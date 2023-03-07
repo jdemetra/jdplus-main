@@ -16,18 +16,6 @@
     <description>${project.parent.artifactId} - ${project.artifactId}</description>
     <url>${project.parent.url}</url>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.github.nbbrd.spreadsheet4j</groupId>
-                <artifactId>spreadsheet-bom</artifactId>
-                <version>2.5.2</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <!-- compile and runtime -->
         <dependency>
@@ -38,6 +26,7 @@
         <dependency>
             <groupId>com.github.nbbrd.spreadsheet4j</groupId>
             <artifactId>spreadsheet-api</artifactId>
+            <version>${spreadsheet4j.version}</version>
         </dependency>
 
         <!-- test only -->

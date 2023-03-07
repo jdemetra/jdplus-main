@@ -59,6 +59,9 @@
         <!-- dependencies -->
         <jd2.version>2.2.4</jd2.version>
         <protobuf.version>3.21.12</protobuf.version>
+        <java-io-util.version>0.0.20</java-io-util.version>
+        <java-sql-util.version>1.0.3</java-sql-util.version>
+        <spreadsheet4j.version>2.5.2</spreadsheet4j.version>
     </properties>
 
     <modules>
@@ -66,19 +69,6 @@
         <module>jd3-main-cli</module>
         <module>jd3-main-desktop</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- dependencies  -->
-            <dependency>
-                <groupId>com.github.nbbrd.java-io-util</groupId>
-                <artifactId>java-io-bom</artifactId>
-                <version>0.0.20</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <!-- annotations & processors -->
@@ -209,7 +199,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <!-- 1.1 Enable annotation processors -->
-                    <annotationProcessorPaths>
+                    <annotationProcessorPaths combine.children="append">
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>

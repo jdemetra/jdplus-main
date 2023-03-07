@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: demetra/desktop/x13/api/Bundle.properties
+OpenIDE-Module-Install: demetra/desktop/x13/util/Installer.class
+OpenIDE-Module-Java-Dependencies: Java > 17
+

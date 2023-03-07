@@ -12,10 +12,72 @@
     <artifactId>jd3-main-desktop</artifactId>
     <packaging>pom</packaging>
 
-    <name>${project.artifactId}</name>
-    <description>${project.parent.artifactId} - ${project.artifactId}</description>
-    <url>${project.parent.url}</url>
+    <name>jd3-main-desktop</name>
+<!--    <description>${project.parent.artifactId} - ${project.artifactId}</description>-->
+<!--    <url>${project.parent.url}</url>-->
+
+    <properties>
+        <!-- NetBeans config -->
+        <brandingToken>nbdemetra</brandingToken>
+
+        <!-- dependencies -->
+        <netbeans.version>RELEASE150</netbeans.version>
+    </properties>
 
     <modules>
+        <module>jd3-main-desktop-design</module>
+        <module>jd3-toolkit-desktop-plugin</module>
+        <module>jd3-spreadsheet-desktop-plugin</module>
+        <module>jd3-sql-desktop-plugin</module>
+        <module>jd3-text-desktop-plugin</module>
+        <module>jd3-sa-desktop-plugin</module>
+        <module>jd3-tramoseats-desktop-plugin</module>
+        <module>jd3-x13-desktop-plugin</module>
+        <module>jd3-main-desktop-branding</module>
+        <module>jd3-main-desktop-bin</module>
     </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Other plugins -->
+                <plugin>
+                    <groupId>org.apache.netbeans.utilities</groupId>
+                    <artifactId>nbm-maven-plugin</artifactId>
+                    <version>4.8</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- Force lookup of annotation processors in classpath by resetting paths -->
+                    <annotationProcessorPaths combine.self="override"/>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <!-- Force use of the nbm generated manifest -->
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.netbeans.utilities</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- Set branding for all NBM plugins -->
+                    <useOSGiDependencies>false</useOSGiDependencies>
+                    <brandingToken>${brandingToken}</brandingToken>
+                    <cluster>${brandingToken}</cluster>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
