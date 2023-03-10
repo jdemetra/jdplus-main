@@ -367,13 +367,14 @@
     </build>
 
     <profiles>
-        <!-- Disable some analytics plugins to accelerate the build -->
+        <!-- Disable some plugins to accelerate the build -->
         <profile>
             <id>fast-build</id>
             <properties>
                 <enforcer.skip>true</enforcer.skip>
                 <modernizer.skip>true</modernizer.skip>
                 <heylogs.skip>true</heylogs.skip>
+                <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
     </profiles>
