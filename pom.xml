@@ -365,4 +365,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Disable some analytics plugins to accelerate the build -->
+        <profile>
+            <id>fast-build</id>
+            <properties>
+                <enforcer.skip>true</enforcer.skip>
+                <modernizer.skip>true</modernizer.skip>
+                <heylogs.skip>true</heylogs.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>
