@@ -1,0 +1,34 @@
+name: Java with Maven
+
+on: [ push, pull_request ]
+
+jobs:
+  build-and-test-job:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ 17 ]
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+
+    name: JDK${{ matrix.java }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+          cache: 'maven'
+
+      - name: Build and (headless) test with Maven
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: mvn -U -B -ntp package
