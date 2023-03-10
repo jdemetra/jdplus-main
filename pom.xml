@@ -374,7 +374,6 @@
                 <enforcer.skip>true</enforcer.skip>
                 <modernizer.skip>true</modernizer.skip>
                 <heylogs.skip>true</heylogs.skip>
-                <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
     </profiles>
