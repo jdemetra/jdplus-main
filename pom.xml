@@ -222,7 +222,7 @@
             <plugin>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.7.0</version>
+                <version>1.7.1</version>
                 <executions>
                     <!-- 1.3 Detect OS properties for protoc -->
                     <!-- Not used as an extension since NetBeans doesn't support extensions -->
