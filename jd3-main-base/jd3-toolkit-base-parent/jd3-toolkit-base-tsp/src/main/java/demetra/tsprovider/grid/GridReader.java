@@ -24,7 +24,7 @@ import demetra.timeseries.util.ObsGathering;
 import demetra.timeseries.util.TsDataBuilder;
 import demetra.util.MultiLineNameUtil;
 import demetra.tsprovider.util.ObsFormat;
-import demetra.util.Substitutor;
+import demetra.util2.Substitutor;
 import internal.tsprovider.grid.InternalValueReader;
 import internal.tsprovider.grid.MarkableStream;
 import internal.tsprovider.grid.TsDataBuilders;

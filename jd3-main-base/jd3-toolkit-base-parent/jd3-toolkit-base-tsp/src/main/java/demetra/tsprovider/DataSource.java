@@ -16,7 +16,7 @@
  */
 package demetra.tsprovider;
 
-import demetra.util.UriBuilder;
+import demetra.util2.UriBuilder;
 import internal.util.SortedMaps;
 import nbbrd.design.RepresentableAs;
 import nbbrd.design.RepresentableAsString;

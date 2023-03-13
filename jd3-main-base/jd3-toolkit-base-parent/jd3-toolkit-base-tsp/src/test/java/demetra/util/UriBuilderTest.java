@@ -16,6 +16,7 @@
  */
 package demetra.util;
 
+import demetra.util2.UriBuilder;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -14,12 +14,12 @@
 * See the Licence for the specific language governing permissions and 
 * limitations under the Licence.
  */
-package demetra.util;
+package demetra.util2;
 
 import nbbrd.design.BuilderPattern;
 import internal.util.Strings;
 import internal.util.URLEncoder2;
-import java.io.UnsupportedEncodingException;
+
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;

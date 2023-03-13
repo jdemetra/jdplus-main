@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package demetra.util;
+package demetra.util2;
 
 import internal.util.Strings.CharMatcher;
 import java.beans.IntrospectionException;

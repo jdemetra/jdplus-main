@@ -16,6 +16,7 @@
  */
 package demetra.util;
 
+import demetra.util2.Substitutor;
 import org.junit.jupiter.api.Test;
 
 import java.beans.IntrospectionException;
