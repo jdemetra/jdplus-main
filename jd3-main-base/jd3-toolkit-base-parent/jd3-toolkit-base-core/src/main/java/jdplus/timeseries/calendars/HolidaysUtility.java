@@ -300,23 +300,23 @@ public class HolidaysUtility {
         for (int k = 0; k < holidays.length; ++k) {
             Holiday hcur = holidays[k];
             HolidayImpl helper = HolidayImpl.implementationOf(hcur);
-            TsDomain xdomain = helper.getSignificantDomain(ifreq, start, end);
+            // significant figures in xdom
+            TsDomain xdomain = helper.getSignificantDomain(ifreq, start, end).intersection(domain);
             if (!xdomain.isEmpty()) {
                 double[][] cur = helper.getLongTermMeanEffect(ifreq);
                 if (cur != null) {
                     int del = domain.getStartPeriod().until(xdomain.getStartPeriod());
+                    int xstart = xdomain.getStartPeriod().annualPosition();
                     for (int p = 0; p < ifreq; ++p) {
                         if (cur[p] != null) {
                             DataBlock mean = DataBlock.of(cur[p]);
-                            int i = p - xdomain.getStartPeriod().annualPosition();
+                            int i = p - xstart;
                             if (i < 0) {
                                 i += ifreq;
                             }
                             while (i < xdomain.getLength()) {
-                                if (i + del < n) {
-                                    DataBlock row = ltm.row(i + del);
-                                    row.add(mean);
-                                }
+                                DataBlock row = ltm.row(i + del);
+                                row.add(mean);
                                 i += ifreq;
                             }
                         }

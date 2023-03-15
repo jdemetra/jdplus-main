@@ -106,7 +106,7 @@ interface HolidayImpl {
             if (! eday.isBefore(end)) {
                 pend = pend.previous();
             }
-            int n = pstart.until(pend) + 1;
+            int n = pstart.until(pend);
             return TsDomain.of(pstart, Math.max(0, n));
         }
     }
@@ -162,7 +162,7 @@ interface HolidayImpl {
             if (! eday.isBefore(end)) {
                 pend = pend.previous();
             }
-            int n = pstart.until(pend) + 1;
+            int n = pstart.until(pend);
             return TsDomain.of(pstart, Math.max(0, n));
         }
     }
@@ -302,10 +302,10 @@ interface HolidayImpl {
             }
             easter = Easter.easter(pend.year());
             LocalDate eday = easter.plusDays(definition.getOffset());
-            if (! eday.isBefore(end)) {
-                pend=pend.previous();
+            if (end.isAfter(eday)){
+                pend=pend.next();
             }
-            int n = pstart.until(pend) + 1;
+            int n = pstart.until(pend);
             return TsDomain.of(pstart, Math.max(0, n));
         }
 
