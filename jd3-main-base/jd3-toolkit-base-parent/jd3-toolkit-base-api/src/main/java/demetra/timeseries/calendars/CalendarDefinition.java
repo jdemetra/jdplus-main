@@ -22,5 +22,4 @@ package demetra.timeseries.calendars;
  * @author PALATEJ
  */
 public interface CalendarDefinition {
- 
 }

@@ -29,7 +29,7 @@ import jdplus.data.normalizer.DataNormalizer;
  */
 @AlgorithmImplementation(algorithm=DataNormalizer.class, feature=Robust)
 @Development(status = Development.Status.Exploratory)
-public strictfp class BigDecimalAccumulator implements DoubleAccumulator {
+public class BigDecimalAccumulator implements DoubleAccumulator {
 
     private BigDecimal sum;
     private final MathContext context=MathContext.DECIMAL128;

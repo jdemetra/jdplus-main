@@ -43,11 +43,11 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
             case AO ->
                 new AdditiveOutlier(od.getPosition().atStartOfDay());
             case LS ->
-                new LevelShift(od.getPosition().atStartOfDay(), false);
+                new LevelShift(od.getPosition().atStartOfDay(), true);
             case TC ->
                 new TransitoryChange(od.getPosition().atStartOfDay(), tc);
             case SO ->
-                new PeriodicOutlier(od.getPosition().atStartOfDay(), period, false);
+                new PeriodicOutlier(od.getPosition().atStartOfDay(), period, true);
             default ->
                 null;
         };

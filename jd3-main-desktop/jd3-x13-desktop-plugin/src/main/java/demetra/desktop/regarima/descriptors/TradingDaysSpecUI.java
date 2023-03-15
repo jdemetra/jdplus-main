@@ -37,7 +37,11 @@ public class TradingDaysSpecUI extends BaseRegArimaSpecUI {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        EnhancedPropertyDescriptor desc = mautoDesc();
+        EnhancedPropertyDescriptor desc = optionDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        desc = mautoDesc();
         if (desc != null) {
             descs.add(desc);
         }
@@ -49,10 +53,7 @@ public class TradingDaysSpecUI extends BaseRegArimaSpecUI {
         if (desc != null) {
             descs.add(desc);
         }
-        desc = optionDesc();
-        if (desc != null) {
-            descs.add(desc);
-        }
+
         desc = holidaysDesc();
         if (desc != null) {
             descs.add(desc);
@@ -649,7 +650,7 @@ public class TradingDaysSpecUI extends BaseRegArimaSpecUI {
             desc.setDisplayName(Bundle.tradingDaysSpecUI_lpDesc_name());
             desc.setShortDescription(Bundle.tradingDaysSpecUI_lpDesc_desc());
             edesc.setReadOnly(isRo() || core().getTransform().getAdjust() != LengthOfPeriodType.None
-                        || isAutoAdjust() || hasFixedCoefficients());
+                    || isAutoAdjust() || hasFixedCoefficients());
             return edesc;
         } catch (IntrospectionException ex) {
             return null;

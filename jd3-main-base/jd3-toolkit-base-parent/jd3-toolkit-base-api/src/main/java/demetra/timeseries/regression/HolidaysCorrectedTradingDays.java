@@ -30,65 +30,75 @@ import demetra.timeseries.calendars.TradingDaysType;
  */
 @lombok.Value
 @lombok.AllArgsConstructor
-@lombok.Builder(builderClassName="Builder", toBuilder=true)
+@lombok.Builder(builderClassName = "Builder", toBuilder = true)
 public class HolidaysCorrectedTradingDays implements ITradingDaysVariable, ISystemVariable {
 
     public static interface HolidaysCorrector {
 
         /**
-         * Gets the corrections (in days) to be applied on normal calendars.For each period, the sum of the correction should be 0.
+         * Gets the corrections (in days) to be applied on normal calendars.For
+         * each period, the sum of the correction should be 0.
          *
          * @param domain
-         * @param meanCorrected
-         * @return The corrections for each period of the
-         * domain. The different columns of the matrix correspond to
-         * Mondays...Sundays. The dimensions of the matrix are (domain.length() x 7)
+         * @return The corrections for each period of the domain. The different
+         * columns of the matrix correspond to Mondays...Sundays. The dimensions
+         * of the matrix are (domain.length() x 7)
          */
-        Matrix holidaysCorrection(TsDomain domain, boolean meanCorrected);
+        Matrix holidaysCorrection(TsDomain domain);
         
+//        /**
+//         * Gets the long term corrections to be applied on each period of the domain.
+//         * The different columns correspond to Mondays...Sundays. The dimensions
+//         * of the matrix are (domain.length() x 7)
+//         * 
+//         * @param domain
+//         * @return 
+//         */
+//        Matrix longTermCorrection(TsDomain domain);
+
         /**
-         * Gets the average annual corrections (in days) to be applied on Mondays...Sundays
-         * The sum should be 0
+         * Gets the average annual corrections (in days) to be applied on
+         * Mondays...Sundays The sum should be 0.
+         * Only used for computing weights (experimental)
+         *
          * @return An array of 7 elements
          */
         DoubleSeq longTermYearlyCorrection();
-
+    }
+    
+    public static Builder builder(){
+        return new Builder()
+                .clustering(DayClustering.TD7)
+                .contrast(true)
+                .weighted(false);
     }
 
+    @lombok.NonNull
+    private HolidaysCorrector corrector;
+    @lombok.NonNull
     private DayClustering clustering;
     private boolean contrast;
-    private boolean meanCorrection;
     private boolean weighted;
-    private HolidaysCorrector corrector;
-
-    public HolidaysCorrectedTradingDays(GenericTradingDays td, HolidaysCorrector corrector) {
-        this.clustering = td.getClustering();
-        this.contrast=td.getType() == GenericTradingDays.Type.CONTRAST;
-        this.meanCorrection=contrast ? true : td.getType() == GenericTradingDays.Type.MEANCORRECTED;
-        this.corrector = corrector;
-        this.weighted=false;
-    }
 
     @Override
     public int dim() {
-        int n = clustering.getGroupsCount();
-        return contrast ? n - 1 : n;
+        int n=clustering.getGroupsCount();
+        return contrast ? n-1 : n; 
     }
-    
+
     @Override
-    public TradingDaysType getTradingDaysType(){
+    public TradingDaysType getTradingDaysType() {
         return clustering.getType();
     }
-    
+
     @Override
-    public <D extends TimeSeriesDomain<?>> String description(D context){
+    public <D extends TimeSeriesDomain<?>> String description(D context) {
         return "Trading days";
     }
-    
+
     @Override
-    public <D extends TimeSeriesDomain<?>> String description(int idx, D context){
+    public <D extends TimeSeriesDomain<?>> String description(int idx, D context) {
         return GenericTradingDaysVariable.description(clustering, idx);
     }
-    
 
 }

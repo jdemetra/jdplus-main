@@ -32,7 +32,6 @@ import jdplus.math.linearfilters.RationalFilter;
  */
 @Development(status = Development.Status.Alpha)
 @Immutable
-@SkipProcessing(target = Immutable.class, reason = "field m_c is not final")
 public final class CrossCovarianceFunction {
 
     /**
@@ -53,8 +52,7 @@ public final class CrossCovarianceFunction {
     }
 
     private final RationalFilter m_r;
-
-    private double m_c = 1;
+    private final double m_c;
 
     /**
      * 

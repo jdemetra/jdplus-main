@@ -60,7 +60,7 @@ import java.io.Serializable;
  * @author Martin Davis
  * 
  */
-public strictfp class LegacyDoubleDouble implements Serializable,
+public class LegacyDoubleDouble implements Serializable,
         Comparable<LegacyDoubleDouble>, Cloneable {
     /**
 	 * 

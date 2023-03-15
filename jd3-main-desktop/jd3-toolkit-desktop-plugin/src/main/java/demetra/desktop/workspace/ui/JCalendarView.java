@@ -112,18 +112,17 @@ public final class JCalendarView extends JComponent {
 
         DayClustering clustering = DayClustering.of(dtype);
         List<ITsVariable> vars = new ArrayList<>();
+        
  
         HolidaysCorrectedTradingDays htd = HolidaysCorrectedTradingDays.builder()
                 .clustering(clustering)
-                .meanCorrection(mean)
-                .contrast(contrast)
                 .corrector(HolidaysCorrectionFactory.corrector(calendar, ModellingContext.getActiveContext().getCalendars(), DayOfWeek.SUNDAY))
                 .build();
         vars.add(htd);
         if (ltype != LengthOfPeriodType.None) {
             vars.add(new LengthOfPeriod(ltype));
         }
-        FastMatrix matrix = Regression.matrix(domain, vars.toArray(new ITsVariable[vars.size()]));
+        FastMatrix matrix = Regression.matrix(domain, vars.toArray(ITsVariable[]::new));
 
         TsPeriod domainStart = domain.getStartPeriod();
         TsCollection tss = IntStream
@@ -237,10 +236,10 @@ public final class JCalendarView extends JComponent {
                     .select(this, "contrast")
                     .display("Contrast")
                     .add();
-            b.withBoolean()
-                    .select(this, "mean")
-                    .display("Long term mean correction")
-                    .add();
+//            b.withBoolean()
+//                    .select(this, "mean")
+//                    .display("Long term mean correction")
+//                    .add();
             result.put(b.build());
 
             return result;

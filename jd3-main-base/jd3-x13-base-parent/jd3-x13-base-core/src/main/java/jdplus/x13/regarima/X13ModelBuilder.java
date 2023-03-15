@@ -158,7 +158,7 @@ class X13ModelBuilder implements IModelBuilder {
     }
 
     private void initializeMean(ModelDescription model, MeanSpec mu) {
-        if (! mu.isUsed()) {
+        if (!mu.isUsed()) {
             model.setMean(false);
         } else if (Parameter.isFixed(mu.getCoefficient())) {
             int d = spec.getArima().getD(), bd = spec.getArima().getBd();
@@ -205,7 +205,7 @@ class X13ModelBuilder implements IModelBuilder {
     private void initializeOutliers(ModelDescription model, List<Variable<IOutlier>> outliers) {
         int freq = model.getAnnualFrequency();
         TransitoryChangeFactory tc = new TransitoryChangeFactory(TransitoryChangeFactory.rate(freq, spec.getOutliers().getMonthlyTCRate()));
-        PeriodicOutlierFactory so = new PeriodicOutlierFactory(freq, false);
+        PeriodicOutlierFactory so = new PeriodicOutlierFactory(freq, true);
         for (Variable<IOutlier> outlier : outliers) {
             IOutlier cur = outlier.getCore();
             String code = cur.getCode();
@@ -389,9 +389,12 @@ class X13ModelBuilder implements IModelBuilder {
         if (tdspec.isStockTradingDays()) {
             return null;
         } else if (tdspec.getHolidays() != null) {
-            GenericTradingDays gtd = GenericTradingDays.contrasts(dc);
             HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
-            return new HolidaysCorrectedTradingDays(gtd, corrector);
+            return HolidaysCorrectedTradingDays.builder()
+                    .clustering(dc)
+                    .corrector(corrector)
+                    .contrast(true)
+                    .build();
         } else if (tdspec.getUserVariables() != null) {
             return null;
         } else {
@@ -416,9 +419,12 @@ class X13ModelBuilder implements IModelBuilder {
         }
         TradingDaysType tdType = td.getTradingDaysType();
         DayClustering dc = DayClustering.of(tdType);
-        GenericTradingDays gtd = GenericTradingDays.contrasts(dc);
         HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(td.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
-        return new HolidaysCorrectedTradingDays(gtd, corrector);
+        return HolidaysCorrectedTradingDays.builder()
+                .clustering(dc)
+                .corrector(corrector)
+                .contrast(true)
+                .build();
     }
 
     public static ITradingDaysVariable userTradingDays(TradingDaysSpec td, ModellingContext context) {

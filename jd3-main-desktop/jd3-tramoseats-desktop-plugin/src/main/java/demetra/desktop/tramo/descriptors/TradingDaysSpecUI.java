@@ -37,15 +37,15 @@ public class TradingDaysSpecUI extends BaseTramoSpecUI {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        EnhancedPropertyDescriptor desc = autoDesc();
+        EnhancedPropertyDescriptor desc = optionDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        desc = autoDesc();
         if (desc != null) {
             descs.add(desc);
         }
         desc = pftdDesc();
-        if (desc != null) {
-            descs.add(desc);
-        }
-        desc = optionDesc();
         if (desc != null) {
             descs.add(desc);
         }

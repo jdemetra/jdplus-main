@@ -21,7 +21,9 @@ import demetra.timeseries.TsCollection;
 import demetra.timeseries.TsData;
 import demetra.timeseries.TsFactory;
 import demetra.timeseries.TsInformationType;
+import demetra.toolkit.dictionaries.Dictionary;
 import demetra.util.MultiLineNameUtil;
+import demetra.x11.X11Dictionaries;
 import demetra.x13.html.HtmlX13Summary;
 import java.awt.*;
 import java.util.Arrays;
@@ -74,9 +76,9 @@ public final class JX13Summary extends JComponent implements Disposable {
         HtmlX13Summary summary = new HtmlX13Summary(MultiLineNameUtil.join(doc.getInput().getName()), results);
         Disposables.disposeAndRemoveAll(document_).add(TsViewToolkit.getHtmlViewer(summary));
 
-        String[] lowSeries = lowSeries();
+        String[] lowSeries = lowSeries(results.getPreprocessing() == null);
         chart_.setTsCollection(
-                Arrays.stream(lowSeries).map(s->getMainSeries(s)).collect(TsCollection.toTsCollection())
+                Arrays.stream(lowSeries).map(s -> getMainSeries(s)).collect(TsCollection.toTsCollection())
         );
 
         X11Results x11 = doc.getResult().getDecomposition();
@@ -98,21 +100,36 @@ public final class JX13Summary extends JComponent implements Disposable {
         return TsFactory.getDefault().makeTs(TsDynamicProvider.monikerOf(doc_, str), TsInformationType.All);
     }
 
-    private static String generateId(String name, String id){
+    private static String generateId(String name, String id) {
         return TsDynamicProvider.CompositeTs.builder()
                 .name(name)
-                .back(id+SeriesInfo.B_SUFFIX)
+                .back(id + SeriesInfo.B_SUFFIX)
                 .now(id)
-                .fore(id+SeriesInfo.F_SUFFIX)
+                .fore(id + SeriesInfo.F_SUFFIX)
                 .build().toString();
     }
-    
-    public static String[] lowSeries(){
-        return new String[]{
-            generateId("Series", SaDictionaries.Y),
-            generateId("Seasonally adjusted", SaDictionaries.SA),
-            generateId("Trend", SaDictionaries.T)
-        };
+
+    private static String generateSimpleId(String name, String id) {
+        return TsDynamicProvider.CompositeTs.builder()
+                .name(name)
+                .now(id)
+                .build().toString();
+    }
+
+    public static String[] lowSeries(boolean x11) {
+        if (x11) {
+            return new String[]{
+                generateSimpleId("Series", Dictionary.concatenate(SaDictionaries.DECOMPOSITION, X11Dictionaries.B1)),
+                generateSimpleId("Seasonally adjusted", Dictionary.concatenate(SaDictionaries.DECOMPOSITION, X11Dictionaries.D11)),
+                generateSimpleId("Trend", Dictionary.concatenate(SaDictionaries.DECOMPOSITION, X11Dictionaries.D12))
+            };
+        } else {
+            return new String[]{
+                generateId("Series", SaDictionaries.Y),
+                generateId("Seasonally adjusted", SaDictionaries.SA),
+                generateId("Trend", SaDictionaries.T)
+            };
+        }
     }
 
     @Override

@@ -12,9 +12,7 @@ import demetra.timeseries.calendars.Calendar;
 import demetra.timeseries.calendars.EasterRelatedDay;
 import demetra.timeseries.calendars.FixedDay;
 import demetra.timeseries.calendars.Holiday;
-import demetra.timeseries.regression.ModellingContext;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,21 +48,22 @@ public class VariablesTest {
         holidays.add(EasterRelatedDay.ASCENSION);
         holidays.add(EasterRelatedDay.EASTERMONDAY);
         holidays.add(EasterRelatedDay.WHITMONDAY);
-        Calendar calendar = new Calendar(holidays.toArray(Holiday[]::new));
+        Calendar calendar = new Calendar(holidays.toArray(Holiday[]::new), false);
         TsDomain mdom = TsDomain.of(TsPeriod.monthly(1980, 1), 60);
-        Matrix td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, false, true);
+        Matrix td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, true);
         for (int i = 0; i < td.getColumnsCount(); ++i) {
             assertTrue(td.column(i).count(z -> z != 0) > 0);
         }
-        td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, false, false);
+        td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, false);
         for (int i = 0; i < td.getColumnsCount(); ++i) {
             assertTrue(td.column(i).count(z -> z != 0) > 0);
         }
-        td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, true, true);
+        calendar = new Calendar(holidays.toArray(Holiday[]::new), true);
+        td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, true);
         for (int i = 0; i < td.getColumnsCount(); ++i) {
             assertTrue(td.column(i).count(z -> z != 0) > 0);
         }
-        td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, true, false);
+        td = Variables.htd(calendar, mdom, new int[]{1, 1, 1, 1, 2, 2, 0}, 7, false);
         for (int i = 0; i < td.getColumnsCount(); ++i) {
             assertTrue(td.column(i).count(z -> z != 0) > 0);
         }

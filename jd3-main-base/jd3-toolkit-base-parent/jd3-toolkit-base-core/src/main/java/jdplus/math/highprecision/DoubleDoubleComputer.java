@@ -20,7 +20,7 @@ package jdplus.math.highprecision;
  *
  * @author Jean Palate
  */
-public strictfp class DoubleDoubleComputer implements DoubleDoubleType {
+public class DoubleDoubleComputer implements DoubleDoubleType {
 
     /**
      * The value to split a double-precision value on during multiplication

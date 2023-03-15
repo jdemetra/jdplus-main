@@ -22,6 +22,7 @@ import internal.jdplus.math.functions.gsl.interpolation.CubicSplines;
 import jdplus.data.DataBlock;
 import jdplus.data.DataBlockIterator;
 import jdplus.math.matrices.FastMatrix;
+import jdplus.math.matrices.LowerTriangularMatrix;
 import jdplus.math.matrices.SymmetricMatrix;
 import jdplus.ssf.ISsfDynamics;
 import jdplus.ssf.ISsfInitialization;
@@ -42,26 +43,22 @@ public class RegularSplineComponent {
         public static Data of(int[] xi) {
             DoubleSeq X = DoubleSeq.onMapping(xi.length, k -> xi[k]);
             int dim = xi.length - 1;
-            CubicSplines.Spline[] nodes = new CubicSplines.Spline[dim];
-            for (int i = 0; i < dim; ++i) {
-                double[] f = new double[dim + 1];
-                if (i == 0) {
-                    f[0] = 1;
-                    f[nodes.length] = 1;
-                } else {
-                    f[i] = 1;
-                }
-                nodes[i] = CubicSplines.periodic(X, DoubleSeq.of(f));
-            }
-
             int period = xi[dim];
             double[] wstar = new double[dim];
             FastMatrix Z = FastMatrix.make(period, dim);
             for (int i = 0; i < dim; ++i) {
+                double[] f = new double[dim + 1];
+                if (i == 0) {
+                    f[0] = 1;
+                    f[dim] = 1;
+                } else {
+                    f[i] = 1;
+                }
+                CubicSplines.Spline node=CubicSplines.periodic(X, DoubleSeq.of(f));
                 DoubleSeqCursor.OnMutable cursor = Z.column(i).cursor();
                 double s = 0;
                 for (int j = 0; j < period; ++j) {
-                    double w = nodes[i].applyAsDouble(j);
+                    double w = node.applyAsDouble(j);
                     cursor.setAndNext(w);
                     s += w;
                 }
@@ -232,6 +229,7 @@ public class RegularSplineComponent {
             this.var = Q.times(var);
             s = this.var.deepClone();
             SymmetricMatrix.lcholesky(s, 1e-9);
+            LowerTriangularMatrix.toLower(s);
         }
 
         @Override
