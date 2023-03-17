@@ -145,6 +145,8 @@ public final class PeriodogramTopComponent extends TopComponent implements HasTs
             "periodogramTopComponent.lastYears.desc=A number of years of observations at the end of the time series used to produce the autoregressive spectrum (0=the whole time series is considered.",
             "periodogramTopComponent.fullYears.name=Full years",
             "periodogramTopComponent.fullYears.desc=Use full years (end of series)",
+            "periodogramTopComponent.meanCorrection.name=Mean correction",
+            "periodogramTopComponent.meanCorrection.desc=Remove the mean of the series prior to the computation of the periodogram",
             "periodogramTopComponent.db.name=Decibels",
             "periodogramTopComponent.db.desc=Periodogram in logs",})
         protected Sheet createSheet() {
@@ -276,6 +278,30 @@ public final class PeriodogramTopComponent extends TopComponent implements HasTs
             full.setName(Bundle.periodogramTopComponent_fullYears_name());
             full.setShortDescription(Bundle.periodogramTopComponent_fullYears_desc());
             transform.put(full);
+            Node.Property<Boolean> mean = new Node.Property(Boolean.class) {
+                @Override
+                public boolean canRead() {
+                    return true;
+                }
+
+                @Override
+                public Object getValue() throws IllegalAccessException, InvocationTargetException {
+                    return view.isMeanCorrection();
+                }
+
+                @Override
+                public boolean canWrite() {
+                    return true;
+                }
+
+                @Override
+                public void setValue(Object t) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    view.setMeanCorrection((Boolean) t);
+                }
+            };
+            mean.setName(Bundle.periodogramTopComponent_meanCorrection_name());
+            mean.setShortDescription(Bundle.periodogramTopComponent_meanCorrection_desc());
+            transform.put(mean);
             sheet.put(transform);
             Set display = Sheet.createPropertiesSet();
             display.setName(Bundle.periodogramTopComponent_display_name());

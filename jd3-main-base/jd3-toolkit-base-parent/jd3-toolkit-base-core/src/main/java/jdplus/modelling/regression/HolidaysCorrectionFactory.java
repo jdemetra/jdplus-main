@@ -113,7 +113,7 @@ public class HolidaysCorrectionFactory implements RegressionVariableFactory<Holi
         TsDomain domain = TsDomain.of(start, n);
         FastMatrix days = FastMatrix.make(n, 7);
         GenericTradingDaysFactory.fillTradingDaysMatrix(start, false, days);
-        Matrix corr = corrector.holidaysCorrection(domain);
+        Matrix corr = corrector.rawCorrection(domain);
         for (int i = 0; i < 7; ++i) {
             days.column(i).apply(corr.column(i), (a, b) -> a + b);
         }

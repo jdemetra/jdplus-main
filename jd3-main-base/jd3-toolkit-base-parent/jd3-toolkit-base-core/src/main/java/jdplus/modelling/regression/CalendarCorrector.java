@@ -43,6 +43,25 @@ class CalendarCorrector implements HolidaysCorrectedTradingDays.HolidaysCorrecto
         this.hol = hol;
     }
 
+   @Override
+    public Matrix rawCorrection(TsDomain domain) {
+        int phol = hol.getValue() - 1;
+        Matrix C = HolidaysUtility.holidays(holidays, domain);
+        FastMatrix Cc = FastMatrix.of(C);
+        // we put in the hpos column the sum of all the other days
+        // and we change the sign of the other days
+        DataBlock chol = Cc.column(phol);
+        chol.set(0);
+        for (int i = 0; i < 7; ++i) {
+            if (i != phol) {
+                DataBlock cur = Cc.column(i);
+                chol.add(cur);
+                cur.chs();
+            }
+        }
+        return Cc;
+    }
+    
     /**
      * C(i,t) if meanCorrection is false, C(i,t)-mean C(i) otherwise
      *

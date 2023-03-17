@@ -301,7 +301,8 @@ public class HolidaysUtility {
             Holiday hcur = holidays[k];
             HolidayImpl helper = HolidayImpl.implementationOf(hcur);
             // significant figures in xdom
-            TsDomain xdomain = helper.getSignificantDomain(ifreq, start, end).intersection(domain);
+            
+            TsDomain xdomain = helper.getDomainForLongTermCorrection(ifreq, start, end).intersection(domain);
             if (!xdomain.isEmpty()) {
                 double[][] cur = helper.getLongTermMeanEffect(ifreq);
                 if (cur != null) {

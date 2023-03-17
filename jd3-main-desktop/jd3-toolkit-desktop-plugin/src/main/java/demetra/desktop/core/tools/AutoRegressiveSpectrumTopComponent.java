@@ -135,6 +135,10 @@ public final class AutoRegressiveSpectrumTopComponent extends TopComponent imple
             "autoregressiveSpectrumTopComponent.differencingLag.desc=A number of lags used to take differences. For example, if Differencing lag = 3 then the differencing filter does not apply to the first lag (default) but to the third lag.",
             "autoregressiveSpectrumTopComponent.lastYears.name=Last years",
             "autoregressiveSpectrumTopComponent.lastYears.desc=A number of years of observations at the end of the time series used to produce the autoregressive spectrum (0=the whole time series is considered.",
+            "autoregressiveSpectrumTopComponent.fullYears.name=Full years",
+            "autoregressiveSpectrumTopComponent.fullYears.desc=Use full years (end of series)",
+            "autoregressiveSpectrumTopComponent.meanCorrection.name=Mean correction",
+            "autoregressiveSpectrumTopComponent.meanCorrection.desc=Remove the mean of the series prior to the computation of the periodogram",
             "autoregressiveSpectrumTopComponent.autoRegressiveSpectrum.name=Auto-regressive Spectrum",
             "autoregressiveSpectrumTopComponent.autoRegressiveSpectrum.displayName=Auto-regressive Spectrum",
             "autoregressiveSpectrumTopComponent.autoRegressivePolynomialOrder.name=Auto–regressive polynomial order",
@@ -251,6 +255,54 @@ public final class AutoRegressiveSpectrumTopComponent extends TopComponent imple
             length.setName(Bundle.autoregressiveSpectrumTopComponent_lastYears_name());
             length.setShortDescription(Bundle.autoregressiveSpectrumTopComponent_lastYears_desc());
             transform.put(length);
+            Node.Property<Boolean> full = new Node.Property(Boolean.class) {
+                @Override
+                public boolean canRead() {
+                    return true;
+                }
+
+                @Override
+                public Object getValue() throws IllegalAccessException, InvocationTargetException {
+                    return view.isFullYears();
+                }
+
+                @Override
+                public boolean canWrite() {
+                    return true;
+                }
+
+                @Override
+                public void setValue(Object t) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    view.setFullYears((Boolean) t);
+                }
+            };
+            full.setName(Bundle.periodogramTopComponent_fullYears_name());
+            full.setShortDescription(Bundle.periodogramTopComponent_fullYears_desc());
+            transform.put(full);
+            Node.Property<Boolean> mean = new Node.Property(Boolean.class) {
+                @Override
+                public boolean canRead() {
+                    return true;
+                }
+
+                @Override
+                public Object getValue() throws IllegalAccessException, InvocationTargetException {
+                    return view.isMeanCorrection();
+                }
+
+                @Override
+                public boolean canWrite() {
+                    return true;
+                }
+
+                @Override
+                public void setValue(Object t) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    view.setMeanCorrection((Boolean) t);
+                }
+            };
+            mean.setName(Bundle.periodogramTopComponent_meanCorrection_name());
+            mean.setShortDescription(Bundle.periodogramTopComponent_meanCorrection_desc());
+            transform.put(mean);
 
             Sheet.Set spectrum = Sheet.createPropertiesSet();
             spectrum.setName(Bundle.autoregressiveSpectrumTopComponent_autoRegressiveSpectrum_name());

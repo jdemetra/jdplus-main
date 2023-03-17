@@ -21,6 +21,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,15 +38,16 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
     public static final String CALENDAR_NAME_PROPERTY = "calendarName";
     public static final String MEAN_CORRECTION_PROPERTY = "meanCorrection";
     public static final String SPECIAL_DAY_EVENTS_PROPERTY = "specialDayEvents";
-    public static final String JULIAN_EASTER_PROPERTY = "julianEaster";
     // PROPERTIES
     private String calendarName;
     private List<Holiday> holidays;
+    private boolean meanCorrection;
     // OTHER
     final ExplorerManager em;
     final ListOfSpecialDayEvent childFactory;
     final JPopupMenu addPopupMenu;
     final NameTextFieldListener nameTextFieldListener;
+    final MeanCheckBoxListener meanListener;
     Action lastUsedAction;
 
     /**
@@ -54,7 +56,8 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
     public NationalCalendarPanel() {
         this.calendarName = "";
         this.holidays = Collections.emptyList();
- 
+        this.meanCorrection = true;
+
         this.em = new ExplorerManager();
         this.childFactory = new ListOfSpecialDayEvent();
 
@@ -117,16 +120,21 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         });
 
         this.nameTextFieldListener = new NameTextFieldListener();
+        this.meanListener = new MeanCheckBoxListener();
 
         listView1.setShowParentNode(false);
         listView1.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         nameTextField.getDocument().addDocumentListener(nameTextFieldListener);
+        meanCB.addActionListener(meanListener);
         removeButton.setEnabled(false);
 
         addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
                 case NationalCalendarPanel.CALENDAR_NAME_PROPERTY:
                     onCalendarNameChange();
+                    break;
+                case NationalCalendarPanel.MEAN_CORRECTION_PROPERTY:
+                    onMeanChange();
                     break;
                 case NationalCalendarPanel.SPECIAL_DAY_EVENTS_PROPERTY:
                     onSpecialDayEventsChange();
@@ -162,10 +170,10 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         jSplitPane1 = new javax.swing.JSplitPane();
         listView1 = new org.openide.explorer.view.ListView();
         propertySheetView1 = new org.openide.explorer.propertysheet.PropertySheetView();
+        meanCB = new javax.swing.JCheckBox();
 
         jLabel1.setText("Name:");
 
-        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         jLabel2.setText("Holidays:");
@@ -193,6 +201,9 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         jSplitPane1.setLeftComponent(listView1);
         jSplitPane1.setRightComponent(propertySheetView1);
 
+        meanCB.setSelected(true);
+        meanCB.setText("Long term mean correction");
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -205,9 +216,10 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
                     .add(layout.createSequentialGroup()
                         .add(jLabel1)
                         .add(0, 0, Short.MAX_VALUE))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                    .add(layout.createSequentialGroup()
                         .add(nameTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 242, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(74, 259, Short.MAX_VALUE)))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(meanCB, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 177, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -216,7 +228,9 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
                 .add(4, 4, 4)
                 .add(jLabel1)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(nameTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(nameTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(meanCB))
                 .add(27, 27, 27)
                 .add(jToolBar1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -238,6 +252,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private org.openide.explorer.view.ListView listView1;
+    private javax.swing.JCheckBox meanCB;
     private javax.swing.JTextField nameTextField;
     private org.openide.explorer.propertysheet.PropertySheetView propertySheetView1;
     private javax.swing.JButton removeButton;
@@ -265,7 +280,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
                     childFactory.beans.add(new FixedWeekEventBean(fixedWeekDay, o.getValidityPeriod()));
                 } else if (o instanceof PrespecifiedHoliday prespecifiedHoliday) {
                     childFactory.beans.add(new PrespecifiedHolidayBean(prespecifiedHoliday));
-                 } else if (o instanceof SingleDate  singleDate) {
+                } else if (o instanceof SingleDate singleDate) {
                     childFactory.beans.add(new SingleDateBean(singleDate));
                 }
             }
@@ -273,8 +288,16 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
             childFactory.state = ListenerState.READY;
         }
     }
-    //</editor-fold>
 
+    protected void onMeanChange() {
+        if (meanListener.state == ListenerState.READY) {
+            meanListener.state = ListenerState.SUSPENDED;
+            meanCB.setSelected(meanCorrection);
+            meanListener.state = ListenerState.READY;
+        }
+    }
+
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
     public String getCalendarName() {
         return calendarName;
@@ -294,6 +317,16 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         List<Holiday> old = this.holidays;
         this.holidays = events != null ? events : Collections.emptyList();
         firePropertyChange(SPECIAL_DAY_EVENTS_PROPERTY, old, this.holidays);
+    }
+
+    public boolean isMeanCorrection() {
+        return meanCorrection;
+    }
+
+    public void setMeanCorrection(boolean mean) {
+        boolean old = this.meanCorrection;
+        this.meanCorrection = mean;
+        firePropertyChange(MEAN_CORRECTION_PROPERTY, old, this.meanCorrection);
     }
 
     @Override
@@ -337,7 +370,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
                 result = new FixedWeekEventNode(fixedWeekEventBean);
             } else if (key instanceof PrespecifiedHolidayBean prespecifiedHolidayBean) {
                 result = new SpecialEventNode(prespecifiedHolidayBean);
-           } else if (key instanceof SingleDateBean singleDateBean) {
+            } else if (key instanceof SingleDateBean singleDateBean) {
                 result = new SingleDateNode(singleDateBean);
             } else {
                 throw new UnsupportedOperationException();
@@ -420,6 +453,24 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
                     validate(NationalConstraints.SPECIAL_DAY_EVENTS, NationalConstraints.CALENDAR_NAME);
                     break;
             }
+        }
+    }
+
+    private class MeanCheckBoxListener implements ActionListener {
+
+        ListenerState state = ListenerState.READY;
+
+        void update() {
+            if (state == ListenerState.READY) {
+                state = ListenerState.SENDING;
+                setMeanCorrection(meanCB.isSelected());
+                state = ListenerState.READY;
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            update();
         }
     }
 

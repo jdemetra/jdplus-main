@@ -48,6 +48,7 @@ import demetra.modelling.SeriesInfo;
 import demetra.processing.ProcDiagnostic;
 import demetra.regarima.RegArimaSpec;
 import demetra.sa.ComponentType;
+import demetra.sa.DecompositionMode;
 import demetra.sa.EstimationPolicyType;
 import demetra.sa.SaDictionaries;
 import demetra.sa.SaManager;
@@ -97,7 +98,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     public static final String X11 = "Decomposition (X11)";
     // X11 nodes
     public static final String A = "A-Table", B = "B-Table",
-            C = "C-Table", D = "D-Table", E = "E-Table", M = "Quality measures", FINALFILTERS = "Final filters";
+            C = "C-Table", D = "D-Table", D_FINAL = "D-Final-Table", E = "E-Table", M = "Quality measures", FINALFILTERS = "Final filters";
     public static final Id M_STATISTICS_SUMMARY = new LinearId(X11, M, SaViews.SUMMARY),
             M_STATISTICS_DETAILS = new LinearId(X11, M, SaViews.DETAILS),
             X11_FILTERS = new LinearId(X11, FINALFILTERS),
@@ -105,6 +106,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             B_TABLES = new LinearId(X11, B),
             C_TABLES = new LinearId(X11, C),
             D_TABLES = new LinearId(X11, D),
+            D_FINAL_TABLES = new LinearId(X11, D_FINAL),
             E_TABLES = new LinearId(X11, E);
 
     private static final AtomicReference<IProcDocumentViewFactory<X13Document>> INSTANCE = new AtomicReference();
@@ -592,15 +594,12 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D9),
             Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D10),
             Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D10A),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11A),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D12),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D12A),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D13),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D16),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D16A),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18A)};
+            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D11),
+            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D11A),
+            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D12),
+            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D12A),
+            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D13)
+        };
 
         public DTablesFactory() {
             super(X13Document.class, D_TABLES, source -> source, new GenericTableUI(false, items));
@@ -609,6 +608,31 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         @Override
         public int getPosition() {
             return 4040;
+        }
+    }
+
+    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 4050)
+    public static class DFinalTablesFactory extends ProcDocumentItemFactory<X13Document, TsDocument> {
+
+        static final String[] items = new String[]{
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11A),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D12),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D12A),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D13),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D16),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D16A),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18A)
+        };
+
+        public DFinalTablesFactory() {
+            super(X13Document.class, D_FINAL_TABLES, source -> source, new GenericTableUI(false, items));
+        }
+
+        @Override
+        public int getPosition() {
+            return 4050;
         }
     }
 
@@ -967,12 +991,21 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5310)
-    public static class ModelResSpectrum extends ProcDocumentItemFactory<X13Document, TsData> {
+    public static class ModelResSpectrum extends ProcDocumentItemFactory<X13Document, SpectrumUI.Information> {
 
         public ModelResSpectrum() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SPECTRUM_RES,
-                    RESEXTRACTOR,
-                    new SpectrumUI(true));
+                    RESEXTRACTOR.andThen(
+                            res
+                            -> res == null ? null
+                                    : SpectrumUI.Information.builder()
+                                            .series(res)
+                                            .differencingOrder(0)
+                                            .log(false)
+                                            .mean(true)
+                                            .whiteNoise(true)
+                                            .build()),
+                    new SpectrumUI());
 
         }
 
@@ -983,7 +1016,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5320)
-    public static class DiagnosticsSpectrumIFactory extends ProcDocumentItemFactory<X13Document, TsData> {
+    public static class DiagnosticsSpectrumIFactory extends ProcDocumentItemFactory<X13Document, SpectrumUI.Information> {
 
         public DiagnosticsSpectrumIFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SPECTRUM_I,
@@ -993,23 +1026,17 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                                     return null;
                                 }
                                 TsData s = x11.getD13();
-                                if (s == null) {
-                                    return null;
-                                }
-                                switch (x11.getMode()) {
-                                    case Multiplicative ->
-                                        s = s.log();
-                                    case LogAdditive ->
-                                        s = s.log();
-                                }
-                                int ny = DemetraSaUI.get().getSpectralLastYears();
-                                if (ny > 0) {
-                                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny), 0);
-                                }
-                                return s;
-                            }
-                    ),
-                    new SpectrumUI(false));
+
+                                return s == null ? null
+                                        : SpectrumUI.Information.builder()
+                                                .series(s)
+                                                .differencingOrder(0)
+                                                .log(x11.getMode() != DecompositionMode.Additive)
+                                                .mean(true)
+                                                .whiteNoise(false)
+                                                .build();
+                            }),
+                    new SpectrumUI());
         }
 
         @Override
@@ -1019,7 +1046,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5330)
-    public static class DiagnosticsSpectrumSaFactory extends ProcDocumentItemFactory<X13Document, TsData> {
+    public static class DiagnosticsSpectrumSaFactory extends ProcDocumentItemFactory<X13Document, SpectrumUI.Information> {
 
         public DiagnosticsSpectrumSaFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SPECTRUM_SA,
@@ -1029,21 +1056,18 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                                     return null;
                                 }
                                 TsData s = x11.getD11();
-                                if (s == null) {
-                                    return null;
-                                }
-                                if (x11.getMode().isMultiplicative()) {
-                                    s = s.log();
-                                }
-                                s = s.delta(1);
-                                int ny = DemetraSaUI.get().getSpectralLastYears();
-                                if (ny > 0) {
-                                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny), 0);
-                                }
-                                return s;
-                            }
-                    ),
-                    new SpectrumUI(false));
+
+                                return s == null ? null
+                                        : SpectrumUI.Information.builder()
+                                                .series(s)
+                                                .differencingOrder(1)
+                                                .differencingLag(1)
+                                                .log(x11.getMode() != DecompositionMode.Additive)
+                                                .mean(true)
+                                                .whiteNoise(false)
+                                                .build();
+                            }),
+                    new SpectrumUI());
         }
 
         @Override

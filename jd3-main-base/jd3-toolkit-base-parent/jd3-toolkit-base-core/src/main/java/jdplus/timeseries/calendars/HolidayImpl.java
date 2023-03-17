@@ -39,7 +39,7 @@ interface HolidayImpl {
 
     double[][] getLongTermMeanEffect(int freq);
 
-    TsDomain getSignificantDomain(int freq, LocalDate start, LocalDate end);
+    TsDomain getDomainForLongTermCorrection(int freq, LocalDate start, LocalDate end);
 
     static HolidayImpl implementationOf(Holiday holiday) {
         if (holiday instanceof FixedDay fd) {
@@ -89,23 +89,18 @@ interface HolidayImpl {
             return rslt;
         }
 
+        // start included, end excluded
         @Override
-        public TsDomain getSignificantDomain(int freq, LocalDate start, LocalDate end) {
-            LocalDate vstart=definition.start(), vend=definition.end();
-            if (vstart.isAfter(start))
-                start=vstart;
-            if (vend.isBefore(end))
-                end=vend;
+        public TsDomain getDomainForLongTermCorrection(int freq, LocalDate start, LocalDate end) {
+            LocalDate vstart = definition.start(), vend = definition.end();
+            if (vstart.isAfter(start)) {
+                start = vstart;
+            }
+            if (vend.isBefore(end)) {
+                end = vend;
+            }
             TsPeriod pstart = TsPeriod.of(TsUnit.ofAnnualFrequency(freq), start),
                     pend = TsPeriod.of(TsUnit.ofAnnualFrequency(freq), end);
-            LocalDate sday = LocalDate.of(pstart.year(), definition.getMonth(), definition.getDay());
-            if (start.isAfter(sday)) {
-                pstart = pstart.next();
-            }
-            LocalDate eday = LocalDate.of(pend.year(), definition.getMonth(), definition.getDay());
-            if (! eday.isBefore(end)) {
-                pend = pend.previous();
-            }
             int n = pstart.until(pend);
             return TsDomain.of(pstart, Math.max(0, n));
         }
@@ -140,28 +135,16 @@ interface HolidayImpl {
         }
 
         @Override
-        public TsDomain getSignificantDomain(int freq, LocalDate start, LocalDate end) {
-            LocalDate vstart=definition.start(), vend=definition.end();
-            if (vstart.isAfter(start))
-                start=vstart;
-            if (vend.isBefore(end))
-                end=vend;
-            TsUnit unit = TsUnit.ofAnnualFrequency(freq);
-            TsPeriod pstart = TsPeriod.of(unit, start), pend = TsPeriod.of(unit, end);
-            LocalDate sday = CalendarUtility.firstWeekDay(definition.getDayOfWeek(), pstart.year(), definition.getMonth());
-            if (definition.getPlace() > 0) {
-                sday = sday.plusDays(definition.getPlace() * 7);
+        public TsDomain getDomainForLongTermCorrection(int freq, LocalDate start, LocalDate end) {
+           LocalDate vstart = definition.start(), vend = definition.end();
+            if (vstart.isAfter(start)) {
+                start = vstart;
             }
-            if (start.isAfter(sday)) {
-                pstart = pstart.next();
+            if (vend.isBefore(end)) {
+                end = vend;
             }
-            LocalDate eday = CalendarUtility.firstWeekDay(definition.getDayOfWeek(), pend.year(), definition.getMonth());
-            if (definition.getPlace() > 0) {
-                eday = eday.plusDays(definition.getPlace() * 7);
-            }
-            if (! eday.isBefore(end)) {
-                pend = pend.previous();
-            }
+            TsPeriod pstart = TsPeriod.of(TsUnit.ofAnnualFrequency(freq), start),
+                    pend = TsPeriod.of(TsUnit.ofAnnualFrequency(freq), end);
             int n = pstart.until(pend);
             return TsDomain.of(pstart, Math.max(0, n));
         }
@@ -186,14 +169,10 @@ interface HolidayImpl {
         }
 
         @Override
-        public TsDomain getSignificantDomain(int freq, LocalDate start, LocalDate end) {
+        public TsDomain getDomainForLongTermCorrection(int freq, LocalDate start, LocalDate end) {
             TsUnit unit = TsUnit.ofAnnualFrequency(freq);
             TsPeriod pstart = TsPeriod.of(unit, definition.getDate());
-            int n = 0;
-            if (!definition.getDate().isBefore(start) && definition.getDate().isBefore(end)) {
-                n = 1;
-            }
-            return TsDomain.of(pstart, n);
+            return TsDomain.of(pstart, 0);
         }
 
     }
@@ -287,24 +266,16 @@ interface HolidayImpl {
         }
 
         @Override
-        public TsDomain getSignificantDomain(int freq, LocalDate start, LocalDate end) {
-            LocalDate vstart=definition.start(), vend=definition.end();
-            if (vstart.isAfter(start))
-                start=vstart;
-            if (vend.isBefore(end))
-                end=vend;
-            TsUnit unit = TsUnit.ofAnnualFrequency(freq);
-            TsPeriod pstart = TsPeriod.of(unit, start), pend = TsPeriod.of(unit, end);
-            LocalDate easter = Easter.easter(pstart.year());
-            LocalDate sday = easter.plusDays(definition.getOffset());
-            if (start.isAfter(sday)) {
-                pstart = pstart.next();
+        public TsDomain getDomainForLongTermCorrection(int freq, LocalDate start, LocalDate end) {
+           LocalDate vstart = definition.start(), vend = definition.end();
+            if (vstart.isAfter(start)) {
+                start = vstart;
             }
-            easter = Easter.easter(pend.year());
-            LocalDate eday = easter.plusDays(definition.getOffset());
-            if (end.isAfter(eday)){
-                pend=pend.next();
+            if (vend.isBefore(end)) {
+                end = vend;
             }
+            TsPeriod pstart = TsPeriod.of(TsUnit.ofAnnualFrequency(freq), start),
+                    pend = TsPeriod.of(TsUnit.ofAnnualFrequency(freq), end);
             int n = pstart.until(pend);
             return TsDomain.of(pstart, Math.max(0, n));
         }

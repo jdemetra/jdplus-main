@@ -16,6 +16,7 @@
  */
 package jdplus.modelling.regular.tests;
 
+import demetra.arima.SarimaOrders;
 import demetra.data.DoubleSeq;
 import demetra.stats.StatisticalTest;
 import demetra.timeseries.TsData;
@@ -27,6 +28,11 @@ import jdplus.stats.linearmodel.LinearModel;
 import jdplus.stats.linearmodel.Ols;
 import jdplus.math.matrices.FastMatrix;
 import jdplus.modelling.regression.Regression;
+import jdplus.regarima.RegArimaEstimation;
+import jdplus.regarima.RegArimaModel;
+import jdplus.regsarima.RegSarimaComputer;
+import jdplus.sarima.SarimaModel;
+import jdplus.stats.linearmodel.JointTest;
 
 /**
  *
@@ -79,6 +85,32 @@ public class TradingDaysTest {
             return null;
         }
     }
-   
-   
+
+    public StatisticalTest maTest(TsData y, boolean seas) {
+        try {
+            GenericTradingDays gtd = GenericTradingDays.contrasts(DayClustering.TD7);
+            GenericTradingDaysVariable td = new GenericTradingDaysVariable(gtd);
+            FastMatrix m = Regression.matrix(y.getDomain(), td);
+            SarimaOrders orders;
+            
+            if (seas)
+                orders=SarimaOrders.airline(y.getAnnualFrequency());
+            else{
+                orders= new SarimaOrders(y.getAnnualFrequency());
+                orders.setD(1);
+                orders.setQ(1);
+            }
+            RegArimaModel regarima = RegArimaModel.<SarimaModel>builder()
+                    .y(y.getValues())
+                    .addX(m)
+                    .arima(SarimaModel.builder(orders)
+                            .setDefault().build())
+                    .build();
+            RegArimaEstimation rslt = RegSarimaComputer.PROCESSOR.process(regarima, null);
+            return new JointTest(rslt.getConcentratedLikelihood()).build();
+        } catch (Exception err) {
+            return null;
+        }
+    }
+
 }

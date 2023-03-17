@@ -53,7 +53,7 @@ public class ResidualTradingDaysTests {
                 synchronized (this) {
                     test = saLastTest;
                     if (test == null) {
-                        test = td(sa, options.getFlast(), 1);
+                        test = td2(sa, options.getFlast(), false);
                         saLastTest = test;
                     }
                 }
@@ -65,7 +65,7 @@ public class ResidualTradingDaysTests {
                 synchronized (this) {
                     test = saTest;
                     if (test == null) {
-                        test = td(sa, 0, 1);
+                        test = td2(sa, 0, false);
                         saTest = test;
                     }
                 }
@@ -81,7 +81,7 @@ public class ResidualTradingDaysTests {
                 synchronized (this) {
                     test = irrLastTest;
                     if (test == null) {
-                        test = td(irr, options.getFlast(), 1);
+                        test = td2(irr, options.getFlast(), false);
                         irrLastTest = test;
                     }
                 }
@@ -93,7 +93,7 @@ public class ResidualTradingDaysTests {
                 synchronized (this) {
                     test = irrTest;
                     if (test == null) {
-                        test = td(irr, 0, 1);
+                        test = td2(irr, 0, false);
                         saTest = test;
                     }
                 }
@@ -139,4 +139,13 @@ public class ResidualTradingDaysTests {
         }
         return TradingDaysTest.olsTest(s, lag);
     }
+    
+        private StatisticalTest td2(TsData s, int ny, boolean seas) {
+        int ifreq = annualFrequency();
+        if (ny > 0) {
+            s = s.drop(Math.max(0, s.length() - ifreq * ny), 0);
+        }
+        return TradingDaysTest.maTest(s, seas);
+    }
+
 }

@@ -34,6 +34,21 @@ class ChainedCalendarCorrector implements HolidaysCorrectedTradingDays.HolidaysC
     final LocalDate breakDate;
 
     @Override
+    public Matrix rawCorrection(TsDomain domain) {
+        int n = domain.getLength();
+        int pos = domain.indexOf(breakDate.atStartOfDay());
+        if (pos > 0) {
+            Matrix M1 = beg.rawCorrection(domain.range(0, pos));
+            Matrix M2 = end.rawCorrection(domain.range(pos, n));
+            return MatrixFactory.rowBind(M1, M2);
+        } else if (pos >= -1) {
+            return end.rawCorrection(domain);
+        } else {
+            return beg.rawCorrection(domain);
+        }
+    }
+
+    @Override
     public Matrix holidaysCorrection(TsDomain domain) {
         int n = domain.getLength();
         int pos = domain.indexOf(breakDate.atStartOfDay());

@@ -34,6 +34,17 @@ class CompositeCalendarCorrector implements HolidaysCorrectedTradingDays.Holiday
     final double[] weights;
 
     @Override
+    public Matrix rawCorrection(TsDomain domain) {
+        FastMatrix M = FastMatrix.of(correctors[0].rawCorrection(domain));
+        M.mul(weights[0]);
+        for (int i = 1; i < correctors.length; ++i) {
+            FastMatrix cur = FastMatrix.of(correctors[i].rawCorrection(domain));
+            M.addAY(weights[i], cur);
+        }
+        return M;
+    }
+
+    @Override
     public Matrix holidaysCorrection(TsDomain domain) {
         FastMatrix M = FastMatrix.of(correctors[0].holidaysCorrection(domain));
         M.mul(weights[0]);

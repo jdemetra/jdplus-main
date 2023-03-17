@@ -20,7 +20,6 @@ import demetra.timeseries.TsPeriod;
 import demetra.timeseries.TsUnit;
 import demetra.timeseries.calendars.CalendarDefinition;
 import demetra.timeseries.calendars.DayClustering;
-import demetra.timeseries.calendars.GenericTradingDays;
 import demetra.timeseries.calendars.LengthOfPeriodType;
 import demetra.timeseries.calendars.RegularFrequency;
 import demetra.timeseries.calendars.TradingDaysType;
@@ -117,6 +116,7 @@ public final class JCalendarView extends JComponent {
         HolidaysCorrectedTradingDays htd = HolidaysCorrectedTradingDays.builder()
                 .clustering(clustering)
                 .corrector(HolidaysCorrectionFactory.corrector(calendar, ModellingContext.getActiveContext().getCalendars(), DayOfWeek.SUNDAY))
+                .contrast(contrast)
                 .build();
         vars.add(htd);
         if (ltype != LengthOfPeriodType.None) {

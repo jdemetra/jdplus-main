@@ -35,6 +35,7 @@ public class HolidaysCorrectedTradingDays implements ITradingDaysVariable, ISyst
 
     public static interface HolidaysCorrector {
 
+        Matrix rawCorrection(TsDomain domain);
         /**
          * Gets the corrections (in days) to be applied on normal calendars.For
          * each period, the sum of the correction should be 0.

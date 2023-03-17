@@ -53,6 +53,11 @@ public final class JSpectralView extends JComponent {
         m_arView.setLogTransformation(log);
     }
 
+    public void setMeanCorrection(boolean mean) {
+        m_pView.setMeanCorrection(mean);
+        m_arView.setMeanCorrection(mean);
+    }
+
     private void build() {
         setLayout(new BorderLayout());
         add(m_splitter, BorderLayout.CENTER);

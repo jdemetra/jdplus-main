@@ -43,6 +43,7 @@ public class PeriodogramView extends ARPView {
     public static final String DIFF_LAG_PROPERTY = "differencingLag";
     public static final String LASTYEARS_PROPERTY = "lastYears";
     public static final String FULL_PROPERTY = "fullYears";
+    public static final String MEAN_PROPERTY = "meanCorrection";
     public static final String DB_PROPERTY = "decibels";
 
     // DEFAULT PROPERTIES
@@ -52,6 +53,7 @@ public class PeriodogramView extends ARPView {
     private static final int DEFAULT_DIFF = 1;
     private static final int DEFAULT_DIFF_LAG = 1;
     private static final boolean DEFAULT_FULL = true;
+    private static final boolean DEFAULT_MEAN = true;
     private static final boolean DEFAULT_DB = false;
 
     // PROPERTIES
@@ -62,6 +64,7 @@ public class PeriodogramView extends ARPView {
     private boolean log;
     private int lastYears;
     private boolean full;
+    private boolean mean;
     private boolean db;
 
     public PeriodogramView() {
@@ -72,6 +75,7 @@ public class PeriodogramView extends ARPView {
         this.log = DEFAULT_LOG;
         this.lastYears = 0;
         this.full = DEFAULT_FULL;
+        this.mean = DEFAULT_MEAN;
         this.db = DEFAULT_DB;
         initComponents();
     }
@@ -105,6 +109,9 @@ public class PeriodogramView extends ARPView {
                     break;
                 case FULL_PROPERTY:
                     onFullChange();
+                    break;
+                case MEAN_PROPERTY:
+                    onMeanChange();
                     break;
                 case DB_PROPERTY:
                     onDbChange();
@@ -149,6 +156,10 @@ public class PeriodogramView extends ARPView {
     }
 
     protected void onFullChange() {
+        onARPDataChange();
+    }
+
+    protected void onMeanChange() {
         onARPDataChange();
     }
 
@@ -214,6 +225,16 @@ public class PeriodogramView extends ARPView {
         boolean old = full;
         full = f;
         firePropertyChange(FULL_PROPERTY, old, this.full);
+    }
+
+    public boolean isMeanCorrection() {
+        return mean;
+    }
+
+    public void setMeanCorrection(boolean f) {
+        boolean old = mean;
+        mean = f;
+        firePropertyChange(MEAN_PROPERTY, old, this.mean);
     }
 
     public int getDifferencingLag() {
@@ -289,6 +310,10 @@ public class PeriodogramView extends ARPView {
             }
         }
 
+        if (mean) {
+            double mu = val.averageWithMissing();
+            val = val.fastOp(z -> z - mu);
+        }
         Periodogram periodogram = Periodogram.of(val);
         double[] yp = periodogram.getP();
         for (int i = 0; i < yp.length; ++i) {

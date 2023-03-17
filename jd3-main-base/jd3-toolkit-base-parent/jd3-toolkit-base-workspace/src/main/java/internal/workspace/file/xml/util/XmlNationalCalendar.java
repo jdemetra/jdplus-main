@@ -90,7 +90,7 @@ public class XmlNationalCalendar extends AbstractXmlCalendar {
                 xcal.sd[i++] = tmp;
             }
         }
-        xcal.setMean(t.isMeanCorrection());
+        xcal.meancorrection=t.isMeanCorrection();
         return xcal;
     }
 
@@ -119,7 +119,7 @@ public class XmlNationalCalendar extends AbstractXmlCalendar {
             for (int i = 0; i < sd.length; ++i) {
                 holidays[i] = sd[i].create();
             }
-            nc = new Calendar(holidays, meancorrection);
+            nc = new Calendar(holidays, isMean());
         } else {
             return false;
         }
