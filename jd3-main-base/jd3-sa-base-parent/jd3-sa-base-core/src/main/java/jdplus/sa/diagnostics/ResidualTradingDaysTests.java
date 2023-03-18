@@ -94,7 +94,7 @@ public class ResidualTradingDaysTests {
                     test = irrTest;
                     if (test == null) {
                         test = td2(irr, 0, false);
-                        saTest = test;
+                        irrTest = test;
                     }
                 }
             }

@@ -123,9 +123,10 @@ public class ResidualTradingDaysDiagnostics implements Diagnostics {
             return ProcQuality.Undefined;
         }
         double pval = test.getPvalue();
-        if (pval < sev) {
-            return ProcQuality.Severe;
-        } else if (pval < bad) {
+//        if (pval < sev) {
+//            return ProcQuality.Severe;
+//        } else 
+        if (pval < bad) {
             return ProcQuality.Bad;
         } else if (pval < unc) {
             return ProcQuality.Uncertain;
