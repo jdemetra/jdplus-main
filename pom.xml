@@ -251,6 +251,8 @@
                     <!-- 1.4 Configure protoc -->
                     <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
                     </protocArtifact>
+                    <!-- 1.5 Avoid compilation of unchanged proto definitions -->
+                    <checkStaleness>true</checkStaleness>
                 </configuration>
             </plugin>
 
