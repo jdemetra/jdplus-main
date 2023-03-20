@@ -2,9 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package demetra.desktop.ui.processing.stats;
-
 
 import demetra.desktop.ui.JSpectralView;
 import demetra.desktop.ui.processing.ItemUI;
@@ -16,28 +14,40 @@ import jdplus.stats.DescriptiveStatistics;
 /**
  * @author Jean Palate
  */
-public class SpectrumUI implements ItemUI<TsData> {
+public class SpectrumUI implements ItemUI<SpectrumUI.Information> {
 
-    private final boolean wn_;
+    @lombok.Builder
+    @lombok.Value
+    public static class Information {
 
-    public SpectrumUI(boolean wn) {
-        wn_ = wn;
+        TsData series;
+        int differencingOrder, differencingLag;
+        boolean log, mean, whiteNoise;
+
     }
 
     @Override
-    public JComponent getView(TsData information) {
-        DescriptiveStatistics stats = DescriptiveStatistics.of(information.getValues());
-        if (stats.isConstant())
+    public JComponent getView(Information information) {
+        DescriptiveStatistics stats = DescriptiveStatistics.of(information.getSeries().getValues());
+        if (stats.isConstant()) {
             return TsViewToolkit.getMessageViewer("Constant series. No spectral analysis");
-        return getSpectralView(information, wn_);
+        }
+        return getSpectralView(information);
     }
 
-    public static JComponent getSpectralView(TsData s, boolean wn) {
-        if (s == null) {
+    public static JComponent getSpectralView(Information info) {
+        if (info.getSeries().isEmpty()) {
             return null;
         }
         JSpectralView spectrum = new JSpectralView();
-        spectrum.set(s, wn);
+        spectrum.setDifferencingOrder(info.differencingOrder);
+        if (info.differencingOrder > 0) {
+            spectrum.setDifferencingLag(info.differencingLag);
+        }
+        spectrum.setLogTransformation(info.log);
+        spectrum.setMeanCorrection(info.mean);
+
+        spectrum.set(info.getSeries(), info.isWhiteNoise());
         return spectrum;
     }
 }

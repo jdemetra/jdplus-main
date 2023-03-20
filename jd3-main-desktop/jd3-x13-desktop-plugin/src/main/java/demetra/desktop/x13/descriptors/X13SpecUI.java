@@ -25,16 +25,16 @@ import org.openide.util.NbBundle.Messages;
  * @author Jean Palate
  */
 public class X13SpecUI implements IObjectDescriptor<X13Spec> {
-    
+
     private final X13SpecRoot root;
-    
+
     @Override
-    public X13Spec getCore(){
+    public X13Spec getCore() {
         return root.getCore();
     }
 
     public X13SpecUI(X13Spec spec, boolean ro) {
-        root=new X13SpecRoot(spec, ro);
+        root = new X13SpecRoot(spec, ro);
     }
 
     public BasicSpecUI getBasic() {
@@ -60,16 +60,17 @@ public class X13SpecUI implements IObjectDescriptor<X13Spec> {
     public EstimateSpecUI getEstimate() {
         return new EstimateSpecUI(root.getRegarima());
     }
+
     public X11SpecUI getX11() {
         return new X11SpecUI(root);
     }
 
     public SaBenchmarkingSpecUI getBenchmarking() {
         return new SaBenchmarkingSpecUI(root.getBenchmarking(), root.isRo(),
-                bspec->root.update(bspec));
+                bspec -> root.update(bspec));
     }
 
-        @Override
+    @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
         EnhancedPropertyDescriptor desc = basicDesc();
@@ -119,6 +120,9 @@ public class X13SpecUI implements IObjectDescriptor<X13Spec> {
         "x13specUI.regressionDesc.desc="
     })
     private EnhancedPropertyDescriptor regressionDesc() {
+        if (!this.getBasic().isPreprocessing()) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("regression", this.getClass(), "getRegression", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, REGRESSION_ID);
@@ -135,6 +139,9 @@ public class X13SpecUI implements IObjectDescriptor<X13Spec> {
         "x13specUI.transformDesc.desc="
     })
     private EnhancedPropertyDescriptor transformDesc() {
+        if (!this.getBasic().isPreprocessing()) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("transform", this.getClass(), "getTransform", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, TRANSFORM_ID);
@@ -166,6 +173,9 @@ public class X13SpecUI implements IObjectDescriptor<X13Spec> {
         "x13specUI.outlierDesc.desc="
     })
     private EnhancedPropertyDescriptor outlierDesc() {
+        if (!this.getBasic().isPreprocessing()) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("outlier", this.getClass(), "getOutlier", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, OUTLIER_ID);
@@ -182,6 +192,9 @@ public class X13SpecUI implements IObjectDescriptor<X13Spec> {
         "x13specUI.arimaDesc.desc="
     })
     private EnhancedPropertyDescriptor arimaDesc() {
+        if (!this.getBasic().isPreprocessing()) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("arima", this.getClass(), "getArima", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, ARIMA_ID);
@@ -198,6 +211,9 @@ public class X13SpecUI implements IObjectDescriptor<X13Spec> {
         "x13specUI.estimateDesc.desc="
     })
     private EnhancedPropertyDescriptor estimateDesc() {
+        if (!this.getBasic().isPreprocessing()) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("estimate", this.getClass(), "getEstimate", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, ESTIMATE_ID);
@@ -229,6 +245,9 @@ public class X13SpecUI implements IObjectDescriptor<X13Spec> {
         "x13specUI.benchDesc.desc="
     })
     private EnhancedPropertyDescriptor benchDesc() {
+        if (!this.getBasic().isPreprocessing()) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("benchmarking", this.getClass(), "getBenchmarking", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, BENCH_ID);

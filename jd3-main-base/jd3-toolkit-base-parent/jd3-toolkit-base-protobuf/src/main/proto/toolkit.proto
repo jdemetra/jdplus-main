@@ -327,6 +327,7 @@ message Calendar{
 	repeated FixedWeekDay fixed_week_days = 3;
 	repeated PrespecifiedHoliday prespecified_holidays = 4;
 	repeated SingleDate single_dates = 5;
+        bool mean_correction = 10;
 }
 
 message WeightedCalendar{

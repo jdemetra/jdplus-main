@@ -262,11 +262,21 @@ public class RegArimaViewFactory extends ProcDocumentViewFactory<RegArimaDocumen
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 400000 + 4000)
-    public static class ModelResSpectrum extends ProcDocumentItemFactory<RegArimaDocument, TsData>  {
+    public static class ModelResSpectrum extends ProcDocumentItemFactory<RegArimaDocument, SpectrumUI.Information>  {
 
         public ModelResSpectrum() {
-            super(RegArimaDocument.class, RegSarimaViews.MODEL_RES_SPECTRUM, RESEXTRACTOR,
-                    new SpectrumUI(true));
+            super(RegArimaDocument.class, RegSarimaViews.MODEL_RES_SPECTRUM, 
+                    RESEXTRACTOR.andThen(
+                            res
+                            -> res == null ? null
+                                    : SpectrumUI.Information.builder()
+                                            .series(res)
+                                            .differencingOrder(0)
+                                            .log(false)
+                                            .mean(true)
+                                            .whiteNoise(true)
+                                            .build()),
+                    new SpectrumUI());
         }
 
         @Override

@@ -26,7 +26,7 @@ import demetra.math.Constants;
  */
 @lombok.experimental.UtilityClass
 @Development(status = Development.Status.Exploratory)
-public strictfp class AccSum {
+public class AccSum {
 
     private static final double EPS = Constants.MACHEP, ETA = Double.MIN_VALUE;
 

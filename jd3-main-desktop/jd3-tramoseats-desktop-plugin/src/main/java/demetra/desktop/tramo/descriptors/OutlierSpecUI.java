@@ -309,6 +309,8 @@ public class OutlierSpecUI extends BaseTramoSpecUI {
         "outliersSpecUI.vaDesc.desc=[va] The critical value used in the outliers detection procedure"
     })
     private EnhancedPropertyDescriptor vaDesc() {
+        if (this.isAutoVa())
+            return null;
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Va", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, VA_ID);

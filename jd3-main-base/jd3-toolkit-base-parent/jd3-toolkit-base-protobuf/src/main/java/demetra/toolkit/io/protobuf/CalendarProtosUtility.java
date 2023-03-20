@@ -242,7 +242,8 @@ public class CalendarProtosUtility {
     }
 
     public ToolkitProtos.Calendar convert(Calendar calendar) {
-        ToolkitProtos.Calendar.Builder builder = ToolkitProtos.Calendar.newBuilder();
+        ToolkitProtos.Calendar.Builder builder = ToolkitProtos.Calendar.newBuilder()
+                .setMeanCorrection(calendar.isMeanCorrection());
         Holiday[] holidays = calendar.getHolidays();
         for (int i = 0; i < holidays.length; ++i) {
             if (holidays[i] instanceof FixedDay fixedDay) {
@@ -256,6 +257,7 @@ public class CalendarProtosUtility {
             } else if (holidays[i] instanceof SingleDate singleDate) {
                 builder.addSingleDates(convert(singleDate));
             }
+            
         }
         return builder.build();
     }
@@ -277,7 +279,7 @@ public class CalendarProtosUtility {
         calendar.getSingleDatesList().forEach(sd -> {
             hol.add(convert(sd));
         });
-        return new Calendar(hol.toArray(Holiday[]::new));
+        return new Calendar(hol.toArray(Holiday[]::new), calendar.getMeanCorrection());
     }
 
     public ToolkitProtos.ChainedCalendar convert(ChainedCalendar cc) {

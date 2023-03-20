@@ -69,7 +69,7 @@ package jdplus.math.highprecision;
  *
  */
 @lombok.Value
-public strictfp class DoubleDouble implements DoubleDoubleType, Comparable<DoubleDouble> {
+public class DoubleDouble implements DoubleDoubleType, Comparable<DoubleDouble> {
 
     private double high, low;
 

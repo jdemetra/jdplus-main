@@ -285,7 +285,7 @@ public class CoefficientsEditorDialog extends JDialog {
         public EditorDialog(final Window owner, double[] elements) {
             super(owner);
             this.elements_ = new ArrayList<>();
-            Arrays.stream(elements).map(Double::new).forEach(elements_::add);
+            Arrays.stream(elements).map(Double::valueOf).forEach(elements_::add);
 
             final JPanel pane = new JPanel(new BorderLayout());
             pane.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));

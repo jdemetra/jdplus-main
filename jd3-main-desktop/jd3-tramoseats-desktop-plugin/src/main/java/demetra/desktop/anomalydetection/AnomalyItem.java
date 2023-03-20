@@ -82,7 +82,7 @@ public class AnomalyItem {
     }
 
     public void reset(int backCount) {
-        synchronized (id) {
+        synchronized (ID) {
             this.backCount = backCount;
             absoluteError = null;
             relativeError = null;
@@ -109,25 +109,25 @@ public class AnomalyItem {
     }
 
     public Status getStatus() {
-        synchronized (id) {
+        synchronized (ID) {
             return status;
         }
     }
 
     public boolean isProcessed() {
-        synchronized (id) {
+        synchronized (ID) {
             return status.isProcessed();
         }
     }
 
     public boolean isInvalid() {
-        synchronized (id) {
+        synchronized (ID) {
             return status.isInvalid();
         }
     }
 
     public boolean isNotProcessable() {
-        synchronized (id) {
+        synchronized (ID) {
             return status.isNotProcessable();
         }
     }
@@ -151,7 +151,7 @@ public class AnomalyItem {
     }
 
     public void process(CheckLast check) {
-        synchronized (id) {
+        synchronized (ID) {
             if (status == Status.Pending) {
                 return;
             }

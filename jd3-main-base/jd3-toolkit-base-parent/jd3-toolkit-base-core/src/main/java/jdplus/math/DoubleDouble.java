@@ -62,7 +62,7 @@ package jdplus.math;
  * @author Martin Davis
  * 
  */
-public strictfp class DoubleDouble implements Comparable<DoubleDouble>, Cloneable {
+public class DoubleDouble implements Comparable<DoubleDouble>, Cloneable {
     /**
 	 * 
 	 */

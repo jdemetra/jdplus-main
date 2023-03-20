@@ -49,7 +49,7 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
     private static IOutlier toOutlier(HighFreqOutlierDescriptor od) {
         return switch (od.getType()) {
             case AO -> new AdditiveOutlier(od.getPosition().atStartOfDay());
-            case LS -> new LevelShift(od.getPosition().atStartOfDay(), false);
+            case LS -> new LevelShift(od.getPosition().atStartOfDay(), true);
             case WO -> new SwitchOutlier(od.getPosition().atStartOfDay());
             default -> null;
         };

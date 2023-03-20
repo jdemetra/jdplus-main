@@ -26,7 +26,7 @@ public class ModellingTest {
     public void testCalendar() {
         Holiday hol1=new FixedDay(7,21);
         Holiday hol2=PrespecifiedHoliday.builder().event(DayEvent.NewYear).build();
-        Calendar cal=new Calendar(new Holiday[]{hol1, hol2});
+        Calendar cal=new Calendar(new Holiday[]{hol1, hol2}, true);
         ModellingContext context=new ModellingContext();
         context.getCalendars().set("BE", cal);
         

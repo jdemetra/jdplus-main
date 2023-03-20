@@ -1087,24 +1087,21 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5310)
-    public static class ModelResSpectrum extends ProcDocumentItemFactory<TramoSeatsDocument, TsData> {
+    public static class ModelResSpectrum extends ProcDocumentItemFactory<TramoSeatsDocument, SpectrumUI.Information> {
 
         public ModelResSpectrum() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SPECTRUM_RES,
                     RESEXTRACTOR.andThen(
-                            (TsData s) -> {
-                                if (s == null) {
-                                    return null;
-                                }
-                                int ny = DemetraSaUI.get().getSpectralLastYears();
-                                if (ny > 0) {
-                                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny), 0);
-                                }
-                                return s;
-                            }
-                    ),
-                    new SpectrumUI(true));
-
+                            res
+                            -> res == null ? null
+                                    : SpectrumUI.Information.builder()
+                                            .series(res)
+                                            .differencingOrder(0)
+                                            .log(false)
+                                            .mean(true)
+                                            .whiteNoise(true)
+                                            .build()),
+                    new SpectrumUI());
         }
 
         @Override
@@ -1114,7 +1111,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5320)
-    public static class DiagnosticsSpectrumIFactory extends ProcDocumentItemFactory<TramoSeatsDocument, TsData> {
+    public static class DiagnosticsSpectrumIFactory extends ProcDocumentItemFactory<TramoSeatsDocument, SpectrumUI.Information> {
 
         public DiagnosticsSpectrumIFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SPECTRUM_I,
@@ -1124,17 +1121,16 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                                     return null;
                                 }
                                 TsData s = seats.getInitialComponents().getSeries(ComponentType.Irregular, ComponentInformation.Value);
-                                if (s == null) {
-                                    return null;
-                                }
-                                int ny = DemetraSaUI.get().getSpectralLastYears();
-                                if (ny > 0) {
-                                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny), 0);
-                                }
-                                return s;
-                            }
-                    ),
-                    new SpectrumUI(false));
+                                return s == null ? null
+                                        : SpectrumUI.Information.builder()
+                                                .series(s)
+                                                .differencingOrder(0)
+                                                .log(false)
+                                                .mean(true)
+                                                .whiteNoise(false)
+                                                .build();
+                            }),
+                    new SpectrumUI());
         }
 
         @Override
@@ -1144,7 +1140,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5330)
-    public static class DiagnosticsSpectrumSaFactory extends ProcDocumentItemFactory<TramoSeatsDocument, TsData> {
+    public static class DiagnosticsSpectrumSaFactory extends ProcDocumentItemFactory<TramoSeatsDocument, SpectrumUI.Information> {
 
         public DiagnosticsSpectrumSaFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SPECTRUM_SA,
@@ -1154,18 +1150,17 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                                     return null;
                                 }
                                 TsData s = seats.getInitialComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value);
-                                if (s == null) {
-                                    return null;
-                                }
-                                s = s.delta(1);
-                                int ny = DemetraSaUI.get().getSpectralLastYears();
-                                if (ny > 0) {
-                                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny), 0);
-                                }
-                                return s;
-                            }
-                    ),
-                    new SpectrumUI(false));
+                                return s == null ? null
+                                        : SpectrumUI.Information.builder()
+                                                .series(s)
+                                                .differencingOrder(1)
+                                                .differencingLag(1)
+                                                .log(false)
+                                                .mean(true)
+                                                .whiteNoise(false)
+                                                .build();
+                            }),
+                    new SpectrumUI());
         }
 
         @Override

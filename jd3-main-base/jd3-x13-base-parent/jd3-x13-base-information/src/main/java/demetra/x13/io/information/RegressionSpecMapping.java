@@ -55,9 +55,6 @@ class RegressionSpecMapping {
             INTERVENTION = "intervention", INTERVENTIONS = "intervention*",
             COEFF = "coefficients", FCOEFF = "fixedcoefficients";
 
-    void fillDictionary(String prefix, Map<String, Class> dic) {
-    }
-
     Parameter coefficientOf(InformationSet regInfo, String name) {
         InformationSet scoefs = regInfo.getSubSet(RegressionSpecMapping.COEFF);
         if (scoefs != null) {
@@ -135,15 +132,24 @@ class RegressionSpecMapping {
                 OutlierDefinition o = OutlierDefinition.fromString(outliers[i]);
                 if (o != null) {
                     Parameter c = RegressionSpecMapping.coefficientOf(regInfo, o.name(context));
+                    if (c == null)
+                        c=RegressionSpecMapping.coefficientOf(regInfo, o.name(null));
                     IOutlier io = OutlierMapping.from(o);
-                    builder.outlier(Variable.variable(OutlierMapping.name(io, context), io, attributes(io)).withCoefficient(c));
+                    String name = OutlierMapping.name(io, context);
+                    Variable<IOutlier> v=Variable.<IOutlier>builder()
+                            .name(name)
+                            .core(io)
+                            .attribute(SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(io).name())
+                            .coefficients(c == null ? null : new Parameter[]{c})
+                            .build();
+                    builder.outlier(v);
                 }
             }
         }
         String[] ramps = regInfo.get(RAMPS_LEGACY, String[].class);
         if (ramps != null) {
             for (int i = 0; i < ramps.length; ++i) {
-                Ramp r = RampMapping.parseLegacy(ramps[i]);
+                Ramp r = RampMapping.parseLegacy(ramps[i], context);
                 if (r != null) {
                     Parameter c = RegressionSpecMapping.coefficientOf(regInfo, ramps[i]);
                     builder.ramp(Variable.variable(ramps[i], r).withCoefficient(c));
@@ -153,8 +159,16 @@ class RegressionSpecMapping {
         List<Information<InformationSet>> sel = regInfo.select(INTERVENTIONS, InformationSet.class);
         if (!sel.isEmpty()) {
             for (Information<InformationSet> sub : sel) {
-                Variable<InterventionVariable> v = InterventionVariableMapping.readLegacy(sub.getValue());
-                builder.interventionVariable(v.withCoefficients(coefficientsOf(regInfo, v.getName())));
+                InformationSet sinfo = sub.getValue();
+                InterventionVariable iv = InterventionVariableMapping.read(sub.getValue());
+                String name=sinfo.get(InterventionVariableMapping.NAME_LEGACY, String.class);
+                Variable<InterventionVariable> v=Variable.<InterventionVariable>builder()
+                        .core(iv)
+                        .name(name)
+                        .coefficients(coefficientsOf(regInfo, name))
+                        .attribute(SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(iv).name())
+                        .build();
+                 builder.interventionVariable(v);
             }
         }
         sel = regInfo.select(USERS, InformationSet.class);
@@ -341,4 +355,9 @@ class RegressionSpecMapping {
         return attributes;
     }
 
+    private Map<String, String> attributes(InterventionVariable iv) {
+        HashMap<String, String> attributes = new HashMap<>();
+        attributes.put(SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(iv).name());
+        return attributes;
+    }
 }

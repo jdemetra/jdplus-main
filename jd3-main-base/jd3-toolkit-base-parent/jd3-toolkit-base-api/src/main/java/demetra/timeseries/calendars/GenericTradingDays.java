@@ -26,39 +26,39 @@ import nbbrd.design.Development;
 @Development(status = Development.Status.Alpha)
 public class GenericTradingDays {
     
-    public static enum Type{
-        /**
-         * Number of days in each group
-         */
-        RAW,
-        /**
-         * Number of days in group(i)/#group[i)*#group(0) - numbers of days in group(0)
-         */
-        CONTRAST,
-        /**
-         * Number of days in group(i) - avg(Number of days in group(i))
-         */
-        MEANCORRECTED
-    }
+//    public static enum Type{
+//        /**
+//         * Number of days in each group
+//         */
+//        RAW,
+//        /**
+//         * Number of days in group(i)/#group[i)*#group(0) - numbers of days in group(0)
+//         */
+//        CONTRAST,
+//        /**
+//         * Contrasts corrected for long term effects:
+//         * group(i)- group(0) - (avg(Number of days in group(i))-avg(Number of days in group(0)))
+//         * = (group(i)-avg(Number of days in group(i)))-(group(0)-avg(Number of days in group(0)))
+//         */
+//        MEANCORRECTEDCONTRAST
+//    }
 
     private DayClustering clustering;
-    private Type type;
+    private boolean contrast;
     
-    public static GenericTradingDays contrasts(DayClustering clustering){
-        return new GenericTradingDays(clustering, Type.CONTRAST);
-    }
- 
     public static GenericTradingDays raw(DayClustering clustering){
-        return new GenericTradingDays(clustering, Type.RAW);
+        return new GenericTradingDays(clustering, false);
     }
 
-    public static GenericTradingDays meanCorrected(DayClustering clustering){
-        return new GenericTradingDays(clustering, Type.MEANCORRECTED);
+    public static GenericTradingDays contrasts(DayClustering clustering){
+        return new GenericTradingDays(clustering, true);
     }
+ 
+
 
     public int getCount() {
         int n = clustering.getGroupsCount();
-        return type == GenericTradingDays.Type.CONTRAST ? n - 1 : n;
+        return contrast ? n - 1 : n;
     }
 
     public String getDescription(int idx) {

@@ -24,15 +24,31 @@ import nbbrd.design.Development;
  */
 @Development(status = Development.Status.Release)
 @lombok.Value
+@lombok.AllArgsConstructor
 public class Calendar implements CalendarDefinition {
 
     @lombok.NonNull
     private Holiday[] holidays;
-    
-    public boolean isempty(){
+
+    private boolean meanCorrection;
+
+    public boolean isempty() {
         return holidays.length == 0;
     }
 
-    public static final Calendar DEFAULT = new Calendar(new Holiday[0]);
+    public static final Calendar DEFAULT = new Calendar(new Holiday[0], true);
+
+    public Calendar(Holiday[] holidays) {
+        this.holidays = holidays.clone();
+        this.meanCorrection = true;
+    }
+
+    public Calendar withMeanCorrection(boolean mean) {
+        if (mean == this.meanCorrection) {
+            return this;
+        } else {
+            return new Calendar(holidays, mean);
+        }
+    }
 
 }

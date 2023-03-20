@@ -39,26 +39,26 @@ import jdplus.stats.likelihood.ConcentratedLikelihoodWithMissing;
 public class TradingDaysRegressionComparator {
 
     public static final ITradingDaysVariable[] ALL = new ITradingDaysVariable[]{
-        new GenericTradingDaysVariable(DayClustering.TD2, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD3, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD3c, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD4, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD7, GenericTradingDays.Type.CONTRAST)};
+        new GenericTradingDaysVariable(DayClustering.TD2),
+        new GenericTradingDaysVariable(DayClustering.TD3),
+        new GenericTradingDaysVariable(DayClustering.TD3c),
+        new GenericTradingDaysVariable(DayClustering.TD4),
+        new GenericTradingDaysVariable(DayClustering.TD7)};
 
     public static final ITradingDaysVariable[] ALL_NESTED = new ITradingDaysVariable[]{
-        new GenericTradingDaysVariable(DayClustering.TD2, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD3, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD4, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD7, GenericTradingDays.Type.CONTRAST)};
+        new GenericTradingDaysVariable(DayClustering.TD2),
+        new GenericTradingDaysVariable(DayClustering.TD3),
+        new GenericTradingDaysVariable(DayClustering.TD4),
+        new GenericTradingDaysVariable(DayClustering.TD7)};
 
     public static final ITradingDaysVariable[] DEFAULT = new ITradingDaysVariable[]{
-        new GenericTradingDaysVariable(DayClustering.TD2, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD3, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD7, GenericTradingDays.Type.CONTRAST)};
+        new GenericTradingDaysVariable(DayClustering.TD2),
+        new GenericTradingDaysVariable(DayClustering.TD3),
+        new GenericTradingDaysVariable(DayClustering.TD7)};
 
     public static final ITradingDaysVariable[] LEGACY = new ITradingDaysVariable[]{
-        new GenericTradingDaysVariable(DayClustering.TD2, GenericTradingDays.Type.CONTRAST),
-        new GenericTradingDaysVariable(DayClustering.TD7, GenericTradingDays.Type.CONTRAST)};
+        new GenericTradingDaysVariable(DayClustering.TD2),
+        new GenericTradingDaysVariable(DayClustering.TD7)};
 
     /**
      *

@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author PALATEJ
  */
 public class TradingDaysTestTest {
-    
+
     public TradingDaysTestTest() {
     }
 
@@ -37,6 +37,13 @@ public class TradingDaysTestTest {
         TsData s = Data.TS_PROD.log();
         StatisticalTest olsTest = TradingDaysTest.olsTest(s, 1, 12);
         assertTrue(olsTest.getPvalue() < 1e-3);
-
     }
+
+    @Test
+    public void testProdMa() {
+        TsData s = Data.TS_PROD.log();
+        StatisticalTest maTest = TradingDaysTest.maTest(s, true);
+        assertTrue(maTest.getPvalue() < 1e-3);
+    }
+
 }

@@ -37,6 +37,7 @@ module jd3.toolkit.base.core {
     exports jdplus.math.matrices.lapack;
     exports jdplus.math.polynomials;
     exports jdplus.math.polynomials.spi;
+    exports jdplus.math.splines;
     exports jdplus.ml;
     exports jdplus.modelling;
     exports jdplus.modelling.extractors;

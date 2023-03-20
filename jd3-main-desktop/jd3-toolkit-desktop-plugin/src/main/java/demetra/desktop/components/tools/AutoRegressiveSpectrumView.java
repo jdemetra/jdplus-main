@@ -34,6 +34,8 @@ public class AutoRegressiveSpectrumView extends ARPView {
     public static final String AR_COUNT_PROPERTY = "arCount";
     public static final String RESOLUTION_PROPERTY = "resolution";
     public static final String LASTYEARS_PROPERTY = "lastYears";
+    public static final String FULL_PROPERTY = "fullYears";
+    public static final String MEAN_PROPERTY = "meanCorrection";
 
     // DEFAULT PROPERTIES
     private static final int DEFAULT_AR_COUNT = 0;
@@ -41,6 +43,8 @@ public class AutoRegressiveSpectrumView extends ARPView {
     private static final boolean DEFAULT_LOG = false;
     private static final int DEFAULT_DIFF = 1;
     private static final int DEFAULT_DIFF_LAG = 1;
+    private static final boolean DEFAULT_FULL = true;
+    private static final boolean DEFAULT_MEAN = true;
     public static final int DEFAULT_LAST = 0;
 
     // PROPERTIES
@@ -48,6 +52,8 @@ public class AutoRegressiveSpectrumView extends ARPView {
     private int lag;
     private boolean log;
     private int lastYears;
+    private boolean full;
+    private boolean mean;
     protected int arcount;
     protected int resolution;
 
@@ -56,7 +62,9 @@ public class AutoRegressiveSpectrumView extends ARPView {
         this.lag = DEFAULT_DIFF_LAG;
         this.log = DEFAULT_LOG;
         // TODO
-        this.lastYears = 12; //DemetraUI.getDefault().getSpectralLastYears();
+        this.lastYears = 0;
+        this.full = DEFAULT_FULL;
+        this.mean = DEFAULT_MEAN;
         this.arcount = DEFAULT_AR_COUNT;
         this.resolution = DEFAULT_RESOLUTION;
         initComponents();
@@ -88,6 +96,12 @@ public class AutoRegressiveSpectrumView extends ARPView {
                     break;
                 case LASTYEARS_PROPERTY:
                     onLastYearsChange();
+                    break;
+                case FULL_PROPERTY:
+                    onFullChange();
+                    break;
+                case MEAN_PROPERTY:
+                    onMeanChange();
                     break;
                 case "componentPopupMenu":
                     onComponentPopupMenuChange();
@@ -146,6 +160,26 @@ public class AutoRegressiveSpectrumView extends ARPView {
         firePropertyChange(DIFF_LAG_PROPERTY, old, this.lag);
     }
 
+    public boolean isFullYears() {
+        return full;
+    }
+
+    public void setFullYears(boolean f) {
+        boolean old = full;
+        full = f;
+        firePropertyChange(FULL_PROPERTY, old, this.full);
+    }
+
+    public boolean isMeanCorrection() {
+        return mean;
+    }
+
+    public void setMeanCorrection(boolean f) {
+        boolean old = mean;
+        mean = f;
+        firePropertyChange(MEAN_PROPERTY, old, this.mean);
+    }
+    
     public int getArCount() {
         return arcount;
     }
@@ -198,6 +232,14 @@ public class AutoRegressiveSpectrumView extends ARPView {
         onARPDataChange();
     }
 
+    protected void onFullChange() {
+        onARPDataChange();
+    }
+
+    protected void onMeanChange() {
+        onARPDataChange();
+    }
+
     @Override
     protected void onARPDataChange() {
         super.onARPDataChange();
@@ -217,19 +259,31 @@ public class AutoRegressiveSpectrumView extends ARPView {
     protected XYSeries computeSeries() {
         DoubleSeq val = data.getValues();
         if (log) {
-            val=val.log();
+            val = val.log();
         }
-         if (del > 0) {
-            val=val.delta(lag, del);
+        if (del > 0) {
+            val = val.delta(lag, del);
         }
         if (lastYears > 0 && data.getFreq() != 0) {
-            int nmax = (int)(lastYears * data.getFreq());
+            int nmax = (int) (lastYears * data.getFreq());
             int nbeg = val.length() - nmax;
             if (nbeg > 0) {
                 val = val.drop(nbeg, 0);
             }
-        } 
+        } else if (full && data.getFreq() > 0) {
+            // Keep full years
+            int nvals = val.length();
+            int np = (int) (nvals / data.getFreq());
+            int nbeg = nvals - (int) (np * data.getFreq());
+            if (nbeg > 0) {
+                val = val.drop(nbeg, 0);
+            }
+        }
 
+        if (mean) {
+            double mu = val.averageWithMissing();
+            val = val.fastOp(z -> z - mu);
+        }
         int nar = arcount;
         if (nar <= 0) {
             nar = (int) Math.min(val.length() - 1, 30 * data.getFreq() / 12);

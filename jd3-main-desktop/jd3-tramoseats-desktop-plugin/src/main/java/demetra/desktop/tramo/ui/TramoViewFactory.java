@@ -259,11 +259,21 @@ public class TramoViewFactory extends ProcDocumentViewFactory<TramoDocument> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 400000 + 4000)
-    public static class ModelResSpectrum extends ProcDocumentItemFactory<TramoDocument, TsData> {
+    public static class ModelResSpectrum extends ProcDocumentItemFactory<TramoDocument, SpectrumUI.Information> {
 
         public ModelResSpectrum() {
-            super(TramoDocument.class, RegSarimaViews.MODEL_RES_SPECTRUM, RESEXTRACTOR,
-                    new SpectrumUI(true));
+            super(TramoDocument.class, RegSarimaViews.MODEL_RES_SPECTRUM, 
+                    RESEXTRACTOR.andThen(
+                            res
+                            -> res == null ? null
+                                    : SpectrumUI.Information.builder()
+                                            .series(res)
+                                            .differencingOrder(0)
+                                            .log(false)
+                                            .mean(true)
+                                            .whiteNoise(true)
+                                            .build()),
+                    new SpectrumUI());
 
         }
 

@@ -92,6 +92,7 @@ public class X13SpecManager extends AbstractWorkspaceItemManager<X13Spec> {
     @Override
     public List<WorkspaceItem<X13Spec>> getDefaultItems() {
         List<WorkspaceItem<X13Spec>> result = new ArrayList<>();
+        result.add(WorkspaceItem.system(ID, "X11", X13Spec.RSAX11));
         result.add(WorkspaceItem.system(ID, "RSA0", X13Spec.RSA0));
         result.add(WorkspaceItem.system(ID, "RSA1", X13Spec.RSA1));
         result.add(WorkspaceItem.system(ID, "RSA2", X13Spec.RSA2));

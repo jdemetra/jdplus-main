@@ -332,8 +332,9 @@ public class ModelBuilder implements IModelBuilder{
             return null;
         } else if (tdspec.getHolidays() != null) {
             GenericTradingDays gtd = GenericTradingDays.contrasts(dc);
+            
             HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
-            return new HolidaysCorrectedTradingDays(gtd, corrector);
+            return HolidaysCorrectedTradingDays.builder().corrector(corrector).clustering(gtd.getClustering()).build();
         } else if (tdspec.getUserVariables() != null) {
             return null;
         } else {
@@ -364,9 +365,12 @@ public class ModelBuilder implements IModelBuilder{
             tdType = TradingDaysType.TD7;
         }
         DayClustering dc = DayClustering.of(tdType);
-        GenericTradingDays gtd = GenericTradingDays.contrasts(dc);
         HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(td.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
-        return new HolidaysCorrectedTradingDays(gtd, corrector);
+        return HolidaysCorrectedTradingDays.builder()
+                .clustering(dc)
+                .corrector(corrector)
+                .contrast(true)
+                .build();
     }
 
     private static ITradingDaysVariable userTradingDays(TradingDaysSpec td, ModellingContext context) {

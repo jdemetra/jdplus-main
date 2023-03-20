@@ -46,12 +46,12 @@ public final class EditCalendarAction extends SingleNodeAction<ItemWsNode> {
     protected void performAction(ItemWsNode activatedNode) {
         CalendarManager manager = ModellingContext.getActiveContext().getCalendars();
         CalendarDefinition o = AddCalendarAction.getProvider(activatedNode);
-        if (o instanceof Calendar) {
-            editNationalCalendar(manager, (Calendar) o, activatedNode);
-        } else if (o instanceof ChainedCalendar) {
-            editChainedCalendar(manager, (ChainedCalendar) o, activatedNode);
-        } else if (o instanceof CompositeCalendar) {
-            editCompositeCalendar(manager, (CompositeCalendar) o, activatedNode);
+        if (o instanceof Calendar cal) {
+            editNationalCalendar(manager, cal, activatedNode);
+        } else if (o instanceof ChainedCalendar ccal) {
+            editChainedCalendar(manager, ccal, activatedNode);
+        } else if (o instanceof CompositeCalendar ocal) {
+            editCompositeCalendar(manager, ocal, activatedNode);
         }
     }
 
@@ -76,7 +76,7 @@ public final class EditCalendarAction extends SingleNodeAction<ItemWsNode> {
         Workspace workspace = node.getWorkspace();
         WorkspaceFactory.Event ev = new WorkspaceFactory.Event(workspace, item.getId(), WorkspaceFactory.Event.ITEMCHANGED, null);
         WorkspaceFactory.getInstance().notifyEvent(ev);
-        if (oldName != newName) {
+        if (! oldName.equals(newName) ) {
             item.setDisplayName(newName);
             WorkspaceFactory.Event nev = new WorkspaceFactory.Event(workspace, item.getId(), WorkspaceFactory.Event.ITEMRENAMED, null);
             WorkspaceFactory.getInstance().notifyEvent(nev);
@@ -92,12 +92,13 @@ public final class EditCalendarAction extends SingleNodeAction<ItemWsNode> {
         NationalCalendarPanel panel = new NationalCalendarPanel();
         panel.setCalendarName(oldName);
         panel.setHolidays(Arrays.asList(p.getHolidays()));
+        panel.setMeanCorrection(p.isMeanCorrection());
 
         DialogDescriptor dd = panel.createDialogDescriptor(Bundle.editNationalCalendar_dialog_title());
         if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
             String name = panel.getCalendarName();
             Collection<Holiday> events = panel.getHolidays();
-            Calendar np = new Calendar(events.toArray(new Holiday[events.size()]));
+            Calendar np = new Calendar(events.toArray(Holiday[]::new), panel.isMeanCorrection());
             replace(manager, oldName, name, np, node);
         }
     }

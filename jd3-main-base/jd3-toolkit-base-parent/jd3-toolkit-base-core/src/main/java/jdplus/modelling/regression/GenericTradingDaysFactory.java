@@ -27,7 +27,6 @@ import demetra.timeseries.calendars.DayClustering;
 import demetra.timeseries.calendars.GenericTradingDays;
 import demetra.timeseries.regression.GenericTradingDaysVariable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import jdplus.data.DataBlock;
@@ -114,33 +113,17 @@ public class GenericTradingDaysFactory implements RegressionVariableFactory<Gene
     }
 
     public boolean fill(GenericTradingDays var, TsPeriod start, FastMatrix buffer) {
-        switch (var.getType()) {
-            case CONTRAST:
-                dataContrast(var.getClustering(), start, buffer);
-                break;
-            case RAW:
-                dataNoContrast(var.getClustering(), false, start, buffer);
-                break;
-            case MEANCORRECTED:
-                dataNoContrast(var.getClustering(), true, start, buffer);
-                break;
+        if (var.isContrast()) {
+            dataContrast(var.getClustering(), start, buffer);
+        } else {
+            dataNoContrast(var.getClustering(), true, start, buffer);
         }
         return true;
     }
 
     @Override
     public boolean fill(GenericTradingDaysVariable var, TsPeriod start, FastMatrix buffer) {
-        switch (var.getVariableType()) {
-            case CONTRAST:
-                dataContrast(var.getClustering(), start, buffer);
-                break;
-            case RAW:
-                dataNoContrast(var.getClustering(), false, start, buffer);
-                break;
-            case MEANCORRECTED:
-                dataNoContrast(var.getClustering(), true, start, buffer);
-                break;
-        }
+        dataContrast(var.getClustering(), start, buffer);
         return true;
     }
 
@@ -342,6 +325,18 @@ public class GenericTradingDaysFactory implements RegressionVariableFactory<Gene
             }
         }
         return data;
+    }
+
+    public static void fillNoContrasts(DayClustering clustering, FastMatrix days, FastMatrix output) {
+        // Just sums the corresponding columns
+        int[][] groups = clustering.allPositions();
+        for (int ig = 0; ig < groups.length; ++ig) {
+            int[] group = groups[ig];
+            DataBlock column = output.column(ig);
+            for (int j = 0; j < group.length; ++j) {
+                column.add(days.column(group[j]));
+            }
+        }
     }
 
     private static void rotate(int[][] groups) {

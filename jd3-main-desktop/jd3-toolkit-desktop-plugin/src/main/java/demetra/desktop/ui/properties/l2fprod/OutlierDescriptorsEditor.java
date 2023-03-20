@@ -82,7 +82,7 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
                         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                         table.setCellSelectionEnabled(true);
                         table.setDefaultEditor(OutlierDescriptor.OutlierType[].class, new OutlierTypeEditor());
-                        table.setDefaultRenderer(OutlierDescriptor[].class, new OutlierTypeRenderer());
+                        table.setDefaultRenderer(OutlierDescriptor.OutlierType[].class, new OutlierTypeRenderer());
                         table.setRowHeight(table.getRowHeight() * 2);
 
                         pane.add(NbComponents.newJScrollPane(table), BorderLayout.CENTER);

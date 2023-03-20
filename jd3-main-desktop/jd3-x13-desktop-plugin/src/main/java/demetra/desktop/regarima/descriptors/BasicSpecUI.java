@@ -32,6 +32,10 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
         update(core().getBasic().toBuilder().span(span).build());
     }
 
+    public boolean isPreprocessing() {
+        return core().getBasic().isPreprocessing();
+    }
+
     public boolean isPreliminaryCheck() {
         return core().getBasic().isPreliminaryCheck();
     }

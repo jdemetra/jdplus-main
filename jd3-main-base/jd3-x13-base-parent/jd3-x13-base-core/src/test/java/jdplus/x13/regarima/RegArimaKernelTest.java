@@ -78,7 +78,7 @@ public class RegArimaKernelTest {
         holidays.add(EasterRelatedDay.EASTERMONDAY);
         holidays.add(EasterRelatedDay.WHITMONDAY);
 
-        france = new Calendar(holidays.toArray(new Holiday[holidays.size()]));
+        france = new Calendar(holidays.toArray(new Holiday[holidays.size()]), true);
 
         ofrance = new ec.tstoolkit.timeseries.calendars.NationalCalendar();
         ofrance.add(new ec.tstoolkit.timeseries.calendars.FixedDay(13, Month.July));
@@ -105,7 +105,7 @@ public class RegArimaKernelTest {
         holidays.add(EasterRelatedDay.EASTERMONDAY);
         holidays.add(EasterRelatedDay.WHITMONDAY);
 
-        belgium = new Calendar(holidays.toArray(new Holiday[holidays.size()]));
+        belgium = new Calendar(holidays.toArray(new Holiday[holidays.size()]), true);
 
         obelgium = new ec.tstoolkit.timeseries.calendars.NationalCalendar();
         obelgium.add(new ec.tstoolkit.timeseries.calendars.FixedDay(20, Month.July));
@@ -415,7 +415,7 @@ public class RegArimaKernelTest {
 
         TsPeriod start = TsPeriod.monthly(1967, 1);
         TsData s = TsData.ofInternal(start, data);
-        
+
         TsContextVariable tv = new TsContextVariable("vars.test");
         Variable<TsContextVariable> var = Variable.<TsContextVariable>builder()
                 .core(tv)
@@ -424,7 +424,7 @@ public class RegArimaKernelTest {
                 .build();
         RegArimaSpec nspec = RegArimaSpec.RG5;
         RegressionSpec regSpec = nspec.getRegression();
-        regSpec=regSpec.toBuilder()
+        regSpec = regSpec.toBuilder()
                 .userDefinedVariable(var)
                 .build();
 
@@ -435,7 +435,7 @@ public class RegArimaKernelTest {
         RegArimaKernel processor = RegArimaKernel.of(nspec, context);
         RegSarimaModel rslt = processor.process(s, null);
         System.out.println(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-       
+
         var = Variable.<TsContextVariable>builder()
                 .core(tv)
                 .name("test")
@@ -443,7 +443,7 @@ public class RegArimaKernelTest {
                 .build();
         nspec = RegArimaSpec.RG5;
         regSpec = nspec.getRegression();
-        regSpec=regSpec.toBuilder()
+        regSpec = regSpec.toBuilder()
                 .userDefinedVariable(var)
                 .build();
 
@@ -456,7 +456,7 @@ public class RegArimaKernelTest {
         System.out.println(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
 
     }
-    
+
     public static void stressTestProd() {
         long t0 = System.currentTimeMillis();
         for (int i = 0; i < 100; ++i) {

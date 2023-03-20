@@ -334,7 +334,10 @@ public class OutlierSpecUI extends BaseRegArimaSpecUI {
         "outlierSpecUI.vaDesc.desc=[critical] The critical value used in the outliers detection procedure."
     })
     private EnhancedPropertyDescriptor vaDesc() {
-        try {
+        if (this.isDefaultVa()) {
+            return null;
+        }
+                try {
             PropertyDescriptor desc = new PropertyDescriptor("Va", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, VA_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
