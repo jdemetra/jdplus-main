@@ -18,7 +18,6 @@ package jdplus.arima;
 
 import nbbrd.design.Development;
 import nbbrd.design.Immutable;
-import nbbrd.design.SkipProcessing;
 import jdplus.math.linearfilters.BackFilter;
 import jdplus.math.linearfilters.FiniteFilter;
 import jdplus.math.linearfilters.ForeFilter;
@@ -42,7 +41,7 @@ public final class CrossCovarianceFunction {
      */
     public static CrossCovarianceFunction create(final IArimaModel m1, final IArimaModel m2) {
 	try {
-	    return new CrossCovarianceFunction(new RationalFilter(FiniteFilter.multiply(new FiniteFilter(
+	    return new CrossCovarianceFunction(RationalFilter.of(FiniteFilter.multiply(new FiniteFilter(
 		    m1.getMa()), m2.getMa().mirror()), m1.getAr(), m2.getAr()
 		    .mirror()), Math.sqrt(m1.getInnovationVariance()
 		    * m2.getInnovationVariance()));
@@ -70,7 +69,7 @@ public final class CrossCovarianceFunction {
 	ForeFilter df1 = f1.getRationalForeFilter().getDenominator(), df2 = f2.getRationalForeFilter()
 		.getDenominator();
 
-	m_r = new RationalFilter(FiniteFilter.multiply(n1, n2), db1
+	m_r = RationalFilter.of(FiniteFilter.multiply(n1, n2), db1
 		.times(df2.mirror()), df1.times(db2.mirror()));
 	m_c = Math
 		.sqrt(m1.getInnovationVariance() * m2.getInnovationVariance());

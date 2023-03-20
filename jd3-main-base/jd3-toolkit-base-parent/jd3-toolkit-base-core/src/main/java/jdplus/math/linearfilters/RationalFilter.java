@@ -29,32 +29,29 @@ import jdplus.math.linearsystem.LinearSystemSolver;
 import jdplus.math.matrices.FastMatrix;
 
 /**
- * Rational filters are the ratio of two filters. They are defined in
- * different ways: 1. as the ratio of two generic filters: R(F,B) =
- * [V(B,F)]/[W(B, F)] (roots larger than 1 are associated to the backward
- * operator, roots smaller than 1 are associated to the forward operator and
- * roots equal to 1 are split in backward and forward operator, the last ones,
- * if any, must be double roots) 2. as the sum of a rational filter in
- * the backward operator and of a rational filter in the forward
- * operator: R(F,B) = V(B)/W(B) + X(F)/Y(F) 3. as the ratio of the
- * products of backward/forward filters: R(F,B) = [V(B) * W(F)]/[X(B) *
- * Y(F)] 4. as the ratio of a generic filter and the product of
- * a backward and of a forward filter: R(F,B) = [V(B,F)]/[X(B) * Y(F)]
- * Objects of this class store the representation 1 and 2 together
+ * Rational filters are the ratio of two filters. They are defined in different
+ * ways: 1. as the ratio of two generic filters: R(F,B) = [V(B,F)]/[W(B, F)]
+ * (roots larger than 1 are associated to the backward operator, roots smaller
+ * than 1 are associated to the forward operator and roots equal to 1 are split
+ * in backward and forward operator, the last ones, if any, must be double
+ * roots) 2. as the sum of a rational filter in the backward operator and of a
+ * rational filter in the forward operator: R(F,B) = V(B)/W(B) + X(F)/Y(F) 3. as
+ * the ratio of the products of backward/forward filters: R(F,B) = [V(B) *
+ * W(F)]/[X(B) * Y(F)] 4. as the ratio of a generic filter and the product of a
+ * backward and of a forward filter: R(F,B) = [V(B,F)]/[X(B) * Y(F)] Objects of
+ * this class store the representation 1 and 2 together
  *
  * @author Jean Palate
  */
 @Development(status = Development.Status.Alpha)
-@Immutable
-@SkipProcessing(target = Immutable.class, reason = "fields are not final")
+@lombok.Getter
+@lombok.AllArgsConstructor(access=lombok.AccessLevel.PUBLIC)
+@lombok.Builder(builderClassName="Builder")
 public final class RationalFilter implements IRationalFilter {
 
-    private RationalBackFilter m_rb;
-    private RationalForeFilter m_rf;
-    private IFiniteFilter m_n, m_d;
-
-    private RationalFilter() {
-    }
+    RationalBackFilter backFilter;
+    RationalForeFilter foreFilter;
+    IFiniteFilter numerator, denominator;
 
     /**
      * Creates the filter defined by N(B)N(F) / D(B)D(F)
@@ -63,7 +60,7 @@ public final class RationalFilter implements IRationalFilter {
      * @param D The polynomial at the denominator
      * @return
      */
-    public static RationalFilter RationalSymmetricFilter(BackFilter N, BackFilter D) {
+    public static RationalFilter rationalSymmetricFilter(BackFilter N, BackFilter D) {
 
         Polynomial.SimplifyingTool smp = new Polynomial.SimplifyingTool();
         if (smp.simplify(N.asPolynomial(), D.asPolynomial())) {
@@ -73,12 +70,13 @@ public final class RationalFilter implements IRationalFilter {
 
         SymmetricFilter n = SymmetricFilter.convolutionOf(N);
         BackFilter g = n.decompose(D);
-        RationalFilter rf = new RationalFilter();
-        rf.m_rb = new RationalBackFilter(g, D, 0);
-        rf.m_rf = rf.m_rb.mirror();
-        rf.m_n = SymmetricFilter.convolutionOf(N);
-        rf.m_d = SymmetricFilter.convolutionOf(D);
-        return rf;
+        RationalBackFilter rb = new RationalBackFilter(g, D, 0);
+        return RationalFilter.builder()
+                .backFilter(rb)
+                .foreFilter(rb.mirror())
+                .numerator(SymmetricFilter.convolutionOf(N))
+                .denominator(SymmetricFilter.convolutionOf(D))
+                .build();
     }
 
     /**
@@ -88,12 +86,38 @@ public final class RationalFilter implements IRationalFilter {
      * @param bdenom Backward factor of the denominator
      * @param fnum Forward factor of the numerator
      * @param fdenom Forward factor of the denominator
+     * @return 
      */
-    public RationalFilter(final BackFilter bnum, final BackFilter bdenom,
+    public static RationalFilter of(final BackFilter bnum, final BackFilter bdenom,
             final ForeFilter fnum, final ForeFilter fdenom) {
-        m_n = FiniteFilter.multiply(bnum, fnum);
-        m_d = FiniteFilter.multiply(bdenom, fdenom);
-        decompose(m_n, bdenom, fdenom);
+        FiniteFilter num = FiniteFilter.multiply(bnum, fnum);
+        Decomposition decomp = Decomposition.of(num, bdenom, fdenom);
+        return RationalFilter.builder()
+                .backFilter(decomp.getBackFilter())
+                .foreFilter(decomp.getForeFilter())
+                .numerator(num)
+                .denominator(FiniteFilter.multiply(bdenom, fdenom))
+                .build();
+      }
+    
+    public static RationalFilter of(final RationalForeFilter rf){
+        return RationalFilter.builder()
+                .backFilter(RationalBackFilter.ZERO)
+                .foreFilter(rf)
+                .numerator(new FiniteFilter(rf.getNumerator()))
+                .denominator(new FiniteFilter(rf.getDenominator()))
+                .build();
+        
+    }
+
+    public static RationalFilter of(final RationalBackFilter rb){
+        return RationalFilter.builder()
+                .backFilter(rb)
+                .foreFilter(RationalForeFilter.ZERO)
+                .numerator(new FiniteFilter(rb.getNumerator()))
+                .denominator(new FiniteFilter(rb.getDenominator()))
+                .build();
+        
     }
 
     /**
@@ -102,138 +126,125 @@ public final class RationalFilter implements IRationalFilter {
      * @param N The numerator
      * @param DB The back filter of the denominator
      * @param DF The forward filter of the denominator
+     * @return 
      */
-    public RationalFilter(final IFiniteFilter N, final BackFilter DB,
+    public static RationalFilter of(final IFiniteFilter N, final BackFilter DB,
             final ForeFilter DF) {
-        m_n = new FiniteFilter(N);
-        m_d = FiniteFilter.multiply(new FiniteFilter(DB), DF);
-        decompose(N, DB, DF);
+        FiniteFilter num = new FiniteFilter(N);
+        FiniteFilter denom = FiniteFilter.multiply(new FiniteFilter(DB), DF);
+        Decomposition decomp = Decomposition.of(num, DB, DF);
+        return RationalFilter.builder()
+                .backFilter(decomp.getBackFilter())
+                .foreFilter(decomp.getForeFilter())
+                .numerator(num)
+                .denominator(denom)
+                .build();
     }
 
-    /**
-     *
-     * @param rbf
-     * @param rff
-     */
-    public RationalFilter(final RationalBackFilter rbf, final RationalForeFilter rff) {
-        m_rb = rbf;
-        m_rf = rff;
-    }
+    @lombok.Getter
+    @lombok.AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+    public static class Decomposition {
 
-    /**
-     * Creates a rational filter that contains all information; we should have
-     * that rbf+rff = num/denom; the coherence of the different inputs
-     * is not checked
-     *
-     * @param rbf
-     * @param rff
-     * @param num
-     * @param denom
-     */
-    public RationalFilter(final RationalBackFilter rbf, final RationalForeFilter rff,
-            final IFiniteFilter num, final IFiniteFilter denom) {
-        m_rb = rbf;
-        m_rf = rff;
-        m_n = num;
-        m_d = denom;
-    }
+        private final RationalBackFilter backFilter;
+        private final RationalForeFilter foreFilter;
 
-    /**
-     * We decompose the filter N(B,F)/(Db(B)Df(F) in Nb(B)/Db(B) + Nf(F)/Df(F)
-     *
-     * See Maravall, "Use and Misuses of Unobserved Components...", EUI
-     * 1993 or Bell, Martin, "Computation of Asymmetric Signal
-     * Extraction Filters and Mean Squared Error for ARIMA Component Models",
-     * Howard University, Research Report Series 2002.
-     *
-     * @param num
-     * @param bd
-     * @param fd
-     */
-    private void decompose(final IFiniteFilter num, final BackFilter bd,
-            final ForeFilter fd) {
+        /**
+         * Decompose the filter N(B,F)/(Db(B)Df(F)) in Nb(B)/Db(B) + Nf(F)/Df(F)
+         *
+         * See Maravall, "Use and Misuses of Unobserved Components...", EUI 1993
+         * or Bell, Martin, "Computation of Asymmetric Signal Extraction Filters
+         * and Mean Squared Error for ARIMA Component Models", Howard
+         * University, Research Report Series 2002.
+         *
+         * @param num
+         * @param dbf
+         * @param dff
+         * @return The decomposition contains backFilter=Nb/Db, foreFilter= Nf/Df 
+         */
+        public static Decomposition of(final IFiniteFilter num, final BackFilter dbf,
+                final ForeFilter dff) {
 
-        int nnb0 = -num.getLowerBound();
-        int nnf0 = num.getUpperBound();
-        double[] nc = num.weightsToArray();
-        int nnb = nnb0;
-        if (nnb < 0) {
-            nnb = 0;
-        }
-        int nnf = nnf0;
-        if (nnf < 0) {
-            nnf = 0;
-        }
-
-        int ndb = -bd.getLowerBound();
-        int ndf = fd.getUpperBound();
-
-        int h = Math.max(nnf, ndf);
-        int k = Math.max(nnb, ndb);
-        int ne = h + k + 1;
-
-        // h+1 unknowns for the num in F,
-        // k+1 unknowns for the num in B.
-        // ne equations
-        if (nc.length != ne) {
-            double[] ntmp = new double[ne];
-            System.arraycopy(nc, 0, ntmp, k - nnb0, nc.length);
-            nc = ntmp;
-        }
-
-        double[] cnb = new double[k + 1];
-        double[] cnf = new double[h + 1];
-        cnf[0] = 0; // we suppress 1 unknown
-
-        double[] db = bd.weightsToArray(), df = fd.weightsToArray();
-
-        FastMatrix m = FastMatrix.square(ne);
-        // initialisation of the matrix
-        // left/up block [k+1]
-        for (int i = 0; i <= ndf; ++i) {
-            for (int j = 0; j <= k; ++j) {
-                m.set(i + j, j, df[i]);
+            int nnb0 = -num.getLowerBound();
+            int nnf0 = num.getUpperBound();
+            double[] nc = num.weightsToArray();
+            int nnb = nnb0;
+            if (nnb < 0) {
+                nnb = 0;
             }
-        }
-        // right/bottom block [h]
-        // first used row: -ndb+1+k
-        for (int i = -ndb + 1 + k, ii = 0; ii <= ndb; ++i, ++ii) {
-            for (int j = 0; j < h; ++j) {
-                m.set(i + j, j + k + 1, db[ii]);
+            int nnf = nnf0;
+            if (nnf < 0) {
+                nnf = 0;
             }
-        }
-        
-        try {
-            LinearSystemSolver.robustSolver().solve(m, DataBlock.of(nc));
-        } catch (MatrixException e) {
-            throw new LinearFilterException(
-                    "Invalid decomposition of rational filter");
-        }
 
-        for (int i = 0; i <= k; ++i) {
-            cnb[i] = nc[i];
-        }
-        for (int i = 1; i <= h; ++i) {
-            cnf[i] = nc[i + k];
-        }
+            int ndb = -dbf.getLowerBound();
+            int ndf = dff.getUpperBound();
 
-        Arrays2.reverse(cnb);
+            int h = Math.max(nnf, ndf);
+            int k = Math.max(nnb, ndb);
+            int ne = h + k + 1;
 
-        m_rb = new RationalBackFilter(BackFilter.ofInternal(cnb), bd, 0);
-        m_rf = new RationalForeFilter(ForeFilter.ofInternal(cnf), fd, 0);
+            // h+1 unknowns for the num in F,
+            // k+1 unknowns for the num in B.
+            // ne equations
+            if (nc.length != ne) {
+                double[] ntmp = new double[ne];
+                System.arraycopy(nc, 0, ntmp, k - nnb0, nc.length);
+                nc = ntmp;
+            }
+
+            double[] cnb = new double[k + 1];
+            double[] cnf = new double[h + 1];
+            cnf[0] = 0; // we suppress 1 unknown
+
+            double[] db = dbf.weightsToArray(), df = dff.weightsToArray();
+
+            FastMatrix m = FastMatrix.square(ne);
+            // initialisation of the matrix
+            // left/up block [k+1]
+            for (int i = 0; i <= ndf; ++i) {
+                for (int j = 0; j <= k; ++j) {
+                    m.set(i + j, j, df[i]);
+                }
+            }
+            // right/bottom block [h]
+            // first used row: -ndb+1+k
+            for (int i = -ndb + 1 + k, ii = 0; ii <= ndb; ++i, ++ii) {
+                for (int j = 0; j < h; ++j) {
+                    m.set(i + j, j + k + 1, db[ii]);
+                }
+            }
+
+            try {
+                LinearSystemSolver.robustSolver().solve(m, DataBlock.of(nc));
+            } catch (MatrixException e) {
+                throw new LinearFilterException(
+                        "Invalid decomposition of rational filter");
+            }
+
+            for (int i = 0; i <= k; ++i) {
+                cnb[i] = nc[i];
+            }
+            for (int i = 1; i <= h; ++i) {
+                cnf[i] = nc[i + k];
+            }
+
+            Arrays2.reverse(cnb);
+
+            return new Decomposition(new RationalBackFilter(BackFilter.ofInternal(cnb), dbf, 0),
+                    new RationalForeFilter(ForeFilter.ofInternal(cnf), dff, 0));
+        }
     }
 
     /**
-     * Computes the frequency response of the filter at a given
-     * frequency
+     * Computes the frequency response of the filter at a given frequency
      *
      * @param freq The frequency (in radians)
      * @return The frequency response
      */
     @Override
     public Complex frequencyResponse(final double freq) {
-        Complex nb = m_rb.frequencyResponse(freq);
-        Complex nf = m_rf.frequencyResponse(freq);
+        Complex nb = backFilter.frequencyResponse(freq);
+        Complex nf = foreFilter.frequencyResponse(freq);
         return nb.plus(nf);
     }
 
@@ -244,14 +255,14 @@ public final class RationalFilter implements IRationalFilter {
      */
     @Override
     public IFiniteFilter getDenominator() {
-        if (m_d == null) {
-            FiniteFilter b = new FiniteFilter(m_rb.getDenominator());
-            FiniteFilter f = new FiniteFilter(m_rf.getDenominator());
+        if (denominator == null) {
+            FiniteFilter b = new FiniteFilter(backFilter.getDenominator());
+            FiniteFilter f = new FiniteFilter(foreFilter.getDenominator());
             FiniteFilter d = FiniteFilter.multiply(b, f);
             //d.smooth();
-            m_d = d;
+            denominator = d;
         }
-        return m_d;
+        return denominator;
     }
 
     /**
@@ -259,7 +270,7 @@ public final class RationalFilter implements IRationalFilter {
      * @return
      */
     public int getLBound() {
-        return m_rb.getUBound();
+        return backFilter.getUBound();
     }
 
     /**
@@ -268,17 +279,17 @@ public final class RationalFilter implements IRationalFilter {
      */
     @Override
     public IFiniteFilter getNumerator() {
-        if (m_n == null) {
-            FiniteFilter nb = new FiniteFilter(m_rb.getNumerator());
-            FiniteFilter nf = new FiniteFilter(m_rf.getNumerator());
-            FiniteFilter db = new FiniteFilter(m_rb.getDenominator());
-            FiniteFilter df = new FiniteFilter(m_rf.getDenominator());
+        if (numerator == null) {
+            FiniteFilter nb = new FiniteFilter(backFilter.getNumerator());
+            FiniteFilter nf = new FiniteFilter(foreFilter.getNumerator());
+            FiniteFilter db = new FiniteFilter(backFilter.getDenominator());
+            FiniteFilter df = new FiniteFilter(foreFilter.getDenominator());
             FiniteFilter n = FiniteFilter.add(FiniteFilter.multiply(nb, df),
                     FiniteFilter.multiply(nf, db));
             //n.smooth();
-            m_n = n;
+            numerator = n;
         }
-        return m_n;
+        return numerator;
     }
 
     /**
@@ -287,7 +298,7 @@ public final class RationalFilter implements IRationalFilter {
      */
     @Override
     public RationalBackFilter getRationalBackFilter() {
-        return m_rb;
+        return backFilter;
     }
 
     /**
@@ -296,7 +307,7 @@ public final class RationalFilter implements IRationalFilter {
      */
     @Override
     public RationalForeFilter getRationalForeFilter() {
-        return m_rf;
+        return foreFilter;
     }
 
     /**
@@ -304,7 +315,7 @@ public final class RationalFilter implements IRationalFilter {
      * @return
      */
     public int getUBound() {
-        return m_rf.getUBound();
+        return foreFilter.getUBound();
     }
 
     /**
@@ -314,11 +325,11 @@ public final class RationalFilter implements IRationalFilter {
      */
     public double weight(int pos) {
         double d = 0;
-        if (pos <= m_rb.getUBound()) {
-            d = m_rb.weight(pos);
+        if (pos <= backFilter.getUBound()) {
+            d = backFilter.weight(pos);
         }
-        if (pos >= m_rf.getLBound()) {
-            d += m_rf.weight(pos);
+        if (pos >= foreFilter.getLBound()) {
+            d += foreFilter.weight(pos);
         }
         return d;
     }
@@ -329,7 +340,7 @@ public final class RationalFilter implements IRationalFilter {
 
     @Override
     public boolean hasLowerBound() {
-        return m_rb.hasLowerBound();
+        return backFilter.hasLowerBound();
     }
 
     /**
@@ -338,7 +349,7 @@ public final class RationalFilter implements IRationalFilter {
      */
     @Override
     public boolean hasUpperBound() {
-        return m_rf.hasUpperBound();
+        return foreFilter.hasUpperBound();
     }
 
     /**
@@ -347,7 +358,7 @@ public final class RationalFilter implements IRationalFilter {
      * @param m
      */
     public void prepare(final int n, final int m) {
-        m_rb.prepare(n);
-        m_rf.prepare(m);
+        backFilter.prepare(n);
+        foreFilter.prepare(m);
     }
 }
