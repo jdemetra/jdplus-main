@@ -69,7 +69,7 @@ public final class LinearProcess implements ILinearProcess {
             fdenom = fst.stationaryFilter;
         }
 
-        RationalFilter stfilter = new RationalFilter(this.rf.getNumerator(), bdenom, fdenom);
+        RationalFilter stfilter = RationalFilter.of(this.rf.getNumerator(), bdenom, fdenom);
         return new LinearProcess(stfilter, var);
     }
 

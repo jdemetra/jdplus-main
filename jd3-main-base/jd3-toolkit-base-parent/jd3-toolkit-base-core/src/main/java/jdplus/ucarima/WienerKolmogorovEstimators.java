@@ -148,7 +148,7 @@ public class WienerKolmogorovEstimators {
         RationalBackFilter rb = new RationalBackFilter(gf, denom, 0);
 
         RationalFilter f = new RationalFilter(rb, rb.mirror(), c, SymmetricFilter.convolutionOf(denom));
-        RationalFilter mf = new RationalFilter(s.getMa().times(svar / mvar), s.getAr(), num.mirror(), denom.mirror());
+        RationalFilter mf = RationalFilter.of(s.getMa().times(svar / mvar), s.getAr(), num.mirror(), denom.mirror());
         LinearProcess m = new LinearProcess(mf, mvar);
 
         finals[cmp][k] = new WienerKolmogorovEstimator(f, m);
@@ -247,7 +247,7 @@ public class WienerKolmogorovEstimators {
         double avar = a.getInnovationVariance(), mvar = model.getInnovationVariance();
         BackFilter star = a.getStationaryAr();
         ur = a.getNonStationaryAr();
-        RationalFilter mf = new RationalFilter(a.getMa().times(avar / mvar), star, num.mirror(), denom.mirror());
+        RationalFilter mf = RationalFilter.of(a.getMa().times(avar / mvar), star, num.mirror(), denom.mirror());
 
         return new StationaryTransformation<>(new LinearProcess(mf, mvar), ur);
     }
@@ -287,7 +287,7 @@ public class WienerKolmogorovEstimators {
         RationalFilter rf = ln.getFilter();
         RationalForeFilter rff = rf.getRationalForeFilter().drop(n + 1);
         ForeFilter num = rff.getNumerator(), denom = rff.getDenominator();
-        RationalFilter crf = new RationalFilter(RationalBackFilter.ZERO, new RationalForeFilter(num, denom, 0)); // 0 should be modified
+        RationalFilter crf = RationalFilter.of(new RationalForeFilter(num, denom, 0)); // 0 should be modified
         return new LinearProcess(crf, ln.getInnovationVariance());
     }
 

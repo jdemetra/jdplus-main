@@ -221,10 +221,10 @@ public class WienerKolmogorovPreliminaryEstimatorProperties {
             if (m_wrev == null) {
                 LinearProcess errmodel = m_wk.revisionModel(m_cmp, m_lag);
                 RationalForeFilter rferr = ((RationalFilter) errmodel.getFilter()).getRationalForeFilter();
-                m_wrev = new RationalFilter(FiniteFilter.multiply(rferr.getNumerator(), model.getAr())/**Math.Sqrt(errmodel.InnovationVariance)*/
+                m_wrev = RationalFilter.of(FiniteFilter.multiply(rferr.getNumerator(), model.getAr())/**Math.Sqrt(errmodel.InnovationVariance)*/
                         , model.getMa(), rferr.getDenominator());
                 // compute ErrModel*UR
-                RationalFilter ferr = new RationalFilter(FiniteFilter.multiply(m_ur, rferr.getNumerator()), BackFilter.ONE, rferr.getDenominator());
+                RationalFilter ferr = RationalFilter.of(FiniteFilter.multiply(m_ur, rferr.getNumerator()), BackFilter.ONE, rferr.getDenominator());
 
                 m_strev = new LinearProcess(ferr, errmodel.getInnovationVariance());
                 m_acgfrev = m_strev.getAutoCovarianceFunction();
