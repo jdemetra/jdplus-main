@@ -1,15 +1,20 @@
-@SuppressWarnings("JavaModuleNaming")
-module jd3.toolkit.base.r {
+module jdplus.toolkit.base.r {
 
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
     requires static org.checkerframework.checker.qual;
 
-    requires jd3.toolkit.base.api;
-    requires jd3.toolkit.base.core;
-    requires jd3.toolkit.base.protobuf;
-    requires com.google.protobuf;
+    requires jdplus.toolkit.base.core;
+    requires jdplus.toolkit.base.protobuf;
+
+    exports demetra.arima.r;
+    exports demetra.calendar.r;
+    exports demetra.math.r;
+    exports demetra.modelling.r;
+    exports demetra.stats.r;
+    exports demetra.timeseries.r;
+    exports demetra.util.r;
 
     provides demetra.information.InformationExtractor with
             demetra.arima.r.extensions.SarimaExtension;

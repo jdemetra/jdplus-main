@@ -1,14 +1,12 @@
-@SuppressWarnings("JavaModuleNaming")
-module jd3.toolkit.base.protobuf {
+module jdplus.toolkit.base.protobuf {
 
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
     requires static org.checkerframework.checker.qual;
 
-    requires jd3.toolkit.base.api;
-    requires jd3.toolkit.base.core;
-    requires com.google.protobuf;
+    requires jdplus.toolkit.base.core;
+    requires transitive com.google.protobuf;
 
     exports demetra.modelling.io.protobuf;
     exports demetra.outliers.io.protobuf;

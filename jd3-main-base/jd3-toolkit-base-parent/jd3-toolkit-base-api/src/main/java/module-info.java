@@ -1,5 +1,4 @@
-@SuppressWarnings("JavaModuleNaming")
-module jd3.toolkit.base.api {
+module jdplus.toolkit.base.api {
 
     requires static lombok;
     requires static nbbrd.design;

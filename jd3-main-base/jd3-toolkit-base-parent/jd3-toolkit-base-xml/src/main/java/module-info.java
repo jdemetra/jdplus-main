@@ -1,12 +1,11 @@
-@SuppressWarnings("JavaModuleNaming")
-module jd3.toolkit.base.xml {
+module jdplus.toolkit.base.xml {
 
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
     requires static org.checkerframework.checker.qual;
 
-    requires jd3.toolkit.base.api;
+    requires transitive jdplus.toolkit.base.api;
     requires nbbrd.io.xml.bind;
 
     exports demetra.toolkit.io.xml.information;

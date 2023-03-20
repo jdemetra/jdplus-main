@@ -1,12 +1,11 @@
-@SuppressWarnings("JavaModuleNaming")
-module jd3.toolkit.base.core {
+module jdplus.toolkit.base.core {
 
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
     requires static org.checkerframework.checker.qual;
 
-    requires jd3.toolkit.base.api;
+    requires transitive jdplus.toolkit.base.api;
 
     exports jdplus.ar;
     exports jdplus.arima;
@@ -71,6 +70,7 @@ module jd3.toolkit.base.core {
     exports jdplus.ssf.likelihood;
     exports jdplus.ssf.multivariate;
     exports jdplus.ssf.sts;
+    exports jdplus.ssf.sts.splines;
     exports jdplus.ssf.univariate;
     exports jdplus.ssf.utility;
     exports jdplus.stats;
@@ -85,6 +85,12 @@ module jd3.toolkit.base.core {
     exports jdplus.timeseries.simplets.analysis;
     exports jdplus.ucarima;
     exports jdplus.ucarima.estimation;
+
+    // FIXME:
+    exports internal.jdplus.dstats to jdplus.sa.base.core;
+    exports internal.jdplus.arima to jdplus.x13.base.core;
+    exports internal.jdplus.math.functions.gsl.integration to jdplus.experimentalsa.base.core;
+    exports internal.jdplus.math.functions.riso;
 
     uses jdplus.arima.estimation.ArimaForecasts;
     uses jdplus.math.matrices.SymmetricMatrix.CholeskyProcessor;

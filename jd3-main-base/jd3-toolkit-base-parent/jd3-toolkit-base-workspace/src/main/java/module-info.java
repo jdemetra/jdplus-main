@@ -1,15 +1,17 @@
-@SuppressWarnings("JavaModuleNaming")
-module jd3.toolkit.base.workspace {
+module jdplus.toolkit.base.workspace {
 
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
     requires static org.checkerframework.checker.qual;
 
-    requires jd3.toolkit.base.api;
-    requires jd3.toolkit.base.xml;
+    requires jdplus.toolkit.base.xml;
     requires nbbrd.io.xml.bind;
     requires java.logging;
+
+    exports demetra.workspace;
+    exports demetra.workspace.file.spi;
+    exports demetra.workspace.file.util;
 
     uses demetra.workspace.file.spi.FamilyHandler;
 
