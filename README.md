@@ -69,11 +69,11 @@ flowchart BT
 ```
 
 The Git repositories and the Maven modules follow this naming convention:  
-`VERSION-TOPIC[-STEREOTYPE[-CLASSIFIER]]` 
+`PREFIX-TOPIC[-STEREOTYPE[-CLASSIFIER]]` 
 
 | Item       | Regex                        | Example                                 |
 |------------|------------------------------|-----------------------------------------|
-| VERSION    | `jd3`                        |                                         |
+| PREFIX     | `\w+`                        | jd3, jdplus, ...                        |
 | TOPIC      | `\w+`                        | tookit, x13, benchmarking, ...          |
 | STEREOTYPE | `base&#124;cli&#124;desktop` |                                         |
 | CLASSIFIER | `\w+`                        | plugin, parent, api, core, protobuf ... |
