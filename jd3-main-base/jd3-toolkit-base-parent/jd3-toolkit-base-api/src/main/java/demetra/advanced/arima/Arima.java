@@ -76,7 +76,7 @@ public class Arima {
         return PROCESSOR.get().doCanonical(ucarima);
     }
 
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     @Algorithm
     public static interface Processor {
 

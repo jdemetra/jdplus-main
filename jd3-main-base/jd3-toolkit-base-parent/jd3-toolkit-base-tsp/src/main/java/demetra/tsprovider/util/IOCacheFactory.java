@@ -9,7 +9,8 @@ import java.time.Duration;
 
 @ServiceDefinition(
         quantifier = Quantifier.SINGLE,
-        singleton = true
+        singleton = true,
+        noFallback = true
 )
 public interface IOCacheFactory {
 

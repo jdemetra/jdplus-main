@@ -63,7 +63,7 @@ public class Distributions {
         return PROCESSOR.get().gamma(alpha, beta);
     }
 
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     @Algorithm
     public static interface Processor {
 

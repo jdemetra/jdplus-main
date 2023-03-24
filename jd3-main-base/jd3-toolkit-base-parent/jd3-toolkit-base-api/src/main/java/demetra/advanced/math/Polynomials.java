@@ -49,7 +49,7 @@ public class Polynomials {
         return PROCESSOR.get().evaluate(polynomial, x);
     }
 
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     public static interface Processor extends Ring<DoubleSeq>{
 
         Complex[] rootsOf(DoubleSeq polynomial, Solver solver);

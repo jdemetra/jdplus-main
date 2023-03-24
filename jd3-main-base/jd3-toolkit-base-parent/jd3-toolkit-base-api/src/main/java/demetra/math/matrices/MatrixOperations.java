@@ -56,7 +56,7 @@ public class MatrixOperations {
     }
 
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     public static interface Computer {
 
         Matrix At(Matrix A);
@@ -118,7 +118,7 @@ public class MatrixOperations {
         }
 
         @Algorithm
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
         public static interface SymmetricComputer {
 
             Matrix t(Matrix M);
@@ -172,7 +172,7 @@ public class MatrixOperations {
         }
 
         @Algorithm
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
         public static interface LowerTriangularComputer {
 
             Matrix t(Matrix L);
@@ -229,7 +229,7 @@ public class MatrixOperations {
         }
 
         @Algorithm
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
         public static interface UpperTriangularComputer {
 
             Matrix inverse(Matrix M);

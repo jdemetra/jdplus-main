@@ -70,7 +70,7 @@ public class SeasonalityTests {
     }
 
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     public static interface Factory {
 
         // Parametric tests. Should be applied on series corrected for trend

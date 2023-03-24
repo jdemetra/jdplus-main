@@ -43,7 +43,7 @@ public class MatrixDecompositions {
         return PROCESSOR.get().cholesky(S);
     }
 
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     @Algorithm
     public static interface Processor {
 
