@@ -68,7 +68,7 @@ public final class ShowInFolderNodeAction extends AbilityNodeAction<DataSource> 
             Optional<File> file = TsManager.get().getFile(item);
             if (file.isPresent()) {
                 try {
-                    DesktopManager.get().showInFolder(file.get());
+                    DesktopManager.get().showInFolder(file.orElseThrow());
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }

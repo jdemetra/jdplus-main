@@ -524,7 +524,7 @@ public class DifferencingModule  {
             if (nvars > 0) {
                 Optional<Variable> first = desc.variables().filter(var -> ModellingUtility.isOutlier(var, true)).findFirst();
                 // remove the outliers effects
-                DoubleSeq outs = RegArimaUtility.regressionEffect(desc.regarima(), estimation.getConcentratedLikelihood(), desc.findPosition(first.get().getCore()), nvars);
+                DoubleSeq outs = RegArimaUtility.regressionEffect(desc.regarima(), estimation.getConcentratedLikelihood(), desc.findPosition(first.orElseThrow().getCore()), nvars);
                 res = res.op(outs, (a, b) -> a - b);
             }
             SarimaOrders curspec = desc.specification();

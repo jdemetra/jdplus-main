@@ -197,7 +197,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
                 .filter(HasSqlProperties.class::isInstance)
                 .map(HasSqlProperties.class::cast);
         return provider.isPresent()
-                ? provider.get().getConnectionSupplier()
+                ? provider.orElseThrow().getConnectionSupplier()
                 : new FailingConnectionSupplier("Cannot load OdbcProvider");
     }
 
@@ -228,7 +228,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     private static List<OdbcDataSource> getDataSources() throws Exception {
         Optional<OdbcRegistry> odbcRegistry = OdbcRegistry.ofServiceLoader();
         return odbcRegistry.isPresent()
-                ? odbcRegistry.get().getDataSources(OdbcDataSource.Type.SYSTEM, OdbcDataSource.Type.USER)
+                ? odbcRegistry.orElseThrow().getDataSources(OdbcDataSource.Type.SYSTEM, OdbcDataSource.Type.USER)
                 : Collections.emptyList();
     }
 

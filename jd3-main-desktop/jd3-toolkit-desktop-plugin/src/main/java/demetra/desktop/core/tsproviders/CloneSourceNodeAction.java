@@ -38,7 +38,7 @@ public final class CloneSourceNodeAction extends AbilityNodeAction<DataSource> {
     }
 
     private static DataSource clone(DataSource dataSource) {
-        DataSourceLoader loader = TsManager.get().getProvider(DataSourceLoader.class, dataSource).get();
+        DataSourceLoader loader = TsManager.get().getProvider(DataSourceLoader.class, dataSource).orElseThrow();
         final Object bean = loader.decodeBean(dataSource);
         if (DataSourceManager.get().getBeanEditor(loader.getSource(), "Clone data source").editBean(bean, Exceptions::printStackTrace)) {
             DataSource newDataSource = loader.encodeBean(bean);

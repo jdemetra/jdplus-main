@@ -160,7 +160,7 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         Optional<Variable> fc = Arrays.stream(vars)
                 .filter(v -> v.getName().equals(TrendConstant.NAME)).findFirst();
         if (fc.isPresent()) {
-            builder.mean(MeanSpec.mean(fc.get().getCoefficient(0)));
+            builder.mean(MeanSpec.mean(fc.orElseThrow().getCoefficient(0)));
         } else {
             builder.mean(MeanSpec.DEFAULT_UNUSED);
         }
@@ -178,14 +178,14 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         LengthOfPeriodType lp = LengthOfPeriodType.None;
         Parameter clp = null;
         if (flp.isPresent()) {
-            Variable v = flp.get();
+            Variable v = flp.orElseThrow();
             lp = tdspec.getLengthOfPeriodType();
             clp = v.getCoefficient(0);
         }
         TradingDaysType td = TradingDaysType.NONE;
         Parameter[] ctd = null;
         if (ftd.isPresent()) {
-            Variable v = ftd.get();
+            Variable v = ftd.orElseThrow();
             if (tdspec.isAutomatic()) {
                 ITradingDaysVariable  tdv=(ITradingDaysVariable) v.getCore();
                 td=tdv.getTradingDaysType();
@@ -216,7 +216,7 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         Optional<Variable> fe = Arrays.stream(vars)
                 .filter(v -> ModellingUtility.isEaster(v)).findFirst();
         if (fe.isPresent()) {
-            Variable ev = fe.get();
+            Variable ev = fe.orElseThrow();
             EasterVariable evar = (EasterVariable) ev.getCore();
             espec = espec.toBuilder()
                     .type(EasterSpec.Type.Easter)
@@ -400,7 +400,7 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         }
         Optional<Variable<S>> rvar = ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
         if (rvar.isPresent()) {
-            return Parameter.freeParameters(c, rvar.get().getCoefficients());
+            return Parameter.freeParameters(c, rvar.orElseThrow().getCoefficients());
         } else {
             return Parameter.freeParameters(c);
         }

@@ -49,7 +49,7 @@ public final class StarAction extends SingleNodeAction<Node> {
     protected boolean enable(Node activatedNode) {
         Optional<DataSource> dataSource = getDataSource(activatedNode);
         if (dataSource.isPresent()) {
-            updateDisplayName(dataSource.get());
+            updateDisplayName(dataSource.orElseThrow());
             return true;
         }
         return false;

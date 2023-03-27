@@ -45,7 +45,7 @@ final class ProviderExceptionNode extends ExceptionNode {
     @Override
     public String getDisplayName() {
         IOException ex = getLookup().lookup(IOException.class);
-        return TsManager.get().getProvider(DataSourceProvider.class, providerName).get().getDisplayName(ex);
+        return TsManager.get().getProvider(DataSourceProvider.class, providerName).orElseThrow().getDisplayName(ex);
     }
 
     private Image lookupIcon(int type, boolean opened) {

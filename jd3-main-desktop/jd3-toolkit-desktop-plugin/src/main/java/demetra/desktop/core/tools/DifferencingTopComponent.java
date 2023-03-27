@@ -214,7 +214,7 @@ public final class DifferencingTopComponent extends TopComponent  implements Has
         public boolean importData(TransferHandler.TransferSupport support) {
             Optional<demetra.timeseries.Ts> s = DataTransferManager.get().toTs(support.getTransferable());
             if (s.isPresent()) {
-                setTs(s.get());
+                setTs(s.orElseThrow());
                 return true;
             }
             return false;

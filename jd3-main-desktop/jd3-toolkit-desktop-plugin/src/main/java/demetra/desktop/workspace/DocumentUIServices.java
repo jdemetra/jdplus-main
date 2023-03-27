@@ -57,13 +57,13 @@ public interface DocumentUIServices<S extends ProcSpecification, D extends ProcD
         Optional<? extends DocumentUIServices> s = Lookup.getDefault().lookupAll(DocumentUIServices.class).stream()
                 .filter(ui->ui.getSpecType().equals(sclass)).findFirst();
       
-        return s.isPresent() ? s.get() : null;
+        return s.orElse(null);
     }
 
     public static DocumentUIServices forDocument(Class dclass) {
         Optional<? extends DocumentUIServices> s = Lookup.getDefault().lookupAll(DocumentUIServices.class).stream()
                 .filter(ui->ui.getDocumentType().equals(dclass)).findFirst();
       
-        return s.isPresent() ? s.get() : null;
+        return s.orElse(null);
     }
 }

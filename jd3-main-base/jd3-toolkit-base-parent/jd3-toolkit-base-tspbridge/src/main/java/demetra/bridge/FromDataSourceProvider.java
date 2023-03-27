@@ -141,14 +141,14 @@ public class FromDataSourceProvider extends FromTsProvider implements ec.tss.tsp
     public ec.tss.tsproviders.@Nullable DataSource toDataSource(ec.tss.@NonNull TsMoniker moniker) throws IllegalArgumentException {
         Objects.requireNonNull(moniker);
         Optional<DataSource> result = getDelegate().toDataSource(TsConverter.toTsMoniker(moniker));
-        return result.isPresent() ? TsConverter.fromDataSource(result.get()) : null;
+        return result.map(TsConverter::fromDataSource).orElse(null);
     }
 
     @Override
     public ec.tss.tsproviders.@Nullable DataSet toDataSet(ec.tss.@NonNull TsMoniker moniker) throws IllegalArgumentException {
         Objects.requireNonNull(moniker);
         Optional<DataSet> result = getDelegate().toDataSet(TsConverter.toTsMoniker(moniker));
-        return result.isPresent() ? TsConverter.fromDataSet(result.get()) : null;
+        return result.map(TsConverter::fromDataSet).orElse(null);
     }
 
     @lombok.AllArgsConstructor

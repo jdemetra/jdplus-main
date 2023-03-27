@@ -47,7 +47,7 @@ public final class PasteTs extends ActiveViewAction<WorkspaceTsTopComponent> {
                 NotifyDescriptor nd = new NotifyDescriptor.Message("Unable to paste ts");
                 DialogDisplayer.getDefault().notify(nd);
             } else {
-                top.setTs(s.get());
+                top.setTs(s.orElseThrow());
             }
         }
     }

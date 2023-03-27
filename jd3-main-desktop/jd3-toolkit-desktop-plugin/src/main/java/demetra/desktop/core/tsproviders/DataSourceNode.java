@@ -191,7 +191,7 @@ public final class DataSourceNode extends AbstractNode {
         protected boolean tryCreateKeys(List<Object> list) throws Exception {
             Optional<DataSourceProvider> provider = TsManager.get().getProvider(DataSourceProvider.class, dataSource);
             if (provider.isPresent()) {
-                list.addAll(provider.get()
+                list.addAll(provider.orElseThrow()
                         .children(dataSource));
             }
             return true;
@@ -218,7 +218,7 @@ public final class DataSourceNode extends AbstractNode {
             DataSource dataSource = getLookup().lookup(DataSource.class);
             Optional<DataSourceProvider> provider = TsManager.get().getProvider(DataSourceProvider.class, dataSource);
             if (provider.isPresent()) {
-                provider.get().reload(dataSource);
+                provider.orElseThrow().reload(dataSource);
                 setChildren(Children.create(new DataSourceChildFactory(dataSource), true));
             } else {
                 notifyMissingProvider(dataSource.getProviderName());
@@ -264,7 +264,7 @@ public final class DataSourceNode extends AbstractNode {
         @Override
         public void edit() {
             DataSource dataSource = getLookup().lookup(DataSource.class);
-            DataSourceLoader loader = TsManager.get().getProvider(DataSourceLoader.class, dataSource).get();
+            DataSourceLoader loader = TsManager.get().getProvider(DataSourceLoader.class, dataSource).orElseThrow();
             Object bean = loader.decodeBean(dataSource);
             if (DataSourceManager.get().getBeanEditor(loader.getSource(), "Edit data source").editBean(bean, Exceptions::printStackTrace)) {
                 loader.close(dataSource);

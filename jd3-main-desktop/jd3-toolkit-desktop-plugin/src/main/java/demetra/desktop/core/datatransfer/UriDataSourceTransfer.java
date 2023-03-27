@@ -30,7 +30,7 @@ public final class UriDataSourceTransfer implements DataSourceTransferSpi {
     @Override
     public boolean canHandle(Transferable t, String providerName) {
         Optional<DataSource> dataSource = getDataSource(t);
-        return dataSource.isPresent() && dataSource.get().getProviderName().equals(providerName);
+        return dataSource.isPresent() && dataSource.orElseThrow().getProviderName().equals(providerName);
     }
 
     @Override
@@ -41,6 +41,6 @@ public final class UriDataSourceTransfer implements DataSourceTransferSpi {
     @Override
     public Optional<DataSource> getDataSource(Transferable t, String providerName) {
         Optional<DataSource> result = getDataSource(t);
-        return result.isPresent() && result.get().getProviderName().equals(providerName) ? result : Optional.empty();
+        return result.isPresent() && result.orElseThrow().getProviderName().equals(providerName) ? result : Optional.empty();
     }
 }

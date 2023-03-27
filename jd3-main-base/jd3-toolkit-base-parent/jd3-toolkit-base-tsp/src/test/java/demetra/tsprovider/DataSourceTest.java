@@ -186,6 +186,6 @@ public class DataSourceTest {
         Formatter<DataSource> formatter = Formatter.of(DataSource::toString);
         Parser<DataSource> parser = Parser.of(DataSource::parse);
 
-        assertThat(parser.parse(formatter.formatValue(newSample()).get())).isEqualTo(newSample());
+        assertThat(parser.parse(formatter.formatValue(newSample()).orElseThrow())).isEqualTo(newSample());
     }
 }

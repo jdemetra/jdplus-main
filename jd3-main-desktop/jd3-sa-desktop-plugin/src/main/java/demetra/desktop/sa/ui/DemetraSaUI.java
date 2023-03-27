@@ -209,7 +209,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         
         List<WorkspaceItem<SaSpecification>> items = WorkspaceFactory.getInstance().getActiveWorkspace().searchDocuments(SaSpecification.class);
         Optional<WorkspaceItem<SaSpecification>> fspec = items.stream().filter(c -> c.getId().toString().equals(id)).findFirst();
-        return fspec.isPresent() ? fspec.get().getElement() : null;
+        return fspec.map(WorkspaceItem::getElement).orElse(null);
     }
 
     private String idOf(SaSpecification spec) {

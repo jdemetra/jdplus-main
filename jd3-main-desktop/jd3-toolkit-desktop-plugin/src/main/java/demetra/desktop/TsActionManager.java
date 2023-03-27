@@ -74,7 +74,7 @@ public final class TsActionManager {
         Optional<? extends TsActionOpenSpi> action = getByName(openActions, actionName);
         if (action.isPresent()) {
             try {
-                action.get().open(data);
+                action.orElseThrow().open(data);
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -94,7 +94,7 @@ public final class TsActionManager {
         Optional<? extends TsActionSaveSpi> action = getByName(saveActions, actionName);
         if (action.isPresent()) {
             try {
-                action.get().save(data);
+                action.orElseThrow().save(data);
             } catch (RuntimeException ex) {
                 Exceptions.printStackTrace(ex);
             }

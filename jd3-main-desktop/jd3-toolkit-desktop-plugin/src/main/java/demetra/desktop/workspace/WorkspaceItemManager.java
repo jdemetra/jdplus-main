@@ -26,7 +26,7 @@ public interface WorkspaceItemManager<D> {
         Optional<? extends WorkspaceItemManager> s = Lookup.getDefault().lookupAll(WorkspaceItemManager.class).stream()
                 .filter(mgr -> mgr.getItemClass().equals(itemclass)).findFirst();
 
-        return s.isPresent() ? s.get() : null;
+        return s.orElse(null);
     }
 
     enum ItemType {

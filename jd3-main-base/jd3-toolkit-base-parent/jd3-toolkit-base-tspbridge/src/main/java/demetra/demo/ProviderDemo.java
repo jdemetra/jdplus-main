@@ -63,7 +63,7 @@ public class ProviderDemo {
         Instant start = clock.instant();
         Optional<Ts> ts = strategy.getFirst(provider, dataSource);
         if (ts.isPresent()) {
-            printSeries(provider, ts.get());
+            printSeries(provider, ts.orElseThrow());
             printDuration(Duration.between(start, clock.instant()));
         } else {
             System.out.println("No series found");
@@ -151,7 +151,7 @@ public class ProviderDemo {
                         .filter(o -> o.getKind().equals(DataSet.Kind.SERIES))
                         .findFirst();
                 return result.isPresent()
-                        ? Optional.of(provider.getTs(provider.toMoniker(result.get()), TsInformationType.All))
+                        ? Optional.of(provider.getTs(provider.toMoniker(result.orElseThrow()), TsInformationType.All))
                         : Optional.empty();
             }
         };

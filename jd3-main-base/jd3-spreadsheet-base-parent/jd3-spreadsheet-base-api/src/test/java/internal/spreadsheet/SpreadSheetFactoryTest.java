@@ -55,17 +55,17 @@ public class SpreadSheetFactoryTest {
         assertThat(top5Browsers).isNotNull();
         assertThat(top5Browsers.getSheets()).hasSize(3);
 
-        SpreadSheetCollectionAssert.assertThat(top5Browsers.getSheetByName("Top 5 Browsers - Monthly").get())
+        SpreadSheetCollectionAssert.assertThat(top5Browsers.getSheetByName("Top 5 Browsers - Monthly").orElseThrow())
                 .hasSheetName("Top 5 Browsers - Monthly")
                 .hasLayout(VERTICAL)
                 .containsExactly(M_DATA);
 
-        SpreadSheetCollectionAssert.assertThat(top5Browsers.getSheetByName("Top 5 Browsers - Quarterly").get())
+        SpreadSheetCollectionAssert.assertThat(top5Browsers.getSheetByName("Top 5 Browsers - Quarterly").orElseThrow())
                 .hasSheetName("Top 5 Browsers - Quarterly")
                 .hasLayout(HORIZONTAL)
                 .containsExactly(Q_DATA);
 
-        SpreadSheetCollectionAssert.assertThat(top5Browsers.getSheetByName("DataTest").get())
+        SpreadSheetCollectionAssert.assertThat(top5Browsers.getSheetByName("DataTest").orElseThrow())
                 .hasSheetName("DataTest")
                 .hasLayout(VERTICAL)
                 .containsExactly(DT_DATA);

@@ -70,7 +70,7 @@ public final class SpreadSheetBasicFileHandler implements BasicFileViewer.BasicF
     public Object asyncLoad(File file, BasicFileViewer.ProgressCallback progress) throws Exception {
         ArrayBook.Builder result = ArrayBook.builder();
         Stopwatch sw = Stopwatch.createStarted();
-        Book.Factory factory = factories.stream().filter(Objects::nonNull).filter(o -> o.accept(file)).findFirst().get();
+        Book.Factory factory = factories.stream().filter(Objects::nonNull).filter(o -> o.accept(file)).findFirst().orElseThrow();
         try (Book book = factory.load(file)) {
             for (int s = 0; s < book.getSheetCount(); s++) {
                 result.sheet(book.getSheet(s));

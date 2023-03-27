@@ -190,7 +190,7 @@ public class MultiProcessingDocument implements Documented {
 
     public SaNode search(int id) {
         Optional<SaNode> found = current.stream().filter(node -> node.getId() == id).findFirst();
-        return found.isPresent() ? found.get() : null;
+        return found.isPresent() ? found.orElseThrow() : null;
     }
 
     public void replace(int id, SaItem nitem) {

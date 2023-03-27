@@ -107,11 +107,11 @@ public class SaManager {
 
     public <I extends SaSpecification> SaProcessingFactory factoryFor(SaSpecification spec) {
         List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
-        return all.stream().filter(p -> p.canHandle(spec)).findFirst().get();
+        return all.stream().filter(p -> p.canHandle(spec)).findFirst().orElseThrow();
     }
 
     public <I extends SaSpecification> SaProcessingFactory factoryFor(AlgorithmDescriptor desc) {
         List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
-        return all.stream().filter(p -> p.descriptor().isCompatible(desc)).findFirst().get();
+        return all.stream().filter(p -> p.descriptor().isCompatible(desc)).findFirst().orElseThrow();
     }
 }

@@ -175,7 +175,7 @@ public class X13Kernel {
             double mean = 0;
             Optional<Variable> mu = Arrays.stream(model.getDescription().getVariables()).filter(v -> v.getCore() instanceof TrendConstant).findFirst();
             if (mu.isPresent()) {
-                mean = mu.get().getCoefficient(0).getValue();
+                mean = mu.orElseThrow().getCoefficient(0).getValue();
             }
             fcasts.prepare(arima, mean);
 

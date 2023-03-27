@@ -80,13 +80,13 @@ public final class TsStreamAsProvider implements TsProvider {
 
         Optional<DataSource> dataSource = hdm.toDataSource(moniker);
         if (dataSource.isPresent()) {
-            fill(result, dataSource.get(), type);
+            fill(result, dataSource.orElseThrow(), type);
             return result.build();
         }
 
         Optional<DataSet> dataSet = hdm.toDataSet(moniker);
         if (dataSet.filter(TsStreamAsProvider::isCollection).isPresent()) {
-            fill(result, dataSet.get(), type);
+            fill(result, dataSet.orElseThrow(), type);
             return result.build();
         }
 
@@ -101,7 +101,7 @@ public final class TsStreamAsProvider implements TsProvider {
 
         Optional<DataSet> dataSet = hdm.toDataSet(moniker);
         if (dataSet.filter(TsStreamAsProvider::isSeries).isPresent()) {
-            fill(result, dataSet.get(), type);
+            fill(result, dataSet.orElseThrow(), type);
             return result.build();
         }
 

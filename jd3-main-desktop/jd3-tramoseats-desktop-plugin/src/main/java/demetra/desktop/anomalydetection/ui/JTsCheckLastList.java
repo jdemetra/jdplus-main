@@ -349,7 +349,7 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
         Optional<Ts> fts = table.getTsSelectionStream().findFirst();
         AnomalyItem selected = null;
         if (fts.isPresent()) {
-            selected = map.get(fts.get().getMoniker());
+            selected = map.get(fts.orElseThrow().getMoniker());
             if (!selected.isProcessed()) {
                 CheckLast cl = new CheckLast(TramoKernel.of(spec, null), lastChecks);
                 selected.process(cl);

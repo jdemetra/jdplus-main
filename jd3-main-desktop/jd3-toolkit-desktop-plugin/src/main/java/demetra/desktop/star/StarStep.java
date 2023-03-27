@@ -43,7 +43,7 @@ public class StarStep extends InstallerStep {
                         }
                         java.util.Optional<DataSource> dataSource = parser.parseValue(tmp);
                         if (dataSource.isPresent()) {
-                            StarListManager.get().toggle(dataSource.get());
+                            StarListManager.get().toggle(dataSource.orElseThrow());
                         }
                     });
         } catch (BackingStoreException ex) {
@@ -53,7 +53,7 @@ public class StarStep extends InstallerStep {
         for (DataSource o : StarListManager.get()) {
             java.util.Optional<TsProvider> provider = TsFactory.getDefault().getProvider(o.getProviderName());
             if (provider.isPresent()) {
-                DataSourceLoader loader = (DataSourceLoader) provider.get();
+                DataSourceLoader loader = (DataSourceLoader) provider.orElseThrow();
                 loader.open(o);
             }
         }
@@ -66,7 +66,7 @@ public class StarStep extends InstallerStep {
         int i = 0;
         for (DataSource o : StarListManager.get()) {
             Preferences node = prefs.node(String.valueOf(i++));
-            node.put(DATASOURCE_PROPERTY, formatter.formatValueAsString(o).get());
+            node.put(DATASOURCE_PROPERTY, formatter.formatValueAsString(o).orElseThrow());
         }
         try {
             prefs.flush();

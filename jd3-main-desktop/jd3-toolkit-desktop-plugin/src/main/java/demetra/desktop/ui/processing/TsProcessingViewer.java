@@ -106,7 +106,7 @@ public class TsProcessingViewer<S extends ProcSpecification, D extends TsDocumen
         public boolean importData(TransferHandler.TransferSupport support) {
             Optional<Ts> ts = DataTransferManager.get().toTs(support.getTransferable());
             if (ts.isPresent()) {
-                Ts input = ts.get();
+                Ts input = ts.orElseThrow();
                 Ts old=getDocument().getInput();
                 TsProcessingViewer.this.firePropertyChange(INPUT_CHANGED, old, input);
                 return true;

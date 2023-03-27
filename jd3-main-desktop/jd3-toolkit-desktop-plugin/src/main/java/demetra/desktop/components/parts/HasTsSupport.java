@@ -51,7 +51,7 @@ public class HasTsSupport {
         public boolean importData(TransferSupport support) {
             Optional<Ts> ts = dataTransfer.toTs(support.getTransferable());
             if (ts.isPresent()) {
-                delegate.setTs(ts.get());
+                delegate.setTs(ts.orElseThrow());
 //                TsManager.get().loadAsync(ts.get(), TsInformationType.All, delegate::updateTs);
                 return true;
             }

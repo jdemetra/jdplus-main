@@ -121,7 +121,7 @@ public final class PreviewTssTopComponent extends TopComponent implements Lookup
                             .map(o -> o.getLookup().lookup(DataSet.class))
                             .map(o -> TsManager.get().getTs(o, TsInformationType.None))
                             .filter(Optional::isPresent)
-                            .map(Optional::get)
+                            .map(Optional::orElseThrow)
                             .collect(TsCollection.toTsCollection())
             );
         }

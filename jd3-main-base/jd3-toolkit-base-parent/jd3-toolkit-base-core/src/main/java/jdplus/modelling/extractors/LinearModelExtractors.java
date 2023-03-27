@@ -99,7 +99,7 @@ public class LinearModelExtractors {
                 Variable[] variables = source.getDescription().getVariables();
                 Optional<Variable> found = Arrays.stream(variables).filter(var->var.getCore() instanceof EasterVariable).findAny();
                 if (found.isPresent()){
-                    EasterVariable ev=(EasterVariable) found.get().getCore();
+                    EasterVariable ev=(EasterVariable) found.orElseThrow().getCore();
                     return ev.getDuration();
                 }else
                 return 0;
