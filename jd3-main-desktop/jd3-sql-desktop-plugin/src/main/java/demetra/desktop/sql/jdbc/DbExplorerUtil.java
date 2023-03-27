@@ -110,7 +110,7 @@ public final class DbExplorerUtil {
         }
         Properties properties = new Properties();
         config.getParams().forEach(properties::put);
-        DatabaseConnection newConn = DatabaseConnection.create(driver.get(), config.getDatabaseUrl(), "", config.getSchema(), "", false, config.getDisplayName(), properties);
+        DatabaseConnection newConn = DatabaseConnection.create(driver.orElseThrow(), config.getDatabaseUrl(), "", config.getSchema(), "", false, config.getDisplayName(), properties);
         try {
             ConnectionManager.getDefault().addConnection(newConn);
         } catch (DatabaseException ex) {

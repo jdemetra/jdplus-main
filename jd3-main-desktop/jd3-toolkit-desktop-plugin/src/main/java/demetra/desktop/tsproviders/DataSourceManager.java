@@ -394,7 +394,7 @@ public final class DataSourceManager {
             b.with(String.class).select(dataSource, "getVersion", null).display("Version").add();
             Optional<DataSourceLoader> loader = TsManager.get().getProvider(DataSourceLoader.class, dataSource);
             if (loader.isPresent()) {
-                Object bean = loader.get().decodeBean(dataSource);
+                Object bean = loader.orElseThrow().decodeBean(dataSource);
                 beanFunc.apply(bean).stream()
                         .flatMap(set -> Stream.of(set.getProperties()))
                         .map(ForwardingNodeProperty::readOnly)

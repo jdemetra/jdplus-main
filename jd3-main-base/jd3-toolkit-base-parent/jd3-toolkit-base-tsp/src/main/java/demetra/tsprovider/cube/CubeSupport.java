@@ -73,7 +73,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
             if (root.isVoid()) {
                 Optional<IOException> ex = connection.testConnection();
                 if (ex.isPresent()) {
-                    throw ex.get();
+                    throw ex.orElseThrow();
                 }
                 DataSet fake = DataSet.of(dataSource, DataSet.Kind.SERIES);
                 return Collections.singletonList(fake);

@@ -37,7 +37,7 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
     @Override
     public boolean canHandle(Transferable t) {
         Optional<File> file = DataTransfers.getSingleFile(t);
-        return file.isPresent() && !getLoaders(file.get()).isEmpty();
+        return file.isPresent() && !getLoaders(file.orElseThrow()).isEmpty();
     }
 
     @Override
@@ -45,21 +45,21 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
         Optional<File> file = DataTransfers.getSingleFile(t);
         if (file.isPresent()) {
             Optional<FileLoader> loader = TsManager.get().getProvider(FileLoader.class, providerName);
-            return loader.isPresent() && loader.get().accept(file.get());
+            return loader.isPresent() && loader.orElseThrow().accept(file.orElseThrow());
         }
         return false;
     }
 
     @Override
     public Optional<demetra.tsprovider.DataSource> getDataSource(Transferable t) {
-        File file = DataTransfers.getSingleFile(t).get();
+        File file = DataTransfers.getSingleFile(t).orElseThrow();
         List<FileLoader> loaders = getLoaders(file);
         Optional<FileLoader> loader = chooseLoader(loaders);
         if (loader.isPresent()) {
-            FileBean bean = loader.get().newBean();
+            FileBean bean = loader.orElseThrow().newBean();
             bean.setFile(file);
-            if (DataSourceManager.get().getBeanEditor(loader.get().getSource(), "Open data source").editBean(bean, Exceptions::printStackTrace)) {
-                return Optional.of(loader.get().encodeBean(bean));
+            if (DataSourceManager.get().getBeanEditor(loader.orElseThrow().getSource(), "Open data source").editBean(bean, Exceptions::printStackTrace)) {
+                return Optional.of(loader.orElseThrow().encodeBean(bean));
             }
         }
         return Optional.empty();
@@ -67,8 +67,8 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
 
     @Override
     public Optional<demetra.tsprovider.DataSource> getDataSource(Transferable t, String providerName) {
-        File file = DataTransfers.getSingleFile(t).get();
-        FileLoader loader = TsManager.get().getProvider(FileLoader.class, providerName).get();
+        File file = DataTransfers.getSingleFile(t).orElseThrow();
+        FileLoader loader = TsManager.get().getProvider(FileLoader.class, providerName).orElseThrow();
         FileBean bean = loader.newBean();
         bean.setFile(file);
         if (DataSourceManager.get().getBeanEditor(loader.getSource(), "Open data source").editBean(bean, Exceptions::printStackTrace)) {

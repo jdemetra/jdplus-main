@@ -127,7 +127,7 @@ public class SpecSelectionComponent extends JComponent implements IPropertyChang
         if (node.isPresent()) {
 //            node.get().setHtmlDecorator(DecoratedNode.Html.BOLD);
             try {
-                em.setSelectedNodes(new Node[]{node.get()});
+                em.setSelectedNodes(new Node[]{node.orElseThrow()});
             } catch (PropertyVetoException ex) {
                 // do nothing?
             }

@@ -313,9 +313,9 @@ public class HasTsCollectionSupport {
                     public void actionPerformed(ActionEvent e) {
                         Optional<DataSourceProvider> provider = TsManager.get().getProvider(DataSourceProvider.class, ts.getMoniker());
                         if (provider.isPresent()) {
-                            demetra.tsprovider.DataSet dataSet = provider.get().toDataSet(ts.getMoniker()).orElse(null);
+                            demetra.tsprovider.DataSet dataSet = provider.orElseThrow().toDataSet(ts.getMoniker()).orElse(null);
                             if (dataSet != null) {
-                                rename(c, ts, provider.get().getDisplayName(dataSet));
+                                rename(c, ts, provider.orElseThrow().getDisplayName(dataSet));
                             }
                         }
                     }

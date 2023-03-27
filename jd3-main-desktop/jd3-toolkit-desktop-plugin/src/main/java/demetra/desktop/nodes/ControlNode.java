@@ -277,7 +277,7 @@ public class ControlNode {
         if (provider != null) {
             Optional<demetra.tsprovider.DataSet> dataSet = provider.toDataSet(moniker);
             if (dataSet.isPresent()) {
-                return provider.getDisplayName(dataSet.get().getDataSource());
+                return provider.getDisplayName(dataSet.orElseThrow().getDataSource());
             }
         }
         return fallback;

@@ -142,7 +142,7 @@ abstract public class DataSetNode extends AbstractNode {
         protected boolean tryCreateKeys(List<Object> list) throws Exception {
             Optional<DataSourceProvider> provider = TsManager.get().getProvider(DataSourceProvider.class, dataSet);
             if (provider.isPresent()) {
-                provider.get()
+                provider.orElseThrow()
                         .children(dataSet)
                         .forEach(list::add);
             }

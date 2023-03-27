@@ -1069,7 +1069,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             SaSpecification currentDomainSpec = item.domainSpec();
             List<WorkspaceItem<SaSpecification>> x = WorkspaceFactory.getInstance().getActiveWorkspace().searchDocuments(SaSpecification.class);
             Optional<WorkspaceItem<SaSpecification>> y = x.stream().filter(workspaceItem -> workspaceItem.getElement().equals(currentDomainSpec)).findFirst();
-            return y.isPresent() ? y.get().getDisplayName() : currentDomainSpec.display();
+            return y.isPresent() ? y.orElseThrow().getDisplayName() : currentDomainSpec.display();
         }
 
         @Override

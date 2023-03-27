@@ -91,7 +91,7 @@ public abstract class InformationMapping<S> implements InformationExtractor<S> {
                 // slow search
                 Optional<Entry<String, BasicInformationExtractor<S>>> findFirst = map.entrySet().stream().filter(entry -> entry.getValue().contains(id)).findFirst();
                 if (findFirst.isPresent()) {
-                    return findFirst.get().getValue();
+                    return findFirst.orElseThrow().getValue();
                 }
                 for (BasicInformationExtractor<S> l : list) {
                     if (l.contains(id)) {

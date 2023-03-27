@@ -72,7 +72,7 @@ public interface TsFactory {
         Optional<TsProvider> provider = getProvider(moniker.getSource());
         if (provider.isPresent()) {
             try {
-                return provider.get().getTs(moniker, info);
+                return provider.orElseThrow().getTs(moniker, info);
             } catch (IOException ex) {
                 return makeTs(moniker, ex);
             }
@@ -91,7 +91,7 @@ public interface TsFactory {
         Optional<TsProvider> provider = getProvider(moniker.getSource());
         if (provider.isPresent()) {
             try {
-                return provider.get().getTsCollection(moniker, info);
+                return provider.orElseThrow().getTsCollection(moniker, info);
             } catch (IOException ex) {
                 return makeTsCollection(moniker, ex);
             }

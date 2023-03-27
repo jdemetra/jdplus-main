@@ -45,7 +45,7 @@ enum MruPreferences {
                         if (label == null) {
                             return;
                         }
-                        list.add(new SourceId(dataSource.get(), label));
+                        list.add(new SourceId(dataSource.orElseThrow(), label));
                     });
         } catch (BackingStoreException ex) {
             log.log(Level.WARNING, "Can't get node list", ex);
@@ -59,7 +59,7 @@ enum MruPreferences {
         int i = 0;
         for (SourceId o : list) {
             Preferences node = prefs.node(String.valueOf(i++));
-            node.put(DATASOURCE_PROPERTY, formatter.formatValueAsString(o.getDataSource()).get());
+            node.put(DATASOURCE_PROPERTY, formatter.formatValueAsString(o.getDataSource()).orElseThrow());
             node.put(LABEL_PROPERTY, o.getLabel());
         }
         try {

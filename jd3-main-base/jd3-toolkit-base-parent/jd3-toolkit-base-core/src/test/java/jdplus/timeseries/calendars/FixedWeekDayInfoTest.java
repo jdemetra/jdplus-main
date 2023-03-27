@@ -41,7 +41,7 @@ public class FixedWeekDayInfoTest {
         Stream<HolidayInfo> stream = StreamSupport.stream(iterable.spliterator(), false);
         assertTrue(stream.count() == 3);
         stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.findFirst().get().getDay().getYear() == 2018);
+        assertTrue(stream.findFirst().orElseThrow().getDay().getYear() == 2018);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class FixedWeekDayInfoTest {
         Stream<HolidayInfo> stream = StreamSupport.stream(iterable.spliterator(), false);
         assertTrue(stream.count() == 4);
         stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.findFirst().get().getDay().getYear() == 2017);
+        assertTrue(stream.findFirst().orElseThrow().getDay().getYear() == 2017);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class FixedWeekDayInfoTest {
         Stream<HolidayInfo> stream = StreamSupport.stream(iterable.spliterator(), false);
         assertTrue(stream.count() == 1);
         stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.findFirst().get().getDay().getYear() == 2017);
+        assertTrue(stream.findFirst().orElseThrow().getDay().getYear() == 2017);
     }
 
    @Test

@@ -95,11 +95,11 @@ public final class SwingPropertyProcessor extends CustomProcessor {
         Optional<VariableElement> field = findField(property, fieldName);
 
         if (field.isPresent()) {
-            if (!isPrivateNotFinalNotStatic(field.get())) {
+            if (!isPrivateNotFinalNotStatic(field.orElseThrow())) {
                 error("Property field must be private and not final nor static", property);
                 return;
             }
-            if (!types().isSameType(fieldType, field.get().asType())) {
+            if (!types().isSameType(fieldType, field.orElseThrow().asType())) {
                 error("Property field must have the same type as its setter and getter", property);
                 return;
             }
@@ -107,7 +107,7 @@ public final class SwingPropertyProcessor extends CustomProcessor {
     }
 
     private static TypeMirror getFirstParameterType(Optional<ExecutableElement> setter) {
-        return setter.get().getParameters().get(0).asType();
+        return setter.orElseThrow().getParameters().get(0).asType();
     }
 
     private static boolean isPrivateNotFinalNotStatic(VariableElement field) {

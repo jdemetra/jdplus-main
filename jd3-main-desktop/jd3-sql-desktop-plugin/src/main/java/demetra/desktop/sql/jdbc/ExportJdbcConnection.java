@@ -79,7 +79,7 @@ public final class ExportJdbcConnection extends NodeAction implements Presenter.
     }
 
     private static DriverBasedConfig getConnectionBean(Node activatedNode) {
-        return DbExplorerUtil.exportConnection(DbExplorerUtil.findConnection(activatedNode).get());
+        return DbExplorerUtil.exportConnection(DbExplorerUtil.findConnection(activatedNode).orElseThrow());
     }
 
     @NonNull

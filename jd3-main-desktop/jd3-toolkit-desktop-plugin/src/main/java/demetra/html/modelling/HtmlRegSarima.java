@@ -142,10 +142,10 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             stream.write("No easter effect").newLine();
         } else {
             if (ee.isPresent()) {
-                stream.write(ee.get().getCore().description(edom) + " detected").newLine();
+                stream.write(ee.orElseThrow().getCore().description(edom) + " detected").newLine();
             }
             if (fee.isPresent()) {
-                stream.write("Fixed " + fee.get().getCore().description(edom) + " effect").newLine();
+                stream.write("Fixed " + fee.orElseThrow().getCore().description(edom) + " effect").newLine();
             }
         }
 
@@ -367,14 +367,14 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         if (!mean.isPresent()) {
             return;
         }
-        Variable v = mean.get();
+        Variable v = mean.orElseThrow();
         if (v.isFree()) {
             List<RegressionDesc> regressionItems = model.getDetails().getRegressionItems();
             Optional<RegressionDesc> d = regressionItems.stream().filter(desc -> desc.getCore() instanceof TrendConstant).findFirst();
             if (!d.isPresent()) {
                 return;
             }
-            RegressionDesc reg = d.get();
+            RegressionDesc reg = d.orElseThrow();
             stream.write(HtmlTag.HEADER3, "Mean");
             stream.open(new HtmlTable().withWidth(400));
             stream.open(HtmlTag.TABLEROW);

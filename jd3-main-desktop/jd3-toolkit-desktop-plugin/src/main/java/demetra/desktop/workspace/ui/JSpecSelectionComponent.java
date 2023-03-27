@@ -134,7 +134,7 @@ public final class JSpecSelectionComponent extends JComponent implements Explore
             if (node.isPresent()) {
 //            node.get().setHtmlDecorator(DecoratedNode.Html.BOLD);
                 try {
-                    em.setSelectedNodes(new Node[]{node.get()});
+                    em.setSelectedNodes(new Node[]{node.orElseThrow()});
                 } catch (PropertyVetoException ex) {
                     // do nothing?
                 }

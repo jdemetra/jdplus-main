@@ -135,9 +135,9 @@ public class Ts2ProcessingViewer<S extends ProcSpecification, D extends MultiTsD
                    // TODO: Message dialog
                    return false;
                 if (pos < nts.size()){
-                    nts.set(pos, ts.get());
+                    nts.set(pos, ts.orElseThrow());
                 } else {
-                    nts.add(ts.get());
+                    nts.add(ts.orElseThrow());
                 }
                  Ts2ProcessingViewer.this.firePropertyChange(INPUT_CHANGED, input, nts);
                 return true;

@@ -143,9 +143,9 @@ public class DataSetTest {
         Parser<DataSet> dataSetParser = Parser.of(DataSet::parse);
 
         DataSet dataSet = newSample();
-        Assertions.assertEquals(dataSet, dataSetParser.parse(dataSetFormatter.formatValue(dataSet).get()));
+        Assertions.assertEquals(dataSet, dataSetParser.parse(dataSetFormatter.formatValue(dataSet).orElseThrow()));
 
         DataSet empty = new DataSet(id, DataSet.Kind.COLLECTION, emptyContent);
-        Assertions.assertEquals(empty, dataSetParser.parse(dataSetFormatter.formatValue(empty).get()));
+        Assertions.assertEquals(empty, dataSetParser.parse(dataSetFormatter.formatValue(empty).orElseThrow()));
     }
 }

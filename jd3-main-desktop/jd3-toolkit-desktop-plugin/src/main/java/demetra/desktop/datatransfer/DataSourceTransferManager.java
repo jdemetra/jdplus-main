@@ -62,7 +62,7 @@ public final class DataSourceTransferManager {
                 .filter(o -> o.canHandle(t))
                 .map(o -> o.getDataSource(t))
                 .filter(Optional::isPresent)
-                .map(Optional::get)
+                .map(Optional::orElseThrow)
                 .findFirst();
     }
 
@@ -72,7 +72,7 @@ public final class DataSourceTransferManager {
                 .filter(o -> o.canHandle(t, providerName))
                 .map(o -> o.getDataSource(t, providerName))
                 .filter(Optional::isPresent)
-                .map(Optional::get)
+                .map(Optional::orElseThrow)
                 .findFirst();
     }
 }

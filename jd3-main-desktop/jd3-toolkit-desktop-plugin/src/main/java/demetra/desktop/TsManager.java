@@ -183,7 +183,7 @@ public final class TsManager implements DataSourceFactory, Closeable {
         public void changed(DataSource ds) {
             Optional<DataSourceProvider> provider = getProvider(DataSourceProvider.class, ds);
             if (provider.isPresent()) {
-                TsManager.this.notify(dataSetMoniker -> isRelated(provider.get(), ds, dataSetMoniker));
+                TsManager.this.notify(dataSetMoniker -> isRelated(provider.orElseThrow(), ds, dataSetMoniker));
             }
         }
 

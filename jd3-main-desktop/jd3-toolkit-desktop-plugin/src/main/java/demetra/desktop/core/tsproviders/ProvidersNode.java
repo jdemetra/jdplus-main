@@ -213,7 +213,7 @@ public final class ProvidersNode extends AbstractNode {
             DataSource dataSource = DataSourceProviderBuddyUtil.getDataSource(config);
             Optional<DataSourceLoader> loader = TsManager.get().getProvider(DataSourceLoader.class, dataSource);
             if (loader.isPresent()) {
-                loader.get().open(dataSource);
+                loader.orElseThrow().open(dataSource);
                 ProvidersNode.findNode(dataSource, ProvidersNode.this)
                         .ifPresent(value -> value.setDisplayName(config.getName()));
             }

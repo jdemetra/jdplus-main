@@ -238,7 +238,7 @@ public final class DataTransferManager implements PropertyChangeSource.WithWeakL
         return DataTransfers.getMultiTransferables(transferable)
                 .map(this::toTsCollection)
                 .filter(Optional::isPresent)
-                .map(Optional::get);
+                .map(Optional::orElseThrow);
     }
 
     /**

@@ -58,7 +58,7 @@ public final class GlobalServiceProcessor extends CustomProcessor {
         if (!defaultMethod.isPresent()) {
             error("Missing method getDefault()", globalService);
         } else {
-            checkDefaultMethod(globalService, defaultMethod.get());
+            checkDefaultMethod(globalService, defaultMethod.orElseThrow());
         }
     }
 

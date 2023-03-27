@@ -85,9 +85,9 @@ public final class SimpleChartTsAction implements TsActionOpenSpi {
     private static String getDisplayName(Ts ts) {
         Optional<DataSourceProvider> provider = TsManager.get().getProvider(DataSourceProvider.class, ts.getMoniker());
         if (provider.isPresent()) {
-            Optional<DataSet> dataSet = provider.get().toDataSet(ts.getMoniker());
+            Optional<DataSet> dataSet = provider.orElseThrow().toDataSet(ts.getMoniker());
             if (dataSet.isPresent()) {
-                return provider.get().getDisplayNodeName(dataSet.get());
+                return provider.orElseThrow().getDisplayNodeName(dataSet.orElseThrow());
             }
         }
         return ts.getName();

@@ -167,7 +167,7 @@ public class FastRegArimaFactory {
                 .filter(v -> v.getName().equals(TrendConstant.NAME)).findFirst();
         builder.checkMu(false);
         if (fc.isPresent()) {
-            builder.mean(fc.get().getCoefficient(0));
+            builder.mean(fc.orElseThrow().getCoefficient(0));
         } else {
             builder.mean(null);
         }
@@ -218,14 +218,14 @@ public class FastRegArimaFactory {
         LengthOfPeriodType lp = LengthOfPeriodType.None;
         Parameter clp = null;
         if (flp.isPresent()) {
-            Variable v = flp.get();
+            Variable v = flp.orElseThrow();
             lp = tdspec.getLengthOfPeriodType();
             clp = v.getCoefficient(0);
         }
         TradingDaysType td = TradingDaysType.NONE;
         Parameter[] ctd = null;
         if (ftd.isPresent()) {
-            Variable v = ftd.get();
+            Variable v = ftd.orElseThrow();
             if (tdspec.isAutomatic()) {
                 ITradingDaysVariable tdv = (ITradingDaysVariable) v.getCore();
                 td = tdv.getTradingDaysType();
@@ -256,7 +256,7 @@ public class FastRegArimaFactory {
         Optional<Variable> fe = Arrays.stream(vars)
                 .filter(v -> ModellingUtility.isEaster(v)).findFirst();
         if (fe.isPresent()) {
-            Variable ev = fe.get();
+            Variable ev = fe.orElseThrow();
             EasterVariable evar = (EasterVariable) ev.getCore();
             espec = espec.toBuilder()
                     .test(false)
@@ -412,7 +412,7 @@ public class FastRegArimaFactory {
         }
         Optional<Variable<S>> rvar = ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
         if (rvar.isPresent()) {
-            return Parameter.freeParameters(c, rvar.get().getCoefficients());
+            return Parameter.freeParameters(c, rvar.orElseThrow().getCoefficients());
         } else {
             return Parameter.freeParameters(c);
         }
