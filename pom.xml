@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.europa.ec.joinup.sat</groupId>
-    <artifactId>jd3-main</artifactId>
+    <artifactId>jdplus-main</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -65,9 +65,9 @@
     </properties>
 
     <modules>
-        <module>jd3-main-base</module>
-        <module>jd3-main-cli</module>
-        <module>jd3-main-desktop</module>
+        <module>jdplus-main-base</module>
+        <module>jdplus-main-cli</module>
+        <module>jdplus-main-desktop</module>
     </modules>
 
     <dependencies>
@@ -293,7 +293,7 @@
                                 <requireProperty>
                                     <property>project.artifactId</property>
                                     <message>Project artifactId must follow JD3 pattern</message>
-                                    <regex>^(jd3)-(\w+)(?:-(base|cli|desktop)(?:-(\w+))?)?$</regex>
+                                    <regex>^(jdplus)-(\w+)(?:-(base|cli|desktop)(?:-(\w+))?)?$</regex>
                                 </requireProperty>
                                 <requireReleaseDeps>
                                     <onlyWhenRelease>true</onlyWhenRelease>

@@ -73,7 +73,7 @@ The Git repositories and the Maven modules follow this naming convention:
 
 | Item       | Regex                        | Example                                 |
 |------------|------------------------------|-----------------------------------------|
-| PREFIX     | `\w+`                        | jd3, jdplus, ...                        |
+| PREFIX     | `\w+`                        | jdplus, ...                             |
 | TOPIC      | `\w+`                        | tookit, x13, benchmarking, ...          |
 | STEREOTYPE | `base&#124;cli&#124;desktop` |                                         |
 | CLASSIFIER | `\w+`                        | plugin, parent, api, core, protobuf ... |
