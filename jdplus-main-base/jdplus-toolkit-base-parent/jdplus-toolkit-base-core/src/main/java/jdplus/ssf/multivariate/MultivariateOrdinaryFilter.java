@@ -91,16 +91,18 @@ public class MultivariateOrdinaryFilter {
         FastMatrix R = FastMatrix.square(nv);
         double[] E = new double[nv];
         // step 1:
+        // computes ZPZ'; results in R
+        // PZ' in K
         MZt(pos, status, state.P(), K);
-        // computes ZPZ'; results in pe_.L
+        // ZPZ'
         ZM(pos, status, K, R);
         addH(pos, status, R);
         SymmetricMatrix.reenforceSymmetry(R);
         FastMatrix F = R.deepClone();
         SymmetricMatrix.lcholesky(R, State.ZERO);
 
-        // We put in K  PZ'*(ZPZ'+H)^-1/2 = PZ'* F^-1 = PZ'*(LL')^-1/2 = PZ'(L')^-1
-        // K L' = PZ' or L K' = ZP
+        // We put in K  PZ'*(ZPZ'+H)^-1/2 = PZ'*(RR')^-1/2 = PZ'(R')^-1
+        // K R' = PZ' 
         LowerTriangularMatrix.solveXLt(R, K, State.ZERO);
         for (int i = 0, iv = 0; i < status.length; ++i) {
             if (status[i] != UpdateInformation.Status.MISSING) {
