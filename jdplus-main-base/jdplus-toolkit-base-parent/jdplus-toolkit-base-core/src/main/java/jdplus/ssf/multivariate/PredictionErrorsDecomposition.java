@@ -16,6 +16,7 @@
  */
 package jdplus.ssf.multivariate;
 
+import demetra.data.DoubleSeq;
 import jdplus.data.DataBlock;
 import jdplus.data.DataBlockStorage;
 import nbbrd.design.Development;
@@ -23,6 +24,7 @@ import jdplus.ssf.IPredictionErrorDecomposition;
 import jdplus.stats.likelihood.ResidualsCumulator;
 import jdplus.ssf.State;
 import jdplus.ssf.StateInfo;
+import jdplus.ssf.UpdateInformation;
 import jdplus.stats.likelihood.Likelihood;
 
 /**
@@ -92,12 +94,18 @@ public class PredictionErrorsDecomposition implements
         if (pe == null) {
             return;
         }
-        DataBlock diag = pe.getCholeskyFactor().diagonal();
-        DataBlock err = pe.getTransformedPredictionErrors();
-        for (int i = 0; i < err.length(); ++i) {
-            double r = diag.get(i);
-            if (r != 0) {
-                cumulator.addStd(err.get(i), r);
+        DoubleSeq diag = pe.getR().diagonal();
+        DoubleSeq err = pe.getE();
+        UpdateInformation.Status[] status = pe.getStatus();
+        for (int i = 0, iv = 0; i < status.length; ++i) {
+            if (status[i] != UpdateInformation.Status.MISSING) {
+                if (status[i] == UpdateInformation.Status.OBSERVATION) {
+                    double r = diag.get(iv);
+                    if (r != 0) {
+                        cumulator.addStd(err.get(iv), r);
+                    }
+                }
+                ++iv;
             }
         }
     }

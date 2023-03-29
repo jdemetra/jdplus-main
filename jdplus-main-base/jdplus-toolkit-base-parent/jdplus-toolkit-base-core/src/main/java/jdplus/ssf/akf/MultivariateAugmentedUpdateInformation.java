@@ -30,43 +30,43 @@ import demetra.data.DoubleSeq;
  *
  * @author Jean Palate
  */
-public class MultivariateAugmentedUpdateInformation extends MultivariateUpdateInformation {
-
-    /**
-     * E is the "prediction error" on the diffuse constraints (=(0-Z(t)A(t)) E ~
-     * ndiffuse x nvars
-     */
-    private final FastMatrix E;
-
-    /**
-     *
-     * @param ndiffuse
-     * @param nvars
-     * @param dim
-     */
-    public MultivariateAugmentedUpdateInformation(final int dim, final int nvars, final int ndiffuse) {
-        super(dim, nvars);
-        E = FastMatrix.make(ndiffuse, nvars);
-    }
-
-    public FastMatrix E() {
-        return E;
-    }
-
-    public boolean isDiffuse() {
-        return E.isZero(State.ZERO);
-    }
-
-    public void compute(IMultivariateSsf ssf, int t, AugmentedState state, DoubleSeq x, int[] equations) {
-
-        super.compute(ssf, t, state, x, equations);
-        // E is ndiffuse x nobs. Each column contains the diffuse effects
-        // on the corresponding variable
-        MZt(t, ssf.measurements(), equations, state.B(), E);
-        E.chs();
-        DataBlockIterator erows = E.rowsIterator();
-        while (erows.hasNext()) {
-            LowerTriangularMatrix.solveLx(this.getCholeskyFactor(), erows.next(), State.ZERO);
-        }
-    }
-}
+//public class MultivariateAugmentedUpdateInformation extends MultivariateUpdateInformation {
+//
+//    /**
+//     * E is the "prediction error" on the diffuse constraints (=(0-Z(t)A(t)) E ~
+//     * ndiffuse x nvars
+//     */
+//    private final FastMatrix E;
+//
+//    /**
+//     *
+//     * @param ndiffuse
+//     * @param nvars
+//     * @param dim
+//     */
+//    public MultivariateAugmentedUpdateInformation(final int dim, final int nvars, final int ndiffuse) {
+//        super(dim, nvars);
+//        E = FastMatrix.make(ndiffuse, nvars);
+//    }
+//
+//    public FastMatrix E() {
+//        return E;
+//    }
+//
+//    public boolean isDiffuse() {
+//        return E.isZero(State.ZERO);
+//    }
+//
+//    public void compute(IMultivariateSsf ssf, int t, AugmentedState state, DoubleSeq x, int[] equations) {
+//
+//        super.compute(ssf, t, state, x, equations);
+//        // E is ndiffuse x nobs. Each column contains the diffuse effects
+//        // on the corresponding variable
+//        MZt(t, ssf.measurements(), state.B(), E);
+//        E.chs();
+//        DataBlockIterator erows = E.rowsIterator();
+//        while (erows.hasNext()) {
+//            LowerTriangularMatrix.solveLx(this.getCholeskyFactor(), erows.next(), State.ZERO);
+//        }
+//    }
+//}
