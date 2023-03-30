@@ -16,17 +16,15 @@
  */
 package demetra.desktop.sa.ui;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.tools.ARPView;
-import demetra.stats.ProbabilityType;
-import ec.util.chart.ColorScheme.KnownColor;
+
 import java.awt.BasicStroke;
 import java.awt.Stroke;
 import javax.swing.JPopupMenu;
-import jdplus.data.analysis.Periodogram;
-import jdplus.data.analysis.WindowFunction;
-import jdplus.dstats.Chi2;
-import jdplus.sa.tests.CanovaHansen2;
+
+import jdplus.toolkit.base.core.data.analysis.WindowFunction;
+import jdplus.sa.base.core.tests.CanovaHansen2;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;

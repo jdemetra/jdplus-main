@@ -16,9 +16,9 @@
  */
 package tck.demetra.tsp;
 
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.FileBean;
-import demetra.tsprovider.FileLoader;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.FileBean;
+import jdplus.toolkit.base.tsp.FileLoader;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;

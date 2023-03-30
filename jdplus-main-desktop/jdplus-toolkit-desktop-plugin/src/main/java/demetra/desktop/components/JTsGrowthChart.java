@@ -24,8 +24,8 @@ import demetra.desktop.components.parts.*;
 import demetra.desktop.design.SwingAction;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.*;
 import internal.ui.components.DemoTsBuilder;
+import jdplus.toolkit.base.api.timeseries.*;
 
 import javax.swing.*;
 import java.awt.*;

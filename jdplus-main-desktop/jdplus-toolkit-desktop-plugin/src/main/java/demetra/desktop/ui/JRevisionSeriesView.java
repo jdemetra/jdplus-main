@@ -25,12 +25,12 @@ import demetra.desktop.components.JHtmlView;
 import demetra.desktop.components.tools.JChartPanel;
 import demetra.html.HtmlUtil;
 import demetra.html.processing.HtmlRevisionsDocument;
-import demetra.information.Explorable;
-import demetra.timeseries.TimeSelector;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import org.jfree.chart.ChartFactory;
@@ -58,9 +58,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import jdplus.timeseries.simplets.analysis.DiagnosticInfo;
-import jdplus.timeseries.simplets.analysis.RevisionHistory;
-import jdplus.timeseries.simplets.analysis.TsDataFunction;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.TsDataFunction;
 
 /**
  * View of the Revision History of a series.

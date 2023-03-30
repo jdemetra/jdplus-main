@@ -39,12 +39,12 @@ import demetra.desktop.actions.Configurable;
 import demetra.desktop.beans.BeanConfigurator;
 import demetra.desktop.sa.output.AbstractOutputNode;
 import demetra.desktop.sa.output.Matrix;
-import demetra.sa.csv.CsvMatrixOutputConfiguration;
-import demetra.sa.csv.CsvMatrixOutputFactory;
+import jdplus.sa.base.csv.CsvMatrixOutputConfiguration;
+import jdplus.sa.base.csv.CsvMatrixOutputFactory;
 import demetra.desktop.sa.output.OutputFactoryBuddy;
 import demetra.desktop.sa.output.OutputSelection;
-import demetra.sa.SaManager;
-import demetra.sa.SaOutputFactory;
+import jdplus.sa.base.api.SaManager;
+import jdplus.sa.base.api.SaOutputFactory;
 
 /**
  *

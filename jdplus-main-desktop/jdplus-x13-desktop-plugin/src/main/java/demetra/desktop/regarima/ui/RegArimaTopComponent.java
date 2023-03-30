@@ -10,7 +10,7 @@ import demetra.desktop.workspace.DocumentUIServices;
 import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.ui.WorkspaceTsTopComponent;
-import jdplus.x13.regarima.RegArimaDocument;
+import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;

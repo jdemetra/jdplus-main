@@ -16,18 +16,18 @@
  */
 package demetra.html.modelling;
 
-import demetra.arima.SarimaOrders;
+import jdplus.toolkit.base.api.arima.SarimaOrders;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.Bootstrap4;
 import demetra.html.HtmlElement;
 import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
-import demetra.math.Complex;
-import demetra.util.Arrays2;
+import jdplus.toolkit.base.api.math.Complex;
+import jdplus.toolkit.base.api.util.Arrays2;
 import java.io.IOException;
-import jdplus.data.analysis.Periodogram;
-import jdplus.math.polynomials.Polynomial;
-import jdplus.sarima.SarimaModel;
+import jdplus.toolkit.base.core.data.analysis.Periodogram;
+import jdplus.toolkit.base.core.math.polynomials.Polynomial;
+import jdplus.toolkit.base.core.sarima.SarimaModel;
 
 /**
  *

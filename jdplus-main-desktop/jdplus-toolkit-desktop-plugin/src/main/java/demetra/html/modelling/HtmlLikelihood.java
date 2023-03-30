@@ -16,7 +16,7 @@
  */
 package demetra.html.modelling;
 
-import jdplus.stats.likelihood.LikelihoodStatistics;
+import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import demetra.html.HtmlElement;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.HtmlStream;

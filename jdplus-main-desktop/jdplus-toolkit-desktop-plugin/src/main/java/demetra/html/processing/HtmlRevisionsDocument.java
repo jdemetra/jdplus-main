@@ -25,15 +25,15 @@ import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTableHeader;
 import demetra.html.HtmlTag;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.time.Month;
-import jdplus.stats.DescriptiveStatistics;
-import jdplus.timeseries.simplets.analysis.DiagnosticInfo;
+
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 
 /**
  *

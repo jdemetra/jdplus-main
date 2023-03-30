@@ -16,7 +16,7 @@
  */
 package demetra.desktop.sa.output;
 
-import demetra.sa.SaOutputFactory;
+import jdplus.sa.base.api.SaOutputFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

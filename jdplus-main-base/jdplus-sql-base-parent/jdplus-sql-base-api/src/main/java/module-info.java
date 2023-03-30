@@ -1,3 +1,7 @@
+import jdplus.sql.base.api.jdbc.JdbcProvider;
+import jdplus.sql.base.api.odbc.OdbcProvider;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+
 module jdplus.sql.base.api {
 
     requires static lombok;
@@ -9,11 +13,11 @@ module jdplus.sql.base.api {
     requires nbbrd.sql.jdbc;
     requires nbbrd.sql.odbc;
 
-    exports demetra.sql;
-    exports demetra.sql.jdbc;
-    exports demetra.sql.odbc;
+    exports jdplus.sql.base.api;
+    exports jdplus.sql.base.api.jdbc;
+    exports jdplus.sql.base.api.odbc;
 
-    provides demetra.timeseries.TsProvider with
-            demetra.sql.jdbc.JdbcProvider,
-            demetra.sql.odbc.OdbcProvider;
+    provides TsProvider with
+            JdbcProvider,
+            OdbcProvider;
 }

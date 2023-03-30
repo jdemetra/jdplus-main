@@ -18,10 +18,9 @@ package demetra.desktop.sa.output;
 
 import demetra.desktop.NamedService;
 import demetra.desktop.Persistable;
-import demetra.sa.SaOutputFactory;
-import demetra.sa.SaProcessingFactory;
+
 import java.awt.Image;
-import java.util.List;
+
 import org.openide.nodes.Sheet;
 
 /**

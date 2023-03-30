@@ -8,21 +8,22 @@ import demetra.desktop.components.GridCommands;
 import demetra.desktop.sa.util.ActionsHelper;
 import demetra.desktop.sa.util.ActionsHelpers;
 import demetra.desktop.util.NbComponents;
-import demetra.information.Explorable;
-import demetra.information.formatters.TableFormatter;
-import demetra.processing.AlgorithmDescriptor;
-import demetra.sa.SaDictionaries;
-import demetra.sa.SaItem;
-import demetra.sa.SaManager;
-import demetra.sa.SaProcessingFactory;
-import demetra.timeseries.TsData;
-import demetra.toolkit.dictionaries.ArimaDictionaries;
-import demetra.toolkit.dictionaries.LikelihoodDictionaries;
-import demetra.toolkit.dictionaries.RegArimaDictionaries;
-import demetra.toolkit.dictionaries.RegressionDictionaries;
-import demetra.toolkit.dictionaries.ResidualsDictionaries;
-import demetra.util.MultiLineNameUtil;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.information.formatters.TableFormatter;
+import jdplus.toolkit.base.api.processing.AlgorithmDescriptor;
+import jdplus.sa.base.api.SaDictionaries;
+import jdplus.sa.base.api.SaItem;
+import jdplus.sa.base.api.SaManager;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.dictionaries.ArimaDictionaries;
+import jdplus.toolkit.base.api.dictionaries.Dictionary;
+import jdplus.toolkit.base.api.dictionaries.LikelihoodDictionaries;
+import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
+import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
+import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.util.Table;
 import ec.util.grid.swing.AbstractGridModel;
 import ec.util.grid.swing.JGrid;
 import ec.util.list.swing.JLists;
@@ -264,11 +265,11 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
     }
 
     private static String arimaItem(String key) {
-        return demetra.toolkit.dictionaries.Dictionary.concatenate(RegArimaDictionaries.ARIMA, key);
+        return Dictionary.concatenate(RegArimaDictionaries.ARIMA, key);
     }
 
     private static String regressionItem(String key) {
-        return demetra.toolkit.dictionaries.Dictionary.concatenate(RegArimaDictionaries.REGRESSION, key);
+        return Dictionary.concatenate(RegArimaDictionaries.REGRESSION, key);
     }
 
     private static String parameterItem(String str, int pos, int n) {
@@ -284,19 +285,19 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
     }
 
     private static String residualsItem(String key) {
-        return demetra.toolkit.dictionaries.Dictionary.concatenate(RegArimaDictionaries.RESIDUALS, key);
+        return Dictionary.concatenate(RegArimaDictionaries.RESIDUALS, key);
     }
 
     private static String advancedItem(String key) {
-        return demetra.toolkit.dictionaries.Dictionary.concatenate(RegArimaDictionaries.ADVANCED, key);
+        return Dictionary.concatenate(RegArimaDictionaries.ADVANCED, key);
     }
 
     private static String mlItem(String key) {
-        return demetra.toolkit.dictionaries.Dictionary.concatenate(RegArimaDictionaries.MAX, key);
+        return Dictionary.concatenate(RegArimaDictionaries.MAX, key);
     }
 
     private static String llItem(String key) {
-        return demetra.toolkit.dictionaries.Dictionary.concatenate(RegArimaDictionaries.LIKELIHOOD, key);
+        return Dictionary.concatenate(RegArimaDictionaries.LIKELIHOOD, key);
     }
 
     private static final String[] MAIN = {

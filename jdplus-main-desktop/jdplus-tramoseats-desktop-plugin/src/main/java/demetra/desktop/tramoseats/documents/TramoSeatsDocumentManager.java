@@ -6,10 +6,10 @@ package demetra.desktop.tramoseats.documents;
 
 import demetra.desktop.workspace.AbstractWorkspaceTsItemManager;
 import demetra.desktop.workspace.WorkspaceItemManager;
-import demetra.tramoseats.TramoSeatsSpec;
-import demetra.util.Id;
-import demetra.util.LinearId;
-import jdplus.tramoseats.TramoSeatsDocument;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.LinearId;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

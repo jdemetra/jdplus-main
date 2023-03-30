@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui;
 
-import demetra.util.Constraint;
+import jdplus.toolkit.base.api.util.Constraint;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
 import org.openide.DialogDescriptor;

@@ -12,5 +12,5 @@ module jdplus.tramoseats.base.r {
     requires jdplus.toolkit.base.core;
     requires jdplus.toolkit.base.protobuf;
 
-    exports demetra.tramoseats.r;
+    exports jdplus.tramoseats.base.r;
 }

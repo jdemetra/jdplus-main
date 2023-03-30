@@ -18,9 +18,9 @@ package demetra.desktop.x13.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.SaOutliersDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import jdplus.regarima.diagnostics.OutliersDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.SaOutliersDiagnosticsFactory;
-import jdplus.x13.X13Results;
+import jdplus.toolkit.base.core.regarima.diagnostics.OutliersDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;
+import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

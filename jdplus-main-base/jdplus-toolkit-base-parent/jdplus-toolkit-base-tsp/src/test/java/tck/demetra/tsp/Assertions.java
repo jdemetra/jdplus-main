@@ -16,7 +16,7 @@
  */
 package tck.demetra.tsp;
 
-import demetra.tsprovider.*;
+import jdplus.toolkit.base.tsp.*;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

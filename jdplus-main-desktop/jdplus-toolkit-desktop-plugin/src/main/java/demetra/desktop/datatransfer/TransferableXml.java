@@ -4,7 +4,7 @@
  */
 package demetra.desktop.datatransfer;
 
-import demetra.toolkit.io.xml.legacy.IXmlConverter;
+import jdplus.toolkit.base.xml.legacy.IXmlConverter;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;

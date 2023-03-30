@@ -6,8 +6,8 @@ package demetra.desktop.regarima.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.DateSelectorUI;
-import demetra.regarima.EstimateSpec;
-import demetra.timeseries.TimeSelector;
+import jdplus.x13.base.api.regarima.EstimateSpec;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

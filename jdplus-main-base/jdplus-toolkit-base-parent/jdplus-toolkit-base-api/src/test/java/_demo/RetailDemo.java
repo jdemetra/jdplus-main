@@ -6,8 +6,8 @@
 package _demo;
 
 import tck.demetra.data.Data;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
 
 import java.util.Arrays;
 

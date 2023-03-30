@@ -6,7 +6,7 @@ package demetra.desktop.x13.ui;
 
 import demetra.desktop.ui.processing.ItemUI;
 import javax.swing.JComponent;
-import jdplus.x13.X13Document;
+import jdplus.x13.base.core.x13.X13Document;
 
 /**
  *

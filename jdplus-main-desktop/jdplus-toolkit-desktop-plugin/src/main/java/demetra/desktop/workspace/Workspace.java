@@ -4,14 +4,14 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.DemetraVersion;
-import demetra.timeseries.regression.ModellingContext;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.tsp.DataSource;
 import demetra.desktop.interfaces.Disposable;
 import demetra.desktop.ui.mru.SourceId;
 import demetra.desktop.workspace.WorkspaceItemManager.ItemType;
-import demetra.util.Id;
-import demetra.util.LinearId;
+import jdplus.toolkit.base.api.util.Id;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;

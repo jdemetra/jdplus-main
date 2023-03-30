@@ -5,7 +5,7 @@
 package demetra.desktop.tramo.ui;
 
 import demetra.desktop.tramo.documents.TramoDocumentManager;
-import jdplus.tramo.TramoDocument;
+import jdplus.tramoseats.base.core.tramo.TramoDocument;
 import demetra.desktop.ui.processing.TsProcessingViewer;
 import demetra.desktop.workspace.DocumentUIServices;
 import demetra.desktop.workspace.WorkspaceFactory;

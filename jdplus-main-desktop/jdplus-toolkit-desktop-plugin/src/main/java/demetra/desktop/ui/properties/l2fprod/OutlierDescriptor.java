@@ -16,15 +16,15 @@
  */
 package demetra.desktop.ui.properties.l2fprod;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.information.InformationSet;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.TsUnit;
-import demetra.timeseries.regression.IOutlier;
-import demetra.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.LocalDate;

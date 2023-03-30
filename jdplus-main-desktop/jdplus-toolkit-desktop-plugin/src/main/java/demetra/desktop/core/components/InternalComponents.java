@@ -20,7 +20,9 @@ import demetra.desktop.DemetraIcons;
 import demetra.desktop.actions.PrintableWithPreview;
 import demetra.desktop.components.parts.HasTsCollection;
 import demetra.desktop.components.parts.HasTsCollection.TsUpdateMode;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.chart.swing.JTimeSeriesChart;
 import ec.util.chart.swing.JTimeSeriesChartCommand;
 import ec.util.various.swing.FontAwesome;
@@ -89,12 +91,12 @@ public class InternalComponents {
         return getNoDataMessage(o.getTsCollection(), o.getTsUpdateMode());
     }
 
-    private static String getNoDataMessage(demetra.timeseries.TsCollection input, TsUpdateMode updateMode) {
+    private static String getNoDataMessage(TsCollection input, TsUpdateMode updateMode) {
         switch (input.size()) {
             case 0:
                 return updateMode.isReadOnly() ? "No data" : "Drop data here";
             case 1:
-                demetra.timeseries.Ts single = input.get(0);
+                Ts single = input.get(0);
                 if (single.getType().hasData()) {
                     String cause = single.getData().getEmptyCause();
                     return cause != null && !cause.isEmpty() ? cause : "No obs";

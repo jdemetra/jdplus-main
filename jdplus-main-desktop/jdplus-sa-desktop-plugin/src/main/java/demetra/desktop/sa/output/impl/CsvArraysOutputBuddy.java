@@ -41,10 +41,10 @@ import demetra.desktop.sa.output.AbstractOutputNode;
 import demetra.desktop.sa.output.Arrays;
 import demetra.desktop.sa.output.OutputFactoryBuddy;
 import demetra.desktop.sa.output.OutputSelection;
-import demetra.sa.SaManager;
-import demetra.sa.SaOutputFactory;
-import demetra.sa.csv.CsvArrayOutputConfiguration;
-import demetra.sa.csv.CsvArrayOutputFactory;
+import jdplus.sa.base.api.SaManager;
+import jdplus.sa.base.api.SaOutputFactory;
+import jdplus.sa.base.csv.CsvArrayOutputConfiguration;
+import jdplus.sa.base.csv.CsvArrayOutputFactory;
 
 /**
  *

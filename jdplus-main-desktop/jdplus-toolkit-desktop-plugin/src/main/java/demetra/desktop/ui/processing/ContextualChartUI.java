@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.processing;
 
-import demetra.processing.ProcDocument;
+import jdplus.toolkit.base.api.processing.ProcDocument;
 import javax.swing.JComponent;
 
 /**

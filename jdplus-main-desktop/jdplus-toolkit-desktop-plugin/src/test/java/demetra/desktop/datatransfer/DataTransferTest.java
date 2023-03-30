@@ -17,10 +17,11 @@
 package demetra.desktop.datatransfer;
 
 import demetra.desktop.util.CollectionSupplier;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsUnit;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.util.Table;
 import org.junit.jupiter.api.Test;
 import org.openide.util.datatransfer.ExTransferable;
 
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import demetra.math.matrices.Matrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  *
@@ -64,15 +65,15 @@ public class DataTransferTest {
         assertThatThrownBy(() -> empty.canImport((DataFlavor[]) null)).isInstanceOf(NullPointerException.class);
 
         assertThat(empty.fromTs(Ts.builder().build()).getTransferDataFlavors()).isEmpty();
-        assertThat(empty.fromTsCollection(demetra.timeseries.TsCollection.EMPTY).getTransferDataFlavors()).isEmpty();
-        assertThat(empty.fromTsData(demetra.timeseries.TsData.random(TsUnit.YEAR, 0)).getTransferDataFlavors()).isEmpty();
+        assertThat(empty.fromTsCollection(TsCollection.EMPTY).getTransferDataFlavors()).isEmpty();
+        assertThat(empty.fromTsData(TsData.random(TsUnit.YEAR, 0)).getTransferDataFlavors()).isEmpty();
         assertThat(empty.fromMatrix(Matrix.of(new double[]{3.14}, 1, 1)).getTransferDataFlavors()).isEmpty();
         assertThat(empty.fromTable(new Table<>(1, 1)).getTransferDataFlavors()).isEmpty();
     }
 
     @Test
     public void testContent() {
-        LocalObjectTransferable<demetra.timeseries.TsCollection> col = new LocalObjectTransferable<>(demetra.timeseries.TsCollection.EMPTY);
+        LocalObjectTransferable<TsCollection> col = new LocalObjectTransferable<>(TsCollection.EMPTY);
         Transferable multi = new ExTransferable.Multi(new Transferable[]{col});
 
         DataTransferManager local = of(new LocalObjectDataTransfer());

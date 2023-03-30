@@ -32,11 +32,12 @@ import demetra.desktop.tools.ToolsPersistence;
 import demetra.desktop.ui.ActiveView;
 import demetra.desktop.ui.ActiveViewManager;
 import demetra.desktop.util.NbComponents;
-import demetra.timeseries.TsCollection;
-import demetra.tramo.TramoSpec;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import ec.util.list.swing.JLists;
-import jdplus.regsarima.regular.CheckLast;
-import jdplus.tramo.TramoKernel;
+import jdplus.toolkit.base.core.regsarima.regular.CheckLast;
+import jdplus.tramoseats.base.core.tramo.TramoKernel;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.core.spi.multiview.CloseOperationState;
@@ -487,7 +488,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
             summary.set(null, null);
             chart.setTsCollection(TsCollection.EMPTY);
         } else {
-            demetra.timeseries.Ts single = list.getTsCollection().get(singleSelection.getAsInt());
+            Ts single = list.getTsCollection().get(singleSelection.getAsInt());
             AnomalyItem a = list.getMap().get(single.getMoniker());
             if (a.isInvalid() || a.isNotProcessable()) {
                 summary.set(null, null);

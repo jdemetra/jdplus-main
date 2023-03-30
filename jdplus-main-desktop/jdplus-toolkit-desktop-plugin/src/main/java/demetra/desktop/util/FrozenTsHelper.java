@@ -17,10 +17,10 @@
 package demetra.desktop.util;
 
 import demetra.desktop.TsManager;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsMoniker;
-import demetra.tsprovider.TsMeta;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.TsMeta;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -54,7 +54,7 @@ public final class FrozenTsHelper {
         if (moniker.isProvided()) {
             return moniker;
         }
-        demetra.timeseries.Ts ts = TsManager.get().makeTs(moniker, TsInformationType.MetaData);
+        Ts ts = TsManager.get().makeTs(moniker, TsInformationType.MetaData);
         if (ts == null) {
             return null;
         }

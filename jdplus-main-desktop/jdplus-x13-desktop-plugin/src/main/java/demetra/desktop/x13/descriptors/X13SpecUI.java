@@ -13,7 +13,7 @@ import demetra.desktop.regarima.descriptors.EstimateSpecUI;
 import demetra.desktop.regarima.descriptors.OutlierSpecUI;
 import demetra.desktop.regarima.descriptors.RegressionSpecUI;
 import demetra.desktop.regarima.descriptors.TransformSpecUI;
-import demetra.x13.X13Spec;
+import jdplus.x13.base.api.x13.X13Spec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

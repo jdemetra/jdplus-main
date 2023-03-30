@@ -4,11 +4,11 @@
  */
 package demetra.desktop.regarima.descriptors;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.arima.SarimaSpec;
+import jdplus.toolkit.base.api.arima.SarimaSpec;
 import demetra.desktop.DemetraUI;
-import demetra.regarima.AutoModelSpec;
+import jdplus.x13.base.api.regarima.AutoModelSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

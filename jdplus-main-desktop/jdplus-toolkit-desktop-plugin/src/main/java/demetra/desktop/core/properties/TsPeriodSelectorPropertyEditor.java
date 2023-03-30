@@ -16,7 +16,7 @@
  */
 package demetra.desktop.core.properties;
 
-import demetra.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import java.awt.Component;
 import java.beans.PropertyEditorSupport;
 import org.openide.explorer.propertysheet.ExPropertyEditor;

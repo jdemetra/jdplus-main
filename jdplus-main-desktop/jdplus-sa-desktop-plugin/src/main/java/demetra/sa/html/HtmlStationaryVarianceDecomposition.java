@@ -23,7 +23,7 @@ import demetra.html.HtmlStream;
 import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTag;
-import demetra.sa.StationaryVarianceDecomposition;
+import jdplus.sa.base.api.StationaryVarianceDecomposition;
 import java.io.IOException;
 
 /**

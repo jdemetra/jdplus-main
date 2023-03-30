@@ -1,3 +1,5 @@
+import jdplus.sa.base.information.SaSpecificationMapping;
+
 module jdplus.sa.base.information {
 
     requires static lombok;
@@ -8,7 +10,7 @@ module jdplus.sa.base.information {
     requires transitive jdplus.sa.base.api;
     requires jdplus.toolkit.base.information;
 
-    exports demetra.sa.io.information;
+    exports jdplus.sa.base.information;
 
-    uses demetra.sa.io.information.SaSpecificationMapping;
+    uses SaSpecificationMapping;
 }

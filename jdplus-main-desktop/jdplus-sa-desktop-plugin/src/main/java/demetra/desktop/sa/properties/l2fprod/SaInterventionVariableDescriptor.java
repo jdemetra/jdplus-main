@@ -4,14 +4,14 @@
  */
 package demetra.desktop.sa.properties.l2fprod;
 
-import demetra.data.Range;
+import jdplus.toolkit.base.api.data.Range;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.ui.properties.l2fprod.UserInterfaceContext;
 import demetra.desktop.ui.properties.l2fprod.Sequence;
-import demetra.sa.ComponentType;
-import demetra.sa.SaVariable;
-import demetra.timeseries.regression.InterventionVariable;
-import demetra.timeseries.regression.Variable;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.api.SaVariable;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.LocalDateTime;

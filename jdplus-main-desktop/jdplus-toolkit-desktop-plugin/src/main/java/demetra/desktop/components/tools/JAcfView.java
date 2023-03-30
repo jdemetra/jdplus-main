@@ -7,13 +7,13 @@ package demetra.desktop.components.tools;
 
 import demetra.desktop.design.SwingComponent;
 import ec.util.chart.swing.Charts;
-import demetra.desktop.interfaces.DoubleSeqView;
+
 import java.awt.BorderLayout;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.util.function.IntToDoubleFunction;
 import javax.swing.JComponent;
-import jdplus.arima.AutoCovarianceFunction;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.axis.NumberAxis;

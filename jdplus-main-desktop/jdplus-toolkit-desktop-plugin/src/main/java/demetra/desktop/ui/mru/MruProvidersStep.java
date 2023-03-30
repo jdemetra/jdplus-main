@@ -4,12 +4,14 @@
  */
 package demetra.desktop.ui.mru;
 
-import demetra.tsprovider.DataSourceListener;
-import demetra.tsprovider.DataSourceLoader;
-import demetra.tsprovider.DataSourceProvider;
+import jdplus.toolkit.base.tsp.DataSourceListener;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import demetra.desktop.TsManager;
 import demetra.desktop.util.InstallerStep;
 import java.util.prefs.Preferences;
+
+import jdplus.toolkit.base.tsp.DataSource;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 
@@ -57,18 +59,18 @@ public class MruProvidersStep extends InstallerStep.LookupStep<DataSourceProvide
     static class Listener implements DataSourceListener {
 
         @Override
-        public void opened(demetra.tsprovider.DataSource dataSource) {
+        public void opened(DataSource dataSource) {
             TsManager.get()
                     .getProvider(DataSourceProvider.class, dataSource)
                     .ifPresent(provider -> MruList.getProvidersInstance().add(new SourceId(dataSource, provider.getDisplayName(dataSource))));
         }
 
         @Override
-        public void closed(demetra.tsprovider.DataSource ds) {
+        public void closed(DataSource ds) {
         }
 
         @Override
-        public void changed(demetra.tsprovider.DataSource ds) {
+        public void changed(DataSource ds) {
         }
 
         @Override

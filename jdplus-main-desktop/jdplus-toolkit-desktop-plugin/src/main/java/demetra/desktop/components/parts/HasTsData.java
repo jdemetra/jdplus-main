@@ -17,7 +17,7 @@
 package demetra.desktop.components.parts;
 
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -4,10 +4,10 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.DemetraVersion;
-import demetra.timeseries.regression.ModellingContext;
-import demetra.util.Id;
-import demetra.util.TreeOfIds;
+import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.TreeOfIds;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

@@ -4,6 +4,7 @@
  */
 package demetra.desktop.core.ts.actions;
 
+import jdplus.toolkit.base.api.timeseries.Ts;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -42,7 +43,7 @@ public final class PasteTs extends ActiveViewAction<WorkspaceTsTopComponent> {
     protected void process(WorkspaceTsTopComponent cur) {
         WorkspaceTsTopComponent top = context();
         if (top != null) {
-            Optional<demetra.timeseries.Ts> s = DataTransferManager.get().toTs(DataTransfers.systemClipboardAsTransferable());
+            Optional<Ts> s = DataTransferManager.get().toTs(DataTransfers.systemClipboardAsTransferable());
             if (!s.isPresent()) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message("Unable to paste ts");
                 DialogDisplayer.getDefault().notify(nd);

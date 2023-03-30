@@ -16,9 +16,9 @@
  */
 package _test;
 
-import demetra.demo.ProviderResources;
-import demetra.spreadsheet.SpreadSheetBean;
-import demetra.spreadsheet.SpreadSheetProvider;
+import jdplus.toolkit.base.tspbridge.demo.ProviderResources;
+import jdplus.spreadsheet.base.api.SpreadSheetBean;
+import jdplus.spreadsheet.base.api.SpreadSheetProvider;
 import ec.tss.tsproviders.IFileBean;
 
 /**

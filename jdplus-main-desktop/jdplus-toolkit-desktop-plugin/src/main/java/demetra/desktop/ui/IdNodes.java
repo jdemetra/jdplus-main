@@ -5,8 +5,8 @@
 package demetra.desktop.ui;
 
 import demetra.desktop.DemetraIcons;
-import demetra.util.Id;
-import demetra.util.LinearId;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.LinearId;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -16,11 +16,11 @@
  */
 package _util.tsproviders;
 
-import demetra.io.ResourceWatcher;
-import demetra.tsprovider.cube.CubeConnection;
-import demetra.tsprovider.cube.CubeId;
-import demetra.tsprovider.cube.CubeSeries;
-import demetra.tsprovider.cube.CubeSeriesWithData;
+import jdplus.toolkit.base.tsp.fixme.ResourceWatcher;
+import jdplus.toolkit.base.tsp.cube.CubeConnection;
+import jdplus.toolkit.base.tsp.cube.CubeId;
+import jdplus.toolkit.base.tsp.cube.CubeSeries;
+import jdplus.toolkit.base.tsp.cube.CubeSeriesWithData;
 import nbbrd.io.function.IORunnable;
 
 import java.io.IOException;

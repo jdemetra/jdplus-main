@@ -3,7 +3,7 @@ package demetra.desktop.ui.properties.l2fprod;
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import com.l2fprod.common.swing.LookAndFeelTweaks;
 import com.toedter.calendar.JTextFieldDateEditor;
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package internal.desktop.spreadsheet.datatransfer;
 
-import demetra.tsprovider.grid.GridReader;
-import demetra.tsprovider.grid.GridWriter;
+import jdplus.toolkit.base.tsp.grid.GridReader;
+import jdplus.toolkit.base.tsp.grid.GridWriter;
 
 @lombok.Data
 class SpreadSheetDataTransferBean {

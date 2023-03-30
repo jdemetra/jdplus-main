@@ -7,7 +7,7 @@ package demetra.desktop.workspace.nodes;
 import demetra.desktop.workspace.Workspace;
 import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItemManager;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.util.Id;
 import java.awt.Image;
 import javax.swing.Icon;
 import org.openide.util.ImageUtilities;

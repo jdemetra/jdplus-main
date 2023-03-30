@@ -5,9 +5,9 @@
  */
 package tck.demetra.data;
 
-import demetra.math.matrices.Matrix;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 
 import java.io.File;
 import java.io.IOException;

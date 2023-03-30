@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package jd3;
 
-option java_package = "demetra.toolkit.io.protobuf";
+option java_package = "jdplus.toolkit.base.protobuf.toolkit";
 option java_outer_classname = "ToolkitProtos";
 
 enum SelectionType {

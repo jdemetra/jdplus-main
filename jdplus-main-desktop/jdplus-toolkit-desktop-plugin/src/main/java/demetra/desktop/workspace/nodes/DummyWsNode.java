@@ -5,7 +5,7 @@
 package demetra.desktop.workspace.nodes;
 
 import demetra.desktop.workspace.Workspace;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.util.Id;
 import java.awt.Image;
 
 /**

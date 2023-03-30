@@ -4,7 +4,7 @@
  */
 package demetra.desktop.tramo.ui;
 
-import jdplus.tramo.TramoDocument;
+import jdplus.tramoseats.base.core.tramo.TramoDocument;
 import demetra.desktop.processing.ui.modelling.ForecastsFactory;
 import demetra.desktop.processing.ui.modelling.InputFactory;
 import demetra.desktop.processing.ui.modelling.LikelihoodFactory;
@@ -23,16 +23,16 @@ import demetra.desktop.ui.processing.stats.ResidualsDistUI;
 import demetra.desktop.ui.processing.stats.ResidualsUI;
 import demetra.desktop.ui.processing.stats.SpectrumUI;
 import demetra.html.HtmlElement;
-import demetra.information.InformationSet;
-import demetra.modelling.ModellingDictionary;
-import demetra.modelling.SeriesInfo;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDocument;
-import demetra.tramoseats.io.information.TramoSpecMapping;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.modelling.ModellingDictionary;
+import jdplus.toolkit.base.api.modelling.SeriesInfo;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.tramoseats.base.information.TramoSpecMapping;
+import jdplus.toolkit.base.api.util.Id;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

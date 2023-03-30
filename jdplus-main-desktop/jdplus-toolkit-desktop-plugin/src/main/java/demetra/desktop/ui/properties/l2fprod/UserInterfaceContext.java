@@ -1,6 +1,6 @@
 package demetra.desktop.ui.properties.l2fprod;
 
-import demetra.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 
 
 /**

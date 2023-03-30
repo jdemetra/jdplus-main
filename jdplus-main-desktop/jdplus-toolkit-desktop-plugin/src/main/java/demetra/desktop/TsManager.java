@@ -18,11 +18,11 @@ package demetra.desktop;
 
 import demetra.desktop.design.GlobalService;
 import demetra.desktop.util.LazyGlobalService;
-import demetra.timeseries.*;
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.DataSourceFactory;
-import demetra.tsprovider.DataSourceListener;
-import demetra.tsprovider.DataSourceProvider;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceFactory;
+import jdplus.toolkit.base.tsp.DataSourceListener;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import ec.util.various.swing.OnAnyThread;
 import ec.util.various.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;

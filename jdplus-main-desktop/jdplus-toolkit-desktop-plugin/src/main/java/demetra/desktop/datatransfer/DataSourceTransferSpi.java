@@ -16,7 +16,7 @@
  */
 package demetra.desktop.datatransfer;
 
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSource;
 import demetra.desktop.util.NetBeansServiceBackend;
 import java.awt.datatransfer.Transferable;
 import java.util.Optional;

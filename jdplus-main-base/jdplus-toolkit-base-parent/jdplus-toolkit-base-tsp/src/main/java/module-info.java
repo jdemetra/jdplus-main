@@ -10,20 +10,18 @@ module jdplus.toolkit.base.tsp {
     requires java.desktop;
     requires java.logging;
 
-    exports demetra.io;
-    exports demetra.tsprovider;
-    exports demetra.tsprovider.cube;
-    exports demetra.tsprovider.grid;
-    exports demetra.tsprovider.legacy;
-    exports demetra.tsprovider.stream;
-    exports demetra.tsprovider.util;
-    exports demetra.util2;
+    exports jdplus.toolkit.base.tsp;
+    exports jdplus.toolkit.base.tsp.cube;
+    exports jdplus.toolkit.base.tsp.grid;
+    exports jdplus.toolkit.base.tsp.legacy;
+    exports jdplus.toolkit.base.tsp.stream;
+    exports jdplus.toolkit.base.tsp.util;
 
     // FIXME:
-    exports internal.util to jdplus.sql.base.api, jdplus.text.base.api;
+    exports jdplus.toolkit.base.tsp.fixme;
 
-    uses demetra.tsprovider.util.IOCacheFactory;
+    uses jdplus.toolkit.base.tsp.util.IOCacheFactory;
 
-    provides demetra.tsprovider.util.IOCacheFactory with
-            internal.tsprovider.util.DefaultIOCacheFactory;
+    provides jdplus.toolkit.base.tsp.util.IOCacheFactory with
+            internal.toolkit.base.tsp.util.DefaultIOCacheFactory;
 }

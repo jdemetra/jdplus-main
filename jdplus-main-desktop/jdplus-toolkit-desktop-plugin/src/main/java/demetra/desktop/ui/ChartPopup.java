@@ -16,7 +16,7 @@
  */
 package demetra.desktop.ui;
 
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;

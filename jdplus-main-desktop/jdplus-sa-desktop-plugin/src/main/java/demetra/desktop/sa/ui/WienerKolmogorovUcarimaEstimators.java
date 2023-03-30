@@ -4,20 +4,20 @@
  */
 package demetra.desktop.sa.ui;
 
-import demetra.math.Complex;
-import demetra.sa.ComponentDescriptor;
+import jdplus.toolkit.base.api.math.Complex;
+import jdplus.sa.base.api.ComponentDescriptor;
 import internal.uihelpers.ContinuousDisplayDomain;
 import internal.uihelpers.ContinuousInformationProvider;
 import internal.uihelpers.DiscreteDisplayDomain;
 import internal.uihelpers.DiscreteInformationProvider;
 import internal.uihelpers.FrequencyInformationProvider;
-import jdplus.arima.AutoCovarianceFunction;
-import jdplus.arima.Spectrum;
-import jdplus.math.linearfilters.RationalFilter;
-import jdplus.ucarima.UcarimaModel;
-import jdplus.ucarima.WienerKolmogorovEstimator;
-import jdplus.ucarima.WienerKolmogorovEstimators;
-import jdplus.ucarima.WienerKolmogorovPreliminaryEstimatorProperties;
+import jdplus.toolkit.base.core.arima.AutoCovarianceFunction;
+import jdplus.toolkit.base.core.arima.Spectrum;
+import jdplus.toolkit.base.core.math.linearfilters.RationalFilter;
+import jdplus.toolkit.base.core.ucarima.UcarimaModel;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimator;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovPreliminaryEstimatorProperties;
 
 
 /**

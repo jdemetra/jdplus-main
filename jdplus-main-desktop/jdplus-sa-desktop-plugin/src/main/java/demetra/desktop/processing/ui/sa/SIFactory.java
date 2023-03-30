@@ -16,15 +16,15 @@
  */
 package demetra.desktop.processing.ui.sa;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.ui.processing.ProcDocumentItemFactory;
-import demetra.modelling.ComponentInformation;
-import demetra.sa.ComponentType;
-import demetra.sa.DecompositionMode;
-import demetra.sa.SeriesDecomposition;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDocument;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.modelling.ComponentInformation;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.api.DecompositionMode;
+import jdplus.sa.base.api.SeriesDecomposition;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.toolkit.base.api.util.Id;
 import java.util.function.Function;
 
 /**

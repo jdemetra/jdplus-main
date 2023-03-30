@@ -2,7 +2,7 @@ syntax = "proto3";
 import public "toolkit.proto";
 
 package outliers;
-option java_package = "demetra.outliers.io.protobuf";
+option java_package = "jdplus.toolkit.base.protobuf.outliers";
 option java_outer_classname = "OutliersProtos";
 
 

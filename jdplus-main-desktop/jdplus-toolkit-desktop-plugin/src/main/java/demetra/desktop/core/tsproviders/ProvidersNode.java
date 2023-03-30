@@ -25,11 +25,11 @@ import demetra.desktop.datatransfer.DataSourceTransferManager;
 import demetra.desktop.interchange.Importable;
 import demetra.desktop.nodes.Nodes;
 import demetra.desktop.tsproviders.DataSourceProviderBuddyUtil;
-import demetra.timeseries.TsProvider;
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.DataSourceListener;
-import demetra.tsprovider.DataSourceLoader;
-import demetra.tsprovider.DataSourceProvider;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceListener;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -172,21 +172,21 @@ public final class ProvidersNode extends AbstractNode {
 
         //<editor-fold defaultstate="collapsed" desc="DataSourceListener">
         @Override
-        public void opened(demetra.tsprovider.DataSource dataSource) {
+        public void opened(DataSource dataSource) {
             if (!DemetraBehaviour.get().isShowTsProviderNodes()) {
                 refresh(true);
             }
         }
 
         @Override
-        public void closed(demetra.tsprovider.DataSource dataSource) {
+        public void closed(DataSource dataSource) {
             if (!DemetraBehaviour.get().isShowTsProviderNodes()) {
                 refresh(true);
             }
         }
 
         @Override
-        public void changed(demetra.tsprovider.DataSource dataSource) {
+        public void changed(DataSource dataSource) {
             if (!DemetraBehaviour.get().isShowTsProviderNodes()) {
                 refresh(true);
             }
@@ -240,7 +240,7 @@ public final class ProvidersNode extends AbstractNode {
 
     private static final Comparator<DataSourceProvider> ON_CLASS_SIMPLENAME = Comparator.comparing(o -> o.getClass().getSimpleName());
 
-    private static final Comparator<demetra.tsprovider.DataSource> ON_TO_STRING = Comparator.comparing(Object::toString);
+    private static final Comparator<DataSource> ON_TO_STRING = Comparator.comparing(Object::toString);
 
     public static Optional<Node> findNode(DataSource dataSource, Node node) {
         if (node instanceof ProvidersNode) {

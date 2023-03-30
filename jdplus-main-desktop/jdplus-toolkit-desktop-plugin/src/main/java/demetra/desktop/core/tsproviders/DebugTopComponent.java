@@ -5,8 +5,8 @@
 package demetra.desktop.core.tsproviders;
 
 import demetra.desktop.util.NbComponents;
-import demetra.tsprovider.DataSet;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSource;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

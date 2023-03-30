@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.mru;
 
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSource;
 
 /**
  *

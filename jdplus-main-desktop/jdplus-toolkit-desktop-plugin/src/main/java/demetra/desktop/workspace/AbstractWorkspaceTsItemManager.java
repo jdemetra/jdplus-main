@@ -4,12 +4,8 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.processing.ProcSpecification;
-import demetra.timeseries.TsDocument;
-import demetra.util.Id;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import jdplus.toolkit.base.api.processing.ProcSpecification;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
 
 /**
  *

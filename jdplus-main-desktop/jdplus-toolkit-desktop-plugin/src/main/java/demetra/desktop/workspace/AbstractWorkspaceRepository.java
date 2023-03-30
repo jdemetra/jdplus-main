@@ -16,7 +16,7 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

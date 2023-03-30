@@ -13,7 +13,7 @@ import demetra.desktop.tramo.descriptors.EstimateSpecUI;
 import demetra.desktop.tramo.descriptors.OutlierSpecUI;
 import demetra.desktop.tramo.descriptors.RegressionSpecUI;
 import demetra.desktop.tramo.descriptors.TransformSpecUI;
-import demetra.tramoseats.TramoSeatsSpec;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

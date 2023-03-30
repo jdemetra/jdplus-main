@@ -6,9 +6,9 @@ import demetra.desktop.design.SwingProperty;
 import demetra.desktop.ui.properties.l2fprod.OutlierDescriptorsEditor;
 import demetra.desktop.util.LazyGlobalService;
 import demetra.desktop.util.Persistence;
-import demetra.tsprovider.util.ObsFormat;
-import demetra.tsprovider.util.ObsFormatHandler;
-import demetra.tsprovider.util.PropertyHandler;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormatHandler;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

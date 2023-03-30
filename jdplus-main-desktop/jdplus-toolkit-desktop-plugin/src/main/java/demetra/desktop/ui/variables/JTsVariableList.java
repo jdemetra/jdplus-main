@@ -54,17 +54,17 @@ import demetra.desktop.components.parts.HasTsAction;
 import ec.util.table.swing.JTables;
 import demetra.desktop.datatransfer.DataTransferManager;
 import demetra.desktop.design.SwingComponent;
-import demetra.timeseries.DynamicTsDataSupplier;
-import demetra.timeseries.StaticTsDataSupplier;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDataSupplier;
-import demetra.timeseries.TsFactory;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.regression.TsDataSuppliers;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.timeseries.DynamicTsDataSupplier;
+import jdplus.toolkit.base.api.timeseries.StaticTsDataSupplier;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDataSupplier;
+import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import ec.util.grid.swing.XTable;
 import ec.util.various.swing.JCommand;
 import nbbrd.design.SkipProcessing;
@@ -415,13 +415,13 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         return null;
     }
 
-    private static demetra.timeseries.Ts toTs(TsDataSuppliers vars, String name) {
+    private static Ts toTs(TsDataSuppliers vars, String name) {
         TsDataSupplier variable = vars.get(name);
         if (variable == null)
             return null;
         return variable instanceof DynamicTsDataSupplier
                 ? TsFactory.getDefault()
-                        .makeTs( ((DynamicTsDataSupplier) variable).getMoniker(), demetra.timeseries.TsInformationType.None)
+                        .makeTs( ((DynamicTsDataSupplier) variable).getMoniker(), TsInformationType.None)
                         
                 :  Ts.of(name, variable.get());
     }

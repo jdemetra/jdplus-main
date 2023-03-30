@@ -16,14 +16,14 @@
  */
 package demetra.desktop.components.tools;
 
-import demetra.data.DoubleSeq;
-import demetra.stats.ProbabilityType;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.stats.ProbabilityType;
 import ec.util.chart.ColorScheme.KnownColor;
 import java.awt.BasicStroke;
 import java.awt.Stroke;
 import javax.swing.JPopupMenu;
-import jdplus.data.analysis.Periodogram;
-import jdplus.dstats.Chi2;
+import jdplus.toolkit.base.core.data.analysis.Periodogram;
+import jdplus.toolkit.base.core.dstats.Chi2;
 import org.jfree.data.xy.XYSeries;
 
 /**

@@ -1,7 +1,7 @@
 package demetra.desktop.components.parts;
 
 import demetra.desktop.beans.PropertyChangeBroadcaster;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class HasTsDataSupport {

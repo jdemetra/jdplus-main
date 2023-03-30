@@ -26,8 +26,10 @@ import demetra.desktop.components.parts.*;
 import demetra.desktop.jfreechart.TsXYDataset;
 import demetra.desktop.util.ActionMaps;
 import demetra.desktop.util.InputMaps;
-import demetra.tsprovider.util.ObsFormat;
-import demetra.util.IntList;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.base.api.util.IntList;
 import ec.util.chart.*;
 import ec.util.chart.TimeSeriesChart.Element;
 import ec.util.chart.swing.JTimeSeriesChart;
@@ -247,7 +249,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
 
     private void onCollectionChange() {
         selectionListener.setEnabled(false);
-        demetra.timeseries.TsCollection tss = target.getTsCollection();
+        TsCollection tss = target.getTsCollection();
         tsFeatures = TsFeatureHelper.of(tss.getItems());
         chartPanel.setDataset(TsXYDataset.of(tss.getItems()));
         updateNoDataMessage();
@@ -271,13 +273,13 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     }
 
     private void onDropContentChange() {
-        demetra.timeseries.TsCollection collection = target.getTsCollection();
-        demetra.timeseries.TsCollection dropContent = target.getDropContent();
+        TsCollection collection = target.getTsCollection();
+        TsCollection dropContent = target.getDropContent();
 
-        List<demetra.timeseries.Ts> tmp = new ArrayList<>(dropContent.getItems());
+        List<Ts> tmp = new ArrayList<>(dropContent.getItems());
         tmp.removeAll(collection.getItems());
 
-        List<demetra.timeseries.Ts> tss = Stream
+        List<Ts> tss = Stream
                 .concat(collection.stream(), tmp.stream())
                 .collect(Collectors.toList());
         chartPanel.setDataset(TsXYDataset.of(tss));

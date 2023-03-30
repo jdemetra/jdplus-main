@@ -7,7 +7,7 @@ import demetra.desktop.design.GlobalService;
 import demetra.desktop.design.SwingProperty;
 import demetra.desktop.util.LazyGlobalService;
 import demetra.desktop.util.Persistence;
-import demetra.tsprovider.util.PropertyHandler;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.beans.PropertyChangeSupport;

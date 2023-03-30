@@ -21,7 +21,7 @@ import demetra.desktop.components.ComponentCommand;
 import demetra.desktop.components.JTsGrowthChart;
 import demetra.desktop.components.TsSelectionBridge;
 import demetra.desktop.datatransfer.DataTransferManager;
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import ec.util.various.swing.JCommand;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.DialogDisplayer;

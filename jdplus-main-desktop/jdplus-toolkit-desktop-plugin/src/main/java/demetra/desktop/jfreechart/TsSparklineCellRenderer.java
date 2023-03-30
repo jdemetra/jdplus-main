@@ -4,8 +4,8 @@
  */
 package demetra.desktop.jfreechart;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SparklineCellRenderer;
 import org.jfree.data.time.TimeSeries;

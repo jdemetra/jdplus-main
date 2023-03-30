@@ -22,7 +22,7 @@ import demetra.html.HtmlElement;
 import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
 import java.io.IOException;
-import jdplus.arima.IArimaModel;
+import jdplus.toolkit.base.core.arima.IArimaModel;
 
 /**
  * 

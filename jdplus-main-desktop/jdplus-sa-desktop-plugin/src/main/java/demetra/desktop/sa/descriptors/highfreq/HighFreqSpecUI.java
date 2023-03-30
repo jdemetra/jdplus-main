@@ -16,14 +16,13 @@
  */
 package demetra.desktop.sa.descriptors.highfreq;
 
-import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.modelling.highfreq.EasterSpec;
-import demetra.modelling.highfreq.EstimateSpec;
-import demetra.modelling.highfreq.HolidaysSpec;
-import demetra.modelling.highfreq.OutlierSpec;
-import demetra.modelling.highfreq.RegressionSpec;
-import demetra.modelling.highfreq.SeriesSpec;
-import demetra.modelling.highfreq.TransformSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.EasterSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.EstimateSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.HolidaysSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.OutlierSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.RegressionSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.SeriesSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.TransformSpec;
 
 /**
  *

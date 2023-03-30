@@ -4,14 +4,13 @@
  */
 package demetra.desktop.tramo.ui.actions;
 
-import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.nodes.WsNode;
 import demetra.desktop.tramo.documents.TramoDocumentManager;
 import demetra.desktop.workspace.DocumentUIServices;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import jdplus.tramo.TramoDocument;
+import jdplus.tramoseats.base.core.tramo.TramoDocument;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

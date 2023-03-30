@@ -4,15 +4,14 @@
  */
 package demetra.desktop.core.tools;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.desktop.TsManager;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.components.parts.HasTsCollection.TsUpdateMode;
 import demetra.desktop.util.NbComponents;
 import demetra.desktop.components.JTsChart;
 import demetra.desktop.components.JTsTable;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import java.awt.BorderLayout;
 import java.util.Optional;
 import javax.swing.JSplitPane;

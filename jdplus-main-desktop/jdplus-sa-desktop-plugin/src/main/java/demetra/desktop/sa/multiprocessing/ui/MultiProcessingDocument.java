@@ -4,16 +4,16 @@
  */
 package demetra.desktop.sa.multiprocessing.ui;
 
-import demetra.sa.EstimationPolicy;
-import demetra.sa.EstimationPolicyType;
-import demetra.sa.SaItem;
-import demetra.sa.SaItems;
-import demetra.sa.SaSpecification;
-import demetra.timeseries.TimeSelector;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.TsInformationType;
-import demetra.util.Documented;
+import jdplus.sa.base.api.EstimationPolicy;
+import jdplus.sa.base.api.EstimationPolicyType;
+import jdplus.sa.base.api.SaItem;
+import jdplus.sa.base.api.SaItems;
+import jdplus.sa.base.api.SaSpecification;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.util.Documented;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

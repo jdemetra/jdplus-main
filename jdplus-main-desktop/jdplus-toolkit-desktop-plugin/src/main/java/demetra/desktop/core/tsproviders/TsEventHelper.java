@@ -16,7 +16,7 @@
  */
 package demetra.desktop.core.tsproviders;
 
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 
 /**
  *

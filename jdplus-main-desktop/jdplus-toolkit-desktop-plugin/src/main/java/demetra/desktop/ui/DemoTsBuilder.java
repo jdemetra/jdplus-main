@@ -4,19 +4,19 @@
  */
 package demetra.desktop.ui;
 
-import demetra.dstats.RandomNumberGenerator;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsMoniker;
-import demetra.timeseries.TsPeriod;
-import demetra.tsprovider.TsMeta;
+import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.tsp.TsMeta;
 import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import jdplus.random.XorshiftRNG;
+import jdplus.toolkit.base.core.random.XorshiftRNG;
 import nbbrd.design.BuilderPattern;
 import org.checkerframework.checker.nullness.qual.NonNull;
 

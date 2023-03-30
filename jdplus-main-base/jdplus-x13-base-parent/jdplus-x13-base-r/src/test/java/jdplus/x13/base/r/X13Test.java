@@ -1,0 +1,39 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package jdplus.x13.base.r;
+
+import tck.demetra.data.Data;
+import jdplus.x13.base.api.x13.X13Spec;
+import jdplus.x13.base.core.x13.X13Output;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ *
+ * @author PALATEJ
+ */
+public class X13Test {
+    
+    public X13Test() {
+    }
+
+    @Test
+    public void testProd() {
+
+        X13Output rslt = X13.fullProcess(Data.TS_PROD, "rsa0");
+//        if (outliers != null) {
+//            for (int i = 0; i < outliers.length; ++i) {
+//                System.out.println(outliers[i]);
+//            }
+//        }
+        byte[] sbytes = X13.toBuffer(rslt.getEstimationSpec());
+        X13Spec spec = X13.specOf(sbytes);
+        
+        assertTrue(spec != null);
+    }
+    
+}

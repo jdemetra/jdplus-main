@@ -6,9 +6,8 @@ package demetra.desktop.x13.descriptors;
 
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import demetra.desktop.util.NbComponents;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.calendars.CalendarUtility;
-import demetra.x11.SeasonalFilterOption;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
+import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;

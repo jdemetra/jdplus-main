@@ -8,7 +8,7 @@ import demetra.desktop.ui.variables.VariablesDocumentManager;
 import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.nodes.WsNode;
-import demetra.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;

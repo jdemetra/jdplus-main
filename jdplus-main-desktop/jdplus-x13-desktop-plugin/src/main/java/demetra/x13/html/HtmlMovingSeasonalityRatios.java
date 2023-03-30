@@ -11,7 +11,7 @@ import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTableHeader;
 import demetra.html.HtmlTag;
-import demetra.x11.MsrTable;
+import jdplus.x13.base.api.x11.MsrTable;
 import java.io.IOException;
 
 /**

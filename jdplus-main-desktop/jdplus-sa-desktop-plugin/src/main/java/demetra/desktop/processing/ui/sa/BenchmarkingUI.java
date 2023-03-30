@@ -18,7 +18,7 @@ package demetra.desktop.processing.ui.sa;
 
 import demetra.desktop.ui.processing.ItemUI;
 import javax.swing.JComponent;
-import jdplus.sa.SaBenchmarkingResults;
+import jdplus.sa.base.core.SaBenchmarkingResults;
 
 /**
  *

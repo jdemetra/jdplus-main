@@ -16,10 +16,10 @@
  */
 package demetra.desktop.core.properties;
 
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import demetra.desktop.DemetraUI;
 import demetra.desktop.jfreechart.TsCharts;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import ec.util.chart.swing.Charts;
 import ec.util.various.swing.StandardSwingColor;
 import java.awt.Graphics;

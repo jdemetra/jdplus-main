@@ -18,7 +18,7 @@ package demetra.desktop.core.star;
 
 import demetra.desktop.nodes.SingleNodeAction;
 import demetra.desktop.star.StarListManager;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

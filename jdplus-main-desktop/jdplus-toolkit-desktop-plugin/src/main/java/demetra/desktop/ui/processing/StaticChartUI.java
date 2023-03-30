@@ -5,9 +5,9 @@
 package demetra.desktop.ui.processing;
 
 import demetra.desktop.components.JTsChart;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;

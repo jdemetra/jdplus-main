@@ -1,7 +1,7 @@
 package demetra.desktop.jfreechart;
 
 import demetra.desktop.components.parts.HasChart.LinesThickness;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
@@ -47,7 +47,7 @@ public final class TsCharts {
     @lombok.AllArgsConstructor
     private static final class TsDataAsXYDataset extends AbstractXYDataset {
 
-        final demetra.timeseries.TsData data;
+        final TsData data;
 
         @Override
         public int getSeriesCount() {

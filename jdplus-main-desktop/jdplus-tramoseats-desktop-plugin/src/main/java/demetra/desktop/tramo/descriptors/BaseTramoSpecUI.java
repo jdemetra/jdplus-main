@@ -5,18 +5,18 @@
 package demetra.desktop.tramo.descriptors;
 
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.arima.SarimaSpec;
-import demetra.modelling.TransformationType;
-import demetra.tramo.AutoModelSpec;
-import demetra.tramo.CalendarSpec;
-import demetra.tramo.EasterSpec;
-import demetra.tramo.EstimateSpec;
-import demetra.tramo.MeanSpec;
-import demetra.tramo.OutlierSpec;
-import demetra.tramo.RegressionSpec;
-import demetra.tramo.TradingDaysSpec;
-import demetra.tramo.TramoSpec;
-import demetra.tramo.TransformSpec;
+import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.tramoseats.base.api.tramo.AutoModelSpec;
+import jdplus.tramoseats.base.api.tramo.CalendarSpec;
+import jdplus.tramoseats.base.api.tramo.EasterSpec;
+import jdplus.tramoseats.base.api.tramo.EstimateSpec;
+import jdplus.tramoseats.base.api.tramo.MeanSpec;
+import jdplus.tramoseats.base.api.tramo.OutlierSpec;
+import jdplus.tramoseats.base.api.tramo.RegressionSpec;
+import jdplus.tramoseats.base.api.tramo.TradingDaysSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramo.TransformSpec;
 
 /**
  *

@@ -1,3 +1,5 @@
+import jdplus.toolkit.base.api.information.InformationExtractor;
+
 module jdplus.sa.base.core {
 
     requires static lombok;
@@ -8,21 +10,21 @@ module jdplus.sa.base.core {
     requires transitive jdplus.sa.base.api;
     requires jdplus.toolkit.base.core;
 
-    exports jdplus.sa;
-    exports jdplus.sa.diagnostics;
-    exports jdplus.sa.extractors;
-    exports jdplus.sa.modelling;
-    exports jdplus.sa.regarima;
-    exports jdplus.sa.spi;
-    exports jdplus.sa.tests;
+    exports jdplus.sa.base.core.diagnostics;
+    exports jdplus.sa.base.core.extractors;
+    exports jdplus.sa.base.core.modelling;
+    exports jdplus.sa.base.core.regarima;
+    exports jdplus.sa.base.core.spi;
+    exports jdplus.sa.base.core.tests;
+    exports jdplus.sa.base.core;
 
-    provides demetra.sa.diagnostics.SeasonalityTests.Factory with
-            jdplus.sa.spi.SeasonalityTestsFactory;
+    provides jdplus.sa.base.api.diagnostics.SeasonalityTests.Factory with
+            jdplus.sa.base.core.spi.SeasonalityTestsFactory;
 
-    provides demetra.information.InformationExtractor with
-            jdplus.sa.extractors.OneStepAheadForecastingTestExtractor,
-            jdplus.sa.extractors.GenericSaTestsExtractor,
-            jdplus.sa.extractors.SaRegarimaExtractor,
-            jdplus.sa.extractors.SaBenchmarkingExtractor,
-            jdplus.sa.extractors.CombinedSeasonalityTestsExtractor;
+    provides InformationExtractor with
+            jdplus.sa.base.core.extractors.OneStepAheadForecastingTestExtractor,
+            jdplus.sa.base.core.extractors.GenericSaTestsExtractor,
+            jdplus.sa.base.core.extractors.SaRegarimaExtractor,
+            jdplus.sa.base.core.extractors.SaBenchmarkingExtractor,
+            jdplus.sa.base.core.extractors.CombinedSeasonalityTestsExtractor;
 }

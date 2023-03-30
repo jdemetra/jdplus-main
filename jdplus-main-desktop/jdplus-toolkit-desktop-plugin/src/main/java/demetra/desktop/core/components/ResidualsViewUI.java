@@ -18,7 +18,7 @@ package demetra.desktop.core.components;
 
 import demetra.desktop.util.DateFormatAdapter;
 import demetra.desktop.components.parts.*;
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.components.ComponentBackendSpi;
 import demetra.desktop.components.JTsGrid;
 import demetra.desktop.components.parts.HasTsCollection.TsUpdateMode;
@@ -30,6 +30,8 @@ import ec.util.chart.ColorScheme;
 import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SwingColorSchemeSupport;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.jfree.chart.ChartFactory;
@@ -52,8 +54,8 @@ import java.util.Collections;
 
 import static demetra.desktop.components.parts.HasObsFormat.OBS_FORMAT_PROPERTY;
 import static demetra.desktop.components.parts.HasTsData.TS_DATA_PROPERTY;
-import demetra.timeseries.TsMoniker;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import java.util.DoubleSummaryStatistics;
 import java.util.stream.DoubleStream;
 
@@ -134,8 +136,8 @@ public final class ResidualsViewUI implements InternalUI<JResidualsView> {
     }
 
     private void onTsDataChange(JResidualsView view) {
-        demetra.timeseries.TsData data = view.getTsData();
-        demetra.timeseries.Ts ts = demetra.timeseries.Ts.builder().moniker(TsMoniker.of()).name("Residuals").data(data).build();
+        TsData data = view.getTsData();
+        Ts ts = Ts.builder().moniker(TsMoniker.of()).name("Residuals").data(data).build();
         chartPanel.getChart().getXYPlot().setDataset(TsXYDataset.of(Collections.singletonList(ts)));
         if (!data.isEmpty()) {
             Range rng = calcRange(data.getValues().toArray());

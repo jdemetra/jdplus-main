@@ -16,7 +16,7 @@
  */
 package demetra.desktop.anomalydetection.report;
 
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.util.Comparator;
 
 /**

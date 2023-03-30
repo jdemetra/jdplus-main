@@ -6,13 +6,11 @@ package demetra.desktop.sa.multiprocessing.ui;
 
 import demetra.desktop.util.NbComponents;
 import demetra.desktop.components.JHtmlView;
-import demetra.desktop.workspace.WorkspaceItem;
 import demetra.html.HtmlUtil;
 import demetra.html.modelling.HtmlRegSarimaReport;
-import demetra.information.Explorable;
-import demetra.processing.AlgorithmDescriptor;
-import demetra.sa.SaItem;
-import demetra.sa.SaItems;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.processing.AlgorithmDescriptor;
+import jdplus.sa.base.api.SaItem;
 import ec.util.list.swing.JLists;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -25,10 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import jdplus.regsarima.regular.RegSarimaReport;
-import jdplus.sa.modelling.HasRegSarimaPreprocessing;
-import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.ExplorerUtils;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaReport;
+import jdplus.sa.base.core.modelling.HasRegSarimaPreprocessing;
 
 /**
  * @author Philippe Charles

@@ -6,9 +6,9 @@ package demetra.desktop.processing.ui.modelling;
 
 import demetra.desktop.ui.processing.ProcDocumentItemFactory;
 import demetra.desktop.ui.processing.TsViewToolkit;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsDocument;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.toolkit.base.api.util.Id;
 import java.util.Collections;
 
 /**

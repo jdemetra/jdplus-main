@@ -1,7 +1,7 @@
 package demetra.desktop.components;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 @lombok.Value

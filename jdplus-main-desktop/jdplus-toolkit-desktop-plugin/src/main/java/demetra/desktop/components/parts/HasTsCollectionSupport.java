@@ -26,14 +26,15 @@ import demetra.desktop.datatransfer.DataTransfers;
 import demetra.desktop.datatransfer.LocalObjectDataTransfer;
 import demetra.desktop.util.Collections2;
 import demetra.desktop.util.KeyStrokes;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsMoniker;
-import demetra.tsprovider.DataSourceProvider;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import ec.util.list.swing.JLists;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
+import jdplus.toolkit.base.tsp.DataSet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.DialogDisplayer;
@@ -281,7 +282,7 @@ public class HasTsCollectionSupport {
             return JLists.isSingleSelectionIndex(c.getTsSelectionModel());
         }
 
-        protected demetra.timeseries.Ts getSingleTs(HasTsCollection c) {
+        protected Ts getSingleTs(HasTsCollection c) {
             return c.getTsCollection().get(c.getTsSelectionModel().getMinSelectionIndex());
         }
     }
@@ -304,7 +305,7 @@ public class HasTsCollectionSupport {
 
         @Override
         public void execute(final HasTsCollection c) throws Exception {
-            final demetra.timeseries.Ts ts = getSingleTs(c);
+            final Ts ts = getSingleTs(c);
             NotifyDescriptor.InputLine descriptor = new NotifyDescriptor.InputLine("New name:", "Rename time series");
             descriptor.setInputText(ts.getName());
             if (ts.getMoniker().isProvided()) {
@@ -313,7 +314,7 @@ public class HasTsCollectionSupport {
                     public void actionPerformed(ActionEvent e) {
                         Optional<DataSourceProvider> provider = TsManager.get().getProvider(DataSourceProvider.class, ts.getMoniker());
                         if (provider.isPresent()) {
-                            demetra.tsprovider.DataSet dataSet = provider.orElseThrow().toDataSet(ts.getMoniker()).orElse(null);
+                            DataSet dataSet = provider.orElseThrow().toDataSet(ts.getMoniker()).orElse(null);
                             if (dataSet != null) {
                                 rename(c, ts, provider.orElseThrow().getDisplayName(dataSet));
                             }
@@ -326,8 +327,8 @@ public class HasTsCollectionSupport {
             }
         }
 
-        private void rename(HasTsCollection c, demetra.timeseries.Ts ts, String newName) {
-            List<demetra.timeseries.Ts> tmp = c.getTsCollection().toList();
+        private void rename(HasTsCollection c, Ts ts, String newName) {
+            List<Ts> tmp = c.getTsCollection().toList();
             tmp.set(tmp.indexOf(ts), ts.withName(newName));
             c.setTsCollection(TsCollection.of(tmp));
         }
@@ -451,7 +452,7 @@ public class HasTsCollectionSupport {
 
         @Override
         public void execute(HasTsCollection c) throws Exception {
-            Set<demetra.timeseries.Ts> selection = c.getTsSelectionStream().collect(Collectors.toSet());
+            Set<Ts> selection = c.getTsSelectionStream().collect(Collectors.toSet());
             TsCollection result = c.getTsCollection()
                     .stream()
                     .filter(ts -> !selection.contains(ts))
@@ -475,7 +476,7 @@ public class HasTsCollectionSupport {
 
         @Override
         public void execute(HasTsCollection component) throws Exception {
-            component.setTsCollection(demetra.timeseries.TsCollection.EMPTY);
+            component.setTsCollection(TsCollection.EMPTY);
         }
     }
 
@@ -517,8 +518,8 @@ public class HasTsCollectionSupport {
             JLists.getSelectionIndexStream(c.getTsSelectionModel())
                     .findFirst()
                     .ifPresent(i -> {
-                        demetra.timeseries.TsCollection tmp = c.getTsCollection();
-                        List<demetra.timeseries.Ts> list = tmp.toList();
+                        TsCollection tmp = c.getTsCollection();
+                        List<Ts> list = tmp.toList();
                         Ts s = list.get(i);
                         if (!s.getMoniker().isUserDefined()) {
                             list.add(s.freeze());

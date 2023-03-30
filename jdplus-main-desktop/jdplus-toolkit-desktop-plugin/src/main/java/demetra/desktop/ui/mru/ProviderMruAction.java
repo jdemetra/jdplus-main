@@ -18,8 +18,8 @@ package demetra.desktop.ui.mru;
 
 import demetra.desktop.TsManager;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
 import org.openide.awt.*;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;

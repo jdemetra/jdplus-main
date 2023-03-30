@@ -4,11 +4,11 @@
  */
 package demetra.desktop.x13.documents;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import demetra.desktop.workspace.AbstractFileItemRepository;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemRepository;
-import demetra.x13.X13Spec;
+import jdplus.x13.base.api.x13.X13Spec;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

@@ -5,11 +5,9 @@
 package demetra.desktop.ui.calendar;
 
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.ValidityPeriod;
-import demetra.timeseries.calendars.CalendarDefinition;
-import demetra.timeseries.calendars.DayEvent;
-import demetra.timeseries.calendars.Holiday;
-import demetra.timeseries.calendars.PrespecifiedHoliday;
+import jdplus.toolkit.base.api.timeseries.calendars.DayEvent;
+import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
+import jdplus.toolkit.base.api.timeseries.calendars.PrespecifiedHoliday;
 import java.time.LocalDate;
 
 /**

@@ -1,3 +1,6 @@
+import jdplus.sa.base.workspace.SaHandlers;
+import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
+
 module jdplus.sa.base.workspace {
 
     requires static lombok;
@@ -8,9 +11,9 @@ module jdplus.sa.base.workspace {
     requires jdplus.toolkit.base.workspace;
     requires jdplus.sa.base.information;
 
-    exports demetra.sa.workspace;
+    exports jdplus.sa.base.workspace;
 
-    provides demetra.workspace.file.spi.FamilyHandler with
-            demetra.sa.workspace.SaHandlers.SaMulti,
-            demetra.sa.workspace.SaHandlers.SaMultiLegacy;
+    provides FamilyHandler with
+            SaHandlers.SaMulti,
+            SaHandlers.SaMultiLegacy;
 }

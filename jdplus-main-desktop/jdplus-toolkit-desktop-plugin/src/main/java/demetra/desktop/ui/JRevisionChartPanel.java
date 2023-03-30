@@ -16,12 +16,11 @@
  */
 package demetra.desktop.ui;
 
-import demetra.desktop.TsManager;
 import demetra.desktop.components.parts.HasColorScheme;
 import demetra.desktop.components.parts.HasColorSchemeResolver;
 import demetra.desktop.components.parts.HasColorSchemeSupport;
 import demetra.desktop.components.parts.HasTsCollection;
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.components.TimeSeriesComponent;
 import demetra.desktop.util.KeyStrokes;
 import demetra.desktop.actions.Actions;
@@ -56,12 +55,12 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.jfreechart.TsCharts;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.calendars.CalendarUtility;
-import demetra.util.Arrays2;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.util.Arrays2;
 import ec.util.chart.swing.SwingColorSchemeSupport;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 
 /**
@@ -231,7 +230,7 @@ public final class JRevisionChartPanel extends JComponent implements TimeSeriesC
     }
 
     protected Transferable transferableOnSelection() {
-        List<demetra.timeseries.Ts> col = new ArrayList<>();
+        List<Ts> col = new ArrayList<>();
         Ts ts = Ts.of("Reference serie", reference);
         col.add(ts);
         if (revs != null) {

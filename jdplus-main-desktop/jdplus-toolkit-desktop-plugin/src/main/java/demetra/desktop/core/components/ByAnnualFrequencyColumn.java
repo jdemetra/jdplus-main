@@ -17,10 +17,10 @@
 package demetra.desktop.core.components;
 
 import demetra.desktop.components.TsGridObs;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDataTable;
-import demetra.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import ec.util.chart.ObsIndex;
 import java.time.Month;
 import java.time.format.TextStyle;

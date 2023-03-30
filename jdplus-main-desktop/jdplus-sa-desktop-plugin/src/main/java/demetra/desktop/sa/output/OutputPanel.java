@@ -5,13 +5,12 @@
 package demetra.desktop.sa.output;
 
 import demetra.desktop.DemetraIcons;
-import demetra.sa.SaOutputFactory;
-import demetra.sa.SaProcessingFactory;
+import jdplus.sa.base.api.SaOutputFactory;
+
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;

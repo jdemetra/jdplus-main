@@ -4,23 +4,21 @@
  */
 package demetra.desktop.core.tools;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.JTsGrid;
 import demetra.desktop.components.JTsGrid.Mode;
 import demetra.desktop.components.parts.HasTs;
-import demetra.desktop.components.parts.HasTsCollection;
 import demetra.desktop.components.parts.HasTsCollection.TsUpdateMode;
 import demetra.desktop.components.tools.JAutoCorrelationsView;
 import demetra.desktop.components.tools.PeriodogramView;
 import demetra.desktop.datatransfer.DataTransferManager;
 import demetra.desktop.tsproviders.DataSourceManager;
 import demetra.desktop.util.NbComponents;
-import demetra.desktop.ui.processing.TsTopComponent;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -40,7 +38,6 @@ import java.util.Optional;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.util.Exceptions;
-import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -169,7 +166,7 @@ public final class DifferencingTopComponent extends TopComponent  implements Has
         } else {
             dropDataLabel.setVisible(false);
             tsLabel.setText(ts.getName());
-            demetra.timeseries.TsMoniker moniker = ts.getMoniker();
+            TsMoniker moniker = ts.getMoniker();
             tsLabel.setIcon(DataSourceManager.get().getIcon(moniker, BeanInfo.ICON_COLOR_16x16, false));
             tsLabel.setToolTipText(tsLabel.getText() + (moniker.getSource() != null ? (" (" + moniker.getSource() + ")") : ""));
             tsLabel.setVisible(true);
@@ -212,7 +209,7 @@ public final class DifferencingTopComponent extends TopComponent  implements Has
 
         @Override
         public boolean importData(TransferHandler.TransferSupport support) {
-            Optional<demetra.timeseries.Ts> s = DataTransferManager.get().toTs(support.getTransferable());
+            Optional<Ts> s = DataTransferManager.get().toTs(support.getTransferable());
             if (s.isPresent()) {
                 setTs(s.orElseThrow());
                 return true;

@@ -21,7 +21,7 @@ import demetra.desktop.design.SwingComponent;
 import demetra.desktop.jfreechart.BasicXYDataset;
 import demetra.desktop.jfreechart.TsCharts;
 import demetra.desktop.ui.StabilityTickUnit;
-import demetra.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import ec.util.chart.ColorScheme.KnownColor;
 import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SwingColorSchemeSupport;

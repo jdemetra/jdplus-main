@@ -16,7 +16,7 @@
  */
 package demetra.desktop.ui.chart3d.functions;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.JExceptionPanel;
 import demetra.desktop.ui.processing.TsViewToolkit;
 import demetra.desktop.ui.chart3d.JSurfacePanel;
@@ -25,10 +25,10 @@ import demetra.desktop.ui.chart3d.SurfaceModel.PlotType;
 
 import javax.swing.*;
 import java.awt.*;
-import jdplus.data.DataBlock;
-import jdplus.math.functions.IFunction;
-import jdplus.math.functions.IFunctionPoint;
-import jdplus.math.functions.IParametersDomain;
+import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.math.functions.IFunction;
+import jdplus.toolkit.base.core.math.functions.IFunctionPoint;
+import jdplus.toolkit.base.core.math.functions.IParametersDomain;
 
 /**
  * Main view displaying the results in the 3D plot

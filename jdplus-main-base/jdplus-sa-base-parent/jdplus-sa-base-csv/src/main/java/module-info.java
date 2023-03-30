@@ -1,3 +1,8 @@
+import jdplus.sa.base.api.SaOutputFactory;
+import jdplus.sa.base.csv.CsvArrayOutputFactory;
+import jdplus.sa.base.csv.CsvMatrixOutputFactory;
+import jdplus.sa.base.csv.CsvOutputFactory;
+
 module jdplus.sa.base.csv {
 
     requires static lombok;
@@ -7,10 +12,10 @@ module jdplus.sa.base.csv {
 
     requires transitive jdplus.sa.base.api;
 
-    exports demetra.sa.csv;
+    exports jdplus.sa.base.csv;
 
-    provides demetra.sa.SaOutputFactory with
-            demetra.sa.csv.CsvArrayOutputFactory,
-            demetra.sa.csv.CsvMatrixOutputFactory,
-            demetra.sa.csv.CsvOutputFactory;
+    provides SaOutputFactory with
+            CsvArrayOutputFactory,
+            CsvMatrixOutputFactory,
+            CsvOutputFactory;
 }

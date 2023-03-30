@@ -16,12 +16,12 @@
  */
 package demetra.desktop.anomalydetection;
 
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.regression.IOutlier;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import java.time.LocalDateTime;
-import jdplus.modelling.regression.RegressionDesc;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.modelling.regression.RegressionDesc;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  *

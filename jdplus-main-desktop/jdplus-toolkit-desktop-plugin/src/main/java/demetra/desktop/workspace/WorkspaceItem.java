@@ -16,11 +16,11 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import java.util.Comparator;
 import org.openide.windows.TopComponent;
 import demetra.desktop.interfaces.Modifiable;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.util.Id;
 
 /**
  *

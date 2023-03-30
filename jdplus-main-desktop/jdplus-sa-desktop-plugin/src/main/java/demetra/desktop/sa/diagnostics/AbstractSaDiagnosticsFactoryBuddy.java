@@ -21,7 +21,7 @@ import demetra.desktop.Converter;
 import demetra.desktop.DemetraIcons;
 import demetra.desktop.actions.Configurable;
 import demetra.desktop.properties.PropertySheetDialogBuilder;
-import demetra.processing.DiagnosticsConfiguration;
+import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
 import java.awt.Image;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.nodes.Sheet;

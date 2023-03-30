@@ -6,10 +6,12 @@ package demetra.desktop.core.tools;
 
 import demetra.desktop.components.parts.HasTs;
 import demetra.desktop.components.tools.TukeySpectrumView;
-import demetra.desktop.ui.processing.TsTopComponent;
+
 import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;
-import jdplus.data.analysis.WindowFunction;
+
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -116,12 +118,12 @@ public final class TukeySpectrumTopComponent extends TopComponent implements Has
 
 
     @Override
-    public demetra.timeseries.Ts getTs() {
+    public Ts getTs() {
         return view.getTs();
     }
 
     @Override
-    public void setTs(demetra.timeseries.Ts ts) {
+    public void setTs(Ts ts) {
         view.setTs(ts);
     }
 

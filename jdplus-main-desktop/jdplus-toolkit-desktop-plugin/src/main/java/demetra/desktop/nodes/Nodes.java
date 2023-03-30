@@ -16,7 +16,7 @@
  */
 package demetra.desktop.nodes;
 
-import demetra.util.TreeTraverser;
+import jdplus.toolkit.base.api.util.TreeTraverser;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.nodes.Node;
 import org.openide.util.Utilities;

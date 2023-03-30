@@ -4,7 +4,7 @@
  */
 package demetra.desktop.tramo.descriptors;
 
-import demetra.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 
 /**
  *

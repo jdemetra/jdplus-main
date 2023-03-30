@@ -6,14 +6,13 @@ package demetra.desktop.ui.processing.stats;
 
 import demetra.desktop.components.tools.JStabilityView;
 import demetra.desktop.ui.processing.ItemUI;
-import demetra.information.Explorable;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.regression.RegressionItem;
-import demetra.toolkit.dictionaries.Dictionary;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
+import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import java.util.Map;
-import java.util.function.ToDoubleFunction;
 import javax.swing.JComponent;
-import jdplus.timeseries.simplets.analysis.MovingProcessing;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
 
 /**
  *

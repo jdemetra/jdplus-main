@@ -2,15 +2,15 @@ package internal.desktop.spreadsheet.datatransfer;
 
 import demetra.desktop.Config;
 import demetra.desktop.Converter;
-import demetra.timeseries.TsUnit;
-import demetra.timeseries.util.ObsGathering;
-import demetra.tsprovider.grid.GridReader;
-import demetra.tsprovider.grid.GridReaderHandler;
-import demetra.tsprovider.util.ObsFormat;
-import demetra.tsprovider.util.ObsFormatHandler;
-import demetra.tsprovider.util.ObsGatheringHandler;
-import demetra.tsprovider.util.PropertyHandler;
-import static demetra.tsprovider.util.PropertyHandler.*;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
+import jdplus.toolkit.base.tsp.grid.GridReader;
+import jdplus.toolkit.base.tsp.grid.GridReaderHandler;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormatHandler;
+import jdplus.toolkit.base.tsp.util.ObsGatheringHandler;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
+import static jdplus.toolkit.base.tsp.util.PropertyHandler.*;
 
 @lombok.RequiredArgsConstructor
 final class SpreadSheetDataTransferConverter implements Converter<SpreadSheetDataTransferBean, Config> {

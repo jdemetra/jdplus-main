@@ -6,7 +6,7 @@ package demetra.desktop.tramo.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IObjectDescriptor;
-import demetra.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

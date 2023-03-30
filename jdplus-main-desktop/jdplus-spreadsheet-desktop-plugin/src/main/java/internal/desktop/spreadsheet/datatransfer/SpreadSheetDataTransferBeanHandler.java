@@ -1,7 +1,7 @@
 package internal.desktop.spreadsheet.datatransfer;
 
-import demetra.tsprovider.grid.GridReader;
-import demetra.tsprovider.util.PropertyHandler;
+import jdplus.toolkit.base.tsp.grid.GridReader;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 

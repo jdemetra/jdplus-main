@@ -16,8 +16,8 @@
  */
 package tck.demetra.tsp;
 
-import demetra.tsprovider.DataSet;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSource;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.util.Objects;
 import org.checkerframework.checker.nullness.qual.NonNull;

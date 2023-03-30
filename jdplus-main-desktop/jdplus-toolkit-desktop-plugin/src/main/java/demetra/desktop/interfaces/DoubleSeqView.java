@@ -1,6 +1,6 @@
 package demetra.desktop.interfaces;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**
  *

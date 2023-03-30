@@ -1,7 +1,7 @@
 package demetra.desktop.core.completion;
 
 import demetra.desktop.completion.AutoCompletionSpi;
-import demetra.util.List2;
+import jdplus.toolkit.base.api.util.List2;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import ec.util.completion.swing.CustomListCellRenderer;

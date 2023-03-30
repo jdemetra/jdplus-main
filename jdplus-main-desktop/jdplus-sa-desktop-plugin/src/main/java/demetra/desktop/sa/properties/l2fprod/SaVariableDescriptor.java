@@ -5,9 +5,9 @@
 package demetra.desktop.sa.properties.l2fprod;
 
 import demetra.desktop.descriptors.*;
-import demetra.sa.ComponentType;
-import demetra.timeseries.regression.ITsVariable;
-import demetra.timeseries.regression.Variable;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import demetra.desktop.ui.properties.l2fprod.VariableDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;

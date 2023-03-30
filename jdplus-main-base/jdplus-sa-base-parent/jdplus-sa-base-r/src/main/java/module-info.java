@@ -9,5 +9,5 @@ module jdplus.sa.base.r {
     requires jdplus.sa.base.protobuf;
     requires jdplus.toolkit.base.core;
 
-    exports demetra.sa.r;
+    exports jdplus.sa.base.r;
 }

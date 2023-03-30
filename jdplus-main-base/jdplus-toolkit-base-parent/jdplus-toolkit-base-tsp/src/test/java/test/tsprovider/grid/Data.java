@@ -16,8 +16,8 @@
  */
 package test.tsprovider.grid;
 
-import demetra.timeseries.*;
-import demetra.tsprovider.grid.GridLayout;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.tsp.grid.GridLayout;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

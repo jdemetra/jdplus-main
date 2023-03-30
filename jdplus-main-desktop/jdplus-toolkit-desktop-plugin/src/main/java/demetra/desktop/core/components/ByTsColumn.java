@@ -17,10 +17,10 @@
 package demetra.desktop.core.components;
 
 import demetra.desktop.components.TsGridObs;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsDataTable;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import ec.util.chart.ObsIndex;
 
 import java.util.List;
@@ -39,8 +39,8 @@ final class ByTsColumn implements TsGridData {
     private final TsGridObs obs;
 
     public ByTsColumn(List<Ts> col) {
-        this.names = col.stream().map(demetra.timeseries.Ts::getName).collect(Collectors.toList());
-        this.dataTable = TsDataTable.of(col, demetra.timeseries.Ts::getData);
+        this.names = col.stream().map(Ts::getName).collect(Collectors.toList());
+        this.dataTable = TsDataTable.of(col, Ts::getData);
         this.domain = dataTable.getDomain();
         this.cursor = dataTable.cursor(TsDataTable.DistributionType.FIRST);
         this.obs = new TsGridObs();

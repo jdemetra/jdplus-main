@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.calendar;
 
-import demetra.timeseries.calendars.Holiday;
+import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
 
 /**
  *

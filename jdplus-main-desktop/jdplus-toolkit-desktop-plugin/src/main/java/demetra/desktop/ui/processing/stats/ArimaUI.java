@@ -8,7 +8,7 @@ import demetra.desktop.components.tools.JArimaView;
 import demetra.desktop.ui.processing.ItemUI;
 import java.util.Map;
 import javax.swing.JComponent;
-import jdplus.arima.IArimaModel;
+import jdplus.toolkit.base.core.arima.IArimaModel;
 
 /**
  *

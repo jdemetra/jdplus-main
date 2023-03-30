@@ -7,5 +7,5 @@ module jdplus.toolkit.base.information {
 
     requires transitive jdplus.toolkit.base.api;
 
-    exports demetra.modelling.io.information;
+    exports jdplus.toolkit.base.information;
 }

@@ -11,5 +11,5 @@ module jdplus.tramoseats.base.protobuf {
     requires jdplus.sa.base.protobuf;
     requires jdplus.toolkit.base.core;
 
-    exports demetra.tramoseats.io.protobuf;
+    exports jdplus.tramoseats.base.protobuf;
 }

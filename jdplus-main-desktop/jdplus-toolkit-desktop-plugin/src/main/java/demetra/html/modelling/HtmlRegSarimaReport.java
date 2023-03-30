@@ -16,13 +16,13 @@
  */
 package demetra.html.modelling;
 
-import demetra.arima.SarimaOrders;
+import jdplus.toolkit.base.api.arima.SarimaOrders;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.HtmlElement;
 import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
 import java.io.IOException;
-import jdplus.regsarima.regular.RegSarimaReport;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaReport;
 
 /**
  *

@@ -18,7 +18,7 @@ package demetra.desktop.core.tsproviders;
 
 import demetra.desktop.TsManager;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.tsprovider.FileLoader;
+import jdplus.toolkit.base.tsp.FileLoader;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;

@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.processing;
 
-import demetra.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.Ts;
 import java.util.List;
 import javax.swing.JComponent;
 

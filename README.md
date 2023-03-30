@@ -85,3 +85,4 @@ Any contribution is welcome and should be done through pull requests and/or issu
 ## Licensing
 
 The code of this project is licensed under the [European Union Public Licence (EUPL)](https://joinup.ec.europa.eu/page/eupl-text-11-12).
+ 

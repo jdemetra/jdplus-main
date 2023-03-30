@@ -10,10 +10,10 @@ import demetra.desktop.util.IdNodes;
 import demetra.desktop.workspace.Workspace;
 import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.util.Id;
 import java.awt.Image;
 import java.util.List;
-import javax.swing.Action;
+
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;

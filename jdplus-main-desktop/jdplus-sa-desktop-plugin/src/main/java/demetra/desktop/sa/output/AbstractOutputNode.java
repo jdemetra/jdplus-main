@@ -17,7 +17,7 @@
 package demetra.desktop.sa.output;
 
 import demetra.desktop.DemetraIcons;
-import demetra.sa.SaOutputFactory;
+import jdplus.sa.base.api.SaOutputFactory;
 import java.awt.Image;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;

@@ -17,7 +17,7 @@
 package demetra.desktop;
 
 import demetra.desktop.util.NetBeansServiceBackend;
-import demetra.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.Ts;
 import ec.util.various.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;

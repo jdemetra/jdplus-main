@@ -16,8 +16,8 @@
  */
 package demetra.desktop;
 
-import demetra.tsprovider.util.PropertyHandler;
-import internal.util.SortedMaps;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
+import jdplus.toolkit.base.tsp.fixme.SortedMaps;
 import nbbrd.design.ThreadSafe;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

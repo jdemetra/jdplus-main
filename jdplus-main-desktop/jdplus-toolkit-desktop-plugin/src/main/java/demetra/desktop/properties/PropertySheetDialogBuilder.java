@@ -17,7 +17,7 @@
 package demetra.desktop.properties;
 
 import demetra.desktop.nodes.AbstractNodeBuilder;
-import demetra.util.TreeTraverser;
+import jdplus.toolkit.base.api.util.TreeTraverser;
 import ec.util.table.swing.JTables;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

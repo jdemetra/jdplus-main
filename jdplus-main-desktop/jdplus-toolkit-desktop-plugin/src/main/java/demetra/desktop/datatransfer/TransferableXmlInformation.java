@@ -4,9 +4,9 @@
  */
 package demetra.desktop.datatransfer;
 
-import demetra.information.InformationSet;
-import demetra.information.InformationSetSerializer;
-import demetra.toolkit.io.xml.information.XmlInformationSet;
+import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.information.InformationSetSerializer;
+import jdplus.toolkit.base.xml.information.XmlInformationSet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

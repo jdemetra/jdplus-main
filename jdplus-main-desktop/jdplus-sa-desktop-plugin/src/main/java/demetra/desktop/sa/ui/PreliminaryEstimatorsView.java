@@ -8,12 +8,12 @@ package demetra.desktop.sa.ui;
 import demetra.desktop.components.tools.FilterView;
 import demetra.desktop.components.tools.PiView;
 import demetra.desktop.components.tools.ScatterView;
-import demetra.sa.ComponentDescriptor;
+import jdplus.sa.base.api.ComponentDescriptor;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import jdplus.ucarima.WienerKolmogorovEstimators;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
 
 /**
  *

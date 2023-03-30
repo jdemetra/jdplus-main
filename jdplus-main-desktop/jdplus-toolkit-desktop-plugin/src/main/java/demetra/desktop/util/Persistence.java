@@ -2,7 +2,7 @@ package demetra.desktop.util;
 
 import demetra.desktop.Config;
 import demetra.desktop.beans.BeanHandler;
-import demetra.tsprovider.util.PropertyHandler;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 
 import java.util.List;
 import java.util.function.BiConsumer;

@@ -17,7 +17,7 @@
 package demetra.desktop.core.components;
 
 import demetra.desktop.components.TsGridObs;
-import demetra.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.Ts;
 import ec.util.chart.ObsIndex;
 import java.util.Collections;
 import org.checkerframework.checker.index.qual.NonNegative;

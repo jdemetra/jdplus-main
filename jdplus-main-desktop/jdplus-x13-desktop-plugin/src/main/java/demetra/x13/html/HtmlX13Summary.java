@@ -22,15 +22,15 @@ import demetra.html.HtmlTag;
 import demetra.html.core.HtmlDiagnosticsSummary;
 import demetra.html.core.HtmlProcessingLog;
 import demetra.html.modelling.HtmlRegSarima;
-import demetra.processing.ProcDiagnostic;
-import demetra.processing.ProcessingLog;
+import jdplus.toolkit.base.api.processing.ProcDiagnostic;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import jdplus.regsarima.regular.RegSarimaModel;
-import jdplus.x11.X11Results;
-import jdplus.x13.X13Factory;
-import jdplus.x13.X13Results;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.x13.base.core.x11.X11Results;
+import jdplus.x13.base.core.x13.X13Factory;
+import jdplus.x13.base.core.x13.X13Results;
 
 /**
  *

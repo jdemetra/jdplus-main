@@ -19,7 +19,7 @@ package demetra.desktop.core.properties;
 import demetra.desktop.components.JObsFormatComponent;
 import demetra.desktop.properties.AbstractExPropertyEditor;
 import demetra.desktop.properties.AbstractInplaceEditor;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import org.openide.explorer.propertysheet.InplaceEditor;
 import org.openide.nodes.PropertyEditorRegistration;
 

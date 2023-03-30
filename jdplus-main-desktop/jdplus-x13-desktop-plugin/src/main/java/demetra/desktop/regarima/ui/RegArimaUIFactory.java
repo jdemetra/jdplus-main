@@ -9,10 +9,10 @@ import demetra.desktop.regarima.descriptors.RegArimaSpecUI;
 import demetra.desktop.ui.processing.IProcDocumentView;
 import demetra.desktop.workspace.DocumentUIServices;
 import demetra.desktop.workspace.WorkspaceItem;
-import demetra.regarima.RegArimaSpec;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
 import java.awt.Color;
 import javax.swing.Icon;
-import jdplus.x13.regarima.RegArimaDocument;
+import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 

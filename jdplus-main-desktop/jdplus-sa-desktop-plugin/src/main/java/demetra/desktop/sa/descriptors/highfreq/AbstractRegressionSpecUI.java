@@ -16,22 +16,22 @@
  */
 package demetra.desktop.sa.descriptors.highfreq;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IPropertyDescriptors;
 import demetra.desktop.sa.properties.l2fprod.SaInterventionVariableDescriptor;
 import demetra.desktop.sa.properties.l2fprod.SaTsVariableDescriptor;
 import demetra.desktop.ui.properties.l2fprod.HighFreqOutlierDescriptor;
-import demetra.modelling.TransformationType;
-import demetra.modelling.highfreq.RegressionSpec;
-import demetra.sa.SaVariable;
-import demetra.timeseries.regression.AdditiveOutlier;
-import demetra.timeseries.regression.IOutlier;
-import demetra.timeseries.regression.InterventionVariable;
-import demetra.timeseries.regression.LevelShift;
-import demetra.timeseries.regression.SwitchOutlier;
-import demetra.timeseries.regression.TsContextVariable;
-import demetra.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.toolkit.base.api.modelling.highfreq.RegressionSpec;
+import jdplus.sa.base.api.SaVariable;
+import jdplus.toolkit.base.api.timeseries.regression.AdditiveOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.LevelShift;
+import jdplus.toolkit.base.api.timeseries.regression.SwitchOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

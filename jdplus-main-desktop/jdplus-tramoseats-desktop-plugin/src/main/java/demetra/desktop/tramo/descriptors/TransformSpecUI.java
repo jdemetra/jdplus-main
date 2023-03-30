@@ -6,11 +6,11 @@ package demetra.desktop.tramo.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.DateSelectorUI;
-import demetra.modelling.TransformationType;
-import demetra.timeseries.TimeSelector;
-import demetra.timeseries.calendars.LengthOfPeriodType;
-import demetra.tramo.TradingDaysSpec;
-import demetra.tramo.TransformSpec;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
+import jdplus.tramoseats.base.api.tramo.TradingDaysSpec;
+import jdplus.tramoseats.base.api.tramo.TransformSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

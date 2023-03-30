@@ -16,14 +16,14 @@
  */
 package _util.tsproviders;
 
-import demetra.tsprovider.DataSet;
-import demetra.tsprovider.DataSource;
-import demetra.timeseries.TsInformationType;
-import demetra.tsprovider.stream.DataSetTs;
-import demetra.tsprovider.util.DataSourcePreconditions;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.tsp.stream.DataSetTs;
+import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import java.io.IOException;
 import java.util.stream.Stream;
-import demetra.tsprovider.stream.HasTsStream;
+import jdplus.toolkit.base.tsp.stream.HasTsStream;
 
 /**
  *

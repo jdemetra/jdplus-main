@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYDataset;
-import demetra.math.matrices.Matrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  * A command that extract a matrix from a chart and put it into the system

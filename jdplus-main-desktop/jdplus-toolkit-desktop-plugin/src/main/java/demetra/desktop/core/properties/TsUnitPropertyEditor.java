@@ -16,8 +16,8 @@
  */
 package demetra.desktop.core.properties;
 
-import demetra.timeseries.TsUnit;
-import demetra.timeseries.calendars.RegularFrequency;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.timeseries.calendars.RegularFrequency;
 import java.beans.PropertyEditorSupport;
 import org.openide.nodes.PropertyEditorRegistration;
 

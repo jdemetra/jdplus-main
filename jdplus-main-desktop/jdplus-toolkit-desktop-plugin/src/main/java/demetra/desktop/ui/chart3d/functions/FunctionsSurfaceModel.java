@@ -16,7 +16,7 @@
  */
 package demetra.desktop.ui.chart3d.functions;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.DemetraBehaviour;
 import demetra.desktop.concurrent.UIExecutors;
 import demetra.desktop.ui.chart3d.AbstractSurfaceModel;
@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
-import jdplus.data.DataBlock;
-import jdplus.math.functions.IFunction;
-import jdplus.math.functions.IFunctionPoint;
-import jdplus.math.functions.IParametersDomain;
+import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.math.functions.IFunction;
+import jdplus.toolkit.base.core.math.functions.IFunctionPoint;
+import jdplus.toolkit.base.core.math.functions.IParametersDomain;
 
 /**
  * Surface model used to generate likelihood data from a preprocessing model

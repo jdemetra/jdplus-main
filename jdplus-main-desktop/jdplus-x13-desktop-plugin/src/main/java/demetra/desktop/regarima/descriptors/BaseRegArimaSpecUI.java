@@ -5,18 +5,18 @@
 package demetra.desktop.regarima.descriptors;
 
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.arima.SarimaSpec;
-import demetra.modelling.TransformationType;
-import demetra.regarima.OutlierSpec;
-import demetra.regarima.EstimateSpec;
-import demetra.regarima.AutoModelSpec;
-import demetra.regarima.BasicSpec;
-import demetra.regarima.RegressionSpec;
-import demetra.regarima.TransformSpec;
-import demetra.regarima.EasterSpec;
-import demetra.regarima.MeanSpec;
-import demetra.regarima.TradingDaysSpec;
-import demetra.regarima.RegArimaSpec;
+import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.x13.base.api.regarima.OutlierSpec;
+import jdplus.x13.base.api.regarima.EstimateSpec;
+import jdplus.x13.base.api.regarima.AutoModelSpec;
+import jdplus.x13.base.api.regarima.BasicSpec;
+import jdplus.x13.base.api.regarima.RegressionSpec;
+import jdplus.x13.base.api.regarima.TransformSpec;
+import jdplus.x13.base.api.regarima.EasterSpec;
+import jdplus.x13.base.api.regarima.MeanSpec;
+import jdplus.x13.base.api.regarima.TradingDaysSpec;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
 
 /**
  *

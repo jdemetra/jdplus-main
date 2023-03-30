@@ -5,8 +5,8 @@
 package demetra.desktop.ui.properties.l2fprod;
 
 import demetra.desktop.descriptors.*;
-import demetra.timeseries.regression.Ramp;
-import demetra.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.timeseries.regression.Ramp;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.LocalDate;

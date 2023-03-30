@@ -27,7 +27,7 @@ import java.awt.datatransfer.Transferable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import javax.swing.ListSelectionModel;
 import demetra.desktop.datatransfer.DataTransferManager;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.util.Table;
 
 /**
  *

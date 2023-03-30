@@ -20,8 +20,8 @@ package demetra.x13.html;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.HtmlStream;
 import java.io.IOException;
-import java.util.List;
-import jdplus.regsarima.regular.RegSarimaModel;
+
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  *

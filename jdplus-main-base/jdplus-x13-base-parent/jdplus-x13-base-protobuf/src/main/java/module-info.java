@@ -10,5 +10,5 @@ module jdplus.x13.base.protobuf {
     requires jdplus.sa.base.protobuf;
     requires jdplus.toolkit.base.protobuf;
 
-    exports demetra.x13.io.protobuf;
+    exports jdplus.x13.base.protobuf;
 }

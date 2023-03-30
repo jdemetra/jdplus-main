@@ -7,7 +7,7 @@ package demetra.desktop.core.star;
 import demetra.desktop.DemetraIcons;
 import demetra.desktop.nodes.NodeAnnotatorSpi;
 import demetra.desktop.star.StarListManager;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSource;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;

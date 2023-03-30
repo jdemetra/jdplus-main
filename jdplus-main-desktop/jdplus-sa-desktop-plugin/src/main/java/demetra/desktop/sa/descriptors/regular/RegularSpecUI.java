@@ -16,15 +16,15 @@
  */
 package demetra.desktop.sa.descriptors.regular;
 
-import demetra.modelling.regular.CalendarSpec;
-import demetra.modelling.regular.EasterSpec;
-import demetra.modelling.regular.EstimateSpec;
-import demetra.modelling.regular.ModellingSpec;
-import demetra.modelling.regular.OutlierSpec;
-import demetra.modelling.regular.RegressionSpec;
-import demetra.modelling.regular.SeriesSpec;
-import demetra.modelling.regular.TradingDaysSpec;
-import demetra.modelling.regular.TransformSpec;
+import jdplus.toolkit.base.api.modelling.regular.CalendarSpec;
+import jdplus.toolkit.base.api.modelling.regular.EasterSpec;
+import jdplus.toolkit.base.api.modelling.regular.EstimateSpec;
+import jdplus.toolkit.base.api.modelling.regular.ModellingSpec;
+import jdplus.toolkit.base.api.modelling.regular.OutlierSpec;
+import jdplus.toolkit.base.api.modelling.regular.RegressionSpec;
+import jdplus.toolkit.base.api.modelling.regular.SeriesSpec;
+import jdplus.toolkit.base.api.modelling.regular.TradingDaysSpec;
+import jdplus.toolkit.base.api.modelling.regular.TransformSpec;
 
 /**
  *

@@ -36,11 +36,12 @@ import demetra.desktop.nodes.Nodes;
 import demetra.desktop.star.StarListManager;
 import demetra.desktop.tsproviders.DataSourceManager;
 import demetra.desktop.tsproviders.DataSourceProviderBuddyUtil;
-import demetra.timeseries.TsInformationType;
-import demetra.tsprovider.DataSet;
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.DataSourceLoader;
-import demetra.tsprovider.DataSourceProvider;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.netbeans.api.actions.Closable;
 import org.netbeans.api.actions.Editable;
@@ -291,11 +292,11 @@ public final class DataSourceNode extends AbstractNode {
     private final class TsCollectableImpl implements TsCollectable {
 
         @Override
-        public demetra.timeseries.TsCollection getTsCollection() {
+        public TsCollection getTsCollection() {
             DataSource dataSource = getLookup().lookup(DataSource.class);
             return TsManager.get()
                     .getTsCollection(dataSource, TsEventHelper.SHOULD_BE_NONE)
-                    .orElse(demetra.timeseries.TsCollection.EMPTY);
+                    .orElse(TsCollection.EMPTY);
         }
     }
 

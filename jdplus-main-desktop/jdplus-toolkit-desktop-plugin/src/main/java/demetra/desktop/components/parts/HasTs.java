@@ -18,8 +18,8 @@ package demetra.desktop.components.parts;
 
 import demetra.desktop.TsManager;
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

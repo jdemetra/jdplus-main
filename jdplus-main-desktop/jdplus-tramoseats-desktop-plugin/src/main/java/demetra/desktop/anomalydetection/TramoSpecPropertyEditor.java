@@ -16,7 +16,7 @@
  */
 package demetra.desktop.anomalydetection;
 
-import demetra.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.beans.PropertyEditor;

@@ -16,8 +16,8 @@
  */
 package demetra.desktop.ui.properties.l2fprod;
 
-import demetra.data.Parameter;
-import demetra.util.NamedObject;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.util.NamedObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

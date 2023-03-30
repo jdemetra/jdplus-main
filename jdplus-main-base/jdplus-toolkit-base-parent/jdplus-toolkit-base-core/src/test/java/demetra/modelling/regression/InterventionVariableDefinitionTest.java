@@ -16,8 +16,8 @@
  */
 package demetra.modelling.regression;
 
-import demetra.data.Range;
-import demetra.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.data.Range;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;

@@ -16,11 +16,11 @@
  */
 package tck.demetra.tsp;
 
-import demetra.tsprovider.DataSet;
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.DataSourceLoader;
-import demetra.tsprovider.DataSourceProvider;
-import demetra.tsprovider.util.TsProviders;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
+import jdplus.toolkit.base.tsp.util.TsProviders;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.internal.Iterables;

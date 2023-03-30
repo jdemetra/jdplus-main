@@ -4,14 +4,12 @@
  */
 package demetra.desktop.ui.processing;
 
-import demetra.desktop.TsDynamicProvider;
 import demetra.desktop.datatransfer.DataTransferManager;
-import static demetra.desktop.ui.processing.DefaultProcessingViewer.INPUT_CHANGED;
 import demetra.desktop.workspace.DocumentUIServices;
-import demetra.processing.ProcSpecification;
-import demetra.timeseries.MultiTsDocument;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.processing.ProcSpecification;
+import jdplus.toolkit.base.api.timeseries.MultiTsDocument;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;

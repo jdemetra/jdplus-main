@@ -1,3 +1,6 @@
+import internal.toolkit.base.workspace.file.GenericHandlers;
+import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
+
 module jdplus.toolkit.base.workspace {
 
     requires static lombok;
@@ -9,13 +12,13 @@ module jdplus.toolkit.base.workspace {
     requires nbbrd.io.xml.bind;
     requires java.logging;
 
-    exports demetra.workspace;
-    exports demetra.workspace.file.spi;
-    exports demetra.workspace.file.util;
+    exports jdplus.toolkit.base.workspace;
+    exports jdplus.toolkit.base.workspace.file.spi;
+    exports jdplus.toolkit.base.workspace.file.util;
 
-    uses demetra.workspace.file.spi.FamilyHandler;
+    uses FamilyHandler;
 
-    provides demetra.workspace.file.spi.FamilyHandler with
-            internal.workspace.file.GenericHandlers.UtilCal,
-            internal.workspace.file.GenericHandlers.UtilVar;
+    provides FamilyHandler with
+            GenericHandlers.UtilCal,
+            GenericHandlers.UtilVar;
 }

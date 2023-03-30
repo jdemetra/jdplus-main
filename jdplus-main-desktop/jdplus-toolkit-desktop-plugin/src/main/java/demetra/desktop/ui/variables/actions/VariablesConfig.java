@@ -18,10 +18,10 @@ package demetra.desktop.ui.variables.actions;
 
 import demetra.desktop.Config;
 import demetra.desktop.Converter;
-import demetra.timeseries.regression.ModellingContext;
-import demetra.timeseries.regression.TsDataSuppliers;
-import demetra.util.NameManager;
-import internal.workspace.file.xml.util.XmlTsVariables;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.api.util.NameManager;
+import internal.toolkit.base.workspace.file.xml.util.XmlTsVariables;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.xml.bind.Jaxb;

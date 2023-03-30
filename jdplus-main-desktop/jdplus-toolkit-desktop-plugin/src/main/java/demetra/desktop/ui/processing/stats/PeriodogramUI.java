@@ -6,14 +6,13 @@
 package demetra.desktop.ui.processing.stats;
 
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.tools.PeriodogramView;
-import demetra.desktop.ui.JSpectralView;
 import demetra.desktop.ui.processing.ItemUI;
 import demetra.desktop.ui.processing.TsViewToolkit;
-import demetra.timeseries.TsData;
+
 import javax.swing.*;
-import jdplus.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 
 /**
  * @author Jean Palate

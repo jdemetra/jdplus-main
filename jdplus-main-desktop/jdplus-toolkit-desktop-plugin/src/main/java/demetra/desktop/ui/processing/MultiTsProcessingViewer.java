@@ -6,8 +6,8 @@ package demetra.desktop.ui.processing;
 
 import demetra.desktop.components.JTsTable;
 import demetra.desktop.workspace.DocumentUIServices;
-import demetra.processing.ProcSpecification;
-import demetra.timeseries.MultiTsDocument;
+import jdplus.toolkit.base.api.processing.ProcSpecification;
+import jdplus.toolkit.base.api.timeseries.MultiTsDocument;
 import java.awt.Font;
 import javax.swing.Box;
 import javax.swing.JLabel;

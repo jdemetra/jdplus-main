@@ -16,7 +16,7 @@
  */
 package demetra.desktop.components.tools;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.TimeSeriesComponent;
 import demetra.desktop.components.parts.*;
 import demetra.desktop.jfreechart.TsCharts;
@@ -25,10 +25,11 @@ import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import demetra.desktop.jfreechart.MatrixChartCommand;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsUnit;
+import jdplus.toolkit.base.api.math.Complex;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jfree.chart.ChartFactory;
@@ -49,7 +50,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import jdplus.data.analysis.Periodogram;
+import jdplus.toolkit.base.core.data.analysis.Periodogram;
 
 /**
  * @author Jeremy Demortier
@@ -193,7 +194,7 @@ public abstract class ARPView extends JComponent implements TimeSeriesComponent,
             }
 
             int ifreq = (int) data.freq;
-            if (Math.abs(ifreq - data.freq) < demetra.math.Complex.EPS) {
+            if (Math.abs(ifreq - data.freq) < Complex.EPS) {
                 double[] tdfreq = Periodogram.getTradingDaysFrequencies(ifreq);
                 if (tdfreq != null) {
                     for (double v : tdfreq) {

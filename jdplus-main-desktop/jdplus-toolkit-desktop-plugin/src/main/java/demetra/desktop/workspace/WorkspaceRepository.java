@@ -16,13 +16,13 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.DemetraVersion;
-import demetra.timeseries.calendars.CalendarDefinition;
-import demetra.timeseries.calendars.CalendarManager;
-import demetra.timeseries.regression.ModellingContext;
-import demetra.timeseries.regression.TsDataSuppliers;
-import demetra.tsprovider.DataSource;
-import demetra.util.NameManager;
+import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.api.util.NameManager;
 import java.util.Collection;
 import java.util.List;
 import nbbrd.service.ServiceDefinition;

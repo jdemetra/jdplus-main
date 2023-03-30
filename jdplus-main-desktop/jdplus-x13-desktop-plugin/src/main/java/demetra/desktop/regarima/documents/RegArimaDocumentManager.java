@@ -6,10 +6,10 @@ package demetra.desktop.regarima.documents;
 
 import demetra.desktop.workspace.AbstractWorkspaceTsItemManager;
 import demetra.desktop.workspace.WorkspaceItemManager;
-import demetra.regarima.RegArimaSpec;
-import demetra.util.Id;
-import demetra.util.LinearId;
-import jdplus.x13.regarima.RegArimaDocument;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.LinearId;
+import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

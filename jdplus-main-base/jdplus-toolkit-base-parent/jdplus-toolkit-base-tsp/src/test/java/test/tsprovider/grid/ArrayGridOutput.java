@@ -16,9 +16,9 @@
  */
 package test.tsprovider.grid;
 
-import demetra.tsprovider.grid.GridDataType;
-import demetra.tsprovider.grid.GridLayout;
-import demetra.tsprovider.grid.GridOutput;
+import jdplus.toolkit.base.tsp.grid.GridDataType;
+import jdplus.toolkit.base.tsp.grid.GridLayout;
+import jdplus.toolkit.base.tsp.grid.GridOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -16,7 +16,7 @@
  */
 package demetra.desktop.processing.ui.sa;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.parts.*;
 import demetra.desktop.DemetraUI;
 import demetra.desktop.jfreechart.BasicXYDataset;
@@ -26,12 +26,12 @@ import demetra.desktop.components.TimeSeriesComponent;
 import demetra.desktop.components.tools.JChartPanel;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.ui.TsFrequencyTickUnit;
-import demetra.sa.DecompositionMode;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.sa.base.api.DecompositionMode;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import ec.util.chart.ColorScheme.KnownColor;
 import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.Charts;
@@ -50,7 +50,6 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JMenu;

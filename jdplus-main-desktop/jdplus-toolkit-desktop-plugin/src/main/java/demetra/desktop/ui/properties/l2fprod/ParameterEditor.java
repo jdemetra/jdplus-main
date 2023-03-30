@@ -2,8 +2,8 @@ package demetra.desktop.ui.properties.l2fprod;
 
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import com.l2fprod.common.swing.LookAndFeelTweaks;
-import demetra.data.Parameter;
-import java.text.Format;
+import jdplus.toolkit.base.api.data.Parameter;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;

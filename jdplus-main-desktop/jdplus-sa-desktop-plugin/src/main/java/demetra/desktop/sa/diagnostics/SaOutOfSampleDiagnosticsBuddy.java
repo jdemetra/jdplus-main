@@ -21,8 +21,8 @@ import demetra.desktop.properties.NodePropertySetBuilder;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import demetra.desktop.Converter;
-import jdplus.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.SaOutOfSampleDiagnosticsFactory;
+import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SaOutOfSampleDiagnosticsFactory;
 import nbbrd.io.text.DoubleProperty;
 
 /**

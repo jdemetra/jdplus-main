@@ -38,23 +38,23 @@ import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemManager;
 import demetra.desktop.workspace.ui.JSpecSelectionComponent;
-import demetra.processing.ProcQuality;
-import demetra.processing.ProcessingLog.InformationType;
-import demetra.sa.EstimationPolicyType;
-import demetra.sa.HasSaEstimation;
-import demetra.sa.SaDefinition;
-import demetra.sa.SaEstimation;
-import demetra.sa.SaItem;
-import demetra.sa.SaItems;
-import demetra.sa.SaSpecification;
-import demetra.sa.io.information.SaItemsMapping;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDocument;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.regression.ModellingContext;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.processing.ProcQuality;
+import jdplus.toolkit.base.api.processing.ProcessingLog.InformationType;
+import jdplus.sa.base.api.EstimationPolicyType;
+import jdplus.sa.base.api.HasSaEstimation;
+import jdplus.sa.base.api.SaDefinition;
+import jdplus.sa.base.api.SaEstimation;
+import jdplus.sa.base.api.SaItem;
+import jdplus.sa.base.api.SaItems;
+import jdplus.sa.base.api.SaSpecification;
+import jdplus.sa.base.information.SaItemsMapping;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import ec.util.grid.swing.XTable;
 import ec.util.table.swing.JTables;
 import java.awt.BorderLayout;
@@ -528,7 +528,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         long count = DataTransferManager.get()
                 .toTsCollectionStream(dataobj)
                 .map(col -> col
-                .load(demetra.timeseries.TsInformationType.All, TsManager.get())
+                .load(TsInformationType.All, TsManager.get())
                 .stream()
                 .map(Ts::freeze)
                 .collect(TsCollection.toTsCollection())
@@ -643,15 +643,15 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     public void copySeries(Collection<SaNode> litems) {
-        demetra.timeseries.TsCollection col = litems.stream()
+        TsCollection col = litems.stream()
                 .map(item -> item.output.getDefinition().getTs())
-                .collect(demetra.timeseries.TsCollection.toTsCollection());
+                .collect(TsCollection.toTsCollection());
         Transferable transferable = DataTransferManager.get().fromTsCollection(col);
         java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferable, null);
     }
 
     public void copyComponents(List<String> components) {
-        List<demetra.timeseries.Ts> col = new java.util.ArrayList<>();
+        List<Ts> col = new java.util.ArrayList<>();
         for (SaNode item : getSelection()) {
             item.getOutput().compute(ModellingContext.getActiveContext(), false);
             components.stream().forEach((comp) -> {
@@ -670,7 +670,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     public void copyComponents() {
-        List<demetra.timeseries.Ts> col = new java.util.ArrayList<>();
+        List<Ts> col = new java.util.ArrayList<>();
         for (SaNode item : getSelection()) {
             ActionsHelper helper = ActionsHelpers.getInstance().getHelperFor(item.getSpec());
             if (helper != null) {

@@ -21,9 +21,9 @@ import demetra.desktop.properties.NodePropertySetBuilder;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import demetra.desktop.Converter;
-import jdplus.regarima.diagnostics.OutliersDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;
+import jdplus.toolkit.base.core.regarima.diagnostics.OutliersDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;
 import nbbrd.io.text.DoubleProperty;
 
 /**

@@ -16,8 +16,8 @@
  */
 package demetra.desktop.sa.util;
 
-import demetra.sa.SaProcessingFactory;
-import demetra.sa.SaSpecification;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.sa.base.api.SaSpecification;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

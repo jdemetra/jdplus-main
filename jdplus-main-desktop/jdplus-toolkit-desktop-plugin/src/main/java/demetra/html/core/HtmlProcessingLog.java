@@ -20,7 +20,7 @@ import demetra.html.AbstractHtmlElement;
 import demetra.html.Bootstrap4;
 import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
-import demetra.processing.ProcessingLog;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;

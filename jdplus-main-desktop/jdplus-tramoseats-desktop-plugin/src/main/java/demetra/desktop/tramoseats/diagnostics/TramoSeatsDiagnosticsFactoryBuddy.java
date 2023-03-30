@@ -17,9 +17,9 @@
 package demetra.desktop.tramoseats.diagnostics;
 
 import demetra.desktop.sa.diagnostics.SaDiagnosticsFactoryBuddy;
-import demetra.processing.DiagnosticsConfiguration;
-import demetra.sa.SaDiagnosticsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
+import jdplus.sa.base.api.SaDiagnosticsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 
 /**
  *

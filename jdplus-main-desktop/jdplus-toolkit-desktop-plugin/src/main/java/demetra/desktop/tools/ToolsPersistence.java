@@ -4,15 +4,15 @@
  */
 package demetra.desktop.tools;
 
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.TsManager;
 import demetra.desktop.components.parts.HasTsCollection;
 import demetra.desktop.Config;
 import demetra.desktop.DemetraBehaviour;
 import demetra.desktop.Persistable;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import demetra.desktop.util.XmlConfig;
 import java.net.URLDecoder;
 import java.net.URLEncoder;

@@ -1,16 +1,16 @@
 package demetra.desktop.tsproviders;
 
-import demetra.data.AggregationType;
+import jdplus.toolkit.base.api.data.AggregationType;
 import demetra.desktop.properties.DhmsPropertyEditor;
 import demetra.desktop.properties.NodePropertySetBuilder;
 import demetra.desktop.ui.properties.FileLoaderFileFilter;
-import demetra.timeseries.calendars.RegularFrequency;
-import demetra.timeseries.util.ObsGathering;
-import demetra.tsprovider.FileBean;
-import demetra.tsprovider.FileLoader;
-import demetra.tsprovider.cube.BulkCube;
-import demetra.tsprovider.cube.TableAsCube;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.api.timeseries.calendars.RegularFrequency;
+import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
+import jdplus.toolkit.base.tsp.FileBean;
+import jdplus.toolkit.base.tsp.FileLoader;
+import jdplus.toolkit.base.tsp.cube.BulkCube;
+import jdplus.toolkit.base.tsp.cube.TableAsCube;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.completion.AutoCompletionSource;
 import java.time.Duration;
 import java.util.List;

@@ -16,7 +16,7 @@
  */
 package xml;
 
-import demetra.toolkit.io.xml.legacy.core.XmlTsData;
+import jdplus.toolkit.base.xml.legacy.core.XmlTsData;
 import java.io.InputStream;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;

@@ -13,9 +13,9 @@ import demetra.desktop.ui.processing.TsProcessingViewer;
 import demetra.desktop.ui.properties.l2fprod.UserInterfaceContext;
 import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsDocument;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import java.beans.PropertyChangeEvent;
 import javax.swing.Action;
 import javax.swing.JMenu;
@@ -117,12 +117,12 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
     }
 
     @Override
-    public demetra.timeseries.Ts getTs() {
+    public Ts getTs() {
         return panel.getDocument().getInput();
     }
 
     @Override
-    public void setTs(demetra.timeseries.Ts ts) {
+    public void setTs(Ts ts) {
         Ts cts;
         if (TsManager.isDynamic(ts)) {
             cts = ts.freeze();

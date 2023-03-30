@@ -1,7 +1,7 @@
 package demetra.desktop.ui.properties.l2fprod;
 
 import com.l2fprod.common.propertysheet.PropertyRendererRegistry;
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 
 /**
  *

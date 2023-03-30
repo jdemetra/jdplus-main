@@ -9,8 +9,8 @@ import demetra.desktop.sa.output.OutputSelection;
 import demetra.desktop.util.LazyGlobalService;
 import demetra.desktop.util.Persistence;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import demetra.sa.SaDiagnosticsFactory;
-import demetra.tsprovider.util.PropertyHandler;
+import jdplus.sa.base.api.SaDiagnosticsFactory;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.beans.PropertyChangeSupport;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import jdplus.x13.X13Factory;
-import jdplus.x13.X13Results;
+import jdplus.x13.base.core.x13.X13Factory;
+import jdplus.x13.base.core.x13.X13Results;
 import nbbrd.design.MightBeGenerated;
 import org.openide.util.Lookup;
 

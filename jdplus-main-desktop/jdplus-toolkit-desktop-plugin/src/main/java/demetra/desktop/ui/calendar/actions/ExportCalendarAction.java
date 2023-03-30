@@ -35,8 +35,8 @@ import org.openide.util.actions.Presenter;
 import demetra.desktop.Converter;
 import demetra.desktop.workspace.CalendarDocumentManager;
 import demetra.desktop.workspace.nodes.ItemWsNode;
-import demetra.timeseries.calendars.CalendarDefinition;
-import demetra.timeseries.calendars.CalendarManager;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 
 /**
  *

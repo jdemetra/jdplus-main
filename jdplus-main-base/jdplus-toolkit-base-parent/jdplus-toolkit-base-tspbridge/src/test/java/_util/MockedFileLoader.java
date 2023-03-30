@@ -1,9 +1,9 @@
 package _util;
 
-import demetra.timeseries.TsProvider;
-import demetra.tsprovider.*;
-import demetra.tsprovider.stream.HasTsStream;
-import demetra.tsprovider.stream.TsStreamAsProvider;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+import jdplus.toolkit.base.tsp.*;
+import jdplus.toolkit.base.tsp.stream.HasTsStream;
+import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import nbbrd.io.function.IORunnable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -26,7 +26,7 @@ import demetra.desktop.beans.PropertyChangeSource;
 import demetra.desktop.components.parts.*;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import internal.ui.components.DemoTsBuilder;
 import internal.ui.components.JTsChartConfig;
 import org.checkerframework.checker.nullness.qual.NonNull;

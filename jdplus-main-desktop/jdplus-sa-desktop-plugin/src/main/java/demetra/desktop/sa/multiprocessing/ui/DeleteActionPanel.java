@@ -16,8 +16,7 @@
  */
 package demetra.desktop.sa.multiprocessing.ui;
 
-import demetra.sa.SaItem;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 
 
 /**

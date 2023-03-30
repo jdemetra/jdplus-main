@@ -16,10 +16,10 @@
  */
 package _test;
 
-import demetra.demo.ProviderResources;
-import demetra.sql.jdbc.JdbcBean;
-import demetra.sql.jdbc.JdbcProvider;
-import demetra.tsprovider.cube.TableAsCube;
+import jdplus.toolkit.base.tspbridge.demo.ProviderResources;
+import jdplus.sql.base.api.jdbc.JdbcBean;
+import jdplus.sql.base.api.jdbc.JdbcProvider;
+import jdplus.toolkit.base.tsp.cube.TableAsCube;
 import ec.tss.tsproviders.jdbc.jndi.JndiJdbcProvider;
 
 import java.sql.DriverManager;

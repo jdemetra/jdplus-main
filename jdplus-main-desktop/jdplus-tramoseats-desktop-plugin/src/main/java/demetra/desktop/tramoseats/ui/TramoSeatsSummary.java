@@ -6,7 +6,7 @@ package demetra.desktop.tramoseats.ui;
 
 import demetra.desktop.ui.processing.ItemUI;
 import javax.swing.JComponent;
-import jdplus.tramoseats.TramoSeatsDocument;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
 
 /**
  *

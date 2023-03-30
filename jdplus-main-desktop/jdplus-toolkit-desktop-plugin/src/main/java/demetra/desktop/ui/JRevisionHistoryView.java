@@ -13,11 +13,11 @@ import demetra.desktop.components.JHtmlView;
 import demetra.desktop.components.tools.JChartPanel;
 import demetra.html.HtmlUtil;
 import demetra.html.processing.HtmlRevisionsDocument;
-import demetra.information.Explorable;
-import demetra.timeseries.TimeSelector;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -36,9 +36,9 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import jdplus.timeseries.simplets.analysis.DiagnosticInfo;
-import jdplus.timeseries.simplets.analysis.DiagnosticTarget;
-import jdplus.timeseries.simplets.analysis.RevisionHistory;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticTarget;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 
 /**
  * @author Kristof Bayens

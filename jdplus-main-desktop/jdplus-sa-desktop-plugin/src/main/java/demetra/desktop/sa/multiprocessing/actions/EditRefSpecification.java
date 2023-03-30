@@ -26,7 +26,7 @@ import demetra.desktop.ui.ActiveViewAction;
 import demetra.desktop.ui.properties.l2fprod.PropertiesDialog;
 import demetra.desktop.workspace.DocumentUIServices;
 import demetra.desktop.workspace.WorkspaceItem;
-import demetra.sa.SaSpecification;
+import jdplus.sa.base.api.SaSpecification;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;

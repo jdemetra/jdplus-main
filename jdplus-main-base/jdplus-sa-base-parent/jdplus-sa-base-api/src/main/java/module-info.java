@@ -1,3 +1,8 @@
+import jdplus.sa.base.api.SaDiagnosticsFactory;
+import jdplus.sa.base.api.SaOutputFactory;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.toolkit.base.api.information.InformationExtractor;
+
 module jdplus.sa.base.api {
 
     requires static lombok;
@@ -7,18 +12,18 @@ module jdplus.sa.base.api {
 
     requires transitive jdplus.toolkit.base.api;
 
-    exports demetra.sa;
-    exports demetra.sa.benchmarking;
-    exports demetra.sa.diagnostics;
-    exports demetra.sa.extractors;
-    exports demetra.sa.modelling;
+    exports jdplus.sa.base.api.benchmarking;
+    exports jdplus.sa.base.api.diagnostics;
+    exports jdplus.sa.base.api.extractors;
+    exports jdplus.sa.base.api.modelling;
+    exports jdplus.sa.base.api;
 
-    uses demetra.sa.SaProcessingFactory;
-    uses demetra.sa.SaDiagnosticsFactory;
-    uses demetra.sa.SaOutputFactory;
-    uses demetra.sa.diagnostics.SeasonalityTests.Factory;
+    uses SaProcessingFactory;
+    uses SaDiagnosticsFactory;
+    uses SaOutputFactory;
+    uses jdplus.sa.base.api.diagnostics.SeasonalityTests.Factory;
 
-    provides demetra.information.InformationExtractor with
-            demetra.sa.extractors.VarianceDecompositionExtractor,
-            demetra.sa.extractors.SeriesDecompositionExtractor;
+    provides InformationExtractor with
+            jdplus.sa.base.api.extractors.VarianceDecompositionExtractor,
+            jdplus.sa.base.api.extractors.SeriesDecompositionExtractor;
 }

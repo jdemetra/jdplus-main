@@ -17,12 +17,12 @@
 package demetra.desktop.ui.processing;
 
 import demetra.desktop.TsDynamicProvider;
-import demetra.information.BasicInformationExtractor;
-import demetra.processing.ProcDocument;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsFactory;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.information.BasicInformationExtractor;
+import jdplus.toolkit.base.api.processing.ProcDocument;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import java.util.ArrayList;
 import java.util.List;
 

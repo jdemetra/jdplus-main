@@ -16,12 +16,13 @@
  */
 package internal.desktop.spreadsheet.datatransfer;
 
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import ec.util.spreadsheet.Book;
 import ec.util.spreadsheet.helpers.ArraySheet;
 import java.io.IOException;
-import internal.spreadsheet.grid.SheetGridInput;
-import internal.spreadsheet.grid.SheetGridOutput;
+import internal.spreadsheet.base.api.grid.SheetGridInput;
+import internal.spreadsheet.base.api.grid.SheetGridOutput;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -131,15 +132,15 @@ final class SpreadSheetDataTransferSupport {
         return false;
     }
 
-    public demetra.math.matrices.Matrix importMatrix(Object obj) throws IOException, ClassCastException {
+    public Matrix importMatrix(Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean canExportMatrix(demetra.math.matrices.Matrix matrix) {
+    public boolean canExportMatrix(Matrix matrix) {
         return false;
     }
 
-    public Object exportMatrix(demetra.math.matrices.Matrix matrix) throws IOException {
+    public Object exportMatrix(Matrix matrix) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -147,15 +148,15 @@ final class SpreadSheetDataTransferSupport {
         return false;
     }
 
-    public demetra.util.Table<?> importTable(Object obj) throws IOException, ClassCastException {
+    public jdplus.toolkit.base.api.util.Table<?> importTable(Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean canExportTable(demetra.util.Table<?> table) {
+    public boolean canExportTable(jdplus.toolkit.base.api.util.Table<?> table) {
         return false;
     }
 
-    public Object exportTable(demetra.util.Table<?> table) throws IOException {
+    public Object exportTable(jdplus.toolkit.base.api.util.Table<?> table) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

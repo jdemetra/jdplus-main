@@ -20,7 +20,7 @@ import demetra.desktop.properties.AbstractInplaceEditor;
 import demetra.desktop.properties.AbstractExPropertyEditor;
 import com.l2fprod.common.swing.LookAndFeelTweaks;
 import com.toedter.calendar.JDateChooser;
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import java.time.LocalDate;
 import java.util.Date;
 import javax.swing.JComponent;

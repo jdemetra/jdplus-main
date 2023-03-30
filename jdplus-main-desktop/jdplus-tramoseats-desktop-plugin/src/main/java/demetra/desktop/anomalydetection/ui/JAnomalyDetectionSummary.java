@@ -24,7 +24,7 @@ import demetra.desktop.ui.Disposables;
 
 import javax.swing.*;
 import java.awt.*;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  * Component containing all Html contents regarding an Outlier Detection of a Ts

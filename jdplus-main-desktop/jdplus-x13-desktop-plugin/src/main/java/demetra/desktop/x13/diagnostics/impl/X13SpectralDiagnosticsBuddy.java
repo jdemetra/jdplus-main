@@ -18,10 +18,9 @@ package demetra.desktop.x13.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.SpectralDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import demetra.sa.SaDiagnosticsFactory;
-import jdplus.sa.diagnostics.SpectralDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.SpectralDiagnosticsFactory;
-import jdplus.x13.X13Results;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
+import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

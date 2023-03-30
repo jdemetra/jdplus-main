@@ -5,10 +5,10 @@
 package demetra.desktop.regarima.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.modelling.TransformationType;
-import demetra.regarima.TradingDaysSpec;
-import demetra.regarima.TransformSpec;
-import demetra.timeseries.calendars.LengthOfPeriodType;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.x13.base.api.regarima.TradingDaysSpec;
+import jdplus.x13.base.api.regarima.TransformSpec;
+import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

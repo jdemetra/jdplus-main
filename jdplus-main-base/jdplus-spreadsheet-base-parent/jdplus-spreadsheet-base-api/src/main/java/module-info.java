@@ -1,3 +1,6 @@
+import jdplus.spreadsheet.base.api.SpreadSheetProvider;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+
 module jdplus.spreadsheet.base.api {
 
     requires static lombok;
@@ -9,8 +12,8 @@ module jdplus.spreadsheet.base.api {
     requires nbbrd.spreadsheet.api;
     requires nbbrd.io.base;
 
-    exports demetra.spreadsheet;
+    exports jdplus.spreadsheet.base.api;
 
-    provides demetra.timeseries.TsProvider
-            with demetra.spreadsheet.SpreadSheetProvider;
+    provides TsProvider
+            with SpreadSheetProvider;
 }

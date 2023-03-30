@@ -6,8 +6,8 @@ package demetra.desktop.ui.calendar;
 
 import demetra.desktop.beans.PropertyChangeSource;
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.calendars.Holiday;
-import demetra.timeseries.calendars.SingleDate;
+import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
+import jdplus.toolkit.base.api.timeseries.calendars.SingleDate;
 
 import java.beans.PropertyChangeSupport;
 import java.time.LocalDate;

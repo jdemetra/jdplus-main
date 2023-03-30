@@ -3,7 +3,7 @@ import public "toolkit.proto";
 
 package modelling;
 
-option java_package = "demetra.modelling.io.protobuf";
+option java_package = "jdplus.toolkit.base.protobuf.modelling";
 option java_outer_classname = "ModellingProtos";
 
 enum Transformation {

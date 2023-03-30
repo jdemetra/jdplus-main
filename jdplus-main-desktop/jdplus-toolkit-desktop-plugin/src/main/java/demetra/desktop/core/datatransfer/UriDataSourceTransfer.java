@@ -7,7 +7,7 @@ package demetra.desktop.core.datatransfer;
 import demetra.desktop.datatransfer.DataSourceTransferSpi;
 import demetra.desktop.datatransfer.DataTransferManager;
 import demetra.desktop.datatransfer.DataTransfers;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSource;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 

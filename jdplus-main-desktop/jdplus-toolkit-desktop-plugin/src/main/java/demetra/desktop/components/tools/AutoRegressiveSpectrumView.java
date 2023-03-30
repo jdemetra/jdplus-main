@@ -16,9 +16,9 @@
  */
 package demetra.desktop.components.tools;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import javax.swing.JPopupMenu;
-import jdplus.data.analysis.AutoRegressiveSpectrum;
+import jdplus.toolkit.base.core.data.analysis.AutoRegressiveSpectrum;
 import org.jfree.data.xy.XYSeries;
 
 /**

@@ -13,24 +13,24 @@ import demetra.desktop.processing.ui.sa.JSIView;
 import demetra.desktop.ui.Disposables;
 import demetra.desktop.ui.processing.TsViewToolkit;
 import demetra.desktop.util.NbComponents;
-import demetra.modelling.SeriesInfo;
-import demetra.sa.DecompositionMode;
-import demetra.sa.SaDictionaries;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsFactory;
-import demetra.timeseries.TsInformationType;
-import demetra.toolkit.dictionaries.Dictionary;
-import demetra.util.MultiLineNameUtil;
-import demetra.x11.X11Dictionaries;
+import jdplus.toolkit.base.api.modelling.SeriesInfo;
+import jdplus.sa.base.api.DecompositionMode;
+import jdplus.sa.base.api.SaDictionaries;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.dictionaries.Dictionary;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.x13.base.api.x11.X11Dictionaries;
 import demetra.x13.html.HtmlX13Summary;
 import java.awt.*;
 import java.util.Arrays;
 import javax.swing.*;
-import jdplus.x11.X11Results;
-import jdplus.x13.X13Document;
-import jdplus.x13.X13Results;
+import jdplus.x13.base.core.x11.X11Results;
+import jdplus.x13.base.core.x13.X13Document;
+import jdplus.x13.base.core.x13.X13Results;
 
 /**
  * @author Kristof Bayens

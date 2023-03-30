@@ -5,7 +5,7 @@
 package demetra.desktop.tramoseats.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.seats.DecompositionSpec;
+import jdplus.tramoseats.base.api.seats.DecompositionSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

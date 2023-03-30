@@ -9,10 +9,10 @@ import demetra.desktop.tramo.descriptors.TramoSpecUI;
 import demetra.desktop.ui.processing.IProcDocumentView;
 import demetra.desktop.workspace.DocumentUIServices;
 import demetra.desktop.workspace.WorkspaceItem;
-import demetra.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import java.awt.Color;
 import javax.swing.Icon;
-import jdplus.tramo.TramoDocument;
+import jdplus.tramoseats.base.core.tramo.TramoDocument;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 

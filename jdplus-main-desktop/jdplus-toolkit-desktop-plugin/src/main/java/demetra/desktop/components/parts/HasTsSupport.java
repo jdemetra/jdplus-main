@@ -4,11 +4,10 @@ import demetra.desktop.TsEvent;
 import demetra.desktop.TsListener;
 import demetra.desktop.TsManager;
 import demetra.desktop.beans.PropertyChangeBroadcaster;
-import static demetra.desktop.components.parts.HasTs.TS_PROPERTY;
 import demetra.desktop.datatransfer.DataTransferManager;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;

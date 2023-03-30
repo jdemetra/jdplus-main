@@ -18,8 +18,8 @@ package demetra.desktop.ui.processing;
 
 import demetra.desktop.ui.processing.SurfacePlotterUI.Functions;
 import demetra.desktop.ui.chart3d.functions.SurfacePlotterView;
-import jdplus.math.functions.IFunction;
-import jdplus.math.functions.IFunctionPoint;
+import jdplus.toolkit.base.core.math.functions.IFunction;
+import jdplus.toolkit.base.core.math.functions.IFunctionPoint;
 
 
 /**

@@ -6,7 +6,7 @@ package demetra.desktop.workspace.nodes;
 
 import demetra.desktop.workspace.Workspace;
 import demetra.desktop.workspace.WorkspaceFactory;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.util.Id;
 import java.util.Arrays;
 import java.util.List;
 import org.openide.nodes.ChildFactory;

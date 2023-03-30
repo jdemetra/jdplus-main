@@ -16,16 +16,15 @@
  */
 package demetra.html.modelling;
 
-import demetra.data.DoubleSeq;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.HtmlElement;
 import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
 import java.io.IOException;
 import java.util.Formatter;
-import jdplus.arima.ArimaModel;
-import jdplus.arima.IArimaModel;
-import jdplus.math.linearfilters.BackFilter;
+
+import jdplus.toolkit.base.core.arima.IArimaModel;
+import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
 
 /**
  *

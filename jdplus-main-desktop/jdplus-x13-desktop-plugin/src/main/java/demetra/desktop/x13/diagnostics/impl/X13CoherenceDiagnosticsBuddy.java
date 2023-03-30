@@ -18,10 +18,10 @@ package demetra.desktop.x13.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.CoherenceDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import jdplus.sa.diagnostics.CoherenceDiagnostics;
-import jdplus.sa.diagnostics.CoherenceDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.CoherenceDiagnosticsFactory;
-import jdplus.x13.X13Results;
+import jdplus.sa.base.core.diagnostics.CoherenceDiagnostics;
+import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsFactory;
+import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

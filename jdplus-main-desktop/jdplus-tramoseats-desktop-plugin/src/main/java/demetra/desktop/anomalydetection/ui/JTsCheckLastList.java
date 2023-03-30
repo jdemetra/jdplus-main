@@ -16,7 +16,7 @@
  */
 package demetra.desktop.anomalydetection.ui;
 
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.components.parts.HasTsCollection;
 import demetra.desktop.components.parts.HasTsCollectionSupport;
 import demetra.desktop.DemetraIcons;
@@ -24,7 +24,6 @@ import demetra.desktop.anomalydetection.AnomalyItem;
 import demetra.desktop.util.ActionMaps;
 import demetra.desktop.util.InputMaps;
 import demetra.desktop.components.JTsTable;
-import demetra.desktop.components.JTsTable.Column;
 import demetra.desktop.components.TimeSeriesComponent;
 import ec.util.table.swing.JTables;
 import ec.util.various.swing.JCommand;
@@ -43,7 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -59,17 +57,17 @@ import demetra.desktop.components.TsIdentifier;
 import demetra.desktop.datatransfer.DataTransferManager;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsMoniker;
-import demetra.timeseries.TsPeriod;
-import demetra.tramo.TramoSpec;
-import demetra.util.MultiLineNameUtil;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.util.Table;
 import internal.ui.components.DemoTsBuilder;
 import java.util.LinkedHashMap;
-import java.util.function.Predicate;
-import jdplus.regsarima.regular.CheckLast;
-import jdplus.tramo.TramoKernel;
+
+import jdplus.toolkit.base.core.regsarima.regular.CheckLast;
+import jdplus.tramoseats.base.core.tramo.TramoKernel;
 import nbbrd.design.SkipProcessing;
 
 /**
@@ -359,7 +357,7 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
         firePropertyChange(ITEM_SELECTION_PROPERTY, null, selected);
     }
 
-    private Optional<AnomalyItem> getAnomaly(demetra.timeseries.Ts ts) {
+    private Optional<AnomalyItem> getAnomaly(Ts ts) {
         AnomalyItem item = map.get(ts.getMoniker());
         return Optional.ofNullable(item);
     }

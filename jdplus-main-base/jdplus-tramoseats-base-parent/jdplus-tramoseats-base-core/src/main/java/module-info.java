@@ -1,3 +1,11 @@
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.toolkit.base.api.information.InformationExtractor;
+import jdplus.tramoseats.base.api.seats.Seats;
+import jdplus.tramoseats.base.api.tramo.Tramo;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeats;
+import jdplus.tramoseats.base.core.tramo.spi.TramoComputer;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsFactory;
+
 module jdplus.tramoseats.base.core {
 
     requires static lombok;
@@ -9,30 +17,30 @@ module jdplus.tramoseats.base.core {
     requires jdplus.toolkit.base.core;
     requires jdplus.sa.base.core;
 
-    exports jdplus.seats;
-    exports jdplus.seats.diagnostics;
-    exports jdplus.tramo;
-    exports jdplus.tramo.internal;
-    exports jdplus.tramo.spi;
-    exports jdplus.tramoseats;
-    exports jdplus.tramoseats.extractors;
-    exports jdplus.tramoseats.spi;
+    exports jdplus.tramoseats.base.core.seats;
+    exports jdplus.tramoseats.base.core.seats.diagnostics;
+    exports jdplus.tramoseats.base.core.tramo;
+    exports jdplus.tramoseats.base.core.tramo.internal;
+    exports jdplus.tramoseats.base.core.tramo.spi;
+    exports jdplus.tramoseats.base.core.tramoseats.extractors;
+    exports jdplus.tramoseats.base.core.tramoseats.spi;
+    exports jdplus.tramoseats.base.core.tramoseats;
 
-    provides demetra.sa.SaProcessingFactory with
-            jdplus.tramoseats.TramoSeatsFactory;
+    provides SaProcessingFactory with
+            TramoSeatsFactory;
 
-    provides demetra.information.InformationExtractor with
-            jdplus.tramoseats.extractors.SeatsDiagnosticsExtractor,
-            jdplus.tramoseats.extractors.TramoSeatsDiagnosticsExtractor,
-            jdplus.tramoseats.extractors.TramoSeatsExtractor,
-            jdplus.tramoseats.extractors.SeatsExtractor;
+    provides InformationExtractor with
+            jdplus.tramoseats.base.core.tramoseats.extractors.SeatsDiagnosticsExtractor,
+            jdplus.tramoseats.base.core.tramoseats.extractors.TramoSeatsDiagnosticsExtractor,
+            jdplus.tramoseats.base.core.tramoseats.extractors.TramoSeatsExtractor,
+            jdplus.tramoseats.base.core.tramoseats.extractors.SeatsExtractor;
 
-    provides demetra.tramoseats.TramoSeats.Processor with
-            jdplus.tramoseats.spi.TramoSeatsProcessor;
+    provides TramoSeats.Processor with
+            jdplus.tramoseats.base.core.tramoseats.spi.TramoSeatsProcessor;
 
-    provides demetra.seats.Seats.Processor with
-            jdplus.tramoseats.spi.SeatsProcessor;
+    provides Seats.Processor with
+            jdplus.tramoseats.base.core.tramoseats.spi.SeatsProcessor;
 
-    provides demetra.tramo.Tramo.Processor with
-            jdplus.tramo.spi.TramoComputer;
+    provides Tramo.Processor with
+            TramoComputer;
 }

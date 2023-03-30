@@ -1,3 +1,7 @@
+import jdplus.text.base.api.TxtProvider;
+import jdplus.text.base.api.XmlProvider;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+
 module jdplus.text.base.api {
 
     requires static lombok;
@@ -10,9 +14,9 @@ module jdplus.text.base.api {
     requires nbbrd.io.picocsv;
     requires nbbrd.io.xml;
 
-    exports demetra.tsp.text;
+    exports jdplus.text.base.api;
 
-    provides demetra.timeseries.TsProvider with
-            demetra.tsp.text.TxtProvider,
-            demetra.tsp.text.XmlProvider;
+    provides TsProvider with
+            TxtProvider,
+            XmlProvider;
 }

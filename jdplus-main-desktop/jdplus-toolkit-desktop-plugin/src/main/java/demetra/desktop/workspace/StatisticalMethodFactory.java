@@ -4,8 +4,8 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.processing.AlgorithmDescriptor;
-import demetra.processing.ProcSpecification;
+import jdplus.toolkit.base.api.processing.AlgorithmDescriptor;
+import jdplus.toolkit.base.api.processing.ProcSpecification;
 import java.util.List;
 
 /**

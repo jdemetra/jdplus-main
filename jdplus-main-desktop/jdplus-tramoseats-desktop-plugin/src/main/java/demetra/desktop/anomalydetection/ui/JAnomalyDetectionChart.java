@@ -33,10 +33,10 @@ import demetra.desktop.datatransfer.DataTransferManager;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.design.SwingProperty;
 import demetra.desktop.ui.TsXYDatasets;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsPeriod;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.util.Table;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.ObsFunction;
 import ec.util.chart.ObsIndex;
@@ -48,7 +48,7 @@ import static ec.util.chart.swing.JTimeSeriesChartCommand.copyImage;
 import static ec.util.chart.swing.JTimeSeriesChartCommand.printImage;
 import static ec.util.chart.swing.JTimeSeriesChartCommand.saveImage;
 import ec.util.various.swing.JCommand;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  *

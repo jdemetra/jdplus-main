@@ -4,11 +4,10 @@
  */
 package demetra.desktop.tramo.descriptors;
 
-import demetra.desktop.DemetraUI;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.DateSelectorUI;
-import demetra.timeseries.TimeSelector;
-import demetra.tramo.EstimateSpec;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.tramoseats.base.api.tramo.EstimateSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

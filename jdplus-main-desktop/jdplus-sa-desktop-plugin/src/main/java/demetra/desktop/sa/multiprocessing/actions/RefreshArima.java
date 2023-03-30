@@ -7,8 +7,7 @@ package demetra.desktop.sa.multiprocessing.actions;
 import demetra.desktop.sa.multiprocessing.ui.MultiProcessingManager;
 import demetra.desktop.sa.multiprocessing.ui.SaBatchUI;
 import demetra.desktop.ui.ActiveViewAction;
-import demetra.sa.EstimationPolicyType;
-import static javax.swing.Action.NAME;
+import jdplus.sa.base.api.EstimationPolicyType;
 
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReference;

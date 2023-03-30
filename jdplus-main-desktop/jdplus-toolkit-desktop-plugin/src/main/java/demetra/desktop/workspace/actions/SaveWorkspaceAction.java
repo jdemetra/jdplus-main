@@ -4,7 +4,7 @@
  */
 package demetra.desktop.workspace.actions;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import demetra.desktop.workspace.Workspace;
 import demetra.desktop.workspace.WorkspaceFactory;
 import java.awt.event.ActionEvent;

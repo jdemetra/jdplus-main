@@ -24,19 +24,19 @@ import demetra.html.core.HtmlProcessingLog;
 import demetra.html.modelling.HtmlRegSarima;
 import demetra.html.modelling.HtmlUcarima;
 import demetra.html.core.HtmlDiagnosticsSummary;
-import demetra.processing.ProcDiagnostic;
-import demetra.processing.ProcessingLog;
+import jdplus.toolkit.base.api.processing.ProcDiagnostic;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import jdplus.arima.ArimaModel;
-import jdplus.arima.IArimaModel;
-import jdplus.regsarima.regular.RegSarimaModel;
-import jdplus.sarima.SarimaModel;
-import jdplus.seats.SeatsResults;
-import jdplus.tramoseats.TramoSeatsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
-import jdplus.ucarima.UcarimaModel;
+import jdplus.toolkit.base.core.arima.ArimaModel;
+import jdplus.toolkit.base.core.arima.IArimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.sarima.SarimaModel;
+import jdplus.tramoseats.base.core.seats.SeatsResults;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
+import jdplus.toolkit.base.core.ucarima.UcarimaModel;
 
 /**
  *

@@ -4,6 +4,7 @@
  */
 package demetra.desktop.core;
 
+import jdplus.toolkit.base.api.timeseries.Ts;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import demetra.desktop.TsActionOpenSpi;
@@ -26,6 +27,6 @@ public final class NoOpTsAction implements TsActionOpenSpi {
     }
 
     @Override
-    public void open(demetra.timeseries.Ts ts) {
+    public void open(Ts ts) {
     }
 }

@@ -8,7 +8,7 @@ import demetra.desktop.components.tools.AutoRegressiveSpectrumView;
 import demetra.desktop.components.tools.PeriodogramView;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.util.NbComponents;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;

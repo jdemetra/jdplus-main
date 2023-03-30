@@ -20,7 +20,7 @@ import demetra.desktop.NamedService;
 import demetra.desktop.TsActionManager;
 import demetra.desktop.TsCollectable;
 import demetra.desktop.actions.AbilityNodeAction;
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;

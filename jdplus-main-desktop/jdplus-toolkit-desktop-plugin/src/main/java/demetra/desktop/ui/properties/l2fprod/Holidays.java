@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.properties.l2fprod;
 
-import demetra.timeseries.calendars.CalendarManager;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 
 
 /**

@@ -20,7 +20,7 @@ import demetra.desktop.NamedService;
 import demetra.desktop.DemetraIcons;
 import demetra.desktop.Persistable;
 import demetra.desktop.actions.Resetable;
-import demetra.processing.DiagnosticsConfiguration;
+import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
 import java.awt.Image;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;

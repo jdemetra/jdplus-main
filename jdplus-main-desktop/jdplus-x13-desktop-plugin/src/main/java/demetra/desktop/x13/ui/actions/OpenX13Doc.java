@@ -10,7 +10,7 @@ import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.nodes.WsNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import jdplus.x13.X13Document;
+import jdplus.x13.base.core.x13.X13Document;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

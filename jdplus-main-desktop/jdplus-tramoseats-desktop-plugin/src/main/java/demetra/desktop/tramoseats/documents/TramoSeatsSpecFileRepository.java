@@ -4,11 +4,11 @@
  */
 package demetra.desktop.tramoseats.documents;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import demetra.desktop.workspace.AbstractFileItemRepository;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemRepository;
-import demetra.tramoseats.TramoSeatsSpec;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

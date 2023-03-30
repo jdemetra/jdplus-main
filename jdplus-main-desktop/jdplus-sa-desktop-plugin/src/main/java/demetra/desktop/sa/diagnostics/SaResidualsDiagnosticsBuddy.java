@@ -21,8 +21,8 @@ import demetra.desktop.properties.NodePropertySetBuilder;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import demetra.desktop.Converter;
-import jdplus.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.SaResidualsDiagnosticsFactory;
+import jdplus.toolkit.base.core.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
 import nbbrd.io.text.DoubleProperty;
 
 /**

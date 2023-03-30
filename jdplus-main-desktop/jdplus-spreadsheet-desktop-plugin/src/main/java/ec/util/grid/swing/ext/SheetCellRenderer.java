@@ -16,7 +16,7 @@
  */
 package ec.util.grid.swing.ext;
 
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import ec.util.spreadsheet.Cell;

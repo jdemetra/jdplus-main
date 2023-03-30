@@ -11,5 +11,5 @@ module jdplus.x13.base.r {
     requires jdplus.toolkit.base.core;
     requires jdplus.x13.base.core;
 
-    exports demetra.x13.r;
+    exports jdplus.x13.base.r;
 }

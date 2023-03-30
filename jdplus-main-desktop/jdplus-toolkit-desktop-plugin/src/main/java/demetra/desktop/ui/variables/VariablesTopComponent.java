@@ -7,7 +7,7 @@ package demetra.desktop.ui.variables;
 import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.ui.WorkspaceTopComponent;
-import demetra.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

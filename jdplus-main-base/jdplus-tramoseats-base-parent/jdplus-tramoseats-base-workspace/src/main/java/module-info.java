@@ -1,3 +1,6 @@
+import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
+import jdplus.tramoseats.base.workspace.TramoSeatsHandlers;
+
 module jdplus.tramoseats.base.workspace {
 
     requires static lombok;
@@ -11,15 +14,15 @@ module jdplus.tramoseats.base.workspace {
     requires jdplus.toolkit.base.workspace;
     requires jdplus.tramoseats.base.core;
 
-    exports demetra.tramoseats.workspace;
+    exports jdplus.tramoseats.base.workspace;
 
-    provides demetra.workspace.file.spi.FamilyHandler with
-            demetra.tramoseats.workspace.TramoSeatsHandlers.ModDocTramoLegacy,
-            demetra.tramoseats.workspace.TramoSeatsHandlers.SaDocTramoSeats,
-            demetra.tramoseats.workspace.TramoSeatsHandlers.ModSpecTramo,
-            demetra.tramoseats.workspace.TramoSeatsHandlers.SaSpecTramoseatsLegacy,
-            demetra.tramoseats.workspace.TramoSeatsHandlers.ModSpecTramoLegacy,
-            demetra.tramoseats.workspace.TramoSeatsHandlers.SaSpecTramoseats,
-            demetra.tramoseats.workspace.TramoSeatsHandlers.ModDocTramo,
-            demetra.tramoseats.workspace.TramoSeatsHandlers.SaDocTramoSeatsLegacy;
+    provides FamilyHandler with
+            TramoSeatsHandlers.ModDocTramoLegacy,
+            TramoSeatsHandlers.SaDocTramoSeats,
+            TramoSeatsHandlers.ModSpecTramo,
+            TramoSeatsHandlers.SaSpecTramoseatsLegacy,
+            TramoSeatsHandlers.ModSpecTramoLegacy,
+            TramoSeatsHandlers.SaSpecTramoseats,
+            TramoSeatsHandlers.ModDocTramo,
+            TramoSeatsHandlers.SaDocTramoSeatsLegacy;
 }

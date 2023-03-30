@@ -1,3 +1,6 @@
+import jdplus.sa.base.information.SaSpecificationMapping;
+import jdplus.x13.base.information.X13SpecMapping;
+
 module jdplus.x13.base.information {
 
     requires static lombok;
@@ -9,8 +12,8 @@ module jdplus.x13.base.information {
     requires jdplus.toolkit.base.information;
     requires jdplus.sa.base.information;
 
-    exports demetra.x13.io.information;
+    exports jdplus.x13.base.information;
 
-    provides demetra.sa.io.information.SaSpecificationMapping with
-            demetra.x13.io.information.X13SpecMapping.Serializer;
+    provides SaSpecificationMapping with
+            X13SpecMapping.Serializer;
 }

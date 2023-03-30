@@ -4,8 +4,8 @@
  */
 package demetra.desktop.sa.ui;
 
-import demetra.util.Id;
-import demetra.util.LinearId;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.LinearId;
 
 /**
  *

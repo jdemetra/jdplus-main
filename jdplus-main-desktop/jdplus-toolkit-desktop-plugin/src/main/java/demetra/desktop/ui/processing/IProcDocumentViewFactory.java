@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.processing;
 
-import demetra.processing.ProcDocument;
+import jdplus.toolkit.base.api.processing.ProcDocument;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

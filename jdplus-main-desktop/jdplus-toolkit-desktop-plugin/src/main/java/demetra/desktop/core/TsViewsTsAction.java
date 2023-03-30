@@ -18,7 +18,8 @@ package demetra.desktop.core;
 
 import demetra.desktop.TsManager;
 import demetra.desktop.components.parts.HasTs;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.Ts;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.openide.windows.TopComponent;
@@ -42,11 +43,11 @@ public final class TsViewsTsAction implements TsActionOpenSpi {
     }
 
     @Override
-    public void open(demetra.timeseries.Ts ts) {
+    public void open(Ts ts) {
        TsManager.get().loadAsync(ts, TsInformationType.Data, this::dispatch);
     }
     
-    private void dispatch(demetra.timeseries.Ts ts){
+    private void dispatch(Ts ts){
         TopComponent.getRegistry().getOpened().stream()
                 .filter(HasTs.class::isInstance)
                 .forEach(o -> ((HasTs) o).setTs(ts));

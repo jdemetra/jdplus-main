@@ -16,14 +16,14 @@
  */
 package demetra.desktop;
 
-import demetra.information.Explorable;
-import demetra.processing.ProcDocument;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsMoniker;
-import demetra.timeseries.TsProvider;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.processing.ProcDocument;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.time.LocalDate;

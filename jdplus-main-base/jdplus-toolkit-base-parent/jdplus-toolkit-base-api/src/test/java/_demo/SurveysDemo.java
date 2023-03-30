@@ -6,7 +6,7 @@
 package _demo;
 
 import tck.demetra.data.Data;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 
 /**
  *

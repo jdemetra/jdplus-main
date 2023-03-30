@@ -16,7 +16,7 @@
  */
 package demetra.tramoseats.io.html;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.Bootstrap4;
 import demetra.html.HtmlClass;
@@ -26,14 +26,14 @@ import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTableHeader;
 import demetra.html.HtmlTag;
-import demetra.stats.AutoCovariances;
+import jdplus.toolkit.base.api.stats.AutoCovariances;
 import java.io.IOException;
 import java.util.function.IntToDoubleFunction;
-import jdplus.arima.ArimaModel;
-import jdplus.arima.BartlettApproximation;
-import jdplus.arima.LinearProcess;
-import jdplus.dstats.Normal;
-import jdplus.ucarima.WienerKolmogorovDiagnostics;
+import jdplus.toolkit.base.core.arima.ArimaModel;
+import jdplus.toolkit.base.core.arima.BartlettApproximation;
+import jdplus.toolkit.base.core.arima.LinearProcess;
+import jdplus.toolkit.base.core.dstats.Normal;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovDiagnostics;
 
 /**
  *

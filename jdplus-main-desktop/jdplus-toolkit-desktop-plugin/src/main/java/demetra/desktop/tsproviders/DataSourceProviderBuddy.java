@@ -18,9 +18,9 @@ package demetra.desktop.tsproviders;
 
 import demetra.desktop.beans.BeanEditor;
 import demetra.desktop.util.NetBeansServiceBackend;
-import demetra.timeseries.TsMoniker;
-import demetra.tsprovider.DataSet;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSource;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import org.checkerframework.checker.nullness.qual.NonNull;

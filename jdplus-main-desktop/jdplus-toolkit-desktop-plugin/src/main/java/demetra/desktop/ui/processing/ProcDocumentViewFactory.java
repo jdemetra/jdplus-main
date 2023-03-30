@@ -4,8 +4,8 @@
  */
 package demetra.desktop.ui.processing;
 
-import demetra.processing.ProcDocument;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.processing.ProcDocument;
+import jdplus.toolkit.base.api.util.Id;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;

@@ -16,8 +16,8 @@
  */
 package demetra.desktop.core.properties;
 
-import demetra.timeseries.TimeSelector;
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import java.time.LocalDateTime;
 import java.util.Date;
 

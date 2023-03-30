@@ -10,5 +10,5 @@ module jdplus.x13.base.xml {
     requires jdplus.toolkit.base.xml;
     requires jdplus.sa.base.xml;
 
-    exports demetra.x13.io.xml.legacy;
+    exports jdplus.x13.base.xml;
 }

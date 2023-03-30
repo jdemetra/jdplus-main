@@ -4,11 +4,10 @@
  */
 package demetra.desktop.regarima.descriptors;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.regarima.EasterSpec;
-import demetra.regarima.MeanSpec;
-import demetra.regarima.RegressionTestSpec;
+import jdplus.x13.base.api.regarima.MeanSpec;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

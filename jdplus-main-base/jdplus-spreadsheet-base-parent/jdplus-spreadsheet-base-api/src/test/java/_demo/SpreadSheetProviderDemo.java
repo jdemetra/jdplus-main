@@ -16,11 +16,11 @@
  */
 package _demo;
 
-import demetra.demo.ProviderDemo;
-import demetra.spreadsheet.SpreadSheetBean;
-import demetra.spreadsheet.SpreadSheetProvider;
-import demetra.timeseries.TsDataTable;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tspbridge.demo.ProviderDemo;
+import jdplus.spreadsheet.base.api.SpreadSheetBean;
+import jdplus.spreadsheet.base.api.SpreadSheetProvider;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.tsp.DataSource;
 import _test.Top5Browsers;
 import nbbrd.design.Demo;
 

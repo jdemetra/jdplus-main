@@ -1,7 +1,7 @@
 package _util;
 
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.DataSourceListener;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceListener;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;

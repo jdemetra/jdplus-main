@@ -9,8 +9,8 @@ import demetra.desktop.sa.output.OutputSelection;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import demetra.desktop.util.LazyGlobalService;
 import demetra.desktop.util.Persistence;
-import demetra.sa.SaDiagnosticsFactory;
-import demetra.tsprovider.util.PropertyHandler;
+import jdplus.sa.base.api.SaDiagnosticsFactory;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.beans.PropertyChangeSupport;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import jdplus.tramoseats.TramoSeatsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import nbbrd.design.MightBeGenerated;
 import org.openide.util.Lookup;
 

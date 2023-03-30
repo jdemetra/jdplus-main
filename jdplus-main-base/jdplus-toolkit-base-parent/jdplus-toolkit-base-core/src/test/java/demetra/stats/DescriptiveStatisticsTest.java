@@ -5,8 +5,8 @@
  */
 package demetra.stats;
 
-import jdplus.stats.DescriptiveStatistics;
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;

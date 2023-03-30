@@ -6,10 +6,10 @@ package demetra.desktop.sa.descriptors.regular;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.modelling.TransformationType;
-import demetra.modelling.regular.TradingDaysSpec;
-import demetra.modelling.regular.TransformSpec;
-import demetra.timeseries.calendars.LengthOfPeriodType;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.toolkit.base.api.modelling.regular.TradingDaysSpec;
+import jdplus.toolkit.base.api.modelling.regular.TransformSpec;
+import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

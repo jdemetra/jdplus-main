@@ -16,9 +16,9 @@
  */
 package demetra.desktop.ui;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import ec.util.chart.swing.Charts;
 import java.util.ArrayList;
 import java.util.Calendar;

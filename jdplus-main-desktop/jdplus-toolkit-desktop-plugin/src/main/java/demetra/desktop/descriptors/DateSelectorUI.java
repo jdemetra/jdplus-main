@@ -4,8 +4,8 @@
  */
 package demetra.desktop.descriptors;
 
-import demetra.timeseries.TimeSelector;
-import demetra.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.LocalDate;

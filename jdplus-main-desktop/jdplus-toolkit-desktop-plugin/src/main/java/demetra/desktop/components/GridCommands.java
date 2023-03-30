@@ -16,7 +16,7 @@
  */
 package demetra.desktop.components;
 
-import demetra.data.Range;
+import jdplus.toolkit.base.api.data.Range;
 import demetra.desktop.datatransfer.DataTransferManager;
 import ec.util.grid.swing.GridModel;
 import ec.util.grid.swing.JGrid;
@@ -25,7 +25,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import javax.swing.ListSelectionModel;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.util.Table;
 
 /**
  *

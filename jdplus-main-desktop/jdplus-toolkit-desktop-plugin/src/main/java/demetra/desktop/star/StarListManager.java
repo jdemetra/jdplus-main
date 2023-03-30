@@ -2,7 +2,7 @@ package demetra.desktop.star;
 
 import demetra.desktop.design.GlobalService;
 import demetra.desktop.util.LazyGlobalService;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSource;
 import ec.util.various.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 

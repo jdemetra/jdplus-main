@@ -4,22 +4,19 @@
  */
 package demetra.desktop.ui.options;
 
-import demetra.desktop.TsManager;
 import demetra.desktop.nodes.AbstractNodeBuilder;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.timeseries.TsFactory;
-import demetra.tsprovider.FileLoader;
+import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.tsp.FileLoader;
 import ec.util.desktop.DesktopManager;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.beans.BeanInfo;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.tree.TreeSelectionModel;
 import org.openide.explorer.ExplorerManager;

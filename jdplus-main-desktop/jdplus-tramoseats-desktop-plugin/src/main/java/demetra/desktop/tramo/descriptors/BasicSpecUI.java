@@ -7,7 +7,7 @@ package demetra.desktop.tramo.descriptors;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.DateSelectorUI;
 import demetra.desktop.ui.properties.l2fprod.UserInterfaceContext;
-import demetra.timeseries.TimeSelector;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

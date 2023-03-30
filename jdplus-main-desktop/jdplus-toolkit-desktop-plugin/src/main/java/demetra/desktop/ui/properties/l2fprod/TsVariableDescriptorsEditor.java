@@ -5,10 +5,8 @@
 package demetra.desktop.ui.properties.l2fprod;
 
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
-import demetra.timeseries.regression.TsContextVariable;
-import demetra.timeseries.regression.TsVariable;
+
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;

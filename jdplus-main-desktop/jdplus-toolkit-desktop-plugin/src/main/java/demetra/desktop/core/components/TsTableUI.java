@@ -22,6 +22,8 @@ import demetra.desktop.components.parts.*;
 import demetra.desktop.util.*;
 import ec.util.table.swing.JTables;
 import ec.util.various.swing.StandardSwingColor;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import org.netbeans.swing.etable.ETable;
 import org.netbeans.swing.etable.ETableColumn;
 import org.netbeans.swing.etable.ETableColumnModel;
@@ -243,15 +245,15 @@ public final class TsTableUI implements InternalUI<JTsTable> {
 
     private static final class TsTableModel extends AbstractTableModel {
 
-        private demetra.timeseries.TsCollection data;
+        private TsCollection data;
         private List<JTsTable.Column> columns;
 
         public TsTableModel() {
-            this.data = demetra.timeseries.TsCollection.EMPTY;
+            this.data = TsCollection.EMPTY;
             this.columns = Collections.emptyList();
         }
 
-        public void setData(demetra.timeseries.TsCollection data) {
+        public void setData(TsCollection data) {
             this.data = data;
             fireTableDataChanged();
         }
@@ -276,7 +278,7 @@ public final class TsTableUI implements InternalUI<JTsTable> {
             if (rowIndex == -1) {
                 return null;
             }
-            demetra.timeseries.Ts ts = data.get(rowIndex);
+            Ts ts = data.get(rowIndex);
             return columns.get(columnIndex).getMapper().apply(ts);
         }
 

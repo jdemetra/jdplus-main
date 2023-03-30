@@ -19,7 +19,7 @@ package demetra.desktop.core.tsproviders;
 import demetra.desktop.TsManager;
 import demetra.desktop.actions.AbilityNodeAction;
 import demetra.desktop.actions.Actions;
-import demetra.tsprovider.DataSource;
+import jdplus.toolkit.base.tsp.DataSource;
 import ec.util.desktop.Desktop;
 import ec.util.desktop.DesktopManager;
 import org.openide.awt.ActionID;

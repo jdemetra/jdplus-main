@@ -5,10 +5,10 @@
 package demetra.desktop.star;
 
 import demetra.desktop.util.InstallerStep;
-import demetra.timeseries.TsFactory;
-import demetra.timeseries.TsProvider;
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.DataSourceLoader;
+import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import org.openide.util.NbPreferences;

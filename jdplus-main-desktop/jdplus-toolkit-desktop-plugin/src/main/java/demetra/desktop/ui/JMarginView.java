@@ -16,7 +16,7 @@
  */
 package demetra.desktop.ui;
 
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.components.parts.HasColorScheme;
 import demetra.desktop.jfreechart.TsCharts;
 import demetra.desktop.components.parts.HasChart.LinesThickness;
@@ -34,13 +34,13 @@ import demetra.desktop.components.parts.HasObsFormatSupport;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.design.SwingProperty;
 import demetra.desktop.util.DateFormatAdapter;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.TsUnit;
-import demetra.timeseries.calendars.CalendarUtility;
-import demetra.util.Arrays2;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.util.Arrays2;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -66,7 +66,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
-import jdplus.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import nbbrd.design.SkipProcessing;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartMouseEvent;
@@ -86,7 +86,6 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.AbstractRenderer;
 import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.time.Day;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.Layer;
 

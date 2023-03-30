@@ -10,5 +10,5 @@ module jdplus.tramoseats.base.xml {
     requires jdplus.toolkit.base.xml;
     requires jdplus.sa.base.xml;
 
-    exports demetra.tramoseats.io.xml.legacy;
+    exports jdplus.tramoseats.base.xml;
 }

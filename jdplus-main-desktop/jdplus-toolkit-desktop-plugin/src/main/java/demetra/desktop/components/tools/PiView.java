@@ -15,7 +15,7 @@ import internal.uihelpers.ContinuousInformationProvider;
 import java.awt.Stroke;
 import java.text.DecimalFormat;
 import javax.swing.JMenu;
-import jdplus.math.matrices.FastMatrix;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -27,7 +27,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
-import demetra.math.matrices.Matrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  *

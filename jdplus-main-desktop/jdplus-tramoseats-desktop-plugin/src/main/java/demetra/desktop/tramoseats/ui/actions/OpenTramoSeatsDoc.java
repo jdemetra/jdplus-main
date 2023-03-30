@@ -6,12 +6,11 @@ package demetra.desktop.tramoseats.ui.actions;
 
 import demetra.desktop.tramoseats.documents.TramoSeatsDocumentManager;
 import demetra.desktop.workspace.DocumentUIServices;
-import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.nodes.WsNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import jdplus.tramoseats.TramoSeatsDocument;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

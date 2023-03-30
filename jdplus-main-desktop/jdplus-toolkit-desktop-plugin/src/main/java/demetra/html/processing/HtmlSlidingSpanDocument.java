@@ -27,19 +27,18 @@ import demetra.html.HtmlStream;
 import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTag;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.function.Function;
-import jdplus.stats.DescriptiveStatistics;
-import jdplus.timeseries.simplets.PeriodIterator;
-import jdplus.timeseries.simplets.TsDataView;
-import jdplus.timeseries.simplets.YearIterator;
-import jdplus.timeseries.simplets.analysis.DiagnosticInfo;
-import jdplus.timeseries.simplets.analysis.SlidingSpans;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.timeseries.simplets.PeriodIterator;
+import jdplus.toolkit.base.core.timeseries.simplets.TsDataView;
+import jdplus.toolkit.base.core.timeseries.simplets.YearIterator;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
 
 /**
  *

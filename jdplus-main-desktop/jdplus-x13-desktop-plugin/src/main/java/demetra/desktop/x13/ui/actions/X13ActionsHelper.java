@@ -18,11 +18,11 @@ package demetra.desktop.x13.ui.actions;
 
 import demetra.desktop.sa.util.ActionsHelper;
 import demetra.desktop.x13.ui.X13UI;
-import demetra.sa.SaProcessingFactory;
-import demetra.sa.SaSpecification;
-import demetra.x13.X13Spec;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.sa.base.api.SaSpecification;
+import jdplus.x13.base.api.x13.X13Spec;
 import java.util.List;
-import jdplus.x13.X13Factory;
+import jdplus.x13.base.core.x13.X13Factory;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

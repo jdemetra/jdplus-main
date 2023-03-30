@@ -4,15 +4,15 @@
  */
 package demetra.desktop.regarima.documents;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import demetra.desktop.workspace.AbstractFileItemRepository;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemRepository;
-import demetra.tsprovider.TsMeta;
+import jdplus.toolkit.base.tsp.TsMeta;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import jdplus.x13.regarima.RegArimaDocument;
+import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

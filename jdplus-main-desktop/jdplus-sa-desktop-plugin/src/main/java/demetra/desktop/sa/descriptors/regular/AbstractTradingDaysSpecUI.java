@@ -4,17 +4,17 @@
  */
 package demetra.desktop.sa.descriptors.regular;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IPropertyDescriptors;
 import demetra.desktop.ui.properties.l2fprod.Holidays;
 import demetra.desktop.ui.properties.l2fprod.UserVariables;
 import demetra.desktop.ui.properties.l2fprod.NamedParameters;
-import demetra.modelling.TransformationType;
-import demetra.modelling.regular.TradingDaysSpec;
-import demetra.timeseries.calendars.CalendarManager;
-import demetra.timeseries.calendars.LengthOfPeriodType;
-import demetra.timeseries.calendars.TradingDaysType;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.toolkit.base.api.modelling.regular.TradingDaysSpec;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
+import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
+import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

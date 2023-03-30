@@ -24,7 +24,7 @@ import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
 import demetra.html.modelling.HtmlRegSarima;
 import java.io.IOException;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  * Html report of a check last processed Ts

@@ -18,13 +18,12 @@ package demetra.desktop.ui.processing.stats;
 
 import demetra.desktop.ui.JSlidingSpansView;
 import demetra.desktop.ui.processing.ItemUI;
-import demetra.information.Explorable;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.function.Function;
 import javax.swing.JComponent;
-import jdplus.stats.DescriptiveStatistics;
-import jdplus.timeseries.simplets.analysis.DiagnosticInfo;
-import jdplus.timeseries.simplets.analysis.SlidingSpans;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
 
 /**
  *

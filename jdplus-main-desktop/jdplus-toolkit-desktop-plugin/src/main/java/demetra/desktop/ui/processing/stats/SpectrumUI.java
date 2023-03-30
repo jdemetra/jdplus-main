@@ -7,9 +7,9 @@ package demetra.desktop.ui.processing.stats;
 import demetra.desktop.ui.JSpectralView;
 import demetra.desktop.ui.processing.ItemUI;
 import demetra.desktop.ui.processing.TsViewToolkit;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import javax.swing.*;
-import jdplus.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 
 /**
  * @author Jean Palate

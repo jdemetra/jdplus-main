@@ -16,7 +16,7 @@
  */
 package demetra.sa.html;
 
-import demetra.arima.SarimaOrders;
+import jdplus.toolkit.base.api.arima.SarimaOrders;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.Bootstrap4;
 import demetra.html.HtmlClass;
@@ -25,14 +25,14 @@ import demetra.html.HtmlStream;
 import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTag;
-import demetra.stats.StatisticalTest;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.io.IOException;
 import java.util.function.IntToDoubleFunction;
-import jdplus.sa.tests.FTest;
-import jdplus.sa.tests.KruskalWallis;
-import jdplus.sa.tests.SeasonalityTests;
-import jdplus.sa.tests.SpectralPeaks;
-import demetra.stats.AutoCovariances;
+import jdplus.sa.base.core.tests.FTest;
+import jdplus.sa.base.core.tests.KruskalWallis;
+import jdplus.sa.base.core.tests.SeasonalityTests;
+import jdplus.sa.base.core.tests.SpectralPeaks;
+import jdplus.toolkit.base.api.stats.AutoCovariances;
 
 /**
  *

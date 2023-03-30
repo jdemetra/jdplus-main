@@ -16,9 +16,9 @@
  */
 package _test;
 
-import demetra.demo.ProviderResources;
-import demetra.tsp.text.XmlBean;
-import demetra.tsp.text.XmlProvider;
+import jdplus.toolkit.base.tspbridge.demo.ProviderResources;
+import jdplus.text.base.api.XmlBean;
+import jdplus.text.base.api.XmlProvider;
 import tck.demetra.tsp.FileLoaderAssert;
 import ec.tss.tsproviders.IFileBean;
 

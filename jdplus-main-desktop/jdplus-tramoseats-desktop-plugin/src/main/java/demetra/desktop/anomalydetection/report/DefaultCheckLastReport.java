@@ -17,8 +17,8 @@
 package demetra.desktop.anomalydetection.report;
 
 import demetra.desktop.util.NbComponents;
-import demetra.util.MultiLineNameUtil;
-import demetra.util.Paths;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.util.Paths;
 import java.awt.Dimension;
 import java.io.FileWriter;
 import java.io.IOException;

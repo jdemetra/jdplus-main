@@ -19,7 +19,8 @@ package demetra.desktop.core.tsproviders;
 import demetra.desktop.NamedService;
 import demetra.desktop.TsActionManager;
 import demetra.desktop.TsManager;
-import demetra.tsprovider.DataSet;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.tsp.DataSet;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -65,7 +66,7 @@ public final class OpenWithSetNodeAction extends AbstractAction implements Prese
         @Override
         public void actionPerformed(ActionEvent e) {
             TsManager.get()
-                    .getTs(dataSet, demetra.timeseries.TsInformationType.None)
+                    .getTs(dataSet, TsInformationType.None)
                     .ifPresent(o -> TsActionManager.get().openWith(o, tsAction.getName()));
         }
     }

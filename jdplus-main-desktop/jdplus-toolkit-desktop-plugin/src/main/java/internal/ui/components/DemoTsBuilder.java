@@ -1,6 +1,6 @@
 package internal.ui.components;
 
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 
 @Deprecated
 public class DemoTsBuilder {

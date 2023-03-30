@@ -21,9 +21,9 @@ import demetra.html.AbstractHtmlElement;
 import demetra.html.HtmlElement;
 import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.io.IOException;
-import jdplus.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 
 /**
  *

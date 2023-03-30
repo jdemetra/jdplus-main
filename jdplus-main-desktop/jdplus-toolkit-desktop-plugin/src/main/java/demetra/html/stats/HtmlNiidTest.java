@@ -25,12 +25,12 @@ import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTableHeader;
 import demetra.html.HtmlTag;
-import demetra.stats.StatisticalTest;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.io.IOException;
 import java.util.function.IntToDoubleFunction;
-import jdplus.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
-import jdplus.stats.DescriptiveStatistics;
-import jdplus.stats.tests.NiidTests;
+import jdplus.toolkit.base.core.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.stats.tests.NiidTests;
 
 /**
  *

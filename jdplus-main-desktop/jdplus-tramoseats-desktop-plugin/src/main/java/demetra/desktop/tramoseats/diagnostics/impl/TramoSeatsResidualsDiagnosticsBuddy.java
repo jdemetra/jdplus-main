@@ -18,10 +18,10 @@ package demetra.desktop.tramoseats.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.SaResidualsDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
-import demetra.sa.SaDiagnosticsFactory;
-import jdplus.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.SaResidualsDiagnosticsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.sa.base.api.SaDiagnosticsFactory;
+import jdplus.toolkit.base.core.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

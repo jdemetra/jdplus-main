@@ -16,7 +16,7 @@
  */
 package demetra.html.core;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.Bootstrap4;
 import demetra.html.HtmlElement;
@@ -25,7 +25,7 @@ import demetra.html.HtmlStream;
 import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTag;
-import demetra.information.InformationSet;
+import jdplus.toolkit.base.api.information.InformationSet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;

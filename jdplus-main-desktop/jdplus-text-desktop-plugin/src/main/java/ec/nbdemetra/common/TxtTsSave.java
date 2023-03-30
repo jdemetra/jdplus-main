@@ -20,14 +20,14 @@ import demetra.desktop.Config;
 import demetra.desktop.ConfigBean;
 import demetra.desktop.properties.NodePropertySetBuilder;
 import demetra.desktop.util.SingleFileExporter;
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.DemetraIcons;
 import demetra.desktop.NamedServiceSupport;
 import demetra.desktop.Persistable;
 import demetra.desktop.datatransfer.ts.TxtDataTransfer;
 import ec.util.various.swing.OnAnyThread;
 import ec.util.various.swing.OnEDT;
-import internal.demetra.tsp.text.TxtFileFilter;
+import internal.text.base.api.TxtFileFilter;
 import nbbrd.io.text.Formatter;
 import nbbrd.service.ServiceProvider;
 import org.netbeans.api.progress.ProgressHandle;
@@ -45,7 +45,7 @@ import demetra.desktop.TsActionSaveSpiSupport;
 import static demetra.desktop.TsActionSaveSpiSupport.newEditor;
 import demetra.desktop.util.Persistence;
 import static demetra.desktop.util.SingleFileExporter.newFileChooser;
-import demetra.tsprovider.util.PropertyHandler;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import nbbrd.design.MightBeGenerated;
 
 /**

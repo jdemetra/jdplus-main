@@ -6,8 +6,8 @@ package demetra.desktop.tramo.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.DateSelectorUI;
-import demetra.timeseries.TimeSelector;
-import demetra.tramo.OutlierSpec;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.tramoseats.base.api.tramo.OutlierSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

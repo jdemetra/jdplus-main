@@ -7,7 +7,7 @@ package demetra.desktop.core.tsproviders;
 import demetra.desktop.actions.AbilityNodeAction;
 import demetra.desktop.datatransfer.DataSourceTransferManager;
 import demetra.desktop.datatransfer.DataTransfers;
-import demetra.tsprovider.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;

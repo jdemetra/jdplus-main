@@ -5,7 +5,7 @@
 
 package demetra.desktop.ui;
 
-import demetra.timeseries.calendars.CalendarUtility;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import org.jfree.chart.axis.NumberTickUnit;
 
 /**

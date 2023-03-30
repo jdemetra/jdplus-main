@@ -35,18 +35,17 @@ import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
 import demetra.desktop.beans.BeanEditor;
 import demetra.desktop.Converter;
-import demetra.desktop.Persistable;
 import demetra.desktop.actions.Configurable;
 import demetra.desktop.beans.BeanConfigurator;
 import demetra.desktop.sa.output.AbstractOutputNode;
 import demetra.desktop.sa.output.OutputFactoryBuddy;
 import demetra.desktop.sa.output.OutputSelection;
 import demetra.desktop.sa.output.Series;
-import demetra.sa.SaManager;
-import demetra.sa.SaOutputFactory;
-import demetra.sa.csv.CsvLayout;
-import demetra.sa.csv.CsvOutputConfiguration;
-import demetra.sa.csv.CsvOutputFactory;
+import jdplus.sa.base.api.SaManager;
+import jdplus.sa.base.api.SaOutputFactory;
+import jdplus.sa.base.csv.CsvLayout;
+import jdplus.sa.base.csv.CsvOutputConfiguration;
+import jdplus.sa.base.csv.CsvOutputFactory;
 
 /**
  *

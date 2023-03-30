@@ -24,9 +24,10 @@ import demetra.desktop.beans.BeanHandler;
 import demetra.desktop.datatransfer.DataTransferSpi;
 import demetra.desktop.properties.NodePropertySetBuilder;
 import demetra.desktop.properties.PropertySheetDialogBuilder;
-import demetra.timeseries.*;
-import demetra.util.MultiLineNameUtil;
-import jdplus.math.matrices.FastMatrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Parser;
 import org.openide.nodes.Sheet;
@@ -92,12 +93,12 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public boolean canExportTsCollection(demetra.timeseries.TsCollection col) {
+    public boolean canExportTsCollection(TsCollection col) {
         return config.exportTimeSeries && !col.isEmpty();
     }
 
     @Override
-    public Object exportTsCollection(demetra.timeseries.TsCollection col) throws IOException {
+    public Object exportTsCollection(TsCollection col) throws IOException {
         TsCollection loaded = col.load(TsInformationType.Data, TsFactory.getDefault());
         return tsCollectionToString(loaded);
     }
@@ -108,8 +109,8 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public demetra.timeseries.TsCollection importTsCollection(Object obj) throws IOException {
-        demetra.timeseries.TsCollection col = tsCollectionFromString((String) obj);
+    public TsCollection importTsCollection(Object obj) throws IOException {
+        TsCollection col = tsCollectionFromString((String) obj);
         if (col == null) {
             throw new IOException("Cannot parse collection");
         }
@@ -117,12 +118,12 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public boolean canExportMatrix(demetra.math.matrices.Matrix matrix) {
+    public boolean canExportMatrix(Matrix matrix) {
         return config.exportMatrix && !matrix.isEmpty();
     }
 
     @Override
-    public Object exportMatrix(demetra.math.matrices.Matrix matrix) throws IOException {
+    public Object exportMatrix(Matrix matrix) throws IOException {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < matrix.getRowsCount(); i++) {
             result.append(numberFormat.format(matrix.get(i, 0)));
@@ -140,17 +141,17 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public demetra.math.matrices.Matrix importMatrix(Object obj) throws IOException, ClassCastException {
+    public Matrix importMatrix(Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean canExportTable(demetra.util.Table<?> table) {
+    public boolean canExportTable(jdplus.toolkit.base.api.util.Table<?> table) {
         return config.exportTable && !table.isEmpty();
     }
 
     @Override
-    public Object exportTable(demetra.util.Table<?> table) throws IOException {
+    public Object exportTable(jdplus.toolkit.base.api.util.Table<?> table) throws IOException {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < table.getRowsCount(); i++) {
             result.append(valueToString(table.get(i, 0)));
@@ -168,7 +169,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public demetra.util.Table<?> importTable(Object obj) throws IOException, ClassCastException {
+    public jdplus.toolkit.base.api.util.Table<?> importTable(Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     //</editor-fold>
@@ -208,7 +209,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
         return value.toString();
     }
 
-    public String tsCollectionToString(demetra.timeseries.TsCollection col) throws IOException {
+    public String tsCollectionToString(TsCollection col) throws IOException {
         if (col.isEmpty()) {
             return "";
         }

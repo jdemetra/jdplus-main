@@ -16,7 +16,7 @@
  */
 package tck.demetra.data;
 
-import demetra.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
 
 /**
  *

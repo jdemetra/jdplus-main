@@ -8,7 +8,7 @@ import demetra.desktop.interfaces.Disposable;
 import demetra.desktop.ui.JMarginView;
 import demetra.desktop.ui.processing.ItemUI;
 import demetra.desktop.util.Pools;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.JComponent;

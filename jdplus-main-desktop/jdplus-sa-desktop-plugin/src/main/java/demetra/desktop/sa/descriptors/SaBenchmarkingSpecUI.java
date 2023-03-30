@@ -6,7 +6,7 @@ package demetra.desktop.sa.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.sa.benchmarking.SaBenchmarkingSpec;
+import jdplus.sa.base.api.benchmarking.SaBenchmarkingSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

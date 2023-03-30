@@ -6,21 +6,21 @@ package demetra.desktop.ui.processing.stats;
 
 import demetra.desktop.ui.processing.ItemUI;
 import demetra.desktop.ui.processing.TsViewToolkit;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.TsMoniker;
-import demetra.timeseries.TsPeriod;
-import demetra.timeseries.regression.ITsVariable;
-import demetra.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
-import jdplus.data.DataBlock;
-import jdplus.math.matrices.FastMatrix;
-import jdplus.modelling.regression.Regression;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.modelling.regression.Regression;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  *

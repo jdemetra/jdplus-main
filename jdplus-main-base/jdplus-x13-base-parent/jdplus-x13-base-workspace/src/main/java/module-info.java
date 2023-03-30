@@ -1,3 +1,6 @@
+import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
+import jdplus.x13.base.workspace.X13Handlers;
+
 module jdplus.x13.base.workspace {
 
     requires static lombok;
@@ -11,13 +14,13 @@ module jdplus.x13.base.workspace {
     requires jdplus.x13.base.information;
     requires jdplus.x13.base.core;
 
-    exports demetra.x13.workspace;
+    exports jdplus.x13.base.workspace;
 
-    provides demetra.workspace.file.spi.FamilyHandler with
-            demetra.x13.workspace.X13Handlers.ModSpecRegarima,
-            demetra.x13.workspace.X13Handlers.ModDocRegarimaLegacy,
-            demetra.x13.workspace.X13Handlers.SaSpecX13,
-            demetra.x13.workspace.X13Handlers.SaDocX13,
-            demetra.x13.workspace.X13Handlers.SaSpecX13Legacy,
-            demetra.x13.workspace.X13Handlers.ModDocRegarima;
+    provides FamilyHandler with
+            X13Handlers.ModSpecRegarima,
+            X13Handlers.ModDocRegarimaLegacy,
+            X13Handlers.SaSpecX13,
+            X13Handlers.SaDocX13,
+            X13Handlers.SaSpecX13Legacy,
+            X13Handlers.ModDocRegarima;
 }

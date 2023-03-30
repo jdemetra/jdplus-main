@@ -5,10 +5,9 @@
 package demetra.desktop.x13.descriptors;
 
 import demetra.desktop.regarima.descriptors.RegArimaSpecRoot;
-import demetra.regarima.RegArimaSpec;
-import demetra.sa.benchmarking.SaBenchmarkingSpec;
-import demetra.x11.X11Spec;
-import demetra.x13.X13Spec;
+import jdplus.sa.base.api.benchmarking.SaBenchmarkingSpec;
+import jdplus.x13.base.api.x11.X11Spec;
+import jdplus.x13.base.api.x13.X13Spec;
 /**
  *
  * @author Jean Palate

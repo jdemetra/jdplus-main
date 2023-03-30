@@ -4,7 +4,6 @@
  */
 package demetra.desktop.sa.multiprocessing.ui;
 
-import demetra.sa.SaItem;
 import java.util.Comparator;
 
 /**

@@ -24,7 +24,7 @@ import demetra.desktop.sa.multiprocessing.ui.SaNode;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.ui.ActiveViewAction;
 import demetra.desktop.workspace.ui.JSpecSelectionComponent;
-import demetra.sa.SaSpecification;
+import jdplus.sa.base.api.SaSpecification;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

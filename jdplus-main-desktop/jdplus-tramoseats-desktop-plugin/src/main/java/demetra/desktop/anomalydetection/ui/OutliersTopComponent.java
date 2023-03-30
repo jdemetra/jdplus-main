@@ -46,7 +46,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;

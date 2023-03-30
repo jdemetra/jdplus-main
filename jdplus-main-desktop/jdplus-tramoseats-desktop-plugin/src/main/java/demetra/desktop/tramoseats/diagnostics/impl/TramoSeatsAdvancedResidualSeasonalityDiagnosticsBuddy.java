@@ -18,9 +18,9 @@ package demetra.desktop.tramoseats.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
-import jdplus.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

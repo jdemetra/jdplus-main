@@ -25,14 +25,12 @@ import demetra.desktop.components.parts.HasChart.LinesThickness;
 import demetra.desktop.jfreechart.TsXYDataset;
 import demetra.desktop.util.ActionMaps;
 import demetra.desktop.util.InputMaps;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.chart.ObsFunction;
 import ec.util.chart.SeriesFunction;
 import ec.util.chart.SeriesPredicate;
 import ec.util.chart.TimeSeriesChart;
 import ec.util.chart.swing.JTimeSeriesChart;
-import ec.util.chart.swing.SelectionMouseListener;
-import ec.util.list.swing.JLists;
 import ec.util.various.swing.JCommand;
 import org.jfree.data.xy.IntervalXYDataset;
 

@@ -8,10 +8,11 @@ import demetra.desktop.TsManager;
 import demetra.desktop.datatransfer.DataSourceTransferSpi;
 import demetra.desktop.datatransfer.DataTransfers;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.tsprovider.DataSourceLoader;
-import demetra.tsprovider.FileBean;
-import demetra.tsprovider.FileLoader;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.base.tsp.FileBean;
+import jdplus.toolkit.base.tsp.FileLoader;
 import ec.util.list.swing.JLists;
+import jdplus.toolkit.base.tsp.DataSource;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.openide.DialogDescriptor;
@@ -51,7 +52,7 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
     }
 
     @Override
-    public Optional<demetra.tsprovider.DataSource> getDataSource(Transferable t) {
+    public Optional<DataSource> getDataSource(Transferable t) {
         File file = DataTransfers.getSingleFile(t).orElseThrow();
         List<FileLoader> loaders = getLoaders(file);
         Optional<FileLoader> loader = chooseLoader(loaders);
@@ -66,7 +67,7 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
     }
 
     @Override
-    public Optional<demetra.tsprovider.DataSource> getDataSource(Transferable t, String providerName) {
+    public Optional<DataSource> getDataSource(Transferable t, String providerName) {
         File file = DataTransfers.getSingleFile(t).orElseThrow();
         FileLoader loader = TsManager.get().getProvider(FileLoader.class, providerName).orElseThrow();
         FileBean bean = loader.newBean();

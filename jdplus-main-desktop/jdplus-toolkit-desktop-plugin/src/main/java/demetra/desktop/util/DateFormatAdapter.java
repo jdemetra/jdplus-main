@@ -1,6 +1,6 @@
 package demetra.desktop.util;
 
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;

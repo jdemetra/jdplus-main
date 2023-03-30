@@ -35,7 +35,7 @@ import demetra.desktop.Converter;
 import demetra.desktop.interchange.InterchangeManager;
 import demetra.desktop.ui.variables.VariablesDocumentManager;
 import demetra.desktop.workspace.nodes.ItemWsNode;
-import demetra.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 
 /**
  *

@@ -16,12 +16,12 @@
  */
 package demetra.desktop.components.tools;
 
-import demetra.data.DoubleSeq;
-import demetra.data.DoubleSeqCursor;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import javax.swing.JPopupMenu;
-import jdplus.data.analysis.WindowFunction;
-import jdplus.data.analysis.SmoothedPeriodogram;
-import jdplus.data.analysis.TukeyHanningTaper;
+import jdplus.toolkit.base.core.data.analysis.WindowFunction;
+import jdplus.toolkit.base.core.data.analysis.SmoothedPeriodogram;
+import jdplus.toolkit.base.core.data.analysis.TukeyHanningTaper;
 import org.jfree.data.xy.XYSeries;
 
 /**

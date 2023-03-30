@@ -16,8 +16,8 @@
  */
 package _util.tsproviders;
 
-import demetra.timeseries.TsUnit;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.Collections;
 import java.util.Map;
 

@@ -16,14 +16,14 @@
  */
 package demetra.desktop.ui.chart3d.functions;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.parts.*;
 import demetra.desktop.components.TimeSeriesComponent;
 import demetra.desktop.components.tools.JChartPanel;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.jfreechart.BasicXYDataset;
 import demetra.desktop.jfreechart.TsCharts;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.ColorScheme.KnownColor;
 import ec.util.chart.swing.Charts;
@@ -32,10 +32,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import javax.swing.JComponent;
-import jdplus.data.DataBlock;
-import jdplus.math.functions.IFunction;
-import jdplus.math.functions.IFunctionPoint;
-import jdplus.math.functions.IParametersDomain;
+import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.math.functions.IFunction;
+import jdplus.toolkit.base.core.math.functions.IFunctionPoint;
+import jdplus.toolkit.base.core.math.functions.IParametersDomain;
 import nbbrd.design.SkipProcessing;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;

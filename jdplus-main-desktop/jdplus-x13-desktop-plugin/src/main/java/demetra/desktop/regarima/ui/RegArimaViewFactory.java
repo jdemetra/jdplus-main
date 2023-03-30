@@ -22,17 +22,17 @@ import demetra.desktop.ui.processing.stats.ResidualsDistUI;
 import demetra.desktop.ui.processing.stats.ResidualsUI;
 import demetra.desktop.ui.processing.stats.SpectrumUI;
 import demetra.html.HtmlElement;
-import demetra.information.InformationSet;
-import demetra.modelling.ModellingDictionary;
-import demetra.modelling.SeriesInfo;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDocument;
-import demetra.util.Id;
-import demetra.x13.io.information.RegArimaSpecMapping;
-import jdplus.x13.regarima.RegArimaDocument;
+import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.modelling.ModellingDictionary;
+import jdplus.toolkit.base.api.modelling.SeriesInfo;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.x13.base.information.RegArimaSpecMapping;
+import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

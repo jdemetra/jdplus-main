@@ -5,7 +5,7 @@
 package demetra.desktop.processing.ui.sa;
 
 import demetra.desktop.ui.processing.PooledItemUI;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsData;
 
 
 /**

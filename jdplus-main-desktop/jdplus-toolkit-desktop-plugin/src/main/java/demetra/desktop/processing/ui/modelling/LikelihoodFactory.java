@@ -7,12 +7,11 @@ package demetra.desktop.processing.ui.modelling;
 import demetra.desktop.ui.processing.ProcDocumentItemFactory;
 import demetra.desktop.ui.processing.SurfacePlotterUI;
 import demetra.desktop.ui.processing.SurfacePlotterUI.Functions;
-import demetra.processing.ProcSpecification;
-import demetra.timeseries.TsDocument;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.toolkit.base.api.util.Id;
 import java.util.function.Function;
-import jdplus.math.functions.IFunction;
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.math.functions.IFunction;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  *

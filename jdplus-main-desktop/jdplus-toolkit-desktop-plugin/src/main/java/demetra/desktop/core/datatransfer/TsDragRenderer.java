@@ -5,10 +5,10 @@
 package demetra.desktop.core.datatransfer;
 
 import com.google.common.base.Suppliers;
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.util.TransferHandlers;
 import demetra.desktop.components.JTsChart;
-import demetra.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.Ts;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;

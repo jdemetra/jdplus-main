@@ -4,11 +4,11 @@
  */
 package demetra.desktop.ui.variables;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import demetra.desktop.workspace.AbstractFileItemRepository;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemRepository;
-import demetra.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

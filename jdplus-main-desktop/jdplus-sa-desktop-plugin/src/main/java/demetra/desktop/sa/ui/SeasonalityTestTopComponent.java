@@ -12,9 +12,9 @@ import demetra.desktop.components.parts.HasTs;
 import demetra.desktop.components.parts.HasTsSupport;
 import demetra.html.HtmlUtil;
 import demetra.sa.html.HtmlSeasonalityDiagnostics;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import java.beans.PropertyVetoException;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -29,7 +29,7 @@ import org.openide.windows.TopComponent;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
-import jdplus.sa.tests.SeasonalityTests;
+import jdplus.sa.base.core.tests.SeasonalityTests;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.util.Exceptions;
@@ -154,7 +154,7 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
     }
     
     private void showTests() {
-        demetra.timeseries.Ts cur = getTs();
+        Ts cur = getTs();
         if (cur == null) {
             jEditorPane1.setHtml("");
         } else {

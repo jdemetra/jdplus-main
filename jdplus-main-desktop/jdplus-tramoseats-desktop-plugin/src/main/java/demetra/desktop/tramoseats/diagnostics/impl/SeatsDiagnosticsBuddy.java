@@ -24,9 +24,9 @@ import demetra.desktop.Converter;
 import demetra.desktop.sa.diagnostics.AbstractSaDiagnosticsFactoryBuddy;
 import demetra.desktop.sa.diagnostics.AbstractSaDiagnosticsNode;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
-import jdplus.seats.diagnostics.SeatsDiagnosticsConfiguration;
-import jdplus.seats.diagnostics.SeatsDiagnosticsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.tramoseats.base.core.seats.diagnostics.SeatsDiagnosticsConfiguration;
+import jdplus.tramoseats.base.core.seats.diagnostics.SeatsDiagnosticsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import nbbrd.io.text.DoubleProperty;
 import org.openide.util.lookup.ServiceProvider;
 

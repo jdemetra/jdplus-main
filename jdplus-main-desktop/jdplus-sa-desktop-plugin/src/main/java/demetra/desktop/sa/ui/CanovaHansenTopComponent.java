@@ -5,10 +5,12 @@
 package demetra.desktop.sa.ui;
 
 import demetra.desktop.components.parts.HasTs;
-import demetra.desktop.components.tools.PeriodogramView;
+
 import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;
-import jdplus.data.analysis.WindowFunction;
+
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -111,12 +113,12 @@ public final class CanovaHansenTopComponent extends TopComponent implements HasT
     }
 
     @Override
-    public demetra.timeseries.Ts getTs() {
+    public Ts getTs() {
         return view.getTs();
     }
 
     @Override
-    public void setTs(demetra.timeseries.Ts ts) {
+    public void setTs(Ts ts) {
         view.setTs(ts);
     }
 

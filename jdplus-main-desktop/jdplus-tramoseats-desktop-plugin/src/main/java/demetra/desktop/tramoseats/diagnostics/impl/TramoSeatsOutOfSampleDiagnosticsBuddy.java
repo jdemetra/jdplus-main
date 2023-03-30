@@ -18,9 +18,9 @@ package demetra.desktop.tramoseats.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.SaOutOfSampleDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
-import jdplus.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.SaOutOfSampleDiagnosticsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SaOutOfSampleDiagnosticsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

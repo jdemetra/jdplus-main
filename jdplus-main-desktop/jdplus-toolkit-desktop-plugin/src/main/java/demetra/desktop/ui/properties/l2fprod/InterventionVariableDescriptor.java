@@ -4,10 +4,10 @@
  */
 package demetra.desktop.ui.properties.l2fprod;
 
-import demetra.data.Range;
+import jdplus.toolkit.base.api.data.Range;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.timeseries.regression.InterventionVariable;
-import demetra.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.LocalDateTime;

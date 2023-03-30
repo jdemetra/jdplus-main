@@ -20,7 +20,7 @@ import demetra.desktop.sa.multiprocessing.ui.MultiProcessingManager;
 import demetra.desktop.sa.multiprocessing.ui.SaBatchUI;
 import demetra.desktop.sa.multiprocessing.ui.SaNode;
 import demetra.desktop.ui.ActiveViewAction;
-import demetra.sa.SaItem;
+import jdplus.sa.base.api.SaItem;
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;

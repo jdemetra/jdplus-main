@@ -20,10 +20,10 @@ import demetra.desktop.sa.multiprocessing.ui.MultiProcessingManager;
 import demetra.desktop.sa.multiprocessing.ui.SaBatchUI;
 import demetra.desktop.sa.multiprocessing.ui.SaNode;
 import demetra.desktop.ui.ActiveViewAction;
-import demetra.sa.SaDictionaries;
+import jdplus.sa.base.api.SaDictionaries;
 import java.util.ArrayList;
 import java.util.List;
-import static javax.swing.Action.NAME;
+
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

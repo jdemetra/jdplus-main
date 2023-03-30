@@ -18,10 +18,9 @@ package demetra.desktop.x13.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import demetra.sa.SaDiagnosticsFactory;
-import jdplus.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;
-import jdplus.x13.X13Results;
+import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;
+import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

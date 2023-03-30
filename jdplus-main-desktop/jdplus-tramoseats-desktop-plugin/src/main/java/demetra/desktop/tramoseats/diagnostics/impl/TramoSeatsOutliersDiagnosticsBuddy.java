@@ -18,9 +18,9 @@ package demetra.desktop.tramoseats.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.SaOutliersDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
-import jdplus.regarima.diagnostics.OutliersDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.SaOutliersDiagnosticsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.toolkit.base.core.regarima.diagnostics.OutliersDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

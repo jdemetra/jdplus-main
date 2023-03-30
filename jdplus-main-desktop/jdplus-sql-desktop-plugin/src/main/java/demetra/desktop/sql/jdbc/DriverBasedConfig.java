@@ -17,7 +17,7 @@
 package demetra.desktop.sql.jdbc;
 
 import demetra.desktop.util.XmlConfig;
-import internal.util.SortedMaps;
+import jdplus.toolkit.base.tsp.fixme.SortedMaps;
 import nbbrd.design.MightBePromoted;
 import nbbrd.design.VisibleForTesting;
 import nbbrd.io.function.IOFunction;

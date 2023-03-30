@@ -16,14 +16,15 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.DemetraVersion;
-import demetra.timeseries.calendars.CalendarDefinition;
-import demetra.timeseries.calendars.CalendarManager;
-import demetra.tsprovider.DataSource;
-import demetra.util.LinearId;
-import demetra.util.Paths;
-import demetra.workspace.WorkspaceItemDescriptor;
-import demetra.workspace.file.FileWorkspace;
+import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.api.util.LinearId;
+import jdplus.toolkit.base.api.util.Paths;
+import jdplus.toolkit.base.workspace.WorkspaceFamily;
+import jdplus.toolkit.base.workspace.WorkspaceItemDescriptor;
+import jdplus.toolkit.base.workspace.file.FileWorkspace;
 import ec.util.desktop.Desktop;
 import ec.util.desktop.Desktop.KnownFolder;
 import ec.util.desktop.DesktopManager;
@@ -125,9 +126,9 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
         }
 
         boolean exist = file.exists();
-        try (demetra.workspace.file.FileWorkspace storage = exist
-                ? demetra.workspace.file.FileWorkspace.open(file.toPath(), version)
-                : demetra.workspace.file.FileWorkspace.create(file.toPath(), version)) {
+        try (FileWorkspace storage = exist
+                ? FileWorkspace.open(file.toPath(), version)
+                : FileWorkspace.create(file.toPath(), version)) {
             storage.setName(ws.getName());
             storeCalendar(storage, ws.getContext().getCalendars());
             if (exist) {
@@ -178,7 +179,7 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
         }
         
  
-        try (demetra.workspace.file.FileWorkspace storage = demetra.workspace.file.FileWorkspace.open(file.toPath())) {
+        try (FileWorkspace storage = FileWorkspace.open(file.toPath())) {
             ws.setName(storage.getName());
             loadCalendars(storage, ws);
             loadItems(storage.getItems(), ws);
@@ -193,11 +194,11 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
         return true;
     }
 
-    private static void loadItems(Collection<demetra.workspace.WorkspaceItemDescriptor> items, Workspace ws) {
+    private static void loadItems(Collection<WorkspaceItemDescriptor> items, Workspace ws) {
         items.forEach(o -> {
             WorkspaceItemDescriptor.Key key = o.getKey();
             WorkspaceItemDescriptor.Attributes attributes = o.getAttributes();
-            if (!key.getFamily().equals(demetra.workspace.WorkspaceFamily.UTIL_CAL)) {
+            if (!key.getFamily().equals(WorkspaceFamily.UTIL_CAL)) {
                 WorkspaceItem<?> witem = WorkspaceItem.item(LinearId.of(key.getFamily()), attributes.getLabel(), key.getId(), attributes.getComments());
                 ws.quietAdd(witem);
                 WorkspaceItemManager<?> manager = WorkspaceFactory.getInstance().getManager(witem.getFamily());
@@ -208,10 +209,10 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
         });
     }
 
-    private static final demetra.workspace.WorkspaceItemDescriptor CAL_ID = 
-            new demetra.workspace.WorkspaceItemDescriptor(
-                    new demetra.workspace.WorkspaceItemDescriptor.Key(demetra.workspace.WorkspaceFamily.UTIL_CAL, "Calendars"),
-                    new demetra.workspace.WorkspaceItemDescriptor.Attributes("Calendars", false, null));
+    private static final WorkspaceItemDescriptor CAL_ID =
+            new WorkspaceItemDescriptor(
+                    new WorkspaceItemDescriptor.Key(WorkspaceFamily.UTIL_CAL, "Calendars"),
+                    new WorkspaceItemDescriptor.Attributes("Calendars", false, null));
 
     private static void storeCalendar(FileWorkspace storage, CalendarManager value) throws IOException {
         storage.store(CAL_ID, value);
@@ -231,18 +232,18 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
     }
 
     private static void removeDeletedItems(FileWorkspace storage, Workspace ws) throws IOException {
-        for (demetra.workspace.WorkspaceItemDescriptor o : storage.getItems()) {
+        for (WorkspaceItemDescriptor o : storage.getItems()) {
             if (!isCalendar(o) && isDeleted(ws, o)) {
                 storage.delete(o.getKey());
             }
         }
     }
 
-    private static boolean isCalendar(demetra.workspace.WorkspaceItemDescriptor o) {
-        return demetra.workspace.WorkspaceFamily.UTIL_CAL.equals(o.getKey().getFamily());
+    private static boolean isCalendar(WorkspaceItemDescriptor o) {
+        return WorkspaceFamily.UTIL_CAL.equals(o.getKey().getFamily());
     }
 
-    private static boolean isDeleted(Workspace ws, demetra.workspace.WorkspaceItemDescriptor o) {
+    private static boolean isDeleted(Workspace ws, WorkspaceItemDescriptor o) {
         return ws.searchDocument(LinearId.of(o.getKey().getFamily()), o.getKey().getId()) == null;
     }
 

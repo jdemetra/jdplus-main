@@ -20,7 +20,7 @@ import demetra.html.HtmlElement;
 import demetra.html.AbstractHtmlElement;
 import demetra.html.HtmlStream;
 import java.io.IOException;
-import jdplus.stats.likelihood.DiffuseLikelihoodStatistics;
+import jdplus.toolkit.base.core.stats.likelihood.DiffuseLikelihoodStatistics;
 
 /**
  *

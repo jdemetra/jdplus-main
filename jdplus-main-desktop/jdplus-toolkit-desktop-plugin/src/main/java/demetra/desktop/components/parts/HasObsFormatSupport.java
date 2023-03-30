@@ -20,7 +20,7 @@ import demetra.desktop.DemetraIcons;
 import demetra.desktop.beans.PropertyChangeBroadcaster;
 import demetra.desktop.components.ComponentCommand;
 import demetra.desktop.components.JObsFormatComponent;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
 import org.checkerframework.checker.nullness.qual.NonNull;

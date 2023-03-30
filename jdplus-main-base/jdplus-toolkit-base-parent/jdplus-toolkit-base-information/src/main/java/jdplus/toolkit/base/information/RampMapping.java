@@ -1,0 +1,78 @@
+/*
+ * Copyright 2020 National Bank of Belgium
+ *
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and 
+ * limitations under the Licence.
+ */
+package jdplus.toolkit.base.information;
+
+import jdplus.toolkit.base.api.data.Range;
+import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.regression.Ramp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ *
+ * @author PALATEJ
+ */
+@lombok.experimental.UtilityClass
+public class RampMapping {
+
+    public final String RANGE = "range", START = "start", END = "end";
+
+    public String format(Ramp ramp) {
+        Range<LocalDateTime> range = Range.of(ramp.getStart(), ramp.getEnd());
+        return VariableMapping.rangeToShortString(range);
+    }
+
+    public Ramp parse(String sr) {
+        Range<LocalDateTime> range = VariableMapping.rangeFromShortString(sr);
+        return new Ramp(range.start(), range.end());
+    }
+
+    public Ramp parseLegacy(String sr, TsDomain context) {
+        Range<LocalDate> range = VariableMapping.rangeFromLegacyString(sr);
+        LocalDate d0 = range.start();
+        if (context == null) {
+            d0 = d0.minusDays(1);
+            return new Ramp(d0.atStartOfDay(), range.end().atStartOfDay());
+        } else {
+            TsPeriod p0 = TsPeriod.of(context.getTsUnit(), d0).previous();
+            return new Ramp(p0.start(), range.end().atStartOfDay());
+        }
+    }
+
+    @Deprecated
+    public Ramp parseLegacy(String sr) {
+        Range<LocalDate> range = VariableMapping.rangeFromLegacyString(sr);
+        return new Ramp(range.start().minusDays(1).atStartOfDay(), range.end().atStartOfDay());
+    }
+
+    public InformationSet write(Ramp ramp) {
+        InformationSet info = new InformationSet();
+        info.set(START, ramp.getStart().toLocalDate().format(DateTimeFormatter.ISO_DATE));
+        info.set(END, ramp.getEnd().toLocalDate().format(DateTimeFormatter.ISO_DATE));
+        return info;
+    }
+
+    public Ramp read(InformationSet info) {
+        String start = info.get(START, String.class);
+        String end = info.get(END, String.class);
+        return new Ramp(LocalDate.parse(start, DateTimeFormatter.ISO_DATE).atStartOfDay(),
+                LocalDate.parse(end, DateTimeFormatter.ISO_DATE).atStartOfDay());
+    }
+}

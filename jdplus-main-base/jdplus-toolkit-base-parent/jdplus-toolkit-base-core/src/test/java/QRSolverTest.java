@@ -5,13 +5,13 @@
  */
 
 
-import jdplus.math.linearsystem.QRLeastSquaresSolution;
-import jdplus.math.linearsystem.QRLeastSquaresSolver;
-import jdplus.data.DataBlock;
+import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolution;
+import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolver;
+import jdplus.toolkit.base.core.data.DataBlock;
 import tck.demetra.data.DataSets;
 import static tck.demetra.data.DataSets.lre;
-import jdplus.math.matrices.FastMatrix;
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**
  *

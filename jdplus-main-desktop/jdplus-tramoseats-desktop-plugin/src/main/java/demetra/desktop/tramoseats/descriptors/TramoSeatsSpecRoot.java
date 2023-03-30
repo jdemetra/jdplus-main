@@ -5,9 +5,9 @@
 package demetra.desktop.tramoseats.descriptors;
 
 import demetra.desktop.tramo.descriptors.TramoSpecRoot;
-import demetra.sa.benchmarking.SaBenchmarkingSpec;
-import demetra.seats.DecompositionSpec;
-import demetra.tramoseats.TramoSeatsSpec;
+import jdplus.sa.base.api.benchmarking.SaBenchmarkingSpec;
+import jdplus.tramoseats.base.api.seats.DecompositionSpec;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 /**
  *
  * @author Jean Palate

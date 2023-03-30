@@ -24,7 +24,7 @@ import demetra.desktop.util.InstallerStep;
 import demetra.desktop.x13.descriptors.SeasonalFilterPropertyEditor;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddies;
 import demetra.desktop.x13.ui.X13UI;
-import demetra.x11.SeasonalFilterOption;
+import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import java.util.prefs.BackingStoreException;
 import org.openide.modules.ModuleInstall;
 

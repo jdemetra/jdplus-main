@@ -1,6 +1,6 @@
 package _util;
 
-import demetra.tsprovider.FileBean;
+import jdplus.toolkit.base.tsp.FileBean;
 
 import java.io.File;
 

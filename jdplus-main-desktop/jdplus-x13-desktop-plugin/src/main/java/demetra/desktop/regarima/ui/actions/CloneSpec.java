@@ -9,7 +9,7 @@ import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemManager;
 import demetra.desktop.workspace.nodes.WsNode;
-import demetra.regarima.RegArimaSpec;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;

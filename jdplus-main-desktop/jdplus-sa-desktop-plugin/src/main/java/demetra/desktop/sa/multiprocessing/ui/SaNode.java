@@ -4,18 +4,18 @@
  */
 package demetra.desktop.sa.multiprocessing.ui;
 
-import demetra.sa.EstimationPolicyType;
-import demetra.sa.SaDefinition;
-import demetra.sa.SaEstimation;
-import demetra.sa.SaItem;
-import demetra.sa.SaManager;
-import demetra.sa.SaProcessingFactory;
-import demetra.sa.SaSpecification;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsFactory;
-import demetra.timeseries.TsInformationType;
-import demetra.timeseries.TsMoniker;
-import demetra.timeseries.regression.ModellingContext;
+import jdplus.sa.base.api.EstimationPolicyType;
+import jdplus.sa.base.api.SaDefinition;
+import jdplus.sa.base.api.SaEstimation;
+import jdplus.sa.base.api.SaItem;
+import jdplus.sa.base.api.SaManager;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.sa.base.api.SaSpecification;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

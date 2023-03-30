@@ -26,11 +26,11 @@ import demetra.desktop.sa.multiprocessing.ui.SaBatchUI;
 import demetra.desktop.sa.output.OutputPanel;
 import demetra.desktop.ui.ActiveViewAction;
 import demetra.desktop.workspace.WorkspaceItem;
-import demetra.sa.SaItem;
-import demetra.sa.SaOutputFactory;
-import demetra.sa.csv.CsvMatrixOutputFactory;
-import demetra.sa.csv.CsvOutputFactory;
-import demetra.util.LinearId;
+import jdplus.sa.base.api.SaItem;
+import jdplus.sa.base.api.SaOutputFactory;
+import jdplus.sa.base.csv.CsvMatrixOutputFactory;
+import jdplus.sa.base.csv.CsvOutputFactory;
+import jdplus.toolkit.base.api.util.LinearId;
 
 import java.io.File;
 import java.util.Arrays;
@@ -118,7 +118,7 @@ public final class Output extends ActiveViewAction<SaBatchUI> {
     private static void store(SaOutputFactory output, LinearId id, SaItem[] processing, ProgressHandle ph) throws Exception {
         ph.start();
         ph.progress("Initializing");
-        demetra.processing.Output sadoc = output.create();
+        jdplus.toolkit.base.api.processing.Output sadoc = output.create();
         ph.progress("Starting");
         sadoc.start(id);
         ph.progress("Processing");

@@ -24,8 +24,8 @@ import demetra.desktop.Converter;
 import demetra.desktop.sa.diagnostics.AbstractSaDiagnosticsFactoryBuddy;
 import demetra.desktop.sa.diagnostics.AbstractSaDiagnosticsNode;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import jdplus.x13.diagnostics.MDiagnosticsConfiguration;
-import jdplus.x13.diagnostics.MDiagnosticsFactory;
+import jdplus.x13.base.core.x13.diagnostics.MDiagnosticsConfiguration;
+import jdplus.x13.base.core.x13.diagnostics.MDiagnosticsFactory;
 import nbbrd.io.text.DoubleProperty;
 import org.openide.util.lookup.ServiceProvider;
 

@@ -21,7 +21,7 @@ import demetra.html.AbstractHtmlElement;
 import demetra.html.HtmlStream;
 import demetra.html.HtmlTag;
 import java.io.IOException;
-import jdplus.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 
 /**
  *

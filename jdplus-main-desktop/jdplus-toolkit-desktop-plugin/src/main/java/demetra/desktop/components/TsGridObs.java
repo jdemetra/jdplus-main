@@ -16,8 +16,8 @@
  */
 package demetra.desktop.components;
 
-import demetra.timeseries.TsDataTable;
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 
 /**
  *

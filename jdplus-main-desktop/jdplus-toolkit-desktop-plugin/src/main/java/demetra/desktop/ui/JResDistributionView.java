@@ -4,14 +4,14 @@
  */
 package demetra.desktop.ui;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.tools.JAutoCorrelationsView;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.util.NbComponents;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
-import jdplus.dstats.Normal;
+import jdplus.toolkit.base.core.dstats.Normal;
 
 /**
  *

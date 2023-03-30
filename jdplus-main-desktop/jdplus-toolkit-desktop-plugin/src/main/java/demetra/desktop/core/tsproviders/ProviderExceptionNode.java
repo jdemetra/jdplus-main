@@ -19,7 +19,7 @@ package demetra.desktop.core.tsproviders;
 import demetra.desktop.TsManager;
 import demetra.desktop.nodes.ExceptionNode;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.tsprovider.DataSourceProvider;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import org.openide.nodes.Sheet;
 
 import java.awt.*;

@@ -4,7 +4,7 @@ import public "modelling.proto";
 
 package regarima;
 
-option java_package = "demetra.regarima.io.protobuf";
+option java_package = "jdplus.toolkit.base.protobuf.regarima";
 option java_outer_classname = "RegArimaProtos";
 
 message SarimaSpec{

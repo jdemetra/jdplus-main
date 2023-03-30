@@ -5,9 +5,9 @@
 package demetra.desktop.ui.calendar;
 
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.ValidityPeriod;
-import demetra.timeseries.calendars.FixedDay;
-import demetra.timeseries.calendars.Holiday;
+import jdplus.toolkit.base.api.timeseries.ValidityPeriod;
+import jdplus.toolkit.base.api.timeseries.calendars.FixedDay;
+import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
 
 import java.time.LocalDate;
 import java.time.Month;

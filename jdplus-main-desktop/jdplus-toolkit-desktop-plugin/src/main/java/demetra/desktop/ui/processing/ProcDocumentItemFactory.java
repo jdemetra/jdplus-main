@@ -18,8 +18,8 @@ package demetra.desktop.ui.processing;
 
 import demetra.desktop.components.JExceptionPanel;
 import demetra.desktop.design.SwingComponent;
-import demetra.processing.ProcDocument;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.processing.ProcDocument;
+import jdplus.toolkit.base.api.util.Id;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.util.Objects;

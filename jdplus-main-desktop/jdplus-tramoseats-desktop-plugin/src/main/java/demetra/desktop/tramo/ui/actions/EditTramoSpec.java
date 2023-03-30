@@ -8,7 +8,7 @@ import demetra.desktop.tramo.documents.TramoSpecManager;
 import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.nodes.WsNode;
-import demetra.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionRegistration;

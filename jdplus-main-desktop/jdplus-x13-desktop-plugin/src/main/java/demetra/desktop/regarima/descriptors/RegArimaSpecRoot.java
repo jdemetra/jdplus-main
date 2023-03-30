@@ -4,7 +4,7 @@
  */
 package demetra.desktop.regarima.descriptors;
 
-import demetra.regarima.RegArimaSpec;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
 
 /**
  *

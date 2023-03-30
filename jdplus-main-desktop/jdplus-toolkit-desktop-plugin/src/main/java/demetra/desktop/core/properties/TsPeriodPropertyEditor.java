@@ -16,7 +16,7 @@
  */
 package demetra.desktop.core.properties;
 
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.beans.PropertyEditorSupport;
 import org.openide.nodes.PropertyEditorRegistration;
 

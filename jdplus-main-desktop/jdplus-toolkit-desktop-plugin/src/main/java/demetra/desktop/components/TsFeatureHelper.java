@@ -16,9 +16,9 @@
  */
 package demetra.desktop.components;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsData;
-import demetra.tsprovider.TsMeta;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.tsp.TsMeta;
 import lombok.AccessLevel;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;

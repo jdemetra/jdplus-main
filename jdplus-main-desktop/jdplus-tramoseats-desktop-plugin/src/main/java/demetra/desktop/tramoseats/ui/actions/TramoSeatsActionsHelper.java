@@ -18,11 +18,11 @@ package demetra.desktop.tramoseats.ui.actions;
 
 import demetra.desktop.sa.util.ActionsHelper;
 import demetra.desktop.tramoseats.ui.TramoSeatsUI;
-import demetra.sa.SaProcessingFactory;
-import demetra.sa.SaSpecification;
-import demetra.tramoseats.TramoSeatsSpec;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.sa.base.api.SaSpecification;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import java.util.List;
-import jdplus.tramoseats.TramoSeatsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsFactory;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

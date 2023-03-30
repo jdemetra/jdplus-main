@@ -22,13 +22,13 @@ import demetra.html.HtmlStream;
 import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTag;
-import demetra.modelling.ComponentInformation;
-import demetra.sa.ComponentType;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.modelling.ComponentInformation;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.io.IOException;
-import jdplus.seats.SeatsResults;
-import jdplus.ucarima.UcarimaModel;
-import jdplus.ucarima.WienerKolmogorovEstimators;
+import jdplus.tramoseats.base.core.seats.SeatsResults;
+import jdplus.toolkit.base.core.ucarima.UcarimaModel;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
 
 /**
  *

@@ -18,9 +18,9 @@ package demetra.desktop.x13.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.ResidualTradingDaysDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import jdplus.sa.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.ResidualTradingDaysDiagnosticsFactory;
-import jdplus.x13.X13Results;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
+import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

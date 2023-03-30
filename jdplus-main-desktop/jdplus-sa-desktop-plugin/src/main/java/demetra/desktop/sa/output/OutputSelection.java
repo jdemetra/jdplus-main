@@ -4,10 +4,10 @@
  */
 package demetra.desktop.sa.output;
 
-import demetra.data.DoubleSeq;
-import demetra.math.matrices.Matrix;
-import demetra.sa.SaProcessingFactory;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;

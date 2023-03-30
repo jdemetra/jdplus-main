@@ -16,8 +16,8 @@
  */
 package demetra.desktop.anomalydetection.report;
 
-import demetra.timeseries.TsPeriod;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import java.text.DecimalFormat;
 
 /**

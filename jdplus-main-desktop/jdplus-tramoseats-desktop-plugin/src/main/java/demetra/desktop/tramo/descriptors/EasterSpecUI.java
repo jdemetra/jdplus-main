@@ -4,9 +4,9 @@
  */
 package demetra.desktop.tramo.descriptors;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.tramo.EasterSpec;
+import jdplus.tramoseats.base.api.tramo.EasterSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

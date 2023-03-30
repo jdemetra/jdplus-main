@@ -1,3 +1,6 @@
+import jdplus.sa.base.information.SaSpecificationMapping;
+import jdplus.tramoseats.base.information.TramoSeatsSpecMapping;
+
 module jdplus.tramoseats.base.information {
 
     requires static lombok;
@@ -9,8 +12,8 @@ module jdplus.tramoseats.base.information {
     requires jdplus.toolkit.base.information;
     requires jdplus.sa.base.information;
 
-    exports demetra.tramoseats.io.information;
+    exports jdplus.tramoseats.base.information;
 
-    provides demetra.sa.io.information.SaSpecificationMapping with
-            demetra.tramoseats.io.information.TramoSeatsSpecMapping.Serializer;
+    provides SaSpecificationMapping with
+            TramoSeatsSpecMapping.Serializer;
 }

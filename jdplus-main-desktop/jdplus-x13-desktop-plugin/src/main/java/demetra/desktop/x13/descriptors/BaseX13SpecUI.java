@@ -5,8 +5,8 @@
 package demetra.desktop.x13.descriptors;
 
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.regarima.RegArimaSpec;
-import demetra.x11.X11Spec;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
+import jdplus.x13.base.api.x11.X11Spec;
 
 /**
  *

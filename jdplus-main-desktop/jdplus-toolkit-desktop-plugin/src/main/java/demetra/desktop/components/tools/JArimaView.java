@@ -20,8 +20,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
-import jdplus.arima.IArimaModel;
-import jdplus.sarima.SarimaModel;
+import jdplus.toolkit.base.core.arima.IArimaModel;
+import jdplus.toolkit.base.core.sarima.SarimaModel;
 
 /**
  * @author Kristof Bayens

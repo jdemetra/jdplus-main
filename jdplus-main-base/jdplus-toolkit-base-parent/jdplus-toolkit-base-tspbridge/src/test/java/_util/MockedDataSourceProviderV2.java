@@ -1,6 +1,6 @@
 package _util;
 
-import demetra.bridge.TsConverter;
+import jdplus.toolkit.base.tspbridge.TsConverter;
 import ec.tss.tsproviders.IDataSourceProvider;
 
 public final class MockedDataSourceProviderV2 implements IDataSourceProvider {

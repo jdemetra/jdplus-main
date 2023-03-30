@@ -5,7 +5,7 @@
 package demetra.desktop.tramoseats.descriptors;
 
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.seats.DecompositionSpec;
+import jdplus.tramoseats.base.api.seats.DecompositionSpec;
 
 /**
  *

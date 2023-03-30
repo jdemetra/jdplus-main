@@ -16,12 +16,12 @@
  */
 package _demo;
 
-import demetra.demo.ProviderDemo;
-import demetra.sql.odbc.OdbcBean;
-import demetra.sql.odbc.OdbcProvider;
-import demetra.timeseries.TsDataTable;
-import demetra.tsprovider.DataSource;
-import demetra.tsprovider.cube.TableAsCube;
+import jdplus.toolkit.base.tspbridge.demo.ProviderDemo;
+import jdplus.sql.base.api.odbc.OdbcBean;
+import jdplus.sql.base.api.odbc.OdbcProvider;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.cube.TableAsCube;
 
 import java.io.IOException;
 import java.sql.DriverManager;

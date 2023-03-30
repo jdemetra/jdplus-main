@@ -26,11 +26,11 @@ import demetra.desktop.tsproviders.DataSourceManager;
 import demetra.desktop.util.ActionMaps;
 import demetra.desktop.util.Collections2;
 import demetra.desktop.util.InputMaps;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsDataTable;
-import demetra.timeseries.TsPeriod;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.chart.ObsIndex;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import ec.util.grid.CellIndex;
@@ -54,7 +54,7 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 import static demetra.desktop.components.JTsGrid.TOGGLE_MODE_ACTION;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import nbbrd.design.MightBePromoted;
@@ -677,7 +677,7 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            demetra.timeseries.Ts ts = (demetra.timeseries.Ts) value;
+            Ts ts = (Ts) value;
             setText(ts.getName());
             setIcon(DataSourceManager.get().getIcon(ts.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
             if (colorSchemeSupport != null && index != -1) {

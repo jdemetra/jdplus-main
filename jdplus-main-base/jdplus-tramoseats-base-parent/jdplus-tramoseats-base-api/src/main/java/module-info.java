@@ -1,3 +1,7 @@
+import jdplus.tramoseats.base.api.seats.Seats;
+import jdplus.tramoseats.base.api.tramo.Tramo;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeats;
+
 module jdplus.tramoseats.base.api {
 
     requires static lombok;
@@ -7,11 +11,11 @@ module jdplus.tramoseats.base.api {
 
     requires transitive jdplus.sa.base.api;
 
-    exports demetra.seats;
-    exports demetra.tramo;
-    exports demetra.tramoseats;
+    exports jdplus.tramoseats.base.api.seats;
+    exports jdplus.tramoseats.base.api.tramo;
+    exports jdplus.tramoseats.base.api.tramoseats;
 
-    uses demetra.tramoseats.TramoSeats.Processor;
-    uses demetra.tramo.Tramo.Processor;
-    uses demetra.seats.Seats.Processor;
+    uses TramoSeats.Processor;
+    uses Tramo.Processor;
+    uses Seats.Processor;
 }

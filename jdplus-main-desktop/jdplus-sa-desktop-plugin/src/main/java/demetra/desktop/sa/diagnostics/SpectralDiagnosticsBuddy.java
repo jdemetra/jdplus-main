@@ -21,8 +21,8 @@ import demetra.desktop.properties.NodePropertySetBuilder;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import demetra.desktop.Converter;
-import jdplus.sa.diagnostics.SpectralDiagnosticsFactory;
-import jdplus.sa.diagnostics.SpectralDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import nbbrd.io.text.DoubleProperty;
 import nbbrd.io.text.IntProperty;
 

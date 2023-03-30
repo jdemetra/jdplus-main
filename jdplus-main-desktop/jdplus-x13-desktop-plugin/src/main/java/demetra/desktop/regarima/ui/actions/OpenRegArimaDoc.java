@@ -4,14 +4,13 @@
  */
 package demetra.desktop.regarima.ui.actions;
 
-import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.nodes.WsNode;
 import demetra.desktop.regarima.documents.RegArimaDocumentManager;
 import demetra.desktop.workspace.DocumentUIServices;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import jdplus.x13.regarima.RegArimaDocument;
+import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

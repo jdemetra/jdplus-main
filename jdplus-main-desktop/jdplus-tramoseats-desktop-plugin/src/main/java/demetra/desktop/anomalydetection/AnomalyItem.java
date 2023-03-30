@@ -16,12 +16,12 @@
  */
 package demetra.desktop.anomalydetection;
 
-import demetra.data.DoubleSeqCursor;
-import demetra.timeseries.TsData;
+import jdplus.toolkit.base.api.data.DoubleSeqCursor;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
-import jdplus.regsarima.regular.CheckLast;
+import jdplus.toolkit.base.core.regsarima.regular.CheckLast;
 
 /**
  * POJO Object corresponding to items in JTsCheckLastList Contains Ts

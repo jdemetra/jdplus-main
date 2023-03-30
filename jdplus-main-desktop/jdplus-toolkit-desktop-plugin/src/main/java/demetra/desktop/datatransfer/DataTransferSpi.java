@@ -18,8 +18,8 @@ package demetra.desktop.datatransfer;
 
 import demetra.desktop.NamedService;
 import demetra.desktop.util.NetBeansServiceBackend;
-import demetra.timeseries.TsCollection;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.util.Table;
 import ec.util.various.swing.OnAnyThread;
 import ec.util.various.swing.OnEDT;
 import nbbrd.service.Quantifier;
@@ -29,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
-import demetra.math.matrices.Matrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  * SPI that allows to import/export specific data structures from/to the

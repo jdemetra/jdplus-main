@@ -6,11 +6,11 @@ package demetra.desktop.workspace;
 
 import demetra.desktop.workspace.ui.CalendarTopComponent;
 import demetra.desktop.DemetraIcons;
-import demetra.timeseries.calendars.Calendar;
-import demetra.timeseries.calendars.CalendarDefinition;
-import demetra.timeseries.calendars.CalendarManager;
-import demetra.util.Id;
-import demetra.util.LinearId;
+import jdplus.toolkit.base.api.timeseries.calendars.Calendar;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.LinearId;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;

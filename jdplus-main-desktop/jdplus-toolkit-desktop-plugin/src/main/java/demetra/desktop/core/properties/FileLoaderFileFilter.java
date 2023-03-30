@@ -16,7 +16,7 @@
  */
 package demetra.desktop.core.properties;
 
-import demetra.tsprovider.FileLoader;
+import jdplus.toolkit.base.tsp.FileLoader;
 import java.io.File;
 import org.checkerframework.checker.nullness.qual.NonNull;
 

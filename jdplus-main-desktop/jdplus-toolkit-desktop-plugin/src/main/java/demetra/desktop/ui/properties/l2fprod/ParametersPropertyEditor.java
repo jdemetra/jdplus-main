@@ -1,8 +1,8 @@
 package demetra.desktop.ui.properties.l2fprod;
 
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
-import demetra.data.Parameter;
-import demetra.data.ParameterType;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.data.ParameterType;
 import demetra.desktop.util.NbComponents;
 import java.awt.BorderLayout;
 import java.awt.Dialog;

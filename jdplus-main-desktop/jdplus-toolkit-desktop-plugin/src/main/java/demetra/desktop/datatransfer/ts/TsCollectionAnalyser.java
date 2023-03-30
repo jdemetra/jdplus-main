@@ -4,18 +4,18 @@
  */
 package demetra.desktop.datatransfer.ts;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsDataTable;
-import demetra.timeseries.TsDomain;
-import demetra.timeseries.util.ObsCharacteristics;
-import demetra.timeseries.util.ObsGathering;
-import demetra.timeseries.util.TsDataBuilder;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.util.ObsCharacteristics;
+import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
+import jdplus.toolkit.base.api.timeseries.util.TsDataBuilder;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import jdplus.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
 /**
  *

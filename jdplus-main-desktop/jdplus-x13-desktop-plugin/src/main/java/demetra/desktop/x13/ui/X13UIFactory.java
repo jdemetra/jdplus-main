@@ -9,10 +9,10 @@ import demetra.desktop.ui.processing.IProcDocumentView;
 import demetra.desktop.workspace.DocumentUIServices;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.x13.descriptors.X13SpecUI;
-import demetra.x13.X13Spec;
+import jdplus.x13.base.api.x13.X13Spec;
 import java.awt.Color;
 import javax.swing.Icon;
-import jdplus.x13.X13Document;
+import jdplus.x13.base.core.x13.X13Document;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 

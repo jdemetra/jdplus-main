@@ -21,7 +21,7 @@ import demetra.desktop.components.parts.*;
 import demetra.desktop.design.SwingAction;
 import demetra.desktop.design.SwingComponent;
 import demetra.desktop.design.SwingProperty;
-import demetra.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import internal.ui.components.DemoTsBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

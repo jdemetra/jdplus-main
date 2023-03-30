@@ -16,7 +16,7 @@
  */
 package tck.demetra.tsp;
 
-import demetra.timeseries.*;
+import jdplus.toolkit.base.api.timeseries.*;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.SoftAssertions;
 import org.checkerframework.checker.nullness.qual.NonNull;

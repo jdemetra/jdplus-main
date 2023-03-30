@@ -4,7 +4,7 @@
  */
 package demetra.desktop.workspace;
 
-import demetra.util.Id;
+import jdplus.toolkit.base.api.util.Id;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Optional;

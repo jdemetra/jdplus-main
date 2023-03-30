@@ -23,10 +23,13 @@ import demetra.desktop.design.SwingComponent;
 import demetra.desktop.design.SwingProperty;
 import demetra.desktop.jfreechart.TsSparklineCellRenderer;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.timeseries.TsData;
-import demetra.timeseries.TsInformationType;
-import demetra.tsprovider.util.ObsFormat;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import ec.util.table.swing.JTables;
 import ec.util.various.swing.StandardSwingColor;
 import internal.ui.components.DemoTsBuilder;
@@ -57,30 +60,30 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
         public static final Column NAME = builder()
                 .name("Name")
                 .type(String.class)
-                .mapper(demetra.timeseries.Ts::getName)
+                .mapper(Ts::getName)
                 .build();
 
         public static final Column FREQ = builder()
                 .name("TsUnit")
-                .type(demetra.timeseries.TsUnit.class)
+                .type(TsUnit.class)
                 .mapper(ts -> ts.getData().getTsUnit())
-                .comparator(Comparator.comparing(demetra.timeseries.TsUnit::toString))
+                .comparator(Comparator.comparing(TsUnit::toString))
                 .renderer(table -> JTables.cellRendererOf(JTsTable::renderTsUnit))
                 .build();
 
         public static final Column START = builder()
                 .name("Start")
-                .type(demetra.timeseries.TsPeriod.class)
+                .type(TsPeriod.class)
                 .mapper(ts -> ts.getData().isEmpty() ? null : ts.getData().getDomain().getStartPeriod())
-                .comparator(Comparator.comparing(demetra.timeseries.TsPeriod::start))
+                .comparator(Comparator.comparing(TsPeriod::start))
                 .renderer(table -> JTables.cellRendererOf(JTsTable::renderTsPeriod))
                 .build();
 
         public static final Column LAST = builder()
                 .name("End")
-                .type(demetra.timeseries.TsPeriod.class)
+                .type(TsPeriod.class)
                 .mapper(ts -> ts.getData().isEmpty() ? null : ts.getData().getDomain().getLastPeriod())
-                .comparator(Comparator.comparing(demetra.timeseries.TsPeriod::end))
+                .comparator(Comparator.comparing(TsPeriod::end))
                 .renderer(table -> JTables.cellRendererOf(JTsTable::renderTsPeriod))
                 .build();
 
@@ -93,8 +96,8 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
 
         public static final Column DATA = builder()
                 .name("Data")
-                .type(demetra.timeseries.TsData.class)
-                .mapper(demetra.timeseries.Ts::getData)
+                .type(TsData.class)
+                .mapper(Ts::getData)
                 .comparator((l, r) -> -1)
                 .renderer(TsDataTableCellRenderer::new)
                 .build();
@@ -116,7 +119,7 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
 
         @lombok.NonNull
         @lombok.Builder.Default
-        private Function<demetra.timeseries.Ts, ?> mapper = Function.identity();
+        private Function<Ts, ?> mapper = Function.identity();
 
         @lombok.NonNull
         @lombok.Builder.Default
@@ -214,12 +217,12 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
         }
     }
 
-    private static void renderTsUnit(JLabel label, demetra.timeseries.TsUnit value) {
+    private static void renderTsUnit(JLabel label, TsUnit value) {
         label.setHorizontalAlignment(JLabel.LEADING);
         label.setText(value != null ? value.toString() : null);
     }
 
-    private static void renderTsPeriod(JLabel label, demetra.timeseries.TsPeriod value) {
+    private static void renderTsPeriod(JLabel label, TsPeriod value) {
         label.setHorizontalAlignment(JLabel.TRAILING);
         label.setText(value != null ? value.display() : null);
     }

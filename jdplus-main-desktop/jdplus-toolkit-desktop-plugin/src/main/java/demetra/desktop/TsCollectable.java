@@ -16,7 +16,7 @@
  */
 package demetra.desktop;
 
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

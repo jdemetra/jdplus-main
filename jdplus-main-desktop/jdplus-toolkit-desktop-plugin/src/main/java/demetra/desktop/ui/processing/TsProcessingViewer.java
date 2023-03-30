@@ -19,11 +19,11 @@ package demetra.desktop.ui.processing;
 import demetra.desktop.datatransfer.DataTransferManager;
 import demetra.desktop.tsproviders.DataSourceManager;
 import demetra.desktop.workspace.DocumentUIServices;
-import demetra.processing.ProcSpecification;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsDocument;
-import demetra.timeseries.TsMoniker;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.processing.ProcSpecification;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDocument;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 
 import javax.swing.*;
 import java.awt.*;

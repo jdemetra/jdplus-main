@@ -1,3 +1,24 @@
+import internal.toolkit.base.core.ar.BurgAlgorithm;
+import internal.toolkit.base.core.ar.LevinsonAlgorithm;
+import internal.toolkit.base.core.ar.OlsAlgorithm;
+import internal.toolkit.base.core.arima.AnsleyFilter;
+import internal.toolkit.base.core.arima.KalmanFilter;
+import internal.toolkit.base.core.arima.LjungBoxFilter;
+import internal.toolkit.base.core.math.functions.gsl.integration.NumericalIntegrationProcessor;
+import jdplus.toolkit.base.api.advanced.dstats.Distributions;
+import jdplus.toolkit.base.api.advanced.math.Polynomials;
+import jdplus.toolkit.base.api.information.InformationExtractor;
+import jdplus.toolkit.base.core.ar.AutoRegressiveEstimation;
+import jdplus.toolkit.base.core.arima.estimation.ArimaForecasts;
+import jdplus.toolkit.base.core.arima.estimation.ArmaFilter;
+import jdplus.toolkit.base.core.dstats.spi.DistributionsProcessor;
+import jdplus.toolkit.base.core.math.functions.NumericalIntegration;
+import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
+import jdplus.toolkit.base.core.math.polynomials.spi.PolynomialsProcessor;
+import jdplus.toolkit.base.core.modelling.regression.MovingHolidayProvider;
+import jdplus.toolkit.base.core.regarima.extractors.RegSarimaModelExtractors;
+import jdplus.toolkit.base.core.stats.linearmodel.Ols;
+
 module jdplus.toolkit.base.core {
 
     requires static lombok;
@@ -7,127 +28,127 @@ module jdplus.toolkit.base.core {
 
     requires transitive jdplus.toolkit.base.api;
 
-    exports jdplus.ar;
-    exports jdplus.arima;
-    exports jdplus.arima.estimation;
-    exports jdplus.basic;
-    exports jdplus.bayes;
-    exports jdplus.data;
-    exports jdplus.data.accumulator;
-    exports jdplus.data.analysis;
-    exports jdplus.data.interpolation;
-    exports jdplus.data.normalizer;
-    exports jdplus.data.transformation;
-    exports jdplus.dstats.spi;
-    exports jdplus.dstats;
-    exports jdplus.eco.discrete;
-    exports jdplus.math;
-    exports jdplus.math.functions;
-    exports jdplus.math.functions.analysis;
-    exports jdplus.math.functions.bfgs;
-    exports jdplus.math.functions.levmar;
-    exports jdplus.math.functions.minpack;
-    exports jdplus.math.functions.ssq;
-    exports jdplus.math.highprecision;
-    exports jdplus.math.linearfilters;
-    exports jdplus.math.linearsystem;
-    exports jdplus.math.matrices;
-    exports jdplus.math.matrices.decomposition;
-    exports jdplus.math.matrices.lapack;
-    exports jdplus.math.polynomials;
-    exports jdplus.math.polynomials.spi;
-    exports jdplus.math.splines;
-    exports jdplus.ml;
-    exports jdplus.modelling;
-    exports jdplus.modelling.extractors;
-    exports jdplus.modelling.regression;
-    exports jdplus.modelling.regular.tests;
-    exports jdplus.pca;
-    exports jdplus.random;
-    exports jdplus.regarima;
-    exports jdplus.regarima.ami;
-    exports jdplus.regarima.diagnostics;
-    exports jdplus.regarima.estimation;
-    exports jdplus.regarima.extractors;
-    exports jdplus.regarima.outlier;
-    exports jdplus.regarima.tests;
-    exports jdplus.regsarima;
-    exports jdplus.regsarima.ami;
-    exports jdplus.regsarima.internal;
-    exports jdplus.regsarima.regular;
-    exports jdplus.sarima;
-    exports jdplus.sarima.estimation;
-    exports jdplus.ssf;
-    exports jdplus.ssf.akf;
-    exports jdplus.ssf.arima;
-    exports jdplus.ssf.array;
-    exports jdplus.ssf.basic;
-    exports jdplus.ssf.benchmarking;
-    exports jdplus.ssf.ckms;
-    exports jdplus.ssf.composite;
-    exports jdplus.ssf.dk;
-    exports jdplus.ssf.dk.sqrt;
-    exports jdplus.ssf.likelihood;
-    exports jdplus.ssf.multivariate;
-    exports jdplus.ssf.sts;
-    exports jdplus.ssf.sts.splines;
-    exports jdplus.ssf.univariate;
-    exports jdplus.ssf.utility;
-    exports jdplus.stats;
-    exports jdplus.stats.likelihood;
-    exports jdplus.stats.linearmodel;
-    exports jdplus.stats.samples;
-    exports jdplus.stats.tests;
-    exports jdplus.strings;
-    exports jdplus.timeseries;
-    exports jdplus.timeseries.calendars;
-    exports jdplus.timeseries.simplets;
-    exports jdplus.timeseries.simplets.analysis;
-    exports jdplus.ucarima;
-    exports jdplus.ucarima.estimation;
+    exports jdplus.toolkit.base.core.ar;
+    exports jdplus.toolkit.base.core.arima;
+    exports jdplus.toolkit.base.core.arima.estimation;
+    exports jdplus.toolkit.base.core.basic;
+    exports jdplus.toolkit.base.core.bayes;
+    exports jdplus.toolkit.base.core.data;
+    exports jdplus.toolkit.base.core.data.accumulator;
+    exports jdplus.toolkit.base.core.data.analysis;
+    exports jdplus.toolkit.base.core.data.interpolation;
+    exports jdplus.toolkit.base.core.data.normalizer;
+    exports jdplus.toolkit.base.core.data.transformation;
+    exports jdplus.toolkit.base.core.dstats.spi;
+    exports jdplus.toolkit.base.core.dstats;
+    exports jdplus.toolkit.base.core.discrete;
+    exports jdplus.toolkit.base.core.math;
+    exports jdplus.toolkit.base.core.math.functions;
+    exports jdplus.toolkit.base.core.math.functions.analysis;
+    exports jdplus.toolkit.base.core.math.functions.bfgs;
+    exports jdplus.toolkit.base.core.math.functions.levmar;
+    exports jdplus.toolkit.base.core.math.functions.minpack;
+    exports jdplus.toolkit.base.core.math.functions.ssq;
+    exports jdplus.toolkit.base.core.math.highprecision;
+    exports jdplus.toolkit.base.core.math.linearfilters;
+    exports jdplus.toolkit.base.core.math.linearsystem;
+    exports jdplus.toolkit.base.core.math.matrices;
+    exports jdplus.toolkit.base.core.math.matrices.decomposition;
+    exports jdplus.toolkit.base.core.math.matrices.lapack;
+    exports jdplus.toolkit.base.core.math.polynomials;
+    exports jdplus.toolkit.base.core.math.polynomials.spi;
+    exports jdplus.toolkit.base.core.math.splines;
+    exports jdplus.toolkit.base.core.ml;
+    exports jdplus.toolkit.base.core.modelling;
+    exports jdplus.toolkit.base.core.modelling.extractors;
+    exports jdplus.toolkit.base.core.modelling.regression;
+    exports jdplus.toolkit.base.core.modelling.regular.tests;
+    exports jdplus.toolkit.base.core.pca;
+    exports jdplus.toolkit.base.core.random;
+    exports jdplus.toolkit.base.core.regarima;
+    exports jdplus.toolkit.base.core.regarima.ami;
+    exports jdplus.toolkit.base.core.regarima.diagnostics;
+    exports jdplus.toolkit.base.core.regarima.estimation;
+    exports jdplus.toolkit.base.core.regarima.extractors;
+    exports jdplus.toolkit.base.core.regarima.outlier;
+    exports jdplus.toolkit.base.core.regarima.tests;
+    exports jdplus.toolkit.base.core.regsarima;
+    exports jdplus.toolkit.base.core.regsarima.ami;
+    exports jdplus.toolkit.base.core.regsarima.internal;
+    exports jdplus.toolkit.base.core.regsarima.regular;
+    exports jdplus.toolkit.base.core.sarima;
+    exports jdplus.toolkit.base.core.sarima.estimation;
+    exports jdplus.toolkit.base.core.ssf;
+    exports jdplus.toolkit.base.core.ssf.akf;
+    exports jdplus.toolkit.base.core.ssf.arima;
+    exports jdplus.toolkit.base.core.ssf.array;
+    exports jdplus.toolkit.base.core.ssf.basic;
+    exports jdplus.toolkit.base.core.ssf.benchmarking;
+    exports jdplus.toolkit.base.core.ssf.ckms;
+    exports jdplus.toolkit.base.core.ssf.composite;
+    exports jdplus.toolkit.base.core.ssf.dk;
+    exports jdplus.toolkit.base.core.ssf.dk.sqrt;
+    exports jdplus.toolkit.base.core.ssf.likelihood;
+    exports jdplus.toolkit.base.core.ssf.multivariate;
+    exports jdplus.toolkit.base.core.ssf.sts;
+    exports jdplus.toolkit.base.core.ssf.sts.splines;
+    exports jdplus.toolkit.base.core.ssf.univariate;
+    exports jdplus.toolkit.base.core.ssf.utility;
+    exports jdplus.toolkit.base.core.stats;
+    exports jdplus.toolkit.base.core.stats.likelihood;
+    exports jdplus.toolkit.base.core.stats.linearmodel;
+    exports jdplus.toolkit.base.core.stats.samples;
+    exports jdplus.toolkit.base.core.stats.tests;
+    exports jdplus.toolkit.base.core.strings;
+    exports jdplus.toolkit.base.core.timeseries;
+    exports jdplus.toolkit.base.core.timeseries.calendars;
+    exports jdplus.toolkit.base.core.timeseries.simplets;
+    exports jdplus.toolkit.base.core.timeseries.simplets.analysis;
+    exports jdplus.toolkit.base.core.ucarima;
+    exports jdplus.toolkit.base.core.ucarima.estimation;
 
     // FIXME:
-    exports internal.jdplus.dstats to jdplus.sa.base.core;
-    exports internal.jdplus.arima to jdplus.x13.base.core;
-    exports internal.jdplus.math.functions.gsl.integration to jdplus.experimentalsa.base.core;
-    exports internal.jdplus.math.functions.riso;
+    exports internal.toolkit.base.core.dstats to jdplus.sa.base.core;
+    exports internal.toolkit.base.core.arima to jdplus.x13.base.core;
+    exports internal.toolkit.base.core.math.functions.gsl.integration to jdplus.experimentalsa.base.core;
+    exports internal.toolkit.base.core.math.functions.riso;
 
-    uses jdplus.arima.estimation.ArimaForecasts;
-    uses jdplus.math.matrices.SymmetricMatrix.CholeskyProcessor;
-    uses jdplus.modelling.regression.MovingHolidayProvider;
-    uses jdplus.stats.linearmodel.Ols.Processor;
-    uses jdplus.math.functions.NumericalIntegration.Processor;
-    uses jdplus.arima.estimation.ArmaFilter;
+    uses ArimaForecasts;
+    uses SymmetricMatrix.CholeskyProcessor;
+    uses MovingHolidayProvider;
+    uses Ols.Processor;
+    uses NumericalIntegration.Processor;
+    uses ArmaFilter;
 
-    provides jdplus.arima.estimation.ArmaFilter with
-            internal.jdplus.arima.AnsleyFilter,
-            internal.jdplus.arima.KalmanFilter,
-            internal.jdplus.arima.LjungBoxFilter;
+    provides ArmaFilter with
+            AnsleyFilter,
+            KalmanFilter,
+            LjungBoxFilter;
 
-    provides demetra.information.InformationExtractor with
-            jdplus.modelling.extractors.ArimaExtractor,
-            jdplus.modelling.extractors.DiffuseLikelihoodStatisticsExtractor,
-            jdplus.modelling.extractors.LikelihoodStatisticsExtractor,
-            jdplus.modelling.extractors.LinearModelExtractors.Default,
-            jdplus.modelling.extractors.ResidualsExtractors.Dynamic,
-            jdplus.modelling.extractors.ResidualsExtractors.Specific,
-            jdplus.modelling.extractors.SarimaExtractor,
-            jdplus.modelling.extractors.SarimaSpecExtractor,
-            jdplus.modelling.extractors.UcarimaExtractor,
-            jdplus.regarima.extractors.RegSarimaModelExtractors.Specific,
-            jdplus.regarima.extractors.RegSarimaModelExtractors.GenericExtractor;
+    provides InformationExtractor with
+            jdplus.toolkit.base.core.modelling.extractors.ArimaExtractor,
+            jdplus.toolkit.base.core.modelling.extractors.DiffuseLikelihoodStatisticsExtractor,
+            jdplus.toolkit.base.core.modelling.extractors.LikelihoodStatisticsExtractor,
+            jdplus.toolkit.base.core.modelling.extractors.LinearModelExtractors.Default,
+            jdplus.toolkit.base.core.modelling.extractors.ResidualsExtractors.Dynamic,
+            jdplus.toolkit.base.core.modelling.extractors.ResidualsExtractors.Specific,
+            jdplus.toolkit.base.core.modelling.extractors.SarimaExtractor,
+            jdplus.toolkit.base.core.modelling.extractors.SarimaSpecExtractor,
+            jdplus.toolkit.base.core.modelling.extractors.UcarimaExtractor,
+            RegSarimaModelExtractors.Specific,
+            RegSarimaModelExtractors.GenericExtractor;
 
-    provides jdplus.math.functions.NumericalIntegration.Processor with
-            internal.jdplus.math.functions.gsl.integration.NumericalIntegrationProcessor;
+    provides NumericalIntegration.Processor with
+            NumericalIntegrationProcessor;
 
-    provides jdplus.ar.AutoRegressiveEstimation with
-            internal.jdplus.ar.BurgAlgorithm,
-            internal.jdplus.ar.LevinsonAlgorithm,
-            internal.jdplus.ar.OlsAlgorithm;
+    provides AutoRegressiveEstimation with
+            BurgAlgorithm,
+            LevinsonAlgorithm,
+            OlsAlgorithm;
 
-    provides demetra.advanced.dstats.Distributions.Processor with
-            jdplus.dstats.spi.DistributionsProcessor;
+    provides Distributions.Processor with
+            DistributionsProcessor;
 
-    provides demetra.advanced.math.Polynomials.Processor with
-            jdplus.math.polynomials.spi.PolynomialsProcessor;
+    provides Polynomials.Processor with
+            PolynomialsProcessor;
 }

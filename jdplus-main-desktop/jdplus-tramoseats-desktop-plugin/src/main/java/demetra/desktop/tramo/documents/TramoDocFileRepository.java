@@ -4,12 +4,12 @@
  */
 package demetra.desktop.tramo.documents;
 
-import demetra.DemetraVersion;
-import jdplus.tramo.TramoDocument;
+import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.tramoseats.base.core.tramo.TramoDocument;
 import demetra.desktop.workspace.AbstractFileItemRepository;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemRepository;
-import demetra.tsprovider.TsMeta;
+import jdplus.toolkit.base.tsp.TsMeta;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

@@ -25,10 +25,10 @@ import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTableHeader;
 import demetra.html.HtmlTag;
-import demetra.stats.StatisticalTest;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.io.IOException;
-import jdplus.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
-import jdplus.regarima.tests.OneStepAheadForecastingTest;
+import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
+import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
 
 /**
  *

@@ -1,7 +1,7 @@
 package demetra.desktop.ui.properties.l2fprod;
 
 import com.l2fprod.common.propertysheet.PropertyEditorRegistry;
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import java.beans.PropertyEditor;
 import java.io.File;
 import java.time.LocalDate;

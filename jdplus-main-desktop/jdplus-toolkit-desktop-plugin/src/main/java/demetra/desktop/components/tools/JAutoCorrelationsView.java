@@ -16,7 +16,7 @@
  */
 package demetra.desktop.components.tools;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.parts.HasColorScheme;
 import demetra.desktop.components.TimeSeriesComponent;
 import demetra.desktop.components.parts.HasColorSchemeResolver;
@@ -30,7 +30,7 @@ import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import demetra.desktop.jfreechart.MatrixChartCommand;
 import demetra.desktop.util.Collections2;
-import demetra.util.Arrays2;
+import jdplus.toolkit.base.api.util.Arrays2;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,7 +40,7 @@ import java.util.function.IntToDoubleFunction;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
-import demetra.stats.AutoCovariances;
+import jdplus.toolkit.base.api.stats.AutoCovariances;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

@@ -8,8 +8,8 @@ module jdplus.toolkit.base.protobuf {
     requires jdplus.toolkit.base.core;
     requires transitive com.google.protobuf;
 
-    exports demetra.modelling.io.protobuf;
-    exports demetra.outliers.io.protobuf;
-    exports demetra.regarima.io.protobuf;
-    exports demetra.toolkit.io.protobuf;
+    exports jdplus.toolkit.base.protobuf.modelling;
+    exports jdplus.toolkit.base.protobuf.regarima;
+    exports jdplus.toolkit.base.protobuf.toolkit;
+    exports jdplus.toolkit.base.protobuf.outliers;
 }

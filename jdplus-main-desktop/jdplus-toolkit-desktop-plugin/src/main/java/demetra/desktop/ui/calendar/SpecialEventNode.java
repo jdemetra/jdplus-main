@@ -5,7 +5,7 @@
 package demetra.desktop.ui.calendar;
 
 import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.timeseries.calendars.DayEvent;
+import jdplus.toolkit.base.api.timeseries.calendars.DayEvent;
 import org.openide.nodes.Sheet;
 
 /**

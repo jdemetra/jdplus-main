@@ -4,8 +4,8 @@
  */
 package demetra.desktop.datatransfer;
 
-import demetra.timeseries.TsCollection;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.util.Table;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.util.Exceptions;
@@ -15,7 +15,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import demetra.math.matrices.Matrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  *

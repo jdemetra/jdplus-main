@@ -9,6 +9,6 @@ module jdplus.sa.base.xml {
     requires jdplus.sa.base.api;
     requires jdplus.toolkit.base.xml;
 
-    exports demetra.sa.io.xml.legacy;
-    exports demetra.sa.io.xml.legacy.benchmarking;
+    exports jdplus.sa.base.xml;
+    exports jdplus.sa.base.xml.benchmarking;
 }

@@ -16,8 +16,8 @@
  */
 package demetra.desktop.jfreechart;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import org.jfree.data.DomainOrder;

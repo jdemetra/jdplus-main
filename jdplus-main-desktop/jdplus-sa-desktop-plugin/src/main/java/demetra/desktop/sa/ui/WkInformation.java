@@ -5,8 +5,8 @@
 
 package demetra.desktop.sa.ui;
 
-import demetra.sa.ComponentDescriptor;
-import jdplus.ucarima.WienerKolmogorovEstimators;
+import jdplus.sa.base.api.ComponentDescriptor;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
 
 /**
  *

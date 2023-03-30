@@ -18,10 +18,10 @@ package demetra.desktop.ui.processing.stats;
 
 import demetra.desktop.ui.JRevisionSeriesView;
 import demetra.desktop.ui.processing.ItemUI;
-import demetra.information.Explorable;
+import jdplus.toolkit.base.api.information.Explorable;
 import javax.swing.JComponent;
-import jdplus.timeseries.simplets.analysis.DiagnosticInfo;
-import jdplus.timeseries.simplets.analysis.RevisionHistory;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 
 /**
  *

@@ -18,8 +18,8 @@ package demetra.desktop.sa.descriptors.highfreq;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.modelling.highfreq.TransformSpec;
-import demetra.modelling.TransformationType;
+import jdplus.toolkit.base.api.modelling.highfreq.TransformSpec;
+import jdplus.toolkit.base.api.modelling.TransformationType;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;

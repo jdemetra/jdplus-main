@@ -4,12 +4,12 @@
  */
 package demetra.desktop.sa.multiprocessing.ui;
 
-import demetra.processing.AlgorithmDescriptor;
+import jdplus.toolkit.base.api.processing.AlgorithmDescriptor;
 import java.util.Map;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import jdplus.regsarima.regular.RegSarimaReport;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaReport;
 
 /**
  *

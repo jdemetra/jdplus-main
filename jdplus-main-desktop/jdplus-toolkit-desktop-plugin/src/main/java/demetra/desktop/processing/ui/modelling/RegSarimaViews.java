@@ -5,8 +5,8 @@
 package demetra.desktop.processing.ui.modelling;
 
 
-import demetra.util.Id;
-import demetra.util.LinearId;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.LinearId;
 
 /**
  *

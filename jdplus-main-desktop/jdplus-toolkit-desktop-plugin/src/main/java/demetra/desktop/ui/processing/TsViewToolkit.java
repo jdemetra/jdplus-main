@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.processing;
 
-import demetra.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import demetra.desktop.components.JHtmlView;
 import demetra.desktop.components.JTsChart;
 import demetra.desktop.components.JTsGrid;
@@ -12,9 +12,9 @@ import demetra.desktop.components.JTsGrowthChart;
 import demetra.desktop.components.parts.HasTsCollection;
 import demetra.html.HtmlElement;
 import demetra.html.HtmlUtil;
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsInformationType;
-import demetra.util.Collections2;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.util.Collections2;
 
 import javax.swing.*;
 

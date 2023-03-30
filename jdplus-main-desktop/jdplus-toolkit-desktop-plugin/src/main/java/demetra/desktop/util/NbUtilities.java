@@ -4,10 +4,10 @@
  */
 package demetra.desktop.util;
 
-import demetra.tsprovider.TsMeta;
+import jdplus.toolkit.base.tsp.TsMeta;
 import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.tsprovider.DataSource;
-import demetra.util.Documented;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.api.util.Documented;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collections;

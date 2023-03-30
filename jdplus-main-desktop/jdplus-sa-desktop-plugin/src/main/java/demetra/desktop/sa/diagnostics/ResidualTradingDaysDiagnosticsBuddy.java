@@ -21,8 +21,8 @@ import demetra.desktop.properties.NodePropertySetBuilder;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import demetra.desktop.Converter;
-import jdplus.sa.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.ResidualTradingDaysDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
 import nbbrd.io.text.DoubleProperty;
 
 /**

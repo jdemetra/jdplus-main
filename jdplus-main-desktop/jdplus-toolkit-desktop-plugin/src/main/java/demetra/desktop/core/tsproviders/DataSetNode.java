@@ -24,9 +24,11 @@ import demetra.desktop.nodes.FailSafeChildFactory;
 import demetra.desktop.nodes.NodeAnnotatorManager;
 import demetra.desktop.nodes.Nodes;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.tsprovider.DataSet;
-import demetra.tsprovider.DataSourceProvider;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.netbeans.api.actions.Openable;
 import org.openide.nodes.AbstractNode;
@@ -169,7 +171,7 @@ abstract public class DataSetNode extends AbstractNode {
         public void open() {
             DataSet dataSet = getLookup().lookup(DataSet.class);
             TsManager.get()
-                    .getTs(dataSet, demetra.timeseries.TsInformationType.None)
+                    .getTs(dataSet, TsInformationType.None)
                     .ifPresent(ts -> TsActionManager.get().openWith(ts, DemetraBehaviour.get().getTsActionName()));
         }
     }
@@ -177,11 +179,11 @@ abstract public class DataSetNode extends AbstractNode {
     private final class TsCollectableImpl implements TsCollectable {
 
         @Override
-        public demetra.timeseries.TsCollection getTsCollection() {
+        public TsCollection getTsCollection() {
             DataSet dataSet = getLookup().lookup(DataSet.class);
             return TsManager.get()
                     .getTsCollection(dataSet, TsEventHelper.SHOULD_BE_NONE)
-                    .orElse(demetra.timeseries.TsCollection.EMPTY);
+                    .orElse(TsCollection.EMPTY);
         }
     }
 

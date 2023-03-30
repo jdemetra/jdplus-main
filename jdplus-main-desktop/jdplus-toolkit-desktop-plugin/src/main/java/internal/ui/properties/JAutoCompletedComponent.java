@@ -25,7 +25,7 @@ import ec.util.list.swing.JListOrdering;
 import ec.util.list.swing.JLists;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
-import internal.util.Strings;
+import jdplus.toolkit.base.tsp.fixme.Strings;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.DialogDisplayer;

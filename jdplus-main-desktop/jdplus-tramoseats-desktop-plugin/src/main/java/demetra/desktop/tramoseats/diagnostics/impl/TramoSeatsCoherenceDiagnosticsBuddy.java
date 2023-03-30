@@ -18,10 +18,10 @@ package demetra.desktop.tramoseats.diagnostics.impl;
 
 import demetra.desktop.sa.diagnostics.CoherenceDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
-import jdplus.sa.diagnostics.CoherenceDiagnostics;
-import jdplus.sa.diagnostics.CoherenceDiagnosticsConfiguration;
-import jdplus.sa.diagnostics.CoherenceDiagnosticsFactory;
-import jdplus.tramoseats.TramoSeatsResults;
+import jdplus.sa.base.core.diagnostics.CoherenceDiagnostics;
+import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsFactory;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

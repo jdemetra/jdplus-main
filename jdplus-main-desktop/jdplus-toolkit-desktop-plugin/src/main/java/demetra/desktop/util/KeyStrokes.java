@@ -16,7 +16,7 @@
  */
 package demetra.desktop.util;
 
-import demetra.util.List2;
+import jdplus.toolkit.base.api.util.List2;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;

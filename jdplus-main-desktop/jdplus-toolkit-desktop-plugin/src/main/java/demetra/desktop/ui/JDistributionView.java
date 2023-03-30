@@ -16,7 +16,7 @@
  */
 package demetra.desktop.ui;
 
-import demetra.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.parts.HasColorScheme;
 import demetra.desktop.jfreechart.TsCharts;
 import demetra.desktop.components.parts.HasChart.LinesThickness;
@@ -31,16 +31,16 @@ import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import demetra.desktop.jfreechart.MatrixChartCommand;
-import demetra.dstats.BoundaryType;
-import demetra.dstats.ContinuousDistribution;
-import demetra.util.Arrays2;
+import jdplus.toolkit.base.api.dstats.BoundaryType;
+import jdplus.toolkit.base.api.dstats.ContinuousDistribution;
+import jdplus.toolkit.base.api.util.Arrays2;
 import java.awt.BorderLayout;
 import java.text.DecimalFormat;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
-import jdplus.data.DataBlock;
-import jdplus.stats.DescriptiveStatistics;
+
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;

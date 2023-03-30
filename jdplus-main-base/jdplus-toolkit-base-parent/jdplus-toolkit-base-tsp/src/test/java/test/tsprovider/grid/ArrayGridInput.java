@@ -16,8 +16,8 @@
  */
 package test.tsprovider.grid;
 
-import demetra.tsprovider.grid.GridDataType;
-import demetra.tsprovider.grid.GridInput;
+import jdplus.toolkit.base.tsp.grid.GridDataType;
+import jdplus.toolkit.base.tsp.grid.GridInput;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;

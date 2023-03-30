@@ -17,7 +17,7 @@
 package demetra.desktop.tsproviders;
 
 import demetra.desktop.Config;
-import demetra.tsprovider.*;
+import jdplus.toolkit.base.tsp.DataSource;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.ErrorManager;
 import org.openide.nodes.Sheet;

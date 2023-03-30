@@ -26,13 +26,13 @@ import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTableHeader;
 import demetra.html.HtmlTag;
-import demetra.sa.ComponentDescriptor;
+import jdplus.sa.base.api.ComponentDescriptor;
 import java.io.IOException;
-import jdplus.arima.ArimaException;
-import jdplus.arima.ArimaModel;
-import jdplus.arima.LinearProcess;
-import jdplus.math.matrices.MatrixException;
-import jdplus.ucarima.WienerKolmogorovEstimators;
+import jdplus.toolkit.base.core.arima.ArimaException;
+import jdplus.toolkit.base.core.arima.ArimaModel;
+import jdplus.toolkit.base.core.arima.LinearProcess;
+import jdplus.toolkit.base.core.math.matrices.MatrixException;
+import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
 
 /**
  *

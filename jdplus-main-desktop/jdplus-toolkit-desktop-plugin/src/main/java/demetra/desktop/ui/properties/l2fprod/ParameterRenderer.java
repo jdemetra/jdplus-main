@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.properties.l2fprod;
 
-import demetra.data.Parameter;
+import jdplus.toolkit.base.api.data.Parameter;
 import java.text.DecimalFormat;
 import javax.swing.table.DefaultTableCellRenderer;
 

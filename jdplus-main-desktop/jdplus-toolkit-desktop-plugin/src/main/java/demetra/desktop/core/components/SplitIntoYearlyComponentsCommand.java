@@ -1,12 +1,12 @@
 package demetra.desktop.core.components;
 
-import demetra.data.Range;
+import jdplus.toolkit.base.api.data.Range;
 import demetra.desktop.components.ComponentCommand;
 import demetra.desktop.components.TsSelectionBridge;
 import demetra.desktop.components.parts.HasTsCollection;
 import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.timeseries.*;
-import demetra.tsprovider.util.ObsFormat;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import demetra.desktop.core.tools.JTsChartTopComponent;
 import ec.util.list.swing.JLists;
 
@@ -27,7 +27,7 @@ public final class SplitIntoYearlyComponentsCommand extends ComponentCommand<Has
     public boolean isEnabled(HasTsCollection c) {
         OptionalInt selection = JLists.getSelectionIndexStream(c.getTsSelectionModel()).findFirst();
         if (selection.isPresent()) {
-            demetra.timeseries.TsData data = c.getTsCollection().get(selection.getAsInt()).getData();
+            TsData data = c.getTsCollection().get(selection.getAsInt()).getData();
             return !data.isEmpty() && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365;
         }
         return false;
@@ -64,7 +64,7 @@ public final class SplitIntoYearlyComponentsCommand extends ComponentCommand<Has
         return start.withDate(start.start().withYear(year));
     }
 
-    private static demetra.timeseries.TsCollection split(Ts ts) {
+    private static TsCollection split(Ts ts) {
         return yearsOf(ts.getData().getDomain())
                 .stream()
                 .map(year -> dataOf(year, ts.getData()))

@@ -16,7 +16,7 @@
  */
 package tck.demetra.data;
 
-import demetra.math.matrices.Matrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

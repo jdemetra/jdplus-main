@@ -4,12 +4,12 @@
  */
 package demetra.desktop.sa.multiprocessing.ui;
 
-import demetra.DemetraVersion;
+import jdplus.toolkit.base.api.DemetraVersion;
 import demetra.desktop.workspace.AbstractFileItemRepository;
 import demetra.desktop.workspace.WorkspaceItem;
 import demetra.desktop.workspace.WorkspaceItemRepository;
-import demetra.sa.SaItems;
-import demetra.tsprovider.TsMeta;
+import jdplus.sa.base.api.SaItems;
+import jdplus.toolkit.base.tsp.TsMeta;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

@@ -23,8 +23,8 @@ import demetra.html.HtmlTable;
 import demetra.html.HtmlTableCell;
 import demetra.html.HtmlTag;
 import java.io.IOException;
-import jdplus.x11.X11Utility;
-import jdplus.x13.Mstatistics;
+import jdplus.x13.base.core.x11.X11Utility;
+import jdplus.x13.base.core.x13.Mstatistics;
 
 /**
  *

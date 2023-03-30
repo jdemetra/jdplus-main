@@ -22,8 +22,8 @@ import demetra.desktop.design.GlobalService;
 import demetra.desktop.design.SwingProperty;
 import demetra.desktop.util.CollectionSupplier;
 import demetra.desktop.util.LazyGlobalService;
-import demetra.timeseries.*;
-import demetra.util.Table;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.util.Table;
 import ec.util.various.swing.OnEDT;
 import nbbrd.design.VisibleForTesting;
 import nbbrd.io.function.IOFunction;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import demetra.math.matrices.Matrix;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  * A support class that deals with the clipboard. It allows the user to get/set

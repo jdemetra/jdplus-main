@@ -16,15 +16,15 @@
  */
 package tck.demetra.tsp;
 
-import demetra.timeseries.Ts;
-import demetra.timeseries.TsCollection;
-import demetra.timeseries.TsMoniker;
-import demetra.tsprovider.*;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.*;
 import org.assertj.core.api.SoftAssertions;
 
 import java.io.IOException;
 
-import static demetra.timeseries.TsInformationType.All;
+import static jdplus.toolkit.base.api.timeseries.TsInformationType.All;
 
 /**
  * @author Philippe Charles

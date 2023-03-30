@@ -26,7 +26,7 @@ import demetra.desktop.ui.Disposables;
 import javax.swing.*;
 import java.awt.*;
 
-import jdplus.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  * Component containing all Html content regarding Check Last report of a Ts

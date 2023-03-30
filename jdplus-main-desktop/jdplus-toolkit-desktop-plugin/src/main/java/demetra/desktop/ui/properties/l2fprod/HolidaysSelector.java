@@ -5,8 +5,8 @@
 package demetra.desktop.ui.properties.l2fprod;
 
 import com.l2fprod.common.beans.editor.ComboBoxPropertyEditor;
-import demetra.timeseries.calendars.CalendarManager;
-import demetra.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import java.awt.Component;
 
 /**

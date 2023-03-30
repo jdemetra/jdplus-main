@@ -6,10 +6,10 @@ package demetra.desktop.x13.documents;
 
 import demetra.desktop.workspace.AbstractWorkspaceTsItemManager;
 import demetra.desktop.workspace.WorkspaceItemManager;
-import demetra.util.Id;
-import demetra.util.LinearId;
-import demetra.x13.X13Spec;
-import jdplus.x13.X13Document;
+import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.base.api.util.LinearId;
+import jdplus.x13.base.api.x13.X13Spec;
+import jdplus.x13.base.core.x13.X13Document;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

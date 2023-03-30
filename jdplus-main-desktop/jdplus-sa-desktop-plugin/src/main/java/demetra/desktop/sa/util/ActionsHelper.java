@@ -16,9 +16,8 @@
  */
 package demetra.desktop.sa.util;
 
-import demetra.sa.SaProcessingFactory;
-import demetra.sa.SaProcessor;
-import demetra.sa.SaSpecification;
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.sa.base.api.SaSpecification;
 import java.util.List;
 
 /**

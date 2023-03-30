@@ -9,7 +9,7 @@ import demetra.desktop.workspace.WorkspaceFactory;
 import demetra.desktop.workspace.nodes.ItemWsNode;
 import demetra.desktop.workspace.nodes.WsNode;
 import demetra.desktop.workspace.nodes.WsRootNode;
-import demetra.util.Id;
+import jdplus.toolkit.base.api.util.Id;
 import javax.swing.ActionMap;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;

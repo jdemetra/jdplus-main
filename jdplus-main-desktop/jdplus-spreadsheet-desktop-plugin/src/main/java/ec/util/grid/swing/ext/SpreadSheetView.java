@@ -28,13 +28,12 @@ import java.awt.Component;
 import java.awt.Font;
 import java.util.AbstractList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.JTabbedPane;
 import demetra.desktop.util.Pools;
-import demetra.tsprovider.util.ObsFormat;
-import demetra.util.MultiLineNameUtil;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import demetra.desktop.util.Pool;
 
 

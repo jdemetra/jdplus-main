@@ -4,14 +4,14 @@
  */
 package internal.uihelpers;
 
-import demetra.util.NamedObject;
+import jdplus.toolkit.base.api.util.NamedObject;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.IntToDoubleFunction;
-import jdplus.arima.AutoCovarianceFunction;
-import jdplus.arima.IArimaModel;
-import jdplus.arima.Spectrum;
+
+import jdplus.toolkit.base.core.arima.AutoCovarianceFunction;
+import jdplus.toolkit.base.core.arima.IArimaModel;
+import jdplus.toolkit.base.core.arima.Spectrum;
 
 /**
  *
