@@ -5,9 +5,9 @@
  */
 package jdplus.math.matrices;
 
+import java.util.Random;
 import jdplus.data.DataBlock;
 import static jdplus.math.matrices.GeneralMatrix.transpose;
-import static jdplus.math.matrices.LowerTriangularMatrix.solveLX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -209,6 +209,30 @@ public class LowerTriangularMatrixTest {
         C.sub(transpose(B));
         assertTrue(MatrixNorms.frobeniusNorm(C) < 1e-9);
     }
+
+    @Test
+    public void testSingular() {
+        int m = 20, n = 30;
+        Random rnd = new Random(0);
+        FastMatrix L = FastMatrix.square(m);
+        L.set((i, j) -> (i >= j) ? rnd.nextDouble() : 0);
+        for (int i = 0; i < m; i += 3) {
+            L.column(i).set(0);
+            L.row(i).set(0);
+        }
+
+        FastMatrix M = FastMatrix.make(m, n);
+        M.set((i, j) -> rnd.nextDouble());
+        for (int i = 0; i < m; i += 3) {
+            M.row(i).set(0);
+        }
+        FastMatrix X=M.deepClone();
+        LowerTriangularMatrix.solveLtX(L, X, 1e-9);
+        
+        FastMatrix M2 = GeneralMatrix.AtB(L, X);
+        FastMatrix del = M.minus(M2);
+        assertTrue(MatrixNorms.absNorm(del) < 1e-9);
+   }
 
     public static void testMul() {
         int K = 10000000;

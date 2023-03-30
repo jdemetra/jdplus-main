@@ -1,13 +1,13 @@
 /*
- * Copyright 2013 National Bank of Belgium
- *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Copyright 2023 National Bank of Belgium
+ * 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
+ * 
+ * https://joinup.ec.europa.eu/software/page/eupl
+ * 
  * Unless required by applicable law or agreed to in writing, software 
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,83 +17,48 @@
 package jdplus.ssf.multivariate;
 
 import demetra.data.DoubleSeq;
-import jdplus.data.DataBlock;
-import jdplus.data.DataBlockStorage;
-import nbbrd.design.Development;
+import java.util.ArrayList;
+import java.util.List;
 import jdplus.ssf.IPredictionErrorDecomposition;
-import jdplus.stats.likelihood.ResidualsCumulator;
 import jdplus.ssf.State;
 import jdplus.ssf.StateInfo;
 import jdplus.ssf.UpdateInformation;
 import jdplus.stats.likelihood.Likelihood;
+import jdplus.stats.likelihood.ResidualsCumulator;
 
 /**
  *
- * @author Jean Palate
+ * @author palatej
  */
-@Development(status = Development.Status.Alpha)
-public class PredictionErrorsDecomposition implements
-        IPredictionErrorDecomposition, IMultivariateFilteringResults {
-
+public class MultivariateUpdates implements IPredictionErrorDecomposition, IMultivariateFilteringResults{
+    
     private final ResidualsCumulator cumulator = new ResidualsCumulator();
-    private DataBlockStorage res;
-    private boolean bres;
+    private List<MultivariateUpdateInformation> infos;
 
-    /**
-     *
-     * @param bres
-     */
-    public PredictionErrorsDecomposition(final boolean bres) {
-        this.bres = bres;
-    }
-
-    /**
-     *
-     */
     @Override
-    public void close() {
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean hasResiduals() {
-        return bres;
-    }
-
-    public double[] allResiduals() {
-        return res.storage();
-    }
-
-    /**
-     *
-     * @param ssf
-     * @param data
-     */
-    @Override
-    public void open(final IMultivariateSsf ssf, final IMultivariateSsfData data) {
+    public void open(IMultivariateSsf ssf, IMultivariateSsfData data) {
+        infos=new ArrayList<>(data.getObsCount());
         cumulator.clear();
     }
 
-//    /**
-//     *
-//     * @param ssf
-//     * @param data
-//     */
-//    @Override
-//    public void prepare(final IMultivariateSsf ssf, final IMultivariateSsfData data) {
-//        clear();
-//    }
     @Override
-    public void save(final int t, final State state, final StateInfo info) {
+    public void close() {
     }
-
+    
+    public int size(){
+        return infos.size();
+    }
+    
+    public MultivariateUpdateInformation get(int idx){
+        return infos.get(idx);
+    }
+    
     @Override
-    public void save(final int t, final MultivariateUpdateInformation pe) {
+    public void save(int t, MultivariateUpdateInformation pe) {
         if (pe == null) {
             return;
         }
+        infos.set(t, pe);
         DoubleSeq diag = pe.getR().diagonal();
         DoubleSeq err = pe.getE();
         UpdateInformation.Status[] status = pe.getStatus();
@@ -111,11 +76,15 @@ public class PredictionErrorsDecomposition implements
     }
 
     @Override
+    public void save(int pos, State state, StateInfo info) {
+    }
+
+    @Override
     public Likelihood likelihood(boolean scalingfactor) {
         return Likelihood.builder(cumulator.getObsCount())
                 .scalingFactor(scalingfactor)
                 .ssqErr(cumulator.getSsqErr())
                 .logDeterminant(cumulator.getLogDeterminant()).build();
     }
-
+    
 }

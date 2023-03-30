@@ -35,44 +35,44 @@ import jdplus.math.matrices.FastMatrix;
  *
  * @author Jean Palate
  */
-@Development(status = Development.Status.Alpha)
-public class MultivariateCkmsInitializer implements MultivariateCkmsArrayFilter.IFastFilterInitializer {
-
-
-    public int initializeStationary(LState state, MultivariateUpdateInformation upd, IMultivariateSsf ssf, IMultivariateSsfData data) {
-//        ISsfDynamics dynamics = ssf.dynamics();
-//        ISsfLoading loading = ssf.loading();
-//        ISsfError error = ssf.measurementError();
-//        ISsfInitialization initialization = ssf.initialization();
-//        FastMatrix P0 = FastMatrix.square(initialization.getStateDim());
-//        initialization.Pf0(P0);
-//        DataBlock m = upd.M();
-//        loading.ZM(0, P0, m);
-//        fstate.l.copy(m);
-//        dynamics.TX(0, fstate.l());
-//        double f = loading.ZX(0, fstate.l);
-//        if (error != null) {
-//            f += error.at(0);
+//@Development(status = Development.Status.Alpha)
+//public class MultivariateCkmsInitializer implements MultivariateCkmsArrayFilter.IFastFilterInitializer {
+//
+//
+//    public int initializeStationary(LState state, MultivariateUpdateInformation upd, IMultivariateSsf ssf, IMultivariateSsfData data) {
+////        ISsfDynamics dynamics = ssf.dynamics();
+////        ISsfLoading loading = ssf.loading();
+////        ISsfError error = ssf.measurementError();
+////        ISsfInitialization initialization = ssf.initialization();
+////        FastMatrix P0 = FastMatrix.square(initialization.getStateDim());
+////        initialization.Pf0(P0);
+////        DataBlock m = upd.M();
+////        loading.ZM(0, P0, m);
+////        fstate.l.copy(m);
+////        dynamics.TX(0, fstate.l());
+////        double f = loading.ZX(0, fstate.l);
+////        if (error != null) {
+////            f += error.at(0);
+////        }
+////        upd.
+//        return 0;
+//    }
+//
+//    public int initializeDiffuse(LState state, MultivariateUpdateInformation upd, IMultivariateSsf ssf, IMultivariateSsfData data) {
+////        CkmsDiffuseInitializer initializer = new CkmsDiffuseInitializer();
+////        return initializer.initializeFilter(fstate, upd, ssf, data);
+//        return 0;
+//    }
+//
+//    @Override
+//    public int initializeFilter(LState state, MultivariateUpdateInformation upd, IMultivariateSsf ssf, IMultivariateSsfData data) {
+//        if (!ssf.isTimeInvariant()) {
+//            return -1;
 //        }
-//        upd.
-        return 0;
-    }
-
-    public int initializeDiffuse(LState state, MultivariateUpdateInformation upd, IMultivariateSsf ssf, IMultivariateSsfData data) {
-//        CkmsDiffuseInitializer initializer = new CkmsDiffuseInitializer();
-//        return initializer.initializeFilter(fstate, upd, ssf, data);
-        return 0;
-    }
-
-    @Override
-    public int initializeFilter(LState state, MultivariateUpdateInformation upd, IMultivariateSsf ssf, IMultivariateSsfData data) {
-        if (!ssf.isTimeInvariant()) {
-            return -1;
-        }
-        if (ssf.initialization().isDiffuse()) {
-            return initializeDiffuse(state, upd, ssf, data);
-        } else {
-            return initializeStationary(state, upd, ssf, data);
-        }
-    }
-}
+//        if (ssf.initialization().isDiffuse()) {
+//            return initializeDiffuse(state, upd, ssf, data);
+//        } else {
+//            return initializeStationary(state, upd, ssf, data);
+//        }
+//    }
+//}

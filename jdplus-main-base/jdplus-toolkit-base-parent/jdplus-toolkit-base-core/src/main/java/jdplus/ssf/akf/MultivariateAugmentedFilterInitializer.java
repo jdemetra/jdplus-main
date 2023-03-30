@@ -25,25 +25,25 @@ import jdplus.ssf.multivariate.MultivariateOrdinaryFilter;
  *
  * @author Jean Palate
  */
-public class MultivariateAugmentedFilterInitializer implements MultivariateOrdinaryFilter.Initializer{
-    
-    private final IMultivariateQFilteringResults results;
-    
-    public MultivariateAugmentedFilterInitializer(IMultivariateQFilteringResults results){
-        this.results=results;
-    }
-
-    @Override
-    public int initialize(State state, IMultivariateSsf ssf, IMultivariateSsfData data) {
-        MultivariateAugmentedFilter akf=new MultivariateAugmentedFilter(true);
-        boolean ok = akf.process(ssf, data, results);
-        if (! ok)
-            return -1;
-        AugmentedState astate = akf.getState();
-        if (! results.collapse(astate))
-            return -1;
-        state.copy(astate);
-        return akf.getCollapsingPosition();
-    }
-    
-}
+//public class MultivariateAugmentedFilterInitializer implements MultivariateOrdinaryFilter.Initializer{
+//    
+//    private final IMultivariateQFilteringResults results;
+//    
+//    public MultivariateAugmentedFilterInitializer(IMultivariateQFilteringResults results){
+//        this.results=results;
+//    }
+//
+//    @Override
+//    public int initialize(State state, IMultivariateSsf ssf, IMultivariateSsfData data) {
+//        MultivariateAugmentedFilter akf=new MultivariateAugmentedFilter(true);
+//        boolean ok = akf.process(ssf, data, results);
+//        if (! ok)
+//            return -1;
+//        AugmentedState astate = akf.getState();
+//        if (! results.collapse(astate))
+//            return -1;
+//        state.copy(astate);
+//        return akf.getCollapsingPosition();
+//    }
+//    
+//}

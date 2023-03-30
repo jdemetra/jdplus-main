@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class SymmetricMatrixTest {
 
- 
     public SymmetricMatrixTest() {
     }
 
@@ -25,10 +24,10 @@ public class SymmetricMatrixTest {
         SymmetricMatrix.randomize(S, null);
         assertTrue(S.isSymmetric());
     }
-    
+
     @Test
-    public void testCholesky(){
-        FastMatrix X = FastMatrix.make(10, 5);
+    public void testCholesky() {
+        FastMatrix X = FastMatrix.make(30, 15);
         JdkRNG rng = JdkRNG.newRandom(0);
         X.set((i, j) -> rng.nextDouble());
         FastMatrix S = SymmetricMatrix.XtX(X);
@@ -39,7 +38,19 @@ public class SymmetricMatrixTest {
     }
 
     @Test
-    public void testInverse(){
+    public void testCholeskySingular() {
+        FastMatrix X = FastMatrix.make(30, 15);
+        JdkRNG rng = JdkRNG.newRandom(0);
+        X.set((i, j) -> (i % 3 == 0) ? 0 : rng.nextDouble());
+        FastMatrix S = SymmetricMatrix.XtX(X);
+        FastMatrix T = S.deepClone();
+        SymmetricMatrix.lcholesky(T);
+        FastMatrix del = SymmetricMatrix.LLt(T).minus(S);
+        assertTrue(MatrixNorms.absNorm(del) < 1e-9);
+    }
+
+    @Test
+    public void testInverse() {
         FastMatrix X = FastMatrix.make(10, 5);
         JdkRNG rng = JdkRNG.newRandom(0);
         X.set((i, j) -> rng.nextDouble());
@@ -47,15 +58,17 @@ public class SymmetricMatrixTest {
         FastMatrix T = S.deepClone();
         SymmetricMatrix.lcholesky(T);
         FastMatrix I = SymmetricMatrix.LtL(LowerTriangularMatrix.inverse(T));
-        FastMatrix P=GeneralMatrix.AB(I, S);
-        assertTrue(P.isDiagonal(1e-9) && P.diagonal().allMatch(x->Math.abs(x-1)<1e-9));
+        FastMatrix P = GeneralMatrix.AB(I, S);
+        assertTrue(P.isDiagonal(1e-9) && P.diagonal().allMatch(x -> Math.abs(x - 1) < 1e-9));
     }
-    
+
     @Test
-    public void testXtX(){
+    public void testXtX() {
         FastMatrix X = FastMatrix.make(2, 4);
-        X.set((i, j) -> i+j*10);
-        System.out.println(X);
-        System.out.println(SymmetricMatrix.XtX(X));
+        X.set((i, j) -> i + j * 10);
+        FastMatrix M1 = SymmetricMatrix.XtX(X);
+        FastMatrix M2 = GeneralMatrix.AtB(X, X);
+        FastMatrix del = M1.minus(M2);
+        assertTrue(MatrixNorms.absNorm(del) < 1e-9);
     }
 }
