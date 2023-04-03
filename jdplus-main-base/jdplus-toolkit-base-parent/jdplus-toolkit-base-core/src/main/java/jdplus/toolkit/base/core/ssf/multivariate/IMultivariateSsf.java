@@ -16,8 +16,14 @@
  */
 package jdplus.toolkit.base.core.ssf.multivariate;
 
+import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.data.DataBlockIterator;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.ssf.ISsfState;
+import jdplus.toolkit.base.core.ssf.State;
+
 
 /**
  *
@@ -26,17 +32,64 @@ import jdplus.toolkit.base.core.ssf.ISsfState;
 public interface IMultivariateSsf extends ISsfState {
 
     ISsfMeasurements measurements();
-    
-    default ISsfLoading loading(int eq){
+
+    default ISsfLoading loading(int eq) {
         return measurements().loading(eq);
     }
-    
-    default ISsfErrors errors(){
+
+    default ISsfErrors errors() {
         return measurements().errors();
     }
-    
-    default int measurementsCount(){
+
+    default int measurementsCount() {
         return measurements().getCount();
     }
 
+    default void xL(int pos, DataBlock x, FastMatrix M, FastMatrix R, int[] used) {
+        // XT - [(XT)*M]R'^(-1) * Z
+        // q=XT
+        dynamics().XT(pos, x);
+        DataBlock w = DataBlock.make(M.getColumnsCount());
+        // w = qM
+        w.product(x, M.columnsIterator());
+        // y = wR^-1 <=> yR = w
+        LowerTriangularMatrix.solvexL(R, w, State.ZERO);
+        for (int i = 0; i < used.length; ++i) {
+            loading(used[i]).XpZd(pos, x, -w.get(i));
+        }
+    }
+
+    default void XL(int pos, FastMatrix X, FastMatrix M, FastMatrix R, int[] used) {
+        // Apply XL on each row of X
+        DataBlockIterator rows = X.rowsIterator();
+        DataBlock w = DataBlock.make(M.getColumnsCount());
+        while (rows.hasNext()) {
+            DataBlock x = rows.next();
+            dynamics().XT(pos, x);
+            // w = qM
+            w.product(x, M.columnsIterator());
+            // y = wR^-1 <=> yR = w
+            LowerTriangularMatrix.solvexL(R, w, State.ZERO);
+            for (int i = 0; i < used.length; ++i) {
+                loading(used[i]).XpZd(pos, x, -w.get(i));
+            }
+        }
+    }
+
+    default void XtL(int pos, FastMatrix X, FastMatrix M, FastMatrix R, int[] used) {
+        // Apply XL on each column of M
+        DataBlockIterator cols = X.columnsIterator();
+        DataBlock w = DataBlock.make(M.getColumnsCount());
+        while (cols.hasNext()) {
+            DataBlock x = cols.next();
+            dynamics().XT(pos, x);
+            // w = qM
+            w.product(x, M.columnsIterator());
+            // y = wR^-1 <=> yR = w
+            LowerTriangularMatrix.solvexL(R, w, State.ZERO);
+            for (int i = 0; i < used.length; ++i) {
+                loading(used[i]).XpZd(pos, x, -w.get(i));
+            }
+        }
+    }
 }

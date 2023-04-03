@@ -16,12 +16,13 @@
  */
 package jdplus.toolkit.base.core.ssf.multivariate;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
-import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.ssf.UpdateInformation;
+
 
 /**
  * The multivariate update information contains all update information related
@@ -35,7 +36,7 @@ import jdplus.toolkit.base.core.ssf.UpdateInformation;
 public class MultivariateUpdateInformation {
 
     @lombok.Builder
-    public MultivariateUpdateInformation(DoubleSeq e, FastMatrix F, FastMatrix R, FastMatrix K, UpdateInformation.Status[] status) {
+    public MultivariateUpdateInformation(DoubleSeq e, FastMatrix F, FastMatrix R, FastMatrix M, UpdateInformation.Status[] status) {
         this.e = e;
         if (F == null) {
             this.F = SymmetricMatrix.LLt(R);
@@ -43,11 +44,18 @@ public class MultivariateUpdateInformation {
             this.F = F;
         }
         this.R = R;
-        this.K = K;
+        this.M = M;
         this.status = status;
         double[] pu = e.toArray();
         LowerTriangularMatrix.solveLx(R, DataBlock.of(pu));
         this.u = DoubleSeq.of(pu);
+        int nused=e.length();
+        usedMeasurements=new int[nused];
+        for (int i=0, j=0; i<status.length; ++i){
+            if (status[i] != UpdateInformation.Status.MISSING){
+                usedMeasurements[j++]=i;
+            }
+        }
     }
 
     /**
@@ -72,10 +80,13 @@ public class MultivariateUpdateInformation {
      * K = P Z' L'^-1 dim x nvars
      */
     @lombok.NonNull
-    private FastMatrix K;
+    private FastMatrix M;
 
     @lombok.NonNull
     private UpdateInformation.Status[] status;
+    
+    @lombok.NonNull
+    private int[] usedMeasurements;
 
     public static int fillStatus(IMultivariateSsfData data, int pos, UpdateInformation.Status[] s) {
         int nvars = s.length;

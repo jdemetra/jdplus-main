@@ -16,16 +16,17 @@
  */
 package jdplus.toolkit.base.core.ssf.multivariate;
 
-import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.ssf.ISsfDynamics;
-import jdplus.toolkit.base.core.ssf.State;
-import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
+import jdplus.toolkit.base.core.ssf.ISsfDynamics;
+import jdplus.toolkit.base.core.ssf.State;
+import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.UpdateInformation;
+
 
 /**
  *
@@ -87,15 +88,15 @@ public class MultivariateOrdinaryFilter {
         int nv = MultivariateUpdateInformation.fillStatus(data, pos, status);
 
         // 
-        FastMatrix K = FastMatrix.make(dim, nv);
+        FastMatrix M = FastMatrix.make(dim, nv);
         FastMatrix R = FastMatrix.square(nv);
         double[] E = new double[nv];
         // step 1:
         // computes ZPZ'; results in R
         // PZ' in K
-        MZt(pos, status, state.P(), K);
+        MZt(pos, status, state.P(), M);
         // ZPZ'
-        ZM(pos, status, K, R);
+        ZM(pos, status, M, R);
         addH(pos, status, R);
         SymmetricMatrix.reenforceSymmetry(R);
         FastMatrix F = R.deepClone();
@@ -103,7 +104,7 @@ public class MultivariateOrdinaryFilter {
 
         // We put in K  PZ'*(ZPZ'+H)^-1/2 = PZ'*(RR')^-1/2 = PZ'(R')^-1
         // K R' = PZ' 
-        LowerTriangularMatrix.solveXLt(R, K, State.ZERO);
+        LowerTriangularMatrix.solveXLt(R, M, State.ZERO);
         for (int i = 0, iv = 0; i < status.length; ++i) {
             if (status[i] != UpdateInformation.Status.MISSING) {
                 double y = data.get(pos, i);
@@ -112,7 +113,7 @@ public class MultivariateOrdinaryFilter {
         }
         updinfo = MultivariateUpdateInformation.builder()
                 .e(DoubleSeq.of(E))
-                .K(K)
+                .M(M)
                 .R(R)
                 .F(F)
                 .status(status)
@@ -126,16 +127,16 @@ public class MultivariateOrdinaryFilter {
         if (updinfo == null) {
             return;
         }
-        int n = updinfo.getK().getColumnsCount();
+        int n = updinfo.getM().getColumnsCount();
         // P = P - (M)* F^-1 *(M)' --> Symmetric
         // PZ'(LL')^-1 ZP' =PZ'L'^-1*L^-1*ZP'
         // A = a + (M)* F^-1 * v
         FastMatrix P = state.P();
-        FastMatrix K = updinfo.getK();
+        FastMatrix M = updinfo.getM();
         DoubleSeq U = updinfo.getU();
         for (int i = 0; i < n; ++i) {
-            P.addXaXt(-1, K.column(i));//, state_.K.column(i));
-            state.a().addAY(U.get(i), K.column(i));
+            P.addXaXt(-1, M.column(i));//, state_.K.column(i));
+            state.a().addAY(U.get(i), M.column(i));
         }
     }
 

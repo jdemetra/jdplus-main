@@ -17,14 +17,14 @@
 package jdplus.toolkit.base.core.ssf.multivariate;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.core.data.DataBlockStorage;
-import nbbrd.design.Development;
 import jdplus.toolkit.base.core.ssf.IPredictionErrorDecomposition;
-import jdplus.toolkit.base.core.stats.likelihood.ResidualsCumulator;
 import jdplus.toolkit.base.core.ssf.State;
 import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.UpdateInformation;
 import jdplus.toolkit.base.core.stats.likelihood.Likelihood;
+import jdplus.toolkit.base.core.stats.likelihood.ResidualsCumulator;
+import nbbrd.design.Development;
+
 
 /**
  *
@@ -35,15 +35,12 @@ public class PredictionErrorsDecomposition implements
         IPredictionErrorDecomposition, IMultivariateFilteringResults {
 
     private final ResidualsCumulator cumulator = new ResidualsCumulator();
-    private DataBlockStorage res;
-    private boolean bres;
 
     /**
      *
      * @param bres
      */
-    public PredictionErrorsDecomposition(final boolean bres) {
-        this.bres = bres;
+    public PredictionErrorsDecomposition() {
     }
 
     /**
@@ -51,18 +48,6 @@ public class PredictionErrorsDecomposition implements
      */
     @Override
     public void close() {
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean hasResiduals() {
-        return bres;
-    }
-
-    public double[] allResiduals() {
-        return res.storage();
     }
 
     /**
