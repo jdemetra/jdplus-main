@@ -17,7 +17,7 @@
 package demetra.desktop.properties;
 
 import com.toedter.components.JSpinField;
-import demetra.desktop.design.SwingEditorAttribute;
+import jdplus.main.desktop.design.SwingEditorAttribute;
 import org.openide.explorer.propertysheet.InplaceEditor;
 import org.openide.explorer.propertysheet.PropertyEnv;
 

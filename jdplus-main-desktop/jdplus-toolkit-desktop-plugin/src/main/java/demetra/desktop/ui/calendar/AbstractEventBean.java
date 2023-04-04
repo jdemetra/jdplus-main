@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.calendar;
 
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingProperty;
 import demetra.desktop.beans.PropertyChangeSource;
 import jdplus.toolkit.base.api.timeseries.ValidityPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.Holiday;

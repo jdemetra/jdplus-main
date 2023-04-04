@@ -4,8 +4,8 @@
  */
 package demetra.desktop.ui;
 
-import demetra.desktop.design.SwingComponent;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingProperty;
 import demetra.desktop.components.parts.HasColorScheme;
 import demetra.desktop.components.parts.HasColorSchemeResolver;
 import demetra.desktop.components.parts.HasColorSchemeSupport;

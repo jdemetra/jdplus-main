@@ -1,8 +1,8 @@
 package demetra.desktop;
 
 import demetra.desktop.beans.PropertyChangeSource;
-import demetra.desktop.design.GlobalService;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.GlobalService;
+import jdplus.main.desktop.design.SwingProperty;
 import demetra.desktop.ui.properties.l2fprod.OutlierDescriptorsEditor;
 import demetra.desktop.util.LazyGlobalService;
 import demetra.desktop.util.Persistence;

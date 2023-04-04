@@ -6,7 +6,7 @@ package demetra.desktop.tramo.descriptors;
 
 import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.sa.descriptors.regular.TradingDaysSpecType;
+import jdplus.sa.desktop.plugin.descriptors.regular.TradingDaysSpecType;
 import demetra.desktop.ui.properties.l2fprod.Holidays;
 import demetra.desktop.ui.properties.l2fprod.UserVariables;
 import demetra.desktop.ui.properties.l2fprod.NamedParameters;

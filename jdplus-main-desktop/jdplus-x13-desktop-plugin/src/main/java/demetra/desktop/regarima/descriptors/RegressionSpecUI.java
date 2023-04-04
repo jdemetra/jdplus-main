@@ -6,8 +6,8 @@ package demetra.desktop.regarima.descriptors;
 
 import jdplus.toolkit.base.api.data.Parameter;
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.sa.properties.l2fprod.SaInterventionVariableDescriptor;
-import demetra.desktop.sa.properties.l2fprod.SaTsVariableDescriptor;
+import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
+import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
 import demetra.desktop.ui.properties.l2fprod.OutlierDescriptor;
 import demetra.desktop.ui.properties.l2fprod.RampDescriptor;
 import demetra.desktop.ui.properties.l2fprod.UserInterfaceContext;

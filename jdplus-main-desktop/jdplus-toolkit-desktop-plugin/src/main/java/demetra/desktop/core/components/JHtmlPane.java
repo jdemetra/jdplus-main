@@ -19,7 +19,7 @@ package demetra.desktop.core.components;
 import demetra.desktop.components.ComponentCommand;
 import demetra.desktop.components.parts.HasZoomRatio;
 import demetra.desktop.components.parts.HasZoomRatioSupport;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingProperty;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;

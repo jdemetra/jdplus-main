@@ -16,7 +16,7 @@
  */
 package demetra.desktop.tramoseats.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.SaResidualsDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.SaResidualsDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import jdplus.sa.base.api.SaDiagnosticsFactory;
 import jdplus.toolkit.base.core.regarima.diagnostics.ResidualsDiagnosticsConfiguration;

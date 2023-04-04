@@ -1,6 +1,6 @@
 package demetra.desktop.star;
 
-import demetra.desktop.design.GlobalService;
+import jdplus.main.desktop.design.GlobalService;
 import demetra.desktop.util.LazyGlobalService;
 import jdplus.toolkit.base.tsp.DataSource;
 import ec.util.various.swing.OnEDT;

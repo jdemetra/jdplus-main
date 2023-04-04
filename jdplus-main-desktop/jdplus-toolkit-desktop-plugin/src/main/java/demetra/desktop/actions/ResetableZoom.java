@@ -16,7 +16,7 @@
  */
 package demetra.desktop.actions;
 
-import demetra.desktop.design.SwingAction;
+import jdplus.main.desktop.design.SwingAction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.swing.*;

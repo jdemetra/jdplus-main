@@ -4,7 +4,7 @@
  */
 package demetra.desktop.components.tools;
 
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.util.NbComponents;
 import demetra.desktop.components.JHtmlView;
 import demetra.html.HtmlStream;

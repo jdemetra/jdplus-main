@@ -16,7 +16,7 @@
  */
 package demetra.desktop.x13.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.SaResidualsDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.SaResidualsDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
 import jdplus.toolkit.base.core.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;

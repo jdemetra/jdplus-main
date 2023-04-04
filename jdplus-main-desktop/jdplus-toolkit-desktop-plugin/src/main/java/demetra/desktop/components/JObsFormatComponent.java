@@ -17,8 +17,8 @@
 package demetra.desktop.components;
 
 import demetra.desktop.completion.AutoCompletionManager;
-import demetra.desktop.design.SwingComponent;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.completion.swing.XPopup;
 import ec.util.various.swing.TextPrompt;

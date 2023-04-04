@@ -18,8 +18,8 @@ package demetra.desktop.datatransfer;
 
 import demetra.desktop.TsManager;
 import demetra.desktop.beans.PropertyChangeSource;
-import demetra.desktop.design.GlobalService;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.GlobalService;
+import jdplus.main.desktop.design.SwingProperty;
 import demetra.desktop.util.CollectionSupplier;
 import demetra.desktop.util.LazyGlobalService;
 import jdplus.toolkit.base.api.timeseries.*;

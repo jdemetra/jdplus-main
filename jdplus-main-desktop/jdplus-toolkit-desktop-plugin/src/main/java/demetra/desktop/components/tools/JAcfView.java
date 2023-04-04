@@ -5,7 +5,7 @@
 
 package demetra.desktop.components.tools;
 
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import ec.util.chart.swing.Charts;
 
 import java.awt.BorderLayout;

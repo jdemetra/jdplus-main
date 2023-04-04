@@ -16,8 +16,8 @@
  */
 package demetra.desktop.components.parts;
 
-import demetra.desktop.design.SwingAction;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingAction;
+import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

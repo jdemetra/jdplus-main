@@ -16,7 +16,7 @@
  */
 package demetra.desktop.tramoseats.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.ResidualTradingDaysDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.ResidualTradingDaysDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;

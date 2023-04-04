@@ -2,7 +2,7 @@ package demetra.desktop.actions;
 
 import demetra.desktop.ConfigEditor;
 import demetra.desktop.Persistable;
-import demetra.desktop.design.SwingAction;
+import jdplus.main.desktop.design.SwingAction;
 import ec.util.various.swing.JCommand;
 
 import javax.swing.*;

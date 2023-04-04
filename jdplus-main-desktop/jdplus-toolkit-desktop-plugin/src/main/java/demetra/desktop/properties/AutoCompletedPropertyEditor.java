@@ -17,7 +17,7 @@
 package demetra.desktop.properties;
 
 import demetra.desktop.completion.AutoCompletionManager;
-import demetra.desktop.design.SwingEditorAttribute;
+import jdplus.main.desktop.design.SwingEditorAttribute;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.swing.JAutoCompletion;
 import ec.util.various.swing.TextPrompt;

@@ -16,7 +16,7 @@
  */
 package demetra.desktop.x13.diagnostics;
 
-import demetra.desktop.sa.diagnostics.SaDiagnosticsFactoryBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.SaDiagnosticsFactoryBuddy;
 import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
 import jdplus.sa.base.api.SaDiagnosticsFactory;
 import jdplus.x13.base.core.x13.X13Results;

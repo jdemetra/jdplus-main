@@ -16,7 +16,7 @@
  */
 package demetra.desktop.tramoseats.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.SpectralDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.SpectralDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;

@@ -20,7 +20,7 @@ import demetra.desktop.DemetraIcons;
 import demetra.desktop.TsManager;
 import demetra.desktop.actions.Configurable;
 import demetra.desktop.beans.BeanEditor;
-import demetra.desktop.design.GlobalService;
+import jdplus.main.desktop.design.GlobalService;
 import demetra.desktop.properties.ForwardingNodeProperty;
 import demetra.desktop.properties.NodePropertySetBuilder;
 import demetra.desktop.properties.PropertySheetDialogBuilder;

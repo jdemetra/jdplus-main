@@ -16,8 +16,8 @@
  */
 package demetra.desktop.workspace.ui;
 
-import demetra.desktop.design.SwingComponent;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingProperty;
 import demetra.desktop.util.IDialogDescriptorProvider;
 import demetra.desktop.nodes.DecoratedNode;
 import demetra.desktop.ui.CustomDialogDescriptor;

@@ -1,6 +1,6 @@
 package demetra.desktop.nodes;
 
-import demetra.desktop.design.GlobalService;
+import jdplus.main.desktop.design.GlobalService;
 import demetra.desktop.util.CollectionSupplier;
 import demetra.desktop.util.LazyGlobalService;
 import org.checkerframework.checker.nullness.qual.NonNull;

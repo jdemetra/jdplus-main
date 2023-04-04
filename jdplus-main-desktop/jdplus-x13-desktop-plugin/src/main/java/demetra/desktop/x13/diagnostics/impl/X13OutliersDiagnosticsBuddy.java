@@ -16,7 +16,7 @@
  */
 package demetra.desktop.x13.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.SaOutliersDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.SaOutliersDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutliersDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;

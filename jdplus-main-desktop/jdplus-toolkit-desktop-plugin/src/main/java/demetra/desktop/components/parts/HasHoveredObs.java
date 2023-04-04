@@ -16,7 +16,7 @@
  */
 package demetra.desktop.components.parts;
 
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingProperty;
 import ec.util.chart.ObsIndex;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

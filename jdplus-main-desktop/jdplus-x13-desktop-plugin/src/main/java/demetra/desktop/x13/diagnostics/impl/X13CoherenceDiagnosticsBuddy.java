@@ -16,7 +16,7 @@
  */
 package demetra.desktop.x13.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.CoherenceDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.CoherenceDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnostics;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsConfiguration;

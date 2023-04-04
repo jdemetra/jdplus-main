@@ -16,7 +16,7 @@
  */
 package demetra.desktop.tramoseats.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.ResidualSeasonalityDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.ResidualSeasonalityDiagnosticsBuddy;
 import demetra.desktop.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.ResidualSeasonalityDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.ResidualSeasonalityDiagnosticsFactory;

@@ -16,8 +16,8 @@
  */
 package internal.ui.properties;
 
-import demetra.desktop.design.SwingComponent;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingProperty;
 import demetra.desktop.util.ExtLayerUI;
 import demetra.desktop.util.FontAwesomeUtils;
 import ec.util.chart.swing.SwingColorSchemeSupport;

@@ -19,7 +19,7 @@ package demetra.desktop.components;
 import demetra.desktop.components.parts.HasObsFormat;
 import demetra.desktop.components.parts.HasTsData;
 import demetra.desktop.components.parts.HasObsFormatSupport;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.components.parts.HasTsDataSupport;
 
 import javax.swing.JComponent;

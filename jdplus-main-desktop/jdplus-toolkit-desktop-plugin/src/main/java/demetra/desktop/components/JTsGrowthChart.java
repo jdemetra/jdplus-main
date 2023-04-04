@@ -21,9 +21,9 @@ import demetra.desktop.actions.PrintableWithPreview;
 import demetra.desktop.actions.ResetableZoom;
 import demetra.desktop.beans.PropertyChangeSource;
 import demetra.desktop.components.parts.*;
-import demetra.desktop.design.SwingAction;
-import demetra.desktop.design.SwingComponent;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingAction;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingProperty;
 import internal.ui.components.DemoTsBuilder;
 import jdplus.toolkit.base.api.timeseries.*;
 

@@ -16,7 +16,7 @@
  */
 package demetra.desktop.tramoseats.ui.actions;
 
-import demetra.desktop.sa.util.ActionsHelper;
+import jdplus.sa.desktop.plugin.util.ActionsHelper;
 import demetra.desktop.tramoseats.ui.TramoSeatsUI;
 import jdplus.sa.base.api.SaProcessingFactory;
 import jdplus.sa.base.api.SaSpecification;

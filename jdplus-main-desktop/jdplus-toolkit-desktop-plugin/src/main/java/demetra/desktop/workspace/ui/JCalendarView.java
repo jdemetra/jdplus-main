@@ -8,7 +8,7 @@ import demetra.desktop.components.JTsGrid;
 import demetra.desktop.components.TsSelectionBridge;
 import demetra.desktop.components.parts.HasTsCollection.TsUpdateMode;
 import demetra.desktop.components.tools.PeriodogramView;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.properties.NodePropertySetBuilder;
 import demetra.desktop.util.NbComponents;
 import jdplus.toolkit.base.api.timeseries.Ts;

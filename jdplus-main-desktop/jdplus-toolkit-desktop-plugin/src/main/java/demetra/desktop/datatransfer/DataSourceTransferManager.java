@@ -17,7 +17,7 @@
 package demetra.desktop.datatransfer;
 
 import jdplus.toolkit.base.tsp.DataSource;
-import demetra.desktop.design.GlobalService;
+import jdplus.main.desktop.design.GlobalService;
 import demetra.desktop.util.CollectionSupplier;
 import demetra.desktop.util.LazyGlobalService;
 import java.awt.datatransfer.Transferable;

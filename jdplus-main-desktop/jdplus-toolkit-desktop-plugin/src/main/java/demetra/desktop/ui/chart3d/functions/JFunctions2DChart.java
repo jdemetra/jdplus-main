@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.parts.*;
 import demetra.desktop.components.TimeSeriesComponent;
 import demetra.desktop.components.tools.JChartPanel;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.jfreechart.BasicXYDataset;
 import demetra.desktop.jfreechart.TsCharts;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;

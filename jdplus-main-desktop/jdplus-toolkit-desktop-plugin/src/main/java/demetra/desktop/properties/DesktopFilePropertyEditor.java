@@ -19,7 +19,7 @@ package demetra.desktop.properties;
 import demetra.desktop.completion.DesktopFileAutoCompletionSource;
 import demetra.desktop.concurrent.ThreadPriority;
 import demetra.desktop.concurrent.UIExecutors;
-import demetra.desktop.design.SwingEditorAttribute;
+import jdplus.main.desktop.design.SwingEditorAttribute;
 import demetra.desktop.util.Collections2;
 import ec.util.completion.swing.FileListCellRenderer;
 import ec.util.completion.swing.JAutoCompletion;

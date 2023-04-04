@@ -1,6 +1,6 @@
 package demetra.desktop.interchange;
 
-import demetra.desktop.design.GlobalService;
+import jdplus.main.desktop.design.GlobalService;
 import demetra.desktop.util.CollectionSupplier;
 import demetra.desktop.util.LazyGlobalService;
 import nbbrd.design.VisibleForTesting;

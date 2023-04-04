@@ -17,7 +17,7 @@
 package demetra.desktop.components.tools;
 
 import demetra.desktop.components.parts.*;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.jfreechart.BasicXYDataset;
 import demetra.desktop.jfreechart.TsCharts;
 import demetra.desktop.ui.StabilityTickUnit;

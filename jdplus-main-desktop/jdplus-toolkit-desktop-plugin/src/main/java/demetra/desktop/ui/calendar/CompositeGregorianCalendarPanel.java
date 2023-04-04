@@ -6,7 +6,7 @@ package demetra.desktop.ui.calendar;
 
 import demetra.desktop.DemetraIcons;
 import demetra.desktop.beans.PropertyChangeSource;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingProperty;
 import demetra.desktop.properties.NodePropertySetBuilder;
 import demetra.desktop.util.IDialogDescriptorProvider;
 import demetra.desktop.util.ListenerState;

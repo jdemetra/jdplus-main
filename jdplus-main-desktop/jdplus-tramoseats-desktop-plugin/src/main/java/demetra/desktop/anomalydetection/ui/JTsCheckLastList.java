@@ -55,8 +55,8 @@ import javax.swing.table.TableCellRenderer;
 
 import demetra.desktop.components.TsIdentifier;
 import demetra.desktop.datatransfer.DataTransferManager;
-import demetra.desktop.design.SwingComponent;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;

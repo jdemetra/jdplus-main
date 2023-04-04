@@ -4,7 +4,7 @@
  */
 package demetra.desktop.ui.calendar;
 
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.calendars.DayEvent;
 import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
 import jdplus.toolkit.base.api.timeseries.calendars.PrespecifiedHoliday;

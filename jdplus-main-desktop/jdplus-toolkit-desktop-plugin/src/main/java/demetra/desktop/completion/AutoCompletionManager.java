@@ -1,6 +1,6 @@
 package demetra.desktop.completion;
 
-import demetra.desktop.design.GlobalService;
+import jdplus.main.desktop.design.GlobalService;
 import demetra.desktop.util.CollectionSupplier;
 import demetra.desktop.util.LazyGlobalService;
 import ec.util.completion.swing.JAutoCompletion;

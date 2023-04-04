@@ -18,7 +18,7 @@ package demetra.desktop.anomalydetection.ui;
 
 import demetra.desktop.anomalydetection.html.HtmlAnomalyDetection;
 import demetra.desktop.ui.processing.TsViewToolkit;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.interfaces.Disposable;
 import demetra.desktop.ui.Disposables;
 

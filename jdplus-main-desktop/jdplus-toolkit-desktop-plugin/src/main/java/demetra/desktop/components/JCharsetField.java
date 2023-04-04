@@ -17,8 +17,8 @@
 package demetra.desktop.components;
 
 import demetra.desktop.completion.AutoCompletionManager;
-import demetra.desktop.design.SwingComponent;
-import demetra.desktop.design.SwingProperty;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingProperty;
 import ec.util.various.swing.TextPrompt;
 import nbbrd.io.text.Parser;
 import org.checkerframework.checker.nullness.qual.Nullable;

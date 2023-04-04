@@ -6,7 +6,7 @@ package demetra.desktop.ui;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import demetra.desktop.components.tools.JAutoCorrelationsView;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.util.NbComponents;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;

@@ -16,7 +16,7 @@
  */
 package demetra.desktop.ui.variables;
 
-import demetra.desktop.design.SwingAction;
+import jdplus.main.desktop.design.SwingAction;
 import demetra.desktop.DemetraBehaviour;
 import demetra.desktop.NamedService;
 import demetra.desktop.components.parts.HasTsActionSupport;
@@ -53,7 +53,7 @@ import org.openide.NotifyDescriptor;
 import demetra.desktop.components.parts.HasTsAction;
 import ec.util.table.swing.JTables;
 import demetra.desktop.datatransfer.DataTransferManager;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import jdplus.toolkit.base.api.timeseries.DynamicTsDataSupplier;
 import jdplus.toolkit.base.api.timeseries.StaticTsDataSupplier;
 import jdplus.toolkit.base.api.timeseries.Ts;

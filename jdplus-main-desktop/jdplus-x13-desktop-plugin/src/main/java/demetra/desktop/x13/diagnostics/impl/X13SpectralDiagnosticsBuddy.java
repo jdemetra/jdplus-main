@@ -16,7 +16,7 @@
  */
 package demetra.desktop.x13.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.SpectralDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.SpectralDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;

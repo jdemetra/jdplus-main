@@ -16,7 +16,7 @@
  */
 package demetra.desktop.x13.diagnostics.impl;
 
-import demetra.desktop.sa.diagnostics.ResidualTradingDaysDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.ResidualTradingDaysDiagnosticsBuddy;
 import demetra.desktop.x13.diagnostics.X13DiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;

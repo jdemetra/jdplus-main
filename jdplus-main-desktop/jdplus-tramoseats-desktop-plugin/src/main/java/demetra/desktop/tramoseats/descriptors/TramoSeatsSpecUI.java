@@ -6,7 +6,7 @@ package demetra.desktop.tramoseats.descriptors;
 
 import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
 import demetra.desktop.descriptors.IObjectDescriptor;
-import demetra.desktop.sa.descriptors.SaBenchmarkingSpecUI;
+import jdplus.sa.desktop.plugin.descriptors.SaBenchmarkingSpecUI;
 import demetra.desktop.tramo.descriptors.ArimaSpecUI;
 import demetra.desktop.tramo.descriptors.BasicSpecUI;
 import demetra.desktop.tramo.descriptors.EstimateSpecUI;

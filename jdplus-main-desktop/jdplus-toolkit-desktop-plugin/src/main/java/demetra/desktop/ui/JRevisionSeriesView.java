@@ -17,7 +17,7 @@
 package demetra.desktop.ui;
 
 import demetra.desktop.components.parts.*;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.components.TimeSeriesComponent;
 import demetra.desktop.jfreechart.TsCharts;
 import demetra.desktop.util.NbComponents;

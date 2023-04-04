@@ -6,7 +6,7 @@ package demetra.desktop.ui;
 
 import demetra.desktop.components.tools.AutoRegressiveSpectrumView;
 import demetra.desktop.components.tools.PeriodogramView;
-import demetra.desktop.design.SwingComponent;
+import jdplus.main.desktop.design.SwingComponent;
 import demetra.desktop.util.NbComponents;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import java.awt.BorderLayout;

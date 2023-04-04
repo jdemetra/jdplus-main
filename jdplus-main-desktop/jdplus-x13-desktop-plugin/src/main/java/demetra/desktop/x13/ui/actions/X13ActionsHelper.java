@@ -16,7 +16,7 @@
  */
 package demetra.desktop.x13.ui.actions;
 
-import demetra.desktop.sa.util.ActionsHelper;
+import jdplus.sa.desktop.plugin.util.ActionsHelper;
 import demetra.desktop.x13.ui.X13UI;
 import jdplus.sa.base.api.SaProcessingFactory;
 import jdplus.sa.base.api.SaSpecification;

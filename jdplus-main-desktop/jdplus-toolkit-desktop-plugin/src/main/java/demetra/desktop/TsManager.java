@@ -16,7 +16,7 @@
  */
 package demetra.desktop;
 
-import demetra.desktop.design.GlobalService;
+import jdplus.main.desktop.design.GlobalService;
 import demetra.desktop.util.LazyGlobalService;
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.tsp.DataSource;
