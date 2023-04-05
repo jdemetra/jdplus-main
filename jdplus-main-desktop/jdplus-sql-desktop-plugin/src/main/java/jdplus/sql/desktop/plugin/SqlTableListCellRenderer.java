@@ -4,7 +4,7 @@
  */
 package jdplus.sql.desktop.plugin;
 
-import demetra.desktop.util.SimpleHtmlCellRenderer;
+import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
 import javax.swing.ListCellRenderer;
 import nbbrd.design.DirectImpl;
 import nbbrd.sql.jdbc.SqlTable;

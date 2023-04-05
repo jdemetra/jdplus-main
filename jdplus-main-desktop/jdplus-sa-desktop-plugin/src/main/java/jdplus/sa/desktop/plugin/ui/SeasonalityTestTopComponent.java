@@ -4,13 +4,13 @@
  */
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.components.JTsChart;
-import demetra.desktop.components.parts.HasTsCollection;
-import demetra.desktop.components.parts.HasTsCollection.TsUpdateMode;
-import demetra.desktop.components.JHtmlView;
-import demetra.desktop.components.parts.HasTs;
-import demetra.desktop.components.parts.HasTsSupport;
-import demetra.html.HtmlUtil;
+import jdplus.toolkit.desktop.plugin.components.JTsChart;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
+import jdplus.toolkit.desktop.plugin.components.JHtmlView;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTs;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsSupport;
+import jdplus.toolkit.desktop.plugin.html.HtmlUtil;
 import jdplus.sa.desktop.plugin.html.HtmlSeasonalityDiagnostics;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsData;

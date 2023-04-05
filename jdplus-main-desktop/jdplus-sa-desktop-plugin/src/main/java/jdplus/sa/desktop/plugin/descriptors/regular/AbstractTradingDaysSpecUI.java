@@ -5,11 +5,11 @@
 package jdplus.sa.desktop.plugin.descriptors.regular;
 
 import jdplus.toolkit.base.api.data.Parameter;
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.desktop.ui.properties.l2fprod.Holidays;
-import demetra.desktop.ui.properties.l2fprod.UserVariables;
-import demetra.desktop.ui.properties.l2fprod.NamedParameters;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.Holidays;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserVariables;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.NamedParameters;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.modelling.regular.TradingDaysSpec;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;

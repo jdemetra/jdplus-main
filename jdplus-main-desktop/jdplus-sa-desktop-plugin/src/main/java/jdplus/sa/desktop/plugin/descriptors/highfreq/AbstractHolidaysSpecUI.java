@@ -16,9 +16,9 @@
  */
 package jdplus.sa.desktop.plugin.descriptors.highfreq;
 
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.desktop.ui.properties.l2fprod.Holidays;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.Holidays;
 import jdplus.toolkit.base.api.modelling.highfreq.HolidaysSpec;
 import jdplus.toolkit.base.api.timeseries.calendars.HolidaysOption;
 import jdplus.toolkit.base.api.timeseries.regression.HolidaysVariable;

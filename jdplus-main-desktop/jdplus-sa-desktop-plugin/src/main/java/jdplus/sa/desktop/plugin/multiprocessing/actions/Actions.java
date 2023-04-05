@@ -17,6 +17,10 @@
 package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
+import jdplus.toolkit.desktop.plugin.workspace.nodes.CommentAction;
+import jdplus.toolkit.desktop.plugin.workspace.nodes.DeleteAction;
+import jdplus.toolkit.desktop.plugin.workspace.nodes.NewAction;
+import jdplus.toolkit.desktop.plugin.workspace.nodes.RenameAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -29,8 +33,8 @@ public class Actions {
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1050)
     })
-    public static demetra.desktop.workspace.nodes.RenameAction renameAction() {
-        return new demetra.desktop.workspace.nodes.RenameAction();
+    public static RenameAction renameAction() {
+        return new RenameAction();
     }
 
     @ActionID(category = "Edit",
@@ -38,8 +42,8 @@ public class Actions {
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1150)
     })
-    public static demetra.desktop.workspace.nodes.CommentAction commentAction() {
-        return new demetra.desktop.workspace.nodes.CommentAction();
+    public static CommentAction commentAction() {
+        return new CommentAction();
     }
 
     @ActionID(category = "Edit",
@@ -47,8 +51,8 @@ public class Actions {
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1100)
     })
-    public static demetra.desktop.workspace.nodes.DeleteAction deleteAction() {
-        return new demetra.desktop.workspace.nodes.DeleteAction();
+    public static DeleteAction deleteAction() {
+        return new DeleteAction();
     }
     
     @ActionID(category = "Edit",
@@ -56,8 +60,8 @@ public class Actions {
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.PATH, position = 1000)
     })
-    public static demetra.desktop.workspace.nodes.NewAction newAction() {
-        return new demetra.desktop.workspace.nodes.NewAction();
+    public static NewAction newAction() {
+        return new NewAction();
     }
     
 }

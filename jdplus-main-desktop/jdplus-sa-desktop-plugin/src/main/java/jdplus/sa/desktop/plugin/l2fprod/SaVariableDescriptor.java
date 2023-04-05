@@ -4,11 +4,12 @@
  */
 package jdplus.sa.desktop.plugin.l2fprod;
 
-import demetra.desktop.descriptors.*;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import demetra.desktop.ui.properties.l2fprod.VariableDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.VariableDescriptor;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 

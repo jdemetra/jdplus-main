@@ -134,6 +134,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
+                        <publicPackage>jdplus.spreadsheet.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

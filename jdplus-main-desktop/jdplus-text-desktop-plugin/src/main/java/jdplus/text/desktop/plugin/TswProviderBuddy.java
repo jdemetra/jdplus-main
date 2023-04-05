@@ -16,7 +16,7 @@
  */
 package jdplus.text.desktop.plugin;
 
-import demetra.desktop.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import java.awt.Image;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
@@ -39,7 +39,7 @@ public final class TswProviderBuddy implements DataSourceProviderBuddy {
 
     @Override
     public Image getIconOrNull(int type, boolean opened) {
-        return ImageUtilities.loadImage("ec/nbdemetra/common/document-list.png", true);
+        return ImageUtilities.loadImage("jdplus/text/desktop/plugin/document-list.png", true);
     }
 //
 //    @Override

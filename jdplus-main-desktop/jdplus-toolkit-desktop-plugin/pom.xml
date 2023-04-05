@@ -253,13 +253,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>demetra.desktop.*</publicPackage>
-                        <publicPackage>internal.ui.*</publicPackage>
+                        <publicPackage>jdplus.toolkit.*</publicPackage>
                         <!-- tmp -->
                         <publicPackage>internal.ui</publicPackage>
-                        <!-- core libs -->
-                        <publicPackage>demetra.*</publicPackage>
-                        <publicPackage>jdplus.*</publicPackage>
+                        <publicPackage>internal.ui.*</publicPackage>
                         <!-- desktop libs -->
                         <publicPackage>ec.util.chart.*</publicPackage>
                         <publicPackage>ec.util.completion.*</publicPackage>
@@ -287,11 +284,6 @@
                         <publicPackage>javax.*</publicPackage>
                         <publicPackage>com.sun.xml.bind.*</publicPackage>
                         <publicPackage>demetra.desktop.*</publicPackage>
-                        <!-- FIXME: demetra-desktop-core -->
-                        <publicPackage>demetra.desktop.core.*</publicPackage>
-                        <!-- FIXME: demetra-desktop-modelling -->
-                        <publicPackage>demetra.desktop.modelling.*</publicPackage>
-                        <publicPackage>demetra.desktop.processing.ui.modelling.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

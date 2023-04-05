@@ -16,7 +16,7 @@
  */
 package jdplus.sa.desktop.plugin.diagnostics;
 
-import demetra.desktop.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import java.awt.Image;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;

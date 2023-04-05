@@ -4,9 +4,9 @@
  */
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.ui.processing.ItemUI;
-import demetra.desktop.ui.processing.TsViewToolkit;
-import demetra.html.HtmlFragment;
+import jdplus.toolkit.desktop.plugin.ui.processing.ItemUI;
+import jdplus.toolkit.desktop.plugin.ui.processing.TsViewToolkit;
+import jdplus.toolkit.desktop.plugin.html.HtmlFragment;
 import javax.swing.JComponent;
 
 /**

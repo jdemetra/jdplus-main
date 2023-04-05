@@ -16,16 +16,16 @@
  */
 package internal.spreadsheet.desktop.plugin;
 
-import demetra.desktop.beans.BeanHandler;
-import demetra.desktop.Config;
-import demetra.desktop.ConfigEditor;
-import demetra.desktop.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.ConfigEditor;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import java.awt.datatransfer.DataFlavor;
 import org.openide.util.lookup.ServiceProvider;
-import demetra.desktop.Persistable;
-import demetra.desktop.actions.Configurable;
-import demetra.desktop.datatransfer.DataTransferSpi;
-import demetra.desktop.beans.BeanConfigurator;
+import jdplus.toolkit.desktop.plugin.Persistable;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
+import jdplus.toolkit.desktop.plugin.beans.BeanConfigurator;
 import ec.util.spreadsheet.html.HtmlBookFactory;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProviders;

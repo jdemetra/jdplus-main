@@ -4,10 +4,10 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import demetra.desktop.util.NbComponents;
-import demetra.desktop.components.JHtmlView;
-import demetra.html.HtmlUtil;
-import demetra.html.modelling.HtmlRegSarimaReport;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
+import jdplus.toolkit.desktop.plugin.components.JHtmlView;
+import jdplus.toolkit.desktop.plugin.html.HtmlUtil;
+import jdplus.toolkit.desktop.plugin.html.modelling.HtmlRegSarimaReport;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.AlgorithmDescriptor;
 import jdplus.sa.base.api.SaItem;

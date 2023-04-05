@@ -16,8 +16,8 @@
  */
 package jdplus.sa.desktop.plugin.descriptors.highfreq;
 
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
 import jdplus.toolkit.base.api.modelling.highfreq.TransformSpec;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import java.beans.IntrospectionException;

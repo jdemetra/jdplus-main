@@ -4,7 +4,7 @@
  */
 package jdplus.sa.desktop.plugin.processing;
 
-import demetra.desktop.ui.processing.PooledItemUI;
+import jdplus.toolkit.desktop.plugin.ui.processing.PooledItemUI;
 import jdplus.toolkit.base.api.timeseries.TsData;
 
 

@@ -16,14 +16,14 @@
  */
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.nodes.DecoratedNode;
-import demetra.desktop.ui.CustomDialogDescriptor;
-import demetra.desktop.util.IDialogDescriptorProvider;
-import demetra.desktop.util.IPropertyChangeSource;
-import demetra.desktop.workspace.WorkspaceFactory;
-import demetra.desktop.workspace.WorkspaceItem;
-import demetra.desktop.workspace.nodes.DummyWsNode;
-import demetra.desktop.workspace.nodes.ItemWsNode;
+import jdplus.toolkit.desktop.plugin.nodes.DecoratedNode;
+import jdplus.toolkit.desktop.plugin.ui.CustomDialogDescriptor;
+import jdplus.toolkit.desktop.plugin.util.IDialogDescriptorProvider;
+import jdplus.toolkit.desktop.plugin.util.IPropertyChangeSource;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.workspace.nodes.DummyWsNode;
+import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.sa.base.api.SaSpecification;
 import jdplus.toolkit.base.api.util.Constraint;
 import jdplus.toolkit.base.api.util.Id;

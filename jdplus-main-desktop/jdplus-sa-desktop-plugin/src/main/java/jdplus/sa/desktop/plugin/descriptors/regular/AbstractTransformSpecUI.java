@@ -4,8 +4,8 @@
  */
 package jdplus.sa.desktop.plugin.descriptors.regular;
 
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.modelling.regular.TradingDaysSpec;
 import jdplus.toolkit.base.api.modelling.regular.TransformSpec;

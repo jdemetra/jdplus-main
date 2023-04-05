@@ -16,9 +16,9 @@
  */
 package ec.util.grid.swing.ext;
 
-import demetra.desktop.components.parts.HasColorScheme;
-import demetra.desktop.components.parts.HasColorSchemeResolver;
-import demetra.desktop.components.parts.HasColorSchemeSupport;
+import jdplus.toolkit.desktop.plugin.components.parts.HasColorScheme;
+import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeResolver;
+import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeSupport;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import ec.util.grid.swing.JGrid;
 import ec.util.spreadsheet.Sheet;
@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.JTabbedPane;
-import demetra.desktop.util.Pools;
+import jdplus.toolkit.desktop.plugin.util.Pools;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
-import demetra.desktop.util.Pool;
+import jdplus.toolkit.desktop.plugin.util.Pool;
 
 
 /**

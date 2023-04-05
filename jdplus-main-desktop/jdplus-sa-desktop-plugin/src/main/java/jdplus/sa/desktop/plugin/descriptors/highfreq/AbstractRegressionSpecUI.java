@@ -17,11 +17,11 @@
 package jdplus.sa.desktop.plugin.descriptors.highfreq;
 
 import jdplus.toolkit.base.api.data.Parameter;
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
 import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
-import demetra.desktop.ui.properties.l2fprod.HighFreqOutlierDescriptor;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.HighFreqOutlierDescriptor;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.modelling.highfreq.RegressionSpec;
 import jdplus.sa.base.api.SaVariable;

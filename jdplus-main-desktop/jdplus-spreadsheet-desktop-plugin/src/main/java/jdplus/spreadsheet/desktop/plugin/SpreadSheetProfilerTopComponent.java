@@ -16,7 +16,7 @@
  */
 package jdplus.spreadsheet.desktop.plugin;
 
-import demetra.desktop.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import ec.util.various.swing.BasicFileViewer;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;

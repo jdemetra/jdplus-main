@@ -16,11 +16,11 @@
  */
 package jdplus.text.desktop.plugin;
 
-import demetra.desktop.TsManager;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.tsproviders.DataSourceProviderBuddy;
-import demetra.desktop.tsproviders.DataSourceProviderBuddyUtil;
-import demetra.desktop.tsproviders.TsProviderProperties;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
+import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
 import jdplus.text.base.api.XmlBean;
 import jdplus.toolkit.base.tsp.FileLoader;
 import java.awt.Image;
@@ -48,7 +48,7 @@ public final class XmlProviderBuddy implements DataSourceProviderBuddy {
 
     @Override
     public Image getIconOrNull(int type, boolean opened) {
-        return ImageUtilities.loadImage("ec/nbdemetra/common/document-code.png", true);
+        return ImageUtilities.loadImage("jdplus/text/desktop/plugin/document-code.png", true);
     }
 
     @Override

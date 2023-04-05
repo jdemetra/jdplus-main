@@ -16,10 +16,10 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import demetra.desktop.beans.PropertyChangeSource;
+import jdplus.toolkit.desktop.plugin.beans.PropertyChangeSource;
 import jdplus.main.desktop.design.SwingProperty;
-import demetra.desktop.workspace.WorkspaceFactory;
-import demetra.desktop.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 

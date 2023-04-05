@@ -17,14 +17,14 @@
 package jdplus.sa.desktop.plugin.html;
 
 import jdplus.toolkit.base.api.arima.SarimaOrders;
-import demetra.html.AbstractHtmlElement;
-import demetra.html.Bootstrap4;
-import demetra.html.HtmlClass;
-import demetra.html.HtmlElement;
-import demetra.html.HtmlStream;
-import demetra.html.HtmlTable;
-import demetra.html.HtmlTableCell;
-import demetra.html.HtmlTag;
+import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
+import jdplus.toolkit.desktop.plugin.html.Bootstrap4;
+import jdplus.toolkit.desktop.plugin.html.HtmlClass;
+import jdplus.toolkit.desktop.plugin.html.HtmlElement;
+import jdplus.toolkit.desktop.plugin.html.HtmlStream;
+import jdplus.toolkit.desktop.plugin.html.HtmlTable;
+import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
+import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.io.IOException;
 import java.util.function.IntToDoubleFunction;

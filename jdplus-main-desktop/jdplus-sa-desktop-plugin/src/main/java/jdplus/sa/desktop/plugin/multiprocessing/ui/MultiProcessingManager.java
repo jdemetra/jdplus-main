@@ -4,10 +4,10 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import demetra.desktop.workspace.AbstractWorkspaceItemManager;
-import demetra.desktop.workspace.WorkspaceFactory;
-import demetra.desktop.workspace.WorkspaceItem;
-import demetra.desktop.workspace.WorkspaceItemManager;
+import jdplus.toolkit.desktop.plugin.workspace.AbstractWorkspaceItemManager;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
 import jdplus.sa.base.api.SaSpecification;
 import jdplus.toolkit.base.api.util.Id;
 import jdplus.toolkit.base.api.util.LinearId;
@@ -114,11 +114,11 @@ public class MultiProcessingManager extends AbstractWorkspaceItemManager<MultiPr
 
     @Override
     public Icon getItemIcon(WorkspaceItem<MultiProcessingDocument> doc) {
-        return ImageUtilities.loadImageIcon("ec/nbdemetra/sa/documents_16x16.png", false);
+        return ImageUtilities.loadImageIcon("jdplus/toolkit/desktop/plugin/icons/documents_16x16.png", false);
     }
 
     @Override
     public Icon getManagerIcon() {
-        return ImageUtilities.loadImageIcon("ec/nbdemetra/sa/folder-open-document_16x16.png", false);
+        return ImageUtilities.loadImageIcon("jdplus/toolkit/desktop/plugin/icons/folder-open-document_16x16.png", false);
     }
 }

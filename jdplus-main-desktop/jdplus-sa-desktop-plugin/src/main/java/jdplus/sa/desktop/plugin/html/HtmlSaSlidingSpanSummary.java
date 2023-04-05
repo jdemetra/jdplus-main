@@ -16,16 +16,16 @@
  */
 package jdplus.sa.desktop.plugin.html;
 
-import demetra.html.AbstractHtmlElement;
-import static demetra.html.Bootstrap4.FONT_ITALIC;
-import static demetra.html.Bootstrap4.TEXT_DANGER;
-import static demetra.html.Bootstrap4.TEXT_SUCCESS;
-import static demetra.html.Bootstrap4.TEXT_WARNING;
-import demetra.html.HtmlElement;
-import demetra.html.HtmlStream;
-import demetra.html.HtmlTable;
-import demetra.html.HtmlTableCell;
-import demetra.html.HtmlTag;
+import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
+import static jdplus.toolkit.desktop.plugin.html.Bootstrap4.FONT_ITALIC;
+import static jdplus.toolkit.desktop.plugin.html.Bootstrap4.TEXT_DANGER;
+import static jdplus.toolkit.desktop.plugin.html.Bootstrap4.TEXT_SUCCESS;
+import static jdplus.toolkit.desktop.plugin.html.Bootstrap4.TEXT_WARNING;
+import jdplus.toolkit.desktop.plugin.html.HtmlElement;
+import jdplus.toolkit.desktop.plugin.html.HtmlStream;
+import jdplus.toolkit.desktop.plugin.html.HtmlTable;
+import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
+import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;

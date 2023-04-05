@@ -16,16 +16,16 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
-import demetra.desktop.descriptors.IObjectDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IObjectDescriptor;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingController;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingDocument;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
-import demetra.desktop.ui.ActiveViewAction;
-import demetra.desktop.ui.properties.l2fprod.PropertiesDialog;
-import demetra.desktop.workspace.DocumentUIServices;
-import demetra.desktop.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.PropertiesDialog;
+import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.sa.base.api.SaSpecification;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;

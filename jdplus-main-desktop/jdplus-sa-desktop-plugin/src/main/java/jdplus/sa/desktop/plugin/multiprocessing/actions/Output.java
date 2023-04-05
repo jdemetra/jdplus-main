@@ -16,15 +16,15 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
-import demetra.desktop.util.SingleFileExporter;
-import demetra.desktop.notification.MessageType;
-import demetra.desktop.notification.NotifyUtil;
+import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
+import jdplus.toolkit.desktop.plugin.notification.MessageType;
+import jdplus.toolkit.desktop.plugin.notification.NotifyUtil;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingDocument;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.sa.desktop.plugin.output.OutputPanel;
-import demetra.desktop.ui.ActiveViewAction;
-import demetra.desktop.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.sa.base.api.SaItem;
 import jdplus.sa.base.api.SaOutputFactory;
 import jdplus.sa.base.csv.CsvMatrixOutputFactory;

@@ -16,15 +16,15 @@
  */
 package jdplus.text.desktop.plugin;
 
-import demetra.desktop.Config;
-import demetra.desktop.ConfigBean;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.util.SingleFileExporter;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.ConfigBean;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
-import demetra.desktop.DemetraIcons;
-import demetra.desktop.NamedServiceSupport;
-import demetra.desktop.Persistable;
-import demetra.desktop.datatransfer.ts.TxtDataTransfer;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.NamedServiceSupport;
+import jdplus.toolkit.desktop.plugin.Persistable;
+import jdplus.toolkit.desktop.plugin.datatransfer.ts.TxtDataTransfer;
 import ec.util.various.swing.OnAnyThread;
 import ec.util.various.swing.OnEDT;
 import internal.text.base.api.TxtFileFilter;
@@ -40,11 +40,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
-import demetra.desktop.TsActionSaveSpi;
-import demetra.desktop.TsActionSaveSpiSupport;
-import static demetra.desktop.TsActionSaveSpiSupport.newEditor;
-import demetra.desktop.util.Persistence;
-import static demetra.desktop.util.SingleFileExporter.newFileChooser;
+import jdplus.toolkit.desktop.plugin.TsActionSaveSpi;
+import jdplus.toolkit.desktop.plugin.TsActionSaveSpiSupport;
+import static jdplus.toolkit.desktop.plugin.TsActionSaveSpiSupport.newEditor;
+import jdplus.toolkit.desktop.plugin.util.Persistence;
+import static jdplus.toolkit.desktop.plugin.util.SingleFileExporter.newFileChooser;
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import nbbrd.design.MightBeGenerated;
 

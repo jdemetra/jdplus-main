@@ -17,15 +17,15 @@
 package jdplus.sa.desktop.plugin.processing;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import demetra.desktop.components.parts.*;
-import demetra.desktop.DemetraUI;
-import demetra.desktop.jfreechart.BasicXYDataset;
-import demetra.desktop.jfreechart.TsCharts;
-import demetra.desktop.components.parts.HasChart.LinesThickness;
-import demetra.desktop.components.TimeSeriesComponent;
-import demetra.desktop.components.tools.JChartPanel;
+import jdplus.toolkit.desktop.plugin.DemetraUI;
+import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.jfreechart.BasicXYDataset;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
+import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
+import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
+import jdplus.toolkit.desktop.plugin.components.tools.JChartPanel;
 import jdplus.main.desktop.design.SwingComponent;
-import demetra.desktop.ui.TsFrequencyTickUnit;
+import jdplus.toolkit.desktop.plugin.ui.TsFrequencyTickUnit;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsData;

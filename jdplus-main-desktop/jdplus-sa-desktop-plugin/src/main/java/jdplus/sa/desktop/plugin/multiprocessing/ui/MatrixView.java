@@ -4,10 +4,10 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import demetra.desktop.components.GridCommands;
+import jdplus.toolkit.desktop.plugin.components.GridCommands;
 import jdplus.sa.desktop.plugin.util.ActionsHelper;
 import jdplus.sa.desktop.plugin.util.ActionsHelpers;
-import demetra.desktop.util.NbComponents;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.information.formatters.TableFormatter;
 import jdplus.toolkit.base.api.processing.AlgorithmDescriptor;

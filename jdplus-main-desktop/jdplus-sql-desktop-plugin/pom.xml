@@ -98,6 +98,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
+                        <publicPackage>jdplus.sql.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

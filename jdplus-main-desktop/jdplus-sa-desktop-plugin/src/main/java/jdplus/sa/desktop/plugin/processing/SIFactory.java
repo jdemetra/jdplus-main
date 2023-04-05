@@ -17,7 +17,7 @@
 package jdplus.sa.desktop.plugin.processing;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import demetra.desktop.ui.processing.ProcDocumentItemFactory;
+import jdplus.toolkit.desktop.plugin.ui.processing.ProcDocumentItemFactory;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.DecompositionMode;

@@ -18,11 +18,11 @@
  */
 package jdplus.sa.desktop.plugin.html;
 
-import demetra.html.AbstractHtmlElement;
-import demetra.html.HtmlStream;
-import demetra.html.HtmlTable;
-import demetra.html.HtmlTableCell;
-import demetra.html.HtmlTag;
+import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
+import jdplus.toolkit.desktop.plugin.html.HtmlStream;
+import jdplus.toolkit.desktop.plugin.html.HtmlTable;
+import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
+import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.sa.base.api.StationaryVarianceDecomposition;
 import java.io.IOException;
 

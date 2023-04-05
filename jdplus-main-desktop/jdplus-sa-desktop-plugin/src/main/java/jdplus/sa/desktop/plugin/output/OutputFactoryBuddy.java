@@ -16,8 +16,8 @@
  */
 package jdplus.sa.desktop.plugin.output;
 
-import demetra.desktop.NamedService;
-import demetra.desktop.Persistable;
+import jdplus.toolkit.desktop.plugin.NamedService;
+import jdplus.toolkit.desktop.plugin.Persistable;
 
 import java.awt.Image;
 

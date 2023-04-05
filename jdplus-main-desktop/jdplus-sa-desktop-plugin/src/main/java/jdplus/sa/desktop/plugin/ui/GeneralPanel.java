@@ -4,10 +4,10 @@
  */
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.DemetraIcons;
-import demetra.desktop.actions.Resetable;
-import demetra.desktop.nodes.AbstractNodeBuilder;
-import demetra.desktop.nodes.NamedServiceNode;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.actions.Resetable;
+import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
+import jdplus.toolkit.desktop.plugin.nodes.NamedServiceNode;
 import jdplus.sa.desktop.plugin.output.OutputFactoryBuddy;
 import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaSpecification;

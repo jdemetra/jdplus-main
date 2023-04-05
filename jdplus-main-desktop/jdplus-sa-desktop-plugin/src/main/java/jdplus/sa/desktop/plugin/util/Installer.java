@@ -16,19 +16,19 @@
  */
 package jdplus.sa.desktop.plugin.util;
 
-import demetra.desktop.Config;
+import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.sa.desktop.plugin.output.OutputFactoryBuddies;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariablesEditor;
 import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
 import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptorsEditor;
 import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
-import demetra.desktop.ui.properties.l2fprod.ArrayRenderer;
-import demetra.desktop.ui.properties.l2fprod.CustomPropertyEditorRegistry;
-import demetra.desktop.ui.properties.l2fprod.CustomPropertyRendererFactory;
-import demetra.desktop.util.InstallerStep;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.ArrayRenderer;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.CustomPropertyEditorRegistry;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.CustomPropertyRendererFactory;
+import jdplus.toolkit.desktop.plugin.util.InstallerStep;
 
-import static demetra.desktop.util.InstallerStep.tryGet;
+import static jdplus.toolkit.desktop.plugin.util.InstallerStep.tryGet;
 import java.util.prefs.BackingStoreException;
 
 import org.openide.modules.ModuleInstall;

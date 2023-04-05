@@ -4,7 +4,7 @@
  */
 package jdplus.sa.desktop.plugin.output;
 
-import demetra.desktop.properties.ListSelectionEditor;
+import jdplus.toolkit.desktop.plugin.properties.ListSelectionEditor;
 import jdplus.sa.base.api.SaManager;
 
 /**

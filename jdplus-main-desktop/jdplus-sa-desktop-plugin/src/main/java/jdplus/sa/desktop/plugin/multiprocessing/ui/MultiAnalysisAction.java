@@ -5,8 +5,8 @@
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
 import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
-import demetra.desktop.workspace.WorkspaceFactory;
-import demetra.desktop.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -16,13 +16,13 @@
  */
 package jdplus.sql.desktop.plugin.jdbc;
 
-import demetra.desktop.TsManager;
-import demetra.desktop.actions.Configurable;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.tsproviders.DataSourceProviderBuddy;
-import demetra.desktop.tsproviders.DataSourceProviderBuddyUtil;
-import demetra.desktop.tsproviders.TsProviderProperties;
-import demetra.desktop.util.SimpleHtmlCellRenderer;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
+import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
+import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import ec.util.various.swing.FontAwesome;

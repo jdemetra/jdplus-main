@@ -5,9 +5,9 @@
 
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.components.tools.FilterView;
-import demetra.desktop.components.tools.PiView;
-import demetra.desktop.components.tools.ScatterView;
+import jdplus.toolkit.desktop.plugin.components.tools.FilterView;
+import jdplus.toolkit.desktop.plugin.components.tools.PiView;
+import jdplus.toolkit.desktop.plugin.components.tools.ScatterView;
 import jdplus.sa.base.api.ComponentDescriptor;
 import java.awt.BorderLayout;
 import javax.swing.JComponent;

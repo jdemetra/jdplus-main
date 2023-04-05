@@ -16,7 +16,7 @@
  */
 package jdplus.sa.desktop.plugin.processing;
 
-import demetra.desktop.ui.processing.ItemUI;
+import jdplus.toolkit.desktop.plugin.ui.processing.ItemUI;
 import javax.swing.JComponent;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 

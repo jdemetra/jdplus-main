@@ -16,13 +16,13 @@
  */
 package jdplus.sql.desktop.plugin.odbc;
 
-import demetra.desktop.TsManager;
-import demetra.desktop.actions.Configurable;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.tsproviders.DataSourceProviderBuddy;
-import demetra.desktop.tsproviders.DataSourceProviderBuddyUtil;
-import demetra.desktop.tsproviders.TsProviderProperties;
-import demetra.desktop.util.SimpleHtmlCellRenderer;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
+import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
+import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import jdplus.sql.base.api.HasSqlProperties;
@@ -90,7 +90,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
 
     @Override
     public Image getIconOrNull(int type, boolean opened) {
-        return ImageUtilities.loadImage("ec/nbdemetra/odbc/database.png", true);
+        return ImageUtilities.loadImage("jdplus/sql/desktop/plugin/database.png", true);
     }
 
     @Override

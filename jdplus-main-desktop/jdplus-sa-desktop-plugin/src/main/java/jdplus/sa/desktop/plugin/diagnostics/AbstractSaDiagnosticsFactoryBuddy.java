@@ -16,11 +16,11 @@
  */
 package jdplus.sa.desktop.plugin.diagnostics;
 
-import demetra.desktop.Config;
-import demetra.desktop.Converter;
-import demetra.desktop.DemetraIcons;
-import demetra.desktop.actions.Configurable;
-import demetra.desktop.properties.PropertySheetDialogBuilder;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.Converter;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
 import java.awt.Image;
 import org.checkerframework.checker.nullness.qual.NonNull;

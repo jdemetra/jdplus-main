@@ -4,8 +4,8 @@
  */
 package jdplus.sa.desktop.plugin.descriptors;
 
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
 import jdplus.sa.base.api.benchmarking.SaBenchmarkingSpec;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;

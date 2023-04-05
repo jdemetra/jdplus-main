@@ -16,15 +16,15 @@
  */
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.Config;
+import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.main.desktop.design.SwingProperty;
-import demetra.desktop.Persistable;
-import demetra.desktop.actions.Configurable;
-import demetra.desktop.beans.PropertyChangeSource;
-import demetra.desktop.util.LazyGlobalService;
-import demetra.desktop.workspace.WorkspaceFactory;
-import demetra.desktop.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.Persistable;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.beans.PropertyChangeSource;
+import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaSpecification;
 import java.beans.PropertyChangeSupport;

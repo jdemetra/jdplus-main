@@ -16,17 +16,17 @@
  */
 package internal.ui.components;
 
-import demetra.desktop.ColorSchemeManager;
-import demetra.desktop.Config;
-import demetra.desktop.Converter;
-import demetra.desktop.DemetraUI;
-import demetra.desktop.beans.BeanConfigurator;
-import demetra.desktop.beans.BeanHandler;
-import demetra.desktop.components.JTsChart;
-import demetra.desktop.components.parts.HasChart;
-import demetra.desktop.beans.BeanEditor;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.properties.PropertySheetDialogBuilder;
+import jdplus.toolkit.desktop.plugin.ColorSchemeManager;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.Converter;
+import jdplus.toolkit.desktop.plugin.DemetraUI;
+import jdplus.toolkit.desktop.plugin.beans.BeanConfigurator;
+import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
+import jdplus.toolkit.desktop.plugin.components.JTsChart;
+import jdplus.toolkit.desktop.plugin.components.parts.HasChart;
+import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import ec.util.chart.ColorScheme;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Formatter;

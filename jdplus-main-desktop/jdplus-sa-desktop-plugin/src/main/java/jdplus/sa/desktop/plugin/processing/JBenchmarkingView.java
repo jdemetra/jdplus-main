@@ -16,13 +16,13 @@
  */
 package jdplus.sa.desktop.plugin.processing;
 
-import demetra.desktop.components.JTsChart;
-import demetra.desktop.components.JTsGrid;
-import demetra.desktop.components.parts.HasTsCollection.TsUpdateMode;
-import demetra.desktop.ui.Disposables;
-import demetra.desktop.ui.processing.TsViewToolkit;
-import demetra.desktop.util.NbComponents;
-import demetra.html.stats.HtmlTsDataDifferenceDocument;
+import jdplus.toolkit.desktop.plugin.components.JTsChart;
+import jdplus.toolkit.desktop.plugin.components.JTsGrid;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
+import jdplus.toolkit.desktop.plugin.ui.Disposables;
+import jdplus.toolkit.desktop.plugin.ui.processing.TsViewToolkit;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
+import jdplus.toolkit.desktop.plugin.html.stats.HtmlTsDataDifferenceDocument;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;

@@ -16,13 +16,13 @@
  */
 package jdplus.spreadsheet.desktop.plugin;
 
-import demetra.desktop.TsManager;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.tsproviders.DataSourceProviderBuddy;
-import demetra.desktop.tsproviders.DataSourceProviderBuddyUtil;
-import static demetra.desktop.tsproviders.TsProviderProperties.addFile;
-import static demetra.desktop.tsproviders.TsProviderProperties.addObsFormat;
-import static demetra.desktop.tsproviders.TsProviderProperties.addObsGathering;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
+import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties.addFile;
+import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties.addObsFormat;
+import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties.addObsGathering;
 import jdplus.spreadsheet.base.api.SpreadSheetBean;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
@@ -52,21 +52,21 @@ public final class SpreadsheetProviderBuddy implements DataSourceProviderBuddy {
 
     @Override
     public Image getIconOrNull(int type, boolean opened) {
-        return ImageUtilities.loadImage("ec/nbdemetra/spreadsheet/document-table.png", true);
+        return ImageUtilities.loadImage("jdplus/spreadsheet/desktop/plugin/document-table.png", true);
     }
 
     @Override
     public Image getIconOrNull(DataSource dataSource, int type, boolean opened) {
-        return ImageUtilities.loadImage("ec/nbdemetra/spreadsheet/tables.png", true);
+        return ImageUtilities.loadImage("jdplus/spreadsheet/desktop/plugin/tables.png", true);
     }
 
     @Override
     public Image getIconOrNull(DataSet dataSet, int type, boolean opened) {
         switch (dataSet.getKind()) {
             case COLLECTION:
-                return ImageUtilities.loadImage("ec/nbdemetra/spreadsheet/table-sheet.png", true);
+                return ImageUtilities.loadImage("jdplus/spreadsheet/desktop/plugin/table-sheet.png", true);
             case SERIES:
-                return ImageUtilities.loadImage("ec/nbdemetra/spreadsheet/table-select-row.png", true);
+                return ImageUtilities.loadImage("jdplus/spreadsheet/desktop/plugin/table-select-row.png", true);
         }
         return null;
     }

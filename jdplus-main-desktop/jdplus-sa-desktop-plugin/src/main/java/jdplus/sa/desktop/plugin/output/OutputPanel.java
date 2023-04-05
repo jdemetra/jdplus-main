@@ -4,7 +4,7 @@
  */
 package jdplus.sa.desktop.plugin.output;
 
-import demetra.desktop.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.sa.base.api.SaOutputFactory;
 
 import java.awt.event.ActionEvent;

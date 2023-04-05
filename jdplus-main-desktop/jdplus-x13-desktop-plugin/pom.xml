@@ -130,13 +130,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>demetra.regarima.*</publicPackage>
-                        <publicPackage>demetra.x11.*</publicPackage>
-                        <publicPackage>demetra.x13.*</publicPackage>
-                        <publicPackage>jdplus.x11.*</publicPackage>
                         <publicPackage>jdplus.x13.*</publicPackage>
-                        <publicPackage>demetra.desktop.x13.*</publicPackage>
-                        <publicPackage>demetra.desktop.regarima.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

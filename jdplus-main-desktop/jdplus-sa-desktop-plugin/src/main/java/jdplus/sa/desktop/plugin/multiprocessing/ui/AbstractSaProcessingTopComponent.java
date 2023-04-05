@@ -16,9 +16,9 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import demetra.desktop.ui.ActiveView;
-import demetra.desktop.ui.ActiveViewManager;
-import demetra.desktop.workspace.WorkspaceItem;
+import jdplus.toolkit.desktop.plugin.ui.ActiveView;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewManager;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.sa.base.api.SaItem;
 import jdplus.sa.base.api.SaItems;
 import javax.swing.JComponent;

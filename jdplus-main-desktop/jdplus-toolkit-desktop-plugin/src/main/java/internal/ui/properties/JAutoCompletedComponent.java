@@ -18,8 +18,8 @@ package internal.ui.properties;
 
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
-import demetra.desktop.util.ExtLayerUI;
-import demetra.desktop.util.FontAwesomeUtils;
+import jdplus.toolkit.desktop.plugin.util.ExtLayerUI;
+import jdplus.toolkit.desktop.plugin.util.FontAwesomeUtils;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import ec.util.list.swing.JListOrdering;
 import ec.util.list.swing.JLists;

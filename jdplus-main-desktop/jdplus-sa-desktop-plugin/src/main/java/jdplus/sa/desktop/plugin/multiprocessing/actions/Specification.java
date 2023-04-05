@@ -18,8 +18,8 @@ package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
-import demetra.desktop.ui.Menus;
-import demetra.desktop.ui.ActiveViewAction;
+import jdplus.toolkit.desktop.plugin.ui.Menus;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 

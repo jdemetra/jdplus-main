@@ -77,7 +77,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>ec.tss.tsproviders.common.*</publicPackage>
+                        <publicPackage>jdplus.text.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

@@ -5,10 +5,10 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import demetra.desktop.nodes.ControlNode;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.tsproviders.DataSourceManager;
-import demetra.desktop.util.NbUtilities;
+import jdplus.toolkit.desktop.plugin.nodes.ControlNode;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
+import jdplus.toolkit.desktop.plugin.util.NbUtilities;
 import jdplus.sa.base.api.SaItem;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import org.openide.nodes.AbstractNode;

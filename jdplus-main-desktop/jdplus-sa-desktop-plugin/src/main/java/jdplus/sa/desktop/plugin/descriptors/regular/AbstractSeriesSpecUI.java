@@ -4,10 +4,10 @@
  */
 package jdplus.sa.desktop.plugin.descriptors.regular;
 
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.DateSelectorUI;
-import demetra.desktop.descriptors.IPropertyDescriptors;
-import demetra.desktop.ui.properties.l2fprod.UserInterfaceContext;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.DateSelectorUI;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.base.api.modelling.regular.SeriesSpec;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import java.beans.IntrospectionException;

@@ -27,7 +27,7 @@ public enum DbIcon implements Icon {
     final String path;
 
     DbIcon(String path) {
-        this.path = "ec/nbdemetra/db/" + path;
+        this.path = "jdplus/sql/desktop/plugin/" + path;
     }
 
     public ImageIcon getImageIcon() {

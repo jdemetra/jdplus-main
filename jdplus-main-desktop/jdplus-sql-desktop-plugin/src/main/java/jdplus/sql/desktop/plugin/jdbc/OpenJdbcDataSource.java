@@ -16,9 +16,9 @@
  */
 package jdplus.sql.desktop.plugin.jdbc;
 
-import demetra.desktop.beans.BeanEditor;
-import demetra.desktop.nodes.SingleNodeAction;
-import demetra.desktop.tsproviders.DataSourceManager;
+import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
+import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.sql.base.api.jdbc.JdbcBean;
 import jdplus.sql.base.api.jdbc.JdbcProvider;
 import org.openide.awt.ActionID;

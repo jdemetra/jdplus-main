@@ -4,7 +4,7 @@
  */
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.components.parts.HasTs;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTs;
 
 import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;

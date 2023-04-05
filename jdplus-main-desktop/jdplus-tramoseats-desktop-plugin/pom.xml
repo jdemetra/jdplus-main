@@ -145,14 +145,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>demetra.tramoseats.*</publicPackage>
                         <publicPackage>jdplus.tramoseats.*</publicPackage>
-                        <publicPackage>demetra.tramo.*</publicPackage>
-                        <publicPackage>jdplus.tramo.*</publicPackage>
-                        <publicPackage>demetra.seats.*</publicPackage>
-                        <publicPackage>jdplus.seats.*</publicPackage>
-                        <publicPackage>demetra.desktop.tramo.*</publicPackage>
-                        <publicPackage>demetra.desktop.tramoseats.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

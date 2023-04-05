@@ -16,10 +16,10 @@
  */
 package jdplus.sql.desktop.plugin.jdbc;
 
-import demetra.desktop.Config;
-import demetra.desktop.interchange.Importable;
-import demetra.desktop.interchange.InterchangeManager;
-import demetra.desktop.nodes.SingleNodeAction;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.interchange.Importable;
+import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
+import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

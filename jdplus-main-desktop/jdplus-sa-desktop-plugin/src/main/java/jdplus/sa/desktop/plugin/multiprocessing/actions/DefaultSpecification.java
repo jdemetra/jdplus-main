@@ -6,7 +6,7 @@ package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
-import demetra.desktop.ui.ActiveViewAction;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

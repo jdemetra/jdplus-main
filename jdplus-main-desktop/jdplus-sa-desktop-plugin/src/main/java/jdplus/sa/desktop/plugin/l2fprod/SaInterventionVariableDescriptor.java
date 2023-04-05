@@ -5,9 +5,9 @@
 package jdplus.sa.desktop.plugin.l2fprod;
 
 import jdplus.toolkit.base.api.data.Range;
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.ui.properties.l2fprod.UserInterfaceContext;
-import demetra.desktop.ui.properties.l2fprod.Sequence;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.Sequence;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;

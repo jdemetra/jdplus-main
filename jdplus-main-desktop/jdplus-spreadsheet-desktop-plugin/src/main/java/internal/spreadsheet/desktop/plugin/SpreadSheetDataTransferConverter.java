@@ -1,7 +1,7 @@
 package internal.spreadsheet.desktop.plugin;
 
-import demetra.desktop.Config;
-import demetra.desktop.Converter;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.Converter;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 import jdplus.toolkit.base.tsp.grid.GridReader;

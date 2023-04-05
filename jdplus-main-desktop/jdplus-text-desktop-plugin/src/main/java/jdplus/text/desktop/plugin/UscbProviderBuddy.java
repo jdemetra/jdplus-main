@@ -4,7 +4,7 @@
  */
 package jdplus.text.desktop.plugin;
 
-import demetra.desktop.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 

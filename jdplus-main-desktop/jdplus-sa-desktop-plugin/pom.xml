@@ -145,11 +145,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>demetra.sa.*</publicPackage>
                         <publicPackage>jdplus.sa.*</publicPackage>
-                        <publicPackage>demetra.desktop.sa.*</publicPackage>
-                        <!-- FIXME: demetra-desktop-sa-ui -->
-                        <publicPackage>demetra.desktop.processing.ui.sa.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

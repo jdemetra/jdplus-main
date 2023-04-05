@@ -16,9 +16,9 @@
  */
 package jdplus.sql.desktop.plugin.jdbc;
 
-import demetra.desktop.Config;
-import demetra.desktop.interchange.Exportable;
-import demetra.desktop.interchange.InterchangeManager;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.interchange.Exportable;
+import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

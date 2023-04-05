@@ -17,7 +17,7 @@
 package jdplus.spreadsheet.desktop.plugin;
 
 import com.google.common.base.Stopwatch;
-import demetra.desktop.util.NbComponents;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import ec.util.desktop.Desktop;
 import ec.util.desktop.DesktopManager;
 import ec.util.grid.swing.ext.SpreadSheetView;
@@ -28,8 +28,8 @@ import static ec.util.various.swing.FontAwesome.FA_EXTERNAL_LINK;
 import static ec.util.various.swing.FontAwesome.FA_INFO;
 import static ec.util.various.swing.FontAwesome.FA_SEARCH;
 import ec.util.various.swing.JCommand;
-import demetra.desktop.util.FontAwesomeUtils;
-import demetra.desktop.components.parts.HasColorSchemeSupport;
+import jdplus.toolkit.desktop.plugin.util.FontAwesomeUtils;
+import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeSupport;
 import ec.util.spreadsheet.BookFactoryLoader;
 import java.awt.BorderLayout;
 import java.awt.Component;

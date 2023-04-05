@@ -16,10 +16,10 @@
  */
 package jdplus.sa.desktop.plugin.diagnostics;
 
-import demetra.desktop.NamedService;
-import demetra.desktop.DemetraIcons;
-import demetra.desktop.Persistable;
-import demetra.desktop.actions.Resetable;
+import jdplus.toolkit.desktop.plugin.NamedService;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.Persistable;
+import jdplus.toolkit.desktop.plugin.actions.Resetable;
 import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
 import java.awt.Image;
 import org.openide.nodes.Sheet;

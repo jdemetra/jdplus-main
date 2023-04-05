@@ -17,8 +17,8 @@
 package jdplus.sa.desktop.plugin.descriptors.highfreq;
 
 import jdplus.toolkit.base.api.data.Parameter;
-import demetra.desktop.descriptors.EnhancedPropertyDescriptor;
-import demetra.desktop.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.modelling.highfreq.EasterSpec;
 import java.beans.IntrospectionException;

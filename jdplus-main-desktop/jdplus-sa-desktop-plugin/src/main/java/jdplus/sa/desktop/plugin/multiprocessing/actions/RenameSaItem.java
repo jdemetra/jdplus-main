@@ -19,7 +19,7 @@ package jdplus.sa.desktop.plugin.multiprocessing.actions;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
-import demetra.desktop.ui.ActiveViewAction;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.InputVerifier;

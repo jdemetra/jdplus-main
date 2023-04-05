@@ -1,8 +1,8 @@
 package internal.spreadsheet.desktop.plugin;
 
-import demetra.desktop.beans.BeanEditor;
-import demetra.desktop.properties.NodePropertySetBuilder;
-import demetra.desktop.properties.PropertySheetDialogBuilder;
+import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 

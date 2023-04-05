@@ -17,7 +17,7 @@
 package jdplus.sa.desktop.plugin.ui;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import demetra.desktop.components.tools.ARPView;
+import jdplus.toolkit.desktop.plugin.components.tools.ARPView;
 
 import java.awt.BasicStroke;
 import java.awt.Stroke;

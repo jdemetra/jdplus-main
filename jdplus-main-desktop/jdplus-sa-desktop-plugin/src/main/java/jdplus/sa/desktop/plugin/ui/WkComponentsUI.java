@@ -5,7 +5,7 @@
 
 package jdplus.sa.desktop.plugin.ui;
 
-import demetra.desktop.ui.processing.ItemUI;
+import jdplus.toolkit.desktop.plugin.ui.processing.ItemUI;
 import javax.swing.JComponent;
 
 

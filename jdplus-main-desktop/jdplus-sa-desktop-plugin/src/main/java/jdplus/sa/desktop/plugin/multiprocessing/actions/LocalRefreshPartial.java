@@ -5,7 +5,7 @@
 package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
-import demetra.desktop.ui.Menus;
+import jdplus.toolkit.desktop.plugin.ui.Menus;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;

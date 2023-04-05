@@ -16,11 +16,11 @@
  */
 package jdplus.sa.desktop.plugin.diagnostics;
 
-import demetra.desktop.Config;
-import demetra.desktop.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
-import demetra.desktop.Converter;
+import jdplus.toolkit.desktop.plugin.Converter;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import nbbrd.io.text.DoubleProperty;

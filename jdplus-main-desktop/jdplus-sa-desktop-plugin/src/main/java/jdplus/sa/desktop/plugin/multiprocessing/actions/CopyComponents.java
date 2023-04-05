@@ -20,7 +20,7 @@ import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
 import jdplus.sa.desktop.plugin.util.ActionsHelpers;
-import demetra.desktop.ui.ActiveViewAction;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.sa.base.api.SaProcessingFactory;
 import ec.util.list.swing.JListSelection;
 import java.awt.Dimension;
