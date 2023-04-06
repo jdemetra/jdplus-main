@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: jdplus/main/desktop/branding/Bundle.properties
-OpenIDE-Module-Display-Category: Platform
+OpenIDE-Module-Display-Category: JD+ Main
 OpenIDE-Module-Java-Dependencies: Java > 17

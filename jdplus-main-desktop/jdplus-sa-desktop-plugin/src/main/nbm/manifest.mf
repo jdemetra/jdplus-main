@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: jdplus/sa/desktop/plugin/Bundle.properties
+OpenIDE-Module-Display-Category: JD+ Main
 OpenIDE-Module-Install: jdplus/sa/desktop/plugin/util/Installer.class
 OpenIDE-Module-Java-Dependencies: Java > 17
 

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: jdplus/spreadsheet/desktop/plugin/Bundle.properties
-OpenIDE-Module-Display-Category: IO
+OpenIDE-Module-Display-Category: JD+ Main
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Java-Dependencies: Java > 17
