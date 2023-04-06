@@ -21,7 +21,6 @@ import jdplus.toolkit.base.api.dstats.ContinuousDistribution;
 import jdplus.toolkit.base.api.dstats.DStatException;
 import jdplus.toolkit.base.api.stats.ProbabilityType;
 import java.util.Formatter;
-import internal.toolkit.base.core.dstats.SpecialFunctions;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 
 /**

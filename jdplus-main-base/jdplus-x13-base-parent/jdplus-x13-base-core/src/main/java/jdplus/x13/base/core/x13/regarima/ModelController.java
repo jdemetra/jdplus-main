@@ -19,7 +19,7 @@ package jdplus.x13.base.core.x13.regarima;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
-import internal.toolkit.base.core.arima.ModifiedLjungBoxFilter;
+import jdplus.toolkit.base.core.arima.estimation.ArmaFilter;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.stats.linearmodel.LinearModel;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
@@ -63,7 +63,7 @@ public class ModelController implements IAmiController {
         DataBlock res = lm.calcResiduals(coeff);
         // filter the residuals with the filter used in X12
         SarimaModel arma = dmodel.getArma();
-        ModifiedLjungBoxFilter filter = new ModifiedLjungBoxFilter();
+        ArmaFilter filter = ArmaFilter.ljungBox(true);
         int nres = filter.prepare(arma, res.length());
         DataBlock fres = DataBlock.make(nres);
         filter.apply(res, fres);

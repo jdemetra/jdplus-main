@@ -13,6 +13,7 @@ module jdplus.toolkit.base.workspace {
     requires java.logging;
 
     exports jdplus.toolkit.base.workspace;
+    exports jdplus.toolkit.base.workspace.file;
     exports jdplus.toolkit.base.workspace.file.spi;
     exports jdplus.toolkit.base.workspace.file.util;
 

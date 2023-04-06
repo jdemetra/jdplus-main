@@ -21,6 +21,8 @@ package jdplus.toolkit.base.core.arima.estimation;
 import jdplus.toolkit.base.core.arima.IArimaModel;
 import internal.toolkit.base.core.arima.AnsleyFilter;
 import internal.toolkit.base.core.arima.KalmanFilter;
+import internal.toolkit.base.core.arima.LjungBoxFilter;
+import internal.toolkit.base.core.arima.ModifiedLjungBoxFilter;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.design.Algorithm;
 import nbbrd.design.Development;
@@ -76,4 +78,7 @@ public interface ArmaFilter {
         return new KalmanFilter();
     }
 
+    public static ArmaFilter ljungBox(boolean modified){
+        return modified ? new ModifiedLjungBoxFilter() :new LjungBoxFilter();
+    }
 }

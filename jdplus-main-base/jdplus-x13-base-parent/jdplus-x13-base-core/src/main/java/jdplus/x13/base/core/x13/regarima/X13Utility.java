@@ -16,7 +16,7 @@
  */
 package jdplus.x13.base.core.x13.regarima;
 
-import internal.toolkit.base.core.arima.ModifiedLjungBoxFilter;
+import jdplus.toolkit.base.core.arima.estimation.ArmaFilter;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.arima.estimation.ResidualsComputer;
 import jdplus.toolkit.base.core.data.DataBlock;
@@ -49,7 +49,7 @@ public class X13Utility {
 
     public static ResidualsComputer mlComputer() {
         return (arma, y) -> {
-            ModifiedLjungBoxFilter f = new ModifiedLjungBoxFilter();
+            ArmaFilter f = ArmaFilter.ljungBox(true);
             int n = y.length();
             int nf = f.prepare(arma, n);
             DataBlock fres = DataBlock.make(nf);

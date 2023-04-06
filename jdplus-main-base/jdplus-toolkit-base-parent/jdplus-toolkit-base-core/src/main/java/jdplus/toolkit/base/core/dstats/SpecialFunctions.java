@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package internal.toolkit.base.core.dstats;
+package jdplus.toolkit.base.core.dstats;
 
 import nbbrd.design.Development;
 import static jdplus.toolkit.base.api.math.Constants.SQTPI;
