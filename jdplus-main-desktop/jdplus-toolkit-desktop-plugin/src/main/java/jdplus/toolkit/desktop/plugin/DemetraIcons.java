@@ -53,7 +53,7 @@ public enum DemetraIcons implements Icon, IconFactory {
     final String path;
 
     DemetraIcons(String path) {
-        this.path = "demetra/desktop/icons/" + path;
+        this.path = "jdplus/toolkit/desktop/plugin/icons/" + path;
     }
     
     public ImageIcon getImageIcon() {
