@@ -24,6 +24,5 @@
         <module>jdplus-spreadsheet-base-parent</module>
         <module>jdplus-sql-base-parent</module>
         <module>jdplus-text-base-parent</module>
-        <module>jdplus-fixme-base-workspacer</module>
     </modules>
 </project>

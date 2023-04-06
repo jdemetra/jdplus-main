@@ -18,7 +18,7 @@ import jdplus.toolkit.base.core.dstats.Gamma;
 import jdplus.toolkit.base.core.dstats.InverseGamma;
 import jdplus.toolkit.base.core.dstats.InverseGaussian;
 import jdplus.toolkit.base.core.dstats.Normal;
-import internal.toolkit.base.core.dstats.SpecialFunctions;
+import jdplus.toolkit.base.core.dstats.SpecialFunctions;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;

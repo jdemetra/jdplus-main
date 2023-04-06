@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.dstats.BoundaryType;
 import jdplus.toolkit.base.api.dstats.ContinuousDistribution;
 import jdplus.toolkit.base.api.dstats.DStatException;
 import internal.toolkit.base.core.dstats.Utility;
-import internal.toolkit.base.core.dstats.SpecialFunctions;
 import jdplus.toolkit.base.api.stats.ProbabilityType;
 import jdplus.toolkit.base.api.data.Interval;
 import nbbrd.design.Development;

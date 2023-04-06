@@ -18,7 +18,7 @@ package jdplus.sa.base.core.tests;
 
 import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 import jdplus.toolkit.base.core.data.analysis.SmoothedPeriodogram;
-import internal.toolkit.base.core.dstats.SpecialFunctions;
+import jdplus.toolkit.base.core.dstats.SpecialFunctions;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
 

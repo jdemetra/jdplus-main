@@ -14,11 +14,10 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package jdplus.fixme.base.workspacer;
+package jdplus.sa.base.workspace;
 
 import jdplus.toolkit.base.api.DemetraVersion;
 import jdplus.sa.base.api.SaItems;
-import jdplus.sa.base.workspace.SaHandlers;
 import jdplus.toolkit.base.api.timeseries.StaticTsDataSupplier;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
@@ -26,7 +25,6 @@ import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import jdplus.toolkit.base.api.util.Paths;
-import jdplus.toolkit.base.r.util.Dictionary;
 import jdplus.toolkit.base.workspace.WorkspaceFamily;
 import jdplus.toolkit.base.workspace.WorkspaceItemDescriptor;
 import jdplus.toolkit.base.workspace.WorkspaceUtility;
@@ -59,11 +57,6 @@ public class Ws {
     public Ws(final String source, final ModellingContext context) {
         this.source = source;
         this.context = context;
-    }
-    
-    @Deprecated
-    public static Ws create(Dictionary dic) {
-        return new Ws(null, dic == null ? new ModellingContext() : dic.toContext());
     }
     
     public static Ws create(ModellingContext context) {
@@ -181,16 +174,6 @@ public class Ws {
     
     public void setContext(ModellingContext context) {
         this.context=context;
-    }
-    
-    @Deprecated
-    public Dictionary dictionary() {
-        return Dictionary.fromContext(context);
-    }
-    
-    @Deprecated
-    public void setDictionary(Dictionary dictionary){
-        context= dictionary.toContext();
     }
     
     public void addVariable(String family, String name, TsData data){

@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package jdplus.fixme.base.workspacer;
+package jdplus.sa.base.workspace;
 
 import jdplus.sa.base.api.SaItem;
 import jdplus.sa.base.api.SaItems;

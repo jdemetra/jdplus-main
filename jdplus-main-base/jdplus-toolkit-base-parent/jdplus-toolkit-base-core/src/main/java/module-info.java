@@ -108,9 +108,6 @@ module jdplus.toolkit.base.core {
     exports jdplus.toolkit.base.core.ucarima.estimation;
 
     // FIXME:
-    exports internal.toolkit.base.core.dstats to jdplus.sa.base.core;
-    exports internal.toolkit.base.core.arima to jdplus.x13.base.core;
-    exports internal.toolkit.base.core.math.functions.gsl.integration to jdplus.experimentalsa.base.core;
     exports internal.toolkit.base.core.math.functions.riso;
 
     uses ArimaForecasts;
