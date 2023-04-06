@@ -11,8 +11,6 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import tck.demetra.data.MatrixSerializer;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.DoubleStream;
 import jdplus.toolkit.base.core.bayes.BayesRegularizedRegressionModel.ModelType;
 import jdplus.toolkit.base.core.bayes.BayesRegularizedRegressionModel.Prior;
@@ -62,7 +60,6 @@ public class BayesRegularizedRegressionTest {
             }
             
         } catch (IOException ex) {
-            Logger.getLogger(BayesRegularizedRegressionTest.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
