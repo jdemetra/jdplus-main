@@ -16,7 +16,68 @@
     <description>${project.parent.artifactId} - ${project.artifactId}</description>
     <url>${project.parent.url}</url>
 
+    <properties>
+        <picocli.version>4.6.2</picocli.version>
+    </properties>
+
     <modules>
         <module>jdplus-main-cli-bin</module>
+        <module>jdplus-toolkit-cli-plugin</module>
+        <module>jdplus-sa-cli-plugin</module>
+        <module>jdplus-spreadsheet-cli-plugin</module>
+        <module>jdplus-sql-cli-plugin</module>
+        <module>jdplus-text-cli-plugin</module>
+        <module>jdplus-tramoseats-cli-plugin</module>
+        <module>jdplus-x13-cli-plugin</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli</artifactId>
+                <version>${picocli.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Generates uber-jar file -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.4.1</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>**/module-info.class</exclude>
+                                    <exclude>META-INF/MANIFEST.MF</exclude>
+                                    <exclude>META-INF/LICENSE.txt</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                        <transformers>
+                            <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                        </transformers>
+                        <shadedArtifactAttached>true</shadedArtifactAttached>
+                        <shadedClassifierName>uber</shadedClassifierName>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
