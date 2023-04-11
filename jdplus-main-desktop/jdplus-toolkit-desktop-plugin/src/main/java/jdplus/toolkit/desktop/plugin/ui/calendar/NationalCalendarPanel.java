@@ -23,10 +23,12 @@ import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -113,7 +115,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
 
         initComponents();
 
-        jButton1.addActionListener(event -> {
+        addButton.addActionListener(event -> {
             if (lastUsedAction != null) {
                 lastUsedAction.actionPerformed(event);
             }
@@ -165,7 +167,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         nameTextField = new javax.swing.JTextField();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = DropDownButtonFactory.createDropDownButton(DemetraIcons.LIST_ADD_16, addPopupMenu);
+        addButton = DropDownButtonFactory.createDropDownButton(DemetraIcons.LIST_ADD_16, addPopupMenu);
         removeButton = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         listView1 = new org.openide.explorer.view.ListView();
@@ -179,14 +181,14 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         jLabel2.setText("Holidays:");
         jToolBar1.add(jLabel2);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/icons/list-add_16x16.png"))); // NOI18N
-        jButton1.setToolTipText("");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
+        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/list-add_16x16.png"))); // NOI18N
+        addButton.setToolTipText("");
+        addButton.setFocusable(false);
+        addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(addButton);
 
-        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/icons/list-remove_16x16.png"))); // NOI18N
+        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/list-remove_16x16.png"))); // NOI18N
         removeButton.setFocusable(false);
         removeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         removeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -246,7 +248,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         childFactory.refreshData();
     }//GEN-LAST:event_removeButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton addButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JSplitPane jSplitPane1;
@@ -317,6 +319,14 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
         List<Holiday> old = this.holidays;
         this.holidays = events != null ? events : Collections.emptyList();
         firePropertyChange(SPECIAL_DAY_EVENTS_PROPERTY, old, this.holidays);
+        if (! events.isEmpty()){
+            try {
+                Children children = em.getExploredContext().getChildren();
+                em.setSelectedNodes(new Node[]{children.getNodes()[events.size()-1]});
+            } catch (PropertyVetoException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
 
     public boolean isMeanCorrection() {

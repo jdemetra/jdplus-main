@@ -11,6 +11,7 @@ import jdplus.toolkit.base.tsp.FileLoader;
 import ec.util.desktop.DesktopManager;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -78,7 +79,7 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
         jToolBar1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jToolBar1.setRollover(true);
 
-        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/icons/list-add_16x16.png"))); // NOI18N
+        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/list-add_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(addButton, org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.addButton.text")); // NOI18N
         addButton.setActionCommand(org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.addButton.text")); // NOI18N
         addButton.setFocusable(false);
@@ -92,7 +93,7 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
         });
         jToolBar1.add(addButton);
 
-        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/icons/list-remove_16x16.png"))); // NOI18N
+        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/list-remove_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(removeButton, org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.removeButton.text")); // NOI18N
         removeButton.setActionCommand(org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.removeButton.text")); // NOI18N
         removeButton.setEnabled(false);
@@ -107,7 +108,7 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
         });
         jToolBar1.add(removeButton);
 
-        moveUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/icons/go-up_16x16.png"))); // NOI18N
+        moveUpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/go-up_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(moveUpButton, org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.moveUpButton.text")); // NOI18N
         moveUpButton.setActionCommand(org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.moveUpButton.text")); // NOI18N
         moveUpButton.setEnabled(false);
@@ -122,7 +123,7 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
         });
         jToolBar1.add(moveUpButton);
 
-        moveDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/icons/go-down_16x16.png"))); // NOI18N
+        moveDownButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/go-down_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(moveDownButton, org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.moveDownButton.text")); // NOI18N
         moveDownButton.setActionCommand(org.openide.util.NbBundle.getMessage(PathsPanel.class, "PathsPanel.moveDownButton.text")); // NOI18N
         moveDownButton.setEnabled(false);
@@ -158,26 +159,35 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         File folder = folderChooserBuilder.showOpenDialog();
-        if (folder != null) {
+        if (folder != null && em.getSelectedNodes().length > 0) {
             em.getSelectedNodes()[0].getChildren().add(new Node[]{new PathNode(folder)});
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         Node[] nodes = em.getSelectedNodes();
+        if (nodes.length == 0) {
+            return;
+        }
         nodes[0].getParentNode().getChildren().remove(nodes);
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void moveUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveUpButtonActionPerformed
-        Node node = em.getSelectedNodes()[0];
-        Index.ArrayChildren children = (Index.ArrayChildren) node.getParentNode().getChildren();
-        children.moveUp(children.indexOf(node));
+        Node[] nodes = em.getSelectedNodes();
+        if (nodes.length == 0) {
+            return;
+        }
+        Index.ArrayChildren children = (Index.ArrayChildren) nodes[0].getParentNode().getChildren();
+        children.moveUp(children.indexOf(nodes[0]));
     }//GEN-LAST:event_moveUpButtonActionPerformed
 
     private void moveDownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveDownButtonActionPerformed
-        Node node = em.getSelectedNodes()[0];
-        Index.ArrayChildren children = (Index.ArrayChildren) node.getParentNode().getChildren();
-        children.moveDown(children.indexOf(node));
+        Node[] nodes = em.getSelectedNodes();
+        if (nodes.length == 0) {
+            return;
+        }
+        Index.ArrayChildren children = (Index.ArrayChildren) nodes[0].getParentNode().getChildren();
+        children.moveDown(children.indexOf(nodes[0]));
     }//GEN-LAST:event_moveDownButtonActionPerformed
     @Override
     public ExplorerManager getExplorerManager() {
@@ -263,10 +273,10 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
 
     void load() {
         List<FileLoader> loaders = TsFactory.getDefault().getProviders()
-//                .filter(p->p instanceof DataSourceLoader)
-//                .map(p->(DataSourceLoader) p)
-                .filter(p->p instanceof FileLoader)
-                .map(p->(FileLoader) p)
+                //                .filter(p->p instanceof DataSourceLoader)
+                //                .map(p->(DataSourceLoader) p)
+                .filter(p -> p instanceof FileLoader)
+                .map(p -> (FileLoader) p)
                 .toList();
         Node[] fileLoaderNodes = new Node[loaders.size()];
         for (int i = 0; i < fileLoaderNodes.length; i++) {
@@ -278,9 +288,15 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
             }
             fileLoaderNodes[i] = new FileLoaderNode(newArray(pathNodes), loader);
         }
-
         em.setRootContext(new AbstractNodeBuilder().add(fileLoaderNodes).name("File Loader").build());
         pathView.expandAll();
+        if (fileLoaderNodes.length > 0) {
+            try {
+                em.setSelectedNodes(new Node[]{fileLoaderNodes[0]});
+            } catch (PropertyVetoException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
 
     void store() {

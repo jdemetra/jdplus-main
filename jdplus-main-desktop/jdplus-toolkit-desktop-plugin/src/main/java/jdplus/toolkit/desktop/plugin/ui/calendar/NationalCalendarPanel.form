@@ -74,10 +74,10 @@
             <Property name="text" type="java.lang.String" value="Holidays:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="addButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/demetra/desktop/icons/list-add_16x16.png"/>
+              <Image iconType="3" name="/jdplus/toolkit/desktop/plugin/icons/list-add_16x16.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -91,7 +91,7 @@
         <Component class="javax.swing.JButton" name="removeButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/demetra/desktop/icons/list-remove_16x16.png"/>
+              <Image iconType="3" name="/jdplus/toolkit/desktop/plugin/icons/list-remove_16x16.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>

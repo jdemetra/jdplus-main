@@ -81,7 +81,7 @@ final class X13Panel extends javax.swing.JPanel {
         jToolBar1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jToolBar1.setRollover(true);
 
-        editDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/x13/ui/preferences-system_16x16.png"))); // NOI18N
+        editDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/preferences-system_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(editDiagnostic, org.openide.util.NbBundle.getMessage(X13Panel.class, "X13Panel.editDiagnostic.text")); // NOI18N
         editDiagnostic.setFocusable(false);
         editDiagnostic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -93,7 +93,7 @@ final class X13Panel extends javax.swing.JPanel {
         });
         jToolBar1.add(editDiagnostic);
 
-        resetDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/x13/ui/reset_16x16.png"))); // NOI18N
+        resetDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/reset_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(resetDiagnostic, org.openide.util.NbBundle.getMessage(X13Panel.class, "X13Panel.resetDiagnostic.text")); // NOI18N
         resetDiagnostic.setFocusable(false);
         resetDiagnostic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -105,7 +105,6 @@ final class X13Panel extends javax.swing.JPanel {
         });
         jToolBar1.add(resetDiagnostic);
 
-        diagnosticsView.setColumnHeader(null);
         diagnosticsView.setColumnHeaderView(null);
 
         javax.swing.GroupLayout diagnosticsPanelLayout = new javax.swing.GroupLayout(diagnosticsPanel);
