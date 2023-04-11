@@ -125,7 +125,7 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         jToolBar1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jToolBar1.setRollover(true);
 
-        editDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/tramoseats/ui/preferences-system_16x16.png"))); // NOI18N
+        editDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/preferences-system_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(editDiagnostic, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.editDiagnostic.text")); // NOI18N
         editDiagnostic.setFocusable(false);
         editDiagnostic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -137,7 +137,7 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(editDiagnostic);
 
-        resetDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/tramoseats/ui/reset_16x16.png"))); // NOI18N
+        resetDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/reset_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(resetDiagnostic, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.resetDiagnostic.text")); // NOI18N
         resetDiagnostic.setFocusable(false);
         resetDiagnostic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -149,7 +149,6 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(resetDiagnostic);
 
-        diagnosticsView.setColumnHeader(null);
         diagnosticsView.setColumnHeaderView(null);
         diagnosticsView.setQuickSearchAllowed(false);
         diagnosticsView.setRowHeaderView(null);

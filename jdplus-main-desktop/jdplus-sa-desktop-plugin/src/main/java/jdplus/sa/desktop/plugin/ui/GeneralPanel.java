@@ -83,7 +83,7 @@ final class GeneralPanel extends javax.swing.JPanel {
         jToolBar1 = new javax.swing.JToolBar();
         editOutput = new javax.swing.JButton();
         resetOutput = new javax.swing.JButton();
-        outputsView = new org.openide.explorer.view.OutlineView("Diagnostics");
+        diagnosticsView = new org.openide.explorer.view.OutlineView("Diagnostics");
 
         lastYearsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.lastYearsPanel.border.title"))); // NOI18N
 
@@ -161,38 +161,40 @@ final class GeneralPanel extends javax.swing.JPanel {
         revisionHistoryPanel.add(estimationPolicyComboBox);
 
         outputsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.outputsPanel.border.title"))); // NOI18N
+        outputsPanel.setName(""); // NOI18N
 
         jToolBar1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jToolBar1.setRollover(true);
 
-        editOutput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/sa/ui/preferences-system_16x16.png"))); // NOI18N
+        editOutput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/preferences-system_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(editOutput, org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.editOutput.text")); // NOI18N
+        editOutput.setActionCommand(org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.editOutput.actionCommand")); // NOI18N
         editOutput.setFocusable(false);
         editOutput.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editOutput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         editOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editOutputActionPerformed(evt);
+                editDiagnosticActionPerformed(evt);
             }
         });
         jToolBar1.add(editOutput);
 
-        resetOutput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/demetra/desktop/sa/ui/reset_16x16.png"))); // NOI18N
+        resetOutput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/reset_16x16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(resetOutput, org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.resetOutput.text")); // NOI18N
+        resetOutput.setActionCommand(org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.resetOutput.actionCommand")); // NOI18N
         resetOutput.setFocusable(false);
         resetOutput.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         resetOutput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         resetOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetOutputActionPerformed(evt);
+                resetDiagnosticActionPerformed(evt);
             }
         });
         jToolBar1.add(resetOutput);
 
-        outputsView.setColumnHeader(null);
-        outputsView.setColumnHeaderView(null);
-        outputsView.setQuickSearchAllowed(false);
-        outputsView.setRowHeaderView(null);
+        diagnosticsView.setColumnHeaderView(null);
+        diagnosticsView.setQuickSearchAllowed(false);
+        diagnosticsView.setRowHeaderView(null);
 
         javax.swing.GroupLayout outputsPanelLayout = new javax.swing.GroupLayout(outputsPanel);
         outputsPanel.setLayout(outputsPanelLayout);
@@ -200,7 +202,7 @@ final class GeneralPanel extends javax.swing.JPanel {
             outputsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(outputsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(diagnosticsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -214,7 +216,7 @@ final class GeneralPanel extends javax.swing.JPanel {
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(70, 74, Short.MAX_VALUE))
                     .addGroup(outputsPanelLayout.createSequentialGroup()
-                        .addComponent(outputsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(diagnosticsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())))
         );
 
@@ -244,13 +246,13 @@ final class GeneralPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void editOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editOutputActionPerformed
+    private void editDiagnosticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDiagnosticActionPerformed
         if (getOutputsExplorerManager().getSelectedNodes() != null && getOutputsExplorerManager().getSelectedNodes().length != 0) {
             getOutputsExplorerManager().getSelectedNodes()[0].getPreferredAction().actionPerformed(evt);
         }
-    }//GEN-LAST:event_editOutputActionPerformed
+    }//GEN-LAST:event_editDiagnosticActionPerformed
 
-    private void resetOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetOutputActionPerformed
+    private void resetDiagnosticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetDiagnosticActionPerformed
         Node[] sel = getOutputsExplorerManager().getSelectedNodes();
         if (sel == null || sel.length == 0) {
             return;
@@ -264,7 +266,7 @@ final class GeneralPanel extends javax.swing.JPanel {
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.YES_OPTION) {
             r.reset();
         }
-    }//GEN-LAST:event_resetOutputActionPerformed
+    }//GEN-LAST:event_resetDiagnosticActionPerformed
 
     void load() {
         DemetraSaUI saui = DemetraSaUI.get();
@@ -305,13 +307,13 @@ final class GeneralPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel defaultSpecLabel;
+    private org.openide.explorer.view.OutlineView diagnosticsView;
     private javax.swing.JButton editOutput;
     private javax.swing.JLabel estimationLabel;
     private javax.swing.JComboBox estimationPolicyComboBox;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel lastYearsPanel;
     private javax.swing.JPanel outputsPanel;
-    private org.openide.explorer.view.OutlineView outputsView;
     private javax.swing.JButton resetOutput;
     private javax.swing.JPanel revisionHistoryPanel;
     private javax.swing.JPanel saPanel;

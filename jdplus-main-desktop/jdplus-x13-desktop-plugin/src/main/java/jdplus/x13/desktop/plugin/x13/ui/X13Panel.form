@@ -62,7 +62,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Diagnostics">
-              <ResourceString PropertyName="titleX" bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.diagnosticsPanel.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.diagnosticsPanel.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -108,10 +108,10 @@
             <Component class="javax.swing.JButton" name="editDiagnostic">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/demetra/desktop/x13/ui/preferences-system_16x16.png"/>
+                  <Image iconType="3" name="/jdplus/toolkit/desktop/plugin/icons/preferences-system_16x16.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.editDiagnostic.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.editDiagnostic.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -124,10 +124,10 @@
             <Component class="javax.swing.JButton" name="resetDiagnostic">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/demetra/desktop/x13/ui/reset_16x16.png"/>
+                  <Image iconType="3" name="/jdplus/toolkit/desktop/plugin/icons/reset_16x16.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.resetDiagnostic.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.resetDiagnostic.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -141,9 +141,6 @@
         </Container>
         <Component class="org.openide.explorer.view.OutlineView" name="diagnosticsView">
           <Properties>
-            <Property name="columnHeader" type="javax.swing.JViewport" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="null"/>
-            </Property>
             <Property name="columnHeaderView" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
               <ComponentRef name="null"/>
             </Property>
@@ -159,7 +156,7 @@
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
             <TitledBorder title="Default components">
-              <ResourceString PropertyName="titleX" bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.componentsPanel.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString PropertyName="titleX" bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.componentsPanel.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -183,7 +180,7 @@
             <Component class="javax.swing.JLabel" name="selectedSeriesLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.selectedSeriesLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.selectedSeriesLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -195,7 +192,7 @@
             <Component class="javax.swing.JButton" name="selectedSeriesButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.selectedSeriesButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.selectedSeriesButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -210,7 +207,7 @@
             <Component class="javax.swing.JLabel" name="estimationLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.estimationLabel6.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.estimationLabel6.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
@@ -233,7 +230,7 @@
             <Component class="javax.swing.JLabel" name="selectedDiagLabel">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.selectedDiagLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.selectedDiagLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -245,7 +242,7 @@
             <Component class="javax.swing.JButton" name="selectedDiagButton">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.selectedDiagButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.selectedDiagButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -260,7 +257,7 @@
             <Component class="javax.swing.JLabel" name="estimationLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="demetra/desktop/x13/ui/Bundle.properties" key="X13Panel.estimationLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="jdplus/x13/desktop/plugin/x13/ui/Bundle.properties" key="X13Panel.estimationLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
