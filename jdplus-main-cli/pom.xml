@@ -17,5 +17,6 @@
     <url>${project.parent.url}</url>
 
     <modules>
+        <module>jdplus-main-cli-bin</module>
     </modules>
 </project>
