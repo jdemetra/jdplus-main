@@ -79,7 +79,7 @@ public class HtmlX11Diagnostics extends AbstractHtmlElement {
             stream.write(new HtmlTableCell(Integer.toString(i)).withWidth(50));
             for (int j = 0; j < Q.length; ++j) {
                 if (Q[j] != null) {
-                    stream.write(new HtmlTableCell(df2.format(Q[j][i - 1])).withWidth(50));
+                    stream.write(new HtmlTableCell(df2.format(100*Q[j][i - 1])).withWidth(50));
                 } else {
                     stream.write(new HtmlTableCell(".").withWidth(50));
                 }

@@ -16,6 +16,6 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 public class X13Finals {
     
     TsData d11final, d12final, d13final, d16, d18;
-    TsData d11a, d12a, d16a, d18a;
+    TsData d11a, d12a, d16a, d18a, d11b, d12b, d16b, d18b;
     TsData e1, e2, e3, e11;
 }

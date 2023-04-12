@@ -66,8 +66,8 @@ public class X11Dictionaries {
             .build();
 
     public final String D1="d1", D2="d2", D4="d4",
-        D5="d5", D6="d6", D7="d7", D8="d8", D9="d9", D10="d10", D10A="d10a", 
-            D11="d11", D11A="d11a", D12="d12", D12A="d12a", D13="d13";
+        D5="d5", D6="d6", D7="d7", D8="d8", D9="d9", D10="d10", D10A="d10a", D10B="d10b",
+            D11="d11", D11A="d11a", D11B="d11b", D12="d12", D12A="d12a", D12B="d12b", D13="d13";
 
     public final String[] D_TABLE = new String[]{D1, D2, D4,
         D5, D6, D7, D8, D9, D10, D10A, D11, D11A, D12, D12A, D13};

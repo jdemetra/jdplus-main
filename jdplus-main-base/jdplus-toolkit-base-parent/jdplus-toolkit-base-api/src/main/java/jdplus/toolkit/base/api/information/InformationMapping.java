@@ -76,8 +76,8 @@ public abstract class InformationMapping<S> implements InformationExtractor<S> {
     @Override
     public void fillDictionary(String prefix, Map<String, Class> dic, boolean compact) {
         synchronized (this) {
-            map.forEach((key, extractor) -> extractor.fillDictionary(prefix, dic, compact));
             list.forEach(extractor -> extractor.fillDictionary(prefix, dic, compact));
+            map.forEach((key, extractor) -> extractor.fillDictionary(prefix, dic, compact));
         }
     }
 

@@ -79,12 +79,9 @@ public class X11Extractor extends InformationMapping<X11Results> {
         set(X11Dictionaries.D7, TsData.class, source -> source.getD7());
         set(X11Dictionaries.D8, TsData.class, source -> source.getD8());
         set(X11Dictionaries.D9, TsData.class, source -> source.getD9());
-        set(X11Dictionaries.D10, TsData.class, source -> TsData.fitToDomain(source.getD10(), source.getActualDomain()));
-        set(X11Dictionaries.D10A, TsData.class, source -> TsData.fitToDomain(source.getD10(), source.getForecastDomain()));
-        set(X11Dictionaries.D11, TsData.class, source -> TsData.fitToDomain(source.getD11(), source.getActualDomain()));
-        set(X11Dictionaries.D11A, TsData.class, source -> TsData.fitToDomain(source.getD11(), source.getForecastDomain()));
-        set(X11Dictionaries.D12, TsData.class, source -> TsData.fitToDomain(source.getD12(), source.getActualDomain()));
-        set(X11Dictionaries.D12A, TsData.class, source -> TsData.fitToDomain(source.getD12(), source.getForecastDomain()));
+        set(X11Dictionaries.D10, TsData.class, source -> source.getD10());
+        set(X11Dictionaries.D11, TsData.class, source -> source.getD11());
+        set(X11Dictionaries.D12, TsData.class, source -> source.getD12());
         set(X11Dictionaries.D13, TsData.class, source -> source.getD13());
         set(X11Dictionaries.TRENDFILTER, Integer.class, source -> source.getFinalHendersonFilterLength());
         set(X11Dictionaries.SEASONALFILTERS, String[].class, (X11Results source) ->{

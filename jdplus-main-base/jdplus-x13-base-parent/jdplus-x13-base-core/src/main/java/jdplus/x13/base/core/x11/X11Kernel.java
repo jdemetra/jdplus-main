@@ -17,6 +17,7 @@ import jdplus.x13.base.core.x11.pseudoadd.X11BStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11CStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11DStepPseudoAdd;
 import java.util.Arrays;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
@@ -41,6 +42,12 @@ public class X11Kernel {
         return x;
     }
 
+    /**
+     * 
+     * @param timeSeries Time series including forecasts/backcasts
+     * @param spec
+     * @return 
+     */
     public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec) {
         clear();
         check(timeSeries, spec);
@@ -96,9 +103,11 @@ public class X11Kernel {
     }
 
     private X11Results buildResults(TsPeriod start, X11Spec spec) {
+        int nb=spec.getBackcastHorizon()>=0 ? spec.getBackcastHorizon() : -spec.getBackcastHorizon()*start.annualFrequency();
+        int nf=spec.getForecastHorizon()>=0 ? spec.getForecastHorizon(): -spec.getForecastHorizon()*start.annualFrequency();
         return X11Results.builder()
-                .nbackcasts(spec.getBackcastHorizon()>=0 ? spec.getBackcastHorizon() : -spec.getBackcastHorizon()*start.annualFrequency())
-                .nforecasts(spec.getForecastHorizon()>=0 ? spec.getForecastHorizon(): -spec.getForecastHorizon()*start.annualFrequency())
+                .nbackcasts(nb)
+                .nforecasts(nf)
                 //B-Tables
                 .b1(input)
                 .b2(TsData.of(start.plus(bstep.getB2drop()), prepare(bstep.getB2())))

@@ -225,6 +225,8 @@ public class TukeySpectrumPeaksTest {
         clear();
         int n=s.length();
         int windowLength=windowLength(n, period);
+        if (windowLength<0)
+            return false;
         SmoothedPeriodogram tukey = SmoothedPeriodogram.builder()
                 .data(s)
                 .windowLength(windowLength)

@@ -27,6 +27,14 @@ public class OneWayAnova {
     double ssr;
     int dfr;
     
+    public double getSsq(){
+        return ssm+ssr;
+    }
+    
+    public int getDfq(){
+        return dfm+dfr;
+    }
+    
     public double ftest(){
         return (ssm/dfm)*(dfr/ssr);
     }
