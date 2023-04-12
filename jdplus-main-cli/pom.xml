@@ -17,7 +17,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <picocli.version>4.6.2</picocli.version>
+        <picocli.version>4.7.2</picocli.version>
     </properties>
 
     <modules>
