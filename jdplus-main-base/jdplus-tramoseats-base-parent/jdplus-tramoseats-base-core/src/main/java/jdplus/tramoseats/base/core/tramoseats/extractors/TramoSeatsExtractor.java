@@ -45,16 +45,20 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
             }
         }
         );
-        set(ModellingDictionary.Y, TsData.class, source
+        set(SaDictionaries.Y, TsData.class, source
                 -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Value));
-//        set(ModellingDictionary.Y + SeriesInfo.F_SUFFIX, TsData.class, source
-//                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Forecast));
-//        set(ModellingDictionary.Y + SeriesInfo.EF_SUFFIX, TsData.class, source
-//                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.StdevForecast));
-//        set(ModellingDictionary.Y + SeriesInfo.B_SUFFIX, TsData.class, source
-//                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Backcast));
-//        set(ModellingDictionary.Y + SeriesInfo.EB_SUFFIX, TsData.class, source
-//                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.StdevBackcast));
+        set(SaDictionaries.Y + SaDictionaries.BACKCAST, TsData.class, source
+                 -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Backcast));
+        set(SaDictionaries.Y + SaDictionaries.FORECAST, TsData.class, source
+                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Forecast));
+
+        set(ModellingDictionary.CAL, TsData.class, source
+                -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getActualDomain()));
+        set(ModellingDictionary.CAL + SaDictionaries.BACKCAST, TsData.class, source
+                -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
+        set(ModellingDictionary.CAL + SaDictionaries.FORECAST, TsData.class, source
+                -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
+        
 
         set(SaDictionaries.T, TsData.class, source
                 -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.Value));

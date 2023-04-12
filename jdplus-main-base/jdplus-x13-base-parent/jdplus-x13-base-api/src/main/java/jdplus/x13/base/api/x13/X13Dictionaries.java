@@ -68,10 +68,10 @@ public class X13Dictionaries {
             .build();
     
     public final String D11="d11", D12="d12", D13="d13", 
-            D16="d16", D18="d18", D11A="d11a", D12A="d12a", D16A="d16a", D18A="d18a";
+            D16="d16", D18="d18", D11A="d11a", D12A="d12a", D16A="d16a", D18A="d18a", D11B="d11b", D12B="d12b", D16B="d16b", D18B="d18b";
     
-    public final String[] D_TABLE_FINAL = new String[]{D11, D11A, 
-        D12, D12A, D13, D16, D16A, D18, D18A};
+    public final String[] D_TABLE_FINAL = new String[]{D11, D11A, D11B,
+        D12, D12A, D12B, D13, D16, D16A, D16B, D18, D18A, D18B};
     
     public final Dictionary DTABLES_FINAL = AtomicDictionary.builder()
             .name(D_TABLES)

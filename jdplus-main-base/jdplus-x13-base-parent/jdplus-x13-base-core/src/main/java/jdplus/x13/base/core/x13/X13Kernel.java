@@ -104,10 +104,10 @@ public class X13Kernel {
                 X13Preadjustment.Builder builder = X13Preadjustment.builder();
                 alin = initialStep(preprocessing, nb, nf, builder);
                 preadjustment = builder.build();
-            }else{
+            } else {
                 preprocessing = null;
-                preadjustment=X13Preadjustment.builder().a1(sc).build();
-                alin=sc;
+                preadjustment = X13Preadjustment.builder().a1(sc).build();
+                alin = sc;
             }
             // Step 3. X11
             X11Kernel x11 = new X11Kernel();
@@ -139,7 +139,8 @@ public class X13Kernel {
         int n = series.length();
         TsDomain sdomain = series.getDomain();
         TsDomain domain = sdomain.extend(nb, nf);
-        TsPeriod bstart = domain.getStartPeriod(), start = sdomain.getStartPeriod(), fstart = sdomain.getEndPeriod();
+        // start of the backcasts/forecasts
+        TsPeriod bstart = domain.getStartPeriod(), fstart = sdomain.getEndPeriod();
 
         // Gets all regression effects
         TsData mh = model.deterministicEffect(domain, v -> ModellingUtility.isMovingHoliday(v));
@@ -182,7 +183,7 @@ public class X13Kernel {
             if (nb > 0) {
                 DoubleSeq tmp = fcasts.backcasts(lin.getValues(), nb);
                 nbcasts = TsData.of(bstart, tmp);
-                TsData.add(nbcasts, detall);
+                nbcasts = TsData.add(nbcasts, detall);
             }
             if (nf > 0) {
                 DoubleSeq tmp = fcasts.forecasts(lin.getValues(), nf);
@@ -214,8 +215,9 @@ public class X13Kernel {
     }
 
     private X11Spec updateSpec(X11Spec spec, RegSarimaModel model) {
-        if (model == null)
+        if (model == null) {
             return spec;
+        }
         int nb = spec.getBackcastHorizon(), nf = spec.getForecastHorizon();
         int period = model.getAnnualFrequency();
         X11Spec.Builder builder = spec.toBuilder()
@@ -239,14 +241,6 @@ public class X13Kernel {
         } else {
             return TsData.divide(l, r);
         }
-    }
-
-    private TsData add(boolean mul, TsData l, TsData... r) {
-        return mul ? TsData.multiply(l, r) : TsData.add(l, r);
-    }
-
-    private TsData subtract(boolean mul, TsData l, TsData r) {
-        return mul ? TsData.divide(l, r) : TsData.subtract(l, r);
     }
 
     /**
@@ -310,6 +304,7 @@ public class X13Kernel {
         // add preadjustment
         TsData a1 = astep.getA1();
         TsData a1a = astep.getA1a();
+        TsData a1b = astep.getA1b();
         TsData a8t = astep.getA8t();
         TsData a8i = astep.getA8i();
         TsData a8s = astep.getA8s();
@@ -321,6 +316,7 @@ public class X13Kernel {
 
         X13Finals.Builder decomp = X13Finals.builder();
 
+        TsDomain bd = a1b == null ? null : a1b.getDomain();
         TsDomain fd = a1a == null ? null : a1a.getDomain();
         TsDomain d = a1.getDomain();
         // add ps to d10
@@ -329,57 +325,37 @@ public class X13Kernel {
         TsData d18 = invOp(mode, a6, a7);
         TsData d10c = invOp(mode, d10, a8s);
         TsData d16 = invOp(mode, d10c, d18);
-//        if (fd != null) {
-//            decomp.d10a(TsData.fitToDomain(d10c, fd));
-//            d10c = TsData.fitToDomain(d10c, d);
-//        }
-//        decomp.d10final(d10c);
-        if (fd != null) {
-            decomp.d16a(TsData.fitToDomain(d16, fd));
-            d16 = TsData.fitToDomain(d16, d);
-        }
-        decomp.d16(d16);
-//        TsData d18=op(mode, d16, d10c);
-        if (fd != null) {
-            decomp.d18a(TsData.fitToDomain(d18, fd));
-            d18 = TsData.fitToDomain(d18, d);
-        }
-        decomp.d18(d18);
-
-        // add pt to trend
-        TsData d12c = invOp(mode, d12, a8t);
-        if (fd != null) {
-            decomp.d12a(TsData.fitToDomain(d12c, fd));
-            d12c = TsData.fitToDomain(d12c, d);
-        }
-        decomp.d12final(d12c);
-
-        // add pi to irregular
-        TsData d13c = invOp(mode, d13, a8i);
-        if (fd != null) {
-            d13c = TsData.fitToDomain(d13c, d);
-        }
-        decomp.d13final(d13c);
-
         // add pt, pi to d11
         TsData d11c = invOp(mode, d11, a8t);
         d11c = invOp(mode, d11c, a8i);
         //   d11c = toolkit.getContext().invOp(d11c, a8s);
         TsData a9sa = astep.getA9sa();
         d11c = invOp(mode, d11c, a9sa);
+        TsData d12c = invOp(mode, d12, a8t);
+        TsData d13c = invOp(mode, d13, a8i);
         if (fd != null) {
             decomp.d11a(TsData.fitToDomain(d11c, fd));
-            d11c = TsData.fitToDomain(d11c, d);
+            decomp.d12a(TsData.fitToDomain(d12c, fd));
+            decomp.d16a(TsData.fitToDomain(d16, fd));
+            decomp.d18a(TsData.fitToDomain(d18, fd));
         }
+        if (bd != null) {
+            decomp.d11b(TsData.fitToDomain(d11c, bd));
+            decomp.d12b(TsData.fitToDomain(d12c, bd));
+            decomp.d16b(TsData.fitToDomain(d16, bd));
+            decomp.d18b(TsData.fitToDomain(d18, bd));
+        }
+        d11c = TsData.fitToDomain(d11c, d);
+        d12c = TsData.fitToDomain(d12c, d);
+        d16 = TsData.fitToDomain(d16, d);
+        d18 = TsData.fitToDomain(d18, d);
+        d13c = TsData.fitToDomain(d13c, d);
         decomp.d11final(d11c);
+        decomp.d12final(d12c);
+        decomp.d13final(d13c);
+        decomp.d16(d16);
+        decomp.d18(d18);
 
-//        if (spec.getMode() == DecompositionMode.PseudoAdditive) {
-//            TsData tmp = TsData.divide(a1, d12);
-//            tmp = TsData.subtract(tmp, d13);
-//            d16 = tmp.add(1).commit();
-//        } else {
-//            d16 = op(mode, a1, d11c);
-//        }
         // remove pre-specified outliers
         TsData a1c = op(mode, a1, a8i);
         d11c = op(mode, d11c, a8i);

@@ -180,8 +180,8 @@ public class DecompositionSpecUI extends BaseTramoSeatsSpecUI {
     }
 
     @NbBundle.Messages({
-        "decompositionSpecUI.nbcastsDesc.name=Prediction length",
-        "decompositionSpecUI.nbcastsDesc.desc=[npred] Number of forecasts used in the decomposition. Negative values correspond to numbers of years"
+        "decompositionSpecUI.nbcastsDesc.name=Backcast length",
+        "decompositionSpecUI.nbcastsDesc.desc=[npred] Number of backcasts used in the decomposition. Negative values correspond to numbers of years"
     })
     private EnhancedPropertyDescriptor nbcastsDesc() {
         try {

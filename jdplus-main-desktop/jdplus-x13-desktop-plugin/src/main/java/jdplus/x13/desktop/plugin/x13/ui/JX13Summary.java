@@ -28,6 +28,7 @@ import jdplus.x13.desktop.plugin.html.HtmlX13Summary;
 import java.awt.*;
 import java.util.Arrays;
 import javax.swing.*;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Document;
 import jdplus.x13.base.core.x13.X13Results;
@@ -38,25 +39,25 @@ import jdplus.x13.base.core.x13.X13Results;
 @SwingComponent
 public final class JX13Summary extends JComponent implements Disposable {
 
-    private final Box document_;
-    private final JTsChart chart_;
-    private final JSIView siPanel_;
-    private X13Document doc_;
+    private final Box document;
+    private final JTsChart chart;
+    private final JSIView siPanel;
+    private X13Document doc;
 
     public JX13Summary() {
         setLayout(new BorderLayout());
 
-        this.chart_ = new JTsChart();
-        chart_.setTsUpdateMode(TsUpdateMode.None);
-        this.siPanel_ = new JSIView();
+        this.chart = new JTsChart();
+        chart.setTsUpdateMode(TsUpdateMode.None);
+        this.siPanel = new JSIView();
 
-        JSplitPane split1 = NbComponents.newJSplitPane(JSplitPane.HORIZONTAL_SPLIT, chart_, siPanel_);
+        JSplitPane split1 = NbComponents.newJSplitPane(JSplitPane.HORIZONTAL_SPLIT, chart, siPanel);
         split1.setDividerLocation(0.6);
         split1.setResizeWeight(.5);
 
-        this.document_ = Box.createHorizontalBox();
+        this.document = Box.createHorizontalBox();
 
-        JSplitPane split2 = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, document_, split1);
+        JSplitPane split2 = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, document, split1);
         split2.setDividerLocation(0.5);
         split2.setResizeWeight(.5);
 
@@ -64,7 +65,7 @@ public final class JX13Summary extends JComponent implements Disposable {
     }
 
     public void set(X13Document doc) {
-        this.doc_ = doc;
+        this.doc = doc;
         if (doc == null) {
             return;
         }
@@ -74,30 +75,31 @@ public final class JX13Summary extends JComponent implements Disposable {
         }
 
         HtmlX13Summary summary = new HtmlX13Summary(MultiLineNameUtil.join(doc.getInput().getName()), results);
-        Disposables.disposeAndRemoveAll(document_).add(TsViewToolkit.getHtmlViewer(summary));
+        Disposables.disposeAndRemoveAll(document).add(TsViewToolkit.getHtmlViewer(summary));
 
         String[] lowSeries = lowSeries(results.getPreprocessing() == null);
-        chart_.setTsCollection(
+        chart.setTsCollection(
                 Arrays.stream(lowSeries).map(s -> getMainSeries(s)).collect(TsCollection.toTsCollection())
         );
 
         X11Results x11 = doc.getResult().getDecomposition();
         if (x11 != null) {
-            TsData si = results.getDecomposition().getD8();
-            TsData seas = results.getDecomposition().getD10();
+            TsDomain dom = results.getDecomposition().getActualDomain();
+            TsData si = TsData.fitToDomain(results.getDecomposition().getD8(), dom);
+            TsData seas = TsData.fitToDomain(results.getDecomposition().getD10(), dom);
 
             if (x11.getMode() == DecompositionMode.LogAdditive) {
                 si = si.exp();
             }
 
-            siPanel_.setSiData(seas, si);
+            siPanel.setSiData(seas, si);
         } else {
-            siPanel_.reset();
+            siPanel.reset();
         }
     }
 
     private Ts getMainSeries(String str) {
-        return TsFactory.getDefault().makeTs(TsDynamicProvider.monikerOf(doc_, str), TsInformationType.All);
+        return TsFactory.getDefault().makeTs(TsDynamicProvider.monikerOf(doc, str), TsInformationType.All);
     }
 
     private static String generateId(String name, String id) {
@@ -134,7 +136,7 @@ public final class JX13Summary extends JComponent implements Disposable {
 
     @Override
     public void dispose() {
-        doc_ = null;
-        Disposables.disposeAndRemoveAll(document_);
+        doc = null;
+        Disposables.disposeAndRemoveAll(document);
     }
 }

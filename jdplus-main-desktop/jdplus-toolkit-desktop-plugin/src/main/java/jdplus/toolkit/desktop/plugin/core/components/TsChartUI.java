@@ -136,13 +136,17 @@ public final class TsChartUI implements InternalUI<JTsChart> {
                 if (series < target.getTsCollection().size() && tsFeatures.hasFeature(TsFeatureHelper.Feature.Forecasts, series, obs)) {
                     result.append("\nForecast");
                 }
+                if (series < target.getTsCollection().size() && tsFeatures.hasFeature(TsFeatureHelper.Feature.Backcasts, series, obs)) {
+                    result.append("\nBackcast");
+                }
                 return result.toString();
             }
         });
         chartPanel.setDashPredicate(new ObsPredicate() {
             @Override
             public boolean apply(int series, int obs) {
-                return series < target.getTsCollection().size() && tsFeatures.hasFeature(TsFeatureHelper.Feature.Forecasts, series, obs);
+                return series < target.getTsCollection().size() && (tsFeatures.hasFeature(TsFeatureHelper.Feature.Forecasts, series, obs)
+                        || tsFeatures.hasFeature(TsFeatureHelper.Feature.Backcasts, series, obs));
             }
         });
         chartPanel.setLegendVisibilityPredicate(new SeriesPredicate() {

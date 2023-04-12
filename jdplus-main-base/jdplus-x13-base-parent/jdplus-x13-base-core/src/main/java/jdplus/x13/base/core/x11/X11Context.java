@@ -50,10 +50,13 @@ public class X11Context {
     SigmaVecOption[] sigmavecOptions;
     int forecastHorizon;
     int backcastHorizon;
+    /**
+     * Actual first period of the series, not taking into account backcasts
+     */
     int firstPeriod;
     /**
-     * Excludefcast is true if the forecast should be excluded for the
-     * calculation of the standard deviation of the extreme values
+     * Excludefcast is true if the forecasts/backcasts should be excluded for
+     * the calculation of the standard deviation of the extreme values
      */
     boolean excludefcast;
 
@@ -86,18 +89,25 @@ public class X11Context {
         } else {
             filters = spec.getFilters();
         }
-
+        int p = data.getAnnualFrequency();
+        int nb = spec.getBackcastHorizon(), nf = spec.getForecastHorizon();
+        if (nb < 0) {
+            nb = -nb * p;
+        }
+        if (nf < 0) {
+            nf = -nf * p;
+        }
         return builder().mode(spec.getMode())
                 .trendFilterLength(spec.getHendersonFilterLength())
-                .period(data.getAnnualFrequency())
+                .period(p)
                 .firstPeriod(data.getStart().annualPosition())
                 .lowerSigma(spec.getLowerSigma())
                 .upperSigma(spec.getUpperSigma())
                 .calendarSigma(spec.getCalendarSigma())
                 .sigmavecOptions(spec.getSigmaVec())
                 .excludefcast(spec.isExcludeForecast())
-                .forecastHorizon(spec.getForecastHorizon())
-                .backcastHorizon(spec.getBackcastHorizon())
+                .forecastHorizon(nf)
+                .backcastHorizon(nb)
                 .initialSeasonalFilter(filters)
                 .finalSeasonalFilter(filters)
                 .build();

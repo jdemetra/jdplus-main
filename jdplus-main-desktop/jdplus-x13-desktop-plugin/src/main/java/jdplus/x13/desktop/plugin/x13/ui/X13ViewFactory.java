@@ -56,6 +56,7 @@ import jdplus.sa.base.api.SaProcessingFactory;
 import jdplus.sa.base.api.SeriesDecomposition;
 import jdplus.sa.desktop.plugin.html.HtmlSaSlidingSpanSummary;
 import jdplus.sa.desktop.plugin.html.HtmlSeasonalityDiagnostics;
+import jdplus.sa.desktop.plugin.html.HtmlCombinedSeasonalityTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDocument;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
@@ -185,18 +186,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     private static String generateId(String name, String id) {
         return TsDynamicProvider.CompositeTs.builder()
                 .name(name)
-                .back(id + SeriesInfo.B_SUFFIX)
+                .back(id + SaDictionaries.BACKCAST)
                 .now(id)
-                .fore(id + SeriesInfo.F_SUFFIX)
-                .build().toString();
-    }
-
-    private static String generateStdErrorId(String name, String id) {
-        return TsDynamicProvider.CompositeTs.builder()
-                .name(name)
-                .back(id + SeriesInfo.EB_SUFFIX)
-                .now(id + SeriesInfo.E_SUFFIX)
-                .fore(id + SeriesInfo.EF_SUFFIX)
+                .fore(id + SaDictionaries.FORECAST)
                 .build().toString();
     }
 
@@ -340,12 +332,13 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                     return null;
                 }
                 X11Results x11 = result.getDecomposition();
+                TsDomain dom = x11.getActualDomain();
                 return SeriesDecomposition.builder(result.getDecomposition().getMode())
-                        .add(x11.getB1(), ComponentType.Series)
-                        .add(x11.getD10(), ComponentType.Seasonal)
-                        .add(x11.getD11(), ComponentType.SeasonallyAdjusted)
-                        .add(x11.getD12(), ComponentType.Trend)
-                        .add(x11.getD13(), ComponentType.Irregular)
+                        .add(TsData.fitToDomain(x11.getB1(), dom), ComponentType.Series)
+                        .add(TsData.fitToDomain(x11.getD10(), dom), ComponentType.Seasonal)
+                        .add(TsData.fitToDomain(x11.getD11(), dom), ComponentType.SeasonallyAdjusted)
+                        .add(TsData.fitToDomain(x11.getD12(), dom), ComponentType.Trend)
+                        .add(TsData.fitToDomain(x11.getD13(), dom), ComponentType.Irregular)
                         .build();
             });
         }
@@ -376,6 +369,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
 //</editor-fold>
+    
 //<editor-fold defaultstate="collapsed" desc="PREPROCESSING-FORECASTS">
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 3110)
     public static class ForecastsTable extends ProcDocumentItemFactory<X13Document, TsDocument> {
@@ -619,14 +613,18 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         static final String[] items = new String[]{
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11),
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11A),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11B),
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D12),
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D12A),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D12B),
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D13),
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D16),
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D16A),
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D16B),
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18),
-            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18A)
-        };
+            Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18A),
+             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D18B)
+       };
 
         public DFinalTablesFactory() {
             super(X13Document.class, D_FINAL_TABLES, source -> source, new GenericTableUI(false, items));
@@ -837,6 +835,30 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         }
     }
 
+    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5035)
+    public static class DiagnosticsSeasonalityFactory extends ProcDocumentItemFactory<X13Document, HtmlElement> {
+
+        public DiagnosticsSeasonalityFactory() {
+            super(X13Document.class, SaViews.DIAGNOSTICS_SEASONALITY, (X13Document doc) -> {
+                X13Results rslt = doc.getResult();
+                if (rslt == null) {
+                    return null;
+                }
+                X11Results x11 = rslt.getDecomposition();
+                TsData si = TsData.fitToDomain(x11.getD8(), x11.getActualDomain());
+                boolean mul = x11.getMode().isMultiplicative();
+                return new HtmlCombinedSeasonalityTest(si, mul);
+
+            }, new HtmlItemUI());
+        }
+
+        @Override
+        public int getPosition() {
+            return 5035;
+        }
+
+    }
+
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 5040)
     public static class SaSeasonalityFactory extends ProcDocumentItemFactory<X13Document, HtmlElement> {
 
@@ -846,11 +868,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null) {
                     return null;
                 }
-                TsData s = rslt.getDecomposition().getD11();
-                if (s == null) {
-                    return null;
-                }
-                if (rslt.getDecomposition().getMode().isMultiplicative()) {
+               X11Results x11 = rslt.getDecomposition();
+                TsData s = TsData.fitToDomain(x11.getD11(), x11.getActualDomain());
+                if (x11.getMode().isMultiplicative()) {
                     s = s.log();
                 }
                 return new HtmlElements(new HtmlHeader(1, "[Linearized] seasonally adjusted series", true),
@@ -861,7 +881,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
 
         @Override
         public int getPosition() {
-            return 5030;
+            return 5040;
         }
     }
 
@@ -874,11 +894,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null) {
                     return null;
                 }
-                TsData s = rslt.getDecomposition().getD13();
-                if (s == null) {
-                    return null;
-                }
-                if (rslt.getDecomposition().getMode().isMultiplicative()) {
+               X11Results x11 = rslt.getDecomposition();
+                TsData s = TsData.fitToDomain(x11.getD13(), x11.getActualDomain());
+                if (x11.getMode().isMultiplicative()) {
                     s = s.log();
                 }
                 return new HtmlElements(new HtmlHeader(1, "[Linearized] irregular component", true),
@@ -933,11 +951,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null) {
                     return null;
                 }
-                TsData s = rslt.getDecomposition().getD11();
-                if (s == null) {
-                    return null;
-                }
-                if (rslt.getDecomposition().getMode().isMultiplicative()) {
+               X11Results x11 = rslt.getDecomposition();
+                TsData s = TsData.fitToDomain(x11.getD11(), x11.getActualDomain());
+                if (x11.getMode().isMultiplicative()) {
                     s = s.log();
                 }
                 StringBuilder header = new StringBuilder().append("[Linearized] seasonally adjusted series");
@@ -967,11 +983,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null) {
                     return null;
                 }
-                TsData s = rslt.getDecomposition().getD13();
-                if (s == null) {
-                    return null;
-                }
-                if (rslt.getDecomposition().getMode().isMultiplicative()) {
+                X11Results x11 = rslt.getDecomposition();
+                TsData s = TsData.fitToDomain(x11.getD13(), x11.getActualDomain());
+                if (x11.getMode().isMultiplicative()) {
                     s = s.log();
                 }
                 StringBuilder header = new StringBuilder().append("[Linearized] irregular component");
@@ -1027,10 +1041,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                                 if (x11 == null) {
                                     return null;
                                 }
-                                TsData s = x11.getD13();
+                TsData s = TsData.fitToDomain(x11.getD13(), x11.getActualDomain());
 
-                                return s == null ? null
-                                        : SpectrumUI.Information.builder()
+                                return SpectrumUI.Information.builder()
                                                 .series(s)
                                                 .differencingOrder(0)
                                                 .log(x11.getMode() != DecompositionMode.Additive)
@@ -1057,10 +1070,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                                 if (x11 == null) {
                                     return null;
                                 }
-                                TsData s = x11.getD11();
+                TsData s = TsData.fitToDomain(x11.getD11(), x11.getActualDomain());
 
-                                return s == null ? null
-                                        : SpectrumUI.Information.builder()
+                                return SpectrumUI.Information.builder()
                                                 .series(s)
                                                 .differencingOrder(1)
                                                 .differencingLag(1)

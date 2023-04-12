@@ -276,6 +276,8 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
      * hasn't the right frequency.
      */
     public static TsData fitToDomain(TsData s, TsDomain domain) {
+        if (s == null)
+            return null;
         if (!s.getTsUnit().equals(domain.getStartPeriod().getUnit())) {
             throw new TsException(TsException.INCOMPATIBLE_FREQ);
         }

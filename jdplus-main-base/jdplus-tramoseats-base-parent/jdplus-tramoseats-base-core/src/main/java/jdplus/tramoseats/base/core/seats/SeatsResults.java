@@ -23,6 +23,10 @@ import jdplus.toolkit.base.api.information.GenericExplorable;
 import jdplus.sa.base.api.ComponentDescriptor;
 import jdplus.toolkit.base.api.util.Arrays2;
 import java.util.List;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.toolkit.base.api.modelling.ComponentInformation;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.core.arima.ArimaModel;
 
 /**
@@ -71,6 +75,20 @@ public class SeatsResults implements GenericExplorable {
         return cmps;
     }
 
+    public TsDomain getBackcastDomain() {
+        TsData sa = initialComponents.getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Backcast);
+        return sa == null ? TsDomain.DEFAULT_EMPTY : sa.getDomain();
+    }
+
+    public TsDomain getForecastDomain() {
+        TsData sa = initialComponents.getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast);
+        return sa == null ? TsDomain.DEFAULT_EMPTY : sa.getDomain();
+    }
+
+    public TsDomain getActualDomain() {
+        TsData sa = initialComponents.getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value);
+        return sa == null ? TsDomain.DEFAULT_EMPTY : sa.getDomain();
+    }
     
     private SarimaModel originalModel;
     private SarimaModel finalModel;

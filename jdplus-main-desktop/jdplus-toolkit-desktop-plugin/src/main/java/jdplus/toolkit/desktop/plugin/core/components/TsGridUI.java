@@ -648,6 +648,9 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
                         if (tsFeatures.get().hasFeature(TsFeatureHelper.Feature.Forecasts, obs.getSeriesIndex(), obs.getIndex())) {
                             setText("<html><i>" + text);
                             setToolTipText("<html>" + toolTipText + "<br>Forecast");
+                        } else if (tsFeatures.get().hasFeature(TsFeatureHelper.Feature.Backcasts, obs.getSeriesIndex(), obs.getIndex())) {
+                            setText("<html><i>" + text);
+                            setToolTipText("<html>" + toolTipText + "<br>Backcast");
                         } else {
                             setText(text);
                             setToolTipText(toolTipText);
