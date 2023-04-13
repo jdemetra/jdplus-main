@@ -48,7 +48,7 @@
 
         <!-- annotations & processors -->
         <lombok.version>1.18.26</lombok.version>
-        <java-service.version>1.6.0</java-service.version>
+        <java-service.version>1.6.1</java-service.version>
         <java-design.version>1.4.0</java-design.version>
         <checker-qual.version>3.33.0</checker-qual.version>
 
