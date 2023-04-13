@@ -83,7 +83,7 @@ final class GeneralPanel extends javax.swing.JPanel {
         jToolBar1 = new javax.swing.JToolBar();
         editOutput = new javax.swing.JButton();
         resetOutput = new javax.swing.JButton();
-        diagnosticsView = new org.openide.explorer.view.OutlineView("Diagnostics");
+        outputsView = new org.openide.explorer.view.OutlineView("Outputs");
 
         lastYearsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.lastYearsPanel.border.title"))); // NOI18N
 
@@ -192,9 +192,9 @@ final class GeneralPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(resetOutput);
 
-        diagnosticsView.setColumnHeaderView(null);
-        diagnosticsView.setQuickSearchAllowed(false);
-        diagnosticsView.setRowHeaderView(null);
+        outputsView.setColumnHeaderView(null);
+        outputsView.setQuickSearchAllowed(false);
+        outputsView.setRowHeaderView(null);
 
         javax.swing.GroupLayout outputsPanelLayout = new javax.swing.GroupLayout(outputsPanel);
         outputsPanel.setLayout(outputsPanelLayout);
@@ -202,7 +202,7 @@ final class GeneralPanel extends javax.swing.JPanel {
             outputsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(outputsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(diagnosticsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(outputsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -216,7 +216,7 @@ final class GeneralPanel extends javax.swing.JPanel {
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(70, 74, Short.MAX_VALUE))
                     .addGroup(outputsPanelLayout.createSequentialGroup()
-                        .addComponent(diagnosticsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(outputsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())))
         );
 
@@ -307,13 +307,13 @@ final class GeneralPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel defaultSpecLabel;
-    private org.openide.explorer.view.OutlineView diagnosticsView;
     private javax.swing.JButton editOutput;
     private javax.swing.JLabel estimationLabel;
     private javax.swing.JComboBox estimationPolicyComboBox;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel lastYearsPanel;
     private javax.swing.JPanel outputsPanel;
+    private org.openide.explorer.view.OutlineView outputsView;
     private javax.swing.JButton resetOutput;
     private javax.swing.JPanel revisionHistoryPanel;
     private javax.swing.JPanel saPanel;

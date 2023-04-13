@@ -16,10 +16,14 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.impl;
 
+import java.util.Arrays;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnostics;
 import jdplus.sa.desktop.plugin.diagnostics.ResidualTradingDaysDiagnosticsBuddy;
 import jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
+import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -30,14 +34,21 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = TramoSeatsDiagnosticsFactoryBuddy.class, position = 1230)
 public final class TramoSeatsResidualTradingDaysDiagnosticsBuddy extends ResidualTradingDaysDiagnosticsBuddy implements TramoSeatsDiagnosticsFactoryBuddy<ResidualTradingDaysDiagnosticsConfiguration> {
 
-    public TramoSeatsResidualTradingDaysDiagnosticsBuddy(){
+    public TramoSeatsResidualTradingDaysDiagnosticsBuddy() {
         this.setActiveDiagnosticsConfiguration(ResidualTradingDaysDiagnosticsConfiguration.getDefault());
     }
-    
+
     @Override
     public ResidualTradingDaysDiagnosticsFactory createFactory() {
         return new ResidualTradingDaysDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
-                (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests());
+                (TramoSeatsResults r) -> {
+                    RegSarimaModel preprocessing = r.getPreprocessing();
+                    boolean td = false;
+                    if (preprocessing != null) {
+                        td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
+                    }
+                    return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                });
     }
 
 }

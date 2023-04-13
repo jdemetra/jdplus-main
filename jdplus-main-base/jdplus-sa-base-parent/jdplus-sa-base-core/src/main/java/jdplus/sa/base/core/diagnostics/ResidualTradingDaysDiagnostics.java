@@ -29,12 +29,20 @@ import jdplus.toolkit.base.api.processing.Diagnostics;
  * @author Jean Palate
  */
 public class ResidualTradingDaysDiagnostics implements Diagnostics {
+    
+    @lombok.Value
+    public static class Input{
+        ResidualTradingDaysTests tests;
+        boolean td;
+    }
 
     private StatisticalTest f_sa, f_i;
     private double sev, bad, unc;
+    private boolean td;
 
-    public static ResidualTradingDaysDiagnostics of(ResidualTradingDaysDiagnosticsConfiguration config, ResidualTradingDaysTests tests) {
+    public static ResidualTradingDaysDiagnostics of(ResidualTradingDaysDiagnosticsConfiguration config, Input input) {
         try {
+            ResidualTradingDaysTests tests = input.getTests();
             ResidualTradingDaysDiagnostics test = new ResidualTradingDaysDiagnostics();
             TsData sa = tests.getSa();
             TsData i = tests.getIrr();
@@ -52,6 +60,7 @@ public class ResidualTradingDaysDiagnostics implements Diagnostics {
             test.sev = config.getSevereThreshold();
             test.bad = config.getBadThreshold();
             test.unc = config.getUncertainThreshold();
+            test.td=input.isTd();
             return test;
         } catch (Exception err) {
             return null;
@@ -84,33 +93,22 @@ public class ResidualTradingDaysDiagnostics implements Diagnostics {
     }
 
     @Override
-    public ProcQuality getDiagnostic(String test
-    ) {
-        switch (test) {
-            case ResidualTradingDaysDiagnosticsFactory.FTEST_SA:
-                return quality(f_sa);
-
-            case ResidualTradingDaysDiagnosticsFactory.FTEST_I:
-                return quality(f_i);
-
-            default:
-                return ProcQuality.Undefined;
-        }
+    public ProcQuality getDiagnostic(String test) {
+        return switch (test) {
+            case ResidualTradingDaysDiagnosticsFactory.FTEST_SA -> quality(f_sa);
+            case ResidualTradingDaysDiagnosticsFactory.FTEST_I -> quality(f_i);
+            default -> ProcQuality.Undefined;
+        };
     }
 
     @Override
     public double getValue(String test) {
 
-        switch (test) {
-
-            case ResidualTradingDaysDiagnosticsFactory.FTEST_SA:
-                return pvalue(f_sa);
-            case ResidualTradingDaysDiagnosticsFactory.FTEST_I:
-                return pvalue(f_i);
-
-            default:
-                return Double.NaN;
-        }
+        return switch (test) {
+            case ResidualTradingDaysDiagnosticsFactory.FTEST_SA -> pvalue(f_sa);
+            case ResidualTradingDaysDiagnosticsFactory.FTEST_I -> pvalue(f_i);
+            default -> Double.NaN;
+        };
     }
 
     @Override
@@ -123,10 +121,9 @@ public class ResidualTradingDaysDiagnostics implements Diagnostics {
             return ProcQuality.Undefined;
         }
         double pval = test.getPvalue();
-//        if (pval < sev) {
-//            return ProcQuality.Severe;
-//        } else 
-        if (pval < bad) {
+        if (!td && pval < sev) {
+            return ProcQuality.Severe;
+        } else if (pval < bad) {
             return ProcQuality.Bad;
         } else if (pval < unc) {
             return ProcQuality.Uncertain;

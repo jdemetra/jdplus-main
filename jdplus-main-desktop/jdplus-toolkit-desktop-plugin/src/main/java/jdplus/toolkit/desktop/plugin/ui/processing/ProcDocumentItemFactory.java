@@ -84,8 +84,9 @@ public abstract class ProcDocumentItemFactory<D extends ProcDocument, I> impleme
 
     @Override
     public JComponent getView(ProcDocument document) {
-        if(!getDocumentType().isInstance(document))
+        if (!getDocumentType().isInstance(document)) {
             throw new IllegalArgumentException("Invalid document type");
+        }
         D source = getDocumentType().cast(document);
         if (async) {
             return new JAsyncView(source);
@@ -115,7 +116,7 @@ public abstract class ProcDocumentItemFactory<D extends ProcDocument, I> impleme
 
         public JAsyncView(final D source) {
             setLayout(new BorderLayout());
-            add(newLoadingComponent(), BorderLayout.CENTER);
+            add(newLoadingComponent("Loading"), BorderLayout.CENTER);
 
             new SwingWorker<I, Void>() {
                 @Override
@@ -126,7 +127,8 @@ public abstract class ProcDocumentItemFactory<D extends ProcDocument, I> impleme
                 @Override
                 protected void done() {
                     try {
-                        switchToComponent(itemUI.getView(get()));
+                        I rslt = get();
+                        switchToComponent(rslt == null ? null : itemUI.getView(rslt));
                     } catch (InterruptedException | ExecutionException ex) {
                         Thread.currentThread().interrupt();
                         switchToComponent(JExceptionPanel.create(ex));
@@ -135,11 +137,11 @@ public abstract class ProcDocumentItemFactory<D extends ProcDocument, I> impleme
             }.execute();
         }
 
-        private JComponent newLoadingComponent() {
+        private JComponent newLoadingComponent(String msg) {
             JLabel result = new JLabel();
             result.setHorizontalAlignment(SwingConstants.CENTER);
             result.setFont(result.getFont().deriveFont(result.getFont().getSize2D() * 2));
-            result.setText("<html><center>Loading");
+            result.setText("<html><center>" + msg);
             return result;
         }
 
@@ -151,6 +153,11 @@ public abstract class ProcDocumentItemFactory<D extends ProcDocument, I> impleme
                 invalidate();
                 repaint();
                 c.setSize(getSize());
+            } else {
+                add(newLoadingComponent("..."), BorderLayout.CENTER);
+                validate();
+                invalidate();
+                repaint();
             }
         }
     }

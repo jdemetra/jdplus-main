@@ -37,9 +37,9 @@ public class ResidualTradingDaysDiagnosticsFactory<R extends Explorable> impleme
     static final List<String> ALL = Collections.unmodifiableList(Arrays.asList(FTEST_SA, FTEST_I));
 
     private final ResidualTradingDaysDiagnosticsConfiguration config;
-    private final Function<R, ResidualTradingDaysTests> extractor;
+    private final Function<R, ResidualTradingDaysDiagnostics.Input> extractor;
 
-    public ResidualTradingDaysDiagnosticsFactory(ResidualTradingDaysDiagnosticsConfiguration config, Function<R, ResidualTradingDaysTests> extractor) {
+    public ResidualTradingDaysDiagnosticsFactory(ResidualTradingDaysDiagnosticsConfiguration config, Function<R, ResidualTradingDaysDiagnostics.Input> extractor) {
         this.config = config;
         this.extractor=extractor;
     }

@@ -96,6 +96,8 @@ import jdplus.tramoseats.base.core.tramoseats.TramoSeatsKernel;
 import jdplus.toolkit.base.core.ucarima.UcarimaModel;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovDiagnostics;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
+import jdplus.toolkit.desktop.plugin.ui.processing.ContextualIds;
+import jdplus.toolkit.desktop.plugin.ui.processing.ContextualTableUI;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -380,10 +382,20 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
 //</editor-fold>
 //<editor-fold defaultstate="collapsed" desc="PREPROCESSING-FORECASTS">
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 3110)
-    public static class ForecastsTable extends ProcDocumentItemFactory<TramoSeatsDocument, TsDocument> {
+    public static class ForecastsTable extends ProcDocumentItemFactory<TramoSeatsDocument, ContextualIds<TsDocument>> {
 
         public ForecastsTable() {
-            super(TramoSeatsDocument.class, SaViews.PREPROCESSING_FCASTS_TABLE, s -> s, new GenericTableUI(false, generateItems()));
+            super(TramoSeatsDocument.class, SaViews.PREPROCESSING_FCASTS_TABLE, s -> {
+                if (s.getResult() == null) {
+                    return null;
+                }
+                int nf = s.getSpecification().getSeats().getForecastCount();
+                if (nf < 0) {
+                    int p = s.getInput().getData().getAnnualFrequency();
+                    nf = -nf * p;
+                }
+                return new ContextualIds<>(generateItems(nf), s);
+            }, new ContextualTableUI(true));
         }
 
         @Override
@@ -391,8 +403,12 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
             return 3110;
         }
 
-        private static String[] generateItems() {
-            return new String[]{RegressionDictionaries.Y_F, RegressionDictionaries.Y_EF};
+        private static String[] generateItems(int nf) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(RegressionDictionaries.Y_F).append('(').append(nf).append(')');
+            StringBuilder ebuilder = new StringBuilder();
+            ebuilder.append(RegressionDictionaries.Y_EF).append('(').append(nf).append(')');
+            return new String[]{builder.toString(), ebuilder.toString()};
         }
     }
 
@@ -1173,7 +1189,6 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
 //</editor-fold>
-    
 //<editor-fold defaultstate="collapsed" desc="REGISTER SLIDING SPANS">
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 6300)
     public static class DiagnosticsSlidingSummaryFactory extends ProcDocumentItemFactory<TramoSeatsDocument, HtmlElement> {
@@ -1234,12 +1249,12 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 return fn.apply(tsrslt);
             };
             DiagnosticInfo info;
-            if (changes){
-                info=mul ? DiagnosticInfo.PeriodToPeriodGrowthDifference : DiagnosticInfo.PeriodToPeriodDifference;
-            }else{
-                info=mul ? DiagnosticInfo.RelativeDifference : DiagnosticInfo.AbsoluteDifference;
+            if (changes) {
+                info = mul ? DiagnosticInfo.PeriodToPeriodGrowthDifference : DiagnosticInfo.PeriodToPeriodDifference;
+            } else {
+                info = mul ? DiagnosticInfo.RelativeDifference : DiagnosticInfo.AbsoluteDifference;
             }
-            return new SlidingSpansUI.Information<>(mul, ss, info , name, extractor);
+            return new SlidingSpansUI.Information<>(mul, ss, info, name, extractor);
         };
     }
 
@@ -1247,10 +1262,10 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     public static class DiagnosticsSlidingSeasFactory extends ProcDocumentItemFactory<TramoSeatsDocument, SlidingSpansUI.Information<TramoSeatsResults>> {
 
         public DiagnosticsSlidingSeasFactory() {
-            super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SEAS, 
+            super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SEAS,
                     ssExtractor("Seasonal", false,
-                            rslt->rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value))
-                    , new SlidingSpansUI<TramoSeatsResults>());
+                            rslt -> rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value)),
+                     new SlidingSpansUI<TramoSeatsResults>());
         }
 
         @Override
@@ -1258,15 +1273,15 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
             return 6310;
         }
     }
-    
+
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 6320)
     public static class DiagnosticsSlidingTdFactory extends ProcDocumentItemFactory<TramoSeatsDocument, SlidingSpansUI.Information<TramoSeatsResults>> {
 
         public DiagnosticsSlidingTdFactory() {
-            super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_TD, 
+            super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_TD,
                     ssExtractor("Trading days", false,
-                            rslt->rslt.getPreprocessing().getTradingDaysEffect(null))
-                    , new SlidingSpansUI<TramoSeatsResults>());
+                            rslt -> rslt.getPreprocessing().getTradingDaysEffect(null)),
+                     new SlidingSpansUI<TramoSeatsResults>());
         }
 
         @Override
@@ -1274,15 +1289,15 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
             return 6320;
         }
     }
-    
+
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 6330)
     public static class DiagnosticsSlidingSaFactory extends ProcDocumentItemFactory<TramoSeatsDocument, SlidingSpansUI.Information<TramoSeatsResults>> {
 
         public DiagnosticsSlidingSaFactory() {
-            super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SA, 
+            super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SA,
                     ssExtractor("Seasonally adjusted", true,
-                            rslt->rslt.getDecomposition().getFinalComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value))
-                    , new SlidingSpansUI<TramoSeatsResults>());
+                            rslt -> rslt.getDecomposition().getFinalComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value)),
+                     new SlidingSpansUI<TramoSeatsResults>());
         }
 
         @Override
@@ -1290,10 +1305,8 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
             return 6330;
         }
     }
-    
-    
+
 //</editor-fold>
-    
 //<editor-fold defaultstate="collapsed" desc="REGISTER REVISION HISTORY VIEW">
     private static Function<TramoSeatsDocument, RevisionHistoryUI.Information> revisionExtractor(String info, DiagnosticInfo diag) {
         return (TramoSeatsDocument source) -> {
