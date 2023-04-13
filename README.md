@@ -4,16 +4,16 @@
 
 ## Installing / Getting started
 
-JDemetra+ v3 runs on any operating system that supports Java 17 or later such as Microsoft Windows, Solaris OS, Apple macOS, Ubuntu and other various Linux distributions.
+JDemetra+ v3 runs on any operating system that supports **Java 17 or later** such as Microsoft **Windows**, **Solaris OS**, Apple **macOS**, **Ubuntu** and other various **Linux** distributions.
 
-The project is still in development, but you can find daily builds and install instructions at https://github.com/nbbrd/jdemetra-app-snapshot.
+The project is still in development, but you can find **daily builds** and install instructions at https://github.com/nbbrd/jdemetra-app-snapshot.
 
-Its main documentation is available at https://jdemetra-new-documentation.netlify.app.
+Its main **documentation** is available at https://jdemetra-new-documentation.netlify.app.
 
 ## Developing
 
-This project is written in Java and uses Maven as a build tool.  
-It requires Java 17 as minimum version and all its dependencies are hosted on Maven Central.
+This project is written in Java and uses [Apache Maven](https://maven.apache.org/) as a build tool.  
+It requires [Java 17 as minimum version](https://whichjdk.com/) and all its dependencies are hosted on [Maven Central](https://search.maven.org/).
 
 The code can be build using any IDE or by just type-in the following commands in a terminal:
 ```shell
@@ -22,7 +22,7 @@ cd jdplus-main
 mvn clean install
 ```
 
-### Structure and naming
+### Structure
 
 JDemetra+ code is **divided into topics** (toolkit, x13, ...) and is **grouped by lifecycle** (main, experimental, ...).  
 Each group is hosted in a separate Git repository while each topic has its own Maven module.
@@ -67,6 +67,8 @@ flowchart BT
     nowcasting --> main
     click nowcastingx https://github.com/jdemetra/jdplus-nowcasting
 ```
+
+### Naming
 
 Git repositories names, Maven modules artifactId, Java modules names and Java packages names follow this naming convention:  
 `PREFIX-TOPIC[-STEREOTYPE[-CLASSIFIER]]` 
