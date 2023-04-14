@@ -147,57 +147,60 @@ public class AutomaticFRegressionTest implements IRegressionModule {
 
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
-
-        ModelDescription current = context.getDescription();
+        try {
+            ModelDescription current = context.getDescription();
 //      First case TD=0 or Just test EE
-        ModelDescription test0 = createTestModel(context, null, null);
-        IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
-        RegArimaEstimation regarima0 = processor.process(test0.regarima(), test0.mapping());
-        ConcentratedLikelihoodWithMissing ll0 = regarima0.getConcentratedLikelihood();
-        int nhp = test0.getArimaSpec().freeParametersCount();
-        double SS0 = ll0.ssq();
+            ModelDescription test0 = createTestModel(context, null, null);
+            IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
+            RegArimaEstimation regarima0 = processor.process(test0.regarima(), test0.mapping());
+            ConcentratedLikelihoodWithMissing ll0 = regarima0.getConcentratedLikelihood();
+            int nhp = test0.getArimaSpec().freeParametersCount();
+            double SS0 = ll0.ssq();
 
-        if (td == null) {
-            return update(current, test0, null, ll0, nhp);
-        }
+            if (td == null) {
+                return update(current, test0, null, ll0, nhp);
+            }
 
-        //      Second case TD=TradindDay only
-        ModelDescription test6 = createTestModel(context, td, null);
-        RegArimaEstimation regarima6 = processor.process(test6.regarima(), test6.mapping());
-        ConcentratedLikelihoodWithMissing ll6 = regarima6.getConcentratedLikelihood();
-        double SS6 = ll6.ssq(), SSmc6 = SS6 / (ll6.degreesOfFreedom() - nhp);
-        double Ftd = (SS0 - SS6) / (SSmc6 * 6);
-        double pFtd6 = 0.0;
-        if (Ftd >= 0) {
-            F f0 = new F(6, ll6.degreesOfFreedom() - nhp);
-            pFtd6 = f0.getProbability(Ftd, ProbabilityType.Lower);
-        }
+            //      Second case TD=TradindDay only
+            ModelDescription test6 = createTestModel(context, td, null);
+            RegArimaEstimation regarima6 = processor.process(test6.regarima(), test6.mapping());
+            ConcentratedLikelihoodWithMissing ll6 = regarima6.getConcentratedLikelihood();
+            double SS6 = ll6.ssq(), SSmc6 = SS6 / (ll6.degreesOfFreedom() - nhp);
+            double Ftd = (SS0 - SS6) / (SSmc6 * 6);
+            double pFtd6 = 0.0;
+            if (Ftd >= 0) {
+                F f0 = new F(6, ll6.degreesOfFreedom() - nhp);
+                pFtd6 = f0.getProbability(Ftd, ProbabilityType.Lower);
+            }
 
 //      Third case TD=WorkingDay only
-        ModelDescription test1 = createTestModel(context, wd, null);
-        RegArimaEstimation regarima1 = processor.process(test1.regarima(), test1.mapping());
-        ConcentratedLikelihoodWithMissing ll1 = regarima1.getConcentratedLikelihood();
-        double SS1 = ll1.ssq(), SSmc1 = SS1 / (ll1.degreesOfFreedom() - nhp);
-        Ftd = (SS0 - SS1) / SSmc1;
-        double pFtd1 = 0.0;
-        if (Ftd >= 0) {
-            F f1 = new F(1, ll1.degreesOfFreedom() - nhp);
-            pFtd1 = f1.getProbability(Ftd, ProbabilityType.Lower);
-        }
+            ModelDescription test1 = createTestModel(context, wd, null);
+            RegArimaEstimation regarima1 = processor.process(test1.regarima(), test1.mapping());
+            ConcentratedLikelihoodWithMissing ll1 = regarima1.getConcentratedLikelihood();
+            double SS1 = ll1.ssq(), SSmc1 = SS1 / (ll1.degreesOfFreedom() - nhp);
+            Ftd = (SS0 - SS1) / SSmc1;
+            double pFtd1 = 0.0;
+            if (Ftd >= 0) {
+                F f1 = new F(1, ll1.degreesOfFreedom() - nhp);
+                pFtd1 = f1.getProbability(Ftd, ProbabilityType.Lower);
+            }
 
 // Check over the 3 cases        
-        if ((pFtd6 > pFtd1) && (pFtd6 > 1 - fpvalue)) {
-            // add leap year
-            ModelDescription all = createTestModel(context, td, lp);
-            RegArimaEstimation regarima = processor.process(all.regarima(), all.mapping());
-            return update(current, all, td, regarima.getConcentratedLikelihood(), nhp);
-        } else if (pFtd1 < 1 - fpvalue) {
-            return update(current, test0, null, ll0, nhp);
-        } else {
-            // add leap year
-            ModelDescription all = createTestModel(context, wd, lp);
-            RegArimaEstimation regarima = processor.process(all.regarima(), all.mapping());
-            return update(current, all, wd, regarima.getConcentratedLikelihood(), nhp);
+            if ((pFtd6 > pFtd1) && (pFtd6 > 1 - fpvalue)) {
+                // add leap year
+                ModelDescription all = createTestModel(context, td, lp);
+                RegArimaEstimation regarima = processor.process(all.regarima(), all.mapping());
+                return update(current, all, td, regarima.getConcentratedLikelihood(), nhp);
+            } else if (pFtd1 < 1 - fpvalue) {
+                return update(current, test0, null, ll0, nhp);
+            } else {
+                // add leap year
+                ModelDescription all = createTestModel(context, wd, lp);
+                RegArimaEstimation regarima = processor.process(all.regarima(), all.mapping());
+                return update(current, all, wd, regarima.getConcentratedLikelihood(), nhp);
+            }
+        } catch (Exception err) {
+            return ProcessingResult.Failed;
         }
     }
 

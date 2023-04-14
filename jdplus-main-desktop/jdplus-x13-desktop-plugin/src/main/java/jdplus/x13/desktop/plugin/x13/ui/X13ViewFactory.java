@@ -81,6 +81,7 @@ import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
+import jdplus.x13.base.api.x11.X11Spec;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Document;
 import jdplus.x13.base.core.x13.X13Factory;
@@ -372,19 +373,33 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     
 //<editor-fold defaultstate="collapsed" desc="PREPROCESSING-FORECASTS">
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 3110)
-    public static class ForecastsTable extends ProcDocumentItemFactory<X13Document, TsDocument> {
+    public static class ForecastsTable extends ProcDocumentItemFactory<X13Document, ContextualIds<TsDocument>> {
 
         public ForecastsTable() {
-            super(X13Document.class, SaViews.PREPROCESSING_FCASTS_TABLE, s -> s, new GenericTableUI(false, generateItems()));
-        }
+            super(X13Document.class, SaViews.PREPROCESSING_FCASTS_TABLE, s ->{
+                if (s.getResult() == null) {
+                    return null;
+                }
+                int nf = s.getSpecification().getX11().getForecastHorizon();
+                if (nf<0){
+                    int p = s.getInput().getData().getAnnualFrequency();
+                    nf=-nf*p;
+                }
+                return new ContextualIds<>(generateItems(nf), s);
+            }, new ContextualTableUI(true));
+         }
 
         @Override
         public int getPosition() {
             return 3110;
         }
 
-        private static String[] generateItems() {
-            return new String[]{RegressionDictionaries.Y_F, RegressionDictionaries.Y_EF};
+        private static String[] generateItems(int nf) {
+            StringBuilder builder=new StringBuilder();
+            builder.append(RegressionDictionaries.Y_F).append('(').append(nf).append(')');
+            StringBuilder ebuilder=new StringBuilder();
+            ebuilder.append(RegressionDictionaries.Y_EF).append('(').append(nf).append(')');
+            return new String[]{builder.toString(), ebuilder.toString()};
         }
     }
 
@@ -414,7 +429,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         }
     }
 //</editor-fold>
-//
+
 //<editor-fold defaultstate="collapsed" desc="PREPROCESSING-DETAILS">
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 3200)
@@ -447,14 +462,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     public static class PreprocessingDetFactory extends ProcDocumentItemFactory<X13Document, TsDocument> {
 
         public PreprocessingDetFactory() {
-            super(X13Document.class, SaViews.PREPROCESSING_DET, source -> source, new GenericTableUI(false,
-                    //                    BasicInformationExtractor.concatenate(SaDictionaries.PREPROCESSING, ModellingDictionary.Y_LIN), 
-                    //                    BasicInformationExtractor.concatenate(SaDictionaries.PREPROCESSING, ModellingDictionary.DET),
-                    //                    BasicInformationExtractor.concatenate(SaDictionaries.PREPROCESSING, ModellingDictionary.CAL), 
-                    //                    BasicInformationExtractor.concatenate(SaDictionaries.PREPROCESSING, ModellingDictionary.TDE), 
-                    //                    BasicInformationExtractor.concatenate(SaDictionaries.PREPROCESSING, ModellingDictionary.EE),
-                    //                    BasicInformationExtractor.concatenate(SaDictionaries.PREPROCESSING, ModellingDictionary.OUT), 
-                    //                    BasicInformationExtractor.concatenate(SaDictionaries.PREPROCESSING, ModellingDictionary.FULL_RES)));
+            super(X13Document.class, SaViews.PREPROCESSING_DET, source -> 
+                    source.getResult().getPreprocessing() == null ? null : source, 
+                    new GenericTableUI(false,
                     SaDictionaries.PREPROCESSING, ModellingDictionary.YCAL,
                     SaDictionaries.PREPROCESSING, ModellingDictionary.Y_LIN,
                     SaDictionaries.PREPROCESSING, ModellingDictionary.DET,
@@ -1091,6 +1101,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
 //</editor-fold>
+    
 //<editor-fold defaultstate="collapsed" desc="BENCHMARKING">
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 4900)
     public static class BenchmarkingFactory extends ProcDocumentItemFactory<X13Document, BenchmarkingUI.Input> {
@@ -1234,6 +1245,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
 //</editor-fold>
+    
 //<editor-fold defaultstate="collapsed" desc="REGISTER REVISION HISTORY VIEW">
     private static Function<X13Document, RevisionHistoryUI.Information> revisionExtractor(String info, DiagnosticInfo diag) {
         return (X13Document source) -> {

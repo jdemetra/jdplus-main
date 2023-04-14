@@ -21,6 +21,7 @@ import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsDictionaries;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,6 +31,7 @@ import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFac
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnostics;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnostics;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutliersDiagnosticsConfiguration;
 import jdplus.toolkit.base.core.regarima.diagnostics.ResidualsDiagnosticsConfiguration;
@@ -38,6 +40,8 @@ import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutOfSampleDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
+import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.tramoseats.base.core.seats.diagnostics.SeatsDiagnosticsConfiguration;
 import jdplus.tramoseats.base.core.seats.diagnostics.SeatsDiagnosticsFactory;
 import jdplus.tramoseats.base.core.tramo.TramoFactory;
@@ -86,7 +90,14 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
 
         ResidualTradingDaysDiagnosticsFactory<TramoSeatsResults> residualTradingDays
                 = new ResidualTradingDaysDiagnosticsFactory<>(ResidualTradingDaysDiagnosticsConfiguration.getDefault(),
-                        (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests()
+                        (TramoSeatsResults r) -> {
+                            RegSarimaModel preprocessing = r.getPreprocessing();
+                            boolean td = false;
+                            if (preprocessing != null) {
+                                td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
+                            }
+                            return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                        }
                 );
 
         List<SaDiagnosticsFactory<?, TramoSeatsResults>> all = new ArrayList<>();

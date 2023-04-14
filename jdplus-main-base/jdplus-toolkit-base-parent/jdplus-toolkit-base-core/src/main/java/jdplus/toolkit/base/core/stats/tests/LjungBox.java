@@ -42,6 +42,26 @@ public class LjungBox {
             return 4 * period;
         }
     }
+    
+    public static int defaultAutoCorrelationsCount(int period, int nobs) {
+        int lbdf;
+
+        switch (period) {
+            case 12 -> lbdf = 24;
+            case 1 -> lbdf = 8;
+            default -> {
+                lbdf = 4 * period;
+                if (nobs <= 22 && period == 4) {
+                    lbdf = 6;
+                }
+            }
+        }
+        if (lbdf >= nobs) {
+            lbdf = nobs / 2;
+        }
+        return lbdf;
+    }
+    
 
     private int lag = 1;
     private int k = 12;
@@ -127,7 +147,6 @@ public class LjungBox {
     }
 
     public StatisticalTest build() {
-
         double res = 0.0;
         for (int i = 1; i <= k; i++) {
             double ai = autoCorrelations.applyAsDouble(i * lag);

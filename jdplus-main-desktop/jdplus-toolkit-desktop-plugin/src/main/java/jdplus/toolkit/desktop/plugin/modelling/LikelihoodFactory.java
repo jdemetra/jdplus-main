@@ -27,11 +27,13 @@ public abstract class LikelihoodFactory<D extends TsDocument<?, ?>>
             return null;
         } else {
             IFunction fn = source.likelihoodFunction();
+            if (fn == null)
+                return null;
             return Functions.create(fn, fn.evaluate(source.getEstimation().getParameters().getValues()));
         }
     };
 
     protected LikelihoodFactory(Class<D> documentType, Id id, Function<D, RegSarimaModel> extractor) {
-        super(documentType, id, extractor.andThen(LLEXTRACTOR), new SurfacePlotterUI());
+        super(documentType, id, extractor == null ? null : extractor.andThen(LLEXTRACTOR), new SurfacePlotterUI());
     }
 }

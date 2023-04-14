@@ -59,9 +59,9 @@ public class ModelStatistics {
     public static ModelStatistics of(ModelDescription m, ConcentratedLikelihood ll) {
         DoubleSeq e = ll.e();
         int p = m.getAnnualFrequency();
-        int n = LjungBox.defaultAutoCorrelationsCount(p);
         int nres = e.length();
         int nhp = m.getArimaSpec().freeParametersCount();
+        int n = LjungBox.defaultAutoCorrelationsCount(p, nres);
         IntToDoubleFunction acf = AutoCovariances.autoCorrelationFunction(e, 0);
         StatisticalTest lb = new LjungBox(acf, nres)
                 .autoCorrelationsCount(n)
@@ -81,12 +81,16 @@ public class ModelStatistics {
                 .skewnessAbsvalue(Math.abs(sk.getValue()))
                 .skewnessPvalue(sk.getPvalue());
         if (p > 1) {
-            StatisticalTest lbs = p == 1 ? null : new LjungBox(acf, nres)
-                    .autoCorrelationsCount(2)
-                    .lag(p)
-                    .build();
-            builder.seasonalLjungBox(lbs.getValue())
-                    .seasonalLjungBoxPvalue(lbs.getPvalue());
+            try {
+                StatisticalTest lbs = p == 1 ? null : new LjungBox(acf, nres)
+                        .autoCorrelationsCount(2)
+                        .lag(p)
+                        .build();
+                builder.seasonalLjungBox(lbs.getValue())
+                        .seasonalLjungBoxPvalue(lbs.getPvalue());
+            } catch (Exception ex) {
+
+            }
         }
         int nres2 = (1 + nres) / 2;
         int nlast = Math.min(nres2, 10 * p);

@@ -16,10 +16,14 @@
  */
 package jdplus.x13.desktop.plugin.x13.diagnostics.impl;
 
+import java.util.Arrays;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnostics;
 import jdplus.sa.desktop.plugin.diagnostics.ResidualTradingDaysDiagnosticsBuddy;
 import jdplus.x13.desktop.plugin.x13.diagnostics.X13DiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
+import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -30,13 +34,20 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = X13DiagnosticsFactoryBuddy.class, position = 1230)
 public final class X13ResidualTradingDaysDiagnosticsBuddy extends ResidualTradingDaysDiagnosticsBuddy implements X13DiagnosticsFactoryBuddy<ResidualTradingDaysDiagnosticsConfiguration> {
 
-    public X13ResidualTradingDaysDiagnosticsBuddy(){
+    public X13ResidualTradingDaysDiagnosticsBuddy() {
         this.setActiveDiagnosticsConfiguration(ResidualTradingDaysDiagnosticsConfiguration.getDefault());
     }
-    
+
     @Override
     public ResidualTradingDaysDiagnosticsFactory<X13Results> createFactory() {
         return new ResidualTradingDaysDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
-        (X13Results r) -> r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests());
+                (X13Results r) -> {
+                    RegSarimaModel preprocessing = r.getPreprocessing();
+                    boolean td = false;
+                    if (preprocessing != null) {
+                        td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
+                    }
+                    return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                });
     }
 }

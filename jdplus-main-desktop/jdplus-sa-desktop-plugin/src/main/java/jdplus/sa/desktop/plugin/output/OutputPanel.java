@@ -66,7 +66,7 @@ public class OutputPanel extends javax.swing.JPanel implements ExplorerManager.P
         outputProperties = new org.openide.explorer.propertysheet.PropertySheetView();
         jToolBar1 = new javax.swing.JToolBar();
         jLabel2 = new javax.swing.JLabel();
-        addButton = new javax.swing.JButton();
+        addButton = DropDownButtonFactory.createDropDownButton(DemetraIcons.LIST_ADD_16, addPopupMenu);
         removeButton = new javax.swing.JButton();
 
         jSplitPane1.setDividerLocation(150);
@@ -79,8 +79,9 @@ public class OutputPanel extends javax.swing.JPanel implements ExplorerManager.P
         jLabel2.setText(org.openide.util.NbBundle.getMessage(OutputPanel.class, "OutputPanel.jLabel2.text")); // NOI18N
         jLabel2.setToolTipText(org.openide.util.NbBundle.getMessage(OutputPanel.class, "OutputPanel.jLabel2.toolTipText")); // NOI18N
         jToolBar1.add(jLabel2);
+        jLabel2.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OutputPanel.class, "OutputPanel.jLabel2.text")); // NOI18N
 
-        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/list-add_16x16.png"))); // NOI18N
+        addButton.setIcon(DemetraIcons.LIST_ADD_16.getImageIcon());
         addButton.setFocusable(false);
         addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -91,7 +92,7 @@ public class OutputPanel extends javax.swing.JPanel implements ExplorerManager.P
         });
         jToolBar1.add(addButton);
 
-        removeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/list-remove_16x16.png"))); // NOI18N
+        removeButton.setIcon(DemetraIcons.LIST_REMOVE_16.getImageIcon());
         removeButton.setFocusable(false);
         removeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         removeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -114,7 +115,7 @@ public class OutputPanel extends javax.swing.JPanel implements ExplorerManager.P
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE))
+                .addComponent(jSplitPane1))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -271,7 +271,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="diagnosticsView" pref="0" max="32767" attributes="0"/>
+                  <Component id="outputsView" pref="0" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jToolBar1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -288,7 +288,7 @@
                           <EmptySpace min="70" pref="74" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="diagnosticsView" pref="0" max="32767" attributes="0"/>
+                          <Component id="outputsView" pref="0" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -345,7 +345,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="org.openide.explorer.view.OutlineView" name="diagnosticsView">
+        <Component class="org.openide.explorer.view.OutlineView" name="outputsView">
           <Properties>
             <Property name="columnHeaderView" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
               <ComponentRef name="null"/>
@@ -356,7 +356,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new org.openide.explorer.view.OutlineView(&quot;Diagnostics&quot;)"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new org.openide.explorer.view.OutlineView(&quot;Outputs&quot;)"/>
           </AuxValues>
         </Component>
       </SubComponents>

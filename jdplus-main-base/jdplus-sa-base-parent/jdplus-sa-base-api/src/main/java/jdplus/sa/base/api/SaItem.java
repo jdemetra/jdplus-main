@@ -60,7 +60,10 @@ public final class SaItem {
     }
 
     public SaItem copy() {
-        return toBuilder().estimation(estimation == null ? null : estimation.flush()).build();
+        return toBuilder()
+                .estimation(estimation == null ? null : estimation.flush())
+                .processed(false)
+                .build();
     }
 
     /**
@@ -70,6 +73,10 @@ public final class SaItem {
     @lombok.experimental.NonFinal
     @lombok.EqualsAndHashCode.Exclude
     private volatile SaEstimation estimation;
+
+    @lombok.experimental.NonFinal
+    @lombok.EqualsAndHashCode.Exclude
+    private volatile boolean processed;
 
     public static SaItem of(Ts s, SaSpecification spec) {
         if (!s.getType().encompass(TsInformationType.Data)) {
@@ -86,21 +93,21 @@ public final class SaItem {
     }
 
     public SaItem withPriority(int priority) {
-        return new SaItem(name, definition, meta, priority, estimation);
+        return new SaItem(name, definition, meta, priority, estimation, processed);
     }
 
     public SaItem withName(String name) {
-        return new SaItem(name, definition, meta, priority, estimation);
+        return new SaItem(name, definition, meta, priority, estimation, processed);
     }
 
     public SaItem withInformations(Map<String, String> info) {
-        return new SaItem(name, definition, Collections.unmodifiableMap(info), priority, estimation);
+        return new SaItem(name, definition, Collections.unmodifiableMap(info), priority, estimation, processed);
     }
 
     public SaItem withComment(String ncomment) {
         Map<String, String> info = new HashMap<>(meta);
         info.put(COMMENT, ncomment);
-        return new SaItem(name, definition, info, priority, estimation);
+        return new SaItem(name, definition, info, priority, estimation, processed);
     }
 
     public SaItem withDomainSpecification(SaSpecification dspec) {
@@ -173,38 +180,43 @@ public final class SaItem {
      */
     public boolean process(ModellingContext context, boolean verbose) {
         synchronized (this) {
-            estimation = SaManager.process(definition, context, verbose);
+            if (!processed) {
+                estimation = SaManager.process(definition, context, verbose);
+                processed = true;
+            }
         }
         return estimation != null && estimation.getQuality() != ProcQuality.Undefined;
     }
 
     public boolean compute(ModellingContext context, boolean verbose) {
         synchronized (this) {
-            if (estimation == null) {
-                estimation = SaManager.process(definition, context, verbose);
-            } else {
-                // workaround against incomplete estimation
-                // Unoptimized solution
-                // SaSpecification pointSpec = estimation.getPointSpec();
-                //if (pointSpec == null)
-                SaSpecification pointSpec = definition.activeSpecification();
-                SaDefinition pdef = SaDefinition.builder()
-                        .ts(definition.getTs())
-                        .domainSpec(pointSpec)
-                        .build();
-                SaEstimation nestimation = SaManager.process(pdef, context, verbose);
-                if (nestimation == null) {
-                    return false;
+            if (!processed) {
+                if (estimation == null) {
+                    estimation = SaManager.process(definition, context, verbose);
+                } else {
+                    // workaround against incomplete estimation
+                    // Unoptimized solution
+                    // SaSpecification pointSpec = estimation.getPointSpec();
+                    //if (pointSpec == null)
+                    SaSpecification pointSpec = definition.activeSpecification();
+                    SaDefinition pdef = SaDefinition.builder()
+                            .ts(definition.getTs())
+                            .domainSpec(pointSpec)
+                            .build();
+                    SaEstimation nestimation = SaManager.process(pdef, context, verbose);
+                    if (nestimation == null) {
+                        return false;
+                    }
+                    estimation = nestimation.withQuality(estimation.getQuality());
                 }
-                estimation = nestimation.withQuality(estimation.getQuality());
+                processed = true;
             }
         }
         return estimation.getQuality() != ProcQuality.Undefined;
     }
 
     public boolean isProcessed() {
-        SaEstimation e = estimation;
-        return e != null && e.getResults() != null;
+        return processed;
     }
 
     /**
@@ -252,7 +264,7 @@ public final class SaItem {
                     .estimationSpec(definition.activeSpecification())
                     .policy(policy.getPolicy())
                     .build();
-            return new SaItem(name, ndef, meta, priority, estimation);
+            return new SaItem(name, ndef, meta, priority, null, false);
         } else {
             SaSpecification dspec = definition.getDomainSpec();
             SaSpecification pspec = estimation.getPointSpec();
@@ -286,7 +298,7 @@ public final class SaItem {
                     .estimationSpec(espec)
                     .policy(policy.getPolicy())
                     .build();
-            return new SaItem(name, ndef, meta, priority, null);
+            return new SaItem(name, ndef, meta, priority, null, false);
         }
     }
 

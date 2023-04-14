@@ -23,6 +23,7 @@ import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.x13.base.api.x13.X13Dictionaries;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,11 +35,14 @@ import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFac
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnostics;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnostics;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutOfSampleDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
+import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.x13.base.core.x13.diagnostics.MDiagnosticsConfiguration;
 import jdplus.x13.base.core.x13.diagnostics.MDiagnosticsFactory;
 import jdplus.x13.base.core.x13.regarima.RegArimaFactory;
@@ -80,7 +84,14 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
                 );
         ResidualTradingDaysDiagnosticsFactory<X13Results> residualTradingDays
                 = new ResidualTradingDaysDiagnosticsFactory<>(ResidualTradingDaysDiagnosticsConfiguration.getDefault(),
-                        (X13Results r) -> r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests()
+                        (X13Results r) -> {
+                            RegSarimaModel preprocessing = r.getPreprocessing();
+                            boolean td = false;
+                            if (preprocessing != null) {
+                                td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
+                            }
+                            return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                        }
                 );
 
         List<SaDiagnosticsFactory<?, X13Results>> all = new ArrayList<>();
@@ -116,7 +127,7 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
 
     @Override
     public X13Spec refreshSpec(X13Spec currentSpec, X13Spec domainSpec, EstimationPolicyType policy, TsDomain frozen) {
-        if (policy == policy.None || ! currentSpec.getRegArima().getBasic().isPreprocessing()) {
+        if (policy == policy.None || !currentSpec.getRegArima().getBasic().isPreprocessing()) {
             return currentSpec;
         }
         RegArimaSpec nrspec = RegArimaFactory.getInstance().refreshSpec(currentSpec.getRegArima(), domainSpec.getRegArima(), policy, frozen);
