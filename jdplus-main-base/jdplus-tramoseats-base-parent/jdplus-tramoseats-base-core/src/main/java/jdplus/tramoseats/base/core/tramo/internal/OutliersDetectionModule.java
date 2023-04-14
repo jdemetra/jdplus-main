@@ -202,7 +202,7 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
         if (so && period > 1) {
             factories.add(new PeriodicOutlierFactory(period, true));
         }
-        detector.setOutlierFactories(factories.toArray(new IOutlierFactory[factories.size()]));
+        detector.setOutlierFactories(factories.toArray(IOutlierFactory[]::new));
         return detector;
     }
 
@@ -215,29 +215,33 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
 
     @Override
     public ProcessingResult process(RegSarimaModelling context, double criticalValue) {
-        ModelDescription model = context.getDescription();
-        TsDomain domain = model.getEstimationDomain();
-        FastOutliersDetector impl = make(model, criticalValue);
-        if (impl == null) {
+        try {
+            ModelDescription model = context.getDescription();
+            TsDomain domain = model.getEstimationDomain();
+            FastOutliersDetector impl = make(model, criticalValue);
+            if (impl == null) {
+                return ProcessingResult.Failed;
+            }
+            boolean ok = impl.process(model.regarima(), model.mapping());
+            if (!ok) {
+                return ProcessingResult.Failed;
+            }
+            // add new outliers
+            int[][] outliers = impl.getOutliers();
+            if (outliers.length == 0) {
+                return ProcessingResult.Unchanged;
+            }
+            for (int i = 0; i < outliers.length; ++i) {
+                int[] cur = outliers[i];
+                TsPeriod pos = domain.get(cur[0]);
+                IOutlier o = impl.getFactory(cur[1]).make(pos.start());
+                model.addVariable(Variable.variable(IOutlier.defaultName(o.getCode(), pos), o, attributes(o)));
+            }
+            context.clearEstimation();
+            return ProcessingResult.Changed;
+        } catch (RuntimeException err) {
             return ProcessingResult.Failed;
         }
-        boolean ok = impl.process(model.regarima(), model.mapping());
-        if (!ok) {
-            return ProcessingResult.Failed;
-        }
-        // add new outliers
-        int[][] outliers = impl.getOutliers();
-        if (outliers.length == 0) {
-            return ProcessingResult.Unchanged;
-        }
-        for (int i = 0; i < outliers.length; ++i) {
-            int[] cur = outliers[i];
-            TsPeriod pos = domain.get(cur[0]);
-            IOutlier o = impl.getFactory(cur[1]).make(pos.start());
-            model.addVariable(Variable.variable(IOutlier.defaultName(o.getCode(), pos), o, attributes(o)));
-        }
-        context.clearEstimation();
-        return ProcessingResult.Changed;
     }
 
     private static int outlierType(String[] all, String cur) {

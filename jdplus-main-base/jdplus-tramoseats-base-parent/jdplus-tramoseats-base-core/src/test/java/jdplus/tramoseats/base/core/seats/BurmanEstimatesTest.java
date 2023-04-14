@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
  * @author Jean Palate
  */
 public class BurmanEstimatesTest {
-    
+
     public BurmanEstimatesTest() {
     }
 
@@ -39,7 +39,10 @@ public class BurmanEstimatesTest {
     public void testAirline() {
         UcarimaModel ucm = ucmAirline(-.6, -.8);
         ucm = ucm.simplify();
-        BurmanEstimates burman= BurmanEstimates.builder()
+        BurmanEstimates burman = BurmanEstimates.builder()
+                .mean(true)
+                .backcastsCount(30)
+                .forecastsCount(10)
                 .data(Data.TS_PROD.getValues())
                 .ucarimaModel(ucm)
                 .build();
@@ -50,10 +53,36 @@ public class BurmanEstimatesTest {
         estimates = burman.estimates(2, true);
 //        System.out.println(estimates);
     }
-    
+
+    @Test
+    public void testAirlineC() {
+        UcarimaModel ucm = ucmAirline(-.6, -.8);
+        ucm = ucm.simplify();
+        BurmanEstimatesC burman = BurmanEstimatesC.builder()
+                .mean(true)
+                .backcastsCount(30)
+                .forecastsCount(10)
+                .data(Data.TS_PROD.getValues())
+                .ucarimaModel(ucm)
+                .build();
+        DoubleSeq estimates = burman.estimates(0, true);
+//        System.out.println("burmanc");
+//        System.out.println(estimates);
+        estimates = burman.estimates(1, true);
+//        System.out.println(estimates);
+        estimates = burman.estimates(2, true);
+//        System.out.println(estimates);
+    }
+
     public static UcarimaModel ucmAirline(double th, double bth) {
-        SarimaOrders spec = SarimaOrders.airline(12);
+        SarimaOrders spec = new SarimaOrders(12);
+        spec.setP(1);
+        spec.setQ(1);
+        spec.setBp(1);
+        spec.setBq(1);
         SarimaModel sarima = SarimaModel.builder(spec)
+                .phi(1, -.9)
+                .bphi(1, -.9)
                 .theta(1, th)
                 .btheta(1, bth)
                 .build();

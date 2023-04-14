@@ -52,7 +52,7 @@ public class ArmaModule implements IArmaModule {
         }
 
         public Builder seasonal(boolean seasonal) {
-            this.seasonal=seasonal;
+            this.seasonal = seasonal;
             return this;
         }
 
@@ -126,9 +126,9 @@ public class ArmaModule implements IArmaModule {
 //        }
         return spec;
     }
-    
-    static int maxInic(int period){
-        switch (period){
+
+    static int maxInic(int period) {
+        switch (period) {
             case 2:
                 return 1;
             case 3:
@@ -195,7 +195,7 @@ public class ArmaModule implements IArmaModule {
 
     private ArmaModule(Builder builder) {
         this.wn = builder.wn;
-        this.seasonal=builder.seasonal;
+        this.seasonal = builder.seasonal;
     }
 
     private ArmaModelSelector createModule(SarimaOrders maxspec) {
@@ -211,35 +211,39 @@ public class ArmaModule implements IArmaModule {
 
     @Override
     public ProcessingResult process(RegSarimaModelling context) {
-        ModelDescription desc = context.getDescription();
-        SarimaOrders curspec = desc.specification();
-        int inic = comespa(curspec.getPeriod(), desc.regarima().getObservationsCount(),
-                maxInic(curspec.getPeriod()), curspec.getD(), curspec.getBd(), seasonal);
-        if (inic == 0) {
-            if (!curspec.isAirline(seasonal)) {
-                curspec.setDefault(seasonal);
-                desc.setSpecification(curspec);
-                return ProcessingResult.Changed;
-            } else {
-                return ProcessingResult.Unprocessed;
+        try {
+            ModelDescription desc = context.getDescription();
+            SarimaOrders curspec = desc.specification();
+            int inic = comespa(curspec.getPeriod(), desc.regarima().getObservationsCount(),
+                    maxInic(curspec.getPeriod()), curspec.getD(), curspec.getBd(), seasonal);
+            if (inic == 0) {
+                if (!curspec.isAirline(seasonal)) {
+                    curspec.setDefault(seasonal);
+                    desc.setSpecification(curspec);
+                    return ProcessingResult.Changed;
+                } else {
+                    return ProcessingResult.Unprocessed;
+                }
             }
+            SarimaOrders maxspec = calcmaxspec(desc.getAnnualFrequency(),
+                    inic, curspec.getD(), curspec.getBd(), seasonal);
+            DoubleSeq res = RegArimaUtility.olsResiduals(desc.regarima());
+            ArmaModelSelector impl = createModule(maxspec);
+            SarmaOrders nspec = impl.process(res, desc.getAnnualFrequency(), maxspec.getD(), maxspec.getBd(), seasonal);
+            if (nspec.equals(curspec.doStationary())) {
+                return ProcessingResult.Unchanged;
+            }
+            curspec = SarimaOrders.of(nspec, curspec.getD(), curspec.getBd());
+            desc.setSpecification(curspec);
+            return ProcessingResult.Changed;
+        } catch (RuntimeException ex) {
+            return ProcessingResult.Failed;
         }
-        SarimaOrders maxspec = calcmaxspec(desc.getAnnualFrequency(),
-                inic, curspec.getD(), curspec.getBd(), seasonal);
-        DoubleSeq res = RegArimaUtility.olsResiduals(desc.regarima());
-        ArmaModelSelector impl = createModule(maxspec);
-        SarmaOrders nspec = impl.process(res, desc.getAnnualFrequency(), maxspec.getD(), maxspec.getBd(), seasonal);
-        if (nspec.equals(curspec.doStationary())) {
-            return ProcessingResult.Unchanged;
-        }
-        curspec = SarimaOrders.of(nspec, curspec.getD(), curspec.getBd());
-        desc.setSpecification(curspec);
-        return ProcessingResult.Changed;
     }
 
     public SarimaOrders process(RegArimaModel<SarimaModel> regarima, boolean seas) {
         SarimaOrders curSpec = regarima.arima().orders();
-        int inic = comespa(curSpec.getPeriod(), regarima.getObservationsCount(),  maxInic(curSpec.getPeriod()), curSpec.getD(), curSpec.getBd(), seas);
+        int inic = comespa(curSpec.getPeriod(), regarima.getObservationsCount(), maxInic(curSpec.getPeriod()), curSpec.getD(), curSpec.getBd(), seas);
         if (inic == 0) {
             curSpec.setDefault(seas);
             return curSpec;

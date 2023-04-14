@@ -221,7 +221,7 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
             }
             context.clearEstimation();
             return ProcessingResult.Changed;
-        } catch (Exception err) {
+        } catch (RuntimeException err) {
             return ProcessingResult.Failed;
         }
     }

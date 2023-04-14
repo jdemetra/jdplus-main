@@ -217,34 +217,38 @@ public class LogLevelModule implements ILogLevelModule {
 
     @Override
     public ProcessingResult process(RegSarimaModelling context) {
-        ModelDescription desc = context.getDescription();
-        DoubleSeq data = desc.getTransformedSeries().getValues();
-        if (data.anyMatch(x -> x <= 0)) {
-            return ProcessingResult.Unchanged;
-        }
-        ProcessingLog logs = context.getLog();
-        if (logs != null) {
-            logs.push(LL);
-        }
-        FastMatrix variables = desc.regarima().variables();
-        if (!process(data, desc.getAnnualFrequency(), variables, seasonal, logs)) {
+        try {
+            ModelDescription desc = context.getDescription();
+            DoubleSeq data = desc.getTransformedSeries().getValues();
+            if (data.anyMatch(x -> x <= 0)) {
+                return ProcessingResult.Unchanged;
+            }
+            ProcessingLog logs = context.getLog();
             if (logs != null) {
-                logs.warning("failed");
+                logs.push(LL);
+            }
+            FastMatrix variables = desc.regarima().variables();
+            if (!process(data, desc.getAnnualFrequency(), variables, seasonal, logs)) {
+                if (logs != null) {
+                    logs.warning("failed");
+                    logs.pop();
+                }
+                return ProcessingResult.Failed;
+            }
+            if (logs != null) {
+                logs.step("level", this.level);
+                logs.step("log", this.log);
                 logs.pop();
             }
+            if (isChoosingLog()) {
+                desc.setLogTransformation(true);
+                context.clearEstimation();
+                return ProcessingResult.Changed;
+            } else {
+                return ProcessingResult.Unchanged;
+            }
+        } catch (RuntimeException err) {
             return ProcessingResult.Failed;
-        }
-        if (logs != null) {
-            logs.step("level", this.level);
-            logs.step("log", this.log);
-            logs.pop();
-        }
-        if (isChoosingLog()) {
-            desc.setLogTransformation(true);
-            context.clearEstimation();
-            return ProcessingResult.Changed;
-        } else {
-            return ProcessingResult.Unchanged;
         }
     }
 

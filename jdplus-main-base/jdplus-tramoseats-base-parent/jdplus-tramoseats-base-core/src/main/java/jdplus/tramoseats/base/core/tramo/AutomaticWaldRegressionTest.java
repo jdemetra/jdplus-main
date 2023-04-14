@@ -111,8 +111,9 @@ public class AutomaticWaldRegressionTest implements IRegressionModule {
 
         /**
          * Indicates if the lp effect can/must be handled as pre-adjustment
+         *
          * @param adjust
-         * @return 
+         * @return
          */
         public Builder adjust(boolean adjust) {
             this.adjust = adjust;
@@ -150,18 +151,22 @@ public class AutomaticWaldRegressionTest implements IRegressionModule {
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
 
-        // first step: test all trading days
-        ModelDescription current = context.getDescription();
-        RegArimaEstimation<SarimaModel>[] estimations = TradingDaysRegressionComparator.test(current, td, lp, precision);
-        int best = TradingDaysRegressionComparator.waldTest(estimations, fpvalue, pconstraint);
+        try {
+            // first step: test all trading days
+            ModelDescription current = context.getDescription();
+            RegArimaEstimation<SarimaModel>[] estimations = TradingDaysRegressionComparator.test(current, td, lp, precision);
+            int best = TradingDaysRegressionComparator.waldTest(estimations, fpvalue, pconstraint);
 
-        ITradingDaysVariable tdsel = best < 2 ? null : td[best - 2];
-        ILengthOfPeriodVariable lpsel = best < 1 ? null : lp;
-        IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
-        ModelDescription model = createTestModel(context, tdsel, lpsel);
-        RegArimaEstimation<SarimaModel> regarima = processor.process(model.regarima(), model.mapping());
-        int nhp = current.getArimaSpec().freeParametersCount();
-        return update(current, model, tdsel, lpsel, regarima.getConcentratedLikelihood(), nhp);
+            ITradingDaysVariable tdsel = best < 2 ? null : td[best - 2];
+            ILengthOfPeriodVariable lpsel = best < 1 ? null : lp;
+            IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
+            ModelDescription model = createTestModel(context, tdsel, lpsel);
+            RegArimaEstimation<SarimaModel> regarima = processor.process(model.regarima(), model.mapping());
+            int nhp = current.getArimaSpec().freeParametersCount();
+            return update(current, model, tdsel, lpsel, regarima.getConcentratedLikelihood(), nhp);
+        } catch (RuntimeException ex) {
+            return ProcessingResult.Failed;
+        }
     }
 
     private ModelDescription createTestModel(RegSarimaModelling context, ITradingDaysVariable td, ILengthOfPeriodVariable lp) {
@@ -182,7 +187,7 @@ public class AutomaticWaldRegressionTest implements IRegressionModule {
 
     private ProcessingResult update(ModelDescription current, ModelDescription test, ITradingDaysVariable aTd, ILengthOfPeriodVariable aLp, ConcentratedLikelihoodWithMissing ll, int nhp) {
         boolean changed = false;
-        boolean preadjustment=adjust && current.isLogTransformation();
+        boolean preadjustment = adjust && current.isLogTransformation();
         if (aTd != null) {
             current.addVariable(Variable.variable("td", aTd, TramoModelBuilder.calendarAMI));
             changed = true;
