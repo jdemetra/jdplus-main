@@ -8,6 +8,7 @@ import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -118,7 +119,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
             if (domain != null)
                return domain.getStartPeriod().start().toLocalDate();
             else
-                return LocalDate.now();
+                return LocalDate.now(Clock.systemDefaultZone());
         }
         return core.getD0().toLocalDate();
     }
@@ -135,7 +136,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
             if (domain != null){
                 return domain.getLastPeriod().end().toLocalDate();
             }else{ 
-                return LocalDate.now();
+                return LocalDate.now(Clock.systemDefaultZone());
             }
         }
         return core.getD1().toLocalDate();

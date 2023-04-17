@@ -36,6 +36,8 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticTarget;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
@@ -152,7 +154,7 @@ public final class JRevisionHistoryView extends JComponent implements HasColorSc
 
     private void configureAxis(XYPlot plot) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy", Locale.getDefault(Locale.Category.FORMAT));
         DateAxis dateAxis = new DateAxis();
         dateAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
         dateAxis.setDateFormatOverride(sdf);
@@ -166,7 +168,7 @@ public final class JRevisionHistoryView extends JComponent implements HasColorSc
         JFreeChart chart = ChartFactory.createXYLineChart("", "x-axis", "y-axis", chartSeries, PlotOrientation.VERTICAL, false, true, false);
 
         XYPlot plot = chart.getXYPlot();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy", Locale.getDefault(Locale.Category.FORMAT));
         DateAxis dateAxis = new DateAxis();
         dateAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
         dateAxis.setDateFormatOverride(sdf);
@@ -180,7 +182,7 @@ public final class JRevisionHistoryView extends JComponent implements HasColorSc
         renderer.setSeriesStroke(1, new BasicStroke(0.75f, 1, 1, 1.0f, new float[]{2f, 3f}, 0.0f));
         renderer.setSeriesPaint(0, Color.RED);
         renderer.setSeriesPaint(1, Color.BLACK);
-        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator("({0}) {1}: {2}", sdf, NumberFormat.getInstance()));
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator("({0}) {1}: {2}", sdf, NumberFormat.getInstance(Locale.getDefault(Locale.Category.FORMAT))));
 
         return chart;
     }
@@ -189,7 +191,7 @@ public final class JRevisionHistoryView extends JComponent implements HasColorSc
         JFreeChart chart = ChartFactory.createScatterPlot(null, null, null, chartSeries, PlotOrientation.VERTICAL, (chartSeries.getSeriesCount() > 1), false, false);
         XYPlot plot = chart.getXYPlot();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy", Locale.getDefault(Locale.Category.FORMAT));
         DateAxis dateAxis = new DateAxis();
         dateAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
         dateAxis.setDateFormatOverride(sdf);

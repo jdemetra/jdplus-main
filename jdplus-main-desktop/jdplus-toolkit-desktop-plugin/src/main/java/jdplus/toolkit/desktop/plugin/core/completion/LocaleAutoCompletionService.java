@@ -58,7 +58,7 @@ public final class LocaleAutoCompletionService implements AutoCompletionSpi {
     private static List<Locale> getLocales(List<Locale> allValues, String term) {
         Predicate<String> filter = ExtAutoCompletionSource.basicFilter(term);
         return allValues.stream()
-                .filter(o -> filter.test(o.toString()) || filter.test(o.getDisplayName()))
+                .filter(o -> filter.test(o.toString()) || filter.test(o.getDisplayName(Locale.getDefault(Locale.Category.DISPLAY))))
                 .sorted(Comparator.comparing(Locale::toString))
                 .collect(Collectors.toList());
     }
@@ -67,7 +67,7 @@ public final class LocaleAutoCompletionService implements AutoCompletionSpi {
 
         @Override
         protected String getValueAsString(Locale value) {
-            return "(" + value.toString() + ") " + value.getDisplayName();
+            return "(" + value.toString() + ") " + value.getDisplayName(Locale.getDefault(Locale.Category.DISPLAY));
         }
     }
 }

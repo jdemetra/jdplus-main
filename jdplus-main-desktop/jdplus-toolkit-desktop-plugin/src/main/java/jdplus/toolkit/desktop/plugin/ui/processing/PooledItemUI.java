@@ -10,6 +10,8 @@ import jdplus.toolkit.desktop.plugin.util.Pools;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+
 import jdplus.toolkit.desktop.plugin.util.Pool;
 
 /**
@@ -43,8 +45,8 @@ public abstract class PooledItemUI<D, C extends JComponent> implements ItemUI<D>
     @Override
     public C create() {
         try {
-            return clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
     }

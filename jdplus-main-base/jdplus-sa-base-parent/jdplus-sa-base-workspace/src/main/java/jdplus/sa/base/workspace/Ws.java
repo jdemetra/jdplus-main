@@ -32,6 +32,7 @@ import jdplus.toolkit.base.workspace.file.FileWorkspace;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class Ws {
                                 new WorkspaceItemDescriptor.Attributes(mp.getName(), false, null));
                 // build the multiProcessing
                 Map<String, String> meta = new HashMap<>(mp.getMetaData());
-                meta.put("@timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
+                meta.put("@timestamp", LocalDateTime.now(Clock.systemDefaultZone()).format(DateTimeFormatter.ISO_DATE));
                 meta.putAll(mp.getMetaData());
                 SaItems items = SaItems.builder()
                         .meta(meta)

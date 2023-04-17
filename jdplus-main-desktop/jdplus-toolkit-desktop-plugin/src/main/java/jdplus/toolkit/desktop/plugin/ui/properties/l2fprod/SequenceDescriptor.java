@@ -8,6 +8,7 @@ import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
 import jdplus.toolkit.desktop.plugin.descriptors.IObjectDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,8 @@ public class SequenceDescriptor implements IObjectDescriptor<Sequence> {
     }
 
     public SequenceDescriptor() {
-        start = LocalDate.now();
-        end = LocalDate.now();
+        start = LocalDate.now(Clock.systemDefaultZone());
+        end = LocalDate.now(Clock.systemDefaultZone());
     }
 
     public SequenceDescriptor(Sequence seq) {

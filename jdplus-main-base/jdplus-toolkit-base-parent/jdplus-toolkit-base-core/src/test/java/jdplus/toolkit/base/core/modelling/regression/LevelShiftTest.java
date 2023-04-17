@@ -21,6 +21,8 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
+
+import java.time.Clock;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -38,7 +40,7 @@ public class LevelShiftTest {
     @Test
     public void testInside() {
         final int pos = 25;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         LevelShift ls = new LevelShift(days.get(pos).start(), true);
         DataBlock buffer = Regression.x(days, ls);
         assertEquals(-pos, buffer.sum(), 1e-9);
@@ -47,7 +49,7 @@ public class LevelShiftTest {
     @Test
     public void testInside99() {
         final int pos = 99;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         LevelShift ls = new LevelShift(days.get(pos).start(), true);
         DataBlock buffer = Regression.x(days, ls);
         assertEquals(-pos, buffer.sum(), 1e-9);
@@ -56,7 +58,7 @@ public class LevelShiftTest {
     @Test
     public void testInside0() {
         final int pos = 0;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         LevelShift ls = new LevelShift(days.get(pos).start(), true);
         DataBlock buffer = Regression.x(days, ls);
         assertEquals(-pos, buffer.sum(), 1e-9);
@@ -64,7 +66,7 @@ public class LevelShiftTest {
 
     @Test
     public void testBefore() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         for (int i = 1; i < 3; ++i) {
             LevelShift ls = new LevelShift(days.get(0).plus(-i).start(), true);
             DataBlock buffer = Regression.x(days, ls);
@@ -74,7 +76,7 @@ public class LevelShiftTest {
 
     @Test
     public void testAfter() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         for (int i = 1; i < 3; ++i) {
             LevelShift ls = new LevelShift(days.get(99).plus(i).start(), true);
             DataBlock buffer = Regression.x(days, ls);
@@ -85,7 +87,7 @@ public class LevelShiftTest {
     @Test
     public void testInside2() {
         final int pos = 25;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         LevelShift ls = new LevelShift(days.get(pos).start(), false);
         DataBlock buffer = Regression.x(days, ls);
         assertEquals(buffer.length() - pos, buffer.sum(), 1e-9);
@@ -94,7 +96,7 @@ public class LevelShiftTest {
     @Test
     public void testInside299() {
         final int pos = 99;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         LevelShift ls = new LevelShift(days.get(pos).start(), false);
         DataBlock buffer = Regression.x(days, ls);
         assertEquals(buffer.length() - pos, buffer.sum(), 1e-9);
@@ -103,7 +105,7 @@ public class LevelShiftTest {
     @Test
     public void testInside20() {
         final int pos = 0;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         LevelShift ls = new LevelShift(days.get(pos).start(), false);
         DataBlock buffer = Regression.x(days, ls);
         assertEquals(buffer.length() - pos, buffer.sum(), 1e-9);
@@ -111,7 +113,7 @@ public class LevelShiftTest {
 
     @Test
     public void testBefore2() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         for (int i = 1; i < 3; ++i) {
             LevelShift ls = new LevelShift(days.get(0).plus(-i).start(), false);
             DataBlock buffer = Regression.x(days, ls);
@@ -121,7 +123,7 @@ public class LevelShiftTest {
 
     @Test
     public void testAfter2() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
         for (int i = 1; i < 3; ++i) {
             LevelShift ls = new LevelShift(days.get(99).plus(i).start(), false);
             DataBlock buffer = Regression.x(days, ls);

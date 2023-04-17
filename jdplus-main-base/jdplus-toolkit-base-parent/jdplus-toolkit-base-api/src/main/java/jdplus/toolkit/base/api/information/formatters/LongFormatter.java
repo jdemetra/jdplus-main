@@ -17,20 +17,21 @@
 package jdplus.toolkit.base.api.information.formatters;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
  * @author Jean Palate
  */
-public class LongFormatter implements InformationFormatter {
+public final class LongFormatter implements InformationFormatter {
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
         if (item > 0) {
             return null;
         }
         long l = (Long) obj;
-        NumberFormat ifmt = NumberFormat.getIntegerInstance();
+        NumberFormat ifmt = NumberFormat.getIntegerInstance(locale);
         ifmt.setGroupingUsed(false);
         return ifmt.format(l);
     }

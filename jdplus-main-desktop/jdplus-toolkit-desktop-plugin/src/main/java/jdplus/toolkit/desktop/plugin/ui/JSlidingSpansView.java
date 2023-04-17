@@ -40,6 +40,8 @@ import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
 import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.SwingColorSchemeSupport;
+
+import java.util.Locale;
 import java.util.function.Function;
 
 /**
@@ -339,7 +341,7 @@ public final class JSlidingSpansView<I> extends JComponent implements HasColorSc
         DateAxis domainAxis = new DateAxis();
         //dateAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
         domainAxis.setTickUnit(new DateTickUnit(DateTickUnitType.YEAR, 1), true, false);
-        domainAxis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM"));
+        domainAxis.setDateFormatOverride(new SimpleDateFormat("yyyy-MM", Locale.getDefault(Locale.Category.FORMAT)));
         domainAxis.setTickLabelPaint(TsCharts.CHART_TICK_LABEL_COLOR);
         plot.setDomainAxis(domainAxis);
 

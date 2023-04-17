@@ -23,6 +23,7 @@ import jdplus.toolkit.base.tsp.*;
 import org.assertj.core.api.SoftAssertions;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import static jdplus.toolkit.base.api.timeseries.TsInformationType.All;
 
@@ -52,7 +53,7 @@ final class Utils {
     }
 
     static String throwDescription(Class<?> codeClass, String code, Class<? extends Throwable> exClass) {
-        return String.format("Expecting '%s#%s' to raise '%s'", codeClass.getName(), code, exClass.getName());
+        return String.format(Locale.ROOT, "Expecting '%s#%s' to raise '%s'", codeClass.getName(), code, exClass.getName());
     }
 
     static final TsCollection.Builder NULL_TS_COLLECTION_INFO = null;

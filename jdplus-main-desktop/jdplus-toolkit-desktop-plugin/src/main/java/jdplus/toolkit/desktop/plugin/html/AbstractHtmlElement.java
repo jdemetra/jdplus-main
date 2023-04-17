@@ -17,6 +17,9 @@
 package jdplus.toolkit.desktop.plugin.html;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
@@ -35,14 +38,14 @@ public abstract class AbstractHtmlElement implements HtmlElement {
     @Deprecated
     protected static final CssStyle d1 = new CssStyle();
     
-    protected static final DecimalFormat df2 = new DecimalFormat("0.00");
-    protected static final DecimalFormat df3 = new DecimalFormat("0.000");
-    protected static final DecimalFormat df4 = new DecimalFormat("0.0000");
-    protected static final DecimalFormat df6 = new DecimalFormat("0.000000");
-    protected static final DecimalFormat dg2 = new DecimalFormat("0.##");
-    protected static final DecimalFormat dg6 = new DecimalFormat("0.######");
-    protected static final DecimalFormat de6 = new DecimalFormat("0.######E0#");
-    protected static final DecimalFormat pc2 = new DecimalFormat();
+    protected static final DecimalFormat df2 = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    protected static final DecimalFormat df3 = new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    protected static final DecimalFormat df4 = new DecimalFormat("0.0000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    protected static final DecimalFormat df6 = new DecimalFormat("0.000000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    protected static final DecimalFormat dg2 = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    protected static final DecimalFormat dg6 = new DecimalFormat("0.######", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    protected static final DecimalFormat de6 = new DecimalFormat("0.######E0#", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    protected static final DecimalFormat pc2 = (DecimalFormat)NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.DISPLAY));
 
     static {
         pc2.setMultiplier(100);

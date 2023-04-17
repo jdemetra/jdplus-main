@@ -9,6 +9,8 @@ import jdplus.toolkit.desktop.plugin.workspace.AbstractFileItemRepository;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemRepository;
 import jdplus.toolkit.base.tsp.TsMeta;
+
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +37,7 @@ public final class X13DocFileRepository extends AbstractFileItemRepository< X13D
         X13Document element = doc.getElement();
 
         Map<String, String> meta = new HashMap<>(element.getMetadata());
-        TsMeta.TIMESTAMP.store(meta, LocalDateTime.now());
+        TsMeta.TIMESTAMP.store(meta, LocalDateTime.now(Clock.systemDefaultZone()));
         element.updateMetadata(meta);
 
         return storeFile(doc, element, version, doc::resetDirty);

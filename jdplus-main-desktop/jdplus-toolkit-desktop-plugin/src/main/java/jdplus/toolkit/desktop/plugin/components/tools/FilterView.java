@@ -14,6 +14,8 @@ import internal.uihelpers.DiscreteInformationProvider;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.JMenu;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.jfree.chart.ChartPanel;
@@ -41,7 +43,7 @@ public class FilterView extends AChartView {
     public static final double DEFAULT_MAX_Y = 1;
     public static final NumberTickUnit DEFAULT_TICKUNIT_X = new NumberTickUnit(5);
     public static final NumberTickUnit DEFAULT_TICKUNIT_Y = new NumberTickUnit(0.1);
-    public static final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("0.##");
+    public static final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
     protected static final int DOT_INDEX = 0;
     protected static final int BAR_INDEX = 1;
     // OTHER

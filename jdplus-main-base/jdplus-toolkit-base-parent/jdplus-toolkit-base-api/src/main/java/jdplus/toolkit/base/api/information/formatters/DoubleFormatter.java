@@ -17,37 +17,29 @@
 
 package jdplus.toolkit.base.api.information.formatters;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
  * @author Jean Palate
  */
-class DoubleFormatter implements InformationFormatter {
-    
-    private static final DecimalFormat df6 = new DecimalFormat();
-    private final DecimalFormat fmt;
-    
-    static{
-        df6.setMaximumFractionDigits(9);
-        df6.setGroupingUsed(false);
-    }
-    
-    public DoubleFormatter(){
-        fmt=df6;
-    }
-    
-    public DoubleFormatter(DecimalFormat fmt){
-        this.fmt=fmt;
+final class DoubleFormatter implements InformationFormatter {
+
+    private NumberFormat newFormat(Locale locale) {
+        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
+        df4.setMaximumFractionDigits(9);
+        df4.setGroupingUsed(false);
+        return df4;
     }
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
         if (item > 0)
             return null;
         double val=(Double) obj;
         if (! Double.isFinite(val))
             return null;
-        return fmt.format(val);
+        return newFormat(locale).format(val);
     }
 }

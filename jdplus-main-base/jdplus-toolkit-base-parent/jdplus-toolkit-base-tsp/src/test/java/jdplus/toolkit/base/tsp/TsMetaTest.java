@@ -19,6 +19,7 @@ package jdplus.toolkit.base.tsp;
 import jdplus.toolkit.base.tsp.TsMeta;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
@@ -45,7 +46,7 @@ public class TsMetaTest {
     @Test
     @SuppressWarnings("null")
     public void testTimestamp() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(Clock.systemDefaultZone());
 
         // Note: Date#toString() reduces precision to the second
         String legacyDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant()).toString();

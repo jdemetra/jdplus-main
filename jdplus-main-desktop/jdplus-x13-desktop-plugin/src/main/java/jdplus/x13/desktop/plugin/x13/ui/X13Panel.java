@@ -14,6 +14,7 @@ import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -229,7 +230,7 @@ final class X13Panel extends javax.swing.JPanel {
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION) {
             selectedSeries.clear();
             selectedSeries.addAll(fieldSelectionComponent.getSelectedValues());
-            selectedSeriesLabel.setText(String.format("%s selected", selectedSeries.size()));
+            selectedSeriesLabel.setText(String.format(Locale.ROOT, "%s selected", selectedSeries.size()));
             controller.changed();
         }
     }//GEN-LAST:event_selectedSeriesButtonActionPerformed
@@ -250,7 +251,7 @@ final class X13Panel extends javax.swing.JPanel {
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION) {
             selectedDiags.clear();
             selectedDiags.addAll(fieldSelectionComponent.getSelectedValues());
-            selectedDiagLabel.setText(String.format("%s selected", selectedDiags.size()));
+            selectedDiagLabel.setText(String.format(Locale.ROOT, "%s selected", selectedDiags.size()));
             controller.changed();
         }
     }//GEN-LAST:event_selectedDiagButtonActionPerformed
@@ -258,10 +259,10 @@ final class X13Panel extends javax.swing.JPanel {
     void load() {
         selectedSeries.clear();
         selectedSeries.addAll(X13UI.get().getSelectedComponents());
-        selectedSeriesLabel.setText(String.format("%s selected", selectedSeries.size()));
+        selectedSeriesLabel.setText(String.format(Locale.ROOT, "%s selected", selectedSeries.size()));
         selectedDiags.clear();
         selectedDiags.addAll(X13UI.get().getSelectedDiagnostics());
-        selectedDiagLabel.setText(String.format("%s selected", selectedDiags.size()));
+        selectedDiagLabel.setText(String.format(Locale.ROOT, "%s selected", selectedDiags.size()));
         AbstractNodeBuilder root = new AbstractNodeBuilder()
                 .name("Diagnostics")
                 .add(Lookup.getDefault().lookupAll(X13DiagnosticsFactoryBuddy.class).stream().map(NamedServiceNode::new));

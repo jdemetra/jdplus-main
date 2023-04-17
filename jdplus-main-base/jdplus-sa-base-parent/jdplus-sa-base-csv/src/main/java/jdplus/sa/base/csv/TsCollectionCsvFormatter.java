@@ -29,6 +29,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -44,10 +45,10 @@ public class TsCollectionCsvFormatter {
     private boolean fullName;
 
     public TsCollectionCsvFormatter() {
-        ifmt = NumberFormat.getIntegerInstance();
+        ifmt = NumberFormat.getIntegerInstance(Locale.getDefault());
         ifmt.setGroupingUsed(false);
         comma = CsvInformationFormatter.getCsvSeparator();
-        fmt = (DecimalFormat) DecimalFormat.getNumberInstance();
+        fmt = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.getDefault());
         fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
         fmt.setGroupingUsed(false);
     }

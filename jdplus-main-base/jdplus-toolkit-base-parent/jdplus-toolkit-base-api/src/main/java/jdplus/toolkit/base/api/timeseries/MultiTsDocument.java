@@ -10,6 +10,8 @@ import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.processing.ProcessingStatus;
+
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -95,7 +97,7 @@ public interface MultiTsDocument<S extends ProcSpecification, R extends Explorab
         }
         if (changed) {
             set(nts);
-            getMetadata().put(TsFactory.DATE, LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+            getMetadata().put(TsFactory.DATE, LocalDate.now(Clock.systemDefaultZone()).format(DateTimeFormatter.ISO_DATE));
         }
     }
 

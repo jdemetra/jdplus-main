@@ -60,6 +60,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.OptionalInt;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -394,7 +395,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
                 }
             }
 
-            log.log(Level.INFO, String.format("Task: %s items in %s by %s executors with priority %s", tasks.size(), stopwatch.stop(), options.getBatchPoolSize(), options.getBatchPriority()));
+            log.log(Level.INFO, String.format(Locale.ROOT, "Task: %s items in %s by %s executors with priority %s", tasks.size(), stopwatch.stop(), options.getBatchPoolSize(), options.getBatchPriority()));
 
             executorService.shutdown();
 

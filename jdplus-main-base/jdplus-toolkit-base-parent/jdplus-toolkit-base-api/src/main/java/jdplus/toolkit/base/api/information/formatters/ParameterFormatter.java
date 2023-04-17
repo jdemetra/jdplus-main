@@ -17,7 +17,9 @@
 package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.data.Parameter;
-import java.text.DecimalFormat;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
@@ -25,33 +27,21 @@ import java.text.DecimalFormat;
  */
 public class ParameterFormatter implements InformationFormatter {
 
-    private static final DecimalFormat df6 = new DecimalFormat();
-    private static final DecimalFormat df3 = new DecimalFormat();
-
-    static {
-        df6.setMaximumFractionDigits(6);
-        df3.setMaximumFractionDigits(3);
-        df6.setGroupingUsed(false);
-        df3.setGroupingUsed(false);
-    }
-    private final DecimalFormat fmt;
-
-    public ParameterFormatter() {
-        fmt = df6;
-    }
-
-    public ParameterFormatter(DecimalFormat fmt) {
-        this.fmt = fmt;
+    private NumberFormat newFormat6(Locale locale) {
+        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
+        df4.setMaximumFractionDigits(6);
+        df4.setGroupingUsed(false);
+        return df4;
     }
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
 
         Parameter param = (Parameter) obj;
         switch (item) {
             case 0:
             case 1:
-                return fmt.format(param.getValue());
+                return newFormat6(locale).format(param.getValue());
             default:
                 return null;
         }

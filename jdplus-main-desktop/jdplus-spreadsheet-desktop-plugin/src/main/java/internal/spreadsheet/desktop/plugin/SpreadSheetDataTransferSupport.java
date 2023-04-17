@@ -63,7 +63,7 @@ final class SpreadSheetDataTransferSupport {
         TEXT {
             @Override
             public Book toBook(Book.Factory factory, Object input) throws IOException {
-                try ( ByteArrayInputStream stream = new ByteArrayInputStream(((String) input).getBytes())) {
+                try ( ByteArrayInputStream stream = new ByteArrayInputStream(((String) input).getBytes(StandardCharsets.UTF_8))) {
                     return factory.load(stream);
                 }
             }

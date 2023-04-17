@@ -31,7 +31,9 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.function.Function;
 import jdplus.sa.base.core.tests.CombinedSeasonality;
 import jdplus.toolkit.base.core.timeseries.simplets.PeriodIterator;
@@ -161,7 +163,7 @@ public class HtmlSaSlidingSpanSummary<I> extends AbstractHtmlElement implements 
     }
 
     private HtmlTableCell SeasonalityCell(StatisticalTest test) {
-        NumberFormat format = new DecimalFormat("0.0");
+        NumberFormat format = new DecimalFormat("0.0", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
         String val = format.format(test.getValue());
         if (test.getPvalue() > .05) {
             return new HtmlTableCell(val).withClass(TEXT_DANGER);
@@ -173,7 +175,7 @@ public class HtmlSaSlidingSpanSummary<I> extends AbstractHtmlElement implements 
     }
 
     private HtmlTableCell MovingSeasonalityCell(StatisticalTest test) {
-        NumberFormat format = new DecimalFormat("0.0");
+        NumberFormat format = new DecimalFormat("0.0", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
         String val = format.format(test.getValue());
         if (test.getPvalue() < .05) {
             return new HtmlTableCell(val).withClass(TEXT_DANGER);

@@ -26,10 +26,8 @@ import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
 import jdplus.toolkit.base.api.util.Table;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
 
 /**
  *
@@ -39,6 +37,7 @@ import java.util.List;
 public class TableFormatter {
 
     private final HashMap<Class, InformationFormatter> DICTIONARY = new HashMap<>();
+    private static Locale LOCALE;
 
     static{
         DICTIONARY.put(double.class, new DoubleFormatter());
@@ -59,6 +58,7 @@ public class TableFormatter {
         DICTIONARY.put(RegressionItem.class, new RegressionItemFormatter());
         DICTIONARY.put(StatisticalTest.class, new StatisticalTestFormatter());
         DICTIONARY.put(ProcDiagnostic.class, new DiagnosticFormatter());
+        LOCALE = Locale.getDefault();
     }
 
     public Table<String> formatInformation(List<InformationSet> records, List<String> names, boolean shortname) {
@@ -197,13 +197,13 @@ public class TableFormatter {
             if (obj != null && obj.getClass().isArray()) {
                 Object[] array = (Object[]) obj;
                 fmt = DICTIONARY.get(array[0].getClass());
-                Object[] rslt = Arrays.stream(array).map(i -> fmt.format(i, item)).toArray();
+                Object[] rslt = Arrays.stream(array).map(i -> fmt.format(i, item, LOCALE)).toArray();
                 return Arrays.toString(rslt);
             } else {
                 fmt = DICTIONARY.get(obj.getClass());
             }
 
-            return fmt.format(obj, item);
+            return fmt.format(obj, item, LOCALE);
         } catch (Exception ex) {
             String msg = ex.getMessage();
         }

@@ -18,6 +18,8 @@ package jdplus.toolkit.base.tsp.legacy;
 
 import jdplus.toolkit.base.api.design.DemetraPlusLegacy;
 import nbbrd.design.Immutable;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Iterator;
@@ -167,7 +169,7 @@ final class LegacyId implements Comparable<LegacyId>, Iterable<String> {
                     final StringBuilder sb = new StringBuilder(o[0]);
                     for (int i = 1; i < o.length; i++) {
                         sb.append(SEP);
-                        sb.append(Base64.getEncoder().encodeToString(o[i].getBytes()));
+                        sb.append(Base64.getEncoder().encodeToString(o[i].getBytes(StandardCharsets.UTF_8)));
                     }
                     return sb.toString();
                 }
@@ -178,7 +180,7 @@ final class LegacyId implements Comparable<LegacyId>, Iterable<String> {
                 String[] splitResult = o.split(SEP);
                 for (int i = 0; i < splitResult.length; i++) {
                     try {
-                        splitResult[i] = new String(Base64.getDecoder().decode(splitResult[i]));
+                        splitResult[i] = new String(Base64.getDecoder().decode(splitResult[i]), StandardCharsets.UTF_8);
                     } catch (Exception e) {
                     }
                 }

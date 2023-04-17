@@ -21,6 +21,8 @@ import jdplus.toolkit.base.api.dstats.ContinuousDistribution;
 import jdplus.toolkit.base.api.dstats.DStatException;
 import jdplus.toolkit.base.api.stats.ProbabilityType;
 import java.util.Formatter;
+import java.util.Locale;
+
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 
 /**
@@ -117,9 +119,9 @@ public class LogNormal implements ContinuousDistribution {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("LogN(");
-        sb.append(new Formatter().format("%g4", N.getMean()));
+        sb.append(new Formatter(Locale.ROOT).format("%g4", N.getMean()));
         sb.append(',');
-        sb.append(new Formatter().format("%g4", N.getStdev()));
+        sb.append(new Formatter(Locale.ROOT).format("%g4", N.getStdev()));
         sb.append(')');
         return sb.toString();
     }

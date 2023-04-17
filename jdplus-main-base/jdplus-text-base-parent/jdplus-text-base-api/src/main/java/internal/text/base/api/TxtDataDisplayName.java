@@ -25,6 +25,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataDisplayName;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 
+import java.util.Locale;
 import java.util.function.Function;
 
 /**
@@ -59,6 +60,6 @@ public final class TxtDataDisplayName implements HasDataDisplayName {
     }
 
     private static String toString(ObsGathering gathering) {
-        return TsUnit.UNDEFINED.equals(gathering.getUnit()) ? "" : String.format("(%s/%s)", gathering.getUnit(), gathering.getAggregationType());
+        return TsUnit.UNDEFINED.equals(gathering.getUnit()) ? "" : String.format(Locale.ROOT, "(%s/%s)", gathering.getUnit(), gathering.getAggregationType());
     }
 }

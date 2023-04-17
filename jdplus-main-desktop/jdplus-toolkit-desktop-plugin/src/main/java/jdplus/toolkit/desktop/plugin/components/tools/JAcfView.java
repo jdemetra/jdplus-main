@@ -11,6 +11,8 @@ import ec.util.chart.swing.Charts;
 import java.awt.BorderLayout;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.function.IntToDoubleFunction;
 import javax.swing.JComponent;
 
@@ -60,7 +62,7 @@ public final class JAcfView extends JComponent{
         NumberAxis ra = new NumberAxis();
         ra.setRange(-1, 1);
         ra.setTickUnit(new NumberTickUnit(0.1));
-        ra.setNumberFormatOverride(new DecimalFormat("0.##"));
+        ra.setNumberFormatOverride(new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT))));
         plot.setRangeAxis(ra);
 
         // Configure domain axis

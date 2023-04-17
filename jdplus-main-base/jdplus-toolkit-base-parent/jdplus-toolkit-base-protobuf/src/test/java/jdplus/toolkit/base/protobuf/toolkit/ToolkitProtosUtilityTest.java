@@ -19,6 +19,8 @@ package jdplus.toolkit.base.protobuf.toolkit;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.api.timeseries.TsData;
+
+import java.time.Clock;
 import java.time.LocalDate;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.junit.jupiter.api.Test;
@@ -41,13 +43,13 @@ public class ToolkitProtosUtilityTest {
         TimeSelector last = TimeSelector.last(10);
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(last));
         assertTrue(last.equals(convert));
-        TimeSelector from = TimeSelector.from(LocalDate.now().atStartOfDay());
+        TimeSelector from = TimeSelector.from(LocalDate.now(Clock.systemDefaultZone()).atStartOfDay());
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(from));
         assertTrue(from.equals(convert));
-        TimeSelector to=TimeSelector.to(LocalDate.now().atStartOfDay());
+        TimeSelector to=TimeSelector.to(LocalDate.now(Clock.systemDefaultZone()).atStartOfDay());
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(to));
         assertTrue(to.equals(convert));
-        TimeSelector between=TimeSelector.between(LocalDate.now().atStartOfDay(), LocalDate.MAX.atStartOfDay());
+        TimeSelector between=TimeSelector.between(LocalDate.now(Clock.systemDefaultZone()).atStartOfDay(), LocalDate.MAX.atStartOfDay());
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(between));
         assertTrue(between.equals(convert));
         TimeSelector excluding = TimeSelector.excluding(5, 10);

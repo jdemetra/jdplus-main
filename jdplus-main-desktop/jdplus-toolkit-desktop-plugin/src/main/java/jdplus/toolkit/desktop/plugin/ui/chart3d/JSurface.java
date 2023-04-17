@@ -37,6 +37,7 @@ import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -291,7 +292,7 @@ public class JSurface extends javax.swing.JComponent {
     }
 
     private String format(float f) {
-        return String.format("%." + model.getNbDecimals() + "G", f);
+        return String.format(Locale.ROOT, "%." + model.getNbDecimals() + "G", f);
     }
 
     private void init() {

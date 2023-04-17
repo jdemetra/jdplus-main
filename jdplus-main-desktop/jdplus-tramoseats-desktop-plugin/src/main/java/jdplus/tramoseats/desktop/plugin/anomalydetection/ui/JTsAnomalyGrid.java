@@ -38,8 +38,10 @@ import jdplus.tramoseats.base.api.tramo.TransformSpec;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.OptionalInt;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -404,7 +406,7 @@ public final class JTsAnomalyGrid extends JComponent {
     private class AnomalyCellRenderer extends DefaultTableCellRenderer {
 
         private final TableCellRenderer delegate;
-        private final DecimalFormat df = new DecimalFormat("0.0000");
+        private final DecimalFormat df = new DecimalFormat("0.0000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
         private final JToolTip toolTip;
         private OutlierEstimation currentOutlier;
 

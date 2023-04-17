@@ -28,6 +28,7 @@ import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -37,7 +38,8 @@ import java.util.List;
 public class MatrixFormatter {
 
     private static final HashMap<Class, InformationFormatter> DICTIONARY = new HashMap<>();
-    
+    private static Locale LOCALE;
+
     static{
         DICTIONARY.put(double.class, new DoubleFormatter());
         DICTIONARY.put(int.class, new IntegerFormatter());
@@ -57,6 +59,7 @@ public class MatrixFormatter {
         DICTIONARY.put(StatisticalTest.class, new StatisticalTestFormatter());
         DICTIONARY.put(ProcDiagnostic.class, new DiagnosticFormatter());
         DICTIONARY.put(Complex.class, new ComplexFormatter());
+        LOCALE = Locale.getDefault();
     }
 
     public boolean canProcess(Class cl){
@@ -209,7 +212,7 @@ public class MatrixFormatter {
         InformationFormatter fmt;
         try {
             fmt = DICTIONARY.get(obj.getClass());
-            return fmt.format(obj, item);
+            return fmt.format(obj, item, LOCALE);
         } catch (Exception ex) {
             String msg = ex.getMessage();
         }

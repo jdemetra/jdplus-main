@@ -45,6 +45,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
@@ -118,7 +120,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
 
     @Override
     public TsDataBuilder<java.util.Date> newBuilder() {
-        return TsDataBuilder.byCalendar(new GregorianCalendar(), gathering, ObsCharacteristics.ORDERED);
+        return TsDataBuilder.byCalendar(new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault()), gathering, ObsCharacteristics.ORDERED);
     }
 
     @Override

@@ -24,6 +24,8 @@ import jdplus.tramoseats.base.api.tramo.RegressionTestType;
 import jdplus.tramoseats.base.api.tramo.TradingDaysSpec;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsException;
 
+import java.util.Locale;
+
 /**
  *
  * @author PALATEJ
@@ -119,7 +121,7 @@ class TradingDaysSpecMapping {
     }
     
     TradingDaysSpec.AutoMethod methodOf(String method){
-        method=method.toUpperCase();
+        method=method.toUpperCase(Locale.ROOT);
         try{
             return TradingDaysSpec.AutoMethod.valueOf(method);
         }

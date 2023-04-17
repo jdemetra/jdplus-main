@@ -25,6 +25,8 @@ import jdplus.toolkit.base.api.data.Interval;
 import nbbrd.design.Development;
 import nbbrd.design.Immutable;
 import java.util.Formatter;
+import java.util.Locale;
+
 import lombok.NonNull;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 
@@ -222,9 +224,9 @@ public final class Normal implements ContinuousDistribution {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("N(");
-        sb.append(new Formatter().format("%g4", mean));
+        sb.append(new Formatter(Locale.ROOT).format("%g4", mean));
         sb.append(',');
-        sb.append(new Formatter().format("%g4", stdev));
+        sb.append(new Formatter(Locale.ROOT).format("%g4", stdev));
         sb.append(')');
         return sb.toString();
     }

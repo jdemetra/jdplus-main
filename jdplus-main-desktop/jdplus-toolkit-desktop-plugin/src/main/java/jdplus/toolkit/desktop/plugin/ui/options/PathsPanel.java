@@ -61,6 +61,7 @@ final class PathsPanel extends javax.swing.JPanel implements ExplorerManager.Pro
         pathView.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     }
 
+    @lombok.Generated
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

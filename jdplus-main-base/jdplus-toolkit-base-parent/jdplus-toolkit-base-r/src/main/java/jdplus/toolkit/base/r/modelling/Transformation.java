@@ -21,6 +21,8 @@ import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.core.timeseries.simplets.Transformations;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataTransformation;
 
+import java.util.Locale;
+
 /**
  *
  * @author palatej
@@ -29,7 +31,7 @@ import jdplus.toolkit.base.core.timeseries.simplets.TsDataTransformation;
 public class Transformation {
 
     public TsData adjust(TsData input, String type, boolean reverse) {
-        String ltype = type.toLowerCase();
+        String ltype = type.toLowerCase(Locale.ROOT);
         LengthOfPeriodType lp = switch (ltype) {
             case "leapyear" ->
                 LengthOfPeriodType.LeapYear;

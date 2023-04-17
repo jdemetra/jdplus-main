@@ -29,8 +29,10 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.Locale;
 
 import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
@@ -68,7 +70,7 @@ public class HtmlRevisionsDocument extends AbstractHtmlElement implements HtmlEl
         double mean = stats.getAverage();
         double rmse = stats.getRmse();
 
-        NumberFormat format = new DecimalFormat("0.0000");
+        NumberFormat format = new DecimalFormat("0.0000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
         stream.write(HtmlTag.EMPHASIZED_TEXT, "mean = " + format.format(mean)).newLine();
         stream.write(HtmlTag.EMPHASIZED_TEXT, "rmse = " + format.format(rmse)).newLines(2);
 
@@ -81,7 +83,7 @@ public class HtmlRevisionsDocument extends AbstractHtmlElement implements HtmlEl
         }
         stream.close(HtmlTag.TABLEROW);
 
-        format = new DecimalFormat("0.000");
+        format = new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
         TsPeriod x = revisions_.getStart().withDate(LocalDate.of(y0, 1,1).atStartOfDay());
         for (int i = 0; i < revisions_.getAnnualFrequency(); ++i) {
             stream.open(HtmlTag.TABLEROW);

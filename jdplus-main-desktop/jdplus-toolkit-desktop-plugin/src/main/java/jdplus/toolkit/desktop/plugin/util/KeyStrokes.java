@@ -70,7 +70,7 @@ public final class KeyStrokes {
         abstract protected Object getActionMapKey(ActionType type);
 
         protected KeyStroke getFallback(ActionType key) {
-            int platformKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+            int platformKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
             switch (key) {
                 case COPY:
                     return KeyStroke.getKeyStroke(KeyEvent.VK_C, platformKeyMask);

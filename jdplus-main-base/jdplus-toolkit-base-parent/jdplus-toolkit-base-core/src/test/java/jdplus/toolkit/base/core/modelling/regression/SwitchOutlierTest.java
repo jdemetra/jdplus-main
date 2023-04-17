@@ -21,6 +21,8 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
+
+import java.time.Clock;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -37,7 +39,7 @@ public class SwitchOutlierTest {
 
     @Test
     public void testData() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now()), 20);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 20);
         for (int i = -10; i < 30; ++i) {
             SwitchOutlier wo = new SwitchOutlier(days.get(0).plus(i).start());
             DataBlock buffer = Regression.x(days, wo);

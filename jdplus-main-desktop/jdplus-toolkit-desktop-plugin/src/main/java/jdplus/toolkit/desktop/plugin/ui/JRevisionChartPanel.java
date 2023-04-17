@@ -62,6 +62,7 @@ import jdplus.toolkit.base.api.util.Arrays2;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Chart Panel used in popups of Revision History View
@@ -185,7 +186,7 @@ public final class JRevisionChartPanel extends JComponent implements TimeSeriesC
     }
 
     private void configureAxis(XYPlot plot) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy", Locale.getDefault(Locale.Category.FORMAT));
         DateAxis dateAxis = new DateAxis();
         dateAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
         dateAxis.setDateFormatOverride(sdf);

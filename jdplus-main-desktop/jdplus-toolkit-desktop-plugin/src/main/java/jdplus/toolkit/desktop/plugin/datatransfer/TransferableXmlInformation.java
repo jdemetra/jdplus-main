@@ -18,6 +18,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -116,7 +117,7 @@ public class TransferableXmlInformation<T> implements Transferable {
             xml.copy(info);
             marshaller.marshal(xml, writer);
             writer.flush();
-            return writer.toString().getBytes();
+            return writer.toString().getBytes(StandardCharsets.UTF_8);
         } catch (Exception ex) {
             return null;
         }

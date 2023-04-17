@@ -43,6 +43,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -145,7 +146,7 @@ public final class JStabilityView extends JComponent implements HasColorScheme {
         });
 
         StandardXYToolTipGenerator generator = new StandardXYToolTipGenerator() {
-            final DecimalFormat format = new DecimalFormat("0.0000");
+            final DecimalFormat format = new DecimalFormat("0.0000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
 
             @Override
             public String generateToolTip(XYDataset dataset, int series, int item) {

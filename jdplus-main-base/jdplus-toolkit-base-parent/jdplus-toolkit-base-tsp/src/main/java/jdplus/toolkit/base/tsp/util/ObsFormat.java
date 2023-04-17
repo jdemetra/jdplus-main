@@ -184,10 +184,10 @@ public class ObsFormat {
                 result.appendPattern("yyyy-MM-dd['T'HH:mm:ss]");
             } else {
                 result
-                        .append(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                        .append(new DateTimeFormatterBuilder().appendLocalized(FormatStyle.MEDIUM, null).toFormatter(Locale.getDefault()))
                         .optionalStart()
                         .appendLiteral(' ')
-                        .append(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM))
+                        .append(new DateTimeFormatterBuilder().appendLocalized(null, FormatStyle.MEDIUM).toFormatter(Locale.getDefault()))
                         .optionalEnd();
             }
         }

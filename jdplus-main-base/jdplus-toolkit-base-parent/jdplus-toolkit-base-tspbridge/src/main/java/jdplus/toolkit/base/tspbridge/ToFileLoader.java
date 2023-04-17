@@ -8,6 +8,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Locale;
 import java.util.Objects;
 
 public class ToFileLoader extends ToDataSourceLoader implements FileLoader {
@@ -37,7 +38,7 @@ public class ToFileLoader extends ToDataSourceLoader implements FileLoader {
     public @NonNull DataSource encodeBean(@NonNull Object bean) throws IllegalArgumentException {
         Objects.requireNonNull(bean);
         if (!(bean instanceof FileBean)) {
-            throw new IllegalArgumentException(String.format("Invalid bean type: expected='%s', found='%s'", FileBean.class, bean.getClass()));
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "Invalid bean type: expected='%s', found='%s'", FileBean.class, bean.getClass()));
         }
         return TsConverter.toDataSource(getDelegate().encodeBean(FromFileBean.fromFileBean((FileBean) bean)));
     }

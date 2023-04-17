@@ -18,28 +18,20 @@ package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.math.Complex;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
  * @author Jean Palate
  */
-public class ComplexFormatter implements InformationFormatter {
+public final class ComplexFormatter implements InformationFormatter {
 
-    private static final DecimalFormat df4 = new DecimalFormat();
-
-    static {
+    private NumberFormat newFormat(Locale locale) {
+        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
         df4.setMaximumFractionDigits(4);
         df4.setGroupingUsed(false);
-    }
-    private final DecimalFormat fmt;
-
-    public ComplexFormatter() {
-        fmt = df4;
-    }
-
-    public ComplexFormatter(DecimalFormat fmt) {
-        this.fmt = fmt;
+        return df4;
     }
 
     @Override
@@ -48,12 +40,15 @@ public class ComplexFormatter implements InformationFormatter {
     }
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
 
         Complex c = (Complex) obj;
         if (item == 0) {
             return c.toString();
         }
+
+        NumberFormat fmt = newFormat(locale);
+
         switch (Math.abs(item)) {
             case 1:
                 return fmt.format(c.abs());

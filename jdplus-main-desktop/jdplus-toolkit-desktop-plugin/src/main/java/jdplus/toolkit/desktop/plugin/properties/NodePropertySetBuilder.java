@@ -35,6 +35,7 @@ import java.beans.PropertyEditor;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
@@ -749,7 +750,7 @@ public final class NodePropertySetBuilder {
 
         private DoubleStep(Node.Property<Double> nodeProperty) {
             super(nodeProperty);
-            DecimalFormat format = new DecimalFormat();
+            DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.DISPLAY));
             fixMaxDecimals(format);
             formatter = new NumberFormatter(format);
             editor(FormattedPropertyEditor.class);
@@ -854,8 +855,9 @@ public final class NodePropertySetBuilder {
         public PropertyEditor getPropertyEditor() {
             if (editorType != null) {
                 try {
-                    return editorType.newInstance();
-                } catch (InstantiationException | IllegalAccessException ex) {
+                    return editorType.getDeclaredConstructor().newInstance();
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                         InvocationTargetException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }

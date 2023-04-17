@@ -6,6 +6,9 @@ package jdplus.toolkit.desktop.plugin.ui.calendar;
 
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 import org.openide.nodes.Sheet;
 
 /**
@@ -23,7 +26,7 @@ public class EasterRelatedEventNode extends AbstractEventNode {
         EasterRelatedEventBean bean = getLookup().lookup(EasterRelatedEventBean.class);
         StringBuilder sb = new StringBuilder();
         sb.append("<b>Easter</b> ");
-        DecimalFormat df = new DecimalFormat("+#;-#");
+        DecimalFormat df = new DecimalFormat("+#;-#", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
         sb.append(df.format(bean.getOffset()));
         return sb.toString();
     }

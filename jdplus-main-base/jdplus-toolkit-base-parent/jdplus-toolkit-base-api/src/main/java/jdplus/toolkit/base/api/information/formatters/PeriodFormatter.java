@@ -19,16 +19,17 @@ package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 
 /**
  *
  * @author Jean Palate
  */
-public class PeriodFormatter implements InformationFormatter {
+public final class PeriodFormatter implements InformationFormatter {
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
 
         if (item != 0) {
             return null;

@@ -60,6 +60,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.TsDataFunction;
@@ -193,7 +195,7 @@ public final class JRevisionSeriesView extends JComponent implements TimeSeriesC
         pt.translate(3, 3);
         SwingUtilities.convertPointToScreen(pt, chartpanel);
         popup.setLocation(pt);
-        popup.setChartTitle(info.toUpperCase() + " First estimations");
+        popup.setChartTitle(info.toUpperCase(Locale.ROOT) + " First estimations");
         popup.setTsData(transform(sRef, sel, activeDiag.asTsDataFunction()), revSeries);
         popup.setVisible(true);
         chartpanel.repaint();
@@ -254,7 +256,7 @@ public final class JRevisionSeriesView extends JComponent implements TimeSeriesC
         Point p = e.getTrigger().getLocationOnScreen();
         p.translate(3, 3);
         popup.setLocation(p);
-        popup.setChartTitle(info.toUpperCase() + "[" + start.toString() + "] Revisions");
+        popup.setChartTitle(info.toUpperCase(Locale.ROOT) + "[" + start.toString() + "] Revisions");
         popup.setVisible(true);
     }
 
@@ -385,7 +387,7 @@ public final class JRevisionSeriesView extends JComponent implements TimeSeriesC
     }
 
     private void configureAxis(XYPlot plot) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy", Locale.getDefault(Locale.Category.FORMAT));
         DateAxis dateAxis = new DateAxis();
         dateAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
         dateAxis.setDateFormatOverride(sdf);

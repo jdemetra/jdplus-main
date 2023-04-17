@@ -31,6 +31,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 import java.util.Map.Entry;
 import javax.swing.*;
@@ -50,7 +51,7 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
 
     private final ExplorerManager mgr = new ExplorerManager();
 
-    private static final DecimalFormat df3 = new DecimalFormat("0.000");
+    private static final DecimalFormat df3 = new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
     private final static int MAXBIAS = 1, SKEWNESS = 2, KURTOSIS = 3, LB = 4, LBS = 5, LB2 = 6, TD_PEAK = 7, S_PEAK = 8, TD_VPEAK = 9, S_VPEAK = 10, S_VAR = 11, I_VAR = 12, SI_CORR = 13, M_START = 11;
 //    private final static String[] TESTS_TS = new String[]{"max bias", "skewness", "kurtosis", "ljung-box", "lb on seas.", "lb on sq.", "td peak", "seas peak", "visual td peak", "visual s. peak", "s_var", "i var", "s-i corr"};
 //    private final static String[] TESTS_X12 = new String[]{"max bias", "skewness", "kurtosis", "ljung-box", "lb on seas.", "lb on sq.", "td peak", "seas peak", "visual td peak", "visual s. peak", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11", "q", "q-m2"};

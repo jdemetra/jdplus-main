@@ -18,6 +18,7 @@ package jdplus.toolkit.base.core.math.polynomials;
 
 import java.util.Arrays;
 import java.util.Formatter;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 import jdplus.toolkit.base.core.math.ComplexComputer;
@@ -754,7 +755,7 @@ public final class Polynomial {
         boolean sign = false;
         int n = p.degree();
         if (n == 0) {
-            sb.append(new Formatter().format(fmt, p.get(0)));
+            sb.append(new Formatter(Locale.ROOT).format(fmt, p.get(0)));
         } else {
             for (int i = 0; i <= n; ++i) {
                 double v = Math.abs(p.get(i));
@@ -765,7 +766,7 @@ public final class Polynomial {
                         sb.append(" + ");
                     }
                     if ((v != 1) || (i == 0)) {
-                        sb.append(new Formatter().format(fmt, v).toString());
+                        sb.append(new Formatter(Locale.ROOT).format(fmt, v).toString());
                     }
                     sign = true;
                     if (i > 0) {

@@ -20,13 +20,9 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import ec.util.chart.swing.Charts;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.*;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jfree.data.DomainOrder;
 import org.jfree.data.general.AbstractSeriesDataset;
@@ -312,7 +308,7 @@ public final class TsXYDatasets {
     private static final class FastTs implements TsFacade {
 
         // a shared calendar used in the event dispatch thread
-        private static final Calendar EDT_CALENDAR = Calendar.getInstance();
+        private static final Calendar EDT_CALENDAR = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault(Locale.Category.FORMAT));
 
         // FACTORY METHODS
         @NonNull
