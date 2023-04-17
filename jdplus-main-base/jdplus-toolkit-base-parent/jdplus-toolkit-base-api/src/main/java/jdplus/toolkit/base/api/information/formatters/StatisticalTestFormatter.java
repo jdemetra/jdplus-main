@@ -26,7 +26,7 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-public class StatisticalTestFormatter implements InformationFormatter {
+public final class StatisticalTestFormatter implements InformationFormatter {
 
     private NumberFormat newFormat6(Locale locale) {
         NumberFormat df4 = NumberFormat.getNumberInstance(locale);

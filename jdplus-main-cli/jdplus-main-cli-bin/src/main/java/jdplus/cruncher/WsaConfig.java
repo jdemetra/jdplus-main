@@ -16,11 +16,11 @@
  */
 package jdplus.cruncher;
 
-import jdplus.toolkit.base.api.information.formatters.CsvInformationFormatter;
 import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaDiagnosticsFactory;
 import jdplus.sa.base.api.SaManager;
 import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.sa.base.csv.CsvInformationFormatter;
 import jdplus.sa.base.csv.CsvLayout;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;

@@ -24,7 +24,7 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-final class IntegerFormatter implements InformationFormatter {
+public final class IntegerFormatter implements InformationFormatter {
 
     @Override
     public String format(Object obj, int item, Locale locale) {
