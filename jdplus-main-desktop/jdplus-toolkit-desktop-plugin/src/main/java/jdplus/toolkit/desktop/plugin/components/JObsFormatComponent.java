@@ -33,6 +33,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -71,7 +72,7 @@ public final class JObsFormatComponent extends JComponent {
         this.numberPattern = new JTextField();
         this.listener = new Listener();
 
-        this.dateSample = LocalDateTime.now();
+        this.dateSample = LocalDateTime.now(Clock.systemDefaultZone());
         this.datePatternPreview = new CustomPreview(datePattern);
         this.numberSample = 1234.5;
         this.numberPatternPreview = new CustomPreview(numberPattern);

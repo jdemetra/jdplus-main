@@ -19,6 +19,7 @@ package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 import jdplus.toolkit.desktop.plugin.html.HtmlClass;
 import static ec.util.chart.swing.SwingColorSchemeSupport.toHex;
 import java.awt.Color;
+import java.util.Locale;
 
 /**
  *
@@ -68,6 +69,6 @@ public class OutlierColorChooser {
     }
 
     public static HtmlClass getCodeClass(String code) {
-        return HtmlClass.of("outlier-" + code.toLowerCase());
+        return HtmlClass.of("outlier-" + code.toLowerCase(Locale.ROOT));
     }
 }

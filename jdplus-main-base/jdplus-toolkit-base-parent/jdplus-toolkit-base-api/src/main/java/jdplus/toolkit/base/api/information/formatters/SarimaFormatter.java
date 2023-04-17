@@ -19,6 +19,8 @@ package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 
+import java.util.Locale;
+
 /**
  *
  * @author Jean Palate
@@ -26,7 +28,7 @@ import jdplus.toolkit.base.api.arima.SarimaOrders;
 public class SarimaFormatter implements InformationFormatter {
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
 
         SarimaOrders orders = (SarimaOrders) obj;
         switch (item) {

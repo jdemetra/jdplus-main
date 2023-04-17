@@ -20,6 +20,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.ls.LSInput;
@@ -74,7 +75,7 @@ public class Input implements LSInput {
             try {
                 byte[] input = new byte[inputStream.available()];
                 inputStream.read(input);
-                String contents = new String(input);
+                String contents = new String(input, StandardCharsets.UTF_8);
                 return contents;
             } catch (IOException ex) {
                 return null;

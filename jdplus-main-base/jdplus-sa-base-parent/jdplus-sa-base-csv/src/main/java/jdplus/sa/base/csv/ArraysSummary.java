@@ -22,6 +22,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.util.WildCards;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ public class ArraysSummary {
    private void fillDictionary(String[] items, Explorable results) {
         for (String item : items) {
             try {
-                item = item.toLowerCase();
+                item = item.toLowerCase(Locale.ROOT);
                 if (results != null) {
                     if (WildCards.hasWildCards(item)) {
                         Map<String, Matrix> mall = results.searchAll(item, Matrix.class);

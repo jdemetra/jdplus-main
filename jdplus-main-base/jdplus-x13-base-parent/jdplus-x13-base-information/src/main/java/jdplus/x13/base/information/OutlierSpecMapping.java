@@ -24,6 +24,8 @@ import jdplus.toolkit.base.api.timeseries.regression.AdditiveOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.LevelShift;
 import jdplus.toolkit.base.api.timeseries.regression.PeriodicOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
+
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -69,7 +71,7 @@ class OutlierSpecMapping {
             info.add(SPAN, span);
         }
         for (SingleOutlierSpec s : spec.getTypes()){
-            info.add(s.getType().toLowerCase(), s.getCriticalValue());
+            info.add(s.getType().toLowerCase(Locale.ROOT), s.getCriticalValue());
         }
         if (verbose || spec.getDefaultCriticalValue() != 0) {
             info.add(DEFCV, spec.getDefaultCriticalValue());

@@ -16,6 +16,7 @@
  */
 package internal.toolkit.base.core.math.functions.gsl.roots;
 
+import java.util.Locale;
 import java.util.function.DoubleUnaryOperator;
 import internal.toolkit.base.core.math.functions.gsl.Utility;
 
@@ -33,7 +34,7 @@ public class SolverTestUtils {
     private static final int MAX_ITERATIONS = 150;
 
     public static void test(FSolver s, String desc, double correctRoot) {
-        System.out.println(String.format("%s => expected : %f", desc, correctRoot));
+        System.out.println(String.format(Locale.ROOT, "%s => expected : %f", desc, correctRoot));
         int iterations = 0;
         RootStatus status;
         do {
@@ -41,11 +42,11 @@ public class SolverTestUtils {
             s.iterate();
 
             if (s.lower > s.upper) {
-                fail(String.format("Interval is invalid (%f %f)", s.lower, s.upper));
+                fail(String.format(Locale.ROOT, "Interval is invalid (%f %f)", s.lower, s.upper));
             }
 
             if (s.root < s.lower || s.root > s.upper) {
-                fail(String.format("r lies outside interval %f (%f %f)", s.root, s.lower, s.upper));
+                fail(String.format(Locale.ROOT, "r lies outside interval %f (%f %f)", s.root, s.lower, s.upper));
             }
 
             // Test interval a b
@@ -57,12 +58,12 @@ public class SolverTestUtils {
         }
 
         // Check the validity of the returned result
-        System.out.println(String.format("\t===> result : %f\t(%d iterations)", s.root, iterations));
+        System.out.println(String.format(Locale.ROOT, "\t===> result : %f\t(%d iterations)", s.root, iterations));
         assertTrue(withinTol(s.root, correctRoot, EPSREL, EPSABS));
     }
 
     public static void testFDF(FDFSolver s, String desc, double correctRoot) {
-        System.out.println(String.format("%s => expected : %f", desc, correctRoot));
+        System.out.println(String.format(Locale.ROOT, "%s => expected : %f", desc, correctRoot));
         int iterations = 0;
         double prev;
         RootStatus status;
@@ -80,7 +81,7 @@ public class SolverTestUtils {
         }
 
         // Check the validity of the returned result
-        System.out.println(String.format("\t===> result : %f\t(%d iterations)", s.root, iterations));
+        System.out.println(String.format(Locale.ROOT, "\t===> result : %f\t(%d iterations)", s.root, iterations));
         assertTrue(withinTol(s.root, correctRoot, EPSREL, EPSABS));
     }
 

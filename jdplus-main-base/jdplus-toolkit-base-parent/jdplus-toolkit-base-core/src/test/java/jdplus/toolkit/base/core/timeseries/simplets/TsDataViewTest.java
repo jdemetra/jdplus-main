@@ -21,6 +21,8 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
+
+import java.time.Clock;
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +40,7 @@ public class TsDataViewTest {
 
     @Test
     public void testFullYears() {
-        TsPeriod p = TsPeriod.of(TsUnit.MONTH, LocalDate.now());
+        TsPeriod p = TsPeriod.of(TsUnit.MONTH, LocalDate.now(Clock.systemDefaultZone()));
         for (int i = 0; i < 12; ++i) {
             for (int j = 0; j < 12; ++j) {
                 DataBlock d = DataBlock.make(i + j + 36);

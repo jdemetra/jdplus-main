@@ -22,6 +22,7 @@ import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import java.io.IOException;
 import java.util.Formatter;
+import java.util.Locale;
 
 import jdplus.toolkit.base.core.arima.IArimaModel;
 import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
@@ -67,7 +68,7 @@ public class HtmlArima extends AbstractHtmlElement implements HtmlElement {
             stream.write(MA).write(ma.toString()).newLine();
         }
         if (Math.abs(var - 1) > EPS) {
-            String val = new Formatter().format("%.5f", var).toString();
+            String val = new Formatter(Locale.ROOT).format("%.5f", var).toString();
             stream.write(VAR).write(HtmlTag.IMPORTANT_TEXT, val).newLine();
         }
     }
@@ -75,7 +76,7 @@ public class HtmlArima extends AbstractHtmlElement implements HtmlElement {
     public void writeShortModel(HtmlStream stream) throws IOException {
         double var = model.getInnovationVariance();
         if (Math.abs(var - 1) > EPS) {
-            String val = new Formatter().format("%.5f", var).toString();
+            String val = new Formatter(Locale.ROOT).format("%.5f", var).toString();
             stream.write(". " + VAR).write(val);
         }
     }

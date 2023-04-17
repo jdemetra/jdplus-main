@@ -18,19 +18,20 @@
 package jdplus.toolkit.base.api.information.formatters;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
  * @author Jean Palate
  */
-class IntegerFormatter implements InformationFormatter {
+final class IntegerFormatter implements InformationFormatter {
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
         if (item > 0)
             return null;
         int i = (Integer)obj;
-        NumberFormat ifmt = NumberFormat.getIntegerInstance();
+        NumberFormat ifmt = NumberFormat.getIntegerInstance(locale);
         ifmt.setGroupingUsed(false);
         return ifmt.format(i);
     }

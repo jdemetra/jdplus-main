@@ -27,6 +27,7 @@ import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class HighFreqOutlierDescriptor implements IPropertyDescriptors {
     private String name;
     
     public HighFreqOutlierDescriptor() {
-        position = LocalDate.now();
+        position = LocalDate.now(Clock.systemDefaultZone());
         type = OutlierType.AO;
         parameter = Parameter.undefined();
         name = null;

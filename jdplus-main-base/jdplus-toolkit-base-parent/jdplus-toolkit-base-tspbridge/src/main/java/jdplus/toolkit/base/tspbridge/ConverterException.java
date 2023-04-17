@@ -18,6 +18,7 @@ package jdplus.toolkit.base.tspbridge;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -29,7 +30,7 @@ public final class ConverterException extends RuntimeException {
         Objects.requireNonNull(from, "from");
         Objects.requireNonNull(to, "to");
         Objects.requireNonNull(value, "value");
-        return new ConverterException(String.format("Cannot convert from %s to %s with value '%s'", from, to, value));
+        return new ConverterException(String.format(Locale.ROOT, "Cannot convert from %s to %s with value '%s'", from, to, value));
     }
 
     public static @NonNull ConverterException notPossible(Enum<?> value) {

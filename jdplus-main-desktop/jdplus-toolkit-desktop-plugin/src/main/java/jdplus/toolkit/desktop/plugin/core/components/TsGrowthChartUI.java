@@ -38,6 +38,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview.PRINT_ACTION;
 import static jdplus.toolkit.desktop.plugin.actions.ResetableZoom.RESET_ZOOM_ACTION;
@@ -106,7 +107,7 @@ public final class TsGrowthChartUI implements InternalUI<JTsGrowthChart> {
         onDataFormatChange();
         onTransferHandlerChange();
         onComponentPopupMenuChange();
-        NumberFormat percent = NumberFormat.getPercentInstance();
+        NumberFormat percent = NumberFormat.getPercentInstance(Locale.getDefault(Locale.Category.FORMAT));
         percent.setMaximumFractionDigits(1);
         chartPanel.setValueFormat(percent);
         chartPanel.setSeriesFormatter(new SeriesFunction<String>() {

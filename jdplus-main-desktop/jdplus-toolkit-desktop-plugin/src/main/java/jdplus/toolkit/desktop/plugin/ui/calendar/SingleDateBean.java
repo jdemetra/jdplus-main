@@ -10,6 +10,7 @@ import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
 import jdplus.toolkit.base.api.timeseries.calendars.SingleDate;
 
 import java.beans.PropertyChangeSupport;
+import java.time.Clock;
 import java.time.LocalDate;
 
 /**
@@ -33,7 +34,7 @@ public class SingleDateBean implements HasHoliday, PropertyChangeSource.WithWeak
     private final PropertyChangeSupport broadcaster = new PropertyChangeSupport(this);
 
     public SingleDateBean() {
-        this(LocalDate.now(), 1);
+        this(LocalDate.now(Clock.systemDefaultZone()), 1);
     }
 
     public SingleDateBean(LocalDate date, double weight) {

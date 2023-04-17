@@ -26,6 +26,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 /**
  * @author Philippe Charles
@@ -159,7 +160,7 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
 
     public TsDomain range(int startIndex, int endIndex) {
         if (endIndex < startIndex || startIndex < 0) {
-            throw new IllegalArgumentException(String.format("Invalid bounds: [%s, %s[", startIndex, endIndex));
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "Invalid bounds: [%s, %s[", startIndex, endIndex));
         }
         if (isEmpty()) {
             return this;

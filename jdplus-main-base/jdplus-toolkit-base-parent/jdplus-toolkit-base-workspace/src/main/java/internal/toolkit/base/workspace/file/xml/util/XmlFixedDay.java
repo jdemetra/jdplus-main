@@ -20,6 +20,7 @@ import jdplus.toolkit.base.api.timeseries.ValidityPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.FixedDay;
 import jdplus.toolkit.base.xml.legacy.IXmlConverter;
 import java.time.Month;
+import java.util.Locale;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -50,7 +51,7 @@ public class XmlFixedDay extends AbstractXmlDay implements IXmlConverter<FixedDa
     }
 
     private static int of(String month) {
-        String umonth=month.toUpperCase();
+        String umonth=month.toUpperCase(Locale.ROOT);
         Month m=Month.valueOf(umonth);
         return m.getValue();
     }

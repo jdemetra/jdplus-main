@@ -29,10 +29,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -57,7 +54,7 @@ public class TsDataBuilderTest {
     @Test
     public void testBuilderByCalendar() {
         CustomFactory<Date> factory = new CustomFactory<Date>() {
-            final GregorianCalendar cal = new GregorianCalendar();
+            final GregorianCalendar cal = new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault());
 
             @Override
             public TsDataBuilder<Date> builder(ObsGathering gathering) {

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.time.LocalDate;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -55,9 +56,9 @@ public class XmlRegressionTest {
     public XmlRegressionTest() {
         // create the regression
         XmlAdditiveOutlier xao = new XmlAdditiveOutlier();
-        xao.setPosition(LocalDate.now());
+        xao.setPosition(LocalDate.now(Clock.systemDefaultZone()));
         XmlSeasonalOutlier xso = new XmlSeasonalOutlier();
-        xso.setPosition(LocalDate.now().minusDays(5000));
+        xso.setPosition(LocalDate.now(Clock.systemDefaultZone()).minusDays(5000));
 
         reg = new XmlRegression();
         XmlRegressionItem ao = new XmlRegressionItem();

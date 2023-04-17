@@ -21,6 +21,7 @@ import jdplus.toolkit.base.api.timeseries.calendars.FixedWeekDay;
 import jdplus.toolkit.base.xml.legacy.IXmlConverter;
 import java.time.DayOfWeek;
 import java.time.Month;
+import java.util.Locale;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -54,13 +55,13 @@ public class XmlFixedWeekDay extends AbstractXmlDay implements IXmlConverter<Fix
     }
 
     private static int ofMonth(String month) {
-        String umonth=month.toUpperCase();
+        String umonth=month.toUpperCase(Locale.ROOT);
         Month m=Month.valueOf(umonth);
         return m.getValue();
     }
 
     private static DayOfWeek ofDay(String day) {
-        String uday=day.toUpperCase();
+        String uday=day.toUpperCase(Locale.ROOT);
         return DayOfWeek.valueOf(uday);
     }
 }

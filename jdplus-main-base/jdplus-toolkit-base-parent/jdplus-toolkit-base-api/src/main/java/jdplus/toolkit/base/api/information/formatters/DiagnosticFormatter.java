@@ -18,38 +18,30 @@ package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
  * @author Jean Palate
  */
-public class DiagnosticFormatter implements InformationFormatter {
+public final class DiagnosticFormatter implements InformationFormatter {
 
-    private static final DecimalFormat df3 = new DecimalFormat();
-    private final DecimalFormat fmt;
-
-    static {
-        df3.setMaximumFractionDigits(3);
-        df3.setGroupingUsed(false);
-    }
-
-    public DiagnosticFormatter() {
-        fmt = df3;
-    }
-
-    public DiagnosticFormatter(DecimalFormat fmt) {
-        this.fmt = fmt;
+    private NumberFormat newFormat(Locale locale) {
+        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
+        df4.setMaximumFractionDigits(3);
+        df4.setGroupingUsed(false);
+        return df4;
     }
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
 
         ProcDiagnostic test = (ProcDiagnostic) obj;
         if (item == 0 || item == 1) {
             return test.getQuality().toString();
         } else if (Math.abs(item) == 2) {
-            return fmt.format(test.getValue());
+            return newFormat(locale).format(test.getValue());
         } else {
             return null;
         }

@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.data;
 
 import java.util.Formatter;
+import java.util.Locale;
 import java.util.Objects;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.api.data.ParameterType;
@@ -342,7 +343,7 @@ public final class OldParameter implements Cloneable, Comparable<OldParameter> {
             return EMPTY;
         StringBuilder builder = new StringBuilder();
 
-        builder.append(new Formatter().format(fmt, value).toString());
+        builder.append(new Formatter(Locale.ROOT).format(fmt, value).toString());
         if (type == ParameterType.Fixed)
             builder.append('f');
         return builder.toString();

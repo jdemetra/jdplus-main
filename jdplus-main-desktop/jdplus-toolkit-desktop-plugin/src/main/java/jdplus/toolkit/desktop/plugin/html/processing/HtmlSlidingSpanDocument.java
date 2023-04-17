@@ -31,7 +31,9 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.function.Function;
 import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import jdplus.toolkit.base.core.timeseries.simplets.PeriodIterator;
@@ -74,7 +76,7 @@ public class HtmlSlidingSpanDocument<I> extends AbstractHtmlElement implements H
 
         stream.write("Abnormal values : ");
 
-        NumberFormat format = new DecimalFormat("0.0");
+        NumberFormat format = new DecimalFormat("0.0", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
         int nabnormal = stats.countBetween(threshold_, Double.MAX_VALUE);
         double mabnormal = stats.getAverage();
         double p = nabnormal * 100.0 / stats.getObservationsCount();

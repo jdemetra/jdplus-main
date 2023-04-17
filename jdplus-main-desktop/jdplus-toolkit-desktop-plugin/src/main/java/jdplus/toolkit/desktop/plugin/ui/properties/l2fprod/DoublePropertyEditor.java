@@ -24,6 +24,8 @@ import static jdplus.toolkit.desktop.plugin.util.JTextComponents.enableValidatio
 
 import java.beans.PropertyEditor;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.function.BiConsumer;
 import javax.swing.JFormattedTextField;
 
@@ -43,7 +45,7 @@ public final class DoublePropertyEditor implements PropertyEditor {
     }
 
     private static JFormattedTextField createEditor() {
-        DecimalFormat format = new DecimalFormat();
+        NumberFormat format = NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.DISPLAY));
         JTextComponents.fixMaxDecimals(format);
         JFormattedTextField result = new JFormattedTextField(format);
         result.setBorder(LookAndFeelTweaks.EMPTY_BORDER);

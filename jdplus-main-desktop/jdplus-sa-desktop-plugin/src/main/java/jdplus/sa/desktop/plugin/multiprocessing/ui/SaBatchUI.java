@@ -1323,7 +1323,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                 }
             }
 
-            log.log(Level.INFO, String.format("Task: %s items in %s by %s executors with priority %s", tasks.size(), stopwatch.stop(), nThread, priority));
+            log.log(Level.INFO, String.format(Locale.ROOT, "Task: %s items in %s by %s executors with priority %s", tasks.size(), stopwatch.stop(), nThread, priority));
             executorService.shutdown();
             return null;
 

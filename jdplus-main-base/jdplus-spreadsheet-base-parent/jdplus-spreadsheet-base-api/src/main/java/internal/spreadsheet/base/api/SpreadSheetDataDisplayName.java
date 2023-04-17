@@ -25,6 +25,8 @@ import jdplus.toolkit.base.tsp.HasDataDisplayName;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 
+import java.util.Locale;
+
 /**
  * @author Philippe Charles
  */
@@ -74,6 +76,6 @@ public final class SpreadSheetDataDisplayName implements HasDataDisplayName {
     }
 
     private static String toString(ObsGathering gathering) {
-        return TsUnit.UNDEFINED.equals(gathering.getUnit()) ? "" : String.format("(%s/%s)", gathering.getUnit(), gathering.getAggregationType());
+        return TsUnit.UNDEFINED.equals(gathering.getUnit()) ? "" : String.format(Locale.ROOT, "(%s/%s)", gathering.getUnit(), gathering.getAggregationType());
     }
 }

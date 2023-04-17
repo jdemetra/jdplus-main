@@ -18,6 +18,8 @@ package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.core.data.DataBlock;
 import nbbrd.design.Development;
+
+import java.util.Locale;
 import java.util.function.IntToDoubleFunction;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
@@ -243,7 +245,7 @@ public interface IFiniteFilter extends IFilter {
                     sb.append(" + ");
                 }
                 if ((av != 1) || (i == 0)) {
-                    sb.append(new Formatter().format(fmt, av).toString());
+                    sb.append(new Formatter(Locale.ROOT).format(fmt, av).toString());
                 }
                 sign = true;
                 if (i < 0) {

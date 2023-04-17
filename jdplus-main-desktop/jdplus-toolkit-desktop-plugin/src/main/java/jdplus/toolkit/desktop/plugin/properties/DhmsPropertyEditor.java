@@ -20,6 +20,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.beans.PropertyEditorSupport;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,8 +121,8 @@ public final class DhmsPropertyEditor extends PropertyEditorSupport {
     public static String millisToShortDhms(long duration) {
         int[] items = millisToDHMS(duration);
         return items[0] == 0
-                ? String.format("%02d:%02d:%02d", items[1], items[2], items[3])
-                : String.format("%dd%02d:%02d:%02d", items[0], items[1], items[2], items[3]);
+                ? String.format(Locale.ROOT, "%02d:%02d:%02d", items[1], items[2], items[3])
+                : String.format(Locale.ROOT, "%dd%02d:%02d:%02d", items[0], items[1], items[2], items[3]);
     }
 
     public static long shortDhmsToMillis(String text) throws IllegalArgumentException {

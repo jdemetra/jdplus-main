@@ -36,6 +36,8 @@ import jdplus.toolkit.base.api.dstats.ContinuousDistribution;
 import jdplus.toolkit.base.api.util.Arrays2;
 import java.awt.BorderLayout;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -340,7 +342,7 @@ public final class JDistributionView extends JComponent implements TimeSeriesCom
         NumberAxis rangeAxis = new NumberAxis();
         rangeAxis.setTickLabelPaint(TsCharts.CHART_TICK_LABEL_COLOR);
         rangeAxis.setTickUnit(new NumberTickUnit(0.05));
-        rangeAxis.setNumberFormatOverride(new DecimalFormat("0.###"));
+        rangeAxis.setNumberFormatOverride(new DecimalFormat("0.###", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT))));
         plot.setRangeAxis(rangeAxis);
 
         plot.mapDatasetToDomainAxis(0, 0);

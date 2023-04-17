@@ -156,9 +156,9 @@ public class ObsFormatTest {
         };
 
         equivalence.accept(builder().locale(FRANCE).dateTimePattern("yyyy-MMM").build(), new SimpleDateFormat("yyyy-MMM", FRANCE));
-        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).dateTimePattern("yyyy-MMM").build(), new SimpleDateFormat("yyyy-MMM"));
+        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).dateTimePattern("yyyy-MMM").build(), new SimpleDateFormat("yyyy-MMM", Locale.getDefault(Category.FORMAT)));
         equivalence.accept(builder().locale(FRANCE).build(), SimpleDateFormat.getDateInstance(DateFormat.DEFAULT, FRANCE));
-        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).build(), SimpleDateFormat.getDateInstance());
+        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).build(), SimpleDateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault(Category.FORMAT)));
     }
 
     @Test
@@ -202,9 +202,9 @@ public class ObsFormatTest {
         };
 
         equivalence.accept(builder().locale(FRANCE).dateTimePattern("yyyy-MMM").build(), new SimpleDateFormat("yyyy-MMM", FRANCE));
-        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).dateTimePattern("yyyy-MMM").build(), new SimpleDateFormat("yyyy-MMM"));
+        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).dateTimePattern("yyyy-MMM").build(), new SimpleDateFormat("yyyy-MMM", Locale.getDefault(Locale.Category.FORMAT)));
         equivalence.accept(builder().locale(FRANCE).build(), SimpleDateFormat.getDateInstance(DateFormat.DEFAULT, FRANCE));
-        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).build(), SimpleDateFormat.getDateInstance());
+        equivalence.accept(builder().locale(NULL_AS_SYSTEM_DEFAULT).build(), SimpleDateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault(Locale.Category.FORMAT)));
     }
 
     private final TemporalQuery[] temporalQueries = {LocalDateTime::from, o -> LocalDate.from(o).atStartOfDay()};

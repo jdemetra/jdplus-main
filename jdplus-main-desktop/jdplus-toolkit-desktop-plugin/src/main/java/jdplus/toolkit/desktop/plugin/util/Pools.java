@@ -17,6 +17,7 @@
 
 package jdplus.toolkit.desktop.plugin.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 import java.util.LinkedList;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -93,8 +94,8 @@ public final class Pools {
         @Override
         public T create() {
             try {
-                return clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException ex) {
+                return clazz.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
                 throw new RuntimeException(ex);
             }
         }

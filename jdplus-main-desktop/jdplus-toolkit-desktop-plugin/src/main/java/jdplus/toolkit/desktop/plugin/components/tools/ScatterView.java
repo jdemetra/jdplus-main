@@ -13,6 +13,8 @@ import internal.uihelpers.DiscreteDisplayDomain;
 import internal.uihelpers.DiscreteInformationProvider;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.JMenu;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.jfree.chart.ChartFactory;
@@ -41,7 +43,7 @@ public class ScatterView extends AChartView {
     public static final double DEFAULT_MAX_Y = 1;
     public static final NumberTickUnit DEFAULT_TICKUNIT_X = new NumberTickUnit(2);
     public static final NumberTickUnit DEFAULT_TICKUNIT_Y = new NumberTickUnit(0.1);
-    public static final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("0.##");
+    public static final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
     // OTHER
     protected final DiscreteInformationProvider provider;
 

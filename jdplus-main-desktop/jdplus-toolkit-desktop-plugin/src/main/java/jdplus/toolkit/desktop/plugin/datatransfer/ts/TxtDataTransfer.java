@@ -63,7 +63,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     private InternalConfig config;
 
     public TxtDataTransfer() {
-        this.numberFormat = NumberFormat.getNumberInstance();
+        this.numberFormat = NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.FORMAT));
         this.dateFormat = DateTimeFormatter.ISO_DATE;
         this.configurator = new BeanConfigurator<>(new InternalConfigHandler(), new InternalConfigConverter(), new InternalConfigEditor());
         this.config = new InternalConfig();

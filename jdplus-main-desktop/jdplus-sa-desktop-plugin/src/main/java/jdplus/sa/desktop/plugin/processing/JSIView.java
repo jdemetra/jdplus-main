@@ -47,8 +47,10 @@ import java.awt.Stroke;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -93,7 +95,7 @@ public final class JSIView extends JComponent implements TimeSeriesComponent, Ha
     private final XYLineAndShapeRenderer siMasterRenderer;
     private final JFreeChart masterChart;
     private final JFreeChart detailChart;
-    private final DecimalFormat format = new DecimalFormat("0");
+    private final DecimalFormat format = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
     private Formatter<Number> numberFormat;
 
     @lombok.experimental.Delegate
@@ -337,7 +339,7 @@ public final class JSIView extends JComponent implements TimeSeriesComponent, Ha
         NumberAxis xAxis = new NumberAxis();
         xAxis.setTickLabelPaint(Color.GRAY);
         xAxis.setTickUnit(new NumberTickUnit(1), true, false);
-        xAxis.setNumberFormatOverride(new DecimalFormat("0000"));
+        xAxis.setNumberFormatOverride(new DecimalFormat("0000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT))));
         xAxis.setRange(g.getMinYear() - 1, g.getMaxYear() + 1);
         plot.setDomainAxis(xAxis);
 

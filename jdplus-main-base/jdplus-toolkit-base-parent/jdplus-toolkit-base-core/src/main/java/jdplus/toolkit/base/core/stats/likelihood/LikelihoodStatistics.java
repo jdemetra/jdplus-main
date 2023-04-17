@@ -19,6 +19,7 @@ package jdplus.toolkit.base.core.stats.likelihood;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
 import java.util.Formatter;
+import java.util.Locale;
 
 /**
  * @author Jean Palate
@@ -148,27 +149,27 @@ public class LikelihoodStatistics {
             builder.append("Number of parameters estimated :").append(
                     estimatedParametersCount).append(System.lineSeparator());
         }
-        Formatter fmt = new Formatter();
+        Formatter fmt = new Formatter(Locale.ROOT);
         builder.append("log likelihood :").append(
                 fmt.format("%.4f", logLikelihood)).append(System.lineSeparator());
         if (transformationAdjustment != 0) {
-            fmt = new Formatter();
+            fmt = new Formatter(Locale.ROOT);
             builder.append("Transformation Adjustment :").append(
                     fmt.format("%.4f", transformationAdjustment)).append(System.lineSeparator());
-            fmt = new Formatter();
+            fmt = new Formatter(Locale.ROOT);
             builder.append("Adjusted log likelihood :").append(
                     fmt.format("%.4f", adjustedLogLikelihood)).append(System.lineSeparator());
         }
-        fmt = new Formatter();
+        fmt = new Formatter(Locale.ROOT);
         builder.append("AIC :").append(fmt.format("%.4f", AIC)).append(System.lineSeparator());
-        fmt = new Formatter();
+        fmt = new Formatter(Locale.ROOT);
 //        builder.append("AICC (F-corrected-AIC) :").append(
 //                fmt.format("%.4f", AICC)).append(System.lineSeparator());
 //        fmt = new Formatter();
 //        builder.append("Hannan Quinn :").append(fmt.format("%.4f", HannanQuinn)).append(System.lineSeparator());
 //        fmt = new Formatter();
         builder.append("BIC :").append(fmt.format("%.4f", BIC)).append(System.lineSeparator());
-        fmt = new Formatter();
+        fmt = new Formatter(Locale.ROOT);
         if (Double.isFinite(ssqErr)) {
             builder.append("BIC corrected for length :").append(fmt.format("%.4f", BICC));
         }

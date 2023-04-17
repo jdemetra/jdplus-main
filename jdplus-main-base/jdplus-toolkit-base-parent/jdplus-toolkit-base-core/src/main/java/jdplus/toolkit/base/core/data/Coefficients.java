@@ -18,6 +18,7 @@ package jdplus.toolkit.base.core.data;
 
 import java.util.Arrays;
 import java.util.Formatter;
+import java.util.Locale;
 
 /**
  *
@@ -275,7 +276,7 @@ public class Coefficients {
         boolean sign = false;
         int n = c.length;
         if (n == 1) {
-            sb.append(new Formatter().format(fmt, coef(c[0], smooth)));
+            sb.append(new Formatter(Locale.ROOT).format(fmt, coef(c[0], smooth)));
         } else {
             for (int i = 0; i < n; ++i) {
                 double v = coef(c[i], smooth);
@@ -286,7 +287,7 @@ public class Coefficients {
                         sb.append(" + ");
                     }
                     if ((v != 1) || (i == 0)) {
-                        sb.append(new Formatter().format(fmt, v).toString());
+                        sb.append(new Formatter(Locale.ROOT).format(fmt, v).toString());
                     }
                     sign = true;
                     if (i > 0) {

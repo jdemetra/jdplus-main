@@ -14,6 +14,8 @@ import internal.uihelpers.ContinuousDisplayDomain;
 import internal.uihelpers.ContinuousInformationProvider;
 import java.awt.Stroke;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.JMenu;
 
 import org.jfree.chart.ChartFactory;
@@ -42,7 +44,7 @@ public class PiView extends AChartView {
     public static final double DEFAULT_MAX_Y = 1;
     public static final NumberTickUnit DEFAULT_TICKUNIT_X = new PiNumberTickUnit(Math.PI / 2);
     public static final NumberTickUnit DEFAULT_TICKUNIT_Y = new NumberTickUnit(0.05);
-    public static final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("0.###");
+    public static final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("0.###", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
     // OTHER
     protected final ContinuousInformationProvider provider;
 

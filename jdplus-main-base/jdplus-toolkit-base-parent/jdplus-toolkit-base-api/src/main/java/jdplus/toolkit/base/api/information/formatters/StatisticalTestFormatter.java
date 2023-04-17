@@ -18,7 +18,9 @@
 package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.stats.StatisticalTest;
-import java.text.DecimalFormat;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
@@ -26,39 +28,35 @@ import java.text.DecimalFormat;
  */
 public class StatisticalTestFormatter implements InformationFormatter {
 
-    private static final DecimalFormat df6 = new DecimalFormat();
-    private static final DecimalFormat df4 = new DecimalFormat();
-     static {
-        df6.setMaximumFractionDigits(6);
-        df4.setMaximumFractionDigits(4);
-        df6.setGroupingUsed(false);
+    private NumberFormat newFormat6(Locale locale) {
+        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
+        df4.setMaximumFractionDigits(6);
         df4.setGroupingUsed(false);
+        return df4;
     }
-   private final DecimalFormat fmt;
 
-    public StatisticalTestFormatter(){
-        fmt=df6;
+    private NumberFormat newFormat4(Locale locale) {
+        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
+        df4.setMaximumFractionDigits(4);
+        df4.setGroupingUsed(false);
+        return df4;
     }
-    
-    public StatisticalTestFormatter(DecimalFormat fmt){
-        this.fmt=fmt;
-    }
-    
+
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
 
         StatisticalTest test = (StatisticalTest)obj;
         if (item == 0)
-            return fmt.format(test.getValue());
+            return newFormat6(locale).format(test.getValue());
         if (test.getDescription() != null)
             ++item;
         switch (Math.abs(item)) {
             case 1:
                 return test.getDescription();
             case 2:
-                return fmt.format(test.getValue());
+                return newFormat6(locale).format(test.getValue());
             case 3:
-                return df4.format(test.getPvalue());
+                return newFormat4(locale).format(test.getPvalue());
             default:
                 return null;
         }

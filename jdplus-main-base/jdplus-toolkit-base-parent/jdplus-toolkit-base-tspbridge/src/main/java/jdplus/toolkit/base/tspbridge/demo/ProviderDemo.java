@@ -32,11 +32,8 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -79,25 +76,25 @@ public class ProviderDemo {
     }
 
     public void printId(DataSourceProvider provider, DataSet id) {
-        System.out.printf("%9s %s\n", "Uri:", id.toString());
-        System.out.printf("%9s %s\n", "Display:", MultiLineNameUtil.join(provider.getDisplayName(id), " \n          "));
+        System.out.printf(Locale.ROOT, "%9s %s\n", "Uri:", id.toString());
+        System.out.printf(Locale.ROOT, "%9s %s\n", "Display:", MultiLineNameUtil.join(provider.getDisplayName(id), " \n          "));
     }
 
     public void printLabel(String label) {
-        System.out.printf("%9s %s\n", "Label:", MultiLineNameUtil.join(label, " \n          "));
+        System.out.printf(Locale.ROOT, "%9s %s\n", "Label:", MultiLineNameUtil.join(label, " \n          "));
     }
 
     public void printMetaData(Map<String, String> metaData) {
         if (metaData != null && !metaData.isEmpty()) {
             Iterator<Entry<String, String>> iterator = metaData.entrySet().iterator();
             Entry<String, String> item = iterator.next();
-            System.out.printf("%9s %s = %s\n", "MetaData:", item.getKey(), item.getValue());
+            System.out.printf(Locale.ROOT, "%9s %s = %s\n", "MetaData:", item.getKey(), item.getValue());
             while (iterator.hasNext()) {
                 item = iterator.next();
-                System.out.printf("%9s %s = %s\n", "", item.getKey(), item.getValue());
+                System.out.printf(Locale.ROOT, "%9s %s = %s\n", "", item.getKey(), item.getValue());
             }
         } else {
-            System.out.printf("%9s %s\n", "MetaData:", "none");
+            System.out.printf(Locale.ROOT, "%9s %s\n", "MetaData:", "none");
         }
     }
 
@@ -105,14 +102,14 @@ public class ProviderDemo {
         if (!data.isEmpty()) {
             TsDomain d = data.getDomain();
             int validValues = (int) data.getValues().reduce(0, (c, o) -> !Double.isNaN(o) ? c + 1 : c);
-            System.out.printf("%9s %s, from %s to %s, %d/%d obs\n", "Data:", d.getTsUnit(), d.start(), d.end(), validValues, d.length());
+            System.out.printf(Locale.ROOT, "%9s %s, from %s to %s, %d/%d obs\n", "Data:", d.getTsUnit(), d.start(), d.end(), validValues, d.length());
         } else {
-            System.out.printf("%9s %s\n", "Data:", data.getEmptyCause());
+            System.out.printf(Locale.ROOT, "%9s %s\n", "Data:", data.getEmptyCause());
         }
     }
 
     public void printDuration(Duration duration) {
-        System.out.printf("%9s %sms\n", "Duration:", duration.toMillis());
+        System.out.printf(Locale.ROOT, "%9s %sms\n", "Duration:", duration.toMillis());
     }
 
     public enum TsStrategy {

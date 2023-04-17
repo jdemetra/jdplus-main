@@ -19,6 +19,8 @@ package jdplus.tramoseats.desktop.plugin.anomalydetection.report;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  *
@@ -26,7 +28,7 @@ import java.text.DecimalFormat;
  */
 public class AnomalyPojo {
     
-    private static final DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("0.00", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
 //    private static int NAME_LEN=60;
 
     public enum Status {

@@ -21,6 +21,8 @@ import jdplus.toolkit.base.api.util.Arrays2;
 import java.text.NumberFormat;
 
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
+
+import java.util.Locale;
 import java.util.function.IntToDoubleFunction;
 
 /**
@@ -277,7 +279,7 @@ public class FiniteFilter implements IFiniteFilter, Cloneable {
     @Override
     public String toString() {
         Polynomial p = Polynomial.ofInternal(w).smooth();
-        NumberFormat format = NumberFormat.getNumberInstance();
+        NumberFormat format = NumberFormat.getNumberInstance(Locale.ROOT);
         format.setMaximumFractionDigits(4);
         format.setMinimumFractionDigits(4);
         // info.NumberDecimalSeparator = "";

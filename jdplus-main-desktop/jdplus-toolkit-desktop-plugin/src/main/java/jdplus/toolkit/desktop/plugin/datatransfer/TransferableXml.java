@@ -11,6 +11,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -95,12 +96,13 @@ public class TransferableXml<T, X extends IXmlConverter<T>> implements Transfera
             JAXBContext context = JAXBContext.newInstance(xclass_);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            X x = xclass_.newInstance();
+            X x = xclass_.getDeclaredConstructor().newInstance();
             x.copy(obj_);
             marshaller.marshal(x, writer);
             writer.flush();
             return writer.toString();
-        } catch (JAXBException | InstantiationException | IllegalAccessException ex) {
+        } catch (JAXBException | InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 InvocationTargetException ex) {
             return null;
         }
     }

@@ -18,6 +18,8 @@ package demetra.modelling.regression;
 
 import jdplus.toolkit.base.api.data.Range;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,7 @@ public class InterventionVariableDefinitionTest {
     @Test
     public void testBuilder() {
         InterventionVariable var = InterventionVariable.builder()
-                .sequence(Range.of(LocalDateTime.now(), LocalDateTime.now().plus(1, ChronoUnit.WEEKS)))
+                .sequence(Range.of(LocalDateTime.now(Clock.systemDefaultZone()), LocalDateTime.now(Clock.systemDefaultZone()).plus(1, ChronoUnit.WEEKS)))
                 .build();
     }
     

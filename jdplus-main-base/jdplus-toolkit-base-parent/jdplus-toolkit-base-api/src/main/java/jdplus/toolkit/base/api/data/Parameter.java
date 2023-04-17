@@ -17,6 +17,8 @@
 package jdplus.toolkit.base.api.data;
 
 import java.util.Formatter;
+import java.util.Locale;
+
 import nbbrd.design.Development;
 
 /**
@@ -447,7 +449,7 @@ public class Parameter {
             return "...";
         else{
             StringBuilder builder=new StringBuilder();
-            builder.append(new Formatter().format("%6g", value));
+            builder.append(new Formatter(Locale.ROOT).format("%6g", value));
             switch (type){
                 case Fixed: builder.append('f'); break;
                 case Estimated: builder.append('e'); break;

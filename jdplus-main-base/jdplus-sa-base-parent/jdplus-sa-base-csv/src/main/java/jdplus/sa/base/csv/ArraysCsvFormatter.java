@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -39,10 +40,10 @@ public class ArraysCsvFormatter {
     private boolean fullName;
 
     public ArraysCsvFormatter() {
-        ifmt = NumberFormat.getIntegerInstance();
+        ifmt = NumberFormat.getIntegerInstance(Locale.getDefault());
         ifmt.setGroupingUsed(false);
         comma = CsvInformationFormatter.getCsvSeparator();
-        fmt = (DecimalFormat) DecimalFormat.getNumberInstance();
+        fmt = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.getDefault());
         fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
         fmt.setGroupingUsed(false);
     }

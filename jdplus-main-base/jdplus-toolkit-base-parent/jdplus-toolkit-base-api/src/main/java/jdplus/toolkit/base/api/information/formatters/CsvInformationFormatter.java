@@ -33,14 +33,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  *
@@ -51,9 +45,11 @@ public class CsvInformationFormatter {
     private final HashMap<Type, InformationFormatter> DICTIONARY = new HashMap<>();
     private final String NEWLINE = System.lineSeparator();
     private volatile Character csvSeparator;
+    private Locale LOCALE;
 
     static {
-        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance();
+        LOCALE = Locale.getDefault();
+        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance(LOCALE);
         fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
         fmt.setGroupingUsed(false);
         char sep = fmt.getDecimalFormatSymbols().getDecimalSeparator();
@@ -87,6 +83,14 @@ public class CsvInformationFormatter {
 
     public void setCsvSeparator(Character c) {
         csvSeparator = c;
+    }
+
+    public Locale getLocale() {
+        return LOCALE;
+    }
+
+    public void setLocale(Locale locale) {
+        CsvInformationFormatter.LOCALE = locale;
     }
 
     public Set<Type> formattedTypes(){
@@ -414,7 +418,7 @@ public class CsvInformationFormatter {
         try {
             InformationFormatter fmt = DICTIONARY.get(obj.getClass());
             if (fmt != null) {
-                return fmt.format(obj, item);
+                return fmt.format(obj, item, LOCALE);
             } else if (item == 0) {
                 return obj.toString();
             } else {

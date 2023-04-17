@@ -5,6 +5,7 @@ import com.l2fprod.common.swing.LookAndFeelTweaks;
 import com.toedter.calendar.JTextFieldDateEditor;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import java.text.ParseException;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.function.BiConsumer;
@@ -62,7 +63,7 @@ public class JDayPropertyEditor extends AbstractPropertyEditor {
 
         @Override
         public void setValue(JTextFieldDateEditor editor, LocalDate value) {
-            editor.setDate(value != null ? CalendarUtility.toDate(value) : CalendarUtility.toDate(LocalDate.now()));
+            editor.setDate(value != null ? CalendarUtility.toDate(value) : CalendarUtility.toDate(LocalDate.now(Clock.systemDefaultZone())));
         }
 
         /**

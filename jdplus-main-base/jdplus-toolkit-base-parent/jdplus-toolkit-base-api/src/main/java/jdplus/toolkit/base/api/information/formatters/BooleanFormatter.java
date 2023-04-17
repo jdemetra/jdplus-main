@@ -17,11 +17,13 @@
 
 package jdplus.toolkit.base.api.information.formatters;
 
+import java.util.Locale;
+
 /**
  *
  * @author Jean Palate
  */
-class BooleanFormatter implements InformationFormatter {
+final class BooleanFormatter implements InformationFormatter {
 
     private final String strue, sfalse;
     
@@ -36,7 +38,7 @@ class BooleanFormatter implements InformationFormatter {
     }
 
     @Override
-    public String format(Object obj, int item) {
+    public String format(Object obj, int item, Locale locale) {
         if (item > 0)
             return null;
         if (strue == null || sfalse == null)

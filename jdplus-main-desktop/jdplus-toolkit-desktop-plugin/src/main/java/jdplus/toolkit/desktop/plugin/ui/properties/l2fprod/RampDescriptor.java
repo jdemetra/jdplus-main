@@ -10,6 +10,7 @@ import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class RampDescriptor extends VariableDescriptor<Ramp> {
     private Ramp core;
 
     public RampDescriptor() {
-        core = new Ramp(LocalDateTime.now(), LocalDateTime.now());
+        core = new Ramp(LocalDateTime.now(Clock.systemDefaultZone()), LocalDateTime.now(Clock.systemDefaultZone()));
     }
 
     public RampDescriptor duplicate() {

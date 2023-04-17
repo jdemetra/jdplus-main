@@ -47,13 +47,13 @@ public class MatrixSerializer {
     }
 
     public static Matrix read(InputStream stream, String separators) throws FileNotFoundException, IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             return read(reader, Locale.ROOT, separators);
         }
     }
 
     public static Matrix read(InputStream stream) throws FileNotFoundException, IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             return read(reader, Locale.ROOT, "\\s+|,");
         }
     }

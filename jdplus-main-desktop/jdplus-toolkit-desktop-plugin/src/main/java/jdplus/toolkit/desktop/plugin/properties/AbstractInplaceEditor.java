@@ -118,7 +118,7 @@ public abstract class AbstractInplaceEditor implements InplaceEditor {
     protected int getModifiers() {
         AWTEvent currentEvent = EventQueue.getCurrentEvent();
         if (currentEvent instanceof InputEvent) {
-            return ((InputEvent) currentEvent).getModifiers();
+            return ((InputEvent) currentEvent).getModifiersEx();
         }
         if (currentEvent instanceof ActionEvent) {
             return ((ActionEvent) currentEvent).getModifiers();

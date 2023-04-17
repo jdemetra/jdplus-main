@@ -22,6 +22,7 @@ import nbbrd.design.StaticFactoryMethod;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -115,7 +116,7 @@ public class Ts {
     private static void putFreezeMeta(@NonNull Builder builder, @NonNull TsMoniker origin) {
         builder.meta(TsFactory.SOURCE, origin.getSource());
         builder.meta(TsFactory.ID, origin.getId());
-        builder.meta(TsFactory.DATE, LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
+        builder.meta(TsFactory.DATE, LocalDateTime.now(Clock.systemDefaultZone()).format(DateTimeFormatter.ISO_DATE));
     }
 
     private static boolean containsFreezeMeta(@NonNull Map<String, String> md) {

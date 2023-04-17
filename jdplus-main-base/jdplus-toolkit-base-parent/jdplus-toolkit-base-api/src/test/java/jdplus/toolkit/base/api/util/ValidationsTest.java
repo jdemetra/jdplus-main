@@ -18,6 +18,7 @@ package jdplus.toolkit.base.api.util;
 
 import static jdplus.toolkit.base.api.util.Validations.*;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import static org.assertj.core.api.Assertions.*;
@@ -50,7 +51,7 @@ public class ValidationsTest {
     @Test
     @SuppressWarnings("null")
     public void testNotBlank2() {
-        Function<String, String> customMsg = o -> String.format("Expected not blank, found '%s'", o);
+        Function<String, String> customMsg = o -> String.format(Locale.ROOT, "Expected not blank, found '%s'", o);
 
         assertThat(notBlank("abc", customMsg))
                 .isEqualTo("abc");
@@ -82,7 +83,7 @@ public class ValidationsTest {
 
     @Test
     public void testMin2() {
-        IntFunction<String> customMsg = o -> String.format("Min value is 10; actual is %d", o);
+        IntFunction<String> customMsg = o -> String.format(Locale.ROOT, "Min value is 10; actual is %d", o);
 
         assertThat(min(10, 10, customMsg))
                 .isEqualTo(10);
@@ -115,7 +116,7 @@ public class ValidationsTest {
     @Test
     @SuppressWarnings("null")
     public void testAtLeast2() {
-        IntFunction<String> customMsg = o -> String.format("Min size is 2; actual is %d", o);
+        IntFunction<String> customMsg = o -> String.format(Locale.ROOT, "Min size is 2; actual is %d", o);
 
         assertThat(atLeast(Arrays.asList("a", "b", "c"), 2, customMsg))
                 .containsExactly("a", "b", "c");
@@ -148,7 +149,7 @@ public class ValidationsTest {
     @Test
     @SuppressWarnings("null")
     public void testOn2() {
-        Function<String, String> customMsg = o -> String.format("Min length is 4; actual is %d", o.length());
+        Function<String, String> customMsg = o -> String.format(Locale.ROOT, "Min length is 4; actual is %d", o.length());
 
         assertThat(on("abcd", str -> str.length() > 3, customMsg))
                 .isEqualTo("abcd");

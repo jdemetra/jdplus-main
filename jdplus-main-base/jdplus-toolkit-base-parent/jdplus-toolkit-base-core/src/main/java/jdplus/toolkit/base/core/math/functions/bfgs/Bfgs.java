@@ -17,6 +17,8 @@ import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.functions.FunctionMinimizer;
 
+import java.util.Locale;
+
 /**
  * BFGS variable-metric method, based on Pascal code in J.C. Nash, `Compact
  * Numerical Methods for Computers', 2nd edition, converted by p2c then
@@ -279,7 +281,7 @@ public class Bfgs implements FunctionMinimizer {
                 /* Resets unless has just been reset */
             }
             if (trace && (iter % nreport == 0)) {
-                System.out.printf("iter%4d value %f", iter, f).println();
+                System.out.printf(Locale.ROOT, "iter%4d value %f", iter, f).println();
             }
             if (iter >= maxit) {
                 break;
@@ -290,11 +292,11 @@ public class Bfgs implements FunctionMinimizer {
             }
         } while (count != n || ilast != gradcount);
         if (trace) {
-            System.out.printf("final  value %f", Fmin).println();
+            System.out.printf(Locale.ROOT, "final  value %f", Fmin).println();
             if (iter < maxit) {
                 System.out.println("converged");
             } else {
-                System.out.printf("stopped after %d iterations\n", iter).println();
+                System.out.printf(Locale.ROOT, "stopped after %d iterations\n", iter).println();
             }
         }
         fail = (iter < maxit) ? 0 : 1;

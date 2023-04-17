@@ -26,6 +26,8 @@ import internal.toolkit.base.api.data.InternalDoubleSeqCursor;
 import internal.toolkit.base.api.data.InternalDoubleVector;
 import internal.toolkit.base.api.data.InternalDoubleVectorCursor;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoublePredicate;
@@ -823,7 +825,7 @@ public interface DoubleSeq extends BaseSeq {
         if (n > 0) {
             if (fmt != null) {
                 DecimalFormat df;
-                df = new DecimalFormat(fmt);
+                df = new DecimalFormat(fmt, DecimalFormatSymbols.getInstance(Locale.ROOT));
                 DoubleSeqCursor cursor = rd.cursor();
                 builder.append(df.format(cursor.getAndNext()));
                 for (int i = 1; i < n; ++i) {

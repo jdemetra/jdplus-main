@@ -18,6 +18,8 @@ package jdplus.toolkit.base.tsp.cube;
 
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
+
+import java.util.Locale;
 import java.util.stream.Collector;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -31,7 +33,7 @@ public class TableAsCubeUtil {
 
     @NonNull
     public String getDisplayName(@NonNull String db, @NonNull String table, @NonNull String value, @NonNull ObsGathering obsGathering) {
-        return String.format("%s ~ %s \u00BB %s %s", db, table, value, toString(obsGathering));
+        return String.format(Locale.ROOT, "%s ~ %s \u00BB %s %s", db, table, value, toString(obsGathering));
     }
 
     @NonNull

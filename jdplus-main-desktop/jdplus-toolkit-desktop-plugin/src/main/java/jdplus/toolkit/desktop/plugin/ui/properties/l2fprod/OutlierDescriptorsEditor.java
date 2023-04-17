@@ -17,7 +17,9 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.text.DateFormatSymbols;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
@@ -68,7 +70,7 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
                             frequency = UserInterfaceContext.INSTANCE.getDomain().getAnnualFrequency();
                         } else {
                             first = 1980;
-                            last = GregorianCalendar.getInstance().get(Calendar.YEAR);
+                            last = Year.now(Clock.systemDefaultZone()).getValue();
                             frequency = 12;
                         }
 
@@ -290,7 +292,7 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
             this.lastYear_ = last;
             this.freq_ = freq;
             this.defs_ = defs;
-            this.months = new DateFormatSymbols().getShortMonths();
+            this.months = new DateFormatSymbols(Locale.getDefault(Locale.Category.FORMAT)).getShortMonths();
         }
 
         @Override

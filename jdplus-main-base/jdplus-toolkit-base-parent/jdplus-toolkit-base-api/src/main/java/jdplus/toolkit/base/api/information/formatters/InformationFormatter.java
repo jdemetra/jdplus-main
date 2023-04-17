@@ -17,12 +17,15 @@
 
 package jdplus.toolkit.base.api.information.formatters;
 
+import java.util.Locale;
+
 /**
  *
  * @author Jean Palate
  */
 interface InformationFormatter {
-    String format(Object obj, int item);
+
+    String format(Object obj, int item, Locale locale);
     
     default int getDefaultRepresentationLength(){
         return 1;

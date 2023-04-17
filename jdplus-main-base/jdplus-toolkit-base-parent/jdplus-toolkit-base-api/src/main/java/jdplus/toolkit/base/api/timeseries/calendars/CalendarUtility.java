@@ -26,6 +26,9 @@ import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -254,5 +257,5 @@ public class CalendarUtility {
         return cal.getTime();
     }
 
-    private static final ThreadLocal<GregorianCalendar> CALENDAR_THREAD_LOCAL = ThreadLocal.withInitial(GregorianCalendar::new);
+    private static final ThreadLocal<GregorianCalendar> CALENDAR_THREAD_LOCAL = ThreadLocal.withInitial(() -> new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault()));
 }

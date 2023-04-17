@@ -5,8 +5,10 @@
 package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 
 import jdplus.toolkit.base.api.data.Parameter;
-import java.text.DecimalFormat;
+
 import javax.swing.table.DefaultTableCellRenderer;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
@@ -14,10 +16,10 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class ParameterRenderer extends DefaultTableCellRenderer {
     
-    private static final DecimalFormat fmt;
+    private static final NumberFormat fmt;
     
     static {
-        fmt = new DecimalFormat();
+        fmt = NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.DISPLAY));
         fmt.setMaximumFractionDigits(6);
     }
     
