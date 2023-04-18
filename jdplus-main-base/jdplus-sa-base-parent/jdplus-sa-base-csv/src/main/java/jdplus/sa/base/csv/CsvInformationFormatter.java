@@ -1,26 +1,27 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or â€“ as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or â€“ as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package jdplus.toolkit.base.api.information.formatters;
+package jdplus.sa.base.csv;
 
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.information.Information;
 import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.information.formatters.*;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
@@ -29,6 +30,8 @@ import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.api.util.NamedObject;
 import jdplus.toolkit.base.api.util.WildCards;
+import nbbrd.picocsv.Csv;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -39,13 +42,12 @@ import java.util.Map.Entry;
 /**
  *
  */
-@lombok.experimental.UtilityClass
-public class CsvInformationFormatter {
+public final class CsvInformationFormatter {
 
-    private final HashMap<Type, InformationFormatter> DICTIONARY = new HashMap<>();
-    private final String NEWLINE = System.lineSeparator();
-    private volatile Character csvSeparator;
-    private Locale LOCALE;
+    private static final HashMap<Type, InformationFormatter> DICTIONARY = new HashMap<>();
+    private static final String NEWLINE = System.lineSeparator();
+    private static volatile Character CSV_SEPARATOR;
+    private static Locale LOCALE;
 
     static {
         LOCALE = Locale.getDefault();
@@ -54,9 +56,9 @@ public class CsvInformationFormatter {
         fmt.setGroupingUsed(false);
         char sep = fmt.getDecimalFormatSymbols().getDecimalSeparator();
         if (sep == ',') {
-            csvSeparator = ';';
+            CSV_SEPARATOR = ';';
         } else {
-            csvSeparator = ',';
+            CSV_SEPARATOR = ',';
         }
 
         DICTIONARY.put(double.class, new DoubleFormatter());
@@ -77,23 +79,27 @@ public class CsvInformationFormatter {
         DICTIONARY.put(ProcDiagnostic.class, new DiagnosticFormatter());
     }
 
-    public char getCsvSeparator() {
-        return csvSeparator;
+    private CsvInformationFormatter() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public void setCsvSeparator(Character c) {
-        csvSeparator = c;
+    public static char getCsvSeparator() {
+        return CSV_SEPARATOR;
     }
 
-    public Locale getLocale() {
+    public static void setCsvSeparator(Character c) {
+        CSV_SEPARATOR = c;
+    }
+
+    public static Locale getLocale() {
         return LOCALE;
     }
 
-    public void setLocale(Locale locale) {
+    public static void setLocale(Locale locale) {
         CsvInformationFormatter.LOCALE = locale;
     }
 
-    public Set<Type> formattedTypes(){
+    public static Set<Type> formattedTypes() {
         return DICTIONARY.keySet();
     }
 
@@ -101,6 +107,18 @@ public class CsvInformationFormatter {
     // for each record, for each name, we search for the length of an item, the actual items (in case of
     // wildcards) and the corresponding result
     private static class MatrixItem {
+
+        static MatrixItem ofInformationSet(String id, InformationSet record, boolean shortname) {
+            MatrixItem result = new MatrixItem();
+            result.fill(id, record, shortname);
+            return result;
+        }
+
+        static MatrixItem ofExplorable(String id, Explorable record, boolean shortname) {
+            MatrixItem result = new MatrixItem();
+            result.fill(id, record, shortname);
+            return result;
+        }
 
         private static final Object[] EMPTY = new Object[0];
         private static final String[] SEMPTY = new String[0];
@@ -185,45 +203,45 @@ public class CsvInformationFormatter {
             }
             // request with wild cards
             if (WildCards.hasWildCards(sid)) {
-                try{
-                Map<String, Object> sel = record.searchAll(sid, Object.class);
-                if (!sel.isEmpty()) {
-                    List<String> ids = new ArrayList<>();
-                    List<Object> objs = new ArrayList<>();
-                    sel.forEach((s, o) -> {
-                        if (o != null) {
-                            ids.add(shortId(s, shortname));
-                            objs.add(o);
-                        }
-                    });
-                    // update unspecified length
-                    int n = ids.size();
-                    results = objs.toArray(EMPTY);
-                    items = ids.toArray(SEMPTY);
+                try {
+                    Map<String, Object> sel = record.searchAll(sid, Object.class);
+                    if (!sel.isEmpty()) {
+                        List<String> ids = new ArrayList<>();
+                        List<Object> objs = new ArrayList<>();
+                        sel.forEach((s, o) -> {
+                            if (o != null) {
+                                ids.add(shortId(s, shortname));
+                                objs.add(o);
+                            }
+                        });
+                        // update unspecified length
+                        int n = ids.size();
+                        results = objs.toArray(EMPTY);
+                        items = ids.toArray(SEMPTY);
 
-                    if (length == 0 && isHomogeneous()) {
-                        updateLength();
+                        if (length == 0 && isHomogeneous()) {
+                            updateLength();
+                        }
+                    } else {
+                        results = EMPTY;
+                        items = SEMPTY;
                     }
-                } else {
+                } catch (Exception ex) {
                     results = EMPTY;
                     items = SEMPTY;
-                }
-                }catch(Exception ex){
-                    results = EMPTY;
-                    items = SEMPTY;
-                    
+
                 }
             } else {
-                try{
-                results = new Object[]{record.getData(sid, Object.class)};
-                items = new String[]{shortId(sid, shortname)};
-                if (length == 0 && results[0] != null) {
-                    updateLength();
-                }
-               }catch(Exception ex){
+                try {
+                    results = new Object[]{record.getData(sid, Object.class)};
+                    items = new String[]{shortId(sid, shortname)};
+                    if (length == 0 && results[0] != null) {
+                        updateLength();
+                    }
+                } catch (Exception ex) {
                     results = EMPTY;
                     items = SEMPTY;
-                    
+
                 }
             }
         }
@@ -269,35 +287,46 @@ public class CsvInformationFormatter {
         }
     }
 
-    public void format(Writer writer, List<InformationSet> records, List<String> names, boolean shortname) {
+    public static void format(Writer writer, List<InformationSet> records, List<String> names, boolean shortname) {
         // STEP 1: we retrieve all information for all records/names
-        List<MatrixItem[]> items = new ArrayList<>();
-        LinkedHashSet<String> dic = new LinkedHashSet<>();
+        List<List<MatrixItem>> rows = new ArrayList<>();
         records.forEach(record -> {
-            MatrixItem[] m = new MatrixItem[names.size()];
-            for (int i = 0; i < m.length; ++i) {
-                m[i] = new MatrixItem();
-                m[i].fill(names.get(i), record, shortname);
-                m[i].fillDictionary(dic);
-                items.add(m);
-            }
+            rows.add(names
+                    .stream()
+                    .map(name -> MatrixItem.ofInformationSet(name, record, shortname))
+                    .toList()
+            );
         });
-        String[] nnames = dic.toArray(new String[dic.size()]);
-        format(writer, items, names.size(), null, false);
+        format(writer, rows, names.size(), null, false);
     }
 
-    private void format(Writer writer, List<MatrixItem[]> items, int nnames, List<String> rowheaders, boolean fullName) {
+    public static void formatResults(Writer writer, List<NamedObject<Explorable>> records, List<String> names, boolean shortColName, boolean fullRowName) {
+        // STEP 1: we retrieve all information for all records/names
+        List<List<MatrixItem>> rows = new ArrayList<>();
+        List<String> rowHeaders = new ArrayList<>();
+        records.forEach(record -> {
+            rows.add(names
+                    .stream()
+                    .map(name -> MatrixItem.ofExplorable(name, record.getObject(), shortColName))
+                    .toList()
+            );
+            rowHeaders.add(record.getName());
+        });
+        format(writer, rows, names.size(), rowHeaders, fullRowName);
+    }
+
+    private static void format(Writer writer, List<List<MatrixItem>> rows, int nameCount, List<String> rowHeaders, boolean fullRowName) {
         // STEP 2: for each name, we find the set of items/length
         List<LinkedHashMap<String, Integer>> wnames = new ArrayList<>();
-        for (int cur = 0; cur < nnames; ++cur) {
+        for (int nameIndex = 0; nameIndex < nameCount; nameIndex++) {
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
-            for (MatrixItem[] mis : items) {
-                MatrixItem m = mis[cur];
-                if (m.items != null) {
-                    for (int j = 0; j < m.items.length; ++j) {
-                        Integer l = map.get(m.items[j]);
-                        if (l == null || l < m.length) {
-                            map.put(m.items[j], m.length);
+            for (List<MatrixItem> row : rows) {
+                MatrixItem item = row.get(nameIndex);
+                if (item.items != null) {
+                    for (int j = 0; j < item.items.length; j++) {
+                        Integer length = map.get(item.items[j]);
+                        if (length == null || length < item.length) {
+                            map.put(item.items[j], item.length);
                         }
                     }
                 }
@@ -305,121 +334,70 @@ public class CsvInformationFormatter {
             wnames.add(map);
         }
         // STEP 3: write the output
-        try {
+        Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder().separator(NEWLINE).delimiter(CSV_SEPARATOR).build();
+        try (Csv.Writer csv = Csv.Writer.of(csvFormat, Csv.WriterOptions.DEFAULT, writer, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
             // columns headers
-            if (rowheaders != null) {
-                writer.write(csvSeparator);
+            if (rowHeaders != null) {
+                csv.writeField(null);
             }
-            writeColumnsHeaders(writer, wnames, nnames);
-            int cur = 0;
-            for (MatrixItem[] item : items) {
-                if (rowheaders != null) {
-                    String rh = rowheaders.get(cur++);
-                    if (rh != null) {
-                        writeHeader(writer, rh, fullName);
-                    }
-                    writer.write(csvSeparator);
+            writeColumnsHeaders(csv, wnames);
+            for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+                if (rowHeaders != null) {
+                    writeRowHeader(csv, rowHeaders.get(rowIndex), fullRowName);
                 }
-                writeLine(writer, item, wnames);
+                writeRow(csv, rows.get(rowIndex), wnames);
             }
-            writer.close();
         } catch (IOException ex) {
             String msg = ex.getMessage();
         }
     }
 
-    private void writeLine(Writer writer, MatrixItem[] item, List<LinkedHashMap<String, Integer>> wnames) throws IOException {
-        for (int k = 0; k < item.length;) {
-            final MatrixItem citem = item[k];
-            LinkedHashMap<String, Integer> map = wnames.get(k);
-            int nmax = map.size();
-            int i = 0;
-            for (Entry<String, Integer> ccur : map.entrySet()) {
-                String c = ccur.getKey();
-                int n = ccur.getValue();
-                Object obj = citem.search(c);
-                if (obj != null) {
-                    if (n == 1) {
-                        write(writer, format(obj, 0));
-                    } else {
-                        for (int j = 1; j <= n; ++j) {
-                            write(writer, format(obj, j));
-                            if (j < n) {
-                                writer.write(csvSeparator);
-                            }
-                        }
-                    }
+    private static void writeRow(Csv.Writer writer, List<MatrixItem> row, List<LinkedHashMap<String, Integer>> wnames) throws IOException {
+        for (int nameIndex = 0; nameIndex < row.size(); nameIndex++) {
+            writeRowCells(writer, row.get(nameIndex), wnames.get(nameIndex));
+        }
+        writer.writeEndOfLine();
+    }
+
+    private static void writeRowCells(Csv.Writer writer, MatrixItem item, LinkedHashMap<String, Integer> map) throws IOException {
+        for (Entry<String, Integer> cellGroup : map.entrySet()) {
+            int length = cellGroup.getValue();
+            Object obj = item.search(cellGroup.getKey());
+            if (obj != null) {
+                if (length == 1) {
+                    writer.writeField(format(obj, InformationFormatter.NO_INDEX));
                 } else {
-                    for (int j = 1; j < n; ++j) {
-                        writer.write(csvSeparator);
+                    for (int j = 1; j <= length; ++j) {
+                        writer.writeField(format(obj, j));
                     }
                 }
-                if (++i < nmax) {
-                    writer.write(csvSeparator);
-                }
-            }
-            if (++k < item.length) {
-                writer.write(csvSeparator);
             } else {
-                writer.write(NEWLINE);
+                for (int j = 0; j < length; ++j) {
+                    writer.writeField(null);
+                }
             }
         }
     }
 
-    private void writeColumnsHeaders(Writer writer, List<LinkedHashMap<String, Integer>> wnames, int n) throws IOException {
-        int cur = 0;
+    private static void writeColumnsHeaders(Csv.Writer writer, List<LinkedHashMap<String, Integer>> wnames) throws IOException {
         for (LinkedHashMap<String, Integer> map : wnames) {
-            int ncur = 0;
-            int nmax = map.size();
-            for (Entry<String, Integer> entry : map.entrySet()) {
-                String c = entry.getKey();
-                int i = entry.getValue();
-                try {
-                    write(writer, c);
-                    for (int j = 1; j < i; ++j) {
-                        writer.write(csvSeparator);
-                    }
-                    if (++ncur < nmax) {
-                        writer.write(csvSeparator);
-                    }
-                } catch (IOException ex) {
+            for (Entry<String, Integer> cellGroup : map.entrySet()) {
+                writer.writeField(cellGroup.getKey());
+                for (int j = 1; j < cellGroup.getValue(); ++j) {
+                    writer.writeField(null);
                 }
             }
-            if (++cur < n) {
-                writer.write(csvSeparator);
-            } else {
-                writer.write(NEWLINE);
-            }
         }
-
+        writer.writeEndOfLine();
     }
 
-    public void formatResults(Writer writer, List<NamedObject<Explorable>> records, List<String> names, boolean shortColName, boolean fullRowName) {
-        // STEP 1: we retrieve all information for all records/names
-        List<MatrixItem[]> items = new ArrayList<>();
-        LinkedHashSet<String> dic = new LinkedHashSet<>();
-        List<String> rowheaders = new ArrayList<>();
-        records.forEach(record -> {
-            MatrixItem[] m = new MatrixItem[names.size()];
-            for (int i = 0; i < m.length; ++i) {
-                m[i] = new MatrixItem();
-                m[i].fill(names.get(i), record.getObject(), shortColName);
-                m[i].fillDictionary(dic);
-            }
-            items.add(m);
-            rowheaders.add(record.getName());
-        });
-        String[] nnames = dic.toArray(new String[dic.size()]);
-        format(writer, items, names.size(), rowheaders, fullRowName);
-    }
-
-    private String format(Object obj, int item) {
+    private static String format(Object obj, int item) {
 
         try {
             InformationFormatter fmt = DICTIONARY.get(obj.getClass());
             if (fmt != null) {
                 return fmt.format(obj, item, LOCALE);
-            } else if (item == 0) {
+            } else if (item == InformationFormatter.NO_INDEX) {
                 return obj.toString();
             } else {
                 return "";
@@ -430,59 +408,17 @@ public class CsvInformationFormatter {
         }
     }
 
-    private void writeHeader(Writer writer, String txt, boolean fullName) throws IOException {
-
+    private static void writeRowHeader(Csv.Writer writer, String txt, boolean fullRowName) throws IOException {
         if (txt == null) {
+            writer.writeField(null);
             return;
         }
-        if (fullName) {
+        if (fullRowName) {
             txt = MultiLineNameUtil.join(txt, " * ");
         } else {
             txt = MultiLineNameUtil.last(txt);
         }
         txt = StringFormatter.cleanup(txt);
-
-        if (txt.indexOf(csvSeparator) >= 0) {
-            if (txt.indexOf('\"') >= 0) {
-                writer.write("\"\"");
-                writer.write(txt);
-                writer.write("\"\"");
-            } else {
-                writer.write('\"');
-                writer.write(txt);
-                writer.write('\"');
-            }
-        } else if (txt.indexOf('\"') >= 0) {
-            writer.write("\"\"");
-            writer.write(txt);
-            writer.write("\"\"");
-        } else {
-            writer.write(txt);
-        }
-    }
-
-    private void write(Writer writer, String txt) throws IOException {
-
-        if (txt == null) {
-            return;
-        }
-
-        if (txt.indexOf(csvSeparator) >= 0) {
-            if (txt.indexOf('\"') >= 0) {
-                writer.write("\"\"");
-                writer.write(txt);
-                writer.write("\"\"");
-            } else {
-                writer.write('\"');
-                writer.write(txt);
-                writer.write('\"');
-            }
-        } else if (txt.indexOf('\"') >= 0) {
-            writer.write("\"\"");
-            writer.write(txt);
-            writer.write("\"\"");
-        } else {
-            writer.write(txt);
-        }
+        writer.writeField(txt);
     }
 }

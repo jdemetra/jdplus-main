@@ -17,7 +17,6 @@
 package jdplus.sa.base.csv;
 
 import jdplus.toolkit.base.api.information.formatters.BasicConfiguration;
-import jdplus.toolkit.base.api.information.formatters.CsvInformationFormatter;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDataTable;
 import jdplus.toolkit.base.api.timeseries.TsDomain;

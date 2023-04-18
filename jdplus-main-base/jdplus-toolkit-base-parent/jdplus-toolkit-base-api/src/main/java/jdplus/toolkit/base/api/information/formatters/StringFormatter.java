@@ -23,7 +23,7 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-public class StringFormatter implements InformationFormatter {
+public final class StringFormatter implements InformationFormatter {
 
     @Override
     public String format(Object obj, int item, Locale locale) {

@@ -23,11 +23,13 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-interface InformationFormatter {
+public interface InformationFormatter {
 
     String format(Object obj, int item, Locale locale);
     
     default int getDefaultRepresentationLength(){
         return 1;
     }
+
+    int NO_INDEX = 0;
 }

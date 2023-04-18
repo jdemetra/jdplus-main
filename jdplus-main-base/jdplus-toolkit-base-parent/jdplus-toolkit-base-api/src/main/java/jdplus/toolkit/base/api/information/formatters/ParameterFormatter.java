@@ -25,7 +25,7 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-public class ParameterFormatter implements InformationFormatter {
+public final class ParameterFormatter implements InformationFormatter {
 
     private NumberFormat newFormat6(Locale locale) {
         NumberFormat df4 = NumberFormat.getNumberInstance(locale);

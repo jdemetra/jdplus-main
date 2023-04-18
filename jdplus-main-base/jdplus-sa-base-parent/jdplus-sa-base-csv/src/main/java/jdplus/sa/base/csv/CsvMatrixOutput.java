@@ -17,7 +17,6 @@
 package jdplus.sa.base.csv;
 
 import jdplus.toolkit.base.api.information.Explorable;
-import jdplus.toolkit.base.api.information.formatters.CsvInformationFormatter;
 import jdplus.toolkit.base.api.processing.Output;
 import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.util.NamedObject;

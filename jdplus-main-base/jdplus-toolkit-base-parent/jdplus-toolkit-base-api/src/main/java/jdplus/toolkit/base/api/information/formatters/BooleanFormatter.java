@@ -23,7 +23,7 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-final class BooleanFormatter implements InformationFormatter {
+public final class BooleanFormatter implements InformationFormatter {
 
     private final String strue, sfalse;
     

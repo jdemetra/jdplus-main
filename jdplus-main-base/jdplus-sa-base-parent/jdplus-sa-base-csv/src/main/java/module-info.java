@@ -11,6 +11,7 @@ module jdplus.sa.base.csv {
     requires static org.checkerframework.checker.qual;
 
     requires transitive jdplus.sa.base.api;
+    requires nbbrd.io.picocsv;
 
     exports jdplus.sa.base.csv;
 

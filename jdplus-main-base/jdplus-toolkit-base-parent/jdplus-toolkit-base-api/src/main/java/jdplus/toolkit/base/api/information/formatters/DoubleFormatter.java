@@ -24,7 +24,7 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-final class DoubleFormatter implements InformationFormatter {
+public final class DoubleFormatter implements InformationFormatter {
 
     private NumberFormat newFormat(Locale locale) {
         NumberFormat df4 = NumberFormat.getNumberInstance(locale);

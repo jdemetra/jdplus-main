@@ -25,7 +25,7 @@ import java.util.Locale;
  *
  * @author Jean Palate
  */
-public class SarimaFormatter implements InformationFormatter {
+public final class SarimaFormatter implements InformationFormatter {
 
     @Override
     public String format(Object obj, int item, Locale locale) {

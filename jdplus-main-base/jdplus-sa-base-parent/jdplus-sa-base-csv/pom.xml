@@ -21,6 +21,11 @@
             <artifactId>jdplus-sa-base-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.nbbrd.java-io-util</groupId>
+            <artifactId>java-io-picocsv</artifactId>
+            <version>${java-io-util.version}</version>
+        </dependency>
 
         <!-- test only -->
         <dependency>
