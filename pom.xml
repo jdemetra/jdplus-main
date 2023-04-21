@@ -556,7 +556,7 @@
 
     <repositories>
         <repository>
-            <id>ossrh-snapshots</id>
+            <id>jdemetra-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
             <releases>
                 <enabled>false</enabled>
