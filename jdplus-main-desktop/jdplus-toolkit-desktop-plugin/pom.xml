@@ -214,11 +214,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.nbbrd.java-io-util</groupId>
             <artifactId>java-io-base</artifactId>
             <version>${java-io-util.version}</version>
@@ -236,6 +231,11 @@
         <dependency>
             <groupId>com.github.nbbrd.java-io-util</groupId>
             <artifactId>java-io-xml-bind</artifactId>
+            <version>${java-io-util.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nbbrd.java-io-util</groupId>
+            <artifactId>java-io-picocsv</artifactId>
             <version>${java-io-util.version}</version>
         </dependency>
         <dependency>

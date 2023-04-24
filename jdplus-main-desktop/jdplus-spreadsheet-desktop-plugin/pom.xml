@@ -87,6 +87,12 @@
         <!-- 2. JD3 Desktop -->
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-main-desktop-design</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-toolkit-desktop-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
