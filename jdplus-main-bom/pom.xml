@@ -126,7 +126,7 @@
                                         <type>JAVA_BINARY</type>
                                         <artifacts>
                                             <artifact>
-                                                <path>${project.parent.basedir}/jdplus-main-desktop/jdplus-main-desktop-bin/target/jdemetra-${project.version}-bin.zip</path>
+                                                <path>${project.parent.basedir}/jdplus-main-desktop/jdplus-main-desktop-bin/target/jdplus-main-desktop-bin-${project.version}.zip</path>
                                                 <transform>jdemetra-${project.version}-bin.zip</transform>
                                             </artifact>
                                         </artifacts>
