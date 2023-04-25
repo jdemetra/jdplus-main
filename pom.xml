@@ -12,6 +12,7 @@
     <name>${project.artifactId}</name>
     <description>JDemetra+ v3</description>
     <url>https://github.com/${x.github.user}/${x.github.repo}</url>
+    <inceptionYear>2013</inceptionYear>
 
     <licenses>
         <license>
@@ -68,6 +69,7 @@
         <module>jdplus-main-base</module>
         <module>jdplus-main-cli</module>
         <module>jdplus-main-desktop</module>
+        <module>jdplus-main-bom</module>
     </modules>
 
     <dependencies>
@@ -333,7 +335,7 @@
                                 <requireProperty>
                                     <property>project.artifactId</property>
                                     <message>Project artifactId must follow JD3 pattern</message>
-                                    <regex>^(jdplus)-(\w+)(?:-(base|cli|desktop)(?:-(\w+))?)?$</regex>
+                                    <regex>^(jdplus)-(\w+)(?:-(base|cli|desktop|bom)(?:-(\w+))?)?$</regex>
                                 </requireProperty>
                                 <requireReleaseDeps>
                                     <onlyWhenRelease>true</onlyWhenRelease>
