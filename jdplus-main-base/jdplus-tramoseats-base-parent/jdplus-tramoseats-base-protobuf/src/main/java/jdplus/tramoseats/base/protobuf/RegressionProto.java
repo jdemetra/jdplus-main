@@ -42,12 +42,15 @@ public class RegressionProto {
 
         MeanSpec mean = MeanSpec.none();
         if (spec.hasMean()) {
-            boolean check = spec.getCheckMean();
-            mean=MeanSpec.builder()
-                    .trendConstant(true)
-                    .test(check)
-                    .coefficient(ToolkitProtosUtility.convert(spec.getMean()))
-                    .build();
+            Parameter p = ToolkitProtosUtility.convert(spec.getMean());
+            if (p != null) {
+                boolean check = spec.getCheckMean();
+                mean = MeanSpec.builder()
+                        .trendConstant(true)
+                        .test(check)
+                        .coefficient(ToolkitProtosUtility.convert(spec.getMean()))
+                        .build();
+            }
         }
 
         RegressionSpec.Builder builder = RegressionSpec.builder()
@@ -85,8 +88,10 @@ public class RegressionProto {
         if (mean.isUsed()) {
             builder.setMean(ToolkitProtosUtility.convert(mean.getCoefficient()))
                     .setCheckMean(mean.isTest());
-        }else
-            builder.clearMean();
+        } else {
+            // unused -> Parameter = unused
+            builder.clearMean().setCheckMean(false);
+        }
 
         List<Variable<IOutlier>> outliers = spec.getOutliers();
         outliers.forEach(outlier -> {

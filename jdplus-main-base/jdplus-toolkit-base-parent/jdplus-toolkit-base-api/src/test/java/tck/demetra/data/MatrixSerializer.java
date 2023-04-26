@@ -31,7 +31,7 @@ import java.util.Locale;
  * @author Jean Palate
  */
 public class MatrixSerializer {
-    
+
     public static final double ND = -99999;
 
     public static Matrix read(File file, String separators) throws FileNotFoundException, IOException {
@@ -71,28 +71,34 @@ public class MatrixSerializer {
         int nc = 0;
         while ((curline = reader.readLine()) != null) {
             double[] c = split(curline, locale, separators);
-            if (c == null) {
-                return null;
+            if (c != null) {
+                if (nc < c.length) {
+                    nc = c.length;
+                }
+                data.add(c);
             }
-            if (nc == 0) {
-                nc = c.length;
-            } else if (nc != c.length) {
-                return null;
-            }
-            data.add(c);
         }
         if (data.isEmpty()) {
             return null;
         }
-        int nrows = data.size(), ncols = data.get(0).length;
-        double[] all = new double[nrows * ncols];
+        int nrows = data.size();
+        double[] all = new double[nrows * nc];
         for (int i = 0; i < nrows; ++i) {
             double[] cur = data.get(i);
-            for (int j = 0; j < ncols; ++j) {
-                all[i + j * nrows] = cur[j];
+            if (cur == null) {
+                for (int j = 0; j < nc; ++j) {
+                    all[i + j * nrows] = Double.NaN;
+                }
+            } else {
+                for (int j = 0; j < cur.length; ++j) {
+                    all[i + j * nrows] = cur[j];
+                }
+                for (int j = cur.length; j < nc; ++j) {
+                    all[i + j * nrows] = Double.NaN;
+                }
             }
         }
-        return Matrix.of(all, nrows, ncols);
+        return Matrix.of(all, nrows, nc);
 
     }
 
@@ -108,8 +114,8 @@ public class MatrixSerializer {
                 data[i] = Double.NaN;
             }
         }
-        for (int i=0; i<data.length; ++i){
-            if (data[i] == ND){
+        for (int i = 0; i < data.length; ++i) {
+            if (data[i] == ND) {
                 data[i] = Double.NaN;
             }
         }

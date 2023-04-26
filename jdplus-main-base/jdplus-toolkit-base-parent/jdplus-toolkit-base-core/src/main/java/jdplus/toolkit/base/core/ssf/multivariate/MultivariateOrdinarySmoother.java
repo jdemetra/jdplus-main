@@ -27,7 +27,6 @@ import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.StateStorage;
 import jdplus.toolkit.base.core.ssf.UpdateInformation;
 
-
 /**
  *
  * @author Jean Palate
@@ -110,6 +109,7 @@ public class MultivariateOrdinarySmoother {
         } else {
             sresults = StateStorage.light(StateInfo.Smoothed);
         }
+        sresults.prepare(ssf.getStateDim(), start, end);
 
         return process(start, end, results, sresults);
     }
@@ -130,8 +130,12 @@ public class MultivariateOrdinarySmoother {
         return true;
     }
 
-    public StateStorage getResults() {
+    public StateStorage getSmoothingResults() {
         return srslts;
+    }
+
+    public MultivariateFilteringInformation getFilteringResults() {
+        return frslts;
     }
 
     public DataBlock getFinalR() {
@@ -163,17 +167,24 @@ public class MultivariateOrdinarySmoother {
 
     private void loadInfo(int pos) {
         MultivariateUpdateInformation info = frslts.get(pos);
-        err = info.getU();
-        M = info.getM();
-        K = M.deepClone();
-        // K = TM
-        if (!K.isEmpty()) {
+        if (info != null) {
+            err = info.getU();
+            M = info.getM();
+            K = M.deepClone();
             dynamics.TM(pos, K);
-            u=DataBlock.of(info.getU());
+            u = DataBlock.of(info.getU());
             R = info.getR();
+            status = info.getStatus();
+            used = info.getUsedMeasurements();
+        } else {
+            err = DoubleSeq.empty();
+            M = FastMatrix.EMPTY;
+            K = FastMatrix.EMPTY;
+            u = DataBlock.EMPTY;
+            R = FastMatrix.EMPTY;
+            status = null;
+            used = new int[0];
         }
-        status = info.getStatus();
-        used=info.getUsedMeasurements();
     }
 
     private boolean iterate(int pos) {
@@ -203,13 +214,14 @@ public class MultivariateOrdinarySmoother {
     // 
 
     private void iterateSmoothation(int pos) {
-        // s = (u-r(t)K(t))*R(t)^-1 <=> sR=(u-rK)
-        s=u.deepClone();
-        s.addAProduct(-1, r, K.columnsIterator());
-        if (! R.isEmpty()){
-            LowerTriangularMatrix.solvexL(R, s, State.ZERO);
+        if (u.isEmpty()) {
+            return;
         }
-        if (calcvar){
+        // s = (u-r(t)K(t))*R(t)^-1 <=> sR=(u-rK)
+        s = u.deepClone();
+        s.addAProduct(-1, r, K.columnsIterator());
+        LowerTriangularMatrix.solvexL(R, s, State.ZERO);
+        if (calcvar) {
             // var(s) = R'^(-1)(I+K'NK)R^(-1)
             // <=> R' var(s)R = (I+K'NK)
             sV = SymmetricMatrix.XtSX(N, K);
@@ -225,18 +237,18 @@ public class MultivariateOrdinarySmoother {
      *
      */
     private void iterateN(int pos) {
-        if (! R.isEmpty()) {
+        if (!R.isEmpty()) {
             // A = xl(xl(N)') (put in N)
             // N(t-1) = Z R'^-1R^-1 Z' + A
             ssf.XL(pos, N, M, R, used);
             ssf.XtL(pos, N, M, R, used);
             // we reuse M to store Z
-            for (int i=0; i<used.length; ++i){
+            for (int i = 0; i < used.length; ++i) {
                 measurements.loading(used[i]).Z(pos, M.column(i));
             }
             // ZR'-1 =W <=> Z = WR'
             LowerTriangularMatrix.solveXLt(R, M);
-            for (int i=0; i<used.length; ++i){
+            for (int i = 0; i < used.length; ++i) {
                 N.addXaXt(1, M.column(i));
             }
         } else {
@@ -252,17 +264,17 @@ public class MultivariateOrdinarySmoother {
      *
      */
     private void iterateR(int pos) {
-        // R(t-1)=u(t)Z(t)+R(t)T'(t)
+        // R(t-1)=s(t)Z(t)+R(t)T'(t)
         dynamics.XT(pos, r);
-        for (int i=0, j=0; i<status.length; ++i){
-            if (status[i] != UpdateInformation.Status.MISSING){
-                double cu = u.get(j);
-                measurements.loading(j++).XpZd(pos, r, cu);
+        if (status != null) {
+            for (int i = 0, j = 0; i < status.length; ++i) {
+                if (status[i] != UpdateInformation.Status.MISSING) {
+                    double cu = s.get(j++);
+                    measurements.loading(i).XpZd(pos, r, cu);
+                }
             }
         }
         r.apply(z -> Math.abs(z) < State.ZERO ? 0 : z);
     }
-
-
 
 }

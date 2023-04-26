@@ -27,18 +27,17 @@ import jdplus.toolkit.base.core.ssf.State;
 import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.UpdateInformation;
 
-
 /**
  *
  * @author Jean Palate
  */
 public class MultivariateOrdinaryFilter {
-    
+
     public static interface Initializer {
-        
+
         int initialize(State state, IMultivariateSsf ssf, IMultivariateSsfData data);
     }
-    
+
     private final Initializer initializer;
     private State state;
     private MultivariateUpdateInformation updinfo;
@@ -86,38 +85,40 @@ public class MultivariateOrdinaryFilter {
         int dim = ssf.getStateDim();
         UpdateInformation.Status[] status = new UpdateInformation.Status[data.getVarsCount()];
         int nv = MultivariateUpdateInformation.fillStatus(data, pos, status);
+        if (nv > 0) {        // 
+            FastMatrix M = FastMatrix.make(dim, nv);
+            FastMatrix R = FastMatrix.square(nv);
+            double[] E = new double[nv];
+            // step 1:
+            // computes ZPZ'; results in R
+            // PZ' in M
+            MZt(pos, status, state.P(), M);
+            // ZPZ'
+            ZM(pos, status, M, R);
+            addH(pos, status, R);
+            SymmetricMatrix.reenforceSymmetry(R);
+            FastMatrix F = R.deepClone();
+            SymmetricMatrix.lcholesky(R, State.ZERO);
 
-        // 
-        FastMatrix M = FastMatrix.make(dim, nv);
-        FastMatrix R = FastMatrix.square(nv);
-        double[] E = new double[nv];
-        // step 1:
-        // computes ZPZ'; results in R
-        // PZ' in K
-        MZt(pos, status, state.P(), M);
-        // ZPZ'
-        ZM(pos, status, M, R);
-        addH(pos, status, R);
-        SymmetricMatrix.reenforceSymmetry(R);
-        FastMatrix F = R.deepClone();
-        SymmetricMatrix.lcholesky(R, State.ZERO);
-
-        // We put in K  PZ'*(ZPZ'+H)^-1/2 = PZ'*(RR')^-1/2 = PZ'(R')^-1
-        // K R' = PZ' 
-        LowerTriangularMatrix.solveXLt(R, M, State.ZERO);
-        for (int i = 0, iv = 0; i < status.length; ++i) {
-            if (status[i] != UpdateInformation.Status.MISSING) {
-                double y = data.get(pos, i);
-                E[iv] = y - measurements.loading(i).ZX(pos, state.a());
+            // We put in M  PZ'*(ZPZ'+H)^-1/2 = PZ'*(RR')^-1/2 = PZ'(R')^-1
+            // M R' = PZ' 
+            LowerTriangularMatrix.solveXLt(R, M, State.ZERO);
+            for (int i = 0, iv = 0; i < status.length; ++i) {
+                if (status[i] != UpdateInformation.Status.MISSING) {
+                    double y = data.get(pos, i);
+                    E[iv++] = y - measurements.loading(i).ZX(pos, state.a());
+                }
             }
+            updinfo = MultivariateUpdateInformation.builder()
+                    .e(DoubleSeq.of(E))
+                    .M(M)
+                    .R(R)
+                    .F(F)
+                    .status(status)
+                    .build();
+        } else {
+            updinfo = null;
         }
-        updinfo = MultivariateUpdateInformation.builder()
-                .e(DoubleSeq.of(E))
-                .M(M)
-                .R(R)
-                .F(F)
-                .status(status)
-                .build();
     }
 
     /**
@@ -147,7 +148,7 @@ public class MultivariateOrdinaryFilter {
     public State getState() {
         return state;
     }
-    
+
     private int initialize(IMultivariateSsf ssf, IMultivariateSsfData data) {
         this.data = data;
         this.ssf = ssf;
@@ -198,7 +199,7 @@ public class MultivariateOrdinaryFilter {
         }
         return true;
     }
-    
+
     public void compute(IMultivariateSsf ssf, int t, State state, DoubleSeq x, int[] equations) {
 
         // pe_L contains the Cholesky factor !!!
@@ -275,5 +276,5 @@ public class MultivariateOrdinaryFilter {
             }
         }
     }
-    
+
 }

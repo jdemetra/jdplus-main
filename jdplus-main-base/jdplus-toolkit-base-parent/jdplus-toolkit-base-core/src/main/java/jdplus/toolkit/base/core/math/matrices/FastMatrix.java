@@ -38,7 +38,6 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.HouseholderWithPivot
 import org.checkerframework.checker.index.qual.Positive;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 
-
 /**
  *
  * @author Jean Palate <jean.palate@nbb.be>
@@ -576,13 +575,13 @@ public final class FastMatrix implements Matrix.Mutable {
             }
         }
     }
-    
-    public FastMatrix transpose(){
-        FastMatrix T=FastMatrix.make(ncols, nrows);
+
+    public FastMatrix transpose() {
+        FastMatrix T = FastMatrix.make(ncols, nrows);
         T.copyTranspose(this);
         return T;
     }
-    
+
     /**
      * Return the sum of all the cells of the matrix
      *
@@ -627,6 +626,21 @@ public final class FastMatrix implements Matrix.Mutable {
             }
         }
         return s;
+    }
+
+    /**
+     * Computes sum(this(i,j**m(i,j))
+     *
+     * @param m The right operand of the dot product
+     * @return
+     */
+    public double dot(FastMatrix m) {
+        double p = 0;
+        DataBlockIterator cols = columnsIterator(), mcols = m.columnsIterator();
+        while (cols.hasNext()) {
+            p += cols.next().dot(mcols.next());
+        }
+        return p;
     }
 
     /**

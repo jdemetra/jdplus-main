@@ -206,12 +206,61 @@ public class SymmetricMatrix {
      * Solve Sx =y using Cholesky decomposition
      * @param S A symmetric matrix. On exit, it contains the cholesky factor
      * @param y On entry y; on exit x
+     * @param clone Clone the S matrix, so that it is not modified
      */
-    public void solve(final FastMatrix S, DataBlock y){
-        lcholesky(S);
-        LowerTriangularMatrix.solveLx(S, y);
-        LowerTriangularMatrix.solvexL(S, y);
+    public void solve(final FastMatrix S, DataBlock y, boolean clone){
+        FastMatrix lower = clone ? S.deepClone() : S;
+        lcholesky(lower);
+        LowerTriangularMatrix.solveLx(lower, y);
+        LowerTriangularMatrix.solvexL(lower, y);
     }
+    
+    /**
+     * Solves SX=B, where S is a symmetric positive definite matrix.
+     *
+     * @param S The Symmetric matrix
+     * @param B In-out parameter. The right-hand side of the equation. It will
+     * contain the result at the end of the processing.
+     * @param clone Indicates if the matrix S can be transformed (should be true
+     * if the matrix S can't be modified). If S is transformed, it will contain
+     * the lower Cholesky factor at the end of the processing.
+     */
+    public void solveSX(FastMatrix S, FastMatrix B, boolean clone) {
+        FastMatrix Q = S;
+        if (clone) {
+            Q = Q.deepClone();
+        }
+        lcholesky(Q);
+        // LL'X = B
+        // LY = B
+        LowerTriangularMatrix.solveLX(Q, B);
+        // L'X = Y
+        LowerTriangularMatrix.solveLtX(Q, B);
+    }
+
+    /**
+     * Solves XS=B, where S is a symmetric positive definite matrix.
+     *
+     * @param S The Symmetric matrix
+     * @param B In-out parameter. The right-hand side of the equation. It will
+     * contain the result at the end of the processing.
+     * @param clone Indicates if the matrix S can be transformed (should be true
+     * if the matrix S can't be modified). If S is transformed, it will contain
+     * the lower Cholesky factor at the end of the processing.
+     */
+    public void solveXS(FastMatrix S, FastMatrix B, boolean clone) {
+        FastMatrix Q = S;
+        if (clone) {
+            Q = Q.deepClone();
+        }
+        lcholesky(Q);
+        // XLL' = B
+        // YL' = B 
+        LowerTriangularMatrix.solveXLt(Q, B);
+        // B contains Y'=(XL)' or Y = XL
+        LowerTriangularMatrix.solveXL(Q, B);
+    }
+     
 
     public FastMatrix XXt(final FastMatrix X) {
         int nr = X.getRowsCount();

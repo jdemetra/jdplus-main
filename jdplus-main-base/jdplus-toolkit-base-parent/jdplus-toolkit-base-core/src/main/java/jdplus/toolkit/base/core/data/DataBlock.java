@@ -19,6 +19,7 @@ package jdplus.toolkit.base.core.data;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleList;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import nbbrd.design.Development;
 import nbbrd.design.Unsafe;
 import jdplus.toolkit.base.api.util.function.BiDoublePredicate;
@@ -935,6 +936,14 @@ public final class DataBlock implements DoubleSeq.Mutable {
         }
     }
 
+    public void copy(Matrix X) {
+        int nr=X.getRowsCount(), nc=X.getColumnsCount();
+        for (int i=0, j=0; i<nc; ++i, j+=nr){
+            DoubleSeq x=X.column(i);
+            this.extract(j, nr).copy(x);
+        }
+    }
+
     /**
      * Exchanges the data between this DataBlock and the given DataBlock
      *
@@ -1083,7 +1092,7 @@ public final class DataBlock implements DoubleSeq.Mutable {
         int idx = beg + pos * inc;
         data[idx] = fn.applyAsDouble(data[idx]);
     }
-
+    
     /**
      * this(pos)=this(pos)+d
      *
@@ -1250,6 +1259,17 @@ public final class DataBlock implements DoubleSeq.Mutable {
         }
     }
 
+    public void add(IntToDoubleFunction fn) {
+        if (inc == 1) {
+            for (int i = beg, j = 0; i < end; ++i, ++j) {
+                data[i] += fn.applyAsDouble(j);
+            }
+        } else {
+            for (int i = beg, j = 0; i != end; i += inc, ++j) {
+                data[i] += fn.applyAsDouble(j);
+            }
+        }
+    }
     /**
      * Changes the sign of the data
      */
@@ -1459,6 +1479,34 @@ public final class DataBlock implements DoubleSeq.Mutable {
                 for (int i = beg, j = y.beg; i != end; i += inc, j += y.inc) {
                     data[i] += a * y.data[j];
                 }
+            }
+        }
+    }
+
+    /**
+     * Adds a rescaled product of blocks. this(i) = this(i) +a * x(i)*y(i)
+     *
+     * @param a The scaling factor
+     * @param x The left hand of the added product. Its length must be &ge the
+     * length of this
+     * @param y The right hand of the added product. Its length must be &ge the
+     * length of this object.
+     */
+    public void addAXY(double a, DataBlock x, DataBlock y) {
+        if (a == 0) {
+            return;
+        }
+        if (a == 1) {
+            for (int i = beg, j = x.beg, k = y.beg; i != end; i += inc, j += x.inc, k += y.inc) {
+                this.data[i] += x.data[j] * y.data[k];
+            }
+        } else if (a == -1) {
+            for (int i = beg, j = x.beg, k = y.beg; i != end; i += inc, j += x.inc, k += y.inc) {
+                this.data[i] -= x.data[j] * y.data[k];
+            }
+        } else {
+            for (int i = beg, j = x.beg, k = y.beg; i != end; i += inc, j += x.inc, k += y.inc) {
+                this.data[i] += a * x.data[j] * y.data[k];
             }
         }
     }

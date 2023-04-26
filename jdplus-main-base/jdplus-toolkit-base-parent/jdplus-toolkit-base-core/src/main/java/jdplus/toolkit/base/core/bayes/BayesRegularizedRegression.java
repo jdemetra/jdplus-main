@@ -384,7 +384,8 @@ public class BayesRegularizedRegression {
         FastMatrix S = SymmetricMatrix.XtX(X0);
         S.diagonal().add(Lambda.fastOp(q -> 1 / q));
         DataBlock y = DataBlock.of(alpha.fastOp(omega, (q, r) -> q / r));
-        SymmetricMatrix.solve(S, y);
+        // Cholesky of S 
+        SymmetricMatrix.solve(S, y, false);
         // b.mu=y
         DataBlock w = DataBlock.of(p, i -> Normal.random(rng, 0, 1));
         LowerTriangularMatrix.solvexL(S, w);
@@ -402,7 +403,7 @@ public class BayesRegularizedRegression {
 
         DataBlock y = Xty.deepClone();
         y.div(sigma2);
-        SymmetricMatrix.solve(S, y);
+        SymmetricMatrix.solve(S, y, false);
         // b.mu=y
         DataBlock w = DataBlock.of(p, i -> Normal.random(rng, 0, 1));
         LowerTriangularMatrix.solvexL(S, w);
