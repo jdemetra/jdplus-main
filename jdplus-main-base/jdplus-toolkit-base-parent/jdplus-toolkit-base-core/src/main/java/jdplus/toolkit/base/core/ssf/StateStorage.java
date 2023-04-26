@@ -106,6 +106,18 @@ public class StateStorage implements IStateResults {
     public FastMatrix P(int pos) {
         return P == null ? null : P.matrix(pos);
     }
+    
+    public DataBlock item(int i){
+        return A.item(i);
+    }
+
+    public DataBlock var(int i) {
+        return P == null ? DataBlock.EMPTY : P.item(i, i);
+    }
+
+    public DataBlock covar(int i, int j) {
+        return P == null ? DataBlock.EMPTY : P.item(i, j);
+    }
 
     public int getStart() {
         return A.getStartSaving();

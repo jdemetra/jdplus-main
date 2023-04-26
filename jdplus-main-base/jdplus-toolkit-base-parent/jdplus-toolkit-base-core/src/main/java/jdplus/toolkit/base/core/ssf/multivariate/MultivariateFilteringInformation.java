@@ -33,7 +33,7 @@ import jdplus.toolkit.base.core.stats.likelihood.Likelihood;
 public class MultivariateFilteringInformation implements IPredictionErrorDecomposition, IMultivariateFilteringResults{
     
     private PredictionErrorsDecomposition predictionErrorsDecomposition;
-    private List<MultivariateUpdateInformation> infos;
+    private MultivariateUpdateInformation[] infos;
     private StateStorage states;
     
     public DataBlock a(int t){
@@ -46,7 +46,7 @@ public class MultivariateFilteringInformation implements IPredictionErrorDecompo
     
     @Override
     public void open(IMultivariateSsf ssf, IMultivariateSsfData data) {
-        infos=new ArrayList<>(data.getObsCount());
+        infos=new MultivariateUpdateInformation[data.getObsCount()];
         predictionErrorsDecomposition=new PredictionErrorsDecomposition();
         states= StateStorage.full(StateInfo.Forecast);
         states.prepare(ssf.getStateDim(), 0, data.getObsCount());
@@ -57,17 +57,24 @@ public class MultivariateFilteringInformation implements IPredictionErrorDecompo
     }
     
     public int size(){
-        return infos.size();
+        return infos.length;
     }
     
     public MultivariateUpdateInformation get(int idx){
-        return infos.get(idx);
+        return infos[idx];
     }
+    
+    private static final int ALLOC=32;
     
     @Override
     public void save(int t, MultivariateUpdateInformation pe) {
         predictionErrorsDecomposition.save(t, pe);
-        infos.set(t, pe);
+        if (t >= infos.length){
+            MultivariateUpdateInformation[]tmp=new MultivariateUpdateInformation[t+ALLOC];
+            System.arraycopy(infos, 0, tmp, 0, infos.length);
+            infos=tmp;
+        }
+        infos[t]=pe;
      }
 
     @Override

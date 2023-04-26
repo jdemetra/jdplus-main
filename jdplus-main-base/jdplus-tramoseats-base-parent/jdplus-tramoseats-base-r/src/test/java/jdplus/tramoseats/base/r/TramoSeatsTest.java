@@ -35,7 +35,7 @@ public class TramoSeatsTest {
     public void testRefresh() {
         TramoSeatsOutput rslt = TramoSeats.fullProcess(Data.TS_PROD, "RSA0");
 
-        TramoSeatsSpec fspec = TramoSeats.refreshSpec(rslt.getResultSpec(), TramoSeatsSpec.RSA0, null, "Fixed");
+        TramoSeatsSpec fspec = TramoSeats.refreshSpec(rslt.getResultSpec(), TramoSeatsSpec.RSA5, null, "Fixed");
 
         SarimaSpec arima = fspec.getTramo().getArima();
         SarimaSpec.Builder sbuilder = arima.toBuilder();

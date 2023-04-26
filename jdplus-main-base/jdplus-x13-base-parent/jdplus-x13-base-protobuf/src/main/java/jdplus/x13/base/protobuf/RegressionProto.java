@@ -40,16 +40,20 @@ import java.util.List;
  */
 @lombok.experimental.UtilityClass
 public class RegressionProto {
+
     public RegressionSpec convert(RegArimaSpec.RegressionSpec spec, double tc) {
 
         MeanSpec mean = MeanSpec.none();
         if (spec.hasMean()) {
-            boolean check = spec.getCheckMean();
-            mean=MeanSpec.builder()
-                    .trendConstant(true)
-                    .test(check)
-                    .coefficient(ToolkitProtosUtility.convert(spec.getMean()))
-                    .build();
+            Parameter p = ToolkitProtosUtility.convert(spec.getMean());
+            if (p != null) {
+                boolean check = spec.getCheckMean();
+                mean = MeanSpec.builder()
+                        .trendConstant(true)
+                        .test(check)
+                        .coefficient(ToolkitProtosUtility.convert(spec.getMean()))
+                        .build();
+            }
         }
 
         RegressionSpec.Builder builder = RegressionSpec.builder()
@@ -76,7 +80,7 @@ public class RegressionProto {
             ModellingProtos.Ramp var = spec.getRamps(i);
             builder.ramp(ModellingProtosUtility.convert(var));
         }
-        
+
         return builder.build();
     }
 
@@ -88,15 +92,16 @@ public class RegressionProto {
         if (mean.isUsed()) {
             builder.setMean(ToolkitProtosUtility.convert(mean.getCoefficient()))
                     .setCheckMean(mean.isTest());
-        }else
-            builder.clearMean();
-        
+        } else {
+            builder.clearMean().setCheckMean(false);
+        }
+
         List<Variable<IOutlier>> outliers = spec.getOutliers();
         for (Variable<IOutlier> outlier : outliers) {
-           builder.addOutliers(convert(outlier));
+            builder.addOutliers(convert(outlier));
         }
         List<Variable<TsContextVariable>> users = spec.getUserDefinedVariables();
-        for (Variable<TsContextVariable> user:users) {
+        for (Variable<TsContextVariable> user : users) {
             builder.addUsers(ModellingProtosUtility.convertTsContextVariable(user));
         }
         List<Variable<InterventionVariable>> ivs = spec.getInterventionVariables();
@@ -107,29 +112,29 @@ public class RegressionProto {
         for (Variable<Ramp> ramp : ramps) {
             builder.addRamps(ModellingProtosUtility.convertRamp(ramp));
         }
-        
+
         return builder.build();
     }
 
     public Variable<IOutlier> convert(ModellingProtos.Outlier outlier, double tc) {
         LocalDate ldt = ToolkitProtosUtility.convert(outlier.getPosition());
-        IOutlier o=null;
+        IOutlier o = null;
         switch (outlier.getCode()) {
             case "ao":
             case "AO":
-                o= new AdditiveOutlier(ldt.atStartOfDay());
+                o = new AdditiveOutlier(ldt.atStartOfDay());
                 break;
             case "ls":
             case "LS":
-                o= new LevelShift(ldt.atStartOfDay(), true);
+                o = new LevelShift(ldt.atStartOfDay(), true);
                 break;
             case "tc":
             case "TC":
-                o= new TransitoryChange(ldt.atStartOfDay(), tc);
+                o = new TransitoryChange(ldt.atStartOfDay(), tc);
                 break;
             case "so":
             case "SO":
-                o=new PeriodicOutlier(ldt.atStartOfDay(), 0, true);
+                o = new PeriodicOutlier(ldt.atStartOfDay(), 0, true);
                 break;
 
             default:
@@ -141,10 +146,10 @@ public class RegressionProto {
                 .name(outlier.getName())
                 .coefficients(c == null ? null : new Parameter[]{c})
                 .attributes(outlier.getMetadataMap())
-                .build();        
+                .build();
     }
-    
-    public ModellingProtos.Outlier convert(Variable<IOutlier> v){
+
+    public ModellingProtos.Outlier convert(Variable<IOutlier> v) {
         IOutlier outlier = v.getCore();
         return ModellingProtos.Outlier.newBuilder()
                 .setName(v.getName())

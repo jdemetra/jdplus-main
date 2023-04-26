@@ -72,4 +72,39 @@ public class SymmetricMatrixTest {
         FastMatrix del = M1.minus(M2);
         assertTrue(MatrixNorms.absNorm(del) < 1e-9);
     }
+    
+    @Test
+    public void testSX() {
+        FastMatrix X = FastMatrix.make(10, 5);
+        JdkRNG rng = JdkRNG.newRandom(0);
+        X.set((i, j) -> rng.nextDouble());
+        FastMatrix S = SymmetricMatrix.XtX(X);
+        
+        FastMatrix Y = FastMatrix.make(5, 3);
+        Y.set((i, j) -> rng.nextDouble());
+        FastMatrix Z=Y.deepClone();
+        
+        SymmetricMatrix.solveSX(S, Y, true);
+        FastMatrix SY=GeneralMatrix.AB(S, Y);
+        SY.sub(Z);
+        assertTrue(MatrixNorms.frobeniusNorm(SY)<1e-9);
+    }
+    
+    @Test
+    public void testXS() {
+        FastMatrix X = FastMatrix.make(10, 5);
+        JdkRNG rng = JdkRNG.newRandom(0);
+        X.set((i, j) -> rng.nextDouble());
+        FastMatrix S = SymmetricMatrix.XtX(X);
+        
+        FastMatrix Y = FastMatrix.make(3, 5);
+        Y.set((i, j) -> rng.nextDouble());
+        FastMatrix Z=Y.deepClone();
+        
+        SymmetricMatrix.solveXS(S, Y, true);
+        FastMatrix YS=GeneralMatrix.AB(Y, S);
+        YS.sub(Z);
+        assertTrue(MatrixNorms.frobeniusNorm(YS)<1e-9);
+     }
+    
 }

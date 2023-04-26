@@ -79,7 +79,7 @@ public class PredictionErrorsDecomposition implements
             return;
         }
         DoubleSeq diag = pe.getR().diagonal();
-        DoubleSeq err = pe.getE();
+        DoubleSeq err = pe.getU();
         UpdateInformation.Status[] status = pe.getStatus();
         for (int i = 0, iv = 0; i < status.length; ++i) {
             if (status[i] != UpdateInformation.Status.MISSING) {

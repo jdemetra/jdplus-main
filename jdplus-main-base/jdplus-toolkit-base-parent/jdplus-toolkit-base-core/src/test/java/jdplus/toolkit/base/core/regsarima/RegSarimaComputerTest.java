@@ -37,7 +37,7 @@ public class RegSarimaComputerTest {
                 .setDefault()
                 .build();
         RegArimaModel model = RegArimaModel.<SarimaModel>builder()
-                .y(DoubleSeq.of(Data.PROD))
+                .y(DoubleSeq.of(Data.ABS63))
                 .arima(arima)
                 .meanCorrection(true)
                 .build();
