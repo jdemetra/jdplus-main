@@ -21,7 +21,7 @@
     </properties>
 
     <modules>
-        <module>jdplus-main-cli-bin</module>
+        <module>jdplus-main-cli-design</module>
         <module>jdplus-toolkit-cli-plugin</module>
         <module>jdplus-sa-cli-plugin</module>
         <module>jdplus-spreadsheet-cli-plugin</module>
@@ -29,6 +29,7 @@
         <module>jdplus-text-cli-plugin</module>
         <module>jdplus-tramoseats-cli-plugin</module>
         <module>jdplus-x13-cli-plugin</module>
+        <module>jdplus-main-cli-bin</module>
     </modules>
 
     <dependencyManagement>
@@ -79,5 +80,27 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <!-- List runtime dependencies for tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>list-runtime-dependencies</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>resolve</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <outputFile>${project.build.testOutputDirectory}/runtime-dependencies.txt</outputFile>
+                            <outputScope>false</outputScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

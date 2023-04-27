@@ -30,30 +30,98 @@
         <!-- 2. JD3 CLI -->
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-main-cli-design</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-toolkit-cli-plugin</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-sa-cli-plugin</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- 3. JD3 Base -->
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-x13-base-api</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>eu.europa.ec.joinup.sat</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.nbbrd.java-io-util</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-x13-base-core</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>eu.europa.ec.joinup.sat</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.nbbrd.java-io-util</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-x13-base-xml</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>eu.europa.ec.joinup.sat</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.nbbrd.java-io-util</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-x13-base-workspace</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>eu.europa.ec.joinup.sat</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.nbbrd.java-io-util</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-x13-base-information</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>eu.europa.ec.joinup.sat</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.nbbrd.java-io-util</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- 4. Other libraries -->
@@ -65,11 +133,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <configuration combine.self="append">
-                    <artifactSet>
-                        <includes>*:jdplus-x13-base-*</includes>
-                    </artifactSet>
-                </configuration>
             </plugin>
         </plugins>
     </build>

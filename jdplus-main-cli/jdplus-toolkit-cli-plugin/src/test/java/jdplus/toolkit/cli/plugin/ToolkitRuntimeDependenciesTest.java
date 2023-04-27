@@ -1,17 +1,17 @@
-package jdplus.toolkit.desktop.plugin;
+package jdplus.toolkit.cli.plugin;
 
-import jdplus.main.desktop.design.GAV;
+import jdplus.main.cli.design.GAV;
 import nbbrd.design.MightBePromoted;
-import nbbrd.io.FileParser;
+import nbbrd.io.text.TextParser;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.regex.Pattern.compile;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,10 +23,7 @@ public class ToolkitRuntimeDependenciesTest {
                 .describedAs("Check runtime dependencies")
                 .satisfies(ToolkitRuntimeDependenciesTest::checkToolkit)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaIoUtil)
-                .satisfies(ToolkitRuntimeDependenciesTest::checkJavaDesktopUtil)
-                .satisfies(ToolkitRuntimeDependenciesTest::checkExternalSwingComponents)
-                .satisfies(ToolkitRuntimeDependenciesTest::checkGuava)
-                .hasSize(35);
+                .hasSize(19);
     }
 
     private static void checkToolkit(List<? extends GAV> coordinates) {
@@ -74,51 +71,6 @@ public class ToolkitRuntimeDependenciesTest {
                 .containsExactlyInAnyOrder("stax-ex");
     }
 
-    private static void checkJavaDesktopUtil(List<? extends GAV> coordinates) {
-        assertThatGroupId(coordinates, "com.github.nbbrd.java-desktop-util")
-                .has(sameVersion())
-                .extracting(GAV::getArtifactId)
-                .are(matchingPattern(compile("^java-desktop-util-(swing|fa|chart|os)$")))
-                .hasSize(4);
-
-        assertThatGroupId(coordinates, "org.jfree")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("jcommon", "jfreechart");
-    }
-
-    private static void checkExternalSwingComponents(List<? extends GAV> coordinates) {
-        assertThatGroupId(coordinates, "com.miglayout")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("miglayout");
-
-        assertThatGroupId(coordinates, "org.tros")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("l2fprod-properties-editor", "l2fprod-common-annotations");
-
-        assertThatGroupId(coordinates, "com.toedter")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("jcalendar");
-
-        assertThatGroupId(coordinates, "org.swinglabs")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("swing-layout");
-    }
-
-    // FIXME: remove Guava dependency
-    private static void checkGuava(List<? extends GAV> coordinates) {
-        assertThatGroupId(coordinates, "com.google.guava")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("guava", "failureaccess", "listenablefuture");
-
-        assertThatGroupId(coordinates, "com.google.errorprone")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("error_prone_annotations");
-
-        assertThatGroupId(coordinates, "com.google.j2objc")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("j2objc-annotations");
-    }
-
     @MightBePromoted
     private static ListAssert<? extends GAV> assertThatGroupId(List<? extends GAV> coordinates, String groupId) {
         return assertThat(coordinates)
@@ -138,8 +90,7 @@ public class ToolkitRuntimeDependenciesTest {
 
     @MightBePromoted
     private static List<GAV> getRuntimeDependencies(Class<?> anchor) throws IOException {
-        return FileParser.onParsingStream(Manifest::new)
-                .andThen(GAV::parseNbmMavenClassPath)
-                .parseResource(anchor, "/runtime-dependencies.mf");
+        return TextParser.onParsingLines(GAV::parseResolvedMavenDependencies)
+                .parseResource(anchor, "/runtime-dependencies.txt", UTF_8);
     }
 }
