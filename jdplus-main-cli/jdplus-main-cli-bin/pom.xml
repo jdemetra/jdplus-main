@@ -17,10 +17,6 @@
     <description>${project.parent.artifactId} - ${project.artifactId}</description>
     <url>${project.parent.url}</url>
 
-    <properties>
-        <project.x.mainClass>jdplus.cruncher.App</project.x.mainClass>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>info.picocli</groupId>
@@ -120,13 +116,14 @@
 
     <build>
         <plugins>
-            <!-- Generates a multi-platform executable bundle -->
+            <!-- Assemble the application and attach it to the project -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>appassembler-maven-plugin</artifactId>
                 <version>2.1.0</version>
                 <executions>
                     <execution>
+                        <id>assemble-step-1</id>
                         <phase>package</phase>
                         <goals>
                             <goal>assemble</goal>
@@ -137,15 +134,13 @@
                     <repositoryLayout>flat</repositoryLayout>
                     <repositoryName>lib</repositoryName>
                     <endorsedDir>lib/ext</endorsedDir>
-                    <assembleDirectory>${project.build.directory}/${project.build.finalName}</assembleDirectory>
-                    <configurationDirectory>etc</configurationDirectory>
                     <copyConfigurationDirectory>true</copyConfigurationDirectory>
                     <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties
                     </extraJvmArguments>
                     <programs>
                         <program>
-                            <mainClass>${project.x.mainClass}</mainClass>
-                            <id>${project.artifactId}</id>
+                            <id>jwsacruncher</id>
+                            <mainClass>jdplus.cruncher.App</mainClass>
                         </program>
                     </programs>
                 </configuration>
@@ -156,14 +151,14 @@
                 <version>3.5.0</version>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>assemble-step-2</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/assembly/app-assembly.xml</descriptor>
+                                <descriptor>src/assembly/jwsacruncher.xml</descriptor>
                             </descriptors>
                             <appendAssemblyId>false</appendAssemblyId>
                         </configuration>

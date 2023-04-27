@@ -5,9 +5,10 @@
     <formats>
         <format>zip</format>
     </formats>
+    <baseDirectory>jwsacruncher-${project.version}</baseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${project.build.directory}/${project.build.finalName}</directory>
+            <directory>${project.build.directory}/appassembler</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>/**</include>
