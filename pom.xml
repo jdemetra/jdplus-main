@@ -293,6 +293,7 @@
                 <configuration>
                     <!-- 1.6 Configure Git branching model -->
                     <gitFlowConfig>
+                        <productionBranch>main</productionBranch>
                         <versionTagPrefix>v</versionTagPrefix>
                     </gitFlowConfig>
                 </configuration>
