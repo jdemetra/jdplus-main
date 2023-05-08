@@ -123,7 +123,6 @@ public class X11Kernel_MixedFilters_Test {
     }
 
     @Test
-    @Disabled(value = "Error in 2.2.2 - Will work with 2.2.3")
     public void test_12_S3X5Stable_AllNone_StartAll_Add() {
 
         String modeName = DecompositionMode.Additive.name();
