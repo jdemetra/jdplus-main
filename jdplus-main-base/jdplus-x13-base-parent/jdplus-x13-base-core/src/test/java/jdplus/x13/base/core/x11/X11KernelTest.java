@@ -88,7 +88,6 @@ public class X11KernelTest {
     }
 
     @Test
-    @Disabled(value = "Error in 2.2.2 - Will work with 2.2.3")
     public void testProcess_mult_Halfyearly_autoHenderson() {
         String modeName = DecompositionMode.LogAdditive.name();
         String seasonalFilterOptionName = SeasonalFilterOption.S3X5.name();
@@ -98,7 +97,6 @@ public class X11KernelTest {
     }
 
     @Test
-    @Disabled(value = "Error in 2.2.2 - Will work with 2.2.3")
     public void testProcess_LogAdd_Halfyearly() {
         String modeName = DecompositionMode.LogAdditive.name();
         String seasonalFilterOptionName = SeasonalFilterOption.S3X5.name();
