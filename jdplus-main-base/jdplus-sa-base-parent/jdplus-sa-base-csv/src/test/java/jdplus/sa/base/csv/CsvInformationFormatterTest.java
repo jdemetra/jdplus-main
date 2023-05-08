@@ -6,17 +6,37 @@ import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.api.processing.GenericOutput;
 import jdplus.toolkit.base.api.util.NamedObject;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static jdplus.sa.base.csv.CsvInformationFormatter.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CsvInformationFormatterTest {
+
+    private static Locale SAVED_LOCALE;
+    private static char SAVED_CSV_SEPARATOR;
+
+    @BeforeAll
+    public static void beforeAll() {
+        SAVED_LOCALE = getLocale();
+        setLocale(Locale.ROOT);
+        SAVED_CSV_SEPARATOR = getCsvSeparator();
+        setCsvSeparator(',');
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        setLocale(SAVED_LOCALE);
+        setCsvSeparator(SAVED_CSV_SEPARATOR);
+    }
 
     @Test
     public void testFormattedTypes() {
