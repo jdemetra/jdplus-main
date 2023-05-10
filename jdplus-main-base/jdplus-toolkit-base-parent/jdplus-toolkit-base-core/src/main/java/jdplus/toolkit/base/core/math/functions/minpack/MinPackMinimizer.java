@@ -115,6 +115,15 @@ public class MinPackMinimizer implements SsqFunctionMinimizer {
 	return m_problem.getResult() == null ? Double.NaN : m_problem.getResult().getSsqE();
     }
  
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getIterationsCount() {
+        return m_estimator.getIterCount();
+    }
+
     @Override
     public boolean minimize(ISsqFunctionPoint start) {
 	m_problem = new SsqEstimationProblem(start);

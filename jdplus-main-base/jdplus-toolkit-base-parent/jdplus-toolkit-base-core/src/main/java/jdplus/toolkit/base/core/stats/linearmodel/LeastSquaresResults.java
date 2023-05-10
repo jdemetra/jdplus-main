@@ -326,8 +326,16 @@ public final class LeastSquaresResults {
         double v = ucov.get(idx, idx);
         return Math.sqrt(getErrorMeanSquares() * v);
     }
+    
+    public double T(int idx){
+        return T(idx,0);
+    }
 
-    public double T(int idx) {
+    public StatisticalTest Ttest(int idx) {
+        return Ttest(idx, 0);
+    }
+    
+    public double T(int idx, double value) {
         double e = ucov.get(idx, idx);
         if (e == 0) {
             return Double.NaN;
@@ -336,11 +344,11 @@ public final class LeastSquaresResults {
         if (b == 0) {
             return 0;
         }
-        return b / Math.sqrt(e * getErrorMeanSquares());
+        return (b - value) / Math.sqrt(e * getErrorMeanSquares());
     }
 
-    public StatisticalTest Ttest(int idx) {
-        double t = T(idx);
+    public StatisticalTest Ttest(int idx, double value) {
+        double t = T(idx, value);
         if (!Double.isFinite(t)) {
             return null;
         } else {

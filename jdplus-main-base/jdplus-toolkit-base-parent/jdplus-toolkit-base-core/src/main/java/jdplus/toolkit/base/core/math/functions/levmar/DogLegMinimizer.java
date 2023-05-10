@@ -240,6 +240,15 @@ public class DogLegMinimizer implements SsqFunctionMinimizer {
 
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getIterationsCount() {
+        return iter;
+    }
+
     private boolean calc() {
         iter = 0;
         ecur_ = DataBlock.of(fcur_.getE());
