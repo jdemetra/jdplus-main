@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Add Windows binaries to release
+
 ## [3.0.0] - 2023-05-02
 
 This the release of JDemetra+ v3.0.0.  
