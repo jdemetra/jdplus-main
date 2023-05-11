@@ -7,10 +7,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.0.1] - 2023-05-11
+
+This the release of JDemetra+ v3.0.1.  
+[Java SE 17 or later](https://adoptium.net/) version is required to run it.
+
+### Added
+
+- Add Windows binaries to release
+
 ## [3.0.0] - 2023-05-02
 
 This the release of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://adoptium.net/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/jdemetra/jd3-main/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/jdemetra/jd3-main/releases/tag/v3.0.0

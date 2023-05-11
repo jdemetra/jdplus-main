@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
     </parent>
 
     <artifactId>jdplus-main-bom</artifactId>
@@ -56,8 +56,14 @@
     </build>
 
     <profiles>
+        <!-- Release binaries on GitHub -->
+        <!-- Note that all plugins are run on 'install' phase -->
         <profile>
             <id>full-release</id>
+            <properties>
+                <java.bundled.version>jdk-17.0.7+7</java.bundled.version>
+                <jdkname>${java.bundled.version}-jre</jdkname>
+            </properties>
             <build>
                 <plugins>
                     <!-- Extract changelog -->
@@ -67,11 +73,165 @@
                         <executions>
                             <execution>
                                 <id>extract-changelog</id>
+                                <phase>install</phase>
                                 <goals>
                                     <goal>extract</goal>
                                 </goals>
                                 <configuration>
                                     <inputFile>${project.parent.basedir}/CHANGELOG.md</inputFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Gather binaries and JRE -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-binaries</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>eu.europa.ec.joinup.sat</groupId>
+                                            <artifactId>jdplus-main-cli-bin</artifactId>
+                                            <type>zip</type>
+                                            <destFileName>jwsacruncher-${project.version}-bin.zip</destFileName>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>eu.europa.ec.joinup.sat</groupId>
+                                            <artifactId>jdplus-main-desktop-bin</artifactId>
+                                            <type>zip</type>
+                                            <destFileName>jdemetra-${project.version}-bin.zip</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>unpack-binaries</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>eu.europa.ec.joinup.sat</groupId>
+                                            <artifactId>jdplus-main-cli-bin</artifactId>
+                                            <type>zip</type>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>eu.europa.ec.joinup.sat</groupId>
+                                            <artifactId>jdplus-main-desktop-bin</artifactId>
+                                            <type>zip</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/windows</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jreleaser</groupId>
+                        <artifactId>jdks-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>download-windows-jre</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>setup-disco</goal>
+                                </goals>
+                                <configuration>
+                                    <pkgs>
+                                        <pkg>
+                                            <name>temurin17</name>
+                                            <distribution>temurin</distribution>
+                                            <platform>windows-x86_64</platform>
+                                            <version>${java.bundled.version}</version>
+                                            <packageType>jre</packageType>
+                                        </pkg>
+                                    </pkgs>
+                                    <unpack>true</unpack>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Create binaries bundled with JRE -->
+                    <plugin>
+                        <groupId>io.github.floverfelt</groupId>
+                        <artifactId>find-and-replace-maven-plugin</artifactId>
+                        <version>1.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>configure-cli-bin</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>find-and-replace</goal>
+                                </goals>
+                                <configuration>
+                                    <replacementType>file-contents</replacementType>
+                                    <baseDir>target/windows/jwsacruncher-${project.version}/bin/</baseDir>
+                                    <fileMask>jwsacruncher.bat</fileMask>
+                                    <encoding>UTF-8</encoding>
+                                    <findRegex>JAVACMD=java</findRegex>
+                                    <replaceValue>JAVACMD=%BASEDIR%\\${jdkname}\\bin\\java</replaceValue>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>configure-desktop-bin</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>find-and-replace</goal>
+                                </goals>
+                                <configuration>
+                                    <replacementType>file-contents</replacementType>
+                                    <baseDir>target/windows/nbdemetra/etc/</baseDir>
+                                    <fileMask>nbdemetra.conf</fileMask>
+                                    <encoding>UTF-8</encoding>
+                                    <findRegex>#jdkhome="\/path\/to\/jdk"</findRegex>
+                                    <replaceValue>jdkhome=${jdkname}</replaceValue>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>pack-desktop-cli</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/assembly/cli-windows-assembly.xml</descriptor>
+                                    </descriptors>
+                                    <finalName>jwsacruncher-${project.version}</finalName>
+                                    <attach>false</attach>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>pack-desktop-bin</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/assembly/desktop-windows-assembly.xml</descriptor>
+                                    </descriptors>
+                                    <finalName>jdemetra-${project.version}</finalName>
+                                    <attach>false</attach>
                                 </configuration>
                             </execution>
                         </executions>
@@ -84,54 +244,66 @@
                         <version>1.5.1</version>
                         <executions>
                             <execution>
+                                <id>release-assets</id>
                                 <phase>install</phase>
                                 <goals>
                                     <goal>full-release</goal>
                                 </goals>
+                                <configuration>
+                                    <jreleaser>
+                                        <release>
+                                            <github>
+                                                <skipTag>true</skipTag>
+                                                <draft>true</draft>
+                                                <changelog>
+                                                    <external>${project.build.directory}/CHANGELOG.md</external>
+                                                </changelog>
+                                            </github>
+                                        </release>
+                                        <signing>
+                                            <active>ALWAYS</active>
+                                            <!-- Fix default value -->
+                                            <armored>true</armored>
+                                        </signing>
+                                        <distributions>
+                                            <!-- Name is here ! -->
+                                            <jwsacruncher>
+                                                <type>JAVA_BINARY</type>
+                                                <artifacts>
+                                                    <artifact>
+                                                        <path>
+                                                            ${project.build.directory}/jwsacruncher-${project.version}-bin.zip
+                                                        </path>
+                                                    </artifact>
+                                                    <artifact>
+                                                        <path>
+                                                            ${project.build.directory}/jwsacruncher-${project.version}-windows-bin.zip
+                                                        </path>
+                                                        <platform>windows-x86_64</platform>
+                                                    </artifact>
+                                                </artifacts>
+                                            </jwsacruncher>
+                                            <jdemetra>
+                                                <type>JAVA_BINARY</type>
+                                                <artifacts>
+                                                    <artifact>
+                                                        <path>
+                                                            ${project.build.directory}/jdemetra-${project.version}-bin.zip
+                                                        </path>
+                                                    </artifact>
+                                                    <artifact>
+                                                        <path>
+                                                            ${project.build.directory}/jdemetra-${project.version}-windows-bin.zip
+                                                        </path>
+                                                        <platform>windows-x86_64</platform>
+                                                    </artifact>
+                                                </artifacts>
+                                            </jdemetra>
+                                        </distributions>
+                                    </jreleaser>
+                                </configuration>
                             </execution>
                         </executions>
-                        <configuration>
-                            <jreleaser>
-                                <release>
-                                    <github>
-                                        <skipTag>true</skipTag>
-                                        <draft>true</draft>
-                                        <changelog>
-                                            <external>${project.build.directory}/CHANGELOG.md</external>
-                                        </changelog>
-                                    </github>
-                                </release>
-                                <checksum>
-                                    <individual>true</individual>
-                                </checksum>
-                                <signing>
-                                    <active>ALWAYS</active>
-                                    <!-- Fix default value -->
-                                    <armored>true</armored>
-                                </signing>
-                                <distributions>
-                                    <!-- Name is here ! -->
-                                    <jwsacruncher>
-                                        <type>JAVA_BINARY</type>
-                                        <artifacts>
-                                            <artifact>
-                                                <path>${project.parent.basedir}/jdplus-main-cli/jdplus-main-cli-bin/target/jdplus-main-cli-bin-${project.version}.zip</path>
-                                                <transform>jwsacruncher-${project.version}-bin.zip</transform>
-                                            </artifact>
-                                        </artifacts>
-                                    </jwsacruncher>
-                                    <jdemetra>
-                                        <type>JAVA_BINARY</type>
-                                        <artifacts>
-                                            <artifact>
-                                                <path>${project.parent.basedir}/jdplus-main-desktop/jdplus-main-desktop-bin/target/jdplus-main-desktop-bin-${project.version}.zip</path>
-                                                <transform>jdemetra-${project.version}-bin.zip</transform>
-                                            </artifact>
-                                        </artifacts>
-                                    </jdemetra>
-                                </distributions>
-                            </jreleaser>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
