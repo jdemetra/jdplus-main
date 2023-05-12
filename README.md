@@ -1,14 +1,27 @@
 # JDemetra+ v3
 
+[![Download](https://img.shields.io/github/release/jdemetra/jdplus-main.svg)](https://github.com/jdemetra/jdplus-main/releases/latest)
+
 **JDemetra+ is a tool for seasonal adjustment (SA)** developed by the National Bank of Belgium (NBB) in cooperation with the Deutsche Bundesbank and Eurostat in accordance with the Guidelines of the European Statistical System (ESS).
 
-## Installing / Getting started
+Its main **documentation** is available at https://jdemetra-new-documentation.netlify.app.
+
+## Installing
 
 JDemetra+ v3 runs on any operating system that supports **Java 17 or later** such as Microsoft **Windows**, **Solaris OS**, Apple **macOS**, **Ubuntu** and other various **Linux** distributions.
 
-The project is still in development, but you can find **daily builds** and install instructions at https://github.com/nbbrd/jdemetra-app-snapshot.
+### Microsoft Windows
 
-Its main **documentation** is available at https://jdemetra-new-documentation.netlify.app.
+1. **Download** the [Windows-specific zip package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-*-windows-bin.zip`)
+2. **Extract** it to any folder on your system (i.e. `_DEMETRA_PATH_`)
+3. **Run** the executable file `nbdemetra64.exe` located in the `_DEMETRA_PATH_/bin` directory
+
+### Other operating systems
+
+1. **Install** [Java version 17 or later](https://whichjdk.com/)
+2. **Download** the [platform-independent zip package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-*-bin.zip`)
+3. **Extract** it to any folder on your system (i.e. `_DEMETRA_PATH_`)
+4. **Run** the executable file `$ ./nbdemetra` located in the `_DEMETRA_PATH_/bin` directory
 
 ## Developing
 
@@ -21,6 +34,8 @@ git clone https://github.com/jdemetra/jdplus-main.git
 cd jdplus-main
 mvn clean install
 ```
+
+Daily builds are also available at https://github.com/nbbrd/jdemetra-app-snapshot.
 
 ### Structure
 
