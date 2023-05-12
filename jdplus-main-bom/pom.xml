@@ -254,7 +254,6 @@
                                         <release>
                                             <github>
                                                 <skipTag>true</skipTag>
-                                                <draft>true</draft>
                                                 <changelog>
                                                     <external>${project.build.directory}/CHANGELOG.md</external>
                                                 </changelog>
