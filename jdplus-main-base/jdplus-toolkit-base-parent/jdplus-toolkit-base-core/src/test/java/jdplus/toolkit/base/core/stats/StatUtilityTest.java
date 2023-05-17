@@ -27,10 +27,9 @@ public class StatUtilityTest {
         assertThat(StatUtility.theilInequalityCoefficient2(y, f2))
                 .isEqualTo(1);
         
-        assertThatExceptionOfType(StatException.class)
-                .isThrownBy(() -> StatUtility.theilInequalityCoefficient2(DoubleSeq.of(1, 2, 3, 4), DoubleSeq.ONE))
-                .withMessage("Non compatible data");
-        
+        assertThat(StatUtility.theilInequalityCoefficient2(DoubleSeq.ZERO, DoubleSeq.ONE))
+                .isEqualTo(Double.NaN);
+
         assertThatExceptionOfType(StatException.class)
                 .isThrownBy(() -> StatUtility.theilInequalityCoefficient2(DoubleSeq.ZERO, DoubleSeq.ONE))
                 .withMessage("The method requires a not to contain any 0");
