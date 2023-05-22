@@ -13,32 +13,23 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the Licence for the specific language governing permissions and 
 * limitations under the Licence.
-*/
-
+ */
 package jdplus.x13.base.core.x11.filter;
 
-import java.util.Arrays;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
-
 /**
- * The dummy filter will set the filtered series to O or 1 (multiplicative case).
+ * The dummy filter will set the filtered series to O or 1 (multiplicative
+ * case).
+ *
  * @author Jean Palate
  */
-public class DummyFilter{
-    
-    public static final String NAME="None";
-    
-    private final boolean mul;
-    
-    
-    public DummyFilter(boolean mul){
-        this.mul=mul;
+@lombok.experimental.UtilityClass
+public class DummyFilter {
+
+    public DoubleSeq filter(boolean mul, DoubleSeq in) {
+        double c = mul ? 1.0 : 0.0;
+        return DoubleSeq.onMapping(in.length(), i -> c);
     }
 
-    public int[] process(DoubleSeq s, double[] out) {
-        Arrays.fill(out, mul ? 1 : 0);
-        return new int[] {0, out.length};
-    }
-    
 }
