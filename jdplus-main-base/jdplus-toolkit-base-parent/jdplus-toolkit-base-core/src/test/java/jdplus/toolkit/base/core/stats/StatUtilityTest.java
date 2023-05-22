@@ -28,11 +28,7 @@ public class StatUtilityTest {
                 .isEqualTo(1);
         
         assertThat(StatUtility.theilInequalityCoefficient2(DoubleSeq.ZERO, DoubleSeq.ONE))
-                .isEqualTo(Double.NaN);
-
-        assertThatExceptionOfType(StatException.class)
-                .isThrownBy(() -> StatUtility.theilInequalityCoefficient2(DoubleSeq.ZERO, DoubleSeq.ONE))
-                .withMessage("The method requires a not to contain any 0");
+                .isNaN();
         
         assertThat(StatUtility.theilInequalityCoefficient2(DoubleSeq.ONE, DoubleSeq.ZERO))
                 .isEqualTo(0);
