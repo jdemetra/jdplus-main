@@ -7,6 +7,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![STAT] Correct forecasts/backcasts in the Burman algorithm (SEATS)
+- ![STAT] Implement X11 without seasonal component
+- ![STAT] Correct Tramo outliers detection with missing values
+
 ## [3.0.1] - 2023-05-11
 
 This is a **patch release** of JDemetra+ v3.0.1.  
