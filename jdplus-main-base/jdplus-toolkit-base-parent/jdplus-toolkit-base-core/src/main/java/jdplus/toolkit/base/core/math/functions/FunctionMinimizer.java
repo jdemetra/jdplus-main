@@ -59,6 +59,8 @@ public interface FunctionMinimizer {
     IFunctionPoint getResult();
 
     double getObjective();
+    
+    int getIterationsCount();
 
     
 }

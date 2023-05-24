@@ -159,7 +159,16 @@ public class LevenbergMarquardtMinimizer implements SsqFunctionMinimizer {
         return currentPoint;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
+    public int getIterationsCount() {
+        return iter;
+    }
+
+   @Override
     public double getObjective() {
         return currentObjective;
     }

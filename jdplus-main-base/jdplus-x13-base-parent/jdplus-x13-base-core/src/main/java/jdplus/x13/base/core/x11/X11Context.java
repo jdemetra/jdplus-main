@@ -41,9 +41,8 @@ public class X11Context {
     int period;
     int trendFilterLength;
     int localPolynomialDegree;
-    @lombok.NonNull
+    boolean seasonal;
     SeasonalFilterOption[] initialSeasonalFilter;
-    @lombok.NonNull
     SeasonalFilterOption[] finalSeasonalFilter;
     double lowerSigma, upperSigma;
     CalendarSigmaOption calendarSigma;
@@ -66,6 +65,7 @@ public class X11Context {
     public static Builder builder() {
         Builder builder = new Builder();
         builder.mode = DecompositionMode.Multiplicative;
+        builder.seasonal = true;
         builder.trendFilterLength = 13;
         builder.localPolynomialDegree = 3;
         builder.period = 1;
@@ -79,15 +79,20 @@ public class X11Context {
     }
 
     public static X11Context of(@lombok.NonNull X11Spec spec, @lombok.NonNull TsData data) {
-        SeasonalFilterOption[] filters = new SeasonalFilterOption[data.getAnnualFrequency()];
-        if (spec.getFilters().length == 1) {
-            filters = new SeasonalFilterOption[data.getAnnualFrequency()];
-            SeasonalFilterOption filter = spec.getFilters()[0];
-            for (int i = 0; i < data.getAnnualFrequency(); i++) {
-                filters[i] = filter;
-            }
+        SeasonalFilterOption[] filters;
+        if (!spec.isSeasonal()) {
+            filters = null;
         } else {
-            filters = spec.getFilters();
+            filters = new SeasonalFilterOption[data.getAnnualFrequency()];
+            if (spec.getFilters().length == 1) {
+                filters = new SeasonalFilterOption[data.getAnnualFrequency()];
+                SeasonalFilterOption filter = spec.getFilters()[0];
+                for (int i = 0; i < data.getAnnualFrequency(); i++) {
+                    filters[i] = filter;
+                }
+            } else {
+                filters = spec.getFilters();
+            }
         }
         int p = data.getAnnualFrequency();
         int nb = spec.getBackcastHorizon(), nf = spec.getForecastHorizon();
@@ -98,6 +103,7 @@ public class X11Context {
             nf = -nf * p;
         }
         return builder().mode(spec.getMode())
+                .seasonal(spec.isSeasonal())
                 .trendFilterLength(spec.getHendersonFilterLength())
                 .period(p)
                 .firstPeriod(data.getStart().annualPosition())
@@ -256,6 +262,8 @@ public class X11Context {
     }
 
     public SeasonalFilterOption[] getFinalSeasonalFilter() {
+        if (finalSeasonalFilter == null)
+            return null;
         SeasonalFilterOption[] result = new SeasonalFilterOption[period];
         for (int i = 0; i < period; i++) {
             result[i] = finalSeasonalFilter[i];

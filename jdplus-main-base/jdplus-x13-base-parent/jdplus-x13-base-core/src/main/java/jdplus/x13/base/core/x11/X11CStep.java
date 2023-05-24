@@ -17,6 +17,7 @@ import jdplus.x13.base.core.x11.filter.X11SeasonalFilterProcessor;
 import jdplus.x13.base.core.x11.filter.X11SeasonalFiltersFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.AsymmetricEndPoints;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.x13.base.core.x11.filter.DummyFilter;
 
 /**
  *
@@ -65,9 +66,15 @@ public class X11CStep {
     }
 
     private void c5Step(X11Context context) {
-        X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
-        c5a = processor.process(c4, (context.getFirstPeriod() + c2drop) % context.getPeriod());
-        c5 = DefaultSeasonalNormalizer.normalize(c5a, c2drop, context);
+        if (context.isSeasonal()) {
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+            c5a = processor.process(c4, (context.getFirstPeriod() + c2drop) % context.getPeriod());
+            c5 = DefaultSeasonalNormalizer.normalize(c5a, c2drop, context);
+        } else {
+            c5a = DummyFilter.filter(context.isMultiplicative(), c4);
+            c5 = c5a;
+        }
+
     }
 
     private void c6Step(X11Context context) {
@@ -109,9 +116,14 @@ public class X11CStep {
     }
 
     private void cFinalStep(X11Context context) {
-        X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
-        c10a = processor.process(c9, context.getFirstPeriod());
-        c10 = DefaultSeasonalNormalizer.normalize(c10a, 0, context);
+        if (context.isSeasonal()) {
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
+            c10a = processor.process(c9, context.getFirstPeriod());
+            c10 = DefaultSeasonalNormalizer.normalize(c10a, 0, context);
+        } else {
+            c10a = DummyFilter.filter(context.isMultiplicative(), c9);
+            c10 = c10a;
+        }
         c11 = c11(context);
         c13 = context.remove(c11, c7);
 

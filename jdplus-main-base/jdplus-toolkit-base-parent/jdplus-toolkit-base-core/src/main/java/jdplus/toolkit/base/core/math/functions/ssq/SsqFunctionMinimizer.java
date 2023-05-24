@@ -59,4 +59,5 @@ public interface SsqFunctionMinimizer {
      */
     boolean minimize(ISsqFunctionPoint start);
 
+    int getIterationsCount();
 }

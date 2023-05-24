@@ -48,6 +48,8 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
 import jdplus.tramoseats.base.core.tramo.internal.TramoUtility;
 import jdplus.toolkit.base.api.information.GenericExplorable;
+import jdplus.toolkit.base.api.util.IntList;
+import jdplus.toolkit.base.core.data.interpolation.AverageInterpolator;
 
 /**
  *
@@ -87,7 +89,7 @@ public class TramoOutliersDetection {
 
         SarimaModel initialArima, finalArima;
 
-        DoubleSeq y;
+        TsData y;
         Matrix x;
         OutlierDescriptor[] outliers;
 
@@ -183,11 +185,14 @@ public class TramoOutliersDetection {
     }
 
     public Results process(TsData ts, int[] order, int[] seasonal, boolean mean, Matrix x,
-            boolean bao, boolean bls, boolean btc, boolean bso, double cv, boolean ml) {
-        TsData y = ts.cleanExtremities();
-        if (x != null && ts.length() != y.length()) {
-            int start = ts.getStart().until(y.getStart());
-            x = x.extract(start, y.length(), 0, x.getColumnsCount());
+            boolean bao, boolean bls, boolean btc, boolean bso, double cv, boolean ml, boolean clean) {
+        TsData y = ts;
+        if (clean) {
+            y = ts.cleanExtremities();
+            if (x != null && ts.length() != y.length()) {
+                int start = ts.getStart().until(y.getStart());
+                x = x.extract(start, y.length(), 0, x.getColumnsCount());
+            }
         }
         SarimaOrders spec = new SarimaOrders(y.getAnnualFrequency());
         spec.setP(order[0]);
@@ -199,6 +204,10 @@ public class TramoOutliersDetection {
             spec.setBq(seasonal[2]);
         }
 
+        double[] yc = y.getValues().toArray();
+        IntList missings = new IntList();
+        AverageInterpolator.cleanMissings(yc, missings);
+        int[] m = missings.toArray();
         SarimaModel arima = SarimaModel.builder(spec)
                 .setDefault()
                 .build();
@@ -206,8 +215,9 @@ public class TramoOutliersDetection {
         RegArimaModel regarima = RegArimaModel.builder()
                 .arima(arima)
                 .meanCorrection(mean)
-                .y(y.getValues())
+                .y(DoubleSeq.of(yc))
                 .addX(FastMatrix.of(x))
+                .missing(m)
                 .build();
         RegArimaEstimation<SarimaModel> estimation0 = RegSarimaComputer.builder()
                 .build()
@@ -227,7 +237,7 @@ public class TramoOutliersDetection {
         if (bso) {
             factories.add(new PeriodicOutlierFactory(y.getAnnualFrequency(), true));
         }
-        detector.setOutlierFactories(factories.toArray(new IOutlierFactory[factories.size()]));
+        detector.setOutlierFactories(factories.toArray(IOutlierFactory[]::new));
 
         FastOutliersDetector od = FastOutliersDetector.builder()
                 .singleOutlierDetector(detector)
@@ -236,7 +246,13 @@ public class TramoOutliersDetection {
                 .processor(RegArimaUtility.processor(true, 1e-7))
                 .build();
 
-        od.prepare(y.length());
+        od.prepare(yc.length);
+        for (int i = 0; i < m.length; ++i) {
+            for (int j = 0; j < factories.size(); ++j) {
+                od.exclude(m[i], j);
+            }
+        }
+
         if (!od.process(regarima, SarimaMapping.of(spec))) {
             return null;
         }
@@ -261,7 +277,7 @@ public class TramoOutliersDetection {
                 .coefficients(estimation1.getConcentratedLikelihood().coefficients().toArray())
                 .coefficientsCovariance(estimation1.getConcentratedLikelihood().covariance(np, true))
                 .x(x)
-                .y(y.getValues())
+                .y(y)
                 .linearized(RegArimaUtility.linearizedData(estimation1.getModel(), estimation1.getConcentratedLikelihood()))
                 .residuals(estimation1.getConcentratedLikelihood().e())
                 .build();

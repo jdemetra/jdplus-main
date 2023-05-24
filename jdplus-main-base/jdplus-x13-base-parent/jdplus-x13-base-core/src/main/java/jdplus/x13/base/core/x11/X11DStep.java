@@ -24,6 +24,7 @@ import java.util.Arrays;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.x13.base.core.x11.filter.DummyFilter;
 
 /**
  *
@@ -80,9 +81,13 @@ public class X11DStep {
     }
 
     private void d5Step(X11Context context) {
-        X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
-        DoubleSeq d5a = processor.process(d4, (context.getFirstPeriod() + d2drop) % context.getPeriod());
-        d5 = DefaultSeasonalNormalizer.normalize(d5a, d2drop, context);
+        if (context.isSeasonal()) {
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+            DoubleSeq d5a = processor.process(d4, (context.getFirstPeriod() + d2drop) % context.getPeriod());
+            d5 = DefaultSeasonalNormalizer.normalize(d5a, d2drop, context);
+        } else {
+            d5 = DummyFilter.filter(context.isMultiplicative(), d4);
+        }
     }
 
     private void d6Step(X11Context context) {
@@ -144,18 +149,23 @@ public class X11DStep {
     }
 
     private void dFinalStep(X11Context context) {
-        seasFilter = context.getFinalSeasonalFilter();
-        if (context.isMSR()) {
-            MsrFilterSelection msr = getMsrFilterSelection();
-            SeasonalFilterOption msrFilter = msr.doMSR(d9_g_bis, context);
-            d9msriter=msr.getIterCount();
-            d9filter = msrFilter;
-            Arrays.fill(seasFilter, msrFilter);
+        if (context.isSeasonal()) {
+            seasFilter = context.getFinalSeasonalFilter();
+            if (context.isMSR()) {
+                MsrFilterSelection msr = getMsrFilterSelection();
+                SeasonalFilterOption msrFilter = msr.doMSR(d9_g_bis, context);
+                d9msriter = msr.getIterCount();
+                d9filter = msrFilter;
+                Arrays.fill(seasFilter, msrFilter);
+            }
+            d9msr = X11Utility.defaultMsrTable(d9_g_bis.drop(context.getBackcastHorizon(), context.getForecastHorizon()), context.getPeriod(), context.getFirstPeriod(), context.getMode());
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), seasFilter);
+            d10bis = processor.process(d9_g_bis, context.getFirstPeriod());
+            d10 = DefaultSeasonalNormalizer.normalize(d10bis, 0, context);
+        } else {
+            d10bis = DummyFilter.filter(context.isMultiplicative(), d9_g_bis);
+            d10 = d10bis;
         }
-        d9msr=X11Utility.defaultMsrTable(d9_g_bis.drop(context.getBackcastHorizon(), context.getForecastHorizon()), context.getPeriod(), context.getFirstPeriod(), context.getMode());
-        X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), seasFilter);
-        d10bis = processor.process(d9_g_bis, context.getFirstPeriod());
-        d10 = DefaultSeasonalNormalizer.normalize(d10bis, 0, context);
 
         d11bis = d11bis(context);
 

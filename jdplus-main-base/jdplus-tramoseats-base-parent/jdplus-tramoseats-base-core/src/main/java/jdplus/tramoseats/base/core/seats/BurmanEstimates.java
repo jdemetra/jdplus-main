@@ -29,7 +29,6 @@ import jdplus.toolkit.base.core.ucarima.UcarimaModel;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Doubles;
-import jdplus.toolkit.base.api.data.DoublesMath;
 import jdplus.toolkit.base.core.ssf.arima.ExactArimaForecasts;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.MatrixWindow;
@@ -126,9 +125,6 @@ public class BurmanEstimates {
         for (int i = 0; i < ucm.getComponentsCount(); ++i) {
             calc(i);
         }
-//        if (bmean) {
-//            completeCasts();
-//        }
     }
 
     private final int nfcasts, nbcasts;
@@ -146,7 +142,7 @@ public class BurmanEstimates {
     private DoubleSeq[] estimates, forecasts, backcasts;
     private DoubleSeq xbcasts, xfcasts;
     private LUDecomposition lu;
-    private int nf;
+    private int nf, nbc, nfc;
 
     private void calc(final int cmp) {
         int n = data.length();
@@ -167,8 +163,8 @@ public class BurmanEstimates {
                 return;
             }
             BackFilter sur = ucm.getComponent(cmp).getNonStationaryAr();
-            // no unit root
             if (mean != 0) {
+                // no unit root
                 if (sur.isIdentity()) {
                     mc = meanc;
                 } else {
@@ -187,17 +183,19 @@ public class BurmanEstimates {
         int pstar = ar.length - 1;
         int rstar = qstar + pstar;
         double[] gcur = this.g[cmp];
-        int gstar = gcur.length - 1; // gstar = max(pstar, qstar). Could it be less ?
-        // We want to estimate x1(t) = g(F)/Q(F) z(t) in [-2*q*, n + 2*q*[ 
-        // 1. Compute w1(t) = g(F) z(t) in [-2*q*, n + q*[ (nf - g* = q*)  
+        int gstar = gcur.length - 1;
+        // g* = max(p*, q*). Could it be less ?
+        // Also, nf-g*=q*; nfc >= nf
+        // We want to estimate x1(t) = g(F)/Q(F) z(t) in [-nbc, n + nfc[ 
+        // 1. Compute w1(t) = g(F) z(t) in [-nbc, n + q*[ (nf - g* = q*)  
         // 2. Estimate  x1(t) for t in [n+q*-p*, n+ 2* q*[ . See Burman's paper
         // 3. Compute the rest by recursion
 
         // //////////////////////////////////
-        // 1. w1(t) = g(F) z(t) in [-2* q*, n + q*[ 
-        // rem: z in [-nf, n+nf[. Starts at nf-2*q*
-        double[] w1 = new double[n + 2 * nf];
-        int start = nf - 2 * qstar, end = nf + n + qstar;
+        // 1. w1(t) = g(F) z(t) in [-nbc, n + q*[ 
+        // rem: z in [-nbc, n+nfc[. 
+        int start = 0, end = nbc + n + qstar;
+        double[] w1 = new double[end];
         for (int i = start; i < end; ++i) {
             double s = gcur[0] * z[i];
             for (int k = 1; k <= gstar; ++k) {
@@ -206,11 +204,11 @@ public class BurmanEstimates {
             w1[i] = s;
         }
 
-        // 2. Estimate  x1(t) for t in [n + q* - p*, n+ 2* q*[
+        // 2. Estimate  x1(t) for t in [n + q* - p*, n + 2* q*[
         // Q(F) x1(t) = w1(t) (t in n + q* - p*, n + q*) // p equations
         // P(B) x1(t) = 0 or m (t in n+q*, n + 2 * q*)  // q equations
         double[] ww = new double[rstar];
-        for (int i = 0, j = nf + n + qstar - pstar; i < pstar; ++i, ++j) {
+        for (int i = 0, j = nbc + n + qstar - pstar; i < pstar; ++i, ++j) {
             ww[i] = w1[j];
         }
         for (int i = pstar; i < ww.length; ++i) {
@@ -218,14 +216,14 @@ public class BurmanEstimates {
         }
         lu.solve(DataBlock.of(ww));
 
-        double[] x1 = new double[n + 2 * nf];
-        start = nf + n + qstar - pstar;
+        double[] x1 = new double[nbc + n + nfc];
+        start = nbc + n + qstar - pstar;
         // Estimated xl
         for (int i = 0, j = start; i < rstar; ++i, ++j) {
             x1[j] = ww[i];
         }
         // backward iteration:  w = (m+MA(F))x1 <-> w(t)-m = MA(f)x1 
-        end = nf - 2 * qstar;
+        end = 0;
         for (int i = start - 1; i >= end; --i) {
             double s = w1[i];
             for (int k = 1; k < ma.length; ++k) {
@@ -233,12 +231,21 @@ public class BurmanEstimates {
             }
             x1[i] = s / ma[0];
         }
+        // forward iteration
+        for (int i = nbc + n + 2 * qstar; i < x1.length; ++i) {
+            double s = fmu/2;
+            for (int j = 1; j <= pstar; ++j) {
+                s -= ar[j] * x1[i - j];
+            }
+            x1[i] = s;
+        }
 
-        // symmetric computation for w2 =g(B) z(t)
-        // 1. w2(t) = g(B) z(t) in [-q*, n + 2*q*[
-        double[] w2 = new double[n + 2 * nf];
-        start = nf - qstar;
-        end = nf + n + 2 * qstar;
+        // symmetric computation for w2 = g(B) z(t)
+        // 1. w2(t) = g(B) z(t) in [-q*, n + nfc[
+        // we waste some memory to align the indices
+        double[] w2 = new double[n + nbc + nfc];
+        start = nbc - qstar;
+        end = nbc + n + nfc;
         for (int i = start; i < end; ++i) {
             double s = gcur[0] * z[i];
             for (int k = 1; k <= gstar; ++k) {
@@ -251,7 +258,7 @@ public class BurmanEstimates {
         // Q(F) x1(t) = w1(t) (t in n + q* - p*, n + q*) // p equations
         // P(B) x1(t) = 0 or m (t in n+q*, n + 2 * q*)  // q equations
         ww = new double[rstar];
-        for (int i = 0, j = nf + pstar - qstar; i < pstar; ++i) {
+        for (int i = 0, j = nbc + pstar - qstar; i < pstar; ++i) {
             ww[i] = w2[--j];
         }
         for (int i = pstar; i < ww.length; ++i) {
@@ -259,15 +266,14 @@ public class BurmanEstimates {
         }
         lu.solve(DataBlock.of(ww));
         // ww contains estimates of the signal for t= -2q* to p*-q* (in reverse order)
-        double[] x2 = new double[n + 2 * nf];
-        start = nf + pstar - qstar;
+        double[] x2 = new double[n + nbc + nfc];
+        start = nbc + pstar - qstar;
         for (int i = 0, j = start; i < ww.length; ++i) {
             x2[--j] = ww[i];
         }
 
         // forward recursion: Q(B) w = x2
-        end = nf + n + 2 * qstar;
-        for (int i = start; i < end; ++i) {
+        for (int i = start; i < x2.length; ++i) {
             double s = w2[i];
             for (int k = 1; k < ma.length; ++k) {
                 s -= x2[i - k] * ma[k];
@@ -275,38 +281,24 @@ public class BurmanEstimates {
             x2[i] = s / ma[0];
         }
 
-        int nfc = Math.max(2 * qstar, nfcasts), nbc = Math.max(2 * qstar, nbcasts);
-
+        // backward iteration
+        for (int i = nbc - 2 * qstar-1; i >= 0; --i) {
+            double s = bmu/2;
+            for (int j = 1; j <= pstar; ++j) {
+                s -= ar[j] * x2[i + j];
+            }
+            x2[i] = s;
+        }
         double[] rslt = new double[n + nfc + nbc];
-        int xstart = nf - 2 * qstar, xend = nf + n + 2 * qstar;
-        int del = nbc - nf;
         // x1, x2 defined in [-2*qstar, n + 2*qstar[
         // rslt define in ]-nbc, n+nbf[
-        for (int i = xstart, j = xstart + del; i < xend; ++i, ++j) {
-            rslt[j] = x1[i] + x2[i];
+        for (int i = 0; i < x1.length; ++i) {
+            rslt[i] = x1[i] + x2[i];
         }
         estimates[cmp] = DoubleSeq.of(rslt, nbc, n);
-        double[] car = ucm.getComponent(cmp).getAr().asPolynomial().toArray();
         if (mc != 0) {
             for (int i = 0; i < rslt.length; ++i) {
                 rslt[i] += mc;
-            }
-        } else {
-            // complete backcasts
-            for (int j = nbc - 2 * qstar - 1; j >= 0; --j) {
-                double s = fmu;
-                for (int k = 1; k < car.length; ++k) {
-                    s -= car[k] * rslt[j + k];
-                }
-                rslt[j] = s;
-            }
-            // complete forecasts
-            for (int j = nbc + n + 2 * qstar; j < rslt.length; ++j) {
-                double s = bmu;
-                for (int k = 1; k < car.length; ++k) {
-                    s -= car[k] * rslt[j - k];
-                }
-                rslt[j] = s;
             }
         }
         if (nfcasts > 0) {
@@ -317,27 +309,6 @@ public class BurmanEstimates {
         }
     }
 
-//    private void completeCasts() {
-//        if (nbcasts > 0) {
-//            DoubleSeq tmp = this.getSeriesBackcasts();
-//            for (int i = 0; i < backcasts.length; ++i) {
-//                if (backcasts[i] != null) {
-//                    tmp = DoublesMath.subtract(tmp, backcasts[i]);
-//                }
-//            }
-//            backcasts[mcmp] = tmp;
-//        }
-//        if (nfcasts > 0) {
-//            DoubleSeq tmp = this.getSeriesForecasts();
-//            for (int i = 0; i < forecasts.length; ++i) {
-//                if (forecasts[i] != null) {
-//                    tmp = DoublesMath.subtract(tmp, forecasts[i]);
-//                }
-//            }
-//            forecasts[mcmp] = tmp;
-//        }
-//
-//    }
     /**
      *
      * @param cmp
@@ -360,11 +331,12 @@ public class BurmanEstimates {
 
         int q = ma.length - 1, p = ar.length - 1;
         nf = q > p ? 2 * q : p + q;
-
+        nbc = Math.max(nf, nbcasts);
+        nfc = Math.max(nf, nfcasts);
         ExactArimaForecasts fcasts = new ExactArimaForecasts();
         fcasts.prepare(wk.getUcarimaModel().getModel(), bmean);
-        xfcasts = fcasts.forecasts(data, Math.max(nf, nfcasts));
-        xbcasts = fcasts.backcasts(data, Math.max(nf, nbcasts));
+        xfcasts = fcasts.forecasts(data, nfc);
+        xbcasts = fcasts.backcasts(data, nbc);
         if (bmean) {
             mean = fcasts.getMean();
         } else {
@@ -372,13 +344,13 @@ public class BurmanEstimates {
         }
         int n = data.length();
         // z is the extended series with forecasts and backcasts
-        z = new double[n + 2 * nf];
-        data.copyTo(z, nf);
+        z = new double[n + nbc+nfc];
+        data.copyTo(z, nbc);
 
-        xfcasts.range(0, nf).copyTo(z, nf + n);
-        xbcasts.drop(xbcasts.length() - nf, 0).copyTo(z, 0);
+        xfcasts.copyTo(z, nbc + n);
+        xbcasts.copyTo(z, 0);
+        meanc = correctedMean();
         if (useMean()) {
-            meanc = correctedMean();
             for (int i = 0; i < z.length; ++i) {
                 z[i] -= meanc;
             }

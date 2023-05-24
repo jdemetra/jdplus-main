@@ -105,4 +105,9 @@ public class ProxyMinimizer implements FunctionMinimizer {
         ISsqFunctionPoint s = fn.ssqEvaluate(start.getParameters());
         return minimizer.minimize(s);
     }
+    
+    @Override
+    public int getIterationsCount(){
+        return minimizer.getIterationsCount();
+    }
 }

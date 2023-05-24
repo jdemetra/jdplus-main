@@ -128,7 +128,8 @@ public class LbfgsMinimizer implements FunctionMinimizer {
      *
      * @return
      */
-    public int getNIter() {
+    @Override
+    public int getIterationsCount() {
         return lbfgs.getNIter();
     }
 
