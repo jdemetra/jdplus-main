@@ -283,9 +283,9 @@ public final class DataSourceManager {
             }
             switch (dataSet.getKind()) {
                 case COLLECTION:
-                    return ImageUtilities.loadImage("demetra/desktop/icons/folder.png", true);
+                    return ImageUtilities.loadImage("jdplus/toolkit/desktop/plugin/icons/folder.png", true);
                 case SERIES:
-                    return ImageUtilities.loadImage("demetra/desktop/icons/chart_line.png", true);
+                    return ImageUtilities.loadImage("jdplus/toolkit/desktop/plugin/icons/chart_line.png", true);
                 default:
                     return getDataSourceImage(buddy, dataSet.getDataSource(), type, opened);
             }
