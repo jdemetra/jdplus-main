@@ -91,7 +91,7 @@ public class SaItemMapping {
         }
         InformationSet md = info.getSubSet(METADATA);
         if (md != null) {
-            List<Information<String>> sel = md.select(String.class);
+            List<Information<String>> sel = md.deepSelect(String.class);
             sel.forEach(v -> builder.meta(v.getName(), v.getValue()));
         }
         String name = info.get(NAME, String.class);
