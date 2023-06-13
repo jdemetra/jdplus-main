@@ -16,13 +16,6 @@
  */
 package jdplus.sql.desktop.plugin.odbc;
 
-import jdplus.toolkit.desktop.plugin.TsManager;
-import jdplus.toolkit.desktop.plugin.actions.Configurable;
-import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
-import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
-import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import jdplus.sql.base.api.HasSqlProperties;
@@ -30,11 +23,18 @@ import jdplus.sql.base.api.odbc.OdbcBean;
 import jdplus.sql.desktop.plugin.SqlColumnListCellRenderer;
 import jdplus.sql.desktop.plugin.SqlProviderBuddy;
 import jdplus.sql.desktop.plugin.SqlTableListCellRenderer;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
+import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
 import nbbrd.sql.odbc.OdbcDataSource;
 import nbbrd.sql.odbc.OdbcRegistry;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -46,10 +46,8 @@ import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -94,15 +92,13 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @Override
-    public Sheet getSheetOfBeanOrNull(Object bean) throws IntrospectionException {
-        return bean instanceof OdbcBean
-                ? createSheetSets((OdbcBean) bean)
-                : DataSourceProviderBuddy.super.getSheetOfBeanOrNull(bean);
+    public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
+        return bean instanceof OdbcBean ? createSheetSets((OdbcBean) bean) : null;
     }
 
-    private Sheet createSheetSets(OdbcBean bean) {
+    private List<Sheet.Set> createSheetSets(OdbcBean bean) {
         NodePropertySetBuilder b = new NodePropertySetBuilder();
-        return DataSourceProviderBuddyUtil.sheetOf(
+        return Arrays.asList(
                 createSource(b, bean),
                 createCube(b, bean),
                 createParsing(b, bean),

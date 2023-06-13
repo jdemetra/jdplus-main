@@ -16,13 +16,6 @@
  */
 package jdplus.sql.desktop.plugin.jdbc;
 
-import jdplus.toolkit.desktop.plugin.TsManager;
-import jdplus.toolkit.desktop.plugin.actions.Configurable;
-import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
-import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
-import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import ec.util.various.swing.FontAwesome;
@@ -34,6 +27,12 @@ import jdplus.sql.desktop.plugin.SqlColumnListCellRenderer;
 import jdplus.sql.desktop.plugin.SqlProviderBuddy;
 import jdplus.sql.desktop.plugin.SqlTableListCellRenderer;
 import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
+import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
 import nbbrd.design.DirectImpl;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
@@ -142,8 +141,8 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @Override
-    public Sheet getSheetOrNull(DataSource dataSource) {
-        Sheet result = DataSourceProviderBuddy.super.getSheetOrNull(dataSource);
+    public List<Sheet.Set> getSheetOrNull(@NonNull DataSource dataSource) {
+        List<Sheet.Set> result = new ArrayList<>();
         NodePropertySetBuilder b = new NodePropertySetBuilder().name("Connection");
 
         getProvider()
@@ -151,20 +150,18 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
                 .map(bean -> new DbConnStatusProperty(bean.getDatabase()))
                 .ifPresent(b::add);
 
-        result.put(b.build());
+        result.add(b.build());
         return result;
     }
 
     @Override
-    public Sheet getSheetOfBeanOrNull(Object bean) throws IntrospectionException {
-        return bean instanceof JdbcBean
-                ? createSheetSets((JdbcBean) bean)
-                : DataSourceProviderBuddy.super.getSheetOfBeanOrNull(bean);
+    public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
+        return bean instanceof JdbcBean ? createSheetSets((JdbcBean) bean) : null;
     }
 
-    private Sheet createSheetSets(JdbcBean bean) {
+    private List<Sheet.Set> createSheetSets(JdbcBean bean) {
         NodePropertySetBuilder b = new NodePropertySetBuilder();
-        return DataSourceProviderBuddyUtil.sheetOf(
+        return Arrays.asList(
                 createSource(b, bean),
                 createCube(b, bean),
                 createParsing(b, bean),

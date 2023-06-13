@@ -16,29 +16,28 @@
  */
 package jdplus.toolkit.desktop.plugin.tsproviders;
 
+import jdplus.main.desktop.design.GlobalService;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.*;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.actions.Configurable;
 import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
-import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.properties.ForwardingNodeProperty;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
-import static jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil.sheetOf;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.FrozenTsHelper;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import jdplus.toolkit.base.tsp.DataSet;
-import jdplus.toolkit.base.tsp.DataSource;
-import jdplus.toolkit.base.tsp.DataSourceLoader;
-import jdplus.toolkit.base.tsp.DataSourceProvider;
-import jdplus.toolkit.base.tsp.FileLoader;
-import java.awt.Image;
+import nbbrd.design.MightBePromoted;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.openide.nodes.BeanNode;
+import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 
+import javax.swing.*;
+import java.awt.*;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.io.IOException;
@@ -50,10 +49,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.swing.Icon;
-import nbbrd.design.MightBePromoted;
-import org.openide.nodes.BeanNode;
-import org.openide.nodes.Node;
 
 /**
  * @author Philippe Charles
@@ -308,32 +303,32 @@ public final class DataSourceManager {
 
         @Override
         public Sheet getProviderSheet(DataSourceProviderBuddy buddy, String providerName) {
-            Sheet result = buddy.getSheetOrNull();
-            return result != null ? result : DataSourceProviderBuddyUtil.sheetOf(sheetSetsOfProvider(providerName));
+            List<Sheet.Set> result = buddy.getSheetOrNull();
+            return sheetOf(result != null ? result : sheetSetsOfProvider(providerName));
         }
 
         @Override
         public Sheet getDataSourceSheet(DataSourceProviderBuddy buddy, DataSource dataSource) {
-            Sheet result = buddy.getSheetOrNull(dataSource);
-            return result != null ? result : DataSourceProviderBuddyUtil.sheetOf(sheetSetsOfDataSource(dataSource));
+            List<Sheet.Set> result = buddy.getSheetOrNull(dataSource);
+            return sheetOf(result != null ? result : sheetSetsOfDataSource(dataSource));
         }
 
         @Override
         public Sheet getDataSetSheet(DataSourceProviderBuddy buddy, DataSet dataSet) {
-            Sheet result = buddy.getSheetOrNull(dataSet);
-            return result != null ? result : DataSourceProviderBuddyUtil.sheetOf(sheetSetsOfDataSet(dataSet));
+            List<Sheet.Set> result = buddy.getSheetOrNull(dataSet);
+            return sheetOf(result != null ? result : sheetSetsOfDataSet(dataSet));
         }
 
         @Override
         public Sheet getErrorSheet(DataSourceProviderBuddy buddy, String providerName, IOException ex) {
-            Sheet result = buddy.getSheetOrNull(ex);
-            return result != null ? result : DataSourceProviderBuddyUtil.sheetOf(sheetSetsOfException(ex));
+            List<Sheet.Set> result = buddy.getSheetOrNull(ex);
+            return sheetOf(result != null ? result : sheetSetsOfException(ex));
         }
 
         @Override
         public Sheet getBeanSheet(DataSourceProviderBuddy buddy, String providerName, Object bean) throws IntrospectionException {
-            Sheet result = buddy.getSheetOfBeanOrNull(bean);
-            return result != null ? result : DataSourceProviderBuddyUtil.sheetOf(sheetSetsOfBean(bean));
+            List<Sheet.Set> result = buddy.getSheetOfBeanOrNull(bean);
+            return sheetOf(result != null ? result : sheetSetsOfBean(bean));
         }
 
         private static List<Sheet.Set> sheetSetsOfProvider(String providerName) {
@@ -413,13 +408,19 @@ public final class DataSourceManager {
         }
 
         private static List<Sheet.Set> sheetSetsOfDataSet(DataSet dataSet,
-                Function<DataSource, List<Sheet.Set>> sourceFunc,
-                BiConsumer<NodePropertySetBuilder, DataSet> paramFiller) {
+                                                          Function<DataSource, List<Sheet.Set>> sourceFunc,
+                                                          BiConsumer<NodePropertySetBuilder, DataSet> paramFiller) {
             List<Sheet.Set> result = new ArrayList<>(sourceFunc.apply(dataSet.getDataSource()));
             NodePropertySetBuilder b = new NodePropertySetBuilder().name("DataSet");
             b.withEnum(DataSet.Kind.class).select(dataSet, "getKind", null).display("Kind").add();
             paramFiller.accept(b, dataSet);
             result.add(b.build());
+            return result;
+        }
+
+        private static Sheet sheetOf(List<Sheet.Set> sets) {
+            Sheet result = new Sheet();
+            sets.forEach(result::put);
             return result;
         }
     }

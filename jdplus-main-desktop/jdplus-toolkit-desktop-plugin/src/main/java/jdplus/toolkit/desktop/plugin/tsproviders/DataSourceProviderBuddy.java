@@ -16,11 +16,11 @@
  */
 package jdplus.toolkit.desktop.plugin.tsproviders;
 
-import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
+import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -30,6 +30,7 @@ import org.openide.nodes.Sheet;
 import java.awt.*;
 import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Philippe Charles
@@ -71,27 +72,27 @@ public interface DataSourceProviderBuddy {
     }
 
     @Nullable
-    default Sheet getSheetOrNull() {
+    default List<Sheet.Set> getSheetOrNull() {
         return null;
     }
 
     @Nullable
-    default Sheet getSheetOrNull(@NonNull DataSource dataSource) {
+    default List<Sheet.Set> getSheetOrNull(@NonNull DataSource dataSource) {
         return null;
     }
 
     @Nullable
-    default Sheet getSheetOrNull(@NonNull DataSet dataSet) {
+    default List<Sheet.Set> getSheetOrNull(@NonNull DataSet dataSet) {
         return null;
     }
 
     @Nullable
-    default Sheet getSheetOrNull(@NonNull IOException ex) {
+    default List<Sheet.Set> getSheetOrNull(@NonNull IOException ex) {
         return null;
     }
 
     @Nullable
-    default Sheet getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
+    default List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
         return null;
     }
 

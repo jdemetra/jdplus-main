@@ -16,20 +16,23 @@
  */
 package jdplus.text.desktop.plugin;
 
+import jdplus.text.base.api.XmlBean;
+import jdplus.toolkit.base.tsp.FileLoader;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
 import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
-import jdplus.text.base.api.XmlBean;
-import jdplus.toolkit.base.tsp.FileLoader;
-import java.awt.Image;
-import java.beans.IntrospectionException;
-import java.nio.charset.Charset;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
+
+import java.awt.*;
+import java.beans.IntrospectionException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -52,15 +55,13 @@ public final class XmlProviderBuddy implements DataSourceProviderBuddy {
     }
 
     @Override
-    public Sheet getSheetOfBeanOrNull(Object bean) throws IntrospectionException {
-        return bean instanceof XmlBean
-                ? createSheetSets((XmlBean) bean)
-                : DataSourceProviderBuddy.super.getSheetOfBeanOrNull(bean);
+    public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
+        return bean instanceof XmlBean ? createSheetSets((XmlBean) bean) : null;
     }
 
-    private Sheet createSheetSets(XmlBean bean) {
+    private List<Sheet.Set> createSheetSets(XmlBean bean) {
         NodePropertySetBuilder b = new NodePropertySetBuilder();
-        return DataSourceProviderBuddyUtil.sheetOf(
+        return Arrays.asList(
                 createSource(b, bean)
         );
     }
