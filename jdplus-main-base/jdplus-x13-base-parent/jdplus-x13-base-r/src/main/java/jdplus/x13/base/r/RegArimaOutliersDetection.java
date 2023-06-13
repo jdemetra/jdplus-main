@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import jdplus.toolkit.base.api.util.IntList;
+import jdplus.toolkit.base.core.data.interpolation.AverageInterpolator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.modelling.regression.AdditiveOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.IOutlierFactory;
@@ -88,7 +90,7 @@ public class RegArimaOutliersDetection {
         }
         SarimaModel initialArima, finalArima;
 
-        DoubleSeq y;
+        TsData y;
         Matrix x;
         OutlierDescriptor[] outliers;
 
@@ -182,17 +184,21 @@ public class RegArimaOutliersDetection {
                 }
                 return names;
             });
+            MAPPING.set(Y, TsData.class, source -> source.getY());
             MAPPING.set(REGRESSORS, Matrix.class, source -> source.getRegressors());
             MAPPING.set(LIN, double[].class, source -> source.getLinearized().toArray());
         }
     }
 
     public Results process(TsData ts, int[] order, int[] seasonal, boolean mean, Matrix x,
-            boolean bao, boolean bls, boolean btc, boolean bso, double cv) {
-        TsData y = ts.cleanExtremities();
-        if (x != null && ts.length() != y.length()){
-            int start=ts.getStart().until(y.getStart());
-            x=x.extract(start, y.length(), 0, x.getColumnsCount());
+            boolean bao, boolean bls, boolean btc, boolean bso, double cv, boolean clean) {
+        TsData y = ts;
+        if (clean) {
+            y = ts.cleanExtremities();
+            if (x != null && ts.length() != y.length()) {
+                int start = ts.getStart().until(y.getStart());
+                x = x.extract(start, y.length(), 0, x.getColumnsCount());
+            }
         }
         SarimaOrders spec = new SarimaOrders(y.getAnnualFrequency());
         spec.setP(order[0]);
@@ -204,6 +210,10 @@ public class RegArimaOutliersDetection {
             spec.setBq(seasonal[2]);
         }
 
+        double[] yc = y.getValues().toArray();
+        IntList missings = new IntList();
+        AverageInterpolator.cleanMissings(yc, missings);
+        int[] m = missings.toArray();
         SarimaModel arima = SarimaModel.builder(spec)
                 .setDefault()
                 .build();
@@ -213,6 +223,7 @@ public class RegArimaOutliersDetection {
                 .meanCorrection(mean)
                 .y(y.getValues())
                 .addX(FastMatrix.of(x))
+                .missing(m)
                 .build();
         RegArimaEstimation<SarimaModel> estimation0 = RegSarimaComputer.builder()
                 .build()
@@ -221,12 +232,12 @@ public class RegArimaOutliersDetection {
         SingleOutlierDetector sod = new ExactSingleOutlierDetector(RobustStandardDeviationComputer.mad(false),
                 null, X13Utility.mlComputer());
         
-        List<IOutlierFactory> factory=new ArrayList<>();
+        List<IOutlierFactory> factories=new ArrayList<>();
         if (bao) {
-            factory.add(AdditiveOutlierFactory.FACTORY);
+            factories.add(AdditiveOutlierFactory.FACTORY);
         }
         if (bls) {
-            factory.add(LevelShiftFactory.FACTORY_ZEROENDED);
+            factories.add(LevelShiftFactory.FACTORY_ZEROENDED);
         }
         int freq=y.getAnnualFrequency();
         if (btc) {
@@ -235,12 +246,12 @@ public class RegArimaOutliersDetection {
             if (r > 1) {
                 c = Math.pow(c, r);
             }
-            factory.add(new TransitoryChangeFactory(c));
+            factories.add(new TransitoryChangeFactory(c));
         }
         if (freq > 1 && bso) {
-            factory.add(new PeriodicOutlierFactory(freq, true));
+            factories.add(new PeriodicOutlierFactory(freq, true));
         }
-        sod.setOutlierFactories(factory.toArray(new IOutlierFactory[factory.size()]));
+        sod.setOutlierFactories(factories.toArray(IOutlierFactory[]::new));
 
         ExactOutliersDetector od = ExactOutliersDetector.builder()
                 .singleOutlierDetector(sod)
@@ -249,7 +260,12 @@ public class RegArimaOutliersDetection {
                 .build();
 
         od.prepare(y.length());
-        od.process(regarima, SarimaMapping.of(spec));
+        for (int i = 0; i < m.length; ++i) {
+            for (int j = 0; j < factories.size(); ++j) {
+                od.exclude(m[i], j);
+            }
+        }
+       od.process(regarima, SarimaMapping.of(spec));
         int[][] o = od.getOutliers();
         String[] ids = od.outlierTypes();
 
@@ -271,7 +287,7 @@ public class RegArimaOutliersDetection {
                 .coefficients(estimation1.getConcentratedLikelihood().coefficients().toArray())
                 .coefficientsCovariance(estimation1.getConcentratedLikelihood().covariance(np, true))
                 .x(x)
-                .y(y.getValues())
+                .y(y)
                 .linearized(RegArimaUtility.linearizedData(estimation1.getModel(), estimation1.getConcentratedLikelihood()))
                 .residuals(estimation1.getConcentratedLikelihood().e())
                 .build();

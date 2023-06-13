@@ -32,7 +32,7 @@ public class RegArimaOutliersDetectionTest {
     @Test
     public void testProd() {
 
-        RegArimaOutliersDetection.Results rslts = RegArimaOutliersDetection.process(Data.TS_PROD, new int[]{0, 1, 1}, new int[]{0, 1, 1}, false, null, true, true, false, true, 4);
+        RegArimaOutliersDetection.Results rslts = RegArimaOutliersDetection.process(Data.TS_PROD, new int[]{0, 1, 1}, new int[]{0, 1, 1}, false, null, true, true, false, true, 4, true);
         String[] outliers = rslts.getData(RegArimaOutliersDetection.Results.BNAMES, String[].class);
 //        if (outliers != null) {
 //            for (int i = 0; i < outliers.length; ++i) {

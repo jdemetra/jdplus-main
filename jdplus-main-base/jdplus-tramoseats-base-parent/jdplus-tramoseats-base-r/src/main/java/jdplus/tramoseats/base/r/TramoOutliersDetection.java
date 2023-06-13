@@ -179,6 +179,7 @@ public class TramoOutliersDetection {
                 }
                 return names;
             });
+            MAPPING.set(Y, TsData.class, source -> source.getY());
             MAPPING.set(REGRESSORS, Matrix.class, source -> source.getRegressors());
             MAPPING.set(LIN, double[].class, source -> source.getLinearized().toArray());
         }
