@@ -41,7 +41,7 @@ public class TradingDaysSpec {
                 LengthOfPeriodType.None, type, DEF_ADJUST, DEF_SIMPLIFIED, w, AutoMethod.UNUSED, 0, null, null);
     }
 
-    public static TradingDaysSpec stockTradingDays(int w, @NonNull Parameter[] tdcoeff) {
+    public static TradingDaysSpec stockTradingDays(int w, Parameter[] tdcoeff) {
         if (tdcoeff.length != 6) {
             throw new IllegalArgumentException();
         }
@@ -58,7 +58,7 @@ public class TradingDaysSpec {
                 LengthOfPeriodType.None, type, DEF_ADJUST, DEF_SIMPLIFIED, 0, AutoMethod.UNUSED, 0, null, null);
     }
 
-    public static TradingDaysSpec userDefined(@NonNull String[] vars, @NonNull Parameter[] coeff) {
+    public static TradingDaysSpec userDefined(@NonNull String[] vars, Parameter[] coeff) {
         if (coeff.length != vars.length) {
             throw new IllegalArgumentException();
         }
