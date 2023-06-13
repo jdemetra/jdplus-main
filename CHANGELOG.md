@@ -7,11 +7,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- ![UI] Change DataSourceProviderBuddy signature to broaden use
+
 ### Fixed
 
 - ![STAT] Correct forecasts/backcasts in the Burman algorithm (SEATS)
 - ![STAT] Implement X11 without seasonal component
 - ![STAT] Correct Tramo outliers detection with missing values
+- ![UI] Fix missing provider info in property sheet
 
 ## [3.0.1] - 2023-05-11
 
