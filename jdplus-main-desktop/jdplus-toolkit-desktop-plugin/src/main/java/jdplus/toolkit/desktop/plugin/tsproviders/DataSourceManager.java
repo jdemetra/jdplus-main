@@ -31,6 +31,7 @@ import jdplus.toolkit.desktop.plugin.util.FrozenTsHelper;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import nbbrd.design.MightBePromoted;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.openide.ErrorManager;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
@@ -45,8 +46,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -304,41 +303,41 @@ public final class DataSourceManager {
         @Override
         public Sheet getProviderSheet(DataSourceProviderBuddy buddy, String providerName) {
             List<Sheet.Set> result = buddy.getSheetOrNull();
-            return sheetOf(result != null ? result : sheetSetsOfProvider(providerName));
+            return sheetOf(result != null ? result : providerName(providerName));
         }
 
         @Override
         public Sheet getDataSourceSheet(DataSourceProviderBuddy buddy, DataSource dataSource) {
             List<Sheet.Set> result = buddy.getSheetOrNull(dataSource);
-            return sheetOf(result != null ? result : sheetSetsOfDataSource(dataSource));
+            return sheetOf(result != null ? result : dataSource(buddy, dataSource));
         }
 
         @Override
         public Sheet getDataSetSheet(DataSourceProviderBuddy buddy, DataSet dataSet) {
             List<Sheet.Set> result = buddy.getSheetOrNull(dataSet);
-            return sheetOf(result != null ? result : sheetSetsOfDataSet(dataSet));
+            return sheetOf(result != null ? result : dataSet(buddy, dataSet));
         }
 
         @Override
         public Sheet getErrorSheet(DataSourceProviderBuddy buddy, String providerName, IOException ex) {
             List<Sheet.Set> result = buddy.getSheetOrNull(ex);
-            return sheetOf(result != null ? result : sheetSetsOfException(ex));
+            return sheetOf(result != null ? result : error(ex));
         }
 
         @Override
         public Sheet getBeanSheet(DataSourceProviderBuddy buddy, String providerName, Object bean) throws IntrospectionException {
             List<Sheet.Set> result = buddy.getSheetOfBeanOrNull(bean);
-            return sheetOf(result != null ? result : sheetSetsOfBean(bean));
+            return sheetOf(result != null ? result : bean(bean));
         }
 
-        private static List<Sheet.Set> sheetSetsOfProvider(String providerName) {
+        private static List<Sheet.Set> providerName(String providerName) {
             return TsManager.get()
                     .getProvider(DataSourceProvider.class, providerName)
-                    .map(DefaultSheetStrategy::sheetSetsOfProvider)
+                    .map(DefaultSheetStrategy::provider)
                     .orElseGet(Collections::emptyList);
         }
 
-        private static List<Sheet.Set> sheetSetsOfProvider(DataSourceProvider provider) {
+        private static List<Sheet.Set> provider(DataSourceProvider provider) {
             List<Sheet.Set> result = new ArrayList<>();
             NodePropertySetBuilder b = new NodePropertySetBuilder();
             b.with(String.class).select(provider, "getSource", null).display("Source").add();
@@ -349,19 +348,13 @@ public final class DataSourceManager {
             return result;
         }
 
-        private static List<Sheet.Set> sheetSetsOfBean(Object bean) throws IntrospectionException {
+        private static List<Sheet.Set> bean(Object bean) throws IntrospectionException {
             return Stream.of(new BeanNode<>(bean).getPropertySets())
-                    .map(DefaultSheetStrategy::sheetSetOfPropertySet)
+                    .map(DefaultSheetStrategy::sheetSetOf)
                     .collect(Collectors.toList());
         }
 
-        private static Sheet.Set sheetSetOfPropertySet(Node.PropertySet o) {
-            Sheet.Set set = Sheet.createPropertiesSet();
-            set.put(o.getProperties());
-            return set;
-        }
-
-        private static List<Sheet.Set> sheetSetsOfException(IOException ex) {
+        private static List<Sheet.Set> error(IOException ex) {
             List<Sheet.Set> result = new ArrayList<>();
             NodePropertySetBuilder b = new NodePropertySetBuilder().name("IOException");
 
@@ -378,11 +371,7 @@ public final class DataSourceManager {
             return result;
         }
 
-        private static List<Sheet.Set> sheetSetsOfDataSource(DataSource dataSource) {
-            return sheetSetsOfDataSource(dataSource, DataSourceProviderBuddyUtil.usingErrorManager(DefaultSheetStrategy::sheetSetsOfBean, Collections::emptyList));
-        }
-
-        private static List<Sheet.Set> sheetSetsOfDataSource(DataSource dataSource, Function<Object, List<Sheet.Set>> beanFunc) {
+        private static List<Sheet.Set> dataSource(DataSourceProviderBuddy buddy, DataSource dataSource) {
             List<Sheet.Set> result = new ArrayList<>();
             NodePropertySetBuilder b = new NodePropertySetBuilder().name("DataSource");
             b.with(String.class).select(dataSource, "getProviderName", null).display("Source").add();
@@ -390,30 +379,30 @@ public final class DataSourceManager {
             Optional<DataSourceLoader> loader = TsManager.get().getProvider(DataSourceLoader.class, dataSource);
             if (loader.isPresent()) {
                 Object bean = loader.orElseThrow().decodeBean(dataSource);
-                beanFunc.apply(bean).stream()
-                        .flatMap(set -> Stream.of(set.getProperties()))
-                        .map(ForwardingNodeProperty::readOnly)
-                        .forEach(b::add);
+                try {
+                    List<Sheet.Set> sheetOfBeanOrNull = buddy.getSheetOfBeanOrNull(bean);
+                    if (sheetOfBeanOrNull == null) {
+                        sheetOfBeanOrNull = bean(bean);
+                    }
+                    if (sheetOfBeanOrNull != null) {
+                        sheetOfBeanOrNull.stream()
+                                .flatMap(set -> Stream.of(set.getProperties()))
+                                .map(ForwardingNodeProperty::readOnly)
+                                .forEach(b::add);
+                    }
+                } catch (IntrospectionException ex) {
+                    ErrorManager.getDefault().log(ex.getMessage());
+                }
             }
             result.add(b.build());
             return result;
         }
 
-        private static List<Sheet.Set> sheetSetsOfDataSet(DataSet dataSet) {
-            return sheetSetsOfDataSet(dataSet, DefaultSheetStrategy::sheetSetsOfDataSource, DefaultSheetStrategy::fillParamProperties);
-        }
-
-        private static void fillParamProperties(NodePropertySetBuilder b, DataSet dataSet) {
-            dataSet.getParameters().forEach((k, v) -> b.with(String.class).selectConst(k, v).add());
-        }
-
-        private static List<Sheet.Set> sheetSetsOfDataSet(DataSet dataSet,
-                                                          Function<DataSource, List<Sheet.Set>> sourceFunc,
-                                                          BiConsumer<NodePropertySetBuilder, DataSet> paramFiller) {
-            List<Sheet.Set> result = new ArrayList<>(sourceFunc.apply(dataSet.getDataSource()));
+        private static List<Sheet.Set> dataSet(DataSourceProviderBuddy buddy, DataSet dataSet) {
+            List<Sheet.Set> result = new ArrayList<>(dataSource(buddy, dataSet.getDataSource()));
             NodePropertySetBuilder b = new NodePropertySetBuilder().name("DataSet");
             b.withEnum(DataSet.Kind.class).select(dataSet, "getKind", null).display("Kind").add();
-            paramFiller.accept(b, dataSet);
+            dataSet.getParameters().forEach((k, v) -> b.with(String.class).selectConst(k, v).add());
             result.add(b.build());
             return result;
         }
@@ -422,6 +411,12 @@ public final class DataSourceManager {
             Sheet result = new Sheet();
             sets.forEach(result::put);
             return result;
+        }
+
+        private static Sheet.Set sheetSetOf(Node.PropertySet o) {
+            Sheet.Set set = Sheet.createPropertiesSet();
+            set.put(o.getProperties());
+            return set;
         }
     }
 
