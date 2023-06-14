@@ -16,25 +16,26 @@
  */
 package jdplus.spreadsheet.desktop.plugin;
 
-import jdplus.toolkit.desktop.plugin.TsManager;
-import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
-import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties.addFile;
-import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties.addObsFormat;
-import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties.addObsGathering;
 import jdplus.spreadsheet.base.api.SpreadSheetBean;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.FileLoader;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 import java.awt.*;
 import java.beans.IntrospectionException;
-import nbbrd.design.DirectImpl;
-import org.openide.nodes.Sheet;
+import java.util.Arrays;
+import java.util.List;
+
+import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties.*;
 
 /**
  * @author Philippe Charles
@@ -72,15 +73,13 @@ public final class SpreadsheetProviderBuddy implements DataSourceProviderBuddy {
     }
 
     @Override
-    public Sheet getSheetOfBeanOrNull(Object bean) throws IntrospectionException {
-        return bean instanceof SpreadSheetBean
-                ? createSheetSets((SpreadSheetBean) bean)
-                : DataSourceProviderBuddy.super.getSheetOfBeanOrNull(bean);
+    public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
+        return bean instanceof SpreadSheetBean ? createSheetSets((SpreadSheetBean) bean) : null;
     }
 
-    private Sheet createSheetSets(SpreadSheetBean bean) {
+    private List<Sheet.Set> createSheetSets(SpreadSheetBean bean) {
         NodePropertySetBuilder b = new NodePropertySetBuilder();
-        return DataSourceProviderBuddyUtil.sheetOf(
+        return Arrays.asList(
                 createSource(b, bean),
                 createOptions(b, bean)
         );

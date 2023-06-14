@@ -38,17 +38,17 @@ public final class TradingDaysSpec implements Validatable<TradingDaysSpec> {
         BIC,
         AIC
     }
-    
+
     public static final double DEF_AUTO_PVALUE1 = .01, DEF_AUTO_PVALUE2 = 0.1;
     public static final boolean DEF_ADJUST = true;
-    
+
     private String holidays;
     private String[] userVariables;
     private TradingDaysType tradingDaysType;
     private LengthOfPeriodType lengthOfPeriodType;
     private RegressionTestSpec regressionTestType;
-   private boolean autoAdjust;
-     private int stockTradingDays;
+    private boolean autoAdjust;
+    private int stockTradingDays;
     private AutoMethod automaticMethod;
     private double autoPvalue1, autoPvalue2;
     private Parameter[] tdCoefficients;
@@ -62,7 +62,7 @@ public final class TradingDaysSpec implements Validatable<TradingDaysSpec> {
                 LengthOfPeriodType.None, test, false, w, AutoMethod.UNUSED, 0, 0, null, null);
     }
 
-    public static TradingDaysSpec stockTradingDays(int w, @NonNull Parameter[] tdc) {
+    public static TradingDaysSpec stockTradingDays(int w, Parameter[] tdc) {
         return new TradingDaysSpec(null, null, TradingDaysType.NONE,
                 LengthOfPeriodType.None, RegressionTestSpec.None, false, w, AutoMethod.UNUSED, 0, 0, tdc, null);
     }
@@ -76,7 +76,7 @@ public final class TradingDaysSpec implements Validatable<TradingDaysSpec> {
                 LengthOfPeriodType.None, test, false, 0, AutoMethod.UNUSED, 0, 0, null, null);
     }
 
-    public static TradingDaysSpec userDefined(@NonNull String[] vars, @NonNull Parameter[] tdcoeff) {
+    public static TradingDaysSpec userDefined(@NonNull String[] vars, Parameter[] tdcoeff) {
         return new TradingDaysSpec(null, vars, TradingDaysType.NONE,
                 LengthOfPeriodType.None, RegressionTestSpec.None, false, 0, AutoMethod.UNUSED, 0, 0, tdcoeff, null);
     }
@@ -145,6 +145,7 @@ public final class TradingDaysSpec implements Validatable<TradingDaysSpec> {
     public boolean isAutomatic() {
         return automaticMethod != AutoMethod.UNUSED;
     }
+
     public boolean isStockTradingDays() {
         return stockTradingDays != 0;
     }
@@ -184,7 +185,7 @@ public final class TradingDaysSpec implements Validatable<TradingDaysSpec> {
         return this;
     }
 
-    public boolean hasFixedCoefficients(){
+    public boolean hasFixedCoefficients() {
         return (lpCoefficient != null && lpCoefficient.isFixed())
                 || Parameter.hasFixedParameters(tdCoefficients);
     }

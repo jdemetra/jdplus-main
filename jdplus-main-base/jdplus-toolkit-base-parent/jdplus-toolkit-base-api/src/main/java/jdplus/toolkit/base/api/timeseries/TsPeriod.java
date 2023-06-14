@@ -146,15 +146,15 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     }
 
     /**
-     * Distance between this period and the given period (exclusive)
+     * Distance between this period and the given period
      *
-     * @param endExclusive The given period
+     * @param end The given period
      * @return The result is 0 when the two periods are equal, positive if the
      * given period is after this period or negative otherwise.
      */
-    public int until(TsPeriod endExclusive) {
-        checkCompatibility(endExclusive);
-        return (int) (getRebasedId(endExclusive) - id);
+    public int until(TsPeriod end) {
+        checkCompatibility(end);
+        return (int) (getRebasedId(end) - id);
     }
 
     //    /**

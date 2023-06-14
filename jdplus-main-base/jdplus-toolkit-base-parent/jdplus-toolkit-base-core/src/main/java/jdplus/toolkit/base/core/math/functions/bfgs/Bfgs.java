@@ -322,6 +322,15 @@ public class Bfgs implements FunctionMinimizer {
         return builder;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getIterationsCount() {
+        return iter;
+    }
+
     @Override
     public FastMatrix curvatureAtMinimum() {
         return H;

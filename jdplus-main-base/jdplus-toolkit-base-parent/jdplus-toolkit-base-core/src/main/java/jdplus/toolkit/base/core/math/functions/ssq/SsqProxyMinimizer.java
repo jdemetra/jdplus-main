@@ -78,4 +78,13 @@ public class SsqProxyMinimizer implements SsqFunctionMinimizer {
         return minimizer.minimize(new SsqProxyFunctionPoint(start));
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getIterationsCount() {
+        return minimizer.getIterationsCount();
+    }
+
 }

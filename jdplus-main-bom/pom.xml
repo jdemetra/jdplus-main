@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.0.1</version>
+        <version>3.0.2</version>
     </parent>
 
     <artifactId>jdplus-main-bom</artifactId>
@@ -254,7 +254,6 @@
                                         <release>
                                             <github>
                                                 <skipTag>true</skipTag>
-                                                <draft>true</draft>
                                                 <changelog>
                                                     <external>${project.build.directory}/CHANGELOG.md</external>
                                                 </changelog>

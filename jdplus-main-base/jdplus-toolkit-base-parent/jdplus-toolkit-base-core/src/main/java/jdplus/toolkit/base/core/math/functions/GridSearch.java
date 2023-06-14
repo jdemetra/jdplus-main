@@ -238,4 +238,12 @@ public class GridSearch implements FunctionMinimizer {
         }
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public int getIterationsCount() {
+        return niter;
+    }
 }

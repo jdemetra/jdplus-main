@@ -1,38 +1,40 @@
 /*
  * Copyright 2013 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.text.desktop.plugin;
 
+import jdplus.text.base.api.TxtBean;
+import jdplus.toolkit.base.tsp.FileLoader;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
 import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
-import jdplus.text.base.api.TxtBean;
-import jdplus.toolkit.base.tsp.FileLoader;
-import java.awt.Image;
-import java.beans.IntrospectionException;
-import java.nio.charset.Charset;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 
+import java.awt.*;
+import java.beans.IntrospectionException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+
 /**
- *
  * @author Philippe Charles
  */
 @DirectImpl
@@ -52,15 +54,13 @@ public final class TxtProviderBuddy implements DataSourceProviderBuddy {
     }
 
     @Override
-    public Sheet getSheetOfBeanOrNull(Object bean) throws IntrospectionException {
-        return bean instanceof TxtBean
-                ? createSheetSets((TxtBean) bean)
-                : DataSourceProviderBuddy.super.getSheetOfBeanOrNull(bean);
+    public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
+        return bean instanceof TxtBean ? createSheetSets((TxtBean) bean) : null;
     }
 
-    private Sheet createSheetSets(TxtBean bean) {
+    private List<Sheet.Set> createSheetSets(TxtBean bean) {
         NodePropertySetBuilder b = new NodePropertySetBuilder();
-        return DataSourceProviderBuddyUtil.sheetOf(
+        return Arrays.asList(
                 createSource(b, bean),
                 createContent(b, bean)
         );

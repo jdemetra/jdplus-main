@@ -69,7 +69,7 @@ public class StatUtility {
             throw new StatException("Non compatible data");
         }
         if(a.anyMatch(d -> d == 0)){
-            throw new StatException("The method requires a not to contain any 0");
+            return Double.NaN;
         }
         if(a.isEmpty() || b.isEmpty()){
             throw new StatException("a and b cannot be empty");

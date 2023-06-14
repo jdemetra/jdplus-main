@@ -16,17 +16,14 @@
  */
 package jdplus.toolkit.desktop.plugin.tsproviders;
 
-import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.desktop.plugin.Config;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.ErrorManager;
-import org.openide.nodes.Sheet;
 
 import java.beans.IntrospectionException;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 /**
  * @author Philippe Charles
@@ -55,20 +52,6 @@ public final class DataSourceProviderBuddyUtil {
         return Config.builder(getDataSourceDomain(), displayName, "")
                 .parameter("uri", dataSource.toString())
                 .build();
-    }
-
-    @NonNull
-    public static Sheet sheetOf(List<Sheet.Set> sets) {
-        Sheet result = new Sheet();
-        sets.forEach(result::put);
-        return result;
-    }
-
-    @NonNull
-    public static Sheet sheetOf(Sheet.Set... sets) {
-        Sheet result = new Sheet();
-        Stream.of(sets).forEach(result::put);
-        return result;
     }
 
     @FunctionalInterface
