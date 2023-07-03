@@ -39,4 +39,8 @@ public class SeriesSpec {
         return new Builder().cleaning(DataCleaning.NONE).span(TimeSelector.all());
     }
     
+    public boolean isDefault(){
+        return this.equals(DEFAULT);
+    }
+    
 }

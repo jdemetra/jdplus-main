@@ -11,6 +11,7 @@ module jdplus.sa.base.information {
     requires jdplus.toolkit.base.information;
 
     exports jdplus.sa.base.information;
+    exports jdplus.sa.base.information.highfreq;
 
     uses SaSpecificationMapping;
 }

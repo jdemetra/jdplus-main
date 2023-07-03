@@ -31,6 +31,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  * @author Philippe Charles
@@ -182,10 +183,10 @@ public final class TsDataTable {
         }
 
         TsDomain o = domains.next();
-
         TsUnit lowestUnit = o.getTsUnit();
         LocalDateTime minDate = o.start();
         LocalDateTime maxDate = o.end();
+        LocalDateTime epoch = o.getStartPeriod().getEpoch();
 
         while (domains.hasNext()) {
             o = domains.next();
@@ -197,11 +198,16 @@ public final class TsDataTable {
             if (maxDate.isBefore(o.end())) {
                 maxDate = o.end();
             }
+            LocalDateTime cepoch = o.getStartPeriod().getEpoch();
+            if (!cepoch.equals(epoch)) {
+                epoch = TsPeriod.DEFAULT_EPOCH;
+            }
         }
 
-        TsPeriod startPeriod = TsPeriod.of(lowestUnit, minDate);
-        TsPeriod endPeriod = TsPeriod.of(lowestUnit, maxDate);
-        // FIXME: default epoch?
+        TsPeriod startPeriod = TsPeriod.make(epoch, lowestUnit, minDate);
+        TsPeriod endPeriod = TsPeriod.make(epoch, lowestUnit, maxDate);
+        // default epoch if we can't find a common epoch. Should be improved
+        // FIXME
         return TsDomain.of(startPeriod, startPeriod.until(endPeriod));
     }
 
@@ -225,4 +231,28 @@ public final class TsDataTable {
         }
         return builder.toString();
     }
+
+    public Matrix toMatrix() {
+        return toMatrix(DistributionType.LAST);
+    }
+
+    public Matrix toMatrix(DistributionType type) {
+
+        int nr = domain.length(), nc = data.size();
+        Cursor cursor = this.cursor(type);
+        double[] m = new double[nr * nc];
+        for (int row = 0, j0 = 0; row < nr; ++row, ++j0) {
+            for (int col = 0, j = j0; col < nc; ++col, j += nr) {
+                cursor.moveTo(row, col);
+                if (cursor.getStatus() == ValueStatus.PRESENT) {
+                    m[j] = cursor.getValue();
+                } else {
+                    m[j] = Double.NaN;
+                }
+
+            }
+        }
+        return Matrix.of(m, nr, nc);
+    }
+
 }

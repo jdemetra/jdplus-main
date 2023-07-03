@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
 
 /**
  *
@@ -82,6 +83,10 @@ public class TsUtility {
      */
     public int[] startPeriod(TsData s) {
         return of(s.getStart());
+    }
+
+    public int[] startPeriod(TsDataTable s) {
+        return of(s.getDomain().getStartPeriod());
     }
 
     public int[] of(TsPeriod p) {
