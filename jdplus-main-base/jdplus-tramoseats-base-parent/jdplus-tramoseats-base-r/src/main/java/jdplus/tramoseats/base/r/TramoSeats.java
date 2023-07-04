@@ -21,6 +21,7 @@ import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsDictionaries;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import jdplus.tramoseats.base.protobuf.Spec;
 import jdplus.tramoseats.base.protobuf.SpecProto;
@@ -89,6 +90,10 @@ public class TramoSeats {
 
     public byte[] toBuffer(TramoSeatsOutput output) {
         return TramoSeatsProtosUtility.convert(output).toByteArray();
+    }
+    
+    public String[] dictionary(){
+        return TramoSeatsDictionaries.TRAMOSEATSDICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
     }
 
 }

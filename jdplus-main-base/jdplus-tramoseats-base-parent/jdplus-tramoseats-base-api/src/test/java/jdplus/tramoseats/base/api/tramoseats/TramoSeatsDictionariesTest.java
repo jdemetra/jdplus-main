@@ -4,8 +4,6 @@
  */
 package jdplus.tramoseats.base.api.tramoseats;
 
-import jdplus.tramoseats.base.api.tramoseats.TramoSeatsDictionaries;
-
 /**
  *
  * @author PALATEJ

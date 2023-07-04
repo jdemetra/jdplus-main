@@ -16,6 +16,7 @@
  */
 package jdplus.x13.base.core.x13.extractors;
 
+import jdplus.sa.base.api.SaDictionaries;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.timeseries.TsData;
@@ -45,6 +46,7 @@ public class X11Extractor extends InformationMapping<X11Results> {
 ////        set(SaDictionaries.S_CMP+ SeriesInfo.F_SUFFIX, TsData.class, source->source.getD10a());
 //        set(SaDictionaries.I_CMP, TsData.class, source -> source.getD13());
 
+        set(SaDictionaries.MODE, String.class, source ->source.getMode().name());
         set(X11Dictionaries.B1, TsData.class, source -> source.getB1());
         set(X11Dictionaries.B2, TsData.class, source -> source.getB2());
         set(X11Dictionaries.B3, TsData.class, source -> source.getB3());

@@ -7,6 +7,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![OTHER] Add classes to simplify the link with R (revision history)
+- ![OTHER] Serialize High-frequency series (modelling part)
+
+
 ## [3.0.2] - 2023-06-14
 
 ### Changed
