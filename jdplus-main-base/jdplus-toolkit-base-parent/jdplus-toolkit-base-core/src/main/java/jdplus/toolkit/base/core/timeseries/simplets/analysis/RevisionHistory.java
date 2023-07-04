@@ -274,7 +274,10 @@ public class RevisionHistory<T> {
      */
     public TsData tsRevision(TsPeriod period, TsPeriod start, Function<T, TsData> extractor) {
         TsPeriod p0 = m_domainT.getStartPeriod();
-        double[] x = new double[start.until(m_domainT.getEndPeriod())];
+        int n = start.until(m_domainT.getEndPeriod());
+        if (n <= 0)
+            return null;
+        double[] x = new double[n];
         int len = p0.until(start) + 1;
         for (int i = 0; i < x.length; ++i, ++len) {
             TsDomain rdom = TsDomain.of(p0, len);
