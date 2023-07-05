@@ -9,6 +9,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.math.Complex;
 import org.junit.jupiter.api.Test;
+import jdplus.toolkit.base.core.math.linearfilters.advanced.HendersonFilters;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

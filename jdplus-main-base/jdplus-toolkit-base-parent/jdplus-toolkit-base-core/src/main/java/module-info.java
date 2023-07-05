@@ -51,6 +51,7 @@ module jdplus.toolkit.base.core {
     exports jdplus.toolkit.base.core.math.functions.ssq;
     exports jdplus.toolkit.base.core.math.highprecision;
     exports jdplus.toolkit.base.core.math.linearfilters;
+    exports jdplus.toolkit.base.core.math.linearfilters.advanced;
     exports jdplus.toolkit.base.core.math.linearsystem;
     exports jdplus.toolkit.base.core.math.matrices;
     exports jdplus.toolkit.base.core.math.matrices.decomposition;

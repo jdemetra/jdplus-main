@@ -25,7 +25,7 @@ import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.log;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.commit;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.normalize;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.pctVariation;
-import jdplus.toolkit.base.core.math.linearfilters.HendersonFilters;
+import jdplus.toolkit.base.core.math.linearfilters.advanced.HendersonFilters;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.fitToDomain;

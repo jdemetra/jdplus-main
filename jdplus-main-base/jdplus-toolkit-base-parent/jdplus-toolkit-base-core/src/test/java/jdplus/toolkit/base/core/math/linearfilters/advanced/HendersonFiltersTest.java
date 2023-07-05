@@ -14,10 +14,11 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package jdplus.toolkit.base.core.math.linearfilters;
+package jdplus.toolkit.base.core.math.linearfilters.advanced;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import java.util.function.DoubleUnaryOperator;
+import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

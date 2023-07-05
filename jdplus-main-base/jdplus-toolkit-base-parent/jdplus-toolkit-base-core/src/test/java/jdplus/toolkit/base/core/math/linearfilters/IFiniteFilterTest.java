@@ -9,8 +9,7 @@ import java.util.Random;
 import java.util.function.DoubleSupplier;
 
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.math.linearfilters.HendersonFilters;
-import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.toolkit.base.core.math.linearfilters.advanced.HendersonFilters;
 import org.junit.jupiter.api.Test;
 
 /**

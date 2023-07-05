@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jdplus.toolkit.base.core.math.linearfilters;
+package jdplus.toolkit.base.core.math.linearfilters.advanced;
 
 import nbbrd.design.Development;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.core.math.linearfilters.LinearFilterException;
+import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 
 /**
  * 

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 import java.util.function.DoubleSupplier;
+import jdplus.toolkit.base.core.math.linearfilters.advanced.HendersonFilters;
+import jdplus.toolkit.base.core.math.linearfilters.advanced.LocalPolynomialFiltersFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 

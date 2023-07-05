@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jdplus.toolkit.base.core.math.linearfilters;
+package jdplus.toolkit.base.core.math.linearfilters.advanced;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
+import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
+import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +25,7 @@ public class AsymmetricFiltersTest {
     @Test
     public void testMusgrave() {
         int h = 6;
-        SymmetricFilter lp = LocalPolynomialFilters.ofDefault(h, 2, DiscreteKernel.henderson(h));
+        SymmetricFilter lp = LocalPolynomialFiltersFactory.ofDefault(h, 2, DiscreteKernel.henderson(h));
         double[] c = new double[]{2 / Math.sqrt(Math.PI) / 3.5};
         IFiniteFilter f1 = AsymmetricFiltersFactory.mmsreFilter(lp, 0, 0, c, null);
         IFiniteFilter f2 = AsymmetricFiltersFactory.musgraveFilter(lp, 0, 3.5);
@@ -36,7 +38,7 @@ public class AsymmetricFiltersTest {
     }
 
     public static void displayMusgrave(int h) {
-        SymmetricFilter lp = LocalPolynomialFilters.ofDefault(h, 2, DiscreteKernel.henderson(h));
+        SymmetricFilter lp = LocalPolynomialFiltersFactory.ofDefault(h, 2, DiscreteKernel.henderson(h));
 //        IFiniteFilter[] f1 = AsymmetricFiltersFactory.musgraveFilters(lp, 1);
 //        IFiniteFilter[] f2 = AsymmetricFiltersFactory.musgraveFilters(lp, 3.5);
 //        IFiniteFilter[] f3 = AsymmetricFiltersFactory.musgraveFilters(lp, 4.5);
@@ -69,13 +71,13 @@ public class AsymmetricFiltersTest {
                 break;
             case 1:
                 for (int i = 0; i < af.length; ++i) {
-                    LocalPolynomialFiltersTest.displayGain(af[i]);
+                    LocalPolynomialFiltersFactoryTest.displayGain(af[i]);
                 }
                 System.out.println();
                 break;
             case 2:
                 for (int i = 0; i < af.length; ++i) {
-                    LocalPolynomialFiltersTest.displayPhase(af[i]);
+                    LocalPolynomialFiltersFactoryTest.displayPhase(af[i]);
                 }
                 System.out.println();
                 break;

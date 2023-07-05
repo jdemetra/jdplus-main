@@ -20,10 +20,10 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import tck.demetra.data.WeeklyData;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
-import jdplus.toolkit.base.core.math.linearfilters.AsymmetricFiltersFactory;
+import jdplus.toolkit.base.core.math.linearfilters.advanced.AsymmetricFiltersFactory;
 import jdplus.toolkit.base.core.math.linearfilters.FilterUtility;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
+import jdplus.toolkit.base.core.math.linearfilters.advanced.LocalPolynomialFiltersFactory;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
@@ -211,7 +211,7 @@ public class BSplinesTest {
                 w[i] = 0;
             }
         }
-        SymmetricFilter sf = LocalPolynomialFilters.of(26, 1, DiscreteKernel.uniform(26));
+        SymmetricFilter sf = LocalPolynomialFiltersFactory.of(26, 1, DiscreteKernel.uniform(26));
         IFiniteFilter[] afilters = AsymmetricFiltersFactory.mmsreFilters(sf, 0, new double[]{1}, null);
         IFiniteFilter[] lfilters = afilters.clone();
         for (int i = 0; i < lfilters.length; ++i) {
