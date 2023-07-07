@@ -30,6 +30,24 @@ public interface TsDocument<S extends ProcSpecification, R extends Explorable> e
 
     void setAll(S spec, Ts input, R result);
 
+    boolean isLocked();
+
+    void setLocked(boolean locked);
+
+    default boolean isFrozen() {
+        synchronized (this) {
+            Ts s = getInput();
+            if (s == null) {
+                return false;
+            }
+            return s.isFrozen();
+        }
+    }
+
+    void refreshTs(TsFactory factory, TsInformationType type);
+    
+    void freeze();
+
     @Override
     R getResult();
 

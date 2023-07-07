@@ -12,6 +12,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import java.awt.Color;
 import javax.swing.Icon;
+import javax.swing.SwingUtilities;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;

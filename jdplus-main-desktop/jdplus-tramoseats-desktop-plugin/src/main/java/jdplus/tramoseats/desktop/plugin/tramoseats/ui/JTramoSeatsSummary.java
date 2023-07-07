@@ -98,7 +98,8 @@ public final class JTramoSeatsSummary extends JComponent implements Disposable{
 
     public void set(TramoSeatsDocument doc) {
         doc_ = doc;
-
+        chart_.setTsCollection(TsCollection.EMPTY);
+        siPanel_.reset();
         if (doc_ == null || doc_.getResult() == null) {
             return;
         }
@@ -114,17 +115,14 @@ public final class JTramoSeatsSummary extends JComponent implements Disposable{
         Disposables.disposeAndRemoveAll(document_).add(TsViewToolkit.getHtmlViewer(document));
 
         String[] lowSeries = lowSeries();
-        chart_.setTsCollection(
-                Arrays.stream(lowSeries).map(s->getMainSeries(s)).collect(TsCollection.toTsCollection())
-        );
+        TsCollection ncoll = Arrays.stream(lowSeries).map(s->getMainSeries(s)).collect(TsCollection.toTsCollection());
+        chart_.setTsCollection(ncoll);
 
         if (seats != null) {
             TsData seas = doc_.getResult().getData(Dictionary.concatenate(SaDictionaries.DECOMPOSITION, SaDictionaries.S_CMP), TsData.class);
             TsData irr = doc_.getResult().getData(Dictionary.concatenate(SaDictionaries.DECOMPOSITION, SaDictionaries.I_CMP), TsData.class);
             siPanel_.setData(seas, irr, doc_.getResult().getFinals().getMode());
-        } else {
-            siPanel_.reset();
-        }
+        } 
     }
 
     private Ts getMainSeries(String str) {
