@@ -9,8 +9,6 @@ import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
-import jdplus.toolkit.base.core.math.linearfilters.advanced.LocalPolynomialFiltersFactory;
-import jdplus.toolkit.base.core.math.linearfilters.advanced.AsymmetricFiltersFactory;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +23,7 @@ public class FilterUtilityTest {
 
     @Test
     public void testFiltering() {
-        SymmetricFilter sf = LocalPolynomialFiltersFactory.of(6, 2, DiscreteKernel.biweight(6));
+        SymmetricFilter sf = LocalPolynomialFilters.of(6, 2, DiscreteKernel.biweight(6));
         IFiniteFilter[] afilters = AsymmetricFiltersFactory.mmsreFilters(sf, 0, new double[]{1}, null);
         DoubleSeq seq1 = FilterUtility.filter(DoubleSeq.of(Data.NILE), sf, afilters);
         IFiniteFilter[] lfilters = afilters.clone();
@@ -50,7 +48,7 @@ public class FilterUtilityTest {
         DoubleSeq input = DoubleSeq.of(Data.NILE);
         int n=input.length();
         System.out.println(input);
-        SymmetricFilter sf = LocalPolynomialFiltersFactory.of(h, 2, DiscreteKernel.henderson(h));
+        SymmetricFilter sf = LocalPolynomialFilters.of(h, 2, DiscreteKernel.henderson(h));
         IFiniteFilter[] afilters = AsymmetricFiltersFactory.mmsreFilters(sf, 0, new double[]{1}, null);
         double[] f = AsymmetricFiltersFactory.implicitForecasts(sf, afilters, input.range(n-h-1, n));
         System.out.println(DoubleSeq.of(f));

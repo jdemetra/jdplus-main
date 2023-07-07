@@ -7,7 +7,7 @@ package jdplus.x13.base.core.x11;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
-import jdplus.toolkit.base.core.math.linearfilters.advanced.LocalPolynomialFiltersFactory;
+import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +22,7 @@ public class TrendCrossValidationTest {
 
     @Test
     public void testProd() {
-        double[] cv = TrendCrossValidation.process(DoubleSeq.of(Data.ABS_RETAIL), 12, true, 3, 25, h -> LocalPolynomialFiltersFactory.of(h, 3, DiscreteKernel.henderson(h)));
+        double[] cv = TrendCrossValidation.process(DoubleSeq.of(Data.ABS_RETAIL), 12, true, 3, 25, h -> LocalPolynomialFilters.of(h, 3, DiscreteKernel.henderson(h)));
 //        long t0 = System.currentTimeMillis();
 //        for (int i = 0; i < 1000; ++i) {
 //            cv = TrendCrossValidation.process(DoubleSeq.of(Data.ABS_RETAIL), 12, true, 3, 25, h -> LocalPolynomialFiltersFactory.of(h, 3, DiscreteKernel.biweight(h)));

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jdplus.toolkit.base.core.math.linearfilters.advanced;
+package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -23,10 +23,6 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
 import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
-import jdplus.toolkit.base.core.math.linearfilters.FilterUtility;
-import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.core.math.matrices.UpperTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.Householder2;
 import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
@@ -40,7 +36,7 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
  * @author Jean Palate
  */
 @lombok.experimental.UtilityClass
-public class LocalPolynomialFiltersFactory {
+public class LocalPolynomialFilters {
 
     public static IFiltering of(LocalPolynomialFilterSpec spec) {
         return new Filter(spec);
@@ -239,7 +235,7 @@ public class LocalPolynomialFiltersFactory {
      * @param k The kernel (a uniform kernel is used if k is null)
      * @return
      */
-    SymmetricFilter ofDefault(int h, int d, IntToDoubleFunction k) {
+    public SymmetricFilter ofDefault(int h, int d, IntToDoubleFunction k) {
         double[] sk = new double[h + 1];
         if (k == null) {
             for (int i = 0; i < sk.length; ++i) {
@@ -372,7 +368,7 @@ public class LocalPolynomialFiltersFactory {
      * @param u included (positive)
      * @return
      */
-    FastMatrix z(FastMatrix Z, int l, int u, int d0, int d1) {
+    public FastMatrix z(FastMatrix Z, int l, int u, int d0, int d1) {
         int nh = Math.max(Math.abs(l), Math.abs(u));
         if (Z == null || Z.getRowsCount() / 2 < nh || Z.getColumnsCount() < d1 + 1) {
             Z = createZ(nh, d1);
@@ -380,7 +376,7 @@ public class LocalPolynomialFiltersFactory {
         return Z.extract(l + nh, u - l + 1, d0, d1 - d0 + 1);
     }
 
-    FastMatrix createZ(int h, int d) {
+    public FastMatrix createZ(int h, int d) {
         FastMatrix M = FastMatrix.make(2 * h + 1, d + 1);
         M.column(0).set(1);
         if (d >= 1) {

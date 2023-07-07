@@ -8,7 +8,7 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import java.util.function.IntFunction;
-import jdplus.toolkit.base.core.math.linearfilters.advanced.CrossValidation;
+import jdplus.toolkit.base.core.math.linearfilters.CrossValidation;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 
 /**

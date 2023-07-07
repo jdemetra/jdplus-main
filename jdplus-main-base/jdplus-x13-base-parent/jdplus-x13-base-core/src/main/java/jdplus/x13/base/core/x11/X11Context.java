@@ -22,9 +22,9 @@ import jdplus.x13.base.core.x11.extremevaluecorrector.PeriodSpecificExtremeValue
 import java.util.function.IntToDoubleFunction;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
-import jdplus.toolkit.base.core.math.linearfilters.advanced.AsymmetricFiltersFactory;
+import jdplus.toolkit.base.core.math.linearfilters.AsymmetricFiltersFactory;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.advanced.LocalPolynomialFiltersFactory;
+import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import lombok.experimental.NonFinal;
 
@@ -173,7 +173,7 @@ public class X11Context {
     public SymmetricFilter trendFilter(int filterLength) {
         int horizon = filterLength / 2;
         IntToDoubleFunction weights = DiscreteKernel.henderson(horizon);
-        return LocalPolynomialFiltersFactory.of(horizon, localPolynomialDegree, weights);
+        return LocalPolynomialFilters.of(horizon, localPolynomialDegree, weights);
     }
 
     private static final double SQRPI = Math.sqrt(Math.PI);

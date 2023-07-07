@@ -18,7 +18,7 @@ package jdplus.x13.base.core.x11.filter;
 
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.advanced.HendersonFilters;
+import jdplus.toolkit.base.core.math.linearfilters.HendersonFilters;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import java.util.HashMap;

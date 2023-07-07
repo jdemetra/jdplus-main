@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jdplus.toolkit.base.core.math.linearfilters.advanced;
+package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
@@ -24,9 +24,6 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
 import jdplus.toolkit.base.core.math.functions.NumericalIntegration;
-import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -115,11 +112,11 @@ public class AsymmetricFiltersFactory {
         int deg = u + dz.length;
         DataBlock wp = DataBlock.of(w, 0, nv);
         DataBlock wf = DataBlock.of(w, nv, w.length);
-        FastMatrix Z = LocalPolynomialFiltersFactory.createZ(h, deg);
-        FastMatrix Zp = LocalPolynomialFiltersFactory.z(Z, -h, q, u + 1, u + dz.length);
-        FastMatrix Zf = LocalPolynomialFiltersFactory.z(Z, q + 1, h, u + 1, u + dz.length);
-        FastMatrix Up = LocalPolynomialFiltersFactory.z(Z, -h, q, 0, u);
-        FastMatrix Uf = LocalPolynomialFiltersFactory.z(Z, q + 1, h, 0, u);
+        FastMatrix Z = LocalPolynomialFilters.createZ(h, deg);
+        FastMatrix Zp = LocalPolynomialFilters.z(Z, -h, q, u + 1, u + dz.length);
+        FastMatrix Zf = LocalPolynomialFilters.z(Z, q + 1, h, u + 1, u + dz.length);
+        FastMatrix Up = LocalPolynomialFilters.z(Z, -h, q, 0, u);
+        FastMatrix Uf = LocalPolynomialFilters.z(Z, q + 1, h, 0, u);
         DataBlock d = DataBlock.of(dz);
 
         FastMatrix H = SymmetricMatrix.XtX(Up);
@@ -225,9 +222,9 @@ public class AsymmetricFiltersFactory {
         int deg = u + (dz == null ? 0 : dz.length);
         DataBlock wp = DataBlock.of(w, 0, nv);
         DataBlock wf = DataBlock.of(w, nv, w.length);
-        FastMatrix Z = LocalPolynomialFiltersFactory.createZ(h, deg);
-        FastMatrix Up = LocalPolynomialFiltersFactory.z(Z, -h, q, 0, u);
-        FastMatrix Uf = LocalPolynomialFiltersFactory.z(Z, q + 1, h, 0, u);
+        FastMatrix Z = LocalPolynomialFilters.createZ(h, deg);
+        FastMatrix Up = LocalPolynomialFilters.z(Z, -h, q, 0, u);
+        FastMatrix Uf = LocalPolynomialFilters.z(Z, q + 1, h, 0, u);
         FastMatrix Q = FastMatrix.square(nv + u + 1);
         FastMatrix D = Q.extract(0, nv, 0, nv);
         D.diagonal().set(1);
@@ -237,8 +234,8 @@ public class AsymmetricFiltersFactory {
         a.extract(nv, u + 1).product(wf, Uf.columnsIterator());
         if (dz != null && dz.length > 0) {
             DataBlock d = DataBlock.of(dz);
-            FastMatrix Zp = LocalPolynomialFiltersFactory.z(Z, -h, q, u + 1, u + dz.length);
-            FastMatrix Zf = LocalPolynomialFiltersFactory.z(Z, q + 1, h, u + 1, u + dz.length);
+            FastMatrix Zp = LocalPolynomialFilters.z(Z, -h, q, u + 1, u + dz.length);
+            FastMatrix Zf = LocalPolynomialFilters.z(Z, q + 1, h, u + 1, u + dz.length);
             DataBlock Yp = DataBlock.make(nv);
             DataBlockIterator cols = Zp.columnsIterator();
             DoubleSeqCursor.OnMutable cursor = d.cursor();
