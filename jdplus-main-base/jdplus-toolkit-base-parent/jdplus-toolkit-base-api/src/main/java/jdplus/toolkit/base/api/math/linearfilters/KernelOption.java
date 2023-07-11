@@ -14,25 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jdplus.toolkit.base.core.math.linearfilters;
-
-import jdplus.toolkit.base.api.data.DoubleSeq;
+package jdplus.toolkit.base.api.math.linearfilters;
 
 /**
  *
- * @author Jean Palate <jean.palate@nbb.be>
+ * @author Jean Palate
  */
-public interface IFiltering {
-    /**
-     * Applies a filter on an input to produce an output.
-     * The input and the output must have the same length
-     * @param in
-     * @return 
-     */
-    DoubleSeq process(DoubleSeq in);
-    
-    IFiniteFilter centralFilter();
-    
-    IFiniteFilter[] leftEndPointsFilters();
-    IFiniteFilter[] rightEndPointsFilters();
+public enum KernelOption {
+    Uniform,
+    Triangular,
+    Epanechnikov,
+    BiWeight,
+    TriWeight,
+    Henderson, 
+    TriCube
 }

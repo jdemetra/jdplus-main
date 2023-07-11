@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
 
 /**
  *
@@ -128,6 +129,12 @@ public class XmlInformation {
         fromXmlMap.put(XmlTsMoniker.class, monikerMapper);
         toXmlMap.put(TsMoniker.class, monikerMapper);
 
+        XmlConverterAdapter<XmlTsUnit, TsUnit> unitMapper
+                = new XmlConverterAdapter<>(XmlTsUnit.class);
+
+        fromXmlMap.put(XmlTsUnit.class, unitMapper);
+        toXmlMap.put(TsUnit.class, unitMapper);
+
         XmlConverterAdapter<XmlTs, Ts> tsMapper
                 = new XmlConverterAdapter<>(XmlTs.class);
 
@@ -186,6 +193,7 @@ public class XmlInformation {
         @XmlElement(type = XmlTsData.class, name = "tsdata"),
         @XmlElement(type = XmlTsMoniker.class, name = "moniker"),
         @XmlElement(type = XmlTs.class, name = "ts"),
+        @XmlElement(type = XmlTsUnit.class, name = "tsunit"),
         @XmlElement(type = XmlTsCollection.class, name = "tscollection"),
         @XmlElement(type = XmlPeriodSelection.class, name = "span"),
         @XmlElement(type = XmlStatisticalTest.class, name = "test"),

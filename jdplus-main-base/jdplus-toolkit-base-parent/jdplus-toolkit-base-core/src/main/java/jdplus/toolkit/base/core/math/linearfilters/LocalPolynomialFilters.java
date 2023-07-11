@@ -20,6 +20,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import java.util.function.IntToDoubleFunction;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.math.linearfilters.LocalPolynomialFilterSpec;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
 import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
@@ -38,7 +39,7 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
 @lombok.experimental.UtilityClass
 public class LocalPolynomialFilters {
 
-    public static IFiltering of(LocalPolynomialFilterSpec spec) {
+    public ISymmetricFiltering of(LocalPolynomialFilterSpec spec) {
         return new Filter(spec);
     }
 
@@ -48,7 +49,7 @@ public class LocalPolynomialFilters {
         private final IFiniteFilter[] asymmetricFilters;
 
         private Filter(LocalPolynomialFilterSpec spec) {
-            int len = spec.getFilterLength();
+            int len = spec.getFilterHorizon();
             symmetricFilter = ofDefault(len, spec.getPolynomialDegree(), kernel(spec));
             asymmetricFilters = switch (spec.getAsymmetricFilters()) {
                 case CutAndNormalize -> AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
@@ -60,7 +61,7 @@ public class LocalPolynomialFilters {
         }
 
         private static IntToDoubleFunction kernel(LocalPolynomialFilterSpec spec) {
-            int len = spec.getFilterLength();
+            int len = spec.getFilterHorizon();
             return switch (spec.getKernel()) {
                 case BiWeight -> DiscreteKernel.biweight(len);
                 case TriWeight -> DiscreteKernel.triweight(len);
@@ -362,6 +363,7 @@ public class LocalPolynomialFilters {
     }
 
     /**
+     * @param Z
      * @param d0 included
      * @param d1 included
      * @param l included (negative)

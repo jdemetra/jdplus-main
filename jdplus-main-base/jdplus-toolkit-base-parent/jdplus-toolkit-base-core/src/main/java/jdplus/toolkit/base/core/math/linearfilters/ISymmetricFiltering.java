@@ -17,8 +17,6 @@
 package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
-import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 
 /**
  *

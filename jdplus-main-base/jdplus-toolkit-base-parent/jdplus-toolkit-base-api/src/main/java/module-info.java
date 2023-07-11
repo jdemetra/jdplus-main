@@ -29,6 +29,7 @@ module jdplus.toolkit.base.api {
     exports jdplus.toolkit.base.api.information.formatters;
     exports jdplus.toolkit.base.api.math;
     exports jdplus.toolkit.base.api.math.functions;
+    exports jdplus.toolkit.base.api.math.linearfilters;
     exports jdplus.toolkit.base.api.math.matrices;
     exports jdplus.toolkit.base.api.modelling;
     exports jdplus.toolkit.base.api.modelling.highfreq;

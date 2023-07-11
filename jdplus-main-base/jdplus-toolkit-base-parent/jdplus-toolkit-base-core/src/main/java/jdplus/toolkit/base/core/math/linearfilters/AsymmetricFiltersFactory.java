@@ -35,12 +35,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @lombok.experimental.UtilityClass
 public class AsymmetricFiltersFactory {
 
-    public static enum Option {
-        Direct,
-        CutAndNormalize,
-        MMSRE
-    }
-
     /**
      *
      * @param s

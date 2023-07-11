@@ -239,6 +239,7 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
                     S pspec = specDescriptor.getCore();
                     doc.set(pspec);
                     updateButtons(BUTTON_APPLY);
+                    dirty = true;
                     updateResults();
                 }
             }};

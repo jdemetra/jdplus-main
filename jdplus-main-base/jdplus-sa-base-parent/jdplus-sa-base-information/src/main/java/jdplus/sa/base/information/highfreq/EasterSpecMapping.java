@@ -25,7 +25,7 @@ import jdplus.toolkit.base.api.modelling.highfreq.EasterSpec;
  * @author PALATEJ
  */
 @lombok.experimental.UtilityClass
-class EasterSpecMapping {
+public class EasterSpecMapping {
 
     final String TYPE = "type", PARAM = "param", TEST = "test", COEF = "coef";
 

@@ -16,16 +16,36 @@
  */
 package jdplus.toolkit.base.core.math.linearfilters;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
+
 /**
  *
- * @author Jean Palate
+ * @author PALATEJ
  */
-public enum KernelOption {
-    Uniform,
-    Triangular,
-    Epanechnikov,
-    BiWeight,
-    TriWeight,
-    Henderson, 
-    TriCube
+public class SymmetricFiltering implements ISymmetricFiltering {
+
+    private final SymmetricFilter cf;
+    private final IFiniteFilter[] ff;
+
+    public SymmetricFiltering(SymmetricFilter cf, IFiniteFilter[] endPoints) {
+        this.cf = cf;
+        this.ff = endPoints.clone();
+    }
+
+    @Override
+    public DoubleSeq process(DoubleSeq in) {
+         return FilterUtility.filter(in, cf, ff);
+    }
+
+    @Override
+    public SymmetricFilter symmetricFilter() {
+        return cf;
+    }
+
+    @Override
+    public IFiniteFilter[] endPointsFilters() {
+        return ff;
+    }
+
+
 }

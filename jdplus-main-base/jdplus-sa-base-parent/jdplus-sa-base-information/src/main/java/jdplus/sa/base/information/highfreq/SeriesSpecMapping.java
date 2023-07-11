@@ -19,7 +19,6 @@ package jdplus.sa.base.information.highfreq;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.modelling.highfreq.SeriesSpec;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
-import java.util.Map;
 import jdplus.toolkit.base.api.modelling.highfreq.DataCleaning;
 
 /**
@@ -27,7 +26,7 @@ import jdplus.toolkit.base.api.modelling.highfreq.DataCleaning;
  * @author PALATEJ
  */
 @lombok.experimental.UtilityClass
-class SeriesSpecMapping {
+public class SeriesSpecMapping {
 
     final String SPAN = "span", CLEANING = "cleaning";
 

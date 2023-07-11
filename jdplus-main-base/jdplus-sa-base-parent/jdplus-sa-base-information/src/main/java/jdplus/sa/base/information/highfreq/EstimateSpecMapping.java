@@ -25,7 +25,7 @@ import jdplus.toolkit.base.api.timeseries.TimeSelector;
  * @author PALATEJ
  */
 @lombok.experimental.UtilityClass
-class EstimateSpecMapping {
+public class EstimateSpecMapping {
 
     final String SPAN = "span",
             TOL = "tol", HESSIAN ="hessian";

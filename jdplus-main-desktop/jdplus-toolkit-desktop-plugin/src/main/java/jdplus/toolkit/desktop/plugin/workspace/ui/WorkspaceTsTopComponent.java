@@ -88,6 +88,7 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
                 case DefaultProcessingViewer.SPEC_CHANGED -> {
                     WorkspaceFactory.Event ev = new WorkspaceFactory.Event(d.getOwner(), d.getId(), WorkspaceFactory.Event.ITEMCHANGED, WorkspaceTsTopComponent.this);
                     WorkspaceFactory.getInstance().notifyEvent(ev);
+                    d.setDirty();
                 }
 
             }
