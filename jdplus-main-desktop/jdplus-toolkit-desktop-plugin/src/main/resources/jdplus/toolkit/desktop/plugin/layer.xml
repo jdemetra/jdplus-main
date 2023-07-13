@@ -24,5 +24,10 @@
     <folder name="Toolbars">
         <file name="UndoRedo_hidden"/>
     </folder>
+    <folder name="Windows2">
+        <folder name="Modes">
+            <file name="tsnavigator.wsmode" url="./layout/tsnavigatorWsmode.xml"/>
+        </folder>
+    </folder>
 
 </filesystem>

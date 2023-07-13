@@ -237,9 +237,11 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     S pspec = specDescriptor.getCore();
+                    S ospec = doc.getSpecification();
                     doc.set(pspec);
                     updateButtons(BUTTON_APPLY);
-                    dirty = true;
+                    dirty = false;
+                    DefaultProcessingViewer.this.firePropertyChange(SPEC_CHANGED, ospec, pspec);
                     updateResults();
                 }
             }};
