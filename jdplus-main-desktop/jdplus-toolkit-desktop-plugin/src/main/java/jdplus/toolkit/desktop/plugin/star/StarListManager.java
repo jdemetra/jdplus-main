@@ -3,7 +3,7 @@ package jdplus.toolkit.desktop.plugin.star;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import jdplus.toolkit.base.tsp.DataSource;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashSet;

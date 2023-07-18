@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
-import ec.util.various.swing.OnAnyThread;
+import nbbrd.design.swing.OnAnyThread;
 import nbbrd.io.function.IOFunction;
 
 import java.awt.datatransfer.DataFlavor;

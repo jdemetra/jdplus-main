@@ -7,7 +7,7 @@ import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.impl.SmartColorScheme;
 import ec.util.chart.swing.SwingColorSchemeSupport;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin;
 
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.timeseries.Ts;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import org.checkerframework.checker.nullness.qual.NonNull;

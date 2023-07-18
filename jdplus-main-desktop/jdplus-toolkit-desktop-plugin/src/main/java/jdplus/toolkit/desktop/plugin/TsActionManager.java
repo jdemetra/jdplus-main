@@ -21,7 +21,7 @@ import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnEDT;
 import nbbrd.design.MightBePromoted;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -16,8 +16,8 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
-import ec.util.various.swing.OnAnyThread;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnAnyThread;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.nodes.ChildFactory;
