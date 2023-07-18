@@ -222,6 +222,94 @@ public class TsDataTest {
         assertThat(ts.aggregateByPosition(YEAR, 11)).hasSize(5);
         assertThat(ts.aggregateByPosition(YEAR, 1)).hasSize(6);
     }
+
+    @Test
+    public void testUpdateStartAndEndIntersecting() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 3), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 3, 4, 5})));
+    }
+
+    @Test
+    public void testUpdateStartAndEndIntersecting2() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 3), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5, 1, 2})));
+    }
+
+    @Test
+    public void testUpdateEndContainedInStart() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2, 3, 4});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 2), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 3, 4, 5, 4})));
+    }
+
+    @Test
+    public void testUpdateStartContainedInEnd() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 2), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5, 6, 7});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5, 6, 7})));
+    }
+
+    @Test
+    public void testUpdateEndAfterStartConnecting() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 4), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2, 3, 4, 5})));
+    }
+
+    @Test
+    public void testUpdateStartAfterEndConnecting() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 4), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5, 0, 1, 2})));
+    }
+
+    @Test
+    public void testUpdateEndAfterStartSeparate() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 5), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2, Double.NaN, 3, 4, 5})));
+    }
+
+    @Test
+    public void testUpdateStartAfterEndSeparate() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 5), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{3, 4, 5, Double.NaN, 0, 1, 2})));
+    }
+
+    @Test
+    public void testUpdatStartNull() {
+        TsData start = null;
+        TsData end = TsData.ofInternal(TsPeriod.monthly(1999, 5), new double[]{3, 4, 5});
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 5), new double[]{3, 4, 5})));
+    }
+
+    @Test
+    public void testUpdateEndNull() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2});
+        TsData end = null;
+        TsData update = TsData.update(start, end);
+        assertThat(update.equals(TsData.ofInternal(TsPeriod.monthly(1999, 1), new double[]{0, 1, 2})));
+    }
+
+    @Test
+    public void testUpdateStartAndEndDifferentFrequency() {
+        TsData start = TsData.ofInternal(TsPeriod.monthly(1999, 5), new double[]{0, 1, 2});
+        TsData end = TsData.ofInternal(TsPeriod.quarterly(1999, 1), new double[]{0, 1, 2});
+        assertThatThrownBy(() -> TsData.update(start, end)).isInstanceOf(TsException.class).hasMessageContaining("Incompatible frequencies");
+    }
+    
     private static TsData monthlyTs(LocalDateTime start, int count) {
         return TsData.of(TsPeriod.of(TsUnit.MONTH, start), DoubleSeq.onMapping(count, i -> i + start.getMonthValue()));
     }

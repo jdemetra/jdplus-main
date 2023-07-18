@@ -516,6 +516,9 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
         if (end == null || end.isEmpty()) {
             return start;
         }
+        if (start == null || start.isEmpty()) {
+            return end;
+        }
         TsDomain ldom = start.getDomain(), rdom = end.getDomain();
         TsDomain udom = ldom.union(rdom);
         if (udom == null) {
@@ -524,8 +527,11 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
         TsPeriod pstart = start.getStart(), pend = end.getStart(), punion = udom.getStartPeriod();
         int n = udom.getLength();
         double[] data = new double[n];
-        int l0 = pstart.until(punion), l1 = start.getEnd().until(punion), r0 = pend.until(punion);
+        int l0 = punion.until(pstart), l1 = punion.until(start.getEnd()), r0 = punion.until(pend), r1 = punion.until(end.getEnd());
         for (int i = l1; i < r0; ++i) {
+            data[i] = Double.NaN;
+        }
+        for (int i = r1; i < l0; ++i) {
             data[i] = Double.NaN;
         }
         start.getValues().copyTo(data, l0);
