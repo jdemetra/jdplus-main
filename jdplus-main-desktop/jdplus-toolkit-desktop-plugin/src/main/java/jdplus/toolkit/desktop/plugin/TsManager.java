@@ -23,8 +23,8 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceFactory;
 import jdplus.toolkit.base.tsp.DataSourceListener;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
-import ec.util.various.swing.OnAnyThread;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnAnyThread;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.util.WeakListeners;
 

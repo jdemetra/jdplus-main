@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.interchange;
 
 import jdplus.toolkit.desktop.plugin.NamedService;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.ServiceSorter;
