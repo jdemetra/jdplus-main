@@ -18,8 +18,8 @@ package jdplus.toolkit.base.core.stats.tests;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import java.util.Random;
+import jdplus.toolkit.base.api.dstats.ContinuousDistribution;
 import jdplus.toolkit.base.core.dstats.Chi2;
-import jdplus.toolkit.base.api.dstats.Distribution;
 import jdplus.toolkit.base.core.dstats.Normal;
 import jdplus.toolkit.base.core.dstats.Uniform;
 import jdplus.toolkit.base.core.random.MersenneTwister;
@@ -162,7 +162,7 @@ public class VariancesTest {
         simulate(chi2, rng, K, M);
     }
     
-    public static void simulate(Distribution dist, RandomNumberGenerator rng, int K, int M){
+    public static void simulate(ContinuousDistribution dist, RandomNumberGenerator rng, int K, int M){
         Random rnd = new Random(0);
         double[] B = new double[K];
         double[] L = new double[K];
