@@ -82,7 +82,7 @@ public final class DiffuseLikelihood implements Likelihood {
                 return this;
             }
             if (ssqerr == 0) {
-                this.ssqerr = residuals.ssq();
+                this.ssqerr = residuals.ssqWithMissing();
             }
             this.res = residuals.toArray();
             return this;
@@ -203,6 +203,18 @@ public final class DiffuseLikelihood implements Likelihood {
     @Override
     public DoubleSeq e() {
         return res == null ? null : DoubleSeq.of(res);
+    }
+    
+    @Override
+    public DoubleSeq deviances(){
+        double f = factor();
+        DoubleSeq e = e().select(x->Double.isFinite(x));
+        if (f == 1) {
+            return e;
+        } else {
+            final double sf = Math.sqrt(f);
+            return e.map(x -> x * sf);
+        }
     }
 
     @Override

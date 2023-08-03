@@ -35,7 +35,6 @@ import jdplus.toolkit.base.core.regarima.estimation.RegArmaProcessor;
 import jdplus.toolkit.base.core.regsarima.internal.HannanRissanenInitializer;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaFixedMapping;
-import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping2;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
@@ -207,7 +206,7 @@ public class RegSarimaComputer implements IRegArimaComputer<SarimaModel> {
     public RegArimaEstimation<SarimaModel> optimize(RegArimaModel<SarimaModel> regs, IArimaMapping<SarimaModel> mapping) {
         SarimaModel arima = regs.arima();
         if (mapping == null) {
-            mapping = SarimaMapping.of(arima.orders());
+            mapping = SarimaMapping2.of(arima.orders());
         }
         return estimate(regs, mapping, (SarimaModel) arima.stationaryTransformation().getStationaryModel(), eps);
     }
