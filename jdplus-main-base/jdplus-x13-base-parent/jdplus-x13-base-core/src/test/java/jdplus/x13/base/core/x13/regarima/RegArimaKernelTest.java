@@ -269,7 +269,7 @@ public class RegArimaKernelTest {
         }
         System.out.println("RG3");
         System.out.println(n);
-        assertTrue(n >= .8 * all.length);
+        assertTrue(n >= .9 * all.length);
     }
 
     @Test

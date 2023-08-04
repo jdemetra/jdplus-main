@@ -36,8 +36,8 @@ public class FilterUtility {
     final double EPS = 1e-9;
 
     /**
-     * Checks that the absolute values of all the inverse of the given roots are lower than
-     * the given limit.
+     * Checks that the absolute values of all the inverse of the given roots are
+     * lower than the given limit.
      *
      * @param roots The roots
      * @param rmin The limit (positive number)
@@ -49,7 +49,7 @@ public class FilterUtility {
         }
         for (int i = 0; i < roots.length; ++i) {
             double n = (roots[i].abs());
-            if (1/n >= rmin) {
+            if (1 / n >= rmin) {
                 return false;
             }
         }
@@ -57,8 +57,8 @@ public class FilterUtility {
     }
 
     /**
-     * Checks that the norm of the inverse of the roots of a given polynomial are higher than
-     * rmin
+     * Checks that the norm of the inverse of the roots of a given polynomial
+     * are higher than rmin
      *
      * @param c The coefficients of the polynomial (excluding the constant,
      * which is considered as 1). The polynomial is 1+c(0)x+...
@@ -82,9 +82,9 @@ public class FilterUtility {
                 if (ro > 0) { // Roots are (-a+-sqrt(ro))/(2b)
                     double sro = Math.sqrt(ro);
                     double x0 = (-a + sro) / (2 * b), x1 = (-a - sro) / (2 * b);
-                    return 1/Math.abs(x0) < rmin && 1/Math.abs(x1) < rmin;
+                    return 1 / Math.abs(x0) < rmin && 1 / Math.abs(x1) < rmin;
                 } else // Roots are (-a+-isqrt(-ro))/(2b). Abs(roots) = (1/2b)*sqrt((a*a - a*a+4*b))=1/sqr(b)
-                    // b is necessary positive
+                // b is necessary positive
                 {
                     return Math.sqrt(b) < rmin;
                 }
@@ -227,13 +227,14 @@ public class FilterUtility {
         for (int i = 0; i < roots.length; ++i) {
             Complex root = roots[i];
             double n = roots[i].abs();
-            if (1/n > rmin) {
-                if (n < rmin) {
-                    roots[i] = root.inv();
-                } else {
-                    // in ]1/rmin, rmin[
-                    roots[i] = root.div(n*(rmin-EPS));
+            if (n < 1 / rmin) {
+                if (n < 1) {
+                    root = root.inv();
                 }
+                if (n > rmin) {
+                    root = root.div(rmin - EPS);
+                }
+                roots[i] = root;
                 changed = true;
             }
         }
