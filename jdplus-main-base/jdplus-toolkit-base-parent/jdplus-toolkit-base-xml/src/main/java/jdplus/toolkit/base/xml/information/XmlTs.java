@@ -16,6 +16,8 @@
  */
 package jdplus.toolkit.base.xml.information;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
@@ -28,6 +30,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import jdplus.toolkit.base.api.data.Doubles;
 
 /**
  *
@@ -55,6 +58,13 @@ public class XmlTs implements IXmlConverter<Ts> {
      */
     @XmlElement
     public Integer firstPeriod;
+
+    // Alternative storage for more general tsdata (high-frequency)
+    @XmlElement
+    public XmlTsUnit unit;
+
+    @XmlElement
+    public String start;
 
     /**
      *
@@ -91,10 +101,17 @@ public class XmlTs implements IXmlConverter<Ts> {
     @Override
     public void copy(Ts t) {
         TsData tsdata = t.getData();
-        TsPeriod start = tsdata.getStart();
-        freq = start.getUnit().getAnnualFrequency();
-        firstYear = start.year();
-        firstPeriod = start.annualPosition() + 1;
+        TsPeriod tstart = tsdata.getStart();
+        int ifreq = tstart.getUnit().getAnnualFrequency();
+        if (ifreq > 0) {
+            freq=ifreq;
+            firstYear = tstart.year();
+            firstPeriod = tstart.annualPosition() + 1;
+        } else {
+            unit = new XmlTsUnit();
+            unit.copy(tstart.getUnit());
+            start = tstart.start().format(DateTimeFormatter.ISO_DATE_TIME);
+        }
         data = tsdata.getValues().toArray();
         source = t.getMoniker().getSource();
         identifier = t.getMoniker().getId();
@@ -112,7 +129,7 @@ public class XmlTs implements IXmlConverter<Ts> {
      */
     @Override
     public Ts create() {
-        TsMoniker moniker = (source == null && identifier == null)? TsMoniker.of() : TsMoniker.of(source, identifier);
+        TsMoniker moniker = (source == null && identifier == null) ? TsMoniker.of() : TsMoniker.of(source, identifier);
         Ts.Builder info = Ts.builder()
                 .name(name)
                 .moniker(moniker)
@@ -122,7 +139,15 @@ public class XmlTs implements IXmlConverter<Ts> {
             info.meta(metaData.create());
         }
         if (data != null) {
-            info.data(XmlTsData.of(freq, firstYear, firstPeriod, data));
+            if (freq != null) {
+                info.data(XmlTsData.of(freq, firstYear, firstPeriod, data));
+            } else {
+                LocalDateTime tstart = LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
+                TsPeriod pstart = TsPeriod.of(unit.create(), tstart);
+                info.data(TsData.ofInternal(pstart, data == null ? Doubles.EMPTYARRAY : data));
+
+            }
+
         }
         return info.build();
     }

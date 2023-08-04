@@ -34,7 +34,7 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 @lombok.Builder( toBuilder = true)
 public class SarimaMapping2 implements IArimaMapping<SarimaModel> {
 
-    public static final double ARMAX = 0.99999;
+    public static final double ARMAX = 0.99;
     public static final double MAMAX = 1;
     public static final double STEP = Math.sqrt(2.220446e-16);
     private double arLimit;
@@ -71,7 +71,7 @@ public class SarimaMapping2 implements IArimaMapping<SarimaModel> {
     public static SarimaMapping2 of(SarimaOrders spec) {
         return SarimaMapping2
                 .builder(spec)
-                .arLimit(1)
+                .arLimit(ARMAX)
                 .maLimit(1)
                 .build();
     }

@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.arima;
 
+import jdplus.toolkit.base.api.dstats.ContinuousDistribution;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.dstats.Normal;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -45,7 +46,7 @@ public final class ArimaSeriesGenerator {
         private double startMean = 100;
         private double startStdev = 10;
         private final RandomNumberGenerator rng;
-        private Distribution dist = new Normal();
+        private ContinuousDistribution dist = new Normal();
 
         private Builder() {
             rng = XorshiftRNG.fromSystemNanoTime();
@@ -72,7 +73,7 @@ public final class ArimaSeriesGenerator {
          * @param distribution
          * @return
          */
-        public Builder distribution(Distribution distribution) {
+        public Builder distribution(ContinuousDistribution distribution) {
             dist = distribution;
             return this;
         }
@@ -104,7 +105,7 @@ public final class ArimaSeriesGenerator {
     private final double startMean;
     private final double startStdev;
     private final RandomNumberGenerator rng;
-    private final Distribution distribution;
+    private final ContinuousDistribution distribution;
 
     public ArimaSeriesGenerator() {
         this(new Builder());
@@ -265,7 +266,7 @@ public final class ArimaSeriesGenerator {
         return z;
     }
 
-    public static double[] generate(IArimaModel model, int n, double[] initial, Distribution distribution, int warmup) {
+    public static double[] generate(IArimaModel model, int n, double[] initial, ContinuousDistribution distribution, int warmup) {
         Polynomial phi = model.getAr().asPolynomial();
         int p = phi.degree();
         if (initial.length < p) {

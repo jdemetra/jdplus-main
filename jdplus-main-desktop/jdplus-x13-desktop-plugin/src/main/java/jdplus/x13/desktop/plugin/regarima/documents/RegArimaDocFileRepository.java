@@ -27,6 +27,7 @@ public final class RegArimaDocFileRepository extends AbstractFileItemRepository<
     @Override
     public boolean load(WorkspaceItem<RegArimaDocument> item) {
         return loadFile(item, (RegArimaDocument o) -> {
+            o.setLocked(true);
             item.setElement(o);
             item.resetDirty();
         });

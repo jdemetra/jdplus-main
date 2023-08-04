@@ -27,6 +27,7 @@ public final class X13DocFileRepository extends AbstractFileItemRepository< X13D
     @Override
     public boolean load(WorkspaceItem<X13Document> item) {
         return loadFile(item, (X13Document o) -> {
+            o.setLocked(true);
             item.setElement(o);
             item.resetDirty();
         });

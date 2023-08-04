@@ -7,9 +7,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- ![OTHER] DeepSelect instead of Select to read MetaData with "." in key
+- ![UI] Modify menus for reference specifications
+
+### Fixed
+
+- ![STAT] Correct deviances in diffuse likelihood
+- ![STAT] Correct covariance of ARMA parameters in models with quasi-unit roots in AR
+- ![UI] Save correctly modified multi-processing
+
 ### Added
 
-- ![OTHER] Add classes to simplify the link with R (revision history)
+- ![STAT] Add Poisson distribution
 - ![OTHER] Serialize High-frequency series (modelling part)
 
 

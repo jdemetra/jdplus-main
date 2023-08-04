@@ -25,7 +25,7 @@ import jdplus.toolkit.base.api.modelling.highfreq.TransformSpec;
  * @author PALATEJ
  */
 @lombok.experimental.UtilityClass
-class TransformSpecMapping {
+public class TransformSpecMapping {
 
     final String FN = "function",
             AICDIFF = "aicdiff"

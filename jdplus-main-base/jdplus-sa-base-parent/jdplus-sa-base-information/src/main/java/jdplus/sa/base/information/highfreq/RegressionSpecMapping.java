@@ -34,7 +34,7 @@ import jdplus.toolkit.base.api.modelling.highfreq.HolidaysSpec;
  * @author PALATEJ
  */
 @lombok.experimental.UtilityClass
-class RegressionSpecMapping {
+public class RegressionSpecMapping {
 
     final String CAL = "calendar", EASTER = "easter",
             OUTLIER = "outlier", OUTLIERS = "outlier*",

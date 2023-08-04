@@ -54,6 +54,7 @@ import jdplus.toolkit.base.core.regarima.RegArimaModel;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaFixedMapping;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
+import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping2;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
 import jdplus.toolkit.base.core.timeseries.simplets.Transformations;
@@ -741,7 +742,7 @@ public final class ModelDescription {
             }
             return new SarimaFixedMapping(specification(), DoubleSeq.of(p), b);
         } else {
-            return SarimaMapping.of(specification());
+            return SarimaMapping2.of(specification());
         }
     }
 

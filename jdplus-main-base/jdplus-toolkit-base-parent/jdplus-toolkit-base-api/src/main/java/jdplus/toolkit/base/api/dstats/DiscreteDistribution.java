@@ -25,6 +25,15 @@ import nbbrd.design.Development;
  */
 @Development(status = Development.Status.Release)
 public interface DiscreteDistribution extends Distribution {
+
+    /**
+     * Returns the lower or upper tail probability of x
+     *
+     * @param x The value for which the probability is returned
+     * @return The requested probability (double in [0, 1]).
+     * @throws DStatException
+     */
+    double getProbability(long x) throws DStatException;
     /**
      * Returns the left bound (if any). Throws an exception otherwise
      * 
@@ -38,4 +47,14 @@ public interface DiscreteDistribution extends Distribution {
      * @return
      */
     long getRightBound();
+    
+    /**
+     * Generates a random value from the given distribution
+     *
+     * @param rng the random number generator used to create the value
+     * @return The random number
+     * @throws DStatException
+     */
+    long random(RandomNumberGenerator rng) throws DStatException;
+    
 }

@@ -42,10 +42,10 @@ import org.openide.windows.WindowManager;
         id = "demetra.sa.multiprocessing.actions.EditRefSpecification")
 @ActionRegistration(displayName = "#CTL_EditRefSpecification", lazy = false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1510),
-    @ActionReference(path = MultiProcessingManager.LOCALPATH + Edit.PATH, position = 1510)
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + RefSpecification.PATH , position = 1510),
+    @ActionReference(path = MultiProcessingManager.LOCALPATH + RefSpecification.PATH, position = 1510)
 })
-@Messages("CTL_EditRefSpecification=Edit Reference Specification...")
+@Messages("CTL_EditRefSpecification=Modify...")
 public final class EditRefSpecification extends ActiveViewAction<SaBatchUI> {
 
     public EditRefSpecification() {
