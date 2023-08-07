@@ -1143,7 +1143,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
 
         @Override
         protected String getText(SaNode item) {
-            if (!item.isProcessed()) {
+            if (!item.isProcessed() || item.results() == null) {
                 return null;
             }
             ProcQuality quality = item.results().getQuality();
@@ -1152,7 +1152,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
 
         @Override
         protected Color getColor(SaNode item) {
-            return item.isProcessed() ? getColor(item.results().getQuality()) : null;
+            return item.isProcessed() && item.results() != null ? getColor(item.results().getQuality()) : null;
         }
 
         Color getColor(ProcQuality quality) {
@@ -1190,7 +1190,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             label.setText("");
             SaNode item = (SaNode) value;
-            if (!item.isProcessed()) {
+            if (!item.isProcessed() || item.results() == null) {
                 return label;
             }
             String[] warnings = item.results().getLog().
