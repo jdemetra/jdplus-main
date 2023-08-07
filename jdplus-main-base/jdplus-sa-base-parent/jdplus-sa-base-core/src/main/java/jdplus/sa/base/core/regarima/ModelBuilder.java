@@ -332,7 +332,6 @@ public class ModelBuilder implements IModelBuilder{
             return null;
         } else if (tdspec.getHolidays() != null) {
             GenericTradingDays gtd = GenericTradingDays.contrasts(dc);
-            
             HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
             return HolidaysCorrectedTradingDays.builder().corrector(corrector).clustering(gtd.getClustering()).build();
         } else if (tdspec.getUserVariables() != null) {

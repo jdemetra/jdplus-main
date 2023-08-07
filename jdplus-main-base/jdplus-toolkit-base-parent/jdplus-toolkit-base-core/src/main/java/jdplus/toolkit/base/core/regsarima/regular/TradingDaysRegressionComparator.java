@@ -91,7 +91,6 @@ public class TradingDaysRegressionComparator {
             cdesc.addVariable(Variable.variable("td", td[i]));
             rslt[i + 2] = cdesc.estimate(processor);
         }
-
         return rslt;
     }
 

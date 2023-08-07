@@ -143,13 +143,21 @@ final class SpecDecoder {
 
             }
         } else if (tdspec.isTest()) {
-            CalendarEffectsDetectionModule cal = CalendarEffectsDetectionModule.builder()
-                    .tradingDays(ModelBuilder.tradingDays(spec, context))
+            ITradingDaysVariable ctd = ModelBuilder.tradingDays(spec, context);
+            builder.calendarTest(AutomaticTradingDaysRegressionTest.builder()
                     .leapYear(ModelBuilder.leapYear(tdspec))
-                    .adjust(tdspec.isAutoAdjust() ? tdspec.getLengthOfPeriodType() : LengthOfPeriodType.None)
-                    .modelComparator(comparator)
-                    .build();
-            builder.calendarTest(cal);
+                    .tradingDays(new ITradingDaysVariable[]{ctd})
+                    .adjust(tdspec.isAutoAdjust())
+                    .estimationPrecision(spec.getEstimate().getIntermediatePrecision())
+                    .bic()
+                    .build());
+//            CalendarEffectsDetectionModule cal = CalendarEffectsDetectionModule.builder()
+//                    .tradingDays(ModelBuilder.tradingDays(spec, context))
+//                    .leapYear(ModelBuilder.leapYear(tdspec))
+//                    .adjust(tdspec.isAutoAdjust() ? tdspec.getLengthOfPeriodType() : LengthOfPeriodType.None)
+//                    .modelComparator(comparator)
+//                    .build();
+//            builder.calendarTest(cal);
         }
         EasterSpec espec = spec.getRegression().getCalendar().getEaster();
         if (espec.getType() != EasterSpec.Type.UNUSED && espec.isTest()) {

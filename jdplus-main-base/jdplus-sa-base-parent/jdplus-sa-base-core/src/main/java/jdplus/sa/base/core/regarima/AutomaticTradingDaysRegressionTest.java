@@ -142,7 +142,7 @@ public class AutomaticTradingDaysRegressionTest implements IRegressionModule {
         tmp.setAirline(true);
         tmp.setMean(true);
         if (td != null) {
-            tmp.addVariable(Variable.variable("td", td, ModelBuilder.calendarAMI));
+            tmp.addVariable(Variable.variable("td", td,  ModelBuilder.calendarAMI));
         }
         if (lp != null) {
             tmp.addVariable(Variable.variable("lp", lp, ModelBuilder.calendarAMI));

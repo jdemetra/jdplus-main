@@ -26,7 +26,7 @@ public class BasicSpecUI extends BaseTramoSpecUI {
     }
 
     public DateSelectorUI getSpan() {
-        return new DateSelectorUI(core() .getTransform().getSpan(), UserInterfaceContext.INSTANCE.getDomain(), isRo(), selector->updateSpan(selector));
+        return new DateSelectorUI(core().getTransform().getSpan(), UserInterfaceContext.INSTANCE.getDomain(), isRo(), selector->updateSpan(selector));
     }
     
     public void updateSpan(TimeSelector span){
