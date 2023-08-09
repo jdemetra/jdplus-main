@@ -22,19 +22,21 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
  *
  * @author PALATEJ
  */
-public class SymmetricFiltering implements ISymmetricFiltering {
+public class QuasiSymmetricFiltering implements IQuasiSymmetricFiltering {
 
     private final SymmetricFilter cf;
-    private final IFiniteFilter[] ff;
+    private final IFiniteFilter[] lf;
+    private final IFiniteFilter[] rf;
 
-    public SymmetricFiltering(SymmetricFilter cf, IFiniteFilter[] endPoints) {
+    public QuasiSymmetricFiltering(SymmetricFilter cf, IFiniteFilter[] lf, IFiniteFilter[] rf) {
         this.cf = cf;
-        this.ff = endPoints.clone();
+        this.lf = lf.clone();
+        this.rf = rf.clone();
     }
 
     @Override
     public DoubleSeq process(DoubleSeq in) {
-         return FilterUtility.filter(in, cf, ff);
+        return FilterUtility.filter(in, cf, lf, rf);
     }
 
     @Override
@@ -43,8 +45,13 @@ public class SymmetricFiltering implements ISymmetricFiltering {
     }
 
     @Override
-    public IFiniteFilter[] endPointsFilters() {
-        return ff;
+    public IFiniteFilter[] leftEndPointsFilters() {
+        return lf.clone();
+    }
+
+    @Override
+    public IFiniteFilter[] rightEndPointsFilters() {
+        return rf.clone();
     }
 
 

@@ -20,38 +20,31 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**
  *
+ * Same (mirror) end points filters
  * @author Jean Palate <jean.palate@nbb.be>
  */
-public interface ISymmetricFiltering extends IFiltering{
-    /**
-     * Applies a filter on an input to produce an output.
-     * The input and the output must have the same length
-     * @param in
-     * @return 
-     */
+public interface ISymmetricFiltering extends IQuasiSymmetricFiltering{
     @Override
     DoubleSeq process(DoubleSeq in);
-    
-    SymmetricFilter symmetricFilter();
-    
-    @Override
-    default IFiniteFilter centralFilter(){
-        return symmetricFilter();
-    }
     
     IFiniteFilter[] endPointsFilters();
     
     @Override
     default IFiniteFilter[] leftEndPointsFilters(){
-        IFiniteFilter[] lf=endPointsFilters().clone();
-        for (int i=0; i<lf.length; ++i){
-            lf[i]=lf[i].mirror();
-        }
-        return lf;
+        return mirror(endPointsFilters());
     }
 
     @Override
     default IFiniteFilter[] rightEndPointsFilters(){
         return endPointsFilters();
+    }
+    
+    public static IFiniteFilter[] mirror(IFiniteFilter[] rightEndPoints){
+        IFiniteFilter[] lf=rightEndPoints.clone();
+        for (int i=0; i<lf.length; ++i){
+            lf[i]=lf[i].mirror();
+        }
+        return lf;
+        
     }
 }

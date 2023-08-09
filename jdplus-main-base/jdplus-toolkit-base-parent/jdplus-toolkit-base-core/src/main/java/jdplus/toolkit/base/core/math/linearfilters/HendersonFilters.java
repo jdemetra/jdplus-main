@@ -66,10 +66,11 @@ public final class HendersonFilters {
         return filter;
     }
     
-    public ISymmetricFiltering of(HendersonSpec spec){
+    public IQuasiSymmetricFiltering of(HendersonSpec spec){
 
         SymmetricFilter sf=ofLength(1+2*spec.getFilterHorizon());
-        IFiniteFilter[] rf = AsymmetricFiltersFactory.musgraveFilters(sf, spec.getIcRatio());
-        return new SymmetricFiltering(sf, rf);
+        IFiniteFilter[] rf = AsymmetricFiltersFactory.musgraveFilters(sf, spec.getRightIcRatio());
+        IFiniteFilter[] lf = ISymmetricFiltering.mirror(spec.isSymmetric() ? rf :AsymmetricFiltersFactory.musgraveFilters(sf, spec.getLeftIcRatio()));
+        return new QuasiSymmetricFiltering(sf, lf, rf);
     }
 }

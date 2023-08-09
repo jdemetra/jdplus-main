@@ -53,7 +53,7 @@ public class AsymmetricFiltersFactoryTest {
         System.out.println(st);
         
         HendersonSpec spec=new HendersonSpec(11, 4.5);
-        ISymmetricFiltering sf = HendersonFilters.of(spec);
+        IQuasiSymmetricFiltering sf = HendersonFilters.of(spec);
         st = sf.process(s);
         System.out.println(st);
    }

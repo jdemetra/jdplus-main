@@ -21,6 +21,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.CommentAction;
 import jdplus.toolkit.desktop.plugin.workspace.nodes.DeleteAction;
 import jdplus.toolkit.desktop.plugin.workspace.nodes.NewAction;
 import jdplus.toolkit.desktop.plugin.workspace.nodes.RenameAction;
+import jdplus.toolkit.desktop.plugin.workspace.nodes.SaveAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -31,7 +32,7 @@ public class Actions {
     @ActionID(category = "Edit",
             id = "demetra.desktop.workspace.nodes.RenameAction")
     @ActionReferences({
-        @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1050)
+        @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1150)
     })
     public static RenameAction renameAction() {
         return new RenameAction();
@@ -40,7 +41,7 @@ public class Actions {
     @ActionID(category = "Edit",
             id = "demetra.desktop.workspace.nodes.CommentAction")
     @ActionReferences({
-        @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1150)
+        @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1200)
     })
     public static CommentAction commentAction() {
         return new CommentAction();
@@ -49,7 +50,7 @@ public class Actions {
     @ActionID(category = "Edit",
             id = "demetra.desktop.workspace.nodes.DeleteAction")
     @ActionReferences({
-        @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1100)
+        @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1050)
     })
     public static DeleteAction deleteAction() {
         return new DeleteAction();
@@ -64,4 +65,12 @@ public class Actions {
         return new NewAction();
     }
     
+    @ActionID(category = "Edit",
+            id = "demetra.desktop.workspace.nodes.SaveAction")
+    @ActionReferences({
+        @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1100, separatorAfter=1110)
+    })
+    public static SaveAction saveAction() {
+        return new SaveAction();
+    }
 }
