@@ -83,7 +83,7 @@ public class LocalPolynomialFilters {
                     AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
                 case MMSRE ->
                     AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
-                    spec.getRightAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
+                    spec.getAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
                     spec.getPassBand(), spec.getTimelinessWeight());
                 default ->
                     directAsymmetricFilters(len, spec.getPolynomialDegree(), kernel(spec));
@@ -119,7 +119,7 @@ public class LocalPolynomialFilters {
                     AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
                 case MMSRE ->
                     AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
-                    spec.getRightAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
+                    spec.getAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
                     spec.getPassBand(), spec.getTimelinessWeight());
                 default ->
                     directAsymmetricFilters(len, spec.getPolynomialDegree(), kernel(spec));
@@ -127,7 +127,7 @@ public class LocalPolynomialFilters {
             leftAsymmetricFilters = ISymmetricFiltering.mirror(switch (spec.getAsymmetricFilters()) {
                 case MMSRE ->
                     AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
-                    spec.getLeftAsymmetricPolynomialDegree(), spec.getLeftLinearModelCoefficients(), null,
+                    spec.getAsymmetricPolynomialDegree(), spec.getLeftLinearModelCoefficients(), null,
                     spec.getPassBand(), spec.getTimelinessWeight());
                 default ->
                     rightAsymmetricFilters;

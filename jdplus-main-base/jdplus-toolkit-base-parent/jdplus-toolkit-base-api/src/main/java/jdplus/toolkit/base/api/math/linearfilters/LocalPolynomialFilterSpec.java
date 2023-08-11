@@ -16,9 +16,12 @@ import jdplus.toolkit.base.api.data.Doubles;
 @lombok.Builder(builderClassName = "Builder", toBuilder = true)
 public class LocalPolynomialFilterSpec implements FilterSpec {
 
+    public static final double DEF_SLOPE = 2 / (Math.sqrt(Math.PI) * 3.5);
+
     public static final LocalPolynomialFilterSpec DEF_TREND_SPEC = builder().build();
     public static final LocalPolynomialFilterSpec DEF_SEAS_SPEC = builder()
             .filterHorizon(2)
+            .polynomialDegree(0)
             .asymmetricPolynomialDegree(0)
             .linearModelCoefficients(Doubles.EMPTYARRAY)
             .build();
@@ -55,12 +58,7 @@ public class LocalPolynomialFilterSpec implements FilterSpec {
      * Only used with MMSRE filters Max degree of the polynomials preserved by
      * the asymmetric filters
      */
-    private int leftAsymmetricPolynomialDegree;
-    /**
-     * Only used with MMSRE filters Max degree of the polynomials preserved by
-     * the asymmetric filters
-     */
-    private int rightAsymmetricPolynomialDegree;
+    private int asymmetricPolynomialDegree;
     /**
      * Only used with MMSRE filters Coefficients of the extrapolating
      * polynomial. See Luati-Proietti for more details
@@ -88,8 +86,8 @@ public class LocalPolynomialFilterSpec implements FilterSpec {
                 .kernel(KernelOption.Henderson)
                 .polynomialDegree(2)
                 .asymmetricFilters(AsymmetricFilterOption.MMSRE)
-                .asymmetricPolynomialDegree(1)
-                .linearModelCoefficients(2 / (Math.sqrt(Math.PI) * 3.5))
+                .asymmetricPolynomialDegree(0)
+                .linearModelCoefficients(DEF_SLOPE)
                 .timelinessWeight(0)
                 .passBand(Math.PI / 8);
 
@@ -97,24 +95,18 @@ public class LocalPolynomialFilterSpec implements FilterSpec {
 
     public static class Builder {
 
-        public Builder asymmetricPolynomialDegree(int degree) {
-            leftAsymmetricPolynomialDegree = degree;
-            rightAsymmetricPolynomialDegree = degree;
-            return this;
-        }
-
         public Builder linearModelCoefficients(double... coefs) {
             leftLinearModelCoefficients = coefs;
             rightLinearModelCoefficients = coefs;
             return this;
         }
 
-        Builder leftLinearModelCoefficients(double... coefs) {
+        public Builder leftLinearModelCoefficients(double... coefs) {
             leftLinearModelCoefficients = coefs;
             return this;
         }
 
-        Builder rightLinearModelCoefficients(double... coefs) {
+        public Builder rightLinearModelCoefficients(double... coefs) {
             rightLinearModelCoefficients = coefs;
             return this;
         }
@@ -123,8 +115,7 @@ public class LocalPolynomialFilterSpec implements FilterSpec {
     public boolean isSymmetric() {
         return asymmetricFilters == AsymmetricFilterOption.CutAndNormalize
                 || asymmetricFilters == AsymmetricFilterOption.Direct
-                || (leftAsymmetricPolynomialDegree == rightAsymmetricPolynomialDegree
-                && Arrays.equals(leftLinearModelCoefficients, rightLinearModelCoefficients));
+                || Arrays.equals(leftLinearModelCoefficients, rightLinearModelCoefficients);
     }
 
 }
