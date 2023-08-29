@@ -18,31 +18,40 @@ package internal.spreadsheet.base.api;
 
 import ec.util.spreadsheet.Book;
 import ec.util.spreadsheet.BookFactoryLoader;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
+import nbbrd.design.StaticFactoryMethod;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Philippe Charles
  */
-public interface BookSupplier {
+//@MightBePromoted
+@lombok.Builder
+public final class SpreadsheetManager {
 
-    @NonNull Optional<Book.Factory> getFactory(@NonNull File file);
-
-    default boolean hasFactory(@NonNull File file) {
-        return getFactory(file).isPresent();
+    @StaticFactoryMethod
+    public static @NonNull SpreadsheetManager ofServiceLoader() {
+        return SpreadsheetManager.builder().factories(BookFactoryLoader.get()).build();
     }
 
-    @NonNull
-    static BookSupplier usingServiceLoader() {
-        return BookSupplier::getLoaderByFile;
-    }
+    @lombok.Singular
+    private final List<Book.Factory> factories;
 
-    static Optional<Book.Factory> getLoaderByFile(File file) {
-        return BookFactoryLoader.get()
+    public @NonNull Optional<Book.Factory> getReader(@NonNull File file) {
+        return factories
                 .stream()
                 .filter(Book.Factory::canLoad)
+                .filter(factory -> factory.accept(file))
+                .findFirst();
+    }
+
+    public @NonNull Optional<Book.Factory> getWriter(@NonNull File file) {
+        return factories
+                .stream()
+                .filter(Book.Factory::canStore)
                 .filter(factory -> factory.accept(file))
                 .findFirst();
     }

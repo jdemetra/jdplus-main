@@ -24,6 +24,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-sa-base-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.nbbrd.spreadsheet4j</groupId>
             <artifactId>spreadsheet-api</artifactId>
             <version>${spreadsheet4j.version}</version>
