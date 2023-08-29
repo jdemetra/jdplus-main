@@ -1079,6 +1079,10 @@ public final class FastMatrix implements Matrix.Mutable {
         return DataBlock.of(storage, beg, end, 1);
     }
 
+    /**
+     * 
+     * @return An array containing the sum of each rows (size=number of rows)
+     */
     public DataBlock rowSums() {
         if (isEmpty()) {
             return DataBlock.EMPTY;
@@ -1091,6 +1095,10 @@ public final class FastMatrix implements Matrix.Mutable {
         return x;
     }
 
+    /**
+     * 
+     * @return An array containing the sum of each columns (size=number of columns)
+     */
     public DataBlock columnSums() {
         if (isEmpty()) {
             return DataBlock.EMPTY;

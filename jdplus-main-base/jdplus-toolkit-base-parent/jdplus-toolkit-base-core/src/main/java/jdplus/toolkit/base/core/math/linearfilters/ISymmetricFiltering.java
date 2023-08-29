@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.core.data.DataBlock;
 
 /**
  *
@@ -24,8 +25,17 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
  * @author Jean Palate <jean.palate@nbb.be>
  */
 public interface ISymmetricFiltering extends IQuasiSymmetricFiltering{
+    
     @Override
-    DoubleSeq process(DoubleSeq in);
+    default DoubleSeq process(DoubleSeq in) {
+         return FilterUtility.filter(in, centralFilter(), endPointsFilters());
+    }
+
+    
+    @Override
+    default void inPlaceProcess(DoubleSeq in, DataBlock out) {
+        FilterUtility.inPlaceFilter(in, out, centralFilter(), endPointsFilters());
+    }
     
     IFiniteFilter[] endPointsFilters();
     

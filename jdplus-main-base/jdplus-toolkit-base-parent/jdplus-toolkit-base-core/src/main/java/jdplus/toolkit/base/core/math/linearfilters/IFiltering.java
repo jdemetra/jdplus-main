@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.core.data.DataBlock;
 
 /**
  *
@@ -29,7 +30,13 @@ public interface IFiltering {
      * @param in
      * @return 
      */
-    DoubleSeq process(DoubleSeq in);
+   default DoubleSeq process(DoubleSeq in) {
+        return FilterUtility.filter(in, centralFilter(), leftEndPointsFilters(), rightEndPointsFilters());
+    }
+
+    default void inPlaceProcess(DoubleSeq in, DataBlock out) {
+        FilterUtility.inPlaceFilter(in, out, centralFilter(), leftEndPointsFilters(), rightEndPointsFilters());
+    }
     
     IFiniteFilter centralFilter();
     

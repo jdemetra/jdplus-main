@@ -371,6 +371,25 @@ public class FilterUtility {
         return DoubleSeq.of(x);
     }
 
+    public void inPlaceFilter(DoubleSeq input, DataBlock output, final SymmetricFilter filter, final IFiniteFilter[] afilters) {
+        int h = filter.getUpperBound(), ilen = input.length();
+        DataBlock out = output.drop(h, h);
+        filter.apply(input, out);
+
+        // apply the endpoints filters
+        if (afilters != null) {
+            for (int i = 0, j = h - 1, k = ilen - h, len = 2 * h; i < h; ++i, --len, --j, ++k) {
+                output.set(j, afilters[i].apply(input.extract(0, len).reverse()));
+                output.set(k, afilters[i].apply(input.extract(ilen - len, len)));
+            }
+        } else {
+            for (int i = 0; i < h; ++i) {
+                output.set(i, Double.NaN);
+                output.set(ilen - i - 1, Double.NaN);
+            }
+        }
+    }
+
     /**
      * Applies the given central filter on a sequence of input. The end-points
      * are handled using given asymmetric filters or set to NaN.
@@ -416,4 +435,33 @@ public class FilterUtility {
         }
         return DoubleSeq.of(x);
     }
+
+    public void inPlaceFilter(DoubleSeq input, DataBlock output, final IFiniteFilter filter, final IFiniteFilter[] leftFilters, final IFiniteFilter[] rightFilters) {
+        int l = -filter.getLowerBound(), u = filter.getUpperBound(), ilen = input.length();
+        DataBlock out = output.drop(l, u);
+        filter.apply(input, out);
+
+        // apply the endpoints filters
+        if (leftFilters != null) {
+            for (int i = 0, j = l - 1; i < l; ++i, --j) {
+                IFiniteFilter cur = leftFilters[i];
+                output.set(j, cur.apply(input.extract(j + cur.getLowerBound(), cur.length())));
+            }
+        } else {
+            for (int i = 0; i < l; ++i) {
+                output.set(i, Double.NaN);
+            }
+        }
+        if (rightFilters != null) {
+            for (int i = 0, j = ilen - u; i < u; ++i, ++j) {
+                IFiniteFilter cur = rightFilters[i];
+                output.set(j, cur.apply(input.extract(j + cur.getLowerBound(), cur.length())));
+            }
+        } else {
+            for (int i = 0; i < l; ++i) {
+                output.set(ilen - i - 1, Double.NaN);
+            }
+        }
+    }
+
 }

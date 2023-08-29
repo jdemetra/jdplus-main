@@ -16,8 +16,6 @@
  */
 package jdplus.toolkit.base.core.math.linearfilters;
 
-import jdplus.toolkit.base.api.data.DoubleSeq;
-
 /**
  *
  * @author PALATEJ
@@ -32,11 +30,6 @@ public class QuasiSymmetricFiltering implements IQuasiSymmetricFiltering {
         this.cf = cf;
         this.lf = lf.clone();
         this.rf = rf.clone();
-    }
-
-    @Override
-    public DoubleSeq process(DoubleSeq in) {
-        return FilterUtility.filter(in, cf, lf, rf);
     }
 
     @Override

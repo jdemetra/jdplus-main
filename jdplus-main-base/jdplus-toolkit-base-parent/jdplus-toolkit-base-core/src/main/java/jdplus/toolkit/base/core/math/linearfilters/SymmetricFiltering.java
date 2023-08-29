@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.core.data.DataBlock;
 
 /**
  *
@@ -30,11 +31,6 @@ public class SymmetricFiltering implements ISymmetricFiltering {
     public SymmetricFiltering(SymmetricFilter cf, IFiniteFilter[] endPoints) {
         this.cf = cf;
         this.ff = endPoints.clone();
-    }
-
-    @Override
-    public DoubleSeq process(DoubleSeq in) {
-         return FilterUtility.filter(in, cf, ff);
     }
 
     @Override

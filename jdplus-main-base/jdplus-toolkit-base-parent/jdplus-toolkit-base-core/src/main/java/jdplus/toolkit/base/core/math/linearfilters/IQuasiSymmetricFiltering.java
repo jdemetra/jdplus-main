@@ -16,23 +16,14 @@
  */
 package jdplus.toolkit.base.core.math.linearfilters;
 
-import jdplus.toolkit.base.api.data.DoubleSeq;
-
 /**
  *
  * @author Jean Palate <jean.palate@nbb.be>
  */
 public interface IQuasiSymmetricFiltering extends IFiltering{
-    /**
-     * Applies a filter on an input to produce an output.
-     * The input and the output must have the same length
-     * @param in
-     * @return 
-     */
-    @Override
-    DoubleSeq process(DoubleSeq in);
     
     @Override
     SymmetricFilter centralFilter();
    
+
 }
