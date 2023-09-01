@@ -16,12 +16,15 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.util.Collections2;
 import jdplus.toolkit.base.api.util.List2;
 import jdplus.toolkit.base.api.util.function.BiIntPredicate;
 import lombok.AccessLevel;
+import lombok.NonNull;
+import nbbrd.design.StaticFactoryMethod;
+import nbbrd.design.VisibleForTesting;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;
@@ -31,11 +34,11 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  * @author Philippe Charles
  */
+@lombok.Getter
 @lombok.AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TsDataTable {
 
@@ -47,23 +50,21 @@ public final class TsDataTable {
         PRESENT, UNUSED, BEFORE, AFTER, EMPTY
     }
 
-    @NonNull
-    public static <X> TsDataTable of(@NonNull Iterable<X> col, @NonNull Function<? super X, TsData> toData) {
+    @StaticFactoryMethod
+    public static @NonNull <X> TsDataTable of(@NonNull Iterable<X> col, @NonNull Function<? super X, TsData> toData) {
         TsDomain domain = computeDomain(Collections2.streamOf(col).map(toData).map(TsData::getDomain).filter(o -> !o.isEmpty()).iterator());
         return new TsDataTable(domain, Collections2.streamOf(col).map(toData).collect(List2.toUnmodifiableList()));
     }
 
-    @NonNull
-    public static TsDataTable of(@NonNull Iterable<TsData> col) {
+    @StaticFactoryMethod
+    public static @NonNull TsDataTable of(@NonNull Iterable<TsData> col) {
         return of(col, Function.identity());
     }
 
     @lombok.NonNull
-    @lombok.Getter
     private final TsDomain domain;
 
     @lombok.NonNull
-    @lombok.Getter
     private final List<TsData> data;
 
     @NonNull
@@ -177,6 +178,7 @@ public final class TsDataTable {
         }
     }
 
+    @VisibleForTesting
     static TsDomain computeDomain(Iterator<TsDomain> domains) {
         if (!domains.hasNext()) {
             return TsDomain.DEFAULT_EMPTY;
@@ -254,5 +256,4 @@ public final class TsDataTable {
         }
         return Matrix.of(m, nr, nc);
     }
-
 }
