@@ -96,6 +96,11 @@
             <artifactId>jdplus-toolkit-desktop-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-sa-desktop-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- 3. JD3 Base -->
         <dependency>

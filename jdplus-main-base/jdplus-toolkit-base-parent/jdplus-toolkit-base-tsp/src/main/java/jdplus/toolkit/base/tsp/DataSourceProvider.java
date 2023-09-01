@@ -33,7 +33,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public interface DataSourceProvider extends TsProvider, HasDataSourceList, HasDataHierarchy, HasDataDisplayName, HasDataMoniker {
 
     @Override
-    default void reload(DataSource dataSource) {
+    default void reload(@NonNull DataSource dataSource) {
         clearCache();
     }
 

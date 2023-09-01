@@ -1,12 +1,15 @@
 package jdplus.toolkit.base.api.util;
 
+import lombok.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.Objects;
 
 @lombok.Value
-public final class NamedObject<T> implements Comparable<NamedObject<T>> {
+public class NamedObject<T> implements Comparable<NamedObject<T>> {
 
-    private String name;
-    private T object;
+    @NonNull String name;
+    @Nullable T object;
 
     @Override
     public int compareTo(NamedObject<T> o) {

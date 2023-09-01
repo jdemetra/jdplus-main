@@ -29,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @DemetraPlusLegacy
 @lombok.Value
-public final class LegacyFileId implements CharSequence {
+public class LegacyFileId implements CharSequence {
 
     @Nullable
     public static LegacyFileId of(@NonNull File file) {

@@ -172,22 +172,22 @@ public final class ProviderNode extends AbstractNode {
         }
 
         @Override
-        public void opened(DataSource dataSource) {
+        public void opened(@NonNull DataSource dataSource) {
             refresh(true);
         }
 
         @Override
-        public void closed(DataSource dataSource) {
+        public void closed(@NonNull DataSource dataSource) {
             refresh(true);
         }
 
         @Override
-        public void changed(DataSource dataSource) {
+        public void changed(@NonNull DataSource dataSource) {
             refresh(true);
         }
 
         @Override
-        public void allClosed(String providerName) {
+        public void allClosed(@NonNull String providerName) {
             refresh(true);
         }
     }

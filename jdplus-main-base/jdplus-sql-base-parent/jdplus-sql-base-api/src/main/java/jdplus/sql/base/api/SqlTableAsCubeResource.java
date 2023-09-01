@@ -89,52 +89,52 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
     }
 
     @Override
-    public CubeId getRoot() throws Exception {
+    public @NonNull CubeId getRoot() throws Exception {
         return root;
     }
 
     @Override
-    public AllSeriesCursor getAllSeriesCursor(CubeId id) throws Exception {
+    public @NonNull AllSeriesCursor getAllSeriesCursor(@NonNull CubeId id) throws Exception {
         return new AllSeriesQuery(id, table, labelColumn).call(supplier, db);
     }
 
     @Override
-    public AllSeriesWithDataCursor<java.util.Date> getAllSeriesWithDataCursor(CubeId id) throws Exception {
+    public @NonNull AllSeriesWithDataCursor<java.util.Date> getAllSeriesWithDataCursor(@NonNull CubeId id) throws Exception {
         return new AllSeriesWithDataQuery(id, table, labelColumn, tdp).call(supplier, db);
     }
 
     @Override
-    public SeriesCursor getSeriesCursor(CubeId id) throws Exception {
+    public @NonNull SeriesCursor getSeriesCursor(@NonNull CubeId id) throws Exception {
         return new SeriesQuery(id, table, labelColumn).call(supplier, db);
     }
 
     @Override
-    public SeriesWithDataCursor<java.util.Date> getSeriesWithDataCursor(CubeId id) throws Exception {
+    public @NonNull SeriesWithDataCursor<java.util.Date> getSeriesWithDataCursor(@NonNull CubeId id) throws Exception {
         return new SeriesWithDataQuery(id, table, labelColumn, tdp).call(supplier, db);
     }
 
     @Override
-    public ChildrenCursor getChildrenCursor(CubeId id) throws Exception {
+    public @NonNull ChildrenCursor getChildrenCursor(@NonNull CubeId id) throws Exception {
         return new ChildrenQuery(id, table).call(supplier, db);
     }
 
     @Override
-    public TsDataBuilder<java.util.Date> newBuilder() {
+    public @NonNull TsDataBuilder<java.util.Date> newBuilder() {
         return TsDataBuilder.byCalendar(new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault()), gathering, ObsCharacteristics.ORDERED);
     }
 
     @Override
-    public String getDisplayName() throws Exception {
+    public @NonNull String getDisplayName() throws Exception {
         return TableAsCubeUtil.getDisplayName(db, table, tdp.getValueColumn(), gathering);
     }
 
     @Override
-    public String getDisplayName(CubeId id) throws Exception {
+    public @NonNull String getDisplayName(@NonNull CubeId id) throws Exception {
         return TableAsCubeUtil.getDisplayName(id, LABEL_COLLECTOR);
     }
 
     @Override
-    public String getDisplayNodeName(CubeId id) throws Exception {
+    public @NonNull String getDisplayNodeName(@NonNull CubeId id) throws Exception {
         return TableAsCubeUtil.getDisplayNodeName(id);
     }
 

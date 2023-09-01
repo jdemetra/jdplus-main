@@ -1,7 +1,6 @@
 package jdplus.toolkit.desktop.plugin.core.completion;
 
 import jdplus.toolkit.desktop.plugin.completion.AutoCompletionSpi;
-import jdplus.toolkit.base.api.util.List2;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import ec.util.completion.swing.CustomListCellRenderer;
@@ -51,7 +50,7 @@ public final class CharsetAutoCompletionService implements AutoCompletionSpi {
     }
 
     private static List<Charset> getCharsets() {
-        return List2.copyOf(Charset.availableCharsets().values());
+        return List.copyOf(Charset.availableCharsets().values());
     }
 
     private static List<Charset> getCharsets(List<Charset> allValues, String term) {

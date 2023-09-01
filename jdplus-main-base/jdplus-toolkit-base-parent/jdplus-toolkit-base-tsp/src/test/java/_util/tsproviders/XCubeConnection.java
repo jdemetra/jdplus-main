@@ -22,6 +22,7 @@ import jdplus.toolkit.base.tsp.cube.CubeId;
 import jdplus.toolkit.base.tsp.cube.CubeSeries;
 import jdplus.toolkit.base.tsp.cube.CubeSeriesWithData;
 import nbbrd.io.function.IORunnable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -42,59 +43,59 @@ public final class XCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Optional<IOException> testConnection() {
+    public @NonNull Optional<IOException> testConnection() {
         return Optional.empty();
     }
 
     @Override
-    public CubeId getRoot() {
+    public @NonNull CubeId getRoot() {
         return root;
     }
 
     @Override
-    public Stream<CubeSeries> getAllSeries(CubeId id) throws IOException {
+    public @NonNull Stream<CubeSeries> getAllSeries(@NonNull CubeId id) throws IOException {
         Objects.requireNonNull(id);
         return Stream.<CubeSeries>empty().onClose(IORunnable.unchecked(resourceWatcher.watchAsCloseable("getAllSeries")::close));
     }
 
     @Override
-    public Stream<CubeSeriesWithData> getAllSeriesWithData(CubeId id) throws IOException {
+    public @NonNull Stream<CubeSeriesWithData> getAllSeriesWithData(@NonNull CubeId id) throws IOException {
         Objects.requireNonNull(id);
         return Stream.<CubeSeriesWithData>empty().onClose(IORunnable.unchecked(resourceWatcher.watchAsCloseable("getAllSeriesWithData")::close));
     }
 
     @Override
-    public Optional<CubeSeries> getSeries(CubeId id) throws IOException {
+    public @NonNull Optional<CubeSeries> getSeries(@NonNull CubeId id) throws IOException {
         Objects.requireNonNull(id);
         resourceWatcher.watchAsCloseable("getSeries").close();
         return Optional.empty();
     }
 
     @Override
-    public Optional<CubeSeriesWithData> getSeriesWithData(CubeId id) throws IOException {
+    public @NonNull Optional<CubeSeriesWithData> getSeriesWithData(@NonNull CubeId id) throws IOException {
         Objects.requireNonNull(id);
         resourceWatcher.watchAsCloseable("getSeriesWithData").close();
         return Optional.empty();
     }
 
     @Override
-    public Stream<CubeId> getChildren(CubeId id) throws IOException {
+    public @NonNull Stream<CubeId> getChildren(@NonNull CubeId id) throws IOException {
         Objects.requireNonNull(id);
         return Stream.<CubeId>empty().onClose(IORunnable.unchecked(resourceWatcher.watchAsCloseable("getChildren")::close));
     }
 
     @Override
-    public String getDisplayName() throws IOException {
+    public @NonNull String getDisplayName() throws IOException {
         return root.toString();
     }
 
     @Override
-    public String getDisplayName(CubeId id) throws IOException {
+    public @NonNull String getDisplayName(@NonNull CubeId id) throws IOException {
         return id.toString();
     }
 
     @Override
-    public String getDisplayNodeName(CubeId id) throws IOException {
+    public @NonNull String getDisplayNodeName(@NonNull CubeId id) throws IOException {
         return id.toString();
     }
 

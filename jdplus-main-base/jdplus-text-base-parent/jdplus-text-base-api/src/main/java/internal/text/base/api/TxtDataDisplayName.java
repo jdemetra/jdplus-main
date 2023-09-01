@@ -24,6 +24,7 @@ import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataDisplayName;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Locale;
 import java.util.function.Function;
@@ -39,14 +40,14 @@ public final class TxtDataDisplayName implements HasDataDisplayName {
     private final Function<DataSource, TsCollection> data;
 
     @Override
-    public String getDisplayName(DataSource dataSource) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSource dataSource) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
         TxtBean bean = param.get(dataSource);
         return bean.getFile().getPath() + toString(bean.getGathering());
     }
 
     @Override
-    public String getDisplayName(DataSet dataSet) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSet dataSet) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
         Integer index = param.getSeriesParam().get(dataSet);
 
@@ -55,7 +56,7 @@ public final class TxtDataDisplayName implements HasDataDisplayName {
     }
 
     @Override
-    public String getDisplayNodeName(DataSet dataSet) {
+    public @NonNull String getDisplayNodeName(@NonNull DataSet dataSet) {
         return getDisplayName(dataSet);
     }
 

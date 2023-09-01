@@ -25,6 +25,7 @@ import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -108,7 +109,7 @@ public final class PocProvider implements DataSourceProvider {
     private static final class PocDataDisplayName implements HasDataDisplayName {
 
         @Override
-        public String getDisplayName(DataSource dataSource) throws IllegalArgumentException {
+        public @NonNull String getDisplayName(@NonNull DataSource dataSource) throws IllegalArgumentException {
             DataSourcePreconditions.checkProvider(NAME, dataSource);
             switch (TYPE_PARAM.get(dataSource::getParameter)) {
                 case NORMAL:
@@ -129,13 +130,13 @@ public final class PocProvider implements DataSourceProvider {
         }
 
         @Override
-        public String getDisplayName(DataSet dataSet) throws IllegalArgumentException {
+        public @NonNull String getDisplayName(@NonNull DataSet dataSet) throws IllegalArgumentException {
             DataSourcePreconditions.checkProvider(NAME, dataSet);
             return getDisplayName(dataSet.getDataSource()) + System.lineSeparator() + getDisplayNodeName(dataSet);
         }
 
         @Override
-        public String getDisplayNodeName(DataSet dataSet) throws IllegalArgumentException {
+        public @NonNull String getDisplayNodeName(@NonNull DataSet dataSet) throws IllegalArgumentException {
             DataSourcePreconditions.checkProvider(NAME, dataSet);
             TsDomain domain = TYPE_PARAM.get(dataSet.getDataSource()::getParameter).getDomain(INDEX_PARAM.get(dataSet::getParameter));
             return domain.getStartPeriod().getUnit() + "#" + domain.getLength();
@@ -155,7 +156,7 @@ public final class PocProvider implements DataSourceProvider {
         }
 
         @Override
-        public List<DataSet> children(DataSource dataSource) throws IllegalArgumentException, IOException {
+        public @NonNull List<DataSet> children(@NonNull DataSource dataSource) throws IllegalArgumentException, IOException {
             DataSourcePreconditions.checkProvider(NAME, dataSource);
             try (Stream<DataSetTs> cursor = cursorOf(dataSource, TsInformationType.Definition)) {
                 return cursor.map(DataSetTs::getId).collect(Collectors.toList());
@@ -165,19 +166,19 @@ public final class PocProvider implements DataSourceProvider {
         }
 
         @Override
-        public List<DataSet> children(DataSet parent) throws IllegalArgumentException, IOException {
+        public @NonNull List<DataSet> children(@NonNull DataSet parent) throws IllegalArgumentException, IOException {
             DataSourcePreconditions.checkProvider(NAME, parent);
             throw new IllegalArgumentException("Invalid hierarchy");
         }
 
         @Override
-        public Stream<DataSetTs> getData(DataSource dataSource, TsInformationType type) throws IllegalArgumentException, IOException {
+        public @NonNull Stream<DataSetTs> getData(@NonNull DataSource dataSource, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
             DataSourcePreconditions.checkProvider(NAME, dataSource);
             return cursorOf(dataSource, type);
         }
 
         @Override
-        public Stream<DataSetTs> getData(DataSet dataSet, TsInformationType type) throws IllegalArgumentException, IOException {
+        public @NonNull Stream<DataSetTs> getData(@NonNull DataSet dataSet, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
             DataSourcePreconditions.checkProvider(NAME, dataSet);
             if (!dataSet.getKind().equals(DataSet.Kind.SERIES)) {
                 throw new IllegalArgumentException("Invalid hierarchy");

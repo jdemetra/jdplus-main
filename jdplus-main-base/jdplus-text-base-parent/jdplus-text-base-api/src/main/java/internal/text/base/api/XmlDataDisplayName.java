@@ -22,6 +22,7 @@ import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataDisplayName;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.List;
 import java.util.function.Function;
@@ -37,14 +38,14 @@ public final class XmlDataDisplayName implements HasDataDisplayName {
     private final Function<DataSource, List<TsCollection>> resources;
 
     @Override
-    public String getDisplayName(DataSource dataSource) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSource dataSource) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
         XmlBean bean = param.get(dataSource);
         return bean.getFile().getPath();
     }
 
     @Override
-    public String getDisplayName(DataSet dataSet) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSet dataSet) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
         Integer collectionIndex = param.getCollectionParam().get(dataSet);
         Integer seriesIndex = param.getSeriesParam().get(dataSet);
@@ -70,7 +71,7 @@ public final class XmlDataDisplayName implements HasDataDisplayName {
     }
 
     @Override
-    public String getDisplayNodeName(DataSet dataSet) {
+    public @NonNull String getDisplayNodeName(@NonNull DataSet dataSet) {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
         Integer collectionIndex = param.getCollectionParam().get(dataSet);
         Integer seriesIndex = param.getSeriesParam().get(dataSet);
