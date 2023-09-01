@@ -18,7 +18,6 @@ package jdplus.toolkit.base.api.timeseries;
 
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.util.Collections2;
-import jdplus.toolkit.base.api.util.List2;
 import jdplus.toolkit.base.api.util.function.BiIntPredicate;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -52,8 +51,8 @@ public final class TsDataTable {
 
     @StaticFactoryMethod
     public static @NonNull <X> TsDataTable of(@NonNull Iterable<X> col, @NonNull Function<? super X, TsData> toData) {
-        TsDomain domain = computeDomain(Collections2.streamOf(col).map(toData).map(TsData::getDomain).filter(o -> !o.isEmpty()).iterator());
-        return new TsDataTable(domain, Collections2.streamOf(col).map(toData).collect(List2.toUnmodifiableList()));
+        TsDomain domain = computeDomain(Collections2.streamOf(col).map(toData).filter(Objects::nonNull).map(TsData::getDomain).filter(o -> !o.isEmpty()).iterator());
+        return new TsDataTable(domain, Collections2.streamOf(col).map(toData).toList());
     }
 
     @StaticFactoryMethod
@@ -61,20 +60,16 @@ public final class TsDataTable {
         return of(col, Function.identity());
     }
 
-    @lombok.NonNull
-    private final TsDomain domain;
+    private final @NonNull TsDomain domain;
 
-    @lombok.NonNull
-    private final List<TsData> data;
+    private final @NonNull List<TsData> data;
 
-    @NonNull
-    public Cursor cursor(@NonNull DistributionType distribution) {
+    public @NonNull Cursor cursor(@NonNull DistributionType distribution) {
         Objects.requireNonNull(distribution);
         return cursor(i -> distribution);
     }
 
-    @NonNull
-    public Cursor cursor(@NonNull IntFunction<DistributionType> distribution) {
+    public @NonNull Cursor cursor(@NonNull IntFunction<DistributionType> distribution) {
         Objects.requireNonNull(distribution);
         return new Cursor(getDistributors(data, distribution));
     }
@@ -166,16 +161,11 @@ public final class TsDataTable {
     }
 
     private static BiIntPredicate getDistributor(DistributionType type) {
-        switch (type) {
-            case FIRST:
-                return (pos, size) -> pos % size == 0;
-            case LAST:
-                return (pos, size) -> pos % size == size - 1;
-            case MIDDLE:
-                return (pos, size) -> pos % size == size / 2;
-            default:
-                throw new RuntimeException();
-        }
+        return switch (type) {
+            case FIRST -> (pos, size) -> pos % size == 0;
+            case LAST -> (pos, size) -> pos % size == size - 1;
+            case MIDDLE -> (pos, size) -> pos % size == size / 2;
+        };
     }
 
     @VisibleForTesting
