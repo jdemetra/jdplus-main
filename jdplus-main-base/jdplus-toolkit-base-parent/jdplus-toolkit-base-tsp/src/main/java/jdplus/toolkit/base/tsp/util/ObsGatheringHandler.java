@@ -25,7 +25,7 @@ public final class ObsGatheringHandler implements PropertyHandler<ObsGathering> 
     private final PropertyHandler<Boolean> includeMissingValues;
 
     @Override
-    public @NonNull ObsGathering get(@NonNull Function<? super String, ? extends CharSequence> properties) {
+    public @NonNull @org.checkerframework.checker.nullness.qual.NonNull ObsGathering get(@NonNull @org.checkerframework.checker.nullness.qual.NonNull Function<? super String, ? extends CharSequence> properties) {
         return ObsGathering
                 .builder()
                 .unit(unit.get(properties))
@@ -36,7 +36,7 @@ public final class ObsGatheringHandler implements PropertyHandler<ObsGathering> 
     }
 
     @Override
-    public void set(@NonNull BiConsumer<? super String, ? super String> properties, @Nullable ObsGathering value) {
+    public void set(@NonNull @org.checkerframework.checker.nullness.qual.NonNull BiConsumer<? super String, ? super String> properties, @Nullable ObsGathering value) {
         if (value != null) {
             unit.set(properties, value.getUnit());
             aggregationType.set(properties, value.getAggregationType());

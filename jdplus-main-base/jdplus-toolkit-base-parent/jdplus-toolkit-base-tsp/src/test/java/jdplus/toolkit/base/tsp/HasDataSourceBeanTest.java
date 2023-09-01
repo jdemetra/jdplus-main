@@ -21,6 +21,7 @@ import jdplus.toolkit.base.tsp.HasDataSourceBean;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -69,7 +70,7 @@ public class HasDataSourceBeanTest {
         private final Property<String> detailsParam = Property.of("d", "defaultValue", Parser.onString(), Formatter.onString());
 
         @Override
-        public CustomBean getDefaultValue() {
+        public @NonNull CustomBean getDefaultValue() {
             CustomBean result = new CustomBean();
             result.file = fileParam.getDefaultValue();
             result.details = detailsParam.getDefaultValue();
@@ -77,7 +78,7 @@ public class HasDataSourceBeanTest {
         }
 
         @Override
-        public CustomBean get(DataSource config) {
+        public @NonNull CustomBean get(@NonNull DataSource config) {
             CustomBean result = new CustomBean();
             result.file = fileParam.get(config::getParameter);
             result.details = detailsParam.get(config::getParameter);
@@ -85,7 +86,7 @@ public class HasDataSourceBeanTest {
         }
 
         @Override
-        public void set(DataSource.Builder builder, CustomBean value) {
+        public void set(DataSource.@NonNull Builder builder, CustomBean value) {
             fileParam.set(builder::parameter, value.file);
             detailsParam.set(builder::parameter, value.details);
         }

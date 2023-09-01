@@ -64,7 +64,7 @@ public final class SpreadSheetSupport implements HasDataHierarchy, HasTsStream {
     private final DataSetConversion<SpreadSheetConnection, String> seriesName;
 
     @Override
-    public List<DataSet> children(DataSource dataSource) throws IllegalArgumentException, IOException {
+    public @NonNull List<DataSet> children(@NonNull DataSource dataSource) throws IllegalArgumentException, IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
 
         try (SpreadSheetConnection connection = spreadsheet.open(dataSource)) {
@@ -79,7 +79,7 @@ public final class SpreadSheetSupport implements HasDataHierarchy, HasTsStream {
     }
 
     @Override
-    public List<DataSet> children(DataSet parent) throws IllegalArgumentException, IOException {
+    public @NonNull List<DataSet> children(@NonNull DataSet parent) throws IllegalArgumentException, IOException {
         DataSourcePreconditions.checkProvider(providerName, parent);
 
         try (SpreadSheetConnection connection = spreadsheet.open(parent.getDataSource())) {
@@ -96,7 +96,7 @@ public final class SpreadSheetSupport implements HasDataHierarchy, HasTsStream {
     }
 
     @Override
-    public Stream<DataSetTs> getData(DataSource dataSource, TsInformationType type) throws IOException {
+    public @NonNull Stream<DataSetTs> getData(@NonNull DataSource dataSource, @NonNull TsInformationType type) throws IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
 
         try (SpreadSheetConnection connection = spreadsheet.open(dataSource)) {
@@ -113,7 +113,7 @@ public final class SpreadSheetSupport implements HasDataHierarchy, HasTsStream {
     }
 
     @Override
-    public Stream<DataSetTs> getData(DataSet dataSet, TsInformationType type) throws IllegalArgumentException, IOException {
+    public @NonNull Stream<DataSetTs> getData(@NonNull DataSet dataSet, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
 
         try (SpreadSheetConnection connection = spreadsheet.open(dataSet.getDataSource())) {

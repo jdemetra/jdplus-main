@@ -19,6 +19,8 @@ package test.tsprovider.grid;
 import jdplus.toolkit.base.tsp.grid.GridDataType;
 import jdplus.toolkit.base.tsp.grid.GridLayout;
 import jdplus.toolkit.base.tsp.grid.GridOutput;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,12 +45,12 @@ public final class ArrayGridOutput implements GridOutput {
     private final Map<String, Object[][]> data = new HashMap<>();
 
     @Override
-    public Set<GridDataType> getDataTypes() {
+    public @NonNull Set<GridDataType> getDataTypes() {
         return dataTypes;
     }
 
     @Override
-    public Stream open(String name, int rows, int columns) throws IOException {
+    public @NonNull Stream open(@NonNull String name, int rows, int columns) throws IOException {
         return new ArrayGridOutputStream(name, rows, columns);
     }
 

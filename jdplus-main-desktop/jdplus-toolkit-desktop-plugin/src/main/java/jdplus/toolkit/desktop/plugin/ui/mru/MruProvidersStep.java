@@ -12,6 +12,7 @@ import jdplus.toolkit.desktop.plugin.util.InstallerStep;
 import java.util.prefs.Preferences;
 
 import jdplus.toolkit.base.tsp.DataSource;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 
@@ -59,22 +60,22 @@ public class MruProvidersStep extends InstallerStep.LookupStep<DataSourceProvide
     static class Listener implements DataSourceListener {
 
         @Override
-        public void opened(DataSource dataSource) {
+        public void opened(@NonNull DataSource dataSource) {
             TsManager.get()
                     .getProvider(DataSourceProvider.class, dataSource)
                     .ifPresent(provider -> MruList.getProvidersInstance().add(new SourceId(dataSource, provider.getDisplayName(dataSource))));
         }
 
         @Override
-        public void closed(DataSource ds) {
+        public void closed(@NonNull DataSource ds) {
         }
 
         @Override
-        public void changed(DataSource ds) {
+        public void changed(@NonNull DataSource ds) {
         }
 
         @Override
-        public void allClosed(String string) {
+        public void allClosed(@NonNull String string) {
         }
     }
 }

@@ -63,7 +63,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
 
     //<editor-fold defaultstate="collapsed" desc="HasDataHierarchy">
     @Override
-    public List<DataSet> children(DataSource dataSource) throws IOException {
+    public @NonNull List<DataSet> children(@NonNull DataSource dataSource) throws IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
 
         try (CubeConnection connection = cube.open(dataSource)) {
@@ -91,7 +91,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
     }
 
     @Override
-    public List<DataSet> children(DataSet parent) throws IOException {
+    public @NonNull List<DataSet> children(@NonNull DataSet parent) throws IOException {
         DataSourcePreconditions.checkProvider(providerName, parent);
 
         if (!DataSet.Kind.COLLECTION.equals(parent.getKind())) {
@@ -121,7 +121,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
 
     //<editor-fold defaultstate="collapsed" desc="HasTsStream">
     @Override
-    public Stream<DataSetTs> getData(DataSource dataSource, TsInformationType type) throws IOException {
+    public @NonNull Stream<DataSetTs> getData(@NonNull DataSource dataSource, @NonNull TsInformationType type) throws IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
 
         CubeConnection connection = cube.open(dataSource);
@@ -142,7 +142,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
     }
 
     @Override
-    public Stream<DataSetTs> getData(DataSet dataSet, TsInformationType type) throws IOException {
+    public @NonNull Stream<DataSetTs> getData(@NonNull DataSet dataSet, @NonNull TsInformationType type) throws IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
 
         CubeConnection connection = cube.open(dataSet.getDataSource());
@@ -168,7 +168,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
 
     //<editor-fold defaultstate="collapsed" desc="HasDataDisplayName">
     @Override
-    public String getDisplayName(DataSource dataSource) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSource dataSource) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
 
         try (CubeConnection connection = cube.open(dataSource)) {
@@ -179,7 +179,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
     }
 
     @Override
-    public String getDisplayName(DataSet dataSet) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSet dataSet) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
 
         try (CubeConnection connection = cube.open(dataSet.getDataSource())) {
@@ -191,7 +191,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
     }
 
     @Override
-    public String getDisplayNodeName(DataSet dataSet) throws IllegalArgumentException {
+    public @NonNull String getDisplayNodeName(@NonNull DataSet dataSet) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
 
         try (CubeConnection connection = cube.open(dataSet.getDataSource())) {
@@ -244,12 +244,12 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
         private final CubeId root;
 
         @Override
-        public CubeId getDefaultValue() {
+        public @NonNull CubeId getDefaultValue() {
             return root;
         }
 
         @Override
-        public CubeId get(DataSet config) {
+        public @NonNull CubeId get(@NonNull DataSet config) {
             String[] dimValues = new String[root.getMaxLevel()];
             int i = 0;
             while (i < dimValues.length) {
@@ -263,7 +263,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
         }
 
         @Override
-        public void set(DataSet.Builder builder, CubeId value) {
+        public void set(DataSet.@NonNull Builder builder, CubeId value) {
             for (int i = 0; i < value.getLevel(); i++) {
                 builder.parameter(value.getDimensionId(i), value.getDimensionValue(i));
             }
@@ -278,12 +278,12 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
         private final String name;
 
         @Override
-        public CubeId getDefaultValue() {
+        public @NonNull CubeId getDefaultValue() {
             return root;
         }
 
         @Override
-        public CubeId get(DataSet config) {
+        public @NonNull CubeId get(@NonNull DataSet config) {
             String value = config.getParameter(name);
             if (value == null || value.isEmpty()) {
                 return getDefaultValue();
@@ -300,7 +300,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
         }
 
         @Override
-        public void set(DataSet.Builder builder, CubeId value) {
+        public void set(DataSet.@NonNull Builder builder, CubeId value) {
             if (value.getLevel() > 0) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(value.getDimensionValue(0));

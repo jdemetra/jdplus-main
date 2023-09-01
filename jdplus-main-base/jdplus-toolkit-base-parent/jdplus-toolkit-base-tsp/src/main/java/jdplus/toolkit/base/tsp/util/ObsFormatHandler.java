@@ -23,7 +23,7 @@ public final class ObsFormatHandler implements PropertyHandler<ObsFormat> {
     private final PropertyHandler<Boolean> ignoreNumberGrouping;
 
     @Override
-    public @NonNull ObsFormat get(@NonNull Function<? super String, ? extends CharSequence> properties) {
+    public @NonNull @org.checkerframework.checker.nullness.qual.NonNull ObsFormat get(@NonNull @org.checkerframework.checker.nullness.qual.NonNull Function<? super String, ? extends CharSequence> properties) {
         return ObsFormat
                 .builder()
                 .locale(locale.get(properties))
@@ -34,7 +34,7 @@ public final class ObsFormatHandler implements PropertyHandler<ObsFormat> {
     }
 
     @Override
-    public void set(@NonNull BiConsumer<? super String, ? super String> properties, @Nullable ObsFormat value) {
+    public void set(@NonNull @org.checkerframework.checker.nullness.qual.NonNull BiConsumer<? super String, ? super String> properties, @Nullable ObsFormat value) {
         if (value != null) {
             locale.set(properties, value.getLocale());
             dateTimePattern.set(properties, value.getDateTimePattern());

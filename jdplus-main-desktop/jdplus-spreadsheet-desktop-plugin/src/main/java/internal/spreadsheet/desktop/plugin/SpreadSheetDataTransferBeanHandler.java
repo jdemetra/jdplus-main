@@ -2,6 +2,8 @@ package internal.spreadsheet.desktop.plugin;
 
 import jdplus.toolkit.base.tsp.grid.GridReader;
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -30,7 +32,7 @@ final class SpreadSheetDataTransferBeanHandler implements PropertyHandler<Spread
     private final PropertyHandler<Boolean> exportTable;
 
     @Override
-    public SpreadSheetDataTransferBean get(Function<? super String, ? extends CharSequence> properties) {
+    public @NonNull SpreadSheetDataTransferBean get(@NonNull Function<? super String, ? extends CharSequence> properties) {
         SpreadSheetDataTransferBean result = new SpreadSheetDataTransferBean();
         result.setImportTs(importTs.get(properties));
         result.setTsReader(tsReader.get(properties));
@@ -43,7 +45,7 @@ final class SpreadSheetDataTransferBeanHandler implements PropertyHandler<Spread
     }
 
     @Override
-    public void set(BiConsumer<? super String, ? super String> properties, SpreadSheetDataTransferBean value) {
+    public void set(@NonNull BiConsumer<? super String, ? super String> properties, SpreadSheetDataTransferBean value) {
         if (value != null) {
             importTs.set(properties, value.isImportTs());
             tsReader.set(properties, value.getTsReader());

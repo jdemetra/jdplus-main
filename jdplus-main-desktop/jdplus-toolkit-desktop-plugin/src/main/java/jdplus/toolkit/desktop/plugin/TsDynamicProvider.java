@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import nbbrd.service.ServiceProvider;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  *
@@ -65,7 +66,7 @@ public final class TsDynamicProvider implements TsProvider {
     }
 
     @Override
-    public TsCollection getTsCollection(TsMoniker moniker, TsInformationType type) throws IOException, IllegalArgumentException {
+    public @NonNull TsCollection getTsCollection(@NonNull TsMoniker moniker, @NonNull TsInformationType type) throws IOException, IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -77,7 +78,7 @@ public final class TsDynamicProvider implements TsProvider {
     }
 
     @Override
-    public Ts getTs(TsMoniker moniker, TsInformationType type) throws IOException, IllegalArgumentException {
+    public @NonNull Ts getTs(@NonNull TsMoniker moniker, @NonNull TsInformationType type) throws IOException, IllegalArgumentException {
         synchronized (DOCUMENTS) {
             if (moniker.getSource().equals(DYNAMIC)) {
                 String[] items = moniker.getId().split("@");
@@ -110,7 +111,7 @@ public final class TsDynamicProvider implements TsProvider {
     }
 
     @Override
-    public String getSource() {
+    public @NonNull String getSource() {
         return DYNAMIC;
     }
 

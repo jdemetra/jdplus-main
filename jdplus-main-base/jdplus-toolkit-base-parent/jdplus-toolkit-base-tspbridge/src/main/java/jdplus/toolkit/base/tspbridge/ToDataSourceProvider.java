@@ -32,7 +32,7 @@ public class ToDataSourceProvider extends ToTsProvider implements DataSourceProv
     }
 
     @Override
-    public void reload(DataSource dataSource) {
+    public void reload(@NonNull DataSource dataSource) {
         getDelegate().reload(TsConverter.fromDataSource(dataSource));
     }
 

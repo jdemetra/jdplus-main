@@ -24,6 +24,7 @@ import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import java.io.IOException;
 import java.util.stream.Stream;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  *
@@ -40,13 +41,13 @@ public final class FailingTsCursorSupport implements HasTsStream {
     }
 
     @Override
-    public Stream<DataSetTs> getData(DataSource dataSource, TsInformationType type) throws IllegalArgumentException, IOException {
+    public @NonNull Stream<DataSetTs> getData(@NonNull DataSource dataSource, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
         throw new IOException(message);
     }
 
     @Override
-    public Stream<DataSetTs> getData(DataSet dataSet, TsInformationType type) throws IllegalArgumentException, IOException {
+    public @NonNull Stream<DataSetTs> getData(@NonNull DataSet dataSet, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
         throw new IOException(message);
     }

@@ -22,6 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  *
@@ -42,23 +43,23 @@ public final class DefaultTsMeta<T> implements TsMeta<T> {
     private final Formatter<T> formatter;
 
     @Override
-    public T load(Map<String, String> meta) {
+    public T load(@NonNull Map<String, String> meta) {
         return load(meta::get);
     }
 
     @Override
-    public T load(Function<String, String> meta) {
+    public T load(@NonNull Function<String, String> meta) {
         String text = meta.apply(key);
         return text != null ? parser.parse(text) : null;
     }
 
     @Override
-    public void store(Map<String, String> meta, T value) {
+    public void store(@NonNull Map<String, String> meta, @NonNull T value) {
         store(meta::put, value);
     }
 
     @Override
-    public void store(BiConsumer<String, String> meta, T value) {
+    public void store(@NonNull BiConsumer<String, String> meta, @NonNull T value) {
         String text = formatter.formatAsString(value);
         meta.accept(key, text);
     }

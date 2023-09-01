@@ -19,6 +19,8 @@ package internal.spreadsheet.base.api.grid;
 import jdplus.toolkit.base.tsp.grid.GridDataType;
 import ec.util.spreadsheet.helpers.ArraySheet;
 import jdplus.toolkit.base.tsp.grid.GridOutput;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -38,7 +40,7 @@ public final class SheetGridOutput implements GridOutput {
     private ArraySheet result = null;
 
     @Override
-    public Set<GridDataType> getDataTypes() {
+    public @NonNull Set<GridDataType> getDataTypes() {
         EnumSet<GridDataType> dataTypes = EnumSet.noneOf(GridDataType.class);
         if (isSupportedDataType.test(String.class)) {
             dataTypes.add(GridDataType.STRING);
@@ -53,7 +55,7 @@ public final class SheetGridOutput implements GridOutput {
     }
 
     @Override
-    public Stream open(String name, int rows, int columns) {
+    public @NonNull Stream open(@NonNull String name, int rows, int columns) {
         return new SheetGridOutputStream(ArraySheet.builder(rows, columns).name(name));
     }
 

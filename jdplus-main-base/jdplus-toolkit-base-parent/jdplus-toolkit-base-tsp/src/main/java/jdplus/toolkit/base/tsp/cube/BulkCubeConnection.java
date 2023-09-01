@@ -63,7 +63,7 @@ public final class BulkCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Stream<CubeSeriesWithData> getAllSeriesWithData(CubeId ref) throws IOException {
+    public @NonNull Stream<CubeSeriesWithData> getAllSeriesWithData(@NonNull CubeId ref) throws IOException {
         if (!ref.isSeries()) {
             int cacheLevel = getCacheLevel();
             if (ref.getLevel() == cacheLevel) {
@@ -79,7 +79,7 @@ public final class BulkCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Optional<CubeSeriesWithData> getSeriesWithData(CubeId ref) throws IOException {
+    public @NonNull Optional<CubeSeriesWithData> getSeriesWithData(@NonNull CubeId ref) throws IOException {
         if (ref.isSeries()) {
             int cacheLevel = getCacheLevel();
             CubeId ancestor = ref.getAncestor(cacheLevel);
@@ -93,42 +93,42 @@ public final class BulkCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Optional<IOException> testConnection() {
+    public @NonNull Optional<IOException> testConnection() {
         return delegate.testConnection();
     }
 
     @Override
-    public CubeId getRoot() throws IOException {
+    public @NonNull CubeId getRoot() throws IOException {
         return delegate.getRoot();
     }
 
     @Override
-    public Stream<CubeSeries> getAllSeries(CubeId id) throws IOException {
+    public @NonNull Stream<CubeSeries> getAllSeries(@NonNull CubeId id) throws IOException {
         return delegate.getAllSeries(id);
     }
 
     @Override
-    public Optional<CubeSeries> getSeries(CubeId id) throws IOException {
+    public @NonNull Optional<CubeSeries> getSeries(@NonNull CubeId id) throws IOException {
         return delegate.getSeries(id);
     }
 
     @Override
-    public Stream<CubeId> getChildren(CubeId id) throws IOException {
+    public @NonNull Stream<CubeId> getChildren(@NonNull CubeId id) throws IOException {
         return delegate.getChildren(id);
     }
 
     @Override
-    public String getDisplayName() throws IOException {
+    public @NonNull String getDisplayName() throws IOException {
         return delegate.getDisplayName();
     }
 
     @Override
-    public String getDisplayName(CubeId id) throws IOException {
+    public @NonNull String getDisplayName(@NonNull CubeId id) throws IOException {
         return delegate.getDisplayName(id);
     }
 
     @Override
-    public String getDisplayNodeName(CubeId id) throws IOException {
+    public @NonNull String getDisplayNodeName(@NonNull CubeId id) throws IOException {
         return delegate.getDisplayNodeName(id);
     }
 

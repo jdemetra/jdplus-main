@@ -31,10 +31,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public interface FileLoader<B extends FileBean> extends DataSourceLoader<B>, FileFilter, HasFilePaths {
 
     @Override
+    @NonNull
     B newBean();
 
     @Override
-    B decodeBean(DataSource dataSource) throws IllegalArgumentException;
+    @NonNull
+    B decodeBean(@NonNull DataSource dataSource) throws IllegalArgumentException;
 
     @NonNull
     String getFileDescription();

@@ -21,6 +21,7 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.tsp.grid.GridReader;
 import jdplus.toolkit.base.tsp.util.IOCache;
 import internal.spreadsheet.base.api.grid.SheetGrid;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -71,12 +72,12 @@ public class SpreadSheetConnectionTest {
         private final ConcurrentMap<K, V> delegate;
 
         @Override
-        public void put(K key, V value) {
+        public void put(@NonNull K key, @NonNull V value) {
             delegate.put(key, value);
         }
 
         @Override
-        public V get(K key) {
+        public V get(@NonNull K key) {
             return delegate.get(key);
         }
 
