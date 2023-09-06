@@ -61,31 +61,7 @@
         <!-- 4. Other libraries -->
         <dependency>
             <groupId>com.github.nbbrd.spreadsheet4j</groupId>
-            <artifactId>spreadsheet-xmlss</artifactId>
-            <version>${spreadsheet4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.nbbrd.spreadsheet4j</groupId>
-            <artifactId>spreadsheet-od</artifactId>
-            <version>${spreadsheet4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.nbbrd.spreadsheet4j</groupId>
-            <artifactId>spreadsheet-xl</artifactId>
-            <version>${spreadsheet4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.nbbrd.spreadsheet4j</groupId>
-            <artifactId>spreadsheet-html</artifactId>
-            <version>${spreadsheet4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.nbbrd.spreadsheet4j</groupId>
-            <artifactId>spreadsheet-fastexcel</artifactId>
+            <artifactId>spreadsheet-standalone</artifactId>
             <version>${spreadsheet4j.version}</version>
             <scope>runtime</scope>
         </dependency>
