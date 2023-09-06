@@ -23,7 +23,7 @@ public class SpreadsheetRuntimeDependenciesTest {
                 .describedAs("Check runtime dependencies")
                 .satisfies(SpreadsheetRuntimeDependenciesTest::checkSpreadsheet)
                 .satisfies(SpreadsheetRuntimeDependenciesTest::checkSpreadsheet4j)
-                .hasSize(12);
+                .hasSize(3);
     }
 
     private static void checkSpreadsheet(List<? extends GAV> coordinates) {
@@ -38,24 +38,8 @@ public class SpreadsheetRuntimeDependenciesTest {
         assertThatGroupId(coordinates, "com.github.nbbrd.spreadsheet4j")
                 .has(sameVersion())
                 .extracting(GAV::getArtifactId)
-                .are(matchingPattern(compile("^spreadsheet-(api|util|xmlss|od|xl|html|fastexcel)$")))
-                .hasSize(7);
-
-        assertThatGroupId(coordinates, "com.github.miachm.sods")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("SODS");
-
-        assertThatGroupId(coordinates, "com.github.rzymek")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("opczip");
-
-        assertThatGroupId(coordinates, "org.dhatim")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("fastexcel");
-
-        assertThatGroupId(coordinates, "org.jsoup")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("jsoup");
+                .are(matchingPattern(compile("^spreadsheet-(api|standalone)$")))
+                .hasSize(2);
     }
 
     @MightBePromoted
