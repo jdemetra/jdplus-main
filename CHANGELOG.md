@@ -17,6 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![STAT] Correct deviances in diffuse likelihood
 - ![STAT] Correct covariance of ARMA parameters in models with quasi-unit roots in AR
 - ![UI] Save correctly modified multi-processing
+- ![IO] Fix NPE in grid reader when header is null
 
 ### Added
 

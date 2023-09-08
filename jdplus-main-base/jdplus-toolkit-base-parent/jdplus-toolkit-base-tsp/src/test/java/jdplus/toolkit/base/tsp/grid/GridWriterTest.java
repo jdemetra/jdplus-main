@@ -47,31 +47,31 @@ public class GridWriterTest {
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(false).ignoreDates(false).reverseChronology(false).build()),
                 new Object[][]{
                         {"x", "G1\nS1", "G1\nS2", "G2\nS1", "S1"},
-                        {JAN_2010, 1.01, 2.01, 3.01, null},
-                        {FEB_2010, null, null, 3.02, 4.02},
-                        {MAR_2010, 1.03, null, null, 4.03}
+                        {JAN_, 1.01, 2.01, 3.01, null},
+                        {FEB_, null, null, 3.02, 4.02},
+                        {MAR_, 1.03, null, null, 4.03}
                 });
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(false).ignoreDates(false).reverseChronology(true).build()),
                 new Object[][]{
                         {"x", "G1\nS1", "G1\nS2", "G2\nS1", "S1"},
-                        {MAR_2010, 1.03, null, null, 4.03},
-                        {FEB_2010, null, null, 3.02, 4.02},
-                        {JAN_2010, 1.01, 2.01, 3.01, null}
+                        {MAR_, 1.03, null, null, 4.03},
+                        {FEB_, null, null, 3.02, 4.02},
+                        {JAN_, 1.01, 2.01, 3.01, null}
                 });
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(true).ignoreDates(false).reverseChronology(false).build()),
                 new Object[][]{
-                        {JAN_2010, 1.01, 2.01, 3.01, null},
-                        {FEB_2010, null, null, 3.02, 4.02},
-                        {MAR_2010, 1.03, null, null, 4.03}
+                        {JAN_, 1.01, 2.01, 3.01, null},
+                        {FEB_, null, null, 3.02, 4.02},
+                        {MAR_, 1.03, null, null, 4.03}
                 });
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(true).ignoreDates(false).reverseChronology(true).build()),
                 new Object[][]{
-                        {MAR_2010, 1.03, null, null, 4.03},
-                        {FEB_2010, null, null, 3.02, 4.02},
-                        {JAN_2010, 1.01, 2.01, 3.01, null}
+                        {MAR_, 1.03, null, null, 4.03},
+                        {FEB_, null, null, 3.02, 4.02},
+                        {JAN_, 1.01, 2.01, 3.01, null}
                 });
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(false).ignoreDates(true).reverseChronology(false).build()),
@@ -124,7 +124,7 @@ public class GridWriterTest {
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(false).ignoreDates(false).reverseChronology(false).build()),
                 new Object[][]{
-                        {"x", JAN_2010, FEB_2010, MAR_2010},
+                        {"x", JAN_, FEB_, MAR_},
                         {"G1\nS1", 1.01, null, 1.03},
                         {"G1\nS2", 2.01, null, null},
                         {"G2\nS1", 3.01, 3.02, null},
@@ -133,7 +133,7 @@ public class GridWriterTest {
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(false).ignoreDates(false).reverseChronology(true).build()),
                 new Object[][]{
-                        {"x", MAR_2010, FEB_2010, JAN_2010},
+                        {"x", MAR_, FEB_, JAN_},
                         {"G1\nS1", 1.03, null, 1.01},
                         {"G1\nS2", null, null, 2.01},
                         {"G2\nS1", null, 3.02, 3.01},
@@ -142,7 +142,7 @@ public class GridWriterTest {
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(true).ignoreDates(false).reverseChronology(false).build()),
                 new Object[][]{
-                        {JAN_2010, FEB_2010, MAR_2010},
+                        {JAN_, FEB_, MAR_},
                         {1.01, null, 1.03},
                         {2.01, null, null},
                         {3.01, 3.02, null},
@@ -151,7 +151,7 @@ public class GridWriterTest {
 
         assertDeepEqualTo(toArray(sample, opts.ignoreNames(true).ignoreDates(false).reverseChronology(true).build()),
                 new Object[][]{
-                        {MAR_2010, FEB_2010, JAN_2010},
+                        {MAR_, FEB_, JAN_},
                         {1.03, null, 1.01},
                         {null, null, 2.01},
                         {null, 3.02, 3.01},
@@ -212,17 +212,17 @@ public class GridWriterTest {
         assertDeepEqualTo(toArray(sample, opts, EnumSet.allOf(GridDataType.class)),
                 new Object[][]{
                         {null, "G1\nS1", "G1\nS2", "G2\nS1", "S1"},
-                        {JAN_2010, 1.01, 2.01, 3.01, null},
-                        {FEB_2010, null, null, 3.02, 4.02},
-                        {MAR_2010, 1.03, null, null, 4.03}
+                        {JAN_, 1.01, 2.01, 3.01, null},
+                        {FEB_, null, null, 3.02, 4.02},
+                        {MAR_, 1.03, null, null, 4.03}
                 });
 
         assertDeepEqualTo(toArray(sample, opts, EnumSet.of(GridDataType.LOCAL_DATE_TIME)),
                 new Object[][]{
                         {null, null, null, null, null},
-                        {JAN_2010, null, null, null, null},
-                        {FEB_2010, null, null, null, null},
-                        {MAR_2010, null, null, null, null}
+                        {JAN_, null, null, null, null},
+                        {FEB_, null, null, null, null},
+                        {MAR_, null, null, null, null}
                 });
 
         assertDeepEqualTo(toArray(sample, opts, EnumSet.of(GridDataType.DOUBLE)),
