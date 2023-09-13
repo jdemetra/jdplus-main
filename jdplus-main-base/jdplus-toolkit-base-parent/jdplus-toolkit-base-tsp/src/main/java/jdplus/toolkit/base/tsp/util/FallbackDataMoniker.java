@@ -20,6 +20,7 @@ import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Optional;
 
@@ -36,23 +37,23 @@ public final class FallbackDataMoniker implements HasDataMoniker {
     private final HasDataMoniker second;
 
     @Override
-    public TsMoniker toMoniker(DataSource dataSource) throws IllegalArgumentException {
+    public @NonNull TsMoniker toMoniker(@NonNull DataSource dataSource) throws IllegalArgumentException {
         return first.toMoniker(dataSource);
     }
 
     @Override
-    public TsMoniker toMoniker(DataSet dataSet) throws IllegalArgumentException {
+    public @NonNull TsMoniker toMoniker(@NonNull DataSet dataSet) throws IllegalArgumentException {
         return first.toMoniker(dataSet);
     }
 
     @Override
-    public Optional<DataSource> toDataSource(TsMoniker moniker) throws IllegalArgumentException {
+    public @NonNull Optional<DataSource> toDataSource(@NonNull TsMoniker moniker) throws IllegalArgumentException {
         Optional<DataSource> result = first.toDataSource(moniker);
         return result.isPresent() ? result : second.toDataSource(moniker);
     }
 
     @Override
-    public Optional<DataSet> toDataSet(TsMoniker moniker) throws IllegalArgumentException {
+    public @NonNull Optional<DataSet> toDataSet(@NonNull TsMoniker moniker) throws IllegalArgumentException {
         Optional<DataSet> result = first.toDataSet(moniker);
         return result.isPresent() ? result : second.toDataSet(moniker);
     }

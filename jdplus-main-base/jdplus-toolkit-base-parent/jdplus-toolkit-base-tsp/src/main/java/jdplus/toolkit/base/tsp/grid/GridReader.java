@@ -16,6 +16,9 @@
  */
 package jdplus.toolkit.base.tsp.grid;
 
+import internal.toolkit.base.tsp.grid.InternalValueReader;
+import internal.toolkit.base.tsp.grid.MarkableStream;
+import internal.toolkit.base.tsp.grid.TsDataBuilders;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;
@@ -23,11 +26,8 @@ import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 import jdplus.toolkit.base.api.timeseries.util.TsDataBuilder;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
 import jdplus.toolkit.base.tsp.fixme.Substitutor;
-import internal.toolkit.base.tsp.grid.InternalValueReader;
-import internal.toolkit.base.tsp.grid.MarkableStream;
-import internal.toolkit.base.tsp.grid.TsDataBuilders;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import lombok.AccessLevel;
 import nbbrd.design.LombokWorkaround;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -113,14 +113,18 @@ public final class GridReader {
 
         head.skip(input);
         while (input.readRow()) {
-            String series = names.apply(input);
-            if (series == null) {
-                break;
-            }
+            String nullableName = names.apply(input);
             for (int col = 0; col < head.columns && input.readCell(); col++) {
                 data.add(head.getPeriod(col), input.getNumber());
             }
-            output.item(getTs(series, data.build()));
+            TsData result = data.build();
+            if (isNotVoid(nullableName, result)) {
+                output.item(Ts.builder()
+                        .type(TsInformationType.Data)
+                        .name(fixNullName(nullableName))
+                        .data(result)
+                        .build());
+            }
             data.clear();
         }
     }
@@ -174,7 +178,7 @@ public final class GridReader {
                     Supplier<String> nameGenerator = getNameGenerator(namePattern);
                     return (stream) -> nameGenerator.get();
                 case 1:
-                    return (stream) -> stream.readCell() ? stream.getString() : null;
+                    return (stream) -> stream.readCell() ? stream.getString() : NULL_NAME;
                 default:
                     Collector<CharSequence, ?, String> nameJoiner = Collectors.joining(nameSeparator);
                     String[] path = new String[firstObsIndex];
@@ -189,7 +193,7 @@ public final class GridReader {
                                 path[index] = null;
                             }
                         }
-                        return !hasHeader ? null : joinSkippingNulls(path, nameJoiner);
+                        return !hasHeader ? NULL_NAME : joinSkippingNulls(path, nameJoiner);
                     };
             }
         }
@@ -216,7 +220,15 @@ public final class GridReader {
 
         List<String> names = head.getNames(namePattern, nameSeparator);
         for (int column = 0; column < head.columns; column++) {
-            output.item(getTs(names.get(column), data.build(column)));
+            String nullableName = names.get(column);
+            TsData result = data.build(column);
+            if (isNotVoid(nullableName, result)) {
+                output.item(Ts.builder()
+                        .type(TsInformationType.Data)
+                        .name(fixNullName(nullableName))
+                        .data(result)
+                        .build());
+            }
         }
     }
 
@@ -246,8 +258,6 @@ public final class GridReader {
                 // level 1
                 List<String> firstLine = line;
                 if (!stream.readRow() || (line = readNameLine(stream)) == null) {
-                    int index = firstLine.lastIndexOf(null);
-                    firstLine = index == -1 ? firstLine : firstLine.subList(0, index);
                     return new PeriodByRowHead(1, firstLine.size(), new String[][]{firstLine.toArray(new String[firstLine.size()])});
                 }
 
@@ -411,14 +421,6 @@ public final class GridReader {
         }
     }
 
-    private static Ts getTs(String name, TsData data) {
-        return Ts.builder()
-                .type(TsInformationType.Data)
-                .name(name)
-                .data(data)
-                .build();
-    }
-
     private static <T> List<T> readCells(TypedInputStream stream, TypedInputStreamFunc<T> func) throws IOException {
         List<T> result = new ArrayList<>();
         while (stream.readCell()) {
@@ -447,5 +449,15 @@ public final class GridReader {
                     return null;
             }
         });
+    }
+
+    private static final String NULL_NAME = null;
+
+    private static boolean isNotVoid(String nullableName, TsData result) {
+        return nullableName != null || !result.isEmpty();
+    }
+
+    private static String fixNullName(String name) {
+        return name != null ? name : "null";
     }
 }

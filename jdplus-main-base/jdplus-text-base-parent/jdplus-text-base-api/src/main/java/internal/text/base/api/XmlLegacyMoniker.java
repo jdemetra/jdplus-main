@@ -24,6 +24,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
 import jdplus.toolkit.base.tsp.legacy.LegacyFileId;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.util.Optional;
@@ -39,19 +40,19 @@ public final class XmlLegacyMoniker implements HasDataMoniker {
     private final XmlParam param;
 
     @Override
-    public TsMoniker toMoniker(DataSource dataSource) throws IllegalArgumentException {
+    public @NonNull TsMoniker toMoniker(@NonNull DataSource dataSource) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
         throw new IllegalArgumentException("Not supported yet.");
     }
 
     @Override
-    public TsMoniker toMoniker(DataSet dataSet) throws IllegalArgumentException {
+    public @NonNull TsMoniker toMoniker(@NonNull DataSet dataSet) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
         throw new IllegalArgumentException("Not supported yet.");
     }
 
     @Override
-    public Optional<DataSource> toDataSource(TsMoniker moniker) throws IllegalArgumentException {
+    public @NonNull Optional<DataSource> toDataSource(@NonNull TsMoniker moniker) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, moniker);
 
         LegacyFileId id = LegacyFileId.parse(moniker.getId());
@@ -59,7 +60,7 @@ public final class XmlLegacyMoniker implements HasDataMoniker {
     }
 
     @Override
-    public Optional<DataSet> toDataSet(TsMoniker moniker) throws IllegalArgumentException {
+    public @NonNull Optional<DataSet> toDataSet(@NonNull TsMoniker moniker) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, moniker);
 
         XmlLegacyId id = XmlLegacyId.parse(moniker.getId());

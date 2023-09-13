@@ -62,12 +62,12 @@ public interface HasDataSourceMutableList extends HasDataSourceList {
     }
 
     @NonNull
-    public static HasDataSourceMutableList of(@NonNull String providerName, @NonNull Consumer<? super DataSource> cacheCleaner) {
+    static HasDataSourceMutableList of(@NonNull String providerName, @NonNull Consumer<? super DataSource> cacheCleaner) {
         return new InternalTsProvider.DataSourceMutableListSupport(providerName, new LinkedHashSet<>(), cacheCleaner);
     }
 
     @NonNull
-    public static HasDataSourceMutableList of(@NonNull String providerName) {
+    static HasDataSourceMutableList of(@NonNull String providerName) {
         return of(providerName, InternalTsProvider.DO_NOTHING);
     }
 }

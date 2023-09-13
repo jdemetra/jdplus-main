@@ -62,7 +62,7 @@
         <protobuf.version>3.21.12</protobuf.version>
         <java-io-util.version>0.0.25</java-io-util.version>
         <java-sql-util.version>1.0.3</java-sql-util.version>
-        <spreadsheet4j.version>2.5.2</spreadsheet4j.version>
+        <spreadsheet4j.version>2.5.7</spreadsheet4j.version>
     </properties>
 
     <modules>
@@ -168,7 +168,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.gaul</groupId>

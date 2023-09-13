@@ -73,7 +73,7 @@ public final class TsStreamAsProvider implements TsProvider {
     }
 
     @Override
-    public TsCollection getTsCollection(TsMoniker moniker, TsInformationType type) throws IOException, IllegalArgumentException {
+    public @NonNull TsCollection getTsCollection(@NonNull TsMoniker moniker, @NonNull TsInformationType type) throws IOException, IllegalArgumentException {
         DataSourcePreconditions.checkProvider(getSource(), moniker);
 
         TsCollection.Builder result = TsCollection.builder().moniker(moniker).type(type);
@@ -94,7 +94,7 @@ public final class TsStreamAsProvider implements TsProvider {
     }
 
     @Override
-    public Ts getTs(TsMoniker moniker, TsInformationType type) throws IOException, IllegalArgumentException {
+    public @NonNull Ts getTs(@NonNull TsMoniker moniker, @NonNull TsInformationType type) throws IOException, IllegalArgumentException {
         DataSourcePreconditions.checkProvider(getSource(), moniker);
 
         Ts.Builder result = Ts.builder().moniker(moniker).type(type);
@@ -109,7 +109,7 @@ public final class TsStreamAsProvider implements TsProvider {
     }
 
     @Override
-    public String getSource() {
+    public @NonNull String getSource() {
         return providerName;
     }
 

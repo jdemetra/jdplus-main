@@ -46,12 +46,12 @@ public class InternalValueReaderTest {
 
         assertThat(x.read(grid.getValue(0, 0))).isNull();
         assertThat(x.read(grid.getValue(1, 0))).isNull();
-        assertThat(x.read(grid.getValue(0, 1))).isEqualTo(JAN_2010);
-        assertThat(x.read(grid.getValue(0, 2))).isEqualTo(FEB_2010);
+        assertThat(x.read(grid.getValue(0, 1))).isEqualTo(JAN_);
+        assertThat(x.read(grid.getValue(0, 2))).isEqualTo(FEB_);
     }
 
     private final Object[][] data = {
-        {null, JAN_2010, FEB_2010, MAR_2010},
+        {null, JAN_, FEB_, MAR_},
         {"S1", 3.14, 4.56, 7.89}
     };
     private final ArrayGridInput grid = ArrayGridInput.of(data);

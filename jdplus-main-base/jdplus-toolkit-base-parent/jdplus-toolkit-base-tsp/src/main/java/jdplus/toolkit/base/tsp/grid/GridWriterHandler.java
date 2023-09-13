@@ -29,7 +29,7 @@ public final class GridWriterHandler implements PropertyHandler<GridWriter> {
     private final PropertyHandler<Boolean> reverseChronology;
 
     @Override
-    public GridWriter get(Function<? super String, ? extends CharSequence> properties) {
+    public @org.checkerframework.checker.nullness.qual.NonNull GridWriter get(@org.checkerframework.checker.nullness.qual.NonNull Function<? super String, ? extends CharSequence> properties) {
         return GridWriter
                 .builder()
                 .format(format.get(properties))
@@ -42,7 +42,7 @@ public final class GridWriterHandler implements PropertyHandler<GridWriter> {
     }
 
     @Override
-    public void set(BiConsumer<? super String, ? super String> properties, GridWriter value) {
+    public void set(@org.checkerframework.checker.nullness.qual.NonNull BiConsumer<? super String, ? super String> properties, GridWriter value) {
         if (value != null) {
             format.set(properties, value.getFormat());
             layout.set(properties, value.getLayout());

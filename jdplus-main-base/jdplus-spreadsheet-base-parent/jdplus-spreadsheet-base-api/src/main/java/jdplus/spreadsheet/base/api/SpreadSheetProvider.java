@@ -43,7 +43,7 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
 
     private static final String NAME = "XCLPRVDR";
 
-    private final BookSupplier bookSupplier;
+    private final SpreadsheetManager spreadsheetManager;
 
     @lombok.experimental.Delegate
     private final HasDataSourceMutableList mutableListSupport;
@@ -67,7 +67,7 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
     private final TsProvider tsSupport;
 
     public SpreadSheetProvider() {
-        this.bookSupplier = BookSupplier.usingServiceLoader();
+        this.spreadsheetManager = SpreadsheetManager.ofServiceLoader();
 
         ResourcePool<SpreadSheetConnection> pool = SpreadSheetSupport.newConnectionPool();
         SpreadSheetParam param = new SpreadSheetParam.V1();
@@ -77,7 +77,7 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
         this.beanSupport = HasDataSourceBean.of(NAME, param, param.getVersion());
         this.filePathSupport = HasFilePaths.of(pool::clear);
         this.displayNameSupport = SpreadSheetDataDisplayName.of(NAME, param);
-        this.spreadSheetSupport = SpreadSheetSupport.of(NAME, pool.asFactory(dataSource -> openConnection(dataSource, filePathSupport, param, bookSupplier)), ignore -> param.getSheetParam(), ignore -> param.getSeriesParam());
+        this.spreadSheetSupport = SpreadSheetSupport.of(NAME, pool.asFactory(dataSource -> openConnection(dataSource, filePathSupport, param, spreadsheetManager)), ignore -> param.getSheetParam(), ignore -> param.getSeriesParam());
         this.tsSupport = TsStreamAsProvider.of(NAME, spreadSheetSupport, monikerSupport, pool::clear);
     }
 
@@ -93,13 +93,13 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
 
     @Override
     public boolean accept(File pathname) {
-        return bookSupplier.hasFactory(pathname);
+        return spreadsheetManager.getReader(pathname).isPresent();
     }
 
-    private static SpreadSheetConnection openConnection(DataSource key, HasFilePaths paths, SpreadSheetParam param, BookSupplier books) throws IOException {
+    private static SpreadSheetConnection openConnection(DataSource key, HasFilePaths paths, SpreadSheetParam param, SpreadsheetManager books) throws IOException {
         SpreadSheetBean bean = param.get(key);
         File file = paths.resolveFilePath(bean.getFile());
-        Book.Factory factory = books.getFactory(file).orElseThrow(() -> new IOException("File type not supported"));
+        Book.Factory factory = books.getReader(file).orElseThrow(() -> new IOException("File type not supported"));
         SheetGrid result = SheetGrid.of(file, factory, getReader(bean));
         return CachedSpreadSheetConnection.of(result, file, IOCacheFactoryLoader.get());
     }

@@ -16,12 +16,12 @@
  */
 package internal.spreadsheet.base.api;
 
+import ec.util.spreadsheet.Book;
+import internal.spreadsheet.base.api.grid.SheetGrid;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.tsp.grid.GridReader;
-import ec.util.spreadsheet.Book;
-import internal.spreadsheet.base.api.grid.SheetGrid;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -29,11 +29,11 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import static _test.Top5Browsers.getRefFile;
+import static java.lang.Double.NaN;
 import static jdplus.toolkit.base.api.timeseries.TsUnit.MONTH;
 import static jdplus.toolkit.base.api.timeseries.TsUnit.QUARTER;
 import static jdplus.toolkit.base.tsp.grid.GridLayout.HORIZONTAL;
 import static jdplus.toolkit.base.tsp.grid.GridLayout.VERTICAL;
-import static java.lang.Double.NaN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -44,7 +44,7 @@ public class SpreadSheetFactoryTest {
     @Test
     public void test() throws IOException {
         File refFile = getRefFile();
-        testFactory(BookSupplier.getLoaderByFile(refFile).orElseThrow(NoSuchElementException::new), refFile);
+        testFactory(SpreadsheetManager.ofServiceLoader().getReader(refFile).orElseThrow(NoSuchElementException::new), refFile);
     }
 
     private static void testFactory(Book.Factory bookFactory, File file) throws IOException {

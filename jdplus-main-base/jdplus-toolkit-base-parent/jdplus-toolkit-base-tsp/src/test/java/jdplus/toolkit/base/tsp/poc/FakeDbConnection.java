@@ -21,6 +21,7 @@ import jdplus.toolkit.base.tsp.cube.CubeConnection;
 import jdplus.toolkit.base.tsp.cube.CubeId;
 import jdplus.toolkit.base.tsp.cube.CubeSeries;
 import jdplus.toolkit.base.tsp.cube.CubeSeriesWithData;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -50,37 +51,37 @@ final class FakeDbConnection implements CubeConnection {
     }
 
     @Override
-    public Optional<IOException> testConnection() {
+    public @NonNull Optional<IOException> testConnection() {
         return Optional.empty();
     }
 
     @Override
-    public CubeId getRoot() {
+    public @NonNull CubeId getRoot() {
         return root;
     }
 
     @Override
-    public Stream<CubeSeries> getAllSeries(CubeId id) throws IOException {
+    public @NonNull Stream<CubeSeries> getAllSeries(@NonNull CubeId id) throws IOException {
         return toSeriesStream(data).filter(ts -> id.isAncestorOf(ts.getId()));
     }
 
     @Override
-    public Stream<CubeSeriesWithData> getAllSeriesWithData(CubeId id) throws IOException {
+    public @NonNull Stream<CubeSeriesWithData> getAllSeriesWithData(@NonNull CubeId id) throws IOException {
         return toSeriesWithDataStream(data).filter(ts -> id.isAncestorOf(ts.getId()));
     }
 
     @Override
-    public Optional<CubeSeries> getSeries(CubeId id) throws IOException {
+    public @NonNull Optional<CubeSeries> getSeries(@NonNull CubeId id) throws IOException {
         return toSeriesStream(data).filter(ts -> id.isAncestorOf(ts.getId())).findFirst();
     }
 
     @Override
-    public Optional<CubeSeriesWithData> getSeriesWithData(CubeId id) throws IOException {
+    public @NonNull Optional<CubeSeriesWithData> getSeriesWithData(@NonNull CubeId id) throws IOException {
         return toSeriesWithDataStream(data).filter(ts -> id.isAncestorOf(ts.getId())).findFirst();
     }
 
     @Override
-    public Stream<CubeId> getChildren(CubeId id) throws IOException {
+    public @NonNull Stream<CubeId> getChildren(@NonNull CubeId id) throws IOException {
         return data.keySet().stream()
                 .filter(id::isAncestorOf)
                 .map(o -> o.getDimensionValue(id.getLevel()))
@@ -89,17 +90,17 @@ final class FakeDbConnection implements CubeConnection {
     }
 
     @Override
-    public String getDisplayName() throws IOException {
+    public @NonNull String getDisplayName() throws IOException {
         return "Fake";
     }
 
     @Override
-    public String getDisplayName(CubeId id) throws IOException {
+    public @NonNull String getDisplayName(@NonNull CubeId id) throws IOException {
         return id.isVoid() ? "All" : id.getDimensionValueStream().collect(Collectors.joining(", "));
     }
 
     @Override
-    public String getDisplayNodeName(CubeId id) throws IOException {
+    public @NonNull String getDisplayNodeName(@NonNull CubeId id) throws IOException {
         return id.isVoid() ? "All" : id.getDimensionValue(id.getLevel() - 1);
     }
 

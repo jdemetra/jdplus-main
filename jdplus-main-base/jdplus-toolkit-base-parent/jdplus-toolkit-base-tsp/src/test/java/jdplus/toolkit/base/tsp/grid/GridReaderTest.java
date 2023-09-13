@@ -49,10 +49,9 @@ public class GridReaderTest {
     public void testReadHorizontal() throws IOException {
         GridReader x = GridReader.DEFAULT.toBuilder().namePattern("Series ${index}").build();
 
-        for (GridInput o : new GridInput[]{HGRID, HGRID_OVERFLOW, HGRID_NULL_NAME, HGRID_CORNER_LABEL}) {
+        for (GridInput o : new GridInput[]{HGRID, HGRID_GAP, HGRID_OVERFLOW, HGRID_CORNER_LABEL}) {
             assertThat(x.read(o)).isEqualTo(c(HORIZONTAL, s("S1", MONTH, 2010, 0, 3.14, 4.56, 7.89)));
         }
-
         assertThat(x.read(HGRID_UNDERFLOW))
                 .isEqualTo(c(HORIZONTAL, s("S1", MONTH, 2010, 0, 3.14, 4.56)));
 
@@ -62,15 +61,24 @@ public class GridReaderTest {
         assertThat(x.toBuilder().namePattern("X${number}").build().read(HGRID_NO_NAME))
                 .isEqualTo(c(HORIZONTAL, s("X1", MONTH, 2010, 0, 3.14, 4.56, 7.89)));
 
+        assertThat(x.read(HGRID_NULL_NAME))
+                .isEqualTo(TsCollection
+                        .builder()
+                        .meta(GridLayout.PROPERTY, HORIZONTAL.name())
+                        .type(TsInformationType.Data)
+                        .item(s("S1", MONTH, 2010, 0, 3.14, 4.56, 7.89))
+                        .item(s("null", MONTH, 2010, 0, 3333, 4444, 5555))
+                        .build());
+
         assertThat(x.read(HGRID_MULTI_NAME))
                 .isEqualTo(TsCollection
                         .builder()
                         .meta(GridLayout.PROPERTY, HORIZONTAL.name())
                         .type(TsInformationType.Data)
                         .item(s("G1\nS1", MONTH, 2010, 0, 3.14, 4.56, 7.89))
-                        .item(s("G1\nS2", MONTH, 2010, 0, 3, 4, 5))
-                        .item(s("G2\nS1", MONTH, 2010, 0, 7, 8, 9))
-                        .item(s("S1", MONTH, 2010, 0, 0, 1, 2))
+                        .item(s("G1\nS2", MONTH, 2010, 0, 1003, 1004, 1005))
+                        .item(s("G2\nS1", MONTH, 2010, 0, 1007, 1008, 1009))
+                        .item(s("S1", MONTH, 2010, 0, 1000, 1001, 1002))
                         .build());
     }
 
@@ -78,7 +86,7 @@ public class GridReaderTest {
     public void testReadVertical() throws IOException {
         GridReader x = GridReader.DEFAULT.toBuilder().namePattern("Series ${index}").build();
 
-        for (GridInput o : new GridInput[]{VGRID, VGRID_OVERFLOW, VGRID_NULL_NAME, VGRID_CORNER_LABEL}) {
+        for (GridInput o : new GridInput[]{VGRID, VGRID_GAP, VGRID_OVERFLOW, VGRID_CORNER_LABEL}) {
             assertThat(x.read(o)).isEqualTo(c(VERTICAL, s("S1", MONTH, 2010, 0, 3.14, 4.56, 7.89)));
         }
 
@@ -91,15 +99,24 @@ public class GridReaderTest {
         assertThat(x.toBuilder().namePattern("X${number}").build().read(VGRID_NO_NAME))
                 .isEqualTo(c(VERTICAL, s("X1", MONTH, 2010, 0, 3.14, 4.56, 7.89)));
 
+        assertThat(x.read(VGRID_NULL_NAME))
+                .isEqualTo(TsCollection
+                        .builder()
+                        .meta(GridLayout.PROPERTY, VERTICAL.name())
+                        .type(TsInformationType.Data)
+                        .item(s("S1", MONTH, 2010, 0, 3.14, 4.56, 7.89))
+                        .item(s("null", MONTH, 2010, 0, 3333, 4444, 5555))
+                        .build());
+
         assertThat(x.read(VGRID_MULTI_NAME))
                 .isEqualTo(TsCollection
                         .builder()
                         .meta(GridLayout.PROPERTY, VERTICAL.name())
                         .type(TsInformationType.Data)
                         .item(s("G1\nS1", MONTH, 2010, 0, 3.14, 4.56, 7.89))
-                        .item(s("G1\nS2", MONTH, 2010, 0, 3, 4, 5))
-                        .item(s("G2\nS1", MONTH, 2010, 0, 7, 8, 9))
-                        .item(s("S1", MONTH, 2010, 0, 0, 1, 2))
+                        .item(s("G1\nS2", MONTH, 2010, 0, 1003, 1004, 1005))
+                        .item(s("G2\nS1", MONTH, 2010, 0, 1007, 1008, 1009))
+                        .item(s("S1", MONTH, 2010, 0, 1000, 1001, 1002))
                         .build());
     }
 
@@ -113,9 +130,9 @@ public class GridReaderTest {
                         .meta(GridLayout.PROPERTY, VERTICAL.name())
                         .type(TsInformationType.Data)
                         .item(s("G1-S1", MONTH, 2010, 0, 3.14, 4.56, 7.89))
-                        .item(s("G1-S2", MONTH, 2010, 0, 3, 4, 5))
-                        .item(s("G2-S1", MONTH, 2010, 0, 7, 8, 9))
-                        .item(s("S1", MONTH, 2010, 0, 0, 1, 2))
+                        .item(s("G1-S2", MONTH, 2010, 0, 1003, 1004, 1005))
+                        .item(s("G2-S1", MONTH, 2010, 0, 1007, 1008, 1009))
+                        .item(s("S1", MONTH, 2010, 0, 1000, 1001, 1002))
                         .build());
     }
 
@@ -127,9 +144,9 @@ public class GridReaderTest {
                         .meta(GridLayout.PROPERTY, HORIZONTAL.name())
                         .type(TsInformationType.Data)
                         .item(s("G1\nS1", MONTH, 2010, 0, 3.14, 4.56, 7.89))
-                        .item(s("G1\nS2", MONTH, 2010, 0, 3, 4, 5))
-                        .item(s("G2\nS1", MONTH, 2010, 0, 7, 8, 9))
-                        .item(s("S1", MONTH, 2010, 0, 0, 1, 2))
+                        .item(s("G1\nS2", MONTH, 2010, 0, 1003, 1004, 1005))
+                        .item(s("G2\nS1", MONTH, 2010, 0, 1007, 1008, 1009))
+                        .item(s("S1", MONTH, 2010, 0, 1000, 1001, 1002))
                         .build());
 
         assertThat(GridReader.builder().layout(VERTICAL).build().read(VGRID_MULTI_NAME))
@@ -138,9 +155,9 @@ public class GridReaderTest {
                         .meta(GridLayout.PROPERTY, VERTICAL.name())
                         .type(TsInformationType.Data)
                         .item(s("G1\nS1", MONTH, 2010, 0, 3.14, 4.56, 7.89))
-                        .item(s("G1\nS2", MONTH, 2010, 0, 3, 4, 5))
-                        .item(s("G2\nS1", MONTH, 2010, 0, 7, 8, 9))
-                        .item(s("S1", MONTH, 2010, 0, 0, 1, 2))
+                        .item(s("G1\nS2", MONTH, 2010, 0, 1003, 1004, 1005))
+                        .item(s("G2\nS1", MONTH, 2010, 0, 1007, 1008, 1009))
+                        .item(s("S1", MONTH, 2010, 0, 1000, 1001, 1002))
                         .build());
     }
 }

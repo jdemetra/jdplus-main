@@ -120,12 +120,12 @@ public class BulkCubeConnectionTest {
         private final ConcurrentMap<K, V> delegate;
 
         @Override
-        public void put(K key, V value) {
+        public void put(@NonNull K key, @NonNull V value) {
             delegate.put(key, value);
         }
 
         @Override
-        public V get(K key) {
+        public V get(@NonNull K key) {
             return delegate.get(key);
         }
 

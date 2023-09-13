@@ -27,7 +27,7 @@ public final class GridReaderHandler implements PropertyHandler<GridReader> {
     private final PropertyHandler<String> nameSeparator;
 
     @Override
-    public GridReader get(Function<? super String, ? extends CharSequence> properties) {
+    public @org.checkerframework.checker.nullness.qual.NonNull GridReader get(@org.checkerframework.checker.nullness.qual.NonNull Function<? super String, ? extends CharSequence> properties) {
         return GridReader
                 .builder()
                 .format(format.get(properties))
@@ -39,7 +39,7 @@ public final class GridReaderHandler implements PropertyHandler<GridReader> {
     }
 
     @Override
-    public void set(BiConsumer<? super String, ? super String> properties, GridReader value) {
+    public void set(@org.checkerframework.checker.nullness.qual.NonNull BiConsumer<? super String, ? super String> properties, GridReader value) {
         if (value != null) {
             format.set(properties, value.getFormat());
             gathering.set(properties, value.getGathering());

@@ -62,7 +62,7 @@ public interface HasDataSourceList {
     void removeDataSourceListener(@NonNull DataSourceListener listener);
 
     @NonNull
-    public static HasDataSourceList of(
+    static HasDataSourceList of(
             @NonNull String providerName,
             @NonNull Iterable<DataSource> dataSources,
             @NonNull Consumer<? super DataSource> cacheCleaner) {
@@ -70,7 +70,7 @@ public interface HasDataSourceList {
     }
 
     @NonNull
-    public static HasDataSourceList of(
+    static HasDataSourceList of(
             @NonNull String providerName,
             @NonNull Iterable<DataSource> dataSources) {
         return of(providerName, dataSources, InternalTsProvider.DO_NOTHING);
