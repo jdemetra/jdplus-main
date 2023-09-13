@@ -130,15 +130,18 @@ public final class App {
         EstimationPolicy policy = new EstimationPolicy(config.getPolicy(), null);
 
         List<SaOutputFactory> output = createOutputFactories(config);
+        TsInformationType type = config.refresh ? TsInformationType.Data : TsInformationType.None;
         for (Entry<WorkspaceItemDescriptor, SaItems> o : sa.entrySet()) {
-            process(ws, o.getKey(), o.getValue(), context, output, bundleSize, policy);
+            process(ws, o.getKey(), o.getValue(), context, output, bundleSize, policy, type);
         }
     }
 
-    private static void process(FileWorkspace ws, WorkspaceItemDescriptor item, SaItems processing, ModellingContext context, List<SaOutputFactory> output, int bundleSize, EstimationPolicy policy) throws IOException {
+    private static void process(FileWorkspace ws, WorkspaceItemDescriptor item, SaItems processing, ModellingContext context,
+                                List<SaOutputFactory> output, int bundleSize, EstimationPolicy policy, TsInformationType type) throws IOException {
 
-        System.out.println("Refreshing data");
-        TsInformationType type=policy.getPolicy() == EstimationPolicyType.None ? TsInformationType.None : TsInformationType.Data;
+        if (type != TsInformationType.None) {
+            System.out.println("Refreshing data");
+        }
         List<SaItem> all = processing.getItems().stream().map(cur -> cur.refresh(policy, type)).collect(Collectors.toList());
         SaBatchInformation info = new SaBatchInformation(all.size() > bundleSize ? bundleSize : 0);
         info.setName(item.getKey().getId());
