@@ -30,8 +30,8 @@ import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static jdplus.toolkit.base.tsp.util.ObsFormat.*;
 import static java.util.Locale.*;
+import static jdplus.toolkit.base.tsp.util.ObsFormat.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
@@ -180,7 +180,7 @@ public class ObsFormatTest {
         assertThat(f1.parseBest("1 janv. 2000", temporalQueries)).isEqualTo(value);
 
         DateTimeFormatter f2 = builder().locale(US).build().newDateTimeFormatter();
-        assertThat(f2.format(value)).isEqualTo("Jan 1, 2000 12:00:00 AM");
+        assertThat(fixNNBSP(f2.format(value))).isEqualTo("Jan 1, 2000 12:00:00 AM");
         assertThat(f2.parseBest("Jan 1, 2000", temporalQueries)).isEqualTo(value);
 
         DateTimeFormatter f3 = builder().locale(FRANCE).dateTimePattern("yyyy-MMM").build().newDateTimeFormatter();
@@ -228,5 +228,12 @@ public class ObsFormatTest {
 
     private static char decimalSeparator(NumberFormat format) {
         return (((DecimalFormat) format).getDecimalFormatSymbols()).getDecimalSeparator();
+    }
+
+    // Since JDK20: NBSP/NNBSP prefixed to AM/PM in time format, instead of a normal space
+    // See https://www.oracle.com/java/technologies/javase/20all-relnotes.html#JDK-8284840
+    // See https://bugs.openjdk.org/browse/JDK-8304925
+    private String fixNNBSP(String text) {
+        return text.replace('\u202f', ' ');
     }
 }
