@@ -26,7 +26,7 @@ public class ToolkitRuntimeDependenciesTest {
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaDesktopUtil)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkExternalSwingComponents)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkGuava)
-                .hasSize(35);
+                .hasSize(36);
     }
 
     private static void checkToolkit(List<? extends GAV> coordinates) {
@@ -89,7 +89,7 @@ public class ToolkitRuntimeDependenciesTest {
     private static void checkExternalSwingComponents(List<? extends GAV> coordinates) {
         assertThatGroupId(coordinates, "com.miglayout")
                 .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("miglayout");
+                .containsExactlyInAnyOrder("miglayout-swing", "miglayout-core");
 
         assertThatGroupId(coordinates, "org.tros")
                 .extracting(GAV::getArtifactId)
