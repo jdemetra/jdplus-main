@@ -203,17 +203,6 @@
 
         <!-- FIXME: demetra-desktop-util -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>32.1.2-jre</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jsr305</artifactId>
-                    <groupId>com.google.code.findbugs</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>com.github.nbbrd.java-io-util</groupId>
             <artifactId>java-io-base</artifactId>
             <version>${java-io-util.version}</version>
@@ -276,7 +265,6 @@
                         <!-- TO FIX -->
                         <publicPackage>internal.*</publicPackage>
                         <!-- FIXME: demetra-desktop-util -->
-                        <publicPackage>com.google.*</publicPackage>
                         <publicPackage>org.apache.commons.*</publicPackage>
                         <publicPackage>nbbrd.io.*</publicPackage>
                         <publicPackage>internal.io.*</publicPackage>
