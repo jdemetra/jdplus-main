@@ -25,8 +25,7 @@ public class ToolkitRuntimeDependenciesTest {
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaIoUtil)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaDesktopUtil)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkExternalSwingComponents)
-                .satisfies(ToolkitRuntimeDependenciesTest::checkGuava)
-                .hasSize(36);
+                .hasSize(31);
     }
 
     private static void checkToolkit(List<? extends GAV> coordinates) {
@@ -102,21 +101,6 @@ public class ToolkitRuntimeDependenciesTest {
         assertThatGroupId(coordinates, "org.swinglabs")
                 .extracting(GAV::getArtifactId)
                 .containsExactlyInAnyOrder("swing-layout");
-    }
-
-    // FIXME: remove Guava dependency
-    private static void checkGuava(List<? extends GAV> coordinates) {
-        assertThatGroupId(coordinates, "com.google.guava")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("guava", "failureaccess", "listenablefuture");
-
-        assertThatGroupId(coordinates, "com.google.errorprone")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("error_prone_annotations");
-
-        assertThatGroupId(coordinates, "com.google.j2objc")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("j2objc-annotations");
     }
 
     @MightBePromoted

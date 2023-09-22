@@ -4,24 +4,21 @@
  */
 package jdplus.toolkit.desktop.plugin.core.datatransfer;
 
-import com.google.common.base.Suppliers;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.desktop.plugin.util.TransferHandlers;
-import jdplus.toolkit.desktop.plugin.components.JTsChart;
 import jdplus.toolkit.base.api.timeseries.Ts;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.desktop.plugin.components.JTsChart;
+import jdplus.toolkit.desktop.plugin.util.Collections2;
+import jdplus.toolkit.desktop.plugin.util.TransferHandlers;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.function.Supplier;
-import static javax.swing.BorderFactory.*;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+
+import static javax.swing.BorderFactory.createEmptyBorder;
 
 /**
- *
  * @author Philippe Charles
  */
 public abstract class TsDragRenderer {
@@ -42,7 +39,7 @@ public abstract class TsDragRenderer {
 
     private static class ChartRenderer extends TsDragRenderer {
 
-        final Supplier<JTsChart> supplier = Suppliers.memoize(ChartRenderer::createChart);
+        final Supplier<JTsChart> supplier = Collections2.memoize(ChartRenderer::createChart);
 
         @Override
         public Component getTsDragRendererComponent(List<Ts> selection) {

@@ -16,7 +16,6 @@
  */
 package jdplus.spreadsheet.desktop.plugin.sa;
 
-import com.google.common.base.Splitter;
 import jdplus.sa.base.api.SaOutputFactory;
 import jdplus.sa.desktop.plugin.output.AbstractOutputNode;
 import jdplus.sa.desktop.plugin.output.OutputFactoryBuddy;
@@ -44,7 +43,9 @@ import org.openide.util.lookup.ServiceProvider;
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
+
+import static jdplus.toolkit.base.tsp.fixme.Strings.nullToEmpty;
+import static jdplus.toolkit.base.tsp.fixme.Strings.splitToStream;
 
 /**
  * @author Philippe Charles
@@ -153,7 +154,7 @@ public final class SpreadsheetOutputBuddy implements OutputFactoryBuddy, Configu
             result.setLayout(layoutParam.get(b::getParameter));
             result.setFolder(folderParam.get(b::getParameter));
             result.setFileName(fileNameParam.get(b::getParameter));
-            result.setSeries(Objects.requireNonNull(Splitter.on(",").trimResults().splitToList(seriesParam.get(b::getParameter))));
+            result.setSeries(splitToStream(',', nullToEmpty(seriesParam.get(b::getParameter))).map(String::trim).toList());
             result.setFullName(fullNameParam.get(b::getParameter));
             return result;
         }

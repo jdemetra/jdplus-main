@@ -1,54 +1,55 @@
 /*
-* Copyright 2016 National Bank of Belgium
-* 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ * Copyright 2016 National Bank of Belgium
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-* 
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
  * http://ec.europa.eu/idabc/eupl
-* 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.desktop.plugin.output.impl;
 
-import com.google.common.base.Splitter;
-import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
+import jdplus.sa.base.api.SaManager;
+import jdplus.sa.base.api.SaOutputFactory;
+import jdplus.sa.base.csv.CsvArrayOutputConfiguration;
+import jdplus.sa.base.csv.CsvArrayOutputFactory;
+import jdplus.sa.desktop.plugin.output.AbstractOutputNode;
+import jdplus.sa.desktop.plugin.output.Arrays;
+import jdplus.sa.desktop.plugin.output.OutputFactoryBuddy;
+import jdplus.sa.desktop.plugin.output.OutputSelection;
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.ConfigEditor;
-import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
+import jdplus.toolkit.desktop.plugin.Converter;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.actions.Resetable;
+import jdplus.toolkit.desktop.plugin.beans.BeanConfigurator;
+import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
+import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
+import nbbrd.io.text.BooleanProperty;
+import nbbrd.io.text.Formatter;
+import nbbrd.io.text.Parser;
+import nbbrd.io.text.Property;
+import org.openide.nodes.Sheet;
+import org.openide.util.lookup.ServiceProvider;
+
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jdplus.sa.desktop.plugin.output.AbstractOutputNode;
-import jdplus.sa.desktop.plugin.output.Arrays;
-import jdplus.sa.desktop.plugin.output.OutputFactoryBuddy;
-import jdplus.sa.desktop.plugin.output.OutputSelection;
-import org.openide.nodes.Sheet;
-import org.openide.util.lookup.ServiceProvider;
-import jdplus.toolkit.desktop.plugin.actions.Resetable;
-import nbbrd.io.text.BooleanProperty;
-import nbbrd.io.text.Formatter;
-import nbbrd.io.text.Parser;
-import nbbrd.io.text.Property;
-import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
-import jdplus.toolkit.desktop.plugin.Converter;
-import jdplus.toolkit.desktop.plugin.actions.Configurable;
-import jdplus.toolkit.desktop.plugin.beans.BeanConfigurator;
-import jdplus.sa.base.api.SaManager;
-import jdplus.sa.base.api.SaOutputFactory;
-import jdplus.sa.base.csv.CsvArrayOutputConfiguration;
-import jdplus.sa.base.csv.CsvArrayOutputFactory;
+import static jdplus.toolkit.base.tsp.fixme.Strings.nullToEmpty;
+import static jdplus.toolkit.base.tsp.fixme.Strings.splitToStream;
 
 /**
- *
  * @author Philippe Charles
  */
 @ServiceProvider(service = OutputFactoryBuddy.class, position = 1000)
@@ -56,8 +57,8 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
 
     private final BeanConfigurator<CsvArrayOutputConfiguration, CsvArraysOutputBuddy> configurator = createConfigurator();
     private CsvArrayOutputConfiguration config = new CsvArrayOutputConfiguration();
-    
-    public CsvArraysOutputBuddy(){
+
+    public CsvArraysOutputBuddy() {
     }
 
     @Override
@@ -130,7 +131,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
 
     private static final class CsvArraysOutputConverter implements Converter<CsvArrayOutputConfiguration, Config> {
 
-//        private final Property<CsvLayout> presentationParam = Property.of("presentation", CsvLayout.List, Parser.onEnum(CsvLayout.class), Formatter.onEnum());
+        //        private final Property<CsvLayout> presentationParam = Property.of("presentation", CsvLayout.List, Parser.onEnum(CsvLayout.class), Formatter.onEnum());
         private final Property<File> folderParam = Property.of("folder", new File(""), Parser.onFile(), Formatter.onFile());
         private final Property<String> filePrefixParam = Property.of("filePrefix", "series", Parser.onString(), Formatter.onString());
         private final Property<String> arraysParam = Property.of("arrays", null, Parser.onString(), Formatter.onString());
@@ -153,7 +154,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
 //            result.setPresentation(presentationParam.get(b::getParameter));
             result.setFolder(folderParam.get(b::getParameter));
             result.setFilePrefix(filePrefixParam.get(b::getParameter));
-            result.setArrays(Splitter.on(",").trimResults().splitToList(arraysParam.get(b::getParameter)));
+            result.setArrays(splitToStream(',', nullToEmpty(arraysParam.get(b::getParameter))).map(String::trim).toList());
             result.setFullName(fullNameParam.get(b::getParameter));
             return result;
         }
@@ -161,7 +162,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
 
     private final static class CsvArraysNode extends AbstractOutputNode<CsvArrayOutputConfiguration> {
 
-        private static CsvArrayOutputConfiguration newConfiguration(){
+        private static CsvArrayOutputConfiguration newConfiguration() {
             CsvArrayOutputConfiguration config = new CsvArrayOutputConfiguration();
             config.setArrays(OutputSelection.arraysItems(SaManager.processors()));
             return config;
