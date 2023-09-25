@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.base.tsp.cube;
 
-import _util.tsproviders.XCubeConnection;
+import _test.tsproviders.XCubeConnection;
 import jdplus.toolkit.base.tsp.fixme.ResourceWatcher;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.tsp.DataSet;

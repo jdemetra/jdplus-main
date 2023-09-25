@@ -16,6 +16,8 @@
  */
 package jdplus.sql.base.api.odbc;
 
+import internal.sql.base.api.odbc.OdbcParam;
+import internal.sql.base.api.odbc.legacy.LegacyOdbcMoniker;
 import jdplus.sql.base.api.HasSqlProperties;
 import jdplus.sql.base.api.SqlTableAsCubeResource;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
@@ -24,10 +26,8 @@ import jdplus.toolkit.base.tsp.cube.*;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.FallbackDataMoniker;
-import jdplus.toolkit.base.tsp.util.IOCacheFactoryLoader;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
-import internal.sql.base.api.odbc.OdbcParam;
-import internal.sql.base.api.odbc.legacy.LegacyOdbcMoniker;
+import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
@@ -89,7 +89,7 @@ public final class OdbcProvider implements DataSourceLoader<OdbcBean>, HasSqlPro
         SqlTableAsCubeResource sqlResource = SqlTableAsCubeResource.of(properties.getConnectionSupplier(), bean.getDsn(), bean.getTable(), toRoot(bean), toDataParams(bean), bean.getCube().getGathering(), bean.getCube().getLabel());
 
         CubeConnection result = TableAsCubeConnection.of(sqlResource);
-        return BulkCubeConnection.of(result, bean.getCache(), IOCacheFactoryLoader.get());
+        return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCachingLoader.get());
     }
 
     private static CubeId toRoot(OdbcBean bean) {
