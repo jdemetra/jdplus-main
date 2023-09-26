@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 
-import static _util.FixAssertj.assertDeepEqualTo;
+import static _test.FixAssertj.assertDeepEqualTo;
 import static internal.toolkit.base.tsp.grid.InternalValueWriter.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.atIndex;

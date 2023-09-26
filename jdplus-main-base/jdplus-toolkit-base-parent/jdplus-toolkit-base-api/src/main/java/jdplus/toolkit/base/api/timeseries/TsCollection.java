@@ -80,6 +80,12 @@ public class TsCollection implements Seq<Ts>, HasEmptyCause {
         return builder().item(item).build();
     }
 
+    @StaticFactoryMethod
+    public static @NonNull TsCollection ofName(@NonNull String name) {
+        Objects.requireNonNull(name);
+        return builder().name(name).build();
+    }
+
     public static @NonNull Collector<Ts, ?, TsCollection> toTsCollection() {
         return Collectors.collectingAndThen(Collectors.toList(), TsCollection::of);
     }

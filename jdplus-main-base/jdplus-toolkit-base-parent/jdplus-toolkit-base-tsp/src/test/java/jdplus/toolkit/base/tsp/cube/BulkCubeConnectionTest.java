@@ -16,19 +16,15 @@
  */
 package jdplus.toolkit.base.tsp.cube;
 
-import _util.tsproviders.XCubeConnection;
+import internal.toolkit.base.tsp.util.SimpleMapCache;
+import _test.tsproviders.XCubeConnection;
+import internal.toolkit.base.tsp.util.MapCaching;
 import jdplus.toolkit.base.tsp.fixme.ResourceWatcher;
-import jdplus.toolkit.base.tsp.util.IOCache;
-import jdplus.toolkit.base.tsp.util.IOCacheFactory;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.function.IntFunction;
+import java.util.HashMap;
+import java.util.List;
 
 import static jdplus.toolkit.base.tsp.cube.CubeIdTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,94 +39,80 @@ public class BulkCubeConnectionTest {
         return new XCubeConnection(DIM2_LEV0, new ResourceWatcher());
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
-    public void testBulkApi() throws IOException {
-        CubeConnection accessor = BulkCubeConnection.of(newSample(), BulkCube.NONE, new FakeCacheFactory());
-        assertThatThrownBy(() -> accessor.getAllSeriesWithData(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> accessor.getSeriesWithData(null)).isInstanceOf(NullPointerException.class);
+    public void testBulkApi() {
+        var connection = BulkCubeConnection.of(newSample(), BulkCube.NONE, new MapCaching());
+        assertThatThrownBy(() -> connection.getAllSeriesWithData(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> connection.getSeriesWithData(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void testBulkDepth() throws IOException {
-        ConcurrentMap x = new ConcurrentHashMap<>();
-        try (IOCache cache = new FakeCache(x)) {
-            IntFunction<BulkCubeConnection> factory = o -> {
-                x.clear();
-                return new BulkCubeConnection(newSample(), o, cache);
-            };
+        var cache = newMapCache();
 
-            factory.apply(0).getSeriesWithData(DIM2_LEV2);
-            assertThat(x).isEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 0, clear(cache))) {
+            connection.getSeriesWithData(DIM2_LEV2);
+            assertThat(cache.getMap()).isEmpty();
+        }
 
-            factory.apply(0).getAllSeriesWithData(DIM2_LEV1).close();
-            assertThat(x).isEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 0, clear(cache))) {
+            connection.getAllSeriesWithData(DIM2_LEV1).close();
+            assertThat(cache.getMap()).isEmpty();
+        }
 
-            factory.apply(0).getAllSeriesWithData(DIM2_LEV0).close();
-            assertThat(x).isEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 0, clear(cache))) {
+            connection.getAllSeriesWithData(DIM2_LEV0).close();
+            assertThat(cache.getMap()).isEmpty();
+        }
 
-            factory.apply(1).getSeriesWithData(DIM2_LEV2);
-            assertThat(x).isNotEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 1, clear(cache))) {
+            connection.getSeriesWithData(DIM2_LEV2);
+            assertThat(cache.getMap()).isNotEmpty();
+        }
 
-            factory.apply(1).getAllSeriesWithData(DIM2_LEV1).close();
-            assertThat(x).isNotEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 1, clear(cache))) {
+            connection.getAllSeriesWithData(DIM2_LEV1).close();
+            assertThat(cache.getMap()).isNotEmpty();
+        }
 
-            factory.apply(1).getAllSeriesWithData(DIM2_LEV0).close();
-            assertThat(x).isEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 1, clear(cache))) {
+            connection.getAllSeriesWithData(DIM2_LEV0).close();
+            assertThat(cache.getMap()).isEmpty();
+        }
 
-            factory.apply(2).getSeriesWithData(DIM2_LEV2);
-            assertThat(x).isNotEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 2, clear(cache))) {
+            connection.getSeriesWithData(DIM2_LEV2);
+            assertThat(cache.getMap()).isNotEmpty();
+        }
 
-            factory.apply(2).getAllSeriesWithData(DIM2_LEV1).close();
-            assertThat(x).isNotEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 2, clear(cache))) {
+            connection.getAllSeriesWithData(DIM2_LEV1).close();
+            assertThat(cache.getMap()).isNotEmpty();
+        }
 
-            factory.apply(2).getAllSeriesWithData(DIM2_LEV0).close();
-            assertThat(x).isNotEmpty();
+        try (var connection = new BulkCubeConnection(newSample(), 2, clear(cache))) {
+            connection.getAllSeriesWithData(DIM2_LEV0).close();
+            assertThat(cache.getMap()).isNotEmpty();
         }
     }
 
     @Test
     public void testResourceLeak() throws IOException {
         ResourceWatcher watcher = new ResourceWatcher();
-        ConcurrentMap x = new ConcurrentHashMap<>();
-        try (IOCache cache = new FakeCache(x)) {
-            BulkCubeConnection accessor = new BulkCubeConnection(new XCubeConnection(DIM2_LEV0, watcher), 1, cache);
-            accessor.getSeriesWithData(DIM2_LEV2);
-            assertThat(x).isNotEmpty();
-            assertThat(watcher.isLeaking()).isFalse();
-        }
+        var cache = newMapCache();
+        var connection = new BulkCubeConnection(new XCubeConnection(DIM2_LEV0, watcher), 1, cache);
+        connection.getSeriesWithData(DIM2_LEV2);
+        assertThat(cache.getMap()).isNotEmpty();
+        assertThat(watcher.isLeaking()).isFalse();
     }
 
-    private static final class FakeCacheFactory implements IOCacheFactory {
-
-        @Override
-        public @NonNull <K, V> IOCache<K, V> ofTtl(@NonNull Duration ttl) {
-            return new FakeCache<>(new ConcurrentHashMap<>());
-        }
-
-        @Override
-        public @NonNull <K, V> IOCache<K, V> ofFile(@NonNull File file) {
-            return new FakeCache<>(new ConcurrentHashMap<>());
-        }
+    private static SimpleMapCache<CubeId, List<CubeSeriesWithData>> newMapCache() {
+        return new SimpleMapCache<>(new HashMap<>());
     }
 
-    @lombok.AllArgsConstructor
-    private static final class FakeCache<K, V> implements IOCache<K, V> {
-
-        @lombok.NonNull
-        private final ConcurrentMap<K, V> delegate;
-
-        @Override
-        public void put(@NonNull K key, @NonNull V value) {
-            delegate.put(key, value);
-        }
-
-        @Override
-        public V get(@NonNull K key) {
-            return delegate.get(key);
-        }
-
-        @Override
-        public void close() throws IOException {
-        }
+    private static <K, V> SimpleMapCache<K, V> clear(SimpleMapCache<K, V> cache) {
+        cache.getMap().clear();
+        return cache;
     }
 }

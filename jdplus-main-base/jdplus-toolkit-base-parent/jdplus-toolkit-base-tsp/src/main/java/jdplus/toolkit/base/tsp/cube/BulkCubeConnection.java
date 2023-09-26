@@ -16,8 +16,8 @@
  */
 package jdplus.toolkit.base.tsp.cube;
 
-import jdplus.toolkit.base.tsp.util.IOCache;
-import jdplus.toolkit.base.tsp.util.IOCacheFactory;
+import jdplus.toolkit.base.tsp.util.ShortLivedCache;
+import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import lombok.AccessLevel;
 import nbbrd.io.IOIterator;
 import nbbrd.io.Resource;
@@ -43,7 +43,7 @@ import static java.util.Objects.requireNonNull;
 public final class BulkCubeConnection implements CubeConnection {
 
     @NonNull
-    public static CubeConnection of(@NonNull CubeConnection delegate, @NonNull BulkCube options, @NonNull IOCacheFactory cacheFactory) {
+    public static CubeConnection of(@NonNull CubeConnection delegate, @NonNull BulkCube options, @NonNull ShortLivedCaching cacheFactory) {
         return options.isCacheEnabled()
                 ? new BulkCubeConnection(delegate, options.getDepth(), cacheFactory.ofTtl(options.getTtl()))
                 : delegate;
@@ -56,7 +56,7 @@ public final class BulkCubeConnection implements CubeConnection {
     private final int depth;
 
     @lombok.NonNull
-    private final IOCache<CubeId, List<CubeSeriesWithData>> cache;
+    private final ShortLivedCache<CubeId, List<CubeSeriesWithData>> cache;
 
     private int getCacheLevel() throws IOException {
         return Math.max(0, delegate.getRoot().getMaxLevel() - depth);
@@ -134,12 +134,12 @@ public final class BulkCubeConnection implements CubeConnection {
 
     @Override
     public void close() throws IOException {
-        Resource.closeBoth(cache, delegate);
+        delegate.close();
     }
 
     @NonNull
     private static Stream<CubeSeriesWithData> getOrLoad(
-            @NonNull IOCache<CubeId, List<CubeSeriesWithData>> cache,
+            @NonNull ShortLivedCache<CubeId, List<CubeSeriesWithData>> cache,
             @NonNull CubeId key,
             @NonNull IOFunction<CubeId, Stream<CubeSeriesWithData>> loader) throws IOException {
 
@@ -160,7 +160,7 @@ public final class BulkCubeConnection implements CubeConnection {
     private static final class CachingIterator implements IOIterator<CubeSeriesWithData>, Closeable {
 
         private final CubeId key;
-        private final IOCache cache;
+        private final ShortLivedCache<CubeId, List<CubeSeriesWithData>> cache;
         private final IOIterator<CubeSeriesWithData> delegate;
         private final Closeable closeable;
 
@@ -179,13 +179,13 @@ public final class BulkCubeConnection implements CubeConnection {
         }
 
         @Override
-        public Stream<CubeSeriesWithData> asStream() {
+        public @lombok.NonNull Stream<CubeSeriesWithData> asStream() {
             return IOIterator.super.asStream().onClose(IORunnable.unchecked(this::close));
         }
 
         @Override
         public void close() throws IOException {
-            Resource.closeBoth(this::flushToCache, closeable::close);
+            Resource.closeBoth(this::flushToCache, closeable);
         }
 
         private void flushToCache() throws IOException {
