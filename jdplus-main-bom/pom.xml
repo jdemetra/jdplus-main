@@ -18,7 +18,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java.bundled.version>jdk-17.0.7+7</java.bundled.version>
+        <java.bundled.version>jdk-17.0.8.1+1</java.bundled.version>
     </properties>
 
     <dependencyManagement>
