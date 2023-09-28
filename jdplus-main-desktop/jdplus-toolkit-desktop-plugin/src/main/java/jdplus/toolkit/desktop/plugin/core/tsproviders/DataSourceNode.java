@@ -16,11 +16,18 @@
  */
 package jdplus.toolkit.desktop.plugin.core.tsproviders;
 
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.TsCollectable;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.actions.Reloadable;
 import jdplus.toolkit.desktop.plugin.actions.Renameable;
+import jdplus.toolkit.desktop.plugin.actions.Repaintable;
 import jdplus.toolkit.desktop.plugin.core.actions.CloseNodeAction;
 import jdplus.toolkit.desktop.plugin.core.actions.ReloadNodeAction;
 import jdplus.toolkit.desktop.plugin.core.actions.RenameNodeAction;
@@ -36,12 +43,6 @@ import jdplus.toolkit.desktop.plugin.nodes.Nodes;
 import jdplus.toolkit.desktop.plugin.star.StarListManager;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
-import jdplus.toolkit.base.api.timeseries.TsInformationType;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.tsp.DataSet;
-import jdplus.toolkit.base.tsp.DataSource;
-import jdplus.toolkit.base.tsp.DataSourceLoader;
-import jdplus.toolkit.base.tsp.DataSourceProvider;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.netbeans.api.actions.Closable;
 import org.netbeans.api.actions.Editable;
@@ -106,6 +107,7 @@ public final class DataSourceNode extends AbstractNode {
         {
             abilities.add(new NameableImpl());
             abilities.add(new TsCollectableImpl());
+            abilities.add(new RepaintableImpl());
             abilities.add(new ReloadableImpl());
             if (TsManager.get().getProvider(DataSourceLoader.class, dataSource).isPresent()) {
                 abilities.add(new EditableImpl());
@@ -209,6 +211,15 @@ public final class DataSourceNode extends AbstractNode {
                 return new ProviderExceptionNode((IOException) ex, dataSource.getProviderName());
             }
             return super.createExceptionNode(ex);
+        }
+    }
+
+    private final class RepaintableImpl implements Repaintable {
+
+        @Override
+        public void repaint() {
+            fireIconChange();
+            fireOpenedIconChange();
         }
     }
 
