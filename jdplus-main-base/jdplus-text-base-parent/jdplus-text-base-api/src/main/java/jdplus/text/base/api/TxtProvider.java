@@ -18,7 +18,7 @@ import java.io.IOException;
 @ServiceProvider(TsProvider.class)
 public final class TxtProvider implements FileLoader<TxtBean> {
 
-    private static final String NAME = "Txt";
+    public static final String NAME = "Txt";
 
     @lombok.experimental.Delegate
     private final HasDataSourceMutableList mutableListSupport;

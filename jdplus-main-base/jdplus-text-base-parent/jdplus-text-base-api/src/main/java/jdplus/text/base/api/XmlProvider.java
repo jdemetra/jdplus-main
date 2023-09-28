@@ -18,7 +18,7 @@ import java.util.List;
 @ServiceProvider(TsProvider.class)
 public final class XmlProvider implements FileLoader<XmlBean> {
 
-    private static final String NAME = "Xml";
+    public static final String NAME = "Xml";
 
     @lombok.experimental.Delegate
     private final HasDataSourceMutableList mutableListSupport;

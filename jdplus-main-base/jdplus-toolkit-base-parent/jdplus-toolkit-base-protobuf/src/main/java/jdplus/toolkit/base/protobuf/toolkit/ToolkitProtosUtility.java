@@ -37,6 +37,9 @@ import jdplus.toolkit.base.core.stats.tests.NiidTests;
 import jdplus.toolkit.base.protobuf.modelling.ModellingProtos;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 
 /**
  *
@@ -281,6 +284,86 @@ public class ToolkitProtosUtility {
                 .setStartYear(start.year())
                 .setStartPeriod(start.annualPosition() + 1)
                 .addAllValues(Iterables.of(s.getValues()))
+                .build();
+    }
+
+    public ToolkitProtos.TsData convert(TsData s, String name) {
+        if (s == null || s.isEmpty()) {
+            return ToolkitProtos.TsData.getDefaultInstance()
+                    .toBuilder().setName(name)
+                    .build();
+        }
+
+        TsPeriod start = s.getStart();
+        return ToolkitProtos.TsData.newBuilder()
+                .setAnnualFrequency(s.getAnnualFrequency())
+                .setStartYear(start.year())
+                .setStartPeriod(start.annualPosition() + 1)
+                .addAllValues(Iterables.of(s.getValues()))
+                .setName(name)
+                .build();
+    }
+
+   public ToolkitProtos.TsMoniker convert(TsMoniker moniker) {
+        return ToolkitProtos.TsMoniker.newBuilder()
+                .setSource(moniker.getSource())
+                .setId(moniker.getId())
+                .build();
+    }
+
+    public TsMoniker convert(ToolkitProtos.TsMoniker moniker) {
+        return TsMoniker.of(moniker.getSource(), moniker.getId());
+    }
+
+    public ToolkitProtos.Ts convert(Ts s) {
+        if (s == null) {
+            return ToolkitProtos.Ts.getDefaultInstance();
+        }
+
+        return ToolkitProtos.Ts.newBuilder()
+                .setName(s.getName())
+                .setMoniker(convert(s.getMoniker()))
+                .setData(convert(s.getData()))
+                .putAllMetadata(s.getMeta())
+                .build();
+    }
+
+    public ToolkitProtos.TsCollection convert(TsCollection s) {
+        if (s == null) {
+            return ToolkitProtos.TsCollection.getDefaultInstance();
+        }
+
+        return ToolkitProtos.TsCollection.newBuilder()
+                .setName(s.getName())
+                .setMoniker(convert(s.getMoniker()))
+                .putAllMetadata(s.getMeta())
+                .addAllSeries(s.getItems().stream().map(t->convert(t)).toList())
+                .build();
+    }
+
+    public Ts convert(ToolkitProtos.Ts s) {
+        if (s == null) {
+            return null;
+        }
+        
+        return Ts.builder()
+                .name(s.getName())
+                .moniker(convert(s.getMoniker()))
+                .data(convert(s.getData()))
+                .meta(s.getMetadataMap())
+                .build();
+    }
+
+   public TsCollection convert(ToolkitProtos.TsCollection s) {
+        if (s == null) {
+            return null;
+        }
+
+        return TsCollection.builder()
+                .name(s.getName())
+                .moniker(convert(s.getMoniker()))
+                .meta(s.getMetadataMap())
+                .items(s.getSeriesList().stream().map(t->convert(t)).toList())
                 .build();
     }
 

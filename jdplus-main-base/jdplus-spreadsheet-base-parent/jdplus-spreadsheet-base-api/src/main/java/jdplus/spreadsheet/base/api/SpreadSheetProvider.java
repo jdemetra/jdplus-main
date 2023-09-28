@@ -41,7 +41,7 @@ import java.io.IOException;
 @ServiceProvider(TsProvider.class)
 public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
 
-    private static final String NAME = "XCLPRVDR";
+    public static final String NAME = "XCLPRVDR";
 
     private final SpreadsheetManager spreadsheetManager;
 

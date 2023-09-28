@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.r.timeseries;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import jdplus.toolkit.base.api.data.AggregationType;
 import jdplus.toolkit.base.api.timeseries.CalendarPeriodObs;
 import jdplus.toolkit.base.api.timeseries.CalendarTimeSeries;
@@ -25,9 +26,15 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos;
+import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtosUtility;
 
 /**
  *
@@ -35,6 +42,11 @@ import jdplus.toolkit.base.api.timeseries.TsDataTable;
  */
 @lombok.experimental.UtilityClass
 public class TsUtility {
+
+    public void updateProviders() {
+        TsFactory nfactory = TsFactory.ofServiceLoader();
+        TsFactory.setDefault(nfactory);
+    }
 
     public TsData of(int freq, int year, int start, double[] data) {
         switch (freq) {
@@ -124,8 +136,58 @@ public class TsUtility {
         }
         return CalendarTimeSeries.of(entries);
     }
-    
+
     public TsData cleanExtremities(TsData s) {
         return s.cleanExtremities();
+    }
+    
+    public byte[] toBuffer(Ts s){
+        return ToolkitProtosUtility.convert(s).toByteArray();
+    }
+    
+    public Ts tsOfBytes(byte[] bytes) throws InvalidProtocolBufferException{
+        return ToolkitProtosUtility.convert(ToolkitProtos.Ts.parseFrom(bytes));
+    }
+    
+    public byte[] toBuffer(TsCollection s){
+        return ToolkitProtosUtility.convert(s).toByteArray();
+    }
+    
+    public TsCollection tsCollectionOfBytes(byte[] bytes) throws InvalidProtocolBufferException{
+        return ToolkitProtosUtility.convert(ToolkitProtos.TsCollection.parseFrom(bytes));
+    }
+    
+    private String dayOf(TsPeriod p, int pos){
+        switch (pos){
+            case 0 -> {
+                return p.start().toLocalDate().format(DateTimeFormatter.ISO_DATE);
+            }
+            case 2 -> {
+                return p.end().toLocalDate().minusDays(1).format(DateTimeFormatter.ISO_DATE);
+            }
+            default -> {
+                LocalDate d0=p.start().toLocalDate(), d1=p.end().toLocalDate();
+                return d0.plusDays(d0.until(d1, ChronoUnit.DAYS)/2).format(DateTimeFormatter.ISO_DATE);
+            }
+                
+        }
+    }
+    
+    /**
+     * 
+     * @param domain
+     * @param pos 0 for first day, 1 for middle day, 2 for last day
+     * @return 
+     */  
+    public String[] daysOf(TsDomain domain, int pos){
+        String[] days=new String[domain.size()];
+        for (int i=0; i<days.length; ++i){
+            days[i]=dayOf(domain.get(i), pos);
+        }
+        return days;
+    }
+    
+    public String[] daysOf(TsData data, int pos){
+        return daysOf(data.getDomain(), pos);
     }
 }

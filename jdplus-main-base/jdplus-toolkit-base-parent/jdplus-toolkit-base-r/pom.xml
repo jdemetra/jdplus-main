@@ -24,6 +24,11 @@
         </dependency>
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-toolkit-base-tsp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-toolkit-base-protobuf</artifactId>
             <version>${project.version}</version>
         </dependency>

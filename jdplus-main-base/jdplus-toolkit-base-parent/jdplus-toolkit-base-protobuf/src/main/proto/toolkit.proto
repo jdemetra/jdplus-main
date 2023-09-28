@@ -351,6 +351,20 @@ message TsMoniker{
 	string id = 2;
 }
 
+message Ts{
+        string name=1;
+	TsMoniker moniker = 2;
+        map<string, string> metadata= 3;
+	TsData data = 4;
+}
+
+message TsCollection{
+        string name=1;
+	TsMoniker moniker = 2;
+        map<string, string> metadata = 3;
+	repeated Ts series = 4;
+}
+
 message DynamicTsData{
 	TsMoniker moniker = 1;
 	TsData current = 2;
