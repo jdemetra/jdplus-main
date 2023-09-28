@@ -16,10 +16,11 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.mru;
 
-import jdplus.toolkit.desktop.plugin.TsManager;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
+import lombok.NonNull;
 import org.openide.awt.*;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
@@ -114,19 +115,14 @@ public final class ProviderMruAction extends AbstractAction implements Presenter
         }
     }
 
+    @lombok.RequiredArgsConstructor
     private static final class OpenDataSource extends AbstractAction {
 
-        private final DataSource dataSource;
-
-        public OpenDataSource(DataSource DataSource) {
-            this.dataSource = DataSource;
-        }
+        private final @NonNull DataSource dataSource;
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            TsManager.get()
-                    .getProvider(DataSourceLoader.class, dataSource)
-                    .ifPresent(o -> o.open(dataSource));
+            TsManager.get().open(dataSource);
         }
     }
 }

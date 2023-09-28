@@ -16,9 +16,11 @@
  */
 package jdplus.toolkit.desktop.plugin.core.star;
 
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.desktop.plugin.actions.Repaintable;
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import jdplus.toolkit.desktop.plugin.star.StarListManager;
-import jdplus.toolkit.base.tsp.DataSource;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -46,20 +48,16 @@ public final class StarAction extends SingleNodeAction<Node> {
     }
 
     @Override
-    protected boolean enable(Node activatedNode) {
-        Optional<DataSource> dataSource = getDataSource(activatedNode);
-        if (dataSource.isPresent()) {
-            updateDisplayName(dataSource.orElseThrow());
-            return true;
-        }
-        return false;
+    protected boolean enable(@NonNull Node activatedNode) {
+        return !getDataSource(activatedNode).stream().peek(this::updateActionName).toList().isEmpty();
     }
 
     @Override
-    protected void performAction(Node activatedNode) {
+    protected void performAction(@NonNull Node activatedNode) {
         getDataSource(activatedNode).ifPresent(dataSource -> {
             StarListManager.get().toggle(dataSource);
-            updateDisplayName(dataSource);
+            updateActionName(dataSource);
+            Repaintable.repaintNode(activatedNode);
         });
     }
 
@@ -68,7 +66,7 @@ public final class StarAction extends SingleNodeAction<Node> {
         return Bundle.starAction_add();
     }
 
-    private void updateDisplayName(DataSource dataSource) {
+    private void updateActionName(DataSource dataSource) {
         putValue(NAME, StarListManager.get().isStarred(dataSource) ? Bundle.starAction_remove() : Bundle.starAction_add());
     }
 
