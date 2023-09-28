@@ -23,7 +23,7 @@ public class ToolkitRuntimeDependenciesTest {
                 .describedAs("Check runtime dependencies")
                 .satisfies(ToolkitRuntimeDependenciesTest::checkToolkit)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaIoUtil)
-                .hasSize(19);
+                .hasSize(20);
     }
 
     private static void checkToolkit(List<? extends GAV> coordinates) {
@@ -32,6 +32,9 @@ public class ToolkitRuntimeDependenciesTest {
                 .extracting(GAV::getArtifactId)
                 .are(matchingPattern(compile("^jdplus-toolkit-base-\\w+$")))
                 .hasSize(6);
+        assertThatGroupId(coordinates, "com.github.ben-manes.caffeine")
+                .extracting(GAV::getArtifactId)
+                .containsExactlyInAnyOrder("caffeine");
     }
 
     private static void checkJavaIoUtil(List<? extends GAV> coordinates) {

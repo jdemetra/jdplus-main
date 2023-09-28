@@ -16,18 +16,18 @@
  */
 package jdplus.spreadsheet.base.api;
 
+import ec.util.spreadsheet.Book;
+import internal.spreadsheet.base.api.*;
+import internal.spreadsheet.base.api.grid.SheetGrid;
+import internal.spreadsheet.base.api.legacy.LegacySpreadSheetMoniker;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
 import jdplus.toolkit.base.tsp.*;
 import jdplus.toolkit.base.tsp.grid.GridReader;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.FallbackDataMoniker;
-import jdplus.toolkit.base.tsp.util.IOCacheFactoryLoader;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
-import ec.util.spreadsheet.Book;
-import internal.spreadsheet.base.api.*;
-import internal.spreadsheet.base.api.grid.SheetGrid;
-import internal.spreadsheet.base.api.legacy.LegacySpreadSheetMoniker;
+import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -101,7 +101,7 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
         File file = paths.resolveFilePath(bean.getFile());
         Book.Factory factory = books.getReader(file).orElseThrow(() -> new IOException("File type not supported"));
         SheetGrid result = SheetGrid.of(file, factory, getReader(bean));
-        return CachedSpreadSheetConnection.of(result, file, IOCacheFactoryLoader.get());
+        return CachedSpreadSheetConnection.of(result, file, ShortLivedCachingLoader.get());
     }
 
     private static GridReader getReader(SpreadSheetBean bean) {

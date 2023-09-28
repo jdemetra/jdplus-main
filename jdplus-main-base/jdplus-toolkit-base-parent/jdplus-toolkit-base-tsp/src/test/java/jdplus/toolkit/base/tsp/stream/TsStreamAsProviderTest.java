@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.base.tsp.stream;
 
-import _util.tsproviders.FailingTsCursorSupport;
+import _test.tsproviders.FailingTsCursorSupport;
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;

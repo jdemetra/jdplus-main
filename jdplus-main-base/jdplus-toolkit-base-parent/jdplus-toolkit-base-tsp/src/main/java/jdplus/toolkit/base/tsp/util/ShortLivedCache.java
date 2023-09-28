@@ -16,15 +16,15 @@
  */
 package jdplus.toolkit.base.tsp.util;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
+import nbbrd.design.NotThreadSafe;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.io.Closeable;
 
 /**
  * @author Philippe Charles
  */
-public interface IOCache<K, V> extends Closeable {
+@NotThreadSafe
+public interface ShortLivedCache<K, V> {
 
     void put(@NonNull K key, @NonNull V value);
 

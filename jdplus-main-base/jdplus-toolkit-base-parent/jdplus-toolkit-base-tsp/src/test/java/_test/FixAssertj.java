@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 National Bank of Belgium
+ * Copyright 2020 National Bank of Belgium
  * 
  * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -14,27 +14,20 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package _util;
+package _test;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.function.Supplier;
+import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
  * @author Philippe Charles
  */
-public final class IOExceptionUtil {
-
-    public static Closeable asCloseable(Supplier<IOException> factory) {
-        return () -> {
-            throw factory.get();
-        };
-    }
-
-    public static final class FirstIO extends IOException {
-    }
-
-    public static final class SecondIO extends IOException {
+public class FixAssertj {
+    
+    public static void assertDeepEqualTo(Object[][] actual, Object[][] expected) {
+        // workaround of bug in assertj 3.17.0
+//        assertThat(actual).isDeepEqualTo(expected);
+        assertThat(Arrays.deepEquals(actual, expected));
     }
 }

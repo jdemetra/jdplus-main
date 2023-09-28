@@ -25,8 +25,7 @@ public class ToolkitRuntimeDependenciesTest {
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaIoUtil)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaDesktopUtil)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkExternalSwingComponents)
-                .satisfies(ToolkitRuntimeDependenciesTest::checkGuava)
-                .hasSize(35);
+                .hasSize(32);
     }
 
     private static void checkToolkit(List<? extends GAV> coordinates) {
@@ -35,6 +34,9 @@ public class ToolkitRuntimeDependenciesTest {
                 .extracting(GAV::getArtifactId)
                 .are(matchingPattern(compile("^jdplus-toolkit-base-\\w+$")))
                 .hasSize(6);
+        assertThatGroupId(coordinates, "com.github.ben-manes.caffeine")
+                .extracting(GAV::getArtifactId)
+                .containsExactlyInAnyOrder("caffeine");
     }
 
     private static void checkJavaIoUtil(List<? extends GAV> coordinates) {
@@ -89,7 +91,7 @@ public class ToolkitRuntimeDependenciesTest {
     private static void checkExternalSwingComponents(List<? extends GAV> coordinates) {
         assertThatGroupId(coordinates, "com.miglayout")
                 .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("miglayout");
+                .containsExactlyInAnyOrder("miglayout-swing", "miglayout-core");
 
         assertThatGroupId(coordinates, "org.tros")
                 .extracting(GAV::getArtifactId)
@@ -102,21 +104,6 @@ public class ToolkitRuntimeDependenciesTest {
         assertThatGroupId(coordinates, "org.swinglabs")
                 .extracting(GAV::getArtifactId)
                 .containsExactlyInAnyOrder("swing-layout");
-    }
-
-    // FIXME: remove Guava dependency
-    private static void checkGuava(List<? extends GAV> coordinates) {
-        assertThatGroupId(coordinates, "com.google.guava")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("guava", "failureaccess", "listenablefuture");
-
-        assertThatGroupId(coordinates, "com.google.errorprone")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("error_prone_annotations");
-
-        assertThatGroupId(coordinates, "com.google.j2objc")
-                .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("j2objc-annotations");
     }
 
     @MightBePromoted

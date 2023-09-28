@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static _util.FixAssertj.assertDeepEqualTo;
+import static _test.FixAssertj.assertDeepEqualTo;
 import static jdplus.toolkit.base.api.timeseries.TsUnit.MONTH;
 import static jdplus.toolkit.base.api.timeseries.TsUnit.QUARTER;
 import static jdplus.toolkit.base.tsp.grid.GridLayout.HORIZONTAL;

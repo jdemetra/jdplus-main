@@ -182,8 +182,8 @@
         </dependency>
         <dependency>
             <groupId>com.miglayout</groupId>
-            <artifactId>miglayout</artifactId>
-            <version>3.7.4</version>
+            <artifactId>miglayout-swing</artifactId>
+            <version>5.3</version>
         </dependency>
         <dependency>
             <groupId>org.tros</groupId>
@@ -202,17 +202,6 @@
         </dependency>
 
         <!-- FIXME: demetra-desktop-util -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>32.0.0-jre</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jsr305</artifactId>
-                    <groupId>com.google.code.findbugs</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>com.github.nbbrd.java-io-util</groupId>
             <artifactId>java-io-base</artifactId>
@@ -276,7 +265,6 @@
                         <!-- TO FIX -->
                         <publicPackage>internal.*</publicPackage>
                         <!-- FIXME: demetra-desktop-util -->
-                        <publicPackage>com.google.*</publicPackage>
                         <publicPackage>org.apache.commons.*</publicPackage>
                         <publicPackage>nbbrd.io.*</publicPackage>
                         <publicPackage>internal.io.*</publicPackage>

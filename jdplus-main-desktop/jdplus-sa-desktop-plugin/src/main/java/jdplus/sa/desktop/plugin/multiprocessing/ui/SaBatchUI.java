@@ -4,25 +4,30 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
-import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.TsActionManager;
-import jdplus.toolkit.desktop.plugin.TsDynamicProvider;
-import jdplus.toolkit.desktop.plugin.TsManager;
+import ec.util.grid.swing.XTable;
+import ec.util.table.swing.JTables;
+import jdplus.sa.base.api.*;
+import jdplus.sa.base.information.SaItemsMapping;
+import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
+import jdplus.sa.desktop.plugin.util.ActionsHelper;
+import jdplus.sa.desktop.plugin.util.ActionsHelpers;
+import jdplus.toolkit.base.api.processing.ProcQuality;
+import jdplus.toolkit.base.api.processing.ProcessingLog.InformationType;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.tsp.fixme.Strings;
+import jdplus.toolkit.desktop.plugin.*;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollectionSupport;
+import jdplus.toolkit.desktop.plugin.concurrent.ThreadPoolSize;
+import jdplus.toolkit.desktop.plugin.concurrent.ThreadPriority;
+import jdplus.toolkit.desktop.plugin.concurrent.UIExecutors;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
 import jdplus.toolkit.desktop.plugin.datatransfer.TransferableXmlInformation;
 import jdplus.toolkit.desktop.plugin.notification.MessageType;
 import jdplus.toolkit.desktop.plugin.notification.NotifyUtil;
-import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
-import jdplus.sa.desktop.plugin.util.ActionsHelper;
-import jdplus.sa.desktop.plugin.util.ActionsHelpers;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.ui.Menus;
 import jdplus.toolkit.desktop.plugin.ui.Menus.DynamicPopup;
@@ -32,56 +37,12 @@ import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.desktop.plugin.util.ListTableModel;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import jdplus.toolkit.desktop.plugin.util.PopupMenuAdapter;
+import jdplus.toolkit.desktop.plugin.util.Stopwatch;
 import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
 import jdplus.toolkit.desktop.plugin.workspace.ui.JSpecSelectionComponent;
-import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.toolkit.base.api.processing.ProcessingLog.InformationType;
-import jdplus.sa.base.api.EstimationPolicyType;
-import jdplus.sa.base.api.HasSaEstimation;
-import jdplus.sa.base.api.SaDefinition;
-import jdplus.sa.base.api.SaEstimation;
-import jdplus.sa.base.api.SaItem;
-import jdplus.sa.base.api.SaItems;
-import jdplus.sa.base.api.SaSpecification;
-import jdplus.sa.base.information.SaItemsMapping;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsDocument;
-import jdplus.toolkit.base.api.timeseries.TsInformationType;
-import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
-import jdplus.toolkit.base.api.util.MultiLineNameUtil;
-import ec.util.grid.swing.XTable;
-import ec.util.table.swing.JTables;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.BeanInfo;
-import java.beans.PropertyChangeListener;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -94,6 +55,28 @@ import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.BeanInfo;
+import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * @author Philippe Charles
@@ -305,13 +288,10 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
                 case HasTsCollection.DROP_CONTENT_PROPERTY, HasTsCollection.FREEZE_ON_IMPORT_PROPERTY, HasTsCollection.TS_COLLECTION_PROPERTY, HasTsCollection.TS_SELECTION_MODEL_PROPERTY, HasTsCollection.TS_UPDATE_MODE_PROPERTY ->
-                    onCollectionChange();
-                case DEFAULT_SPECIFICATION_PROPERTY ->
-                    onDefaultSpecificationChange();
-                case PROCESSING_PROPERTY ->
-                    onProcessingChange();
-                case SELECTION_PROPERTY ->
-                    onSelectionChange();
+                        onCollectionChange();
+                case DEFAULT_SPECIFICATION_PROPERTY -> onDefaultSpecificationChange();
+                case PROCESSING_PROPERTY -> onProcessingChange();
+                case SELECTION_PROPERTY -> onSelectionChange();
             }
         });
         master.addMouseListener(new DynamicPopup(MultiProcessingManager.LOCALPATH));
@@ -327,7 +307,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     @NbBundle.Messages({
-        "undefinedspec.dialog.title=Undefined specification"
+            "undefinedspec.dialog.title=Undefined specification"
     })
     private void onCollectionChange() {
         TsCollection coll = getTsCollection();
@@ -509,7 +489,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         if (dataobj.getTransferDataFlavors().length > 0) {
             if (pasteTs(dataobj)) {
                 redrawAll();
-                
+
                 return;
             }
             if (pasteSaProcessing(dataobj)) {
@@ -527,10 +507,10 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         long count = DataTransferManager.get()
                 .toTsCollectionStream(dataobj)
                 .map(col -> col
-                .load(TsInformationType.All, TsManager.get())
-                .stream()
-                .map(Ts::freeze)
-                .collect(TsCollection.toTsCollection())
+                        .load(TsInformationType.All, TsManager.get())
+                        .stream()
+                        .map(Ts::freeze)
+                        .collect(TsCollection.toTsCollection())
                 )
                 .peek(col -> getElement().add(defaultSpecification, col.toArray(n -> new Ts[n])))
                 .count();
@@ -750,7 +730,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         return result;
     }
 
-//    private void refreshInfo() {
+    //    private void refreshInfo() {
 //        String ts = getCurrentProcessing().getMeta().get(TsMeta.TIMESTAMP);
 //        if (!Strings.isNullOrEmpty(ts)) {
 //            if (getCurrentProcessing().isDirty()) {
@@ -1088,22 +1068,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             }
             EstimationPolicyType policy = item.getOutput().getDefinition().getPolicy();
             return switch (policy) {
-                case Fixed ->
-                    "Fixed model";
-                case FixedParameters ->
-                    "Reg. coefficients";
-                case FreeParameters ->
-                    "Arima parameters";
-                case LastOutliers ->
-                    "Last outliers";
-                case Outliers_StochasticComponent ->
-                    "Arima model";
-                case Complete ->
-                    "Concurrent";
-                case None ->
-                    "New";
-                default ->
-                    policy.name();
+                case Fixed -> "Fixed model";
+                case FixedParameters -> "Reg. coefficients";
+                case FreeParameters -> "Arima parameters";
+                case LastOutliers -> "Last outliers";
+                case Outliers_StochasticComponent -> "Arima model";
+                case Complete -> "Concurrent";
+                case None -> "New";
+                default -> policy.name();
             };
         }
     }
@@ -1118,14 +1090,10 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         @Override
         protected Color getColor(SaNode item) {
             return switch (item.getStatus()) {
-                case Unprocessed ->
-                    Color.GRAY;
-                case Pending ->
-                    Color.ORANGE;
-                case Valid ->
-                    null;
-                default ->
-                    Color.RED;
+                case Unprocessed -> Color.GRAY;
+                case Pending -> Color.ORANGE;
+                case Valid -> null;
+                default -> Color.RED;
             };
         }
     }
@@ -1203,7 +1171,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             char[] tmp = new char[warnings.length];
             Arrays.fill(tmp, '!');
             label.setText(String.valueOf(tmp));
-            label.setToolTipText(Joiner.on(". ").join(warnings));
+            label.setToolTipText(String.join(". ", warnings));
             return label;
         }
     }
@@ -1301,10 +1269,10 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             }
 
             DemetraBehaviour options = DemetraBehaviour.get();
-            int nThread = options.getBatchPoolSize().getSize();
-            int priority = options.getBatchPriority().getPriority();
+            ThreadPoolSize nThread = options.getBatchPoolSize();
+            ThreadPriority priority = options.getBatchPriority();
 
-            ExecutorService executorService = Executors.newFixedThreadPool(nThread, new ThreadFactoryBuilder().setDaemon(true).setPriority(priority).build());
+            ExecutorService executorService = UIExecutors.newFixedThreadPool(nThread, priority);
             Stopwatch stopwatch = Stopwatch.createStarted();
             try {
                 executorService.invokeAll(tasks);
