@@ -92,41 +92,94 @@ public class XmlFiles {
     public DataSource source(String file, String cs) {
         XmlBean bean = new XmlBean();
         bean.setFile(new File(file));
-        if (cs != null) {
+        if (!cs.isEmpty()) {
             Charset charset = Charset.forName(cs);
             bean.setCharset(charset);
         }
         return PROVIDER.encodeBean(bean);
     }
 
-    public String[] series(DataSource source) throws Exception {
+    public String[] sheets(DataSource source) throws Exception {
         XmlProvider currentProvider = currentProvider();
         if (currentProvider == null) {
             throw new Exception("XmlProvider is not available");
         }
         try {
             currentProvider.open(source);
-            List<DataSet> all = currentProvider.children(source);
+            List<DataSet> sheets = currentProvider.children(source);
+            return sheets.stream().map(s -> currentProvider.getDisplayNodeName(s)).toArray(String[]::new);
+        } finally {
+            currentProvider.close(source);
+        }
+    }
+    
+    public String[] series(DataSource source, int sheet) throws Exception {
+        XmlProvider currentProvider = currentProvider();
+        if (currentProvider == null) {
+            throw new Exception("XmlProvider is not available");
+        }
+        try {
+            currentProvider.open(source);
+            List<DataSet> sheets = currentProvider.children(source);
+            if (sheet > sheets.size()) {
+                throw new IllegalArgumentException("Invalid sheet");
+            }
+            DataSet ds = sheets.get(sheet - 1);
+            List<DataSet> all = currentProvider.children(ds);
             return all.stream().map(s -> currentProvider.getDisplayNodeName(s)).toArray(String[]::new);
         } finally {
             currentProvider.close(source);
         }
     }
-
-    public Ts series(DataSource source, int series, boolean fullName) throws Exception {
+    
+    public Ts series(DataSource source, int sheet, int series, boolean fullName) throws Exception {
         XmlProvider currentProvider = currentProvider();
         if (currentProvider == null) {
-            throw new Exception("TxtProvider is not available");
+            throw new Exception("XmlProvider is not available");
         }
         try {
             currentProvider.open(source);
-            List<DataSet> all = currentProvider.children(source);
+            List<DataSet> sheets = currentProvider.children(source);
+            if (sheet > sheets.size()) {
+                throw new IllegalArgumentException("Invalid sheet");
+            }
+            DataSet ds = sheets.get(sheet - 1);
+            List<DataSet> all = currentProvider.children(ds);
             if (series > all.size()) {
                 throw new IllegalArgumentException("Invalid sheet");
             }
             DataSet s = all.get(series - 1);
             TsMoniker moniker = currentProvider.toMoniker(s);
             return currentProvider.getTs(moniker, TsInformationType.All).withName(fullName ? currentProvider.getDisplayName(s) : currentProvider.getDisplayNodeName(s));
+        } finally {
+            currentProvider.close(source);
+        }
+    }
+
+   public TsCollection collection(DataSource source, int sheet, boolean fullNames) throws Exception {
+        XmlProvider currentProvider = currentProvider();
+        if (currentProvider == null) {
+            throw new Exception("XmlProvider is not available");
+        }
+        try {
+            currentProvider.open(source);
+            List<DataSet> sheets = currentProvider.children(source);
+            if (sheet > sheets.size()) {
+                throw new IllegalArgumentException("Invalid sheet");
+            }
+            DataSet ds = sheets.get(sheet - 1);
+            TsMoniker moniker = currentProvider.toMoniker(ds);
+            if (fullNames) {
+                return currentProvider.getTsCollection(moniker, TsInformationType.All).withName(currentProvider.getDisplayName(ds));
+            } else {
+                List<DataSet> schildren = currentProvider.children(ds);
+                List<Ts> all = schildren.stream().map(c -> of(currentProvider, c)).toList();
+                return TsCollection.builder()
+                        .name(currentProvider.getDisplayName(ds))
+                        .moniker(moniker)
+                        .items(all)
+                        .build();
+            }
         } finally {
             currentProvider.close(source);
         }
@@ -146,31 +199,7 @@ public class XmlFiles {
         }
     }
 
-    public TsCollection collection(DataSource source, boolean fullNames) throws Exception {
-        XmlProvider currentProvider = currentProvider();
-        if (currentProvider == null) {
-            throw new Exception("TxtProvider is not available");
-        }
-        try {
-            currentProvider.open(source);
-            TsMoniker moniker = currentProvider.toMoniker(source);
-            if (fullNames) {
-                return currentProvider.getTsCollection(moniker, TsInformationType.All).withName(currentProvider.getDisplayName(source));
-            } else {
-                List<DataSet> schildren = currentProvider.children(source);
-                List<Ts> all = schildren.stream().map(c -> of(currentProvider, c)).toList();
-                return TsCollection.builder()
-                        .name(currentProvider.getDisplayName(source))
-                        .moniker(moniker)
-                        .items(all)
-                        .build();
-            }
-        } finally {
-            currentProvider.close(source);
-        }
-    }
-
-    public void setPaths(String[] paths) throws Exception {
+     public void setPaths(String[] paths) throws Exception {
         XmlProvider provider = currentProvider();
         if (provider == null) {
             throw new Exception("XmlProvider is not available");

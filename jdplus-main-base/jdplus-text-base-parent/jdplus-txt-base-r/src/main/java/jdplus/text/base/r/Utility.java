@@ -16,9 +16,11 @@
  */
 package jdplus.text.base.r;
 
+import java.util.Locale;
 import jdplus.text.base.api.TxtProvider;
 import jdplus.text.base.api.XmlProvider;
 import jdplus.toolkit.base.r.util.Providers;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 
 /**
  *
@@ -42,4 +44,20 @@ public class Utility {
             }
         }
     }
+    
+    public ObsFormat obsFormat(String locale, String dateFmt, String numberFmt, boolean ignoreNumberGrouping) {
+        ObsFormat.Builder builder = ObsFormat.builder().ignoreNumberGrouping(ignoreNumberGrouping);
+        if (locale.length()>0) {
+            builder.locale(Locale.forLanguageTag(locale));
+        }
+        if (dateFmt.length()>0) {
+            builder.dateTimePattern(dateFmt);
+        }
+        if (numberFmt.length()>0) {
+            builder.numberPattern(numberFmt);
+        }
+        return builder.build();
+
+    }
+    
 }

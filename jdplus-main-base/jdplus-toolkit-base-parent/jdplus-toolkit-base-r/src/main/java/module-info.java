@@ -9,7 +9,6 @@ module jdplus.toolkit.base.r {
 
     requires jdplus.toolkit.base.core;
     requires jdplus.toolkit.base.protobuf;
-    requires jdplus.toolkit.base.tsp;
 
     exports jdplus.toolkit.base.r.arima;
     exports jdplus.toolkit.base.r.calendar;

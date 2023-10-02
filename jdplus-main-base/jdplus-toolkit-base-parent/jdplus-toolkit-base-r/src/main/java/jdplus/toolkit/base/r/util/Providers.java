@@ -18,13 +18,11 @@ package jdplus.toolkit.base.r.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import jdplus.toolkit.base.api.data.AggregationType;
 import jdplus.toolkit.base.api.timeseries.TsFactory;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
 
 /**
  *
@@ -54,21 +52,6 @@ public class Providers {
                     .aggregationType(AggregationType.valueOf(aggregationType));
         }
         return builder.build();
-    }
-
-    public ObsFormat obsFormat(String locale, String dateFmt, String numberFmt, boolean ignoreNumberGrouping) {
-        ObsFormat.Builder builder = ObsFormat.builder().ignoreNumberGrouping(ignoreNumberGrouping);
-        if (locale.length()>0) {
-            builder.locale(Locale.forLanguageTag(locale));
-        }
-        if (dateFmt.length()>0) {
-            builder.dateTimePattern(dateFmt);
-        }
-        if (numberFmt.length()>0) {
-            builder.numberPattern(numberFmt);
-        }
-        return builder.build();
-
     }
 
 }
