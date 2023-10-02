@@ -16,6 +16,11 @@
  */
 package jdplus.toolkit.desktop.plugin.core.tsproviders;
 
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.DataSourceListener;
+import jdplus.toolkit.base.tsp.DataSourceLoader;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
 import jdplus.toolkit.desktop.plugin.TsManager;
@@ -25,11 +30,6 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataSourceTransferManager;
 import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.nodes.Nodes;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
-import jdplus.toolkit.base.api.timeseries.TsProvider;
-import jdplus.toolkit.base.tsp.DataSource;
-import jdplus.toolkit.base.tsp.DataSourceListener;
-import jdplus.toolkit.base.tsp.DataSourceLoader;
-import jdplus.toolkit.base.tsp.DataSourceProvider;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -231,10 +231,7 @@ public final class ProvidersNode extends AbstractNode {
 
         @Override
         public Transferable paste() throws IOException {
-            DataSourceTransferManager.get()
-                    .getDataSource(t).ifPresent(source -> TsManager.get()
-                            .getProvider(DataSourceLoader.class, source)
-                            .ifPresent(dataSourceLoader -> dataSourceLoader.open(source)));
+            DataSourceTransferManager.get().getDataSource(t).ifPresent(source -> TsManager.get().open(source));
             return null;
         }
     }
