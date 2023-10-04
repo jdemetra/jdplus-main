@@ -33,6 +33,8 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsDataTable;
 import jdplus.toolkit.base.api.timeseries.TsFactory;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos;
 import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtosUtility;
 
@@ -190,4 +192,17 @@ public class TsUtility {
     public String[] daysOf(TsData data, int pos){
         return daysOf(data.getDomain(), pos);
     }
+    
+    public Ts makeTs(TsData data, String name){
+        return Ts.of(name, data);
+    }
+    
+    public Ts makeTs(TsMoniker moniker, String type){
+        return TsFactory.getDefault().makeTs(moniker, TsInformationType.valueOf(type));
+    }
+    
+    public TsCollection makeTsCollection(TsMoniker moniker, String type){
+        return TsFactory.getDefault().makeTsCollection(moniker, TsInformationType.valueOf(type));
+    }
+    
 }

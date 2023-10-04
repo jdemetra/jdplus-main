@@ -18,6 +18,7 @@ import jdplus.toolkit.base.core.arima.AutoCovarianceFunction;
 import jdplus.toolkit.base.core.dstats.Normal;
 import jdplus.toolkit.base.core.dstats.T;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.random.XorshiftRNG;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaModel;
 import jdplus.toolkit.base.core.regsarima.RegSarimaComputer;
@@ -56,12 +57,14 @@ public class SarimaModels {
      * @param btheta
      * @param stde
      * @param tdegree Degrees of T-Stat. O if normal is used
+     * @param seed If seed < 0, use random seeds
      * @return
      */
-    public double[] random(int length, int period, double[] phi, int d, double[] theta, double[] bphi, int bd, double[] btheta, double stde, int tdegree) {
+    public double[] random(int length, int period, double[] phi, int d, double[] theta, double[] bphi, int bd, double[] btheta, double stde, int tdegree, int seed) {
         if (stde == 0) {
             stde = 1;
         }
+        XorshiftRNG rnd = seed < 0 ? XorshiftRNG.fromSystemNanoTime() : new XorshiftRNG(seed);
         SarimaModel sarima = SarimaModel.builder(period)
                 .differencing(d, bd)
                 .phi(phi)
@@ -69,7 +72,7 @@ public class SarimaModels {
                 .bphi(bphi)
                 .btheta(btheta)
                 .build();
-        ArimaSeriesGenerator generator = ArimaSeriesGenerator.builder()
+        ArimaSeriesGenerator generator = ArimaSeriesGenerator.builder(rnd)
                 .distribution(tdegree <= 0 ? new Normal(0, stde) : new T(tdegree))
                 .startMean(10 * stde)
                 .startStdev(stde)

@@ -41,11 +41,11 @@ public class Providers {
         TsFactory.setDefault(TsFactory.of(cproviders));
     }
 
-    public ObsGathering obsGathering(int period, String aggregationType, boolean allowPartialAggregation, boolean cleanMissing) {
-        if (period <= 0 && cleanMissing) {
+    public ObsGathering obsGathering(int period, String aggregationType, boolean allowPartialAggregation, boolean includeMissing) {
+        if (period <= 0 && !includeMissing) {
             return ObsGathering.DEFAULT;
         }
-        ObsGathering.Builder builder = ObsGathering.builder().includeMissingValues(!cleanMissing);
+        ObsGathering.Builder builder = ObsGathering.builder().includeMissingValues(includeMissing);
         if (period > 0) {
             builder.unit(TsUnit.ofAnnualFrequency(period))
                     .allowPartialAggregation(allowPartialAggregation)

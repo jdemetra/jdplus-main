@@ -47,52 +47,28 @@ public class TxtFiles {
         return (TxtProvider) TsFactory.getDefault().getProvider(TxtProvider.NAME).orElse(null);
     }
 
-    public List<TsMoniker> changeFiles(List<TsMoniker> monikers, File ofile, File nfile) {
-        List<TsMoniker> rslt = new ArrayList<>();
-        for (TsMoniker moniker : monikers) {
-            Optional<DataSet> set = PROVIDER.toDataSet(moniker);
-            set.ifPresentOrElse(
-                    (DataSet d) -> {
-                        TxtBean bean = PROVIDER.decodeBean(d.getDataSource());
-                        if (bean.getFile().equals(ofile)) {
-                            bean.setFile(nfile);
-                            DataSource src = PROVIDER.encodeBean(bean);
-
-                            DataSet nd = d.toBuilder()
-                                    .dataSource(src)
-                                    .build();
-                            rslt.add(PROVIDER.toMoniker(nd));
-                        } else {
-                            rslt.add(moniker);
-                        }
-                    }, () -> rslt.add(moniker));
-        }
-        return rslt;
-    }
-
-    public TsMoniker changeFile(TsMoniker moniker, File ofile, File nfile) {
-        Optional<DataSet> set = PROVIDER.toDataSet(moniker);
-        Optional<TsMoniker> m = set.<TsMoniker>map(d -> {
+    public String changeFile(String id, String nfile, String ofile) {
+        Optional<DataSet> set = PROVIDER.toDataSet(TsMoniker.of(TxtProvider.NAME, id));
+        Optional<String> m = set.<String>map(d -> {
             TxtBean bean = PROVIDER.decodeBean(d.getDataSource());
-            if (bean.getFile().equals(ofile)) {
-                bean.setFile(nfile);
+            if (ofile.isBlank() || bean.getFile().getName().equals(ofile)) {
+                bean.setFile(new File(nfile));
                 DataSource src = PROVIDER.encodeBean(bean);
-
                 DataSet nd = d.toBuilder()
                         .dataSource(src)
                         .build();
-                return PROVIDER.toMoniker(nd);
+                return PROVIDER.toMoniker(nd).getId();
             } else {
-                return moniker;
+                return id;
             }
         });
-        return m.orElse(moniker);
+        return m.orElse(id);
     }
 
     public DataSource source(String file, ObsFormat obsFormat, ObsGathering obsGathering, String cs, String delimiter, String txtqualifier, boolean headers, int skiplines) {
         TxtBean bean = new TxtBean();
         bean.setFile(new File(file));
-        if (cs != null && cs.length()>0) {
+        if (cs != null && cs.length() > 0) {
             bean.setCharset(Charset.forName(cs));
         }
         if (delimiter != null) {
@@ -168,4 +144,27 @@ public class TxtFiles {
         provider.setPaths(files);
     }
 
+    public DataSet decode(String id) {
+        Optional<DataSet> set = PROVIDER.toDataSet(TsMoniker.of(TxtProvider.NAME, id));
+        return set.orElse(null);
+    }
+
+    public String encode(DataSet set) {
+        return PROVIDER.toMoniker(set).getId();
+    }
+
+    public TxtBean sourceOf(DataSet set) {
+        return PROVIDER.decodeBean(set.getDataSource());
+    }
+
+    public DataSet sheetDataSet(DataSource source) {
+        return DataSet.builder(source, DataSet.Kind.COLLECTION)
+                .build();
+    }
+
+    public DataSet seriesDataSet(DataSource source, int series) {
+        return DataSet.builder(source, DataSet.Kind.SERIES)
+                .parameter("seriesIndex", Integer.toString(series-1))
+                .build();
+    }
 }

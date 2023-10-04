@@ -47,46 +47,22 @@ public class XmlFiles {
         return (XmlProvider) TsFactory.getDefault().getProvider(XmlProvider.NAME).orElse(null);
     }
 
-    public List<TsMoniker> changeFiles(List<TsMoniker> monikers, File ofile, File nfile) {
-        List<TsMoniker> rslt = new ArrayList<>();
-        for (TsMoniker moniker : monikers) {
-            Optional<DataSet> set = PROVIDER.toDataSet(moniker);
-            set.ifPresentOrElse(
-                    (DataSet d) -> {
-                        XmlBean bean = PROVIDER.decodeBean(d.getDataSource());
-                        if (bean.getFile().equals(ofile)) {
-                            bean.setFile(nfile);
-                            DataSource src = PROVIDER.encodeBean(bean);
-
-                            DataSet nd = d.toBuilder()
-                                    .dataSource(src)
-                                    .build();
-                            rslt.add(PROVIDER.toMoniker(nd));
-                        } else {
-                            rslt.add(moniker);
-                        }
-                    }, () -> rslt.add(moniker));
-        }
-        return rslt;
-    }
-
-    public TsMoniker changeFile(TsMoniker moniker, File ofile, File nfile) {
-        Optional<DataSet> set = PROVIDER.toDataSet(moniker);
-        Optional<TsMoniker> m = set.<TsMoniker>map(d -> {
+    public String changeFile(String id, String nfile, String ofile) {
+        Optional<DataSet> set = PROVIDER.toDataSet(TsMoniker.of(XmlProvider.NAME, id));
+        Optional<String> m = set.<String>map(d -> {
             XmlBean bean = PROVIDER.decodeBean(d.getDataSource());
-            if (bean.getFile().equals(ofile)) {
-                bean.setFile(nfile);
+            if (ofile.isBlank() || bean.getFile().getName().equals(ofile)) {
+                bean.setFile(new File(nfile));
                 DataSource src = PROVIDER.encodeBean(bean);
-
                 DataSet nd = d.toBuilder()
                         .dataSource(src)
                         .build();
-                return PROVIDER.toMoniker(nd);
+                return PROVIDER.toMoniker(nd).getId();
             } else {
-                return moniker;
+                return id;
             }
         });
-        return m.orElse(moniker);
+        return m.orElse(id);
     }
 
     public DataSource source(String file, String cs) {
@@ -112,7 +88,7 @@ public class XmlFiles {
             currentProvider.close(source);
         }
     }
-    
+
     public String[] series(DataSource source, int sheet) throws Exception {
         XmlProvider currentProvider = currentProvider();
         if (currentProvider == null) {
@@ -131,7 +107,7 @@ public class XmlFiles {
             currentProvider.close(source);
         }
     }
-    
+
     public Ts series(DataSource source, int sheet, int series, boolean fullName) throws Exception {
         XmlProvider currentProvider = currentProvider();
         if (currentProvider == null) {
@@ -156,7 +132,7 @@ public class XmlFiles {
         }
     }
 
-   public TsCollection collection(DataSource source, int sheet, boolean fullNames) throws Exception {
+    public TsCollection collection(DataSource source, int sheet, boolean fullNames) throws Exception {
         XmlProvider currentProvider = currentProvider();
         if (currentProvider == null) {
             throw new Exception("XmlProvider is not available");
@@ -199,7 +175,7 @@ public class XmlFiles {
         }
     }
 
-     public void setPaths(String[] paths) throws Exception {
+    public void setPaths(String[] paths) throws Exception {
         XmlProvider provider = currentProvider();
         if (provider == null) {
             throw new Exception("XmlProvider is not available");
@@ -208,4 +184,29 @@ public class XmlFiles {
         provider.setPaths(files);
     }
 
+    public DataSet decode(String id) {
+        Optional<DataSet> set = PROVIDER.toDataSet(TsMoniker.of(XmlProvider.NAME, id));
+        return set.orElse(null);
+    }
+
+    public String encode(DataSet set) {
+        return PROVIDER.toMoniker(set).getId();
+    }
+
+    public XmlBean sourceOf(DataSet set) {
+        return PROVIDER.decodeBean(set.getDataSource());
+    }
+
+    public DataSet seriesDataSet(DataSource source, int collectionIndex, int seriesIndex) {
+        return DataSet.builder(source, DataSet.Kind.SERIES)
+                .parameter("collectionIndex", Integer.toString(collectionIndex - 1))
+                .parameter("seriesIndex", Integer.toString(seriesIndex - 1))
+                .build();
+    }
+
+    public DataSet sheetDataSet(DataSource source, String sheetName) {
+        return DataSet.builder(source, DataSet.Kind.COLLECTION)
+                .parameter("sheetName", sheetName)
+                .build();
+    }
 }

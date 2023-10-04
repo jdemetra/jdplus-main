@@ -23,7 +23,7 @@ public class SarimaModelsTest {
 
     @Test
     public void testRandom() {
-        double[] rnd = SarimaModels.random(200, 12, new double[]{-.2, -.5}, 1, new double[]{-.5}, null, 1, new double[]{-.8}, 1, 5);
+        double[] rnd = SarimaModels.random(200, 12, new double[]{-.2, -.5}, 1, new double[]{-.5}, null, 1, new double[]{-.8}, 1, 5, -1);
 //        System.out.println(DoubleSeq.of(rnd));
         assertTrue(rnd.length == 200);
     }

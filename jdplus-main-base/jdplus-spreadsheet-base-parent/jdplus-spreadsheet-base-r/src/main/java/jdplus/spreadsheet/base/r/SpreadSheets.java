@@ -18,7 +18,6 @@ package jdplus.spreadsheet.base.r;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -42,55 +41,31 @@ import jdplus.toolkit.base.tsp.util.ObsFormat;
  */
 @lombok.experimental.UtilityClass
 public class SpreadSheets {
-    
+
     private final SpreadSheetProvider PROVIDER = new SpreadSheetProvider();
-    
+
     private SpreadSheetProvider currentProvider() {
         return (SpreadSheetProvider) TsFactory.getDefault().getProvider(SpreadSheetProvider.NAME).orElse(null);
     }
-    
-    public List<TsMoniker> changeFiles(List<TsMoniker> monikers, File ofile, File nfile) {
-        List<TsMoniker> rslt = new ArrayList<>();
-        for (TsMoniker moniker : monikers) {
-            Optional<DataSet> set = PROVIDER.toDataSet(moniker);
-            set.ifPresentOrElse(
-                    (DataSet d) -> {
-                        SpreadSheetBean bean = PROVIDER.decodeBean(d.getDataSource());
-                        if (bean.getFile().equals(ofile)) {
-                            bean.setFile(nfile);
-                            DataSource src = PROVIDER.encodeBean(bean);
-                            
-                            DataSet nd = d.toBuilder()
-                                    .dataSource(src)
-                                    .build();
-                            rslt.add(PROVIDER.toMoniker(nd));
-                        } else {
-                            rslt.add(moniker);
-                        }
-                    }, () -> rslt.add(moniker));
-        }
-        return rslt;
-    }
-    
-    public TsMoniker changeFile(TsMoniker moniker, File ofile, File nfile) {
-        Optional<DataSet> set = PROVIDER.toDataSet(moniker);
-        Optional<TsMoniker> m = set.<TsMoniker>map(d -> {
+
+    public String changeFile(String id, String nfile, String ofile) {
+        Optional<DataSet> set = PROVIDER.toDataSet(TsMoniker.of(SpreadSheetProvider.NAME, id));
+        Optional<String> m = set.<String>map(d -> {
             SpreadSheetBean bean = PROVIDER.decodeBean(d.getDataSource());
-            if (bean.getFile().equals(ofile)) {
-                bean.setFile(nfile);
+            if (ofile.isEmpty() || bean.getFile().getName().equals(ofile)) {
+                bean.setFile(new File(nfile));
                 DataSource src = PROVIDER.encodeBean(bean);
-                
                 DataSet nd = d.toBuilder()
                         .dataSource(src)
                         .build();
-                return PROVIDER.toMoniker(nd);
+                return PROVIDER.toMoniker(nd).getId();
             } else {
-                return moniker;
+                return id;
             }
         });
-        return m.orElse(moniker);
+        return m.orElse(id);
     }
-    
+
     public DataSource source(String file, ObsFormat obsFormat, ObsGathering obsGathering) {
         SpreadSheetBean bean = new SpreadSheetBean();
         bean.setFile(new File(file));
@@ -102,11 +77,11 @@ public class SpreadSheets {
         }
         return PROVIDER.encodeBean(bean);
     }
-    
-    public String[] sheets(DataSource source) throws Exception {
+
+    public String[] sheets(DataSource source) throws IllegalArgumentException, IOException {
         SpreadSheetProvider currentProvider = currentProvider();
         if (currentProvider == null) {
-            throw new Exception("SpreadSheetProvider is not available");
+            throw new RuntimeException("SpreadSheetProvider is not available");
         }
         try {
             currentProvider.open(source);
@@ -116,11 +91,11 @@ public class SpreadSheets {
             currentProvider.close(source);
         }
     }
-    
-    public String[] series(DataSource source, int sheet) throws Exception {
+
+    public String[] series(DataSource source, int sheet) throws IllegalArgumentException, IOException {
         SpreadSheetProvider currentProvider = currentProvider();
         if (currentProvider == null) {
-            throw new Exception("SpreadSheetProvider is not available");
+            throw new RuntimeException("SpreadSheetProvider is not available");
         }
         try {
             currentProvider.open(source);
@@ -135,11 +110,11 @@ public class SpreadSheets {
             currentProvider.close(source);
         }
     }
-    
-    public Ts series(DataSource source, int sheet, int series, boolean fullName) throws Exception {
+
+    public Ts series(DataSource source, int sheet, int series, boolean fullName) throws IllegalArgumentException, IOException {
         SpreadSheetProvider currentProvider = currentProvider();
         if (currentProvider == null) {
-            throw new Exception("SpreadSheetProvider is not available");
+            throw new RuntimeException("SpreadSheetProvider is not available");
         }
         try {
             currentProvider.open(source);
@@ -159,7 +134,7 @@ public class SpreadSheets {
             currentProvider.close(source);
         }
     }
-    
+
     private Ts of(SpreadSheetProvider provider, DataSet c) {
         TsMoniker moniker = provider.toMoniker(c);
         try {
@@ -170,14 +145,13 @@ public class SpreadSheets {
                     .moniker(moniker)
                     .data(TsData.empty("Unavailable"))
                     .build();
-            
         }
     }
-    
-    public TsCollection collection(DataSource source, int sheet, boolean fullNames) throws Exception {
+
+    public TsCollection collection(DataSource source, int sheet, boolean fullNames) throws IllegalArgumentException, IOException {
         SpreadSheetProvider currentProvider = currentProvider();
         if (currentProvider == null) {
-            throw new Exception("SpreadSheetProvider is not available");
+            throw new RuntimeException("SpreadSheetProvider is not available");
         }
         try {
             currentProvider.open(source);
@@ -202,20 +176,47 @@ public class SpreadSheets {
             currentProvider.close(source);
         }
     }
-    
-    public void setPaths(String[] paths) throws Exception {
+
+    public void setPaths(String[] paths) {
         SpreadSheetProvider provider = currentProvider();
         if (provider == null) {
-            throw new Exception("SpreadSheetProvider is not available");
+            throw new RuntimeException("SpreadSheetProvider is not available");
         }
         File[] files = Arrays.stream(paths).map(p -> new File(p)).toArray(n -> new File[n]);
         provider.setPaths(files);
     }
-    
+
     public void updateTsFactory() {
         SpreadSheetProvider currentProvider = currentProvider();
         if (currentProvider == null) {
             Providers.updateTsFactory(new SpreadSheetProvider());
         }
     }
+
+    public DataSet decode(String id) {
+        Optional<DataSet> set = PROVIDER.toDataSet(TsMoniker.of(SpreadSheetProvider.NAME, id));
+        return set.orElse(null);
+    }
+
+    public String encode(DataSet set) {
+        return PROVIDER.toMoniker(set).getId();
+    }
+
+    public SpreadSheetBean sourceOf(DataSet set) {
+        return PROVIDER.decodeBean(set.getDataSource());
+    }
+    
+    public DataSet seriesDataSet(DataSource source, String sheetName, String seriesName){
+        return DataSet.builder(source, DataSet.Kind.SERIES)
+                .parameter("sheetName", sheetName)
+                .parameter("seriesName", seriesName)
+                .build();
+    }
+    
+    public DataSet sheetDataSet(DataSource source, String sheetName){
+        return DataSet.builder(source, DataSet.Kind.COLLECTION)
+                .parameter("sheetName", sheetName)
+                .build();
+    }
+    
 }
