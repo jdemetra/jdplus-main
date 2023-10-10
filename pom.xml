@@ -339,9 +339,7 @@
                                 <requireMavenVersion>
                                     <version>3.6.0</version>
                                 </requireMavenVersion>
-                                <requireNoRepositories>
-                                    <allowSnapshotRepositories>true</allowSnapshotRepositories>
-                                </requireNoRepositories>
+                                <requireNoRepositories/>
                                 <requirePluginVersions/>
                                 <requireProperty>
                                     <property>project.artifactId</property>
@@ -566,17 +564,4 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <repository>
-            <id>jdemetra-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>
