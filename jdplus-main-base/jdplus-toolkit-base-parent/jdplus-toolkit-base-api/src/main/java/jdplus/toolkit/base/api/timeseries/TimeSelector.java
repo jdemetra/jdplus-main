@@ -287,7 +287,7 @@ public class TimeSelector {
                     builder.append(d0.toLocalDate());
                 builder.append(" - ");
                 if (!d1.equals(LocalDateTime.MAX))
-                    builder.append(d1.toLocalDate());
+                    builder.append(d1.toLocalDate().minusDays(1));
                 return builder.toString();
             case Excluding: {
                 if (n0 == 0 && n1 == 0) {
@@ -356,7 +356,7 @@ public class TimeSelector {
             case To:
                 builder.append("Until ");
                 if (!d1.equals(LocalDateTime.MAX))
-                    builder.append(d1.toLocalDate());
+                    builder.append(d1.toLocalDate().minusDays(1));
                  return builder.toString();
            case All:
                 return "All";

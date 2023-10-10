@@ -39,37 +39,54 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
 @lombok.experimental.UtilityClass
 public class LocalPolynomialFilters {
 
-    public ISymmetricFiltering of(LocalPolynomialFilterSpec spec) {
-        return new Filter(spec);
+    public IQuasiSymmetricFiltering of(LocalPolynomialFilterSpec spec) {
+        return spec.isSymmetric() ? new SFilter(spec) : new Filter(spec);
     }
 
-    private static class Filter implements ISymmetricFiltering {
+    public ISymmetricFiltering ofSymmetric(LocalPolynomialFilterSpec spec) {
+        if (!spec.isSymmetric()) {
+            throw new IllegalArgumentException();
+        }
+        return new SFilter(spec);
+    }
+
+    private static IntToDoubleFunction kernel(LocalPolynomialFilterSpec spec) {
+        int len = spec.getFilterHorizon();
+        return switch (spec.getKernel()) {
+            case BiWeight ->
+                DiscreteKernel.biweight(len);
+            case TriWeight ->
+                DiscreteKernel.triweight(len);
+            case Uniform ->
+                DiscreteKernel.uniform(len);
+            case Triangular ->
+                DiscreteKernel.triangular(len);
+            case Epanechnikov ->
+                DiscreteKernel.epanechnikov(len);
+            case Henderson ->
+                DiscreteKernel.henderson(len);
+            default ->
+                null;
+        };
+    }
+
+    private static class SFilter implements ISymmetricFiltering {
 
         private final SymmetricFilter symmetricFilter;
         private final IFiniteFilter[] asymmetricFilters;
 
-        private Filter(LocalPolynomialFilterSpec spec) {
+        private SFilter(LocalPolynomialFilterSpec spec) {
             int len = spec.getFilterHorizon();
             symmetricFilter = ofDefault(len, spec.getPolynomialDegree(), kernel(spec));
             asymmetricFilters = switch (spec.getAsymmetricFilters()) {
-                case CutAndNormalize -> AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
-                case MMSRE -> AsymmetricFiltersFactory.mmsreFilters(symmetricFilter
-                        , spec.getAsymmetricPolynomialDegree(), spec.getLinearModelCoefficients(), null,
-                        spec.getPassBand(), spec.getTimelinessWeight());
-                default -> directAsymmetricFilters(len, spec.getPolynomialDegree(), kernel(spec));
-            };
-        }
-
-        private static IntToDoubleFunction kernel(LocalPolynomialFilterSpec spec) {
-            int len = spec.getFilterHorizon();
-            return switch (spec.getKernel()) {
-                case BiWeight -> DiscreteKernel.biweight(len);
-                case TriWeight -> DiscreteKernel.triweight(len);
-                case Uniform -> DiscreteKernel.uniform(len);
-                case Triangular -> DiscreteKernel.triangular(len);
-                case Epanechnikov -> DiscreteKernel.epanechnikov(len);
-                case Henderson -> DiscreteKernel.henderson(len);
-                default -> null;
+                case CutAndNormalize ->
+                    AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
+                case MMSRE ->
+                    AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
+                    spec.getAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
+                    spec.getPassBand(), spec.getTimelinessWeight());
+                default ->
+                    directAsymmetricFilters(len, spec.getPolynomialDegree(), kernel(spec));
             };
         }
 
@@ -79,7 +96,7 @@ public class LocalPolynomialFilters {
         }
 
         @Override
-        public SymmetricFilter symmetricFilter() {
+        public SymmetricFilter centralFilter() {
             return symmetricFilter;
         }
 
@@ -87,7 +104,55 @@ public class LocalPolynomialFilters {
         public IFiniteFilter[] endPointsFilters() {
             return asymmetricFilters;
         }
+    }
 
+    private static class Filter implements IQuasiSymmetricFiltering {
+
+        private final SymmetricFilter symmetricFilter;
+        private final IFiniteFilter[] leftAsymmetricFilters, rightAsymmetricFilters;
+
+        private Filter(LocalPolynomialFilterSpec spec) {
+            int len = spec.getFilterHorizon();
+            symmetricFilter = ofDefault(len, spec.getPolynomialDegree(), kernel(spec));
+            rightAsymmetricFilters = switch (spec.getAsymmetricFilters()) {
+                case CutAndNormalize ->
+                    AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
+                case MMSRE ->
+                    AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
+                    spec.getAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
+                    spec.getPassBand(), spec.getTimelinessWeight());
+                default ->
+                    directAsymmetricFilters(len, spec.getPolynomialDegree(), kernel(spec));
+            };
+            leftAsymmetricFilters = ISymmetricFiltering.mirror(switch (spec.getAsymmetricFilters()) {
+                case MMSRE ->
+                    AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
+                    spec.getAsymmetricPolynomialDegree(), spec.getLeftLinearModelCoefficients(), null,
+                    spec.getPassBand(), spec.getTimelinessWeight());
+                default ->
+                    rightAsymmetricFilters;
+            });
+        }
+
+        @Override
+        public DoubleSeq process(DoubleSeq in) {
+            return FilterUtility.filter(in, symmetricFilter, leftAsymmetricFilters, rightAsymmetricFilters);
+        }
+
+        @Override
+        public SymmetricFilter centralFilter() {
+            return symmetricFilter;
+        }
+
+        @Override
+        public IFiniteFilter[] leftEndPointsFilters() {
+            return leftAsymmetricFilters;
+        }
+
+        @Override
+        public IFiniteFilter[] rightEndPointsFilters() {
+            return rightAsymmetricFilters;
+        }
     }
 
     /**
@@ -100,9 +165,12 @@ public class LocalPolynomialFilters {
      */
     public SymmetricFilter of(final int h, final int d, final IntToDoubleFunction k) {
         return switch (d) {
-            case 0, 1 -> of0_1(h, k);
-            case 2, 3 -> of2_3(h, k);
-            default -> ofDefault(h, d, k);
+            case 0, 1 ->
+                of0_1(h, k);
+            case 2, 3 ->
+                of2_3(h, k);
+            default ->
+                ofDefault(h, d, k);
         };
     }
 
@@ -159,7 +227,7 @@ public class LocalPolynomialFilters {
 
     public FiniteFilter[] directAsymmetricFilters(int h, final int d, final IntToDoubleFunction k) {
         FiniteFilter[] ff = new FiniteFilter[h];
-        for (int i = 0, j=h-1; i < h; ++i, --j) {
+        for (int i = 0, j = h - 1; i < h; ++i, --j) {
             ff[i] = directAsymmetricFilter(h, j, d, k);
         }
         return ff;
@@ -258,7 +326,7 @@ public class LocalPolynomialFilters {
             rows.next().mul(sk[Math.abs(pos++)]);
         }
 
-        QRDecomposition qr=new Householder2().decompose(Z);
+        QRDecomposition qr = new Householder2().decompose(Z);
         double[] z = new double[Z.getRowsCount()];
         z[0] = 1;
         UpperTriangularMatrix.solvexU(qr.rawR(), DataBlock.of(z, 0, d + 1, 1));

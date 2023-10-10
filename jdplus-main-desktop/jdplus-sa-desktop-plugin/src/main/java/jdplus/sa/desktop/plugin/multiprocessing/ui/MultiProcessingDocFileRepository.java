@@ -9,12 +9,6 @@ import jdplus.toolkit.desktop.plugin.workspace.AbstractFileItemRepository;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemRepository;
 import jdplus.sa.base.api.SaItems;
-import jdplus.toolkit.base.tsp.TsMeta;
-
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -35,10 +29,13 @@ public class MultiProcessingDocFileRepository extends AbstractFileItemRepository
     @Override
     public boolean save(WorkspaceItem<MultiProcessingDocument> doc, DemetraVersion version) {
         MultiProcessingDocument element = doc.getElement();
-        Map<String, String> meta=new HashMap<>(element.getMetadata());
-        TsMeta.TIMESTAMP.store(meta, LocalDateTime.now(Clock.systemDefaultZone()));
-        SaItems current = element.current(meta);
-        return storeFile(doc, current, version, doc::resetDirty);
+        MultiProcessingDocument saved = element.save();
+        // we update the current document
+        return storeFile(doc, saved.getInitial(), version, ()
+                -> {
+            doc.setElement(saved);
+            doc.resetDirty();
+        });
     }
 
     @Override

@@ -209,7 +209,7 @@ public interface Likelihood {
      */
     default DoubleSeq deviances() {
         double f = factor();
-        DoubleSeq e = e();
+        DoubleSeq e = e().select(x->Double.isFinite(x));
         if (f == 1) {
             return e;
         } else {

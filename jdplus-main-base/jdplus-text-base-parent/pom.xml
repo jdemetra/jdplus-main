@@ -17,5 +17,6 @@
 
     <modules>
         <module>jdplus-text-base-api</module>
+        <module>jdplus-txt-base-r</module>
     </modules>
 </project>

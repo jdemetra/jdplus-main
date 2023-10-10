@@ -21,9 +21,20 @@ package jdplus.toolkit.base.api.math.linearfilters;
  * @author palatej
  */
 @lombok.Value
-public class HendersonSpec implements FilterSpec{
-    
+@lombok.AllArgsConstructor
+public class HendersonSpec implements FilterSpec {
+
     int filterHorizon;
-    double icRatio;
+    double leftIcRatio, rightIcRatio;
     
+    public HendersonSpec(int horizon, double icRatio){
+        this.filterHorizon=horizon;
+        this.leftIcRatio=icRatio;
+        this.rightIcRatio=icRatio;
+    }
+
+    public boolean isSymmetric() {
+        return leftIcRatio == rightIcRatio;
+    }
+
 }

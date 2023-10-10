@@ -16,6 +16,9 @@
  */
 package jdplus.sa.base.workspace;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import jdplus.sa.base.api.SaItem;
 import jdplus.sa.base.api.SaItems;
 import jdplus.sa.base.api.SaSpecification;
@@ -26,6 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jdplus.sa.base.api.EstimationPolicy;
+import jdplus.sa.base.api.EstimationPolicyType;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 
 /**
  *
@@ -33,7 +40,7 @@ import java.util.Map;
  */
 @lombok.Data
 public class MultiProcessing {
-
+    
     public static MultiProcessing of(String name, SaItems processing) {
         MultiProcessing p = new MultiProcessing(name);
         p.metaData.putAll(processing.getMeta());
@@ -44,17 +51,37 @@ public class MultiProcessing {
     public MultiProcessing(String name) {
         this.name = name;
     }
+    
+    private static final String TIMESTAMP="@timestamp";
+    
+    public MultiProcessing refresh(String policy, TsDomain domain, String info){
+        MultiProcessing p =new MultiProcessing(name);
+        for (SaItem cur : items) {
+            p.items.add(cur.refresh(new EstimationPolicy(EstimationPolicyType.valueOf(policy), domain), 
+                TsInformationType.valueOf(info)));
+        }
+        p.metaData.putAll(metaData);
+        p.metaData.put(TIMESTAMP, LocalDateTime.now(Clock.systemDefaultZone()).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+       return p;
+     }
 
-    public void compute(ModellingContext context) {
+     public void compute(ModellingContext context) {
         items.parallelStream().forEach(v -> v.compute(context, false));
     }
 
     public void process(ModellingContext context) {
         items.parallelStream().forEach(v -> v.process(context, false));
     }
-    
-    public void add(SaItem item){
+
+    public void add(SaItem item) {
         items.add(item);
+    }
+    
+    public MultiProcessing makeCopy(){
+        MultiProcessing mp=new MultiProcessing(name);
+        mp.metaData.putAll(metaData);
+        mp.items.addAll(items); // SaItem are immutable !
+        return mp;
     }
 
     public void add(String name, TsData s, SaSpecification spec) {
@@ -71,19 +98,9 @@ public class MultiProcessing {
         items.set(pos, newItem);
     }
 
-    public void setDomainSpecification(int pos, SaSpecification newspec){
-        SaItem nitem=items.get(pos).withDomainSpecification(newspec);
-        items.set(pos, nitem);
-    }
-
-    public void setSpecification(int pos, SaSpecification newspec){
-        SaItem nitem=items.get(pos).withSpecification(newspec);
-        items.set(pos, nitem);
-    }
-
-    public void setData(int pos, TsData ndata){
-        SaItem item=items.get(pos);
-        Ts nts=Ts.of(item.getDefinition().getTs().getName(), ndata);
+    public void setData(int pos, TsData ndata) {
+        SaItem item = items.get(pos);
+        Ts nts = Ts.of(item.getDefinition().getTs().getName(), ndata);
         items.set(pos, item.withTs(nts));
     }
 

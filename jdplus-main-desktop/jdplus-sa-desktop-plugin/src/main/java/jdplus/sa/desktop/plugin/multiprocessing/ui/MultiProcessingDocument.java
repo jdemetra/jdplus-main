@@ -4,6 +4,8 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import jdplus.sa.base.api.EstimationPolicy;
 import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaItem;
@@ -17,11 +19,14 @@ import jdplus.toolkit.base.api.util.Documented;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import jdplus.toolkit.base.tsp.TsMeta;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -32,7 +37,7 @@ public class MultiProcessingDocument implements Documented {
 
     int curId = 0;
 
-    private final Map<String, String> metadata = Collections.emptyMap();
+    private final Map<String, String> metadata = new LinkedHashMap<>();
 
     private final List<SaNode> current = new ArrayList<>();
     @NonNull
@@ -65,6 +70,15 @@ public class MultiProcessingDocument implements Documented {
         return doc;
     }
 
+    public MultiProcessingDocument save() {
+        Map<String, String> meta = new HashMap<>(metadata);
+        SaItems cur = current(meta);
+        MultiProcessingDocument saved = open(cur);
+        saved.metadata.putAll(metadata);
+        TsMeta.TIMESTAMP.store(saved.metadata, LocalDateTime.now(Clock.systemDefaultZone()));
+        return saved;
+    }
+
     @Override
     public Map<String, String> getMetadata() {
         return metadata;
@@ -83,8 +97,8 @@ public class MultiProcessingDocument implements Documented {
     public boolean isNew() {
         return initial.isEmpty();
     }
-    
-    public boolean isRefreshable(){
+
+    public boolean isRefreshable() {
         return !isNew() || hasFrozenItems();
     }
 

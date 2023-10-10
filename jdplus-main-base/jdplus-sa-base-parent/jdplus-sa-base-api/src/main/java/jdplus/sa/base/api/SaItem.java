@@ -35,6 +35,7 @@ import java.util.Map;
  */
 @lombok.Value
 @lombok.Builder(builderClassName = "Builder", toBuilder = true)
+@lombok.AllArgsConstructor(access=lombok.AccessLevel.PUBLIC)
 public final class SaItem {
 
     public static final String COMMENT = "comment";
@@ -149,6 +150,17 @@ public final class SaItem {
                         .policy(EstimationPolicyType.None)
                         .build())
                 .build();
+    }
+
+    public SaItem withTsMetaData(Map<String, String> info) {
+        Ts cur = definition.getTs();
+        Ts ncur = cur.toBuilder().clearMeta()
+                .meta(info)
+                .build();
+        SaDefinition ndef = definition.toBuilder()
+                .ts(ncur)
+                .build();
+        return new SaItem(name, ndef, meta, priority, estimation, processed);
     }
 
     public void accept() {

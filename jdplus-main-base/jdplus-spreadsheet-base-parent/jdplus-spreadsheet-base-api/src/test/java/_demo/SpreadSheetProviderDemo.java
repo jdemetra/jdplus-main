@@ -26,6 +26,9 @@ import nbbrd.design.Demo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.DataSet;
 
 /**
  * @author Philippe Charles
@@ -35,17 +38,20 @@ public class SpreadSheetProviderDemo {
     @Demo
     public static void main(String[] args) throws IOException {
         File file = Top5Browsers.getRefFile();
-
         // 1. create and configure the provider
         try (SpreadSheetProvider provider = new SpreadSheetProvider()) {
 
             // 2. create and configure a bean
             SpreadSheetBean bean = provider.newBean();
             bean.setFile(file);
-
+            
+ 
             // 3. create and open a DataSource from the bean
             DataSource dataSource = provider.encodeBean(bean);
+            List<DataSet> children = provider.children(dataSource);
+            
             provider.open(dataSource);
+            TsMoniker toMoniker = provider.toMoniker(dataSource);
 
             // 4. run demos
             ProviderDemo.printTree(provider, dataSource);

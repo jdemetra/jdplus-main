@@ -17,5 +17,6 @@
 
     <modules>
         <module>jdplus-spreadsheet-base-api</module>
+        <module>jdplus-spreadsheet-base-r</module>
     </modules>
 </project>

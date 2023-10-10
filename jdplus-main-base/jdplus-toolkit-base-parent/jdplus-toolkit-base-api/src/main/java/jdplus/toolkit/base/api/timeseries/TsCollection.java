@@ -45,6 +45,7 @@ public class TsCollection implements Seq<Ts>, HasEmptyCause {
     @lombok.NonNull
     private TsInformationType type;
 
+    @lombok.With
     @lombok.NonNull
     private String name;
 

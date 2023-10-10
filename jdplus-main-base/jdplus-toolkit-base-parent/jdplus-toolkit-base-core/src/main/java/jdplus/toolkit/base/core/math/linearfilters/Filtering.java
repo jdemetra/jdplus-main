@@ -19,6 +19,7 @@ package jdplus.toolkit.base.core.math.linearfilters;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.core.data.DataBlock;
 
 /**
  *
@@ -92,11 +93,6 @@ public class Filtering implements IFiltering {
             ++pos;
         }
         return Polynomial.raw(col.range(pos, n).toArray());
-    }
-
-    @Override
-    public DoubleSeq process(DoubleSeq in) {
-        return FilterUtility.filter(in, cf, lf, rf);
     }
 
     @Override
