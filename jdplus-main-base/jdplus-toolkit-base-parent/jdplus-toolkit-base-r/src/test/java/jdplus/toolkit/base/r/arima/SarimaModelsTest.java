@@ -35,5 +35,15 @@ public class SarimaModelsTest {
         byte[] buffer = SarimaModels.toBuffer(estimate);
         assertTrue(buffer != null);
     }
+    
+    @Test
+    public void testHR(){
+        RegArimaEstimation<SarimaModel> estimate = SarimaModels.estimate(Data.ABS_RETAIL, new int[]{3, 1, 1}, 12, new int[]{0, 1, 1}, false, null, null, 1e-9);
+//        System.out.println(estimate.getModel().arima());
+        SarimaModel hr = SarimaModels.hannanRissanen(Data.ABS_RETAIL, new int[]{3, 1, 1}, 12, new int[]{0, 1, 1}, "Ols", true, false);
+//        System.out.println(hr);
+        hr = SarimaModels.hannanRissanen(Data.ABS_RETAIL, new int[]{3, 1, 1}, 12, new int[]{0, 1, 1}, "Ols", true, true);
+//        System.out.println(hr);
+    }
 
 }
