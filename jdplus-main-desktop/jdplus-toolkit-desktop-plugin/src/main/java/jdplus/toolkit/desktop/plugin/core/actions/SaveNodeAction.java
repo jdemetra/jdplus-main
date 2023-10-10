@@ -36,7 +36,7 @@ import org.openide.util.Exceptions;
 @Messages("SaveNodeAction=Save")
 public final class SaveNodeAction extends AbilityNodeAction<Savable> {
 
-    public static final String ID = "demetra.desktop.core.actions.OpenNodeAction";
+    public static final String ID = "demetra.desktop.core.actions.SaveNodeAction";
 
     public SaveNodeAction() {
         super(Savable.class);
@@ -55,6 +55,6 @@ public final class SaveNodeAction extends AbilityNodeAction<Savable> {
 
     @Override
     public String getName() {
-        return Bundle.OpenNodeAction();
+        return Bundle.SaveNodeAction();
     }
 }
