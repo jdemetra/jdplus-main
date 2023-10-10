@@ -24,6 +24,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![STAT] Add Poisson distribution
 - ![OTHER] Serialize High-frequency series (modelling part)
+- ![OTHER] Add auxiliary functions to simplify the use of JD+ from R
+- ![OTHER] Add specifications and auxiliary functions for linear filters
+- ![OTHER] Add default modelling for seasonal adjustment (STL...)
+- ![OTHER] Add handling of time varying trading days
 - ![UI] Add export of SA documents to Excel
 
 ## [3.0.2] - 2023-06-14
