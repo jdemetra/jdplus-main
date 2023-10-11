@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main-cli</artifactId>
-        <version>3.1.1</version>
+        <version>3.1.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>jdplus-main-cli-design</artifactId>
