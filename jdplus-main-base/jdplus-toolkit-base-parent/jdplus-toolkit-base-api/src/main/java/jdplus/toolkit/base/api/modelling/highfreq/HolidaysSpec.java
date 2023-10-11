@@ -31,12 +31,16 @@ import nbbrd.design.Development;
 @lombok.Builder(toBuilder = true)
 public final class HolidaysSpec {
 
+    public static HolidaysOption DEF_OPTION=HolidaysOption.Skip;
+    
     public final static HolidaysSpec DEFAULT_UNUSED = HolidaysSpec.builder().build();
 
     private String holidays;
     private HolidaysOption holidaysOption;
     private boolean single;
     private int[] nonWorkingDays;
+    
+    private boolean test;
 
     private Parameter[] coefficients;
 
@@ -50,7 +54,7 @@ public final class HolidaysSpec {
 
     public static Builder builder() {
         return new Builder()
-                .holidaysOption(HolidaysOption.Skip)
+                .holidaysOption(DEF_OPTION)
                 .single(false)
                 .nonWorkingDays(HolidaysVariable.NONWORKING_WE);
     }

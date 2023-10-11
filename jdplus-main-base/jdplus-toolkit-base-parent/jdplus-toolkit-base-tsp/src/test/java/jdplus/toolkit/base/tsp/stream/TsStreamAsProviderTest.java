@@ -16,12 +16,13 @@
  */
 package jdplus.toolkit.base.tsp.stream;
 
-import _util.tsproviders.FailingTsCursorSupport;
+import _test.tsproviders.FailingTsCursorSupport;
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
 import internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class TsStreamAsProviderTest {
         s3 = Ts.builder().moniker(leaf3).type(All).name("leaf3").data(TsData.random(TsUnit.MONTH, 3)).meta(customMeta).build();
         goodCursor = new HasTsStream() {
             @Override
-            public Stream<DataSetTs> getData(DataSource dataSource, TsInformationType type) throws IllegalArgumentException, IOException {
+            public @NonNull Stream<DataSetTs> getData(@NonNull DataSource dataSource, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
                 if (dataSource.equals(ds)) {
                     DataSet.Builder b = DataSet.builder(dataSource, SERIES);
                     Function<Ts, DataSet> toDataSet = o -> {
@@ -93,7 +94,7 @@ public class TsStreamAsProviderTest {
             }
 
             @Override
-            public Stream<DataSetTs> getData(DataSet dataSet, TsInformationType type) throws IllegalArgumentException, IOException {
+            public @NonNull Stream<DataSetTs> getData(@NonNull DataSet dataSet, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
                 return getData(dataSet.getDataSource(), type)
                         .filter(o -> o.getId().getParameter("id").startsWith(dataSet.getParameter("id")));
             }

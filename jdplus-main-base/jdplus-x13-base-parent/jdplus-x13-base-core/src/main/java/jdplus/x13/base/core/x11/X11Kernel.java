@@ -17,7 +17,6 @@ import jdplus.x13.base.core.x11.pseudoadd.X11BStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11CStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11DStepPseudoAdd;
 import java.util.Arrays;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;

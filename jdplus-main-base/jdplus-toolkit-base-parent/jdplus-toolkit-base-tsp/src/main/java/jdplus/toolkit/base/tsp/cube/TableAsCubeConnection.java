@@ -127,13 +127,13 @@ public final class TableAsCubeConnection implements CubeConnection {
     private final Resource<?> resource;
 
     @Override
-    public Optional<IOException> testConnection() {
+    public @NonNull Optional<IOException> testConnection() {
         Exception result = resource.testConnection();
         return result != null ? Optional.of(WrappedIOException.wrap(result)) : Optional.empty();
     }
 
     @Override
-    public CubeId getRoot() throws IOException {
+    public @NonNull CubeId getRoot() throws IOException {
         try {
             return resource.getRoot();
         } catch (Exception ex) {
@@ -142,7 +142,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Stream<CubeSeries> getAllSeries(CubeId id) throws IOException {
+    public @NonNull Stream<CubeSeries> getAllSeries(@NonNull CubeId id) throws IOException {
         try {
             AllSeriesCursor cursor = resource.getAllSeriesCursor(id);
             return new AllSeriesIterator(id, cursor).asStream();
@@ -152,7 +152,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Stream<CubeSeriesWithData> getAllSeriesWithData(CubeId id) throws IOException {
+    public @NonNull Stream<CubeSeriesWithData> getAllSeriesWithData(@NonNull CubeId id) throws IOException {
         try {
             AllSeriesWithDataCursor cursor = resource.getAllSeriesWithDataCursor(id);
             return new AllSeriesWithDataIterator(id, cursor, resource.newBuilder()).asStream();
@@ -162,7 +162,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Optional<CubeSeries> getSeries(CubeId id) throws IOException {
+    public @NonNull Optional<CubeSeries> getSeries(@NonNull CubeId id) throws IOException {
         try (SeriesCursor cursor = resource.getSeriesCursor(id)) {
             AbstractIOIterator<CubeSeries> result = new SeriesIterator(id, cursor);
             return result.hasNextWithIO() ? Optional.of(result.nextWithIO()) : Optional.empty();
@@ -172,7 +172,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Optional<CubeSeriesWithData> getSeriesWithData(CubeId id) throws IOException {
+    public @NonNull Optional<CubeSeriesWithData> getSeriesWithData(@NonNull CubeId id) throws IOException {
         try (SeriesWithDataCursor cursor = resource.getSeriesWithDataCursor(id)) {
             AbstractIOIterator<CubeSeriesWithData> result = new SeriesWithDataIterator(id, cursor, resource.newBuilder());
             return result.hasNextWithIO() ? Optional.of(result.nextWithIO()) : Optional.empty();
@@ -182,7 +182,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public Stream<CubeId> getChildren(CubeId id) throws IOException {
+    public @NonNull Stream<CubeId> getChildren(@NonNull CubeId id) throws IOException {
         try {
             ChildrenCursor cursor = resource.getChildrenCursor(id);
             return new ChildrenIterator(id, cursor).asStream();
@@ -192,7 +192,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public String getDisplayName() throws IOException {
+    public @NonNull String getDisplayName() throws IOException {
         try {
             return resource.getDisplayName();
         } catch (Exception ex) {
@@ -201,7 +201,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public String getDisplayName(CubeId id) throws IOException {
+    public @NonNull String getDisplayName(@NonNull CubeId id) throws IOException {
         try {
             return resource.getDisplayName(id);
         } catch (Exception ex) {
@@ -210,7 +210,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @Override
-    public String getDisplayNodeName(CubeId id) throws IOException {
+    public @NonNull String getDisplayNodeName(@NonNull CubeId id) throws IOException {
         try {
             return resource.getDisplayNodeName(id);
         } catch (Exception ex) {

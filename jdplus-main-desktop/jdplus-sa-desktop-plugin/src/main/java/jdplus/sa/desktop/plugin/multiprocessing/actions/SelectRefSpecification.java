@@ -35,19 +35,19 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(category = "SaProcessing",
-        id = "demetra.sa.multiprocessing.actions.RefSpecification")
-@ActionRegistration(displayName = "#CTL_RefSpecification", lazy = false)
+        id = "demetra.sa.multiprocessing.actions.SelectRefSpecification")
+@ActionRegistration(displayName = "#CTL_SelectRefSpecification", lazy = false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1500, separatorBefore = 1499),
-    @ActionReference(path = MultiProcessingManager.LOCALPATH + Edit.PATH, position = 1500)
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + RefSpecification.PATH, position = 1505),
+    @ActionReference(path = MultiProcessingManager.LOCALPATH + RefSpecification.PATH, position = 1505)
 })
-@Messages("CTL_RefSpecification=Reference Specification...")
+@Messages("CTL_SelectRefSpecification=Select...")
 public final class SelectRefSpecification extends ActiveViewAction<SaBatchUI> {
 
     public SelectRefSpecification() {
         super(SaBatchUI.class);
         refreshAction();
-        putValue(NAME, Bundle.CTL_RefSpecification());
+        putValue(NAME, Bundle.CTL_SelectRefSpecification());
     }
 
     @Override

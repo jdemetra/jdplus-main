@@ -323,7 +323,7 @@ public class ModelBuilder implements IModelBuilder{
         }
     }
 
-    static ITradingDaysVariable td(ModellingSpec spec, DayClustering dc, ModellingContext context) {
+    public static ITradingDaysVariable td(ModellingSpec spec, DayClustering dc, ModellingContext context) {
         TradingDaysSpec tdspec = spec.getRegression().getCalendar().getTradingDays();
         if (!tdspec.isUsed()) {
             return null;
@@ -332,7 +332,6 @@ public class ModelBuilder implements IModelBuilder{
             return null;
         } else if (tdspec.getHolidays() != null) {
             GenericTradingDays gtd = GenericTradingDays.contrasts(dc);
-            
             HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
             return HolidaysCorrectedTradingDays.builder().corrector(corrector).clustering(gtd.getClustering()).build();
         } else if (tdspec.getUserVariables() != null) {
@@ -387,18 +386,15 @@ public class ModelBuilder implements IModelBuilder{
     }
 
     public static IEasterVariable easter(EasterSpec.Type type, int w) {
-        switch (type) {
-            case JULIANEASTER:
-                return new JulianEasterVariable(w, true);
-            case EASTER:
-                return EasterVariable.builder()
-                        .duration(w)
-                        .meanCorrection(EasterVariable.Correction.Simple)
-                        .endPosition(-1)
-                        .build();
-            default:
-                return null;
-        }
+        return switch (type) {
+            case JULIANEASTER -> new JulianEasterVariable(w, true);
+            case EASTER -> EasterVariable.builder()
+                    .duration(w)
+                    .meanCorrection(EasterVariable.Correction.Simple)
+                    .endPosition(-1)
+                    .build();
+            default -> null;
+        };
     }
     public static IEasterVariable easter(ModellingSpec spec) {
         EasterSpec espec = spec.getRegression().getCalendar().getEaster();

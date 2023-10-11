@@ -27,6 +27,7 @@ public final class TramoSeatsDocFileRepository extends AbstractFileItemRepositor
     @Override
     public boolean load(WorkspaceItem<TramoSeatsDocument> item) {
         return loadFile(item, (TramoSeatsDocument o) -> {
+            o.setLocked(true);
             item.setElement(o);
             item.resetDirty();
         });

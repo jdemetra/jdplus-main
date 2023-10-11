@@ -14,6 +14,7 @@ import jdplus.toolkit.desktop.plugin.components.JTsGrid;
 import static jdplus.toolkit.desktop.plugin.components.JTsGrid.REVERSE_ACTION;
 import static jdplus.toolkit.desktop.plugin.components.JTsGrid.TRANSPOSE_ACTION;
 import java.awt.BorderLayout;
+import java.util.Set;
 import javax.swing.*;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.core.spi.multiview.CloseOperationState;
@@ -74,7 +75,6 @@ public final class JTsGridTopComponent extends TopComponent implements ExplorerM
     @Override
     public void open() {
         super.open();
-        WindowManager.getDefault().getModes();
         Mode mode = WindowManager.getDefault().findMode("tsnavigator");
         if (mode != null) {
             mode.dockInto(this);

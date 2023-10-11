@@ -17,19 +17,16 @@
 package internal.spreadsheet.base.api;
 
 import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.tsp.util.IOCache;
-import jdplus.toolkit.base.tsp.util.IOCacheFactory;
+import jdplus.toolkit.base.tsp.util.ShortLivedCache;
+import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import lombok.AccessLevel;
-import nbbrd.io.Resource;
-import nbbrd.io.function.IOSupplier;
+import nbbrd.design.StaticFactoryMethod;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Philippe Charles
@@ -37,7 +34,8 @@ import java.util.stream.Collectors;
 @lombok.AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class CachedSpreadSheetConnection implements SpreadSheetConnection {
 
-    public static @NonNull SpreadSheetConnection of(@NonNull SpreadSheetConnection delegate, @NonNull File target, @NonNull IOCacheFactory cacheFactory) {
+    @StaticFactoryMethod
+    public static @NonNull CachedSpreadSheetConnection of(@NonNull SpreadSheetConnection delegate, @NonNull File target, @NonNull ShortLivedCaching cacheFactory) {
         return new CachedSpreadSheetConnection(delegate, cacheFactory.ofFile(target));
     }
 
@@ -45,50 +43,65 @@ public final class CachedSpreadSheetConnection implements SpreadSheetConnection 
     private final SpreadSheetConnection delegate;
 
     @lombok.NonNull
-    private final IOCache<String, Object> cache;
+    private final ShortLivedCache<String, List<TsCollection>> cache;
 
     @Override
-    public Optional<TsCollection> getSheetByName(String name) throws IOException {
-        Objects.requireNonNull(name);
-
-        List<TsCollection> all = peek("getSheets");
+    public @lombok.NonNull Optional<TsCollection> getSheetByName(@lombok.NonNull String name) throws IOException {
+        List<TsCollection> all = peekAll();
         if (all != null) {
-            return all.stream().filter(o -> o.getName().equals(name)).findFirst();
+            return all.stream()
+                    .filter(collection -> collection.getName().equals(name))
+                    .findFirst();
         }
 
-        return load("getSheetByName/" + name, () -> delegate.getSheetByName(name));
+        String key = "getSheetByName/" + name;
+        List<TsCollection> cachedValue = cache.get(key);
+        if (cachedValue == null) {
+            Optional<TsCollection> result = delegate.getSheetByName(name);
+            cache.put(key, result.stream().toList());
+            return result;
+        } else {
+            return cachedValue.stream().findFirst();
+        }
     }
 
     @Override
-    public List<String> getSheetNames() throws IOException {
-        List<TsCollection> all = peek("getSheets");
+    public @lombok.NonNull List<String> getSheetNames() throws IOException {
+        List<TsCollection> all = peekAll();
         if (all != null) {
-            return all.stream().map(TsCollection::getName).collect(Collectors.toList());
+            return all.stream()
+                    .map(TsCollection::getName)
+                    .toList();
         }
 
-        return load("getSheetNames", delegate::getSheetNames);
+        String key = "getSheetNames";
+        List<TsCollection> cachedValue = cache.get(key);
+        if (cachedValue == null) {
+            List<String> result = delegate.getSheetNames();
+            cache.put(key, result.stream().map(TsCollection::ofName).toList());
+            return result;
+        } else {
+            return cachedValue.stream().map(TsCollection::getName).toList();
+        }
     }
 
     @Override
-    public List<TsCollection> getSheets() throws IOException {
-        return load("getSheets", delegate::getSheets);
+    public @lombok.NonNull List<TsCollection> getSheets() throws IOException {
+        String key = "getSheets";
+        List<TsCollection> cachedValue = cache.get(key);
+        if (cachedValue == null) {
+            cachedValue = delegate.getSheets();
+            cache.put(key, cachedValue);
+        }
+        return cachedValue;
     }
 
     @Override
     public void close() throws IOException {
-        Resource.closeBoth(cache, delegate);
+        delegate.close();
     }
 
-    private <T> T peek(String key) {
-        return (T) cache.get(key);
-    }
-
-    private <T> T load(String key, IOSupplier<T> loader) throws IOException {
-        T result = peek(key);
-        if (result == null) {
-            result = loader.getWithIO();
-            cache.put(key, result);
-        }
-        return result;
+    private List<TsCollection> peekAll() {
+        return cache.get("getSheets");
     }
 }

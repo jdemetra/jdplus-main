@@ -48,7 +48,7 @@ interface FakeDbParam extends DataSource.Converter<FakeDbBean> {
         }
 
         @Override
-        public FakeDbBean getDefaultValue() {
+        public @NonNull FakeDbBean getDefaultValue() {
             FakeDbBean result = new FakeDbBean();
             result.setDbName(dbName.getDefaultValue());
             result.setTableName(tableName.getDefaultValue());
@@ -56,7 +56,7 @@ interface FakeDbParam extends DataSource.Converter<FakeDbBean> {
         }
 
         @Override
-        public FakeDbBean get(DataSource dataSource) {
+        public @NonNull FakeDbBean get(@NonNull DataSource dataSource) {
             FakeDbBean result = new FakeDbBean();
             result.setDbName(dbName.get(dataSource::getParameter));
             result.setTableName(tableName.get(dataSource::getParameter));
@@ -64,7 +64,7 @@ interface FakeDbParam extends DataSource.Converter<FakeDbBean> {
         }
 
         @Override
-        public void set(DataSource.Builder builder, FakeDbBean value) {
+        public void set(DataSource.@NonNull Builder builder, FakeDbBean value) {
             dbName.set(builder::parameter, value.getDbName());
             tableName.set(builder::parameter, value.getTableName());
         }

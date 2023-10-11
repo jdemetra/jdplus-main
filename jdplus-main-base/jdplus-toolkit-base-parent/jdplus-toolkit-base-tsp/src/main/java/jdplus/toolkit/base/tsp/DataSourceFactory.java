@@ -101,4 +101,9 @@ public interface DataSourceFactory extends TsFactory {
                     }
                 });
     }
+
+    default boolean open(@lombok.NonNull DataSource dataSource) {
+        return getProvider(DataSourceLoader.class, dataSource.getProviderName())
+                .map(loader -> loader.open(dataSource)).orElse(false);
+    }
 }

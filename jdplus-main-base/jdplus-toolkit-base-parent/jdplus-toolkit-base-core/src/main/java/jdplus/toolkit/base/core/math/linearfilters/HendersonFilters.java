@@ -19,6 +19,7 @@ package jdplus.toolkit.base.core.math.linearfilters;
 import nbbrd.design.Development;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.math.linearfilters.HendersonSpec;
 
 /**
  * 
@@ -63,5 +64,13 @@ public final class HendersonFilters {
 	filter=SymmetricFilter.ofInternal(c);
         FILTERSTORE.put(length, filter);
         return filter;
+    }
+    
+    public IQuasiSymmetricFiltering of(HendersonSpec spec){
+
+        SymmetricFilter sf=ofLength(1+2*spec.getFilterHorizon());
+        IFiniteFilter[] rf = AsymmetricFiltersFactory.musgraveFilters(sf, spec.getRightIcRatio());
+        IFiniteFilter[] lf = ISymmetricFiltering.mirror(spec.isSymmetric() ? rf :AsymmetricFiltersFactory.musgraveFilters(sf, spec.getLeftIcRatio()));
+        return new QuasiSymmetricFiltering(sf, lf, rf);
     }
 }

@@ -45,6 +45,7 @@ public class TsCollection implements Seq<Ts>, HasEmptyCause {
     @lombok.NonNull
     private TsInformationType type;
 
+    @lombok.With
     @lombok.NonNull
     private String name;
 
@@ -78,6 +79,12 @@ public class TsCollection implements Seq<Ts>, HasEmptyCause {
     public static @NonNull TsCollection of(@NonNull Ts item) {
         Objects.requireNonNull(item);
         return builder().item(item).build();
+    }
+
+    @StaticFactoryMethod
+    public static @NonNull TsCollection ofName(@NonNull String name) {
+        Objects.requireNonNull(name);
+        return builder().name(name).build();
     }
 
     public static @NonNull Collector<Ts, ?, TsCollection> toTsCollection() {

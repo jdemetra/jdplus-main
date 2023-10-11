@@ -42,7 +42,6 @@ import jdplus.toolkit.base.api.information.BasicInformationExtractor;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.modelling.ModellingDictionary;
-import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlInformationSet;
 import jdplus.toolkit.desktop.plugin.html.modelling.HtmlRegSarima;
@@ -81,7 +80,6 @@ import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
-import jdplus.x13.base.api.x11.X11Spec;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Document;
 import jdplus.x13.base.core.x13.X13Factory;
@@ -465,14 +463,14 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             super(X13Document.class, SaViews.PREPROCESSING_DET, source -> 
                     source.getResult().getPreprocessing() == null ? null : source, 
                     new GenericTableUI(false,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.YCAL,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.Y_LIN,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.DET,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.CAL,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.TDE,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.EE,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.OUT,
-                    SaDictionaries.PREPROCESSING, ModellingDictionary.FULL_RES));
+                    ModellingDictionary.YCAL,
+                    ModellingDictionary.Y_LIN,
+                    ModellingDictionary.DET,
+                    ModellingDictionary.CAL,
+                    ModellingDictionary.TDE,
+                    ModellingDictionary.EE,
+                    ModellingDictionary.OUT,
+                    ModellingDictionary.FULL_RES));
         }
 
         @Override

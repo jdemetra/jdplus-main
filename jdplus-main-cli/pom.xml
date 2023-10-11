@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.0.2</version>
+        <version>3.1.0</version>
     </parent>
 
     <artifactId>jdplus-main-cli</artifactId>
@@ -17,7 +17,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <picocli.version>4.7.4</picocli.version>
+        <picocli.version>4.7.5</picocli.version>
     </properties>
 
     <modules>
@@ -49,7 +49,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.1</version>
                     <executions>
                         <execution>
                             <phase>package</phase>

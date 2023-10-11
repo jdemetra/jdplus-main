@@ -25,7 +25,7 @@ public class TrendCrossValidationTest {
         double[] cv = TrendCrossValidation.process(DoubleSeq.of(Data.ABS_RETAIL), 12, true, 3, 25, h -> LocalPolynomialFilters.of(h, 3, DiscreteKernel.henderson(h)));
 //        long t0 = System.currentTimeMillis();
 //        for (int i = 0; i < 1000; ++i) {
-//            cv = TrendCrossValidation.process(DoubleSeq.of(Data.ABS_RETAIL), 12, true, 3, 25, h -> LocalPolynomialFilters.of(h, 3, DiscreteKernel.biweight(h)));
+//            cv = TrendCrossValidation.process(DoubleSeq.of(Data.ABS_RETAIL), 12, true, 3, 25, h -> LocalPolynomialFiltersFactory.of(h, 3, DiscreteKernel.biweight(h)));
 //        }
 //        long t1 = System.currentTimeMillis();
 //        System.out.println(t1 - t0);

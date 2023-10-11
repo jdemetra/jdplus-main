@@ -36,20 +36,20 @@ public class FilterUtility {
     final double EPS = 1e-9;
 
     /**
-     * Checks that the absolute values of all the given roots are higher
-     * than the given limit.
+     * Checks that the absolute values of all the inverse of the given roots are
+     * lower than the given limit.
      *
      * @param roots The roots
-     * @param amin The limit (positive number)
+     * @param rmin The limit (positive number)
      * @return
      */
-    public boolean checkRoots(final Complex[] roots, final double amin) {
-        if (roots == null || amin < 0) {
+    public boolean checkRoots(final Complex[] roots, final double rmin) {
+        if (roots == null || rmin < 0) {
             return true;
         }
         for (int i = 0; i < roots.length; ++i) {
             double n = (roots[i].abs());
-            if (n <= amin) {
+            if (1 / n >= rmin) {
                 return false;
             }
         }
@@ -57,49 +57,52 @@ public class FilterUtility {
     }
 
     /**
-     * Checks that the norm of the roots of a given polynomial
+     * Checks that the norm of the inverse of the roots of a given polynomial
      * are higher than rmin
      *
      * @param c The coefficients of the polynomial (excluding the constant,
-     * which is considered as 1).
-     * The polynomial is 1+c(0)x+...
-     * @param rmin The limit of the roots
+     * which is considered as 1). The polynomial is 1+c(0)x+...
+     * @param rmin The limit of the inverse of the roots
      * @return
      */
     public boolean checkRoots(final DoubleSeq c, final double rmin) {
         int nc = c.length();
         switch (nc) {
-            case 0:
+            case 0 -> {
                 return true;
-            case 1:
+            }
+            case 1 -> {
                 double cabs = Math.abs(c.get(0));
-                return (1 / cabs) > rmin;
-            case 2:
+                return cabs < rmin;
+            }
+            case 2 -> {
                 double a = c.get(0),
-                 b = c.get(1);
+                        b = c.get(1);
                 double ro = a * a - 4 * b;
                 if (ro > 0) { // Roots are (-a+-sqrt(ro))/(2b)
                     double sro = Math.sqrt(ro);
                     double x0 = (-a + sro) / (2 * b), x1 = (-a - sro) / (2 * b);
-                    return Math.abs(x0) > rmin && Math.abs(x1) > rmin;
+                    return 1 / Math.abs(x0) < rmin && 1 / Math.abs(x1) < rmin;
                 } else // Roots are (-a+-isqrt(-ro))/(2b). Abs(roots) = (1/2b)*sqrt((a*a - a*a+4*b))=1/sqr(b)
                 // b is necessary positive
                 {
-                    return (1 / Math.sqrt(b)) > rmin;
+                    return Math.sqrt(b) < rmin;
                 }
-            default:
+            }
+            default -> {
                 double[] ctmp = new double[nc + 1];
                 ctmp[0] = 1;
                 c.copyTo(ctmp, 1);
                 Polynomial p = Polynomial.ofInternal(ctmp);
                 return checkRoots(p.roots(), rmin);
+            }
         }
     }
 
     /**
-     * Checks that the polynomial corresponding to the given coefficients
-     * has all its roots outside the unit circle. Same as checkRoots(c, 1), but
-     * more efficient.
+     * Checks that the polynomial corresponding to the given coefficients has
+     * all its roots outside the unit circle. Same as checkRoots(c, 1), but more
+     * efficient.
      *
      * @param c The coefficients of the polynomial. The polynomial is
      * 1+c(0)x+...
@@ -162,13 +165,13 @@ public class FilterUtility {
 
     /**
      * /**
-     * Stabilize a given polynomial (all its roots will be > 1/rmin)
+     * Stabilize a given polynomial (all its roots will be >= 1/rmin)
      *
      * @param c The coefficients of the polynomial (excluding the constant,
-     * which is considered as 1).
-     * The polynomial is 1+c(0)x+...
-     * @param rmin The inverse of the limit of the roots
-     * @return true if some coefficients where changed , false otherwise
+     * which is considered as 1). The polynomial is 1+c(0)x+...
+     * @param rmin The limit of the inverse of the roots (all abs of the roots
+     * will be >= 1/rmin)
+     * @return true if some coefficients where changed, false otherwise
      */
     public boolean stabilize(DoubleSeq.Mutable c, double rmin) {
         int nc = c.length();
@@ -177,15 +180,16 @@ public class FilterUtility {
         }
         if (nc == 1) {
             double c0 = c.get(0);
-            double cabs = Math.abs(c0);
-            if (cabs < rmin) {
+            double rabs = Math.abs(c0);
+            if (rabs < rmin) {
                 return false;
             }
-
-            if (rmin < 1) {
-                c.set(0, c0 > 0 ? rmin : -rmin);
-            } else {
+            if (rabs > 1 / rmin) {
                 c.set(0, 1 / c0);
+            } else {
+                // in [rmin, 1/rmin]
+                // we put it nearly on the boundary
+                c.set(0, c0 > 0 ? rmin - EPS : -rmin + EPS);
             }
             return true;
         }
@@ -201,6 +205,7 @@ public class FilterUtility {
             }
             return true;
         }
+
         return false;
     }
 
@@ -210,8 +215,7 @@ public class FilterUtility {
      * @param p
      * @param rmin
      * @return A new polynomial is returned if the initial polynomial was not
-     * stable
-     * (= some roots were higher than rmin
+     * stable (= some roots were lower than 1/rmin)
      */
     public Polynomial stabilize(Polynomial p, double rmin) {
         if (p == null) {
@@ -222,14 +226,15 @@ public class FilterUtility {
         boolean changed = false;
         for (int i = 0; i < roots.length; ++i) {
             Complex root = roots[i];
-            double n = 1 / roots[i].abs();
-            if (n > rmin) {
-                if (rmin < 1) {
-                    roots[i] = root.times(n / rmin);
-                } else if (n > 1) {
-                    roots[i] = root.inv();
-
+            double n = roots[i].abs();
+            if (n < 1 / rmin) {
+                if (n < 1) {
+                    root = root.inv();
                 }
+                if (n > rmin) {
+                    root = root.div(rmin - EPS);
+                }
+                roots[i] = root;
                 changed = true;
             }
         }
@@ -263,7 +268,8 @@ public class FilterUtility {
     }
 
     /**
-     * Computes the frequency response (f(w)=sum(w(t)e(iwt))=sum(w(t)(cos(wt)+i*sin(wt)))
+     * Computes the frequency response
+     * (f(w)=sum(w(t)e(iwt))=sum(w(t)(cos(wt)+i*sin(wt)))
      *
      * @param c
      * @param lb Lower bound (included)
@@ -365,6 +371,25 @@ public class FilterUtility {
         return DoubleSeq.of(x);
     }
 
+    public void inPlaceFilter(DoubleSeq input, DataBlock output, final SymmetricFilter filter, final IFiniteFilter[] afilters) {
+        int h = filter.getUpperBound(), ilen = input.length();
+        DataBlock out = output.drop(h, h);
+        filter.apply(input, out);
+
+        // apply the endpoints filters
+        if (afilters != null) {
+            for (int i = 0, j = h - 1, k = ilen - h, len = 2 * h; i < h; ++i, --len, --j, ++k) {
+                output.set(j, afilters[i].apply(input.extract(0, len).reverse()));
+                output.set(k, afilters[i].apply(input.extract(ilen - len, len)));
+            }
+        } else {
+            for (int i = 0; i < h; ++i) {
+                output.set(i, Double.NaN);
+                output.set(ilen - i - 1, Double.NaN);
+            }
+        }
+    }
+
     /**
      * Applies the given central filter on a sequence of input. The end-points
      * are handled using given asymmetric filters or set to NaN.
@@ -410,4 +435,33 @@ public class FilterUtility {
         }
         return DoubleSeq.of(x);
     }
+
+    public void inPlaceFilter(DoubleSeq input, DataBlock output, final IFiniteFilter filter, final IFiniteFilter[] leftFilters, final IFiniteFilter[] rightFilters) {
+        int l = -filter.getLowerBound(), u = filter.getUpperBound(), ilen = input.length();
+        DataBlock out = output.drop(l, u);
+        filter.apply(input, out);
+
+        // apply the endpoints filters
+        if (leftFilters != null) {
+            for (int i = 0, j = l - 1; i < l; ++i, --j) {
+                IFiniteFilter cur = leftFilters[i];
+                output.set(j, cur.apply(input.extract(j + cur.getLowerBound(), cur.length())));
+            }
+        } else {
+            for (int i = 0; i < l; ++i) {
+                output.set(i, Double.NaN);
+            }
+        }
+        if (rightFilters != null) {
+            for (int i = 0, j = ilen - u; i < u; ++i, ++j) {
+                IFiniteFilter cur = rightFilters[i];
+                output.set(j, cur.apply(input.extract(j + cur.getLowerBound(), cur.length())));
+            }
+        } else {
+            for (int i = 0; i < l; ++i) {
+                output.set(ilen - i - 1, Double.NaN);
+            }
+        }
+    }
+
 }

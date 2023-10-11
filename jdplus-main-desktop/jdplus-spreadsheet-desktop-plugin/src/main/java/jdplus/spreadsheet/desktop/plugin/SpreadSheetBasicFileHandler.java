@@ -16,7 +16,7 @@
  */
 package jdplus.spreadsheet.desktop.plugin;
 
-import com.google.common.base.Stopwatch;
+import jdplus.toolkit.desktop.plugin.util.Stopwatch;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import ec.util.desktop.Desktop;
 import ec.util.desktop.DesktopManager;

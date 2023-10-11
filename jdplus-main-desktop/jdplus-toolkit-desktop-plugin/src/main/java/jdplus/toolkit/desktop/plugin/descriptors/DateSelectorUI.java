@@ -134,17 +134,17 @@ public class DateSelectorUI implements IPropertyDescriptors {
     public LocalDate getEnd() {
         if (core.getD1().equals(LocalDateTime.MAX)){
             if (domain != null){
-                return domain.getLastPeriod().end().toLocalDate();
+                return domain.getLastPeriod().end().toLocalDate().minusDays(1);
             }else{ 
                 return LocalDate.now(Clock.systemDefaultZone());
             }
         }
-        return core.getD1().toLocalDate();
+        return core.getD1().toLocalDate().minusDays(1);
     }
 
     public void setEnd(LocalDate day) {
         core=core.toBuilder()
-                .d1(day.atStartOfDay())
+                .d1(day.plusDays(1).atStartOfDay())
                 .build();
         callback.accept(core);
     }
@@ -242,7 +242,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
 
     @NbBundle.Messages({
         "tsPeriodSelectorUI.endDesc.name=End",
-        "tsPeriodSelectorUI.endDesc.desc=End of the time span. Only complete periods will be taken into account"
+        "tsPeriodSelectorUI.endDesc.desc=End of the time span (included). Only complete periods will be taken into account"
     })
     private EnhancedPropertyDescriptor endDesc() {
         TimeSelector.SelectionType type = core.getType();

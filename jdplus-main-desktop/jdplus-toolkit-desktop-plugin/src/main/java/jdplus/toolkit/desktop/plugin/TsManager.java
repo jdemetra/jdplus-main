@@ -23,8 +23,8 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceFactory;
 import jdplus.toolkit.base.tsp.DataSourceListener;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
-import ec.util.various.swing.OnAnyThread;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnAnyThread;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.util.WeakListeners;
 
@@ -171,16 +171,16 @@ public final class TsManager implements DataSourceFactory, Closeable {
     private final class DataSourceListenerImpl implements DataSourceListener {
 
         @Override
-        public void opened(DataSource ds) {
+        public void opened(@NonNull DataSource ds) {
         }
 
         @Override
-        public void closed(DataSource ds) {
+        public void closed(@NonNull DataSource ds) {
         }
 
         @OnAnyThread
         @Override
-        public void changed(DataSource ds) {
+        public void changed(@NonNull DataSource ds) {
             Optional<DataSourceProvider> provider = getProvider(DataSourceProvider.class, ds);
             if (provider.isPresent()) {
                 TsManager.this.notify(dataSetMoniker -> isRelated(provider.orElseThrow(), ds, dataSetMoniker));
@@ -196,7 +196,7 @@ public final class TsManager implements DataSourceFactory, Closeable {
         }
 
         @Override
-        public void allClosed(String string) {
+        public void allClosed(@NonNull String string) {
         }
     }
 

@@ -16,12 +16,14 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.util.Collections2;
-import jdplus.toolkit.base.api.util.List2;
 import jdplus.toolkit.base.api.util.function.BiIntPredicate;
 import lombok.AccessLevel;
+import lombok.NonNull;
+import nbbrd.design.StaticFactoryMethod;
+import nbbrd.design.VisibleForTesting;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;
@@ -35,6 +37,7 @@ import java.util.stream.IntStream;
 /**
  * @author Philippe Charles
  */
+@lombok.Getter
 @lombok.AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TsDataTable {
 
@@ -46,33 +49,27 @@ public final class TsDataTable {
         PRESENT, UNUSED, BEFORE, AFTER, EMPTY
     }
 
-    @NonNull
-    public static <X> TsDataTable of(@NonNull Iterable<X> col, @NonNull Function<? super X, TsData> toData) {
-        TsDomain domain = computeDomain(Collections2.streamOf(col).map(toData).map(TsData::getDomain).filter(o -> !o.isEmpty()).iterator());
-        return new TsDataTable(domain, Collections2.streamOf(col).map(toData).collect(List2.toUnmodifiableList()));
+    @StaticFactoryMethod
+    public static @NonNull <X> TsDataTable of(@NonNull Iterable<X> col, @NonNull Function<? super X, TsData> toData) {
+        TsDomain domain = computeDomain(Collections2.streamOf(col).map(toData).filter(Objects::nonNull).map(TsData::getDomain).filter(o -> !o.isEmpty()).iterator());
+        return new TsDataTable(domain, Collections2.streamOf(col).map(toData).toList());
     }
 
-    @NonNull
-    public static TsDataTable of(@NonNull Iterable<TsData> col) {
+    @StaticFactoryMethod
+    public static @NonNull TsDataTable of(@NonNull Iterable<TsData> col) {
         return of(col, Function.identity());
     }
 
-    @lombok.NonNull
-    @lombok.Getter
-    private final TsDomain domain;
+    private final @NonNull TsDomain domain;
 
-    @lombok.NonNull
-    @lombok.Getter
-    private final List<TsData> data;
+    private final @NonNull List<TsData> data;
 
-    @NonNull
-    public Cursor cursor(@NonNull DistributionType distribution) {
+    public @NonNull Cursor cursor(@NonNull DistributionType distribution) {
         Objects.requireNonNull(distribution);
         return cursor(i -> distribution);
     }
 
-    @NonNull
-    public Cursor cursor(@NonNull IntFunction<DistributionType> distribution) {
+    public @NonNull Cursor cursor(@NonNull IntFunction<DistributionType> distribution) {
         Objects.requireNonNull(distribution);
         return new Cursor(getDistributors(data, distribution));
     }
@@ -164,28 +161,24 @@ public final class TsDataTable {
     }
 
     private static BiIntPredicate getDistributor(DistributionType type) {
-        switch (type) {
-            case FIRST:
-                return (pos, size) -> pos % size == 0;
-            case LAST:
-                return (pos, size) -> pos % size == size - 1;
-            case MIDDLE:
-                return (pos, size) -> pos % size == size / 2;
-            default:
-                throw new RuntimeException();
-        }
+        return switch (type) {
+            case FIRST -> (pos, size) -> pos % size == 0;
+            case LAST -> (pos, size) -> pos % size == size - 1;
+            case MIDDLE -> (pos, size) -> pos % size == size / 2;
+        };
     }
 
+    @VisibleForTesting
     static TsDomain computeDomain(Iterator<TsDomain> domains) {
         if (!domains.hasNext()) {
             return TsDomain.DEFAULT_EMPTY;
         }
 
         TsDomain o = domains.next();
-
         TsUnit lowestUnit = o.getTsUnit();
         LocalDateTime minDate = o.start();
         LocalDateTime maxDate = o.end();
+        LocalDateTime epoch = o.getStartPeriod().getEpoch();
 
         while (domains.hasNext()) {
             o = domains.next();
@@ -197,11 +190,16 @@ public final class TsDataTable {
             if (maxDate.isBefore(o.end())) {
                 maxDate = o.end();
             }
+            LocalDateTime cepoch = o.getStartPeriod().getEpoch();
+            if (!cepoch.equals(epoch)) {
+                epoch = TsPeriod.DEFAULT_EPOCH;
+            }
         }
 
-        TsPeriod startPeriod = TsPeriod.of(lowestUnit, minDate);
-        TsPeriod endPeriod = TsPeriod.of(lowestUnit, maxDate);
-        // FIXME: default epoch?
+        TsPeriod startPeriod = TsPeriod.make(epoch, lowestUnit, minDate);
+        TsPeriod endPeriod = TsPeriod.make(epoch, lowestUnit, maxDate);
+        // default epoch if we can't find a common epoch. Should be improved
+        // FIXME
         return TsDomain.of(startPeriod, startPeriod.until(endPeriod));
     }
 
@@ -224,5 +222,28 @@ public final class TsDataTable {
             builder.append(("\r\n"));
         }
         return builder.toString();
+    }
+
+    public Matrix toMatrix() {
+        return toMatrix(DistributionType.LAST);
+    }
+
+    public Matrix toMatrix(DistributionType type) {
+
+        int nr = domain.length(), nc = data.size();
+        Cursor cursor = this.cursor(type);
+        double[] m = new double[nr * nc];
+        for (int row = 0, j0 = 0; row < nr; ++row, ++j0) {
+            for (int col = 0, j = j0; col < nc; ++col, j += nr) {
+                cursor.moveTo(row, col);
+                if (cursor.getStatus() == ValueStatus.PRESENT) {
+                    m[j] = cursor.getValue();
+                } else {
+                    m[j] = Double.NaN;
+                }
+
+            }
+        }
+        return Matrix.of(m, nr, nc);
     }
 }

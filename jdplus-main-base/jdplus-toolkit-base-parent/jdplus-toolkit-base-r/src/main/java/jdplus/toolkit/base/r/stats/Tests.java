@@ -10,10 +10,13 @@ import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.util.function.IntToDoubleFunction;
 import jdplus.toolkit.base.api.stats.AutoCovariances;
 import jdplus.toolkit.base.core.stats.InverseAutoCorrelations;
+import jdplus.toolkit.base.core.stats.RobustStandardDeviationComputer;
 import jdplus.toolkit.base.core.stats.tests.BowmanShenton;
 import jdplus.toolkit.base.core.stats.tests.DoornikHansen;
 import jdplus.toolkit.base.core.stats.tests.JarqueBera;
+import jdplus.toolkit.base.core.stats.tests.Kurtosis;
 import jdplus.toolkit.base.core.stats.tests.LjungBox;
+import jdplus.toolkit.base.core.stats.tests.Skewness;
 import jdplus.toolkit.base.core.stats.tests.TestOfRuns;
 import jdplus.toolkit.base.core.stats.tests.TestOfUpDownRuns;
 
@@ -51,6 +54,14 @@ public class Tests {
         return iac;
     }
     
+    public StatisticalTest skewness(double[] data){
+        return new Skewness(DoubleSeq.of(data)).build();
+    }
+    
+    public StatisticalTest kurtosis(double[] data){
+        return new Kurtosis(DoubleSeq.of(data)).build();
+    }
+    
     public StatisticalTest bowmanShenton(double[] data){
         return new BowmanShenton(DoubleSeq.of(data)).build();
     }
@@ -84,6 +95,10 @@ public class Tests {
                 .hyperParametersCount(nhp)
                 .sign(sign)
                 .build();
+    }
+    
+    public static double mad(double[] data, double centile, boolean mdedianCorrected){
+        return RobustStandardDeviationComputer.mad(centile, mdedianCorrected).compute(DoubleSeq.of(data));
     }
     
     

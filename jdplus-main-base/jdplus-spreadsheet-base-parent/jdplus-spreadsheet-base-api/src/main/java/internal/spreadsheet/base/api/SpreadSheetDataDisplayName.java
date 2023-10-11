@@ -24,6 +24,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataDisplayName;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Locale;
 
@@ -37,14 +38,14 @@ public final class SpreadSheetDataDisplayName implements HasDataDisplayName {
     private final SpreadSheetParam resource;
 
     @Override
-    public String getDisplayName(DataSource dataSource) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSource dataSource) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSource);
         SpreadSheetBean bean = resource.get(dataSource);
         return bean.getFile().getPath() + toString(bean.getGathering());
     }
 
     @Override
-    public String getDisplayName(DataSet dataSet) throws IllegalArgumentException {
+    public @NonNull String getDisplayName(@NonNull DataSet dataSet) throws IllegalArgumentException {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
         switch (dataSet.getKind()) {
             case COLLECTION:
@@ -56,7 +57,7 @@ public final class SpreadSheetDataDisplayName implements HasDataDisplayName {
     }
 
     @Override
-    public String getDisplayNodeName(DataSet dataSet) {
+    public @NonNull String getDisplayNodeName(@NonNull DataSet dataSet) {
         DataSourcePreconditions.checkProvider(providerName, dataSet);
         switch (dataSet.getKind()) {
             case COLLECTION:

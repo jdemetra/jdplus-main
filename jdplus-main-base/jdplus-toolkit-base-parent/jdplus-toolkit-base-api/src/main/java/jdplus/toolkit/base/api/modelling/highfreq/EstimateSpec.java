@@ -45,5 +45,9 @@ public class EstimateSpec {
                 .precision(EPS)
                 .approximateHessian(DEF_APP_HESSIAN);
     }
+    
+    public boolean isDefault(){
+        return this.equals(DEFAULT);
+    }
 
 }

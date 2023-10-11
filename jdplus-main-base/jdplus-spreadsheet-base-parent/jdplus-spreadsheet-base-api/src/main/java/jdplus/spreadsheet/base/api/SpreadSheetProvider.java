@@ -16,18 +16,18 @@
  */
 package jdplus.spreadsheet.base.api;
 
+import ec.util.spreadsheet.Book;
+import internal.spreadsheet.base.api.*;
+import internal.spreadsheet.base.api.grid.SheetGrid;
+import internal.spreadsheet.base.api.legacy.LegacySpreadSheetMoniker;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
 import jdplus.toolkit.base.tsp.*;
 import jdplus.toolkit.base.tsp.grid.GridReader;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.FallbackDataMoniker;
-import jdplus.toolkit.base.tsp.util.IOCacheFactoryLoader;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
-import ec.util.spreadsheet.Book;
-import internal.spreadsheet.base.api.*;
-import internal.spreadsheet.base.api.grid.SheetGrid;
-import internal.spreadsheet.base.api.legacy.LegacySpreadSheetMoniker;
+import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -41,9 +41,9 @@ import java.io.IOException;
 @ServiceProvider(TsProvider.class)
 public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
 
-    private static final String NAME = "XCLPRVDR";
+    public static final String NAME = "XCLPRVDR";
 
-    private final BookSupplier bookSupplier;
+    private final SpreadsheetManager spreadsheetManager;
 
     @lombok.experimental.Delegate
     private final HasDataSourceMutableList mutableListSupport;
@@ -67,7 +67,7 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
     private final TsProvider tsSupport;
 
     public SpreadSheetProvider() {
-        this.bookSupplier = BookSupplier.usingServiceLoader();
+        this.spreadsheetManager = SpreadsheetManager.ofServiceLoader();
 
         ResourcePool<SpreadSheetConnection> pool = SpreadSheetSupport.newConnectionPool();
         SpreadSheetParam param = new SpreadSheetParam.V1();
@@ -77,7 +77,7 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
         this.beanSupport = HasDataSourceBean.of(NAME, param, param.getVersion());
         this.filePathSupport = HasFilePaths.of(pool::clear);
         this.displayNameSupport = SpreadSheetDataDisplayName.of(NAME, param);
-        this.spreadSheetSupport = SpreadSheetSupport.of(NAME, pool.asFactory(dataSource -> openConnection(dataSource, filePathSupport, param, bookSupplier)), ignore -> param.getSheetParam(), ignore -> param.getSeriesParam());
+        this.spreadSheetSupport = SpreadSheetSupport.of(NAME, pool.asFactory(dataSource -> openConnection(dataSource, filePathSupport, param, spreadsheetManager)), ignore -> param.getSheetParam(), ignore -> param.getSeriesParam());
         this.tsSupport = TsStreamAsProvider.of(NAME, spreadSheetSupport, monikerSupport, pool::clear);
     }
 
@@ -93,15 +93,15 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
 
     @Override
     public boolean accept(File pathname) {
-        return bookSupplier.hasFactory(pathname);
+        return spreadsheetManager.getReader(pathname).isPresent();
     }
 
-    private static SpreadSheetConnection openConnection(DataSource key, HasFilePaths paths, SpreadSheetParam param, BookSupplier books) throws IOException {
+    private static SpreadSheetConnection openConnection(DataSource key, HasFilePaths paths, SpreadSheetParam param, SpreadsheetManager books) throws IOException {
         SpreadSheetBean bean = param.get(key);
         File file = paths.resolveFilePath(bean.getFile());
-        Book.Factory factory = books.getFactory(file).orElseThrow(() -> new IOException("File type not supported"));
+        Book.Factory factory = books.getReader(file).orElseThrow(() -> new IOException("File type not supported"));
         SheetGrid result = SheetGrid.of(file, factory, getReader(bean));
-        return CachedSpreadSheetConnection.of(result, file, IOCacheFactoryLoader.get());
+        return CachedSpreadSheetConnection.of(result, file, ShortLivedCachingLoader.get());
     }
 
     private static GridReader getReader(SpreadSheetBean bean) {

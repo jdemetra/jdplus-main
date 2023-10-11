@@ -16,7 +16,7 @@
  */
 package jdplus.tramoseats.desktop.plugin.anomalydetection.ui;
 
-import com.google.common.base.Stopwatch;
+import jdplus.toolkit.desktop.plugin.util.Stopwatch;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.tramoseats.desktop.plugin.anomalydetection.AnomalyItem;

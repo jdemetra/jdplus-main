@@ -1,6 +1,6 @@
 package jdplus.toolkit.desktop.plugin;
 
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.EventListener;

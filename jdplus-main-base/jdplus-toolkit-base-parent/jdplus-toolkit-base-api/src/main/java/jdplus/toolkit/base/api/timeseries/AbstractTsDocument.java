@@ -39,6 +39,8 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
     @lombok.NonNull
     private S specification;
 
+    private boolean locked = false;
+
     private Ts input;
 
     private R result;
@@ -49,10 +51,20 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
         this.specification = spec;
         uuid = UUID.randomUUID();
     }
-    
-    private void clear(){
-        result=null;
-        status=ProcessingStatus.Unprocessed;
+
+    private void clear() {
+        result = null;
+        status = ProcessingStatus.Unprocessed;
+    }
+
+    @Override
+    public boolean isLocked() {
+        return locked;
+    }
+
+    @Override
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     @Override
@@ -67,11 +79,14 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
 
     @Override
     public void set(S newSpec, Ts newInput) {
+        if (locked) {
+            return;
+        }
         synchronized (this) {
             specification = newSpec;
             input = newInput;
             clear();
-         }
+        }
     }
 
     @Override
@@ -84,6 +99,9 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
 
     @Override
     public void set(Ts newInput) {
+        if (locked) {
+            return;
+        }
         synchronized (this) {
             input = newInput;
             clear();
@@ -114,6 +132,37 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
             }
         }
         return cur;
+    }
+
+    @Override
+    public void refreshTs(TsFactory factory, TsInformationType type) {
+        synchronized (this) {
+            if (input == null) {
+                return;
+            }
+            boolean frozen = input.isFrozen();
+            Ts ninput;
+            if (frozen) {
+                ninput = input.unfreeze(factory, type).freeze();
+            } else {
+                ninput = input.load(type, factory);
+            }
+            boolean del = input != ninput;
+            input = ninput;
+            if (del) {
+                clear();
+            }
+        }
+    }
+
+    @Override
+    public void freeze() {
+        synchronized (this) {
+            if (input == null || input.isFrozen()) {
+                return;
+            }
+            input = input.freeze();
+        }
     }
 
     private boolean check() {
@@ -177,12 +226,12 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
     public ProcessingStatus getStatus() {
         return status;
     }
-    
+
     @Override
-    public void setAll(S spec, Ts input, R result){
-        this.input=input;
-        this.specification=spec;
-        this.result=result;
+    public void setAll(S spec, Ts input, R result) {
+        this.input = input;
+        this.specification = spec;
+        this.result = result;
         this.status = result != null ? ProcessingStatus.Valid : ProcessingStatus.Invalid;
     }
 

@@ -28,99 +28,114 @@ import java.time.LocalDateTime;
 @lombok.experimental.UtilityClass
 public class Data {
 
-    public final LocalDateTime JAN_2010 = LocalDate.of(2010, 1, 1).atStartOfDay();
-    public final LocalDateTime FEB_2010 = LocalDate.of(2010, 2, 1).atStartOfDay();
-    public final LocalDateTime MAR_2010 = LocalDate.of(2010, 3, 1).atStartOfDay();
+    public final LocalDateTime JAN_ = LocalDate.of(2010, 1, 1).atStartOfDay();
+    public final LocalDateTime FEB_ = LocalDate.of(2010, 2, 1).atStartOfDay();
+    public final LocalDateTime MAR_ = LocalDate.of(2010, 3, 1).atStartOfDay();
 
     public final ArrayGridInput EMPTY = ArrayGridInput.of(new Object[][]{});
 
     public final ArrayGridInput HGRID = ArrayGridInput.of(new Object[][]{
-            {null, JAN_2010, FEB_2010, MAR_2010},
+            {null, JAN_, FEB_, MAR_},
             {"S1", 3.14, 4.56, 7.89}
     });
 
+    public final ArrayGridInput HGRID_GAP = ArrayGridInput.of(new Object[][]{
+            {null, JAN_, FEB_, MAR_, null},
+            {null, null, null, null, null},
+            {"S1", 3.14, 4.56, 7.89, null},
+            {null, null, null, null, null},
+    });
+
     public final ArrayGridInput HGRID_OVERFLOW = ArrayGridInput.of(new Object[][]{
-            {null, JAN_2010, FEB_2010, MAR_2010},
+            {null, JAN_, FEB_, MAR_},
             {"S1", 3.14, 4.56, 7.89, 666}
     });
 
     public final ArrayGridInput HGRID_UNDERFLOW = ArrayGridInput.of(new Object[][]{
-            {null, JAN_2010, FEB_2010, MAR_2010},
+            {null, JAN_, FEB_, MAR_},
             {"S1", 3.14, 4.56}
     });
 
     public final ArrayGridInput HGRID_NULL_NAME = ArrayGridInput.of(new Object[][]{
-            {null, JAN_2010, FEB_2010, MAR_2010},
+            {null, JAN_, FEB_, MAR_},
             {"S1", 3.14, 4.56, 7.89},
-            {null, 3, 4, 5}
+            {null, 3333, 4444, 5555}
     });
 
     public final ArrayGridInput HGRID_CORNER_LABEL = ArrayGridInput.of(new Object[][]{
-            {"Date", JAN_2010, FEB_2010, MAR_2010},
+            {"Dt", JAN_, FEB_, MAR_},
             {"S1", 3.14, 4.56, 7.89}
     });
 
     public final ArrayGridInput HGRID_NO_NAME = ArrayGridInput.of(new Object[][]{
-            {JAN_2010, FEB_2010, MAR_2010},
+            {JAN_, FEB_, MAR_},
             {3.14, 4.56, 7.89}
     });
 
     public final ArrayGridInput HGRID_MULTI_NAME = ArrayGridInput.of(new Object[][]{
-            {null, null, JAN_2010, FEB_2010, MAR_2010},
+            {null, null, JAN_, FEB_, MAR_},
             {"G1", "S1", 3.14, 4.56, 7.89},
-            {null, "S2", 3, 4, 5},
-            {"G2", "S1", 7, 8, 9},
-            {"S1", null, 0, 1, 2}
+            {null, "S2", 1003, 1004, 1005},
+            {"G2", "S1", 1007, 1008, 1009},
+            {"S1", null, 1000, 1001, 1002}
     });
 
     public final ArrayGridInput VGRID = ArrayGridInput.of(new Object[][]{
             {null, "S1"},
-            {JAN_2010, 3.14},
-            {FEB_2010, 4.56},
-            {MAR_2010, 7.89}
+            {JAN_, 3.14},
+            {FEB_, 4.56},
+            {MAR_, 7.89}
+    });
+
+    public final ArrayGridInput VGRID_GAP = ArrayGridInput.of(new Object[][]{
+            {null, null, "S1", null},
+            {JAN_, null, 3.14, null},
+            {FEB_, null, 4.56, null},
+            {MAR_, null, 7.89, null},
+            {null, null, null, null}
     });
 
     public final ArrayGridInput VGRID_OVERFLOW = ArrayGridInput.of(new Object[][]{
             {null, "S1"},
-            {JAN_2010, 3.14},
-            {FEB_2010, 4.56},
-            {MAR_2010, 7.89},
+            {JAN_, 3.14},
+            {FEB_, 4.56},
+            {MAR_, 7.89},
             {null, 666}
     });
 
     public final ArrayGridInput VGRID_UNDERFLOW = ArrayGridInput.of(new Object[][]{
             {null, "S1"},
-            {JAN_2010, 3.14},
-            {FEB_2010, 4.56},
-            {MAR_2010}
+            {JAN_, 3.14},
+            {FEB_, 4.56},
+            {MAR_}
     });
 
     public final ArrayGridInput VGRID_NULL_NAME = ArrayGridInput.of(new Object[][]{
             {null, "S1", null},
-            {JAN_2010, 3.14, 3},
-            {FEB_2010, 4.56, 4},
-            {MAR_2010, 7.89, 5}
+            {JAN_, 3.14, 3333},
+            {FEB_, 4.56, 4444},
+            {MAR_, 7.89, 5555}
     });
 
     public final ArrayGridInput VGRID_CORNER_LABEL = ArrayGridInput.of(new Object[][]{
-            {"Date", "S1"},
-            {JAN_2010, 3.14},
-            {FEB_2010, 4.56},
-            {MAR_2010, 7.89}
+            {"Dt", "S1"},
+            {JAN_, 3.14},
+            {FEB_, 4.56},
+            {MAR_, 7.89}
     });
 
     public final ArrayGridInput VGRID_NO_NAME = ArrayGridInput.of(new Object[][]{
-            {JAN_2010, 3.14},
-            {FEB_2010, 4.56},
-            {MAR_2010, 7.89}
+            {JAN_, 3.14},
+            {FEB_, 4.56},
+            {MAR_, 7.89}
     });
 
     public final ArrayGridInput VGRID_MULTI_NAME = ArrayGridInput.of(new Object[][]{
             {null, "G1", null, "G2", "S1"},
             {null, "S1", "S2", "S1", null},
-            {JAN_2010, 3.14, 3, 7, 0},
-            {FEB_2010, 4.56, 4, 8, 1},
-            {MAR_2010, 7.89, 5, 9, 2}
+            {JAN_, 3.14, 1003, 1007, 1000},
+            {FEB_, 4.56, 1004, 1008, 1001},
+            {MAR_, 7.89, 1005, 1009, 1002}
     });
 
     public static TsData d(TsUnit freq, int year, int position, double... values) {
@@ -139,10 +154,6 @@ public class Data {
                 .name(name)
                 .data(data)
                 .build();
-    }
-
-    public static TsCollection c(GridLayout layout, String seriesName, TsData data) {
-        return c(layout, s(seriesName, data));
     }
 
     public static TsCollection c(GridLayout layout, Ts ts) {

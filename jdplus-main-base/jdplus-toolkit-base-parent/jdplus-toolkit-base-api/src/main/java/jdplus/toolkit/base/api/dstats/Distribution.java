@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.base.api.dstats;
 
-import jdplus.toolkit.base.api.stats.ProbabilityType;
 import nbbrd.design.Development;
 
 /**
@@ -48,28 +47,6 @@ public interface Distribution {
     double getExpectation() throws DStatException;
 
     /**
-     * Returns the lower or upper tail probability of x
-     *
-     * @param x The value for which the probability is returned
-     * @param pt The type of requested probability: lower or upper tail
-     * @return The requested probability (double in [0, 1]).
-     * @throws DStatException
-     */
-    double getProbability(double x, ProbabilityType pt) throws DStatException;
-
-    /**
-     * Returns the value x that has probability p for the given distribution and
-     * probability type
-     *
-     * @param p The probability
-     * @param pt The probability type
-     * @return The value x such that P(X &lt x or X &gt x or X = x) = p
-     * @throws DStatException
-     */
-    double getProbabilityInverse(double p, ProbabilityType pt)
-            throws DStatException;
-
-    /**
      * Returns the second moment of the distribution
      *
      * @return The variance of the distribution. Can be Double.Nan
@@ -99,14 +76,6 @@ public interface Distribution {
      */
     boolean isSymmetrical();
 
-    /**
-     * Generates a random value from the given distribution
-     *
-     * @param rng the random number generator used to create the value
-     * @return The random number
-     * @throws DStatException
-     */
-    double random(RandomNumberGenerator rng) throws DStatException;
 
 
 }

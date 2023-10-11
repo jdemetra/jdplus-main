@@ -29,7 +29,7 @@ public final class MockedDataSourceLoader implements DataSourceLoader<String> {
         }
 
         @Override
-        public void set(@lombok.NonNull DataSource.Builder builder, @Nullable String value) {
+        public void set(@lombok.NonNull DataSource.@NonNull Builder builder, @Nullable String value) {
             property.set(builder::parameter, value);
         }
     };

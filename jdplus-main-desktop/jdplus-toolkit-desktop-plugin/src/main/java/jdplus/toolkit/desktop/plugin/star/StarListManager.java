@@ -1,9 +1,9 @@
 package jdplus.toolkit.desktop.plugin.star;
 
 import jdplus.main.desktop.design.GlobalService;
-import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import jdplus.toolkit.base.tsp.DataSource;
-import ec.util.various.swing.OnEDT;
+import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashSet;
@@ -30,16 +30,26 @@ public final class StarListManager implements Iterable<DataSource> {
     }
 
     @OnEDT
-    public void toggle(DataSource item) {
-        if (list.contains(item))
-            list.remove(item);
+    public void toggle(DataSource dataSource) {
+        if (list.contains(dataSource))
+            list.remove(dataSource);
         else
-            list.add(item);
+            list.add(dataSource);
+    }
+
+    @OnEDT
+    public void add(DataSource dataSource) {
+        list.add(dataSource);
+    }
+
+    @OnEDT
+    public void remove(DataSource dataSource) {
+        list.remove(dataSource);
     }
 
     @OnEDT
     @Override
-    public Iterator<DataSource> iterator() {
+    public @lombok.NonNull Iterator<DataSource> iterator() {
         return list.iterator();
     }
 

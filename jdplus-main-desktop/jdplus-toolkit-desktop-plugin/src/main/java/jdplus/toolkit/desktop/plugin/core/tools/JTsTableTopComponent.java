@@ -62,7 +62,6 @@ public final class JTsTableTopComponent extends TopComponent implements Explorer
     @Override
     public void open() {
         super.open();
-        WindowManager.getDefault().getModes();
         Mode mode = WindowManager.getDefault().findMode("tsnavigator");
         if (mode != null) {
             mode.dockInto(this);

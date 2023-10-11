@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 National Bank of Belgium.
+ * Copyright 2023 National Bank of Belgium.
  *
  * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -35,12 +35,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 @lombok.experimental.UtilityClass
 public class AsymmetricFiltersFactory {
 
-    public static enum Option {
-        Direct,
-        CutAndNormalize,
-        MMSRE
-    }
-
     /**
      *
      * @param s
@@ -49,13 +43,13 @@ public class AsymmetricFiltersFactory {
      * @return
      */
     public IFiniteFilter musgraveFilter(final SymmetricFilter s, final int q, double ic) {
-        double r = 4 / (Math.PI * ic * ic);
         double[] h = s.weightsToArray();
         int n = s.length();
         int l = (n - 1) / 2;
         int m = l + q + 1;
         double[] c = new double[m];
 
+        double r = Math.PI * ic * ic / 4;
         for (int i = 0; i < m; i++) {
             c[i] = h[i];
             double p1 = 0.0, p2 = 0.0;
@@ -64,9 +58,8 @@ public class AsymmetricFiltersFactory {
                 p2 += h[j] * ((j + 1) - (m + 1) / 2.0);
             }
             p1 /= m;
-            p2 *= (((i + 1) - (m + 1) / 2.0) * r / (1 + (m * (m - 1) * (m + 1)
-                    * r * (1.0 / 12.0))));
-            c[i] += (p1 + p2);
+            p2 *= ((i + 1) - (m + 1) / 2.0) / (r + m * (m - 1) * (m + 1) / 12.0);
+            c[i] += p1 + p2;
         }
         return FiniteFilter.ofInternal(c, -l);
     }
@@ -201,10 +194,8 @@ public class AsymmetricFiltersFactory {
 
     /**
      * Extension of the usual asymmetric filters that introduces a timeliness
-     * criterion,
-     * "à la Guggemos".
-     * See Grun-Rehomme, Guggemos and Ladiray, "Asymmetric Moving Averages
-     * Minimizing Phase-Shift"
+     * criterion, "à la Guggemos". See Grun-Rehomme, Guggemos and Ladiray,
+     * "Asymmetric Moving Averages Minimizing Phase-Shift"
      *
      * @param sw
      * @param q

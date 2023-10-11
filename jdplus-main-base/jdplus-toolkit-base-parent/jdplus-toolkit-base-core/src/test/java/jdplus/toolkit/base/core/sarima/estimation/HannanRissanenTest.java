@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.arima.ArimaSeriesGenerator;
+import jdplus.toolkit.base.core.random.XorshiftRNG;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 
 /**
@@ -32,6 +33,7 @@ public class HannanRissanenTest {
     static final DoubleSeq airlineData, data;
 
     static {
+        XorshiftRNG rnd = new XorshiftRNG(0);
         SarmaOrders spec = new SarmaOrders(12);
         spec.setQ(1);
         spec.setBq(1);
@@ -39,7 +41,8 @@ public class HannanRissanenTest {
                 .theta(1, -.6)
                 .btheta(1, -.8)
                 .build();
-        ArimaSeriesGenerator generator = new ArimaSeriesGenerator();
+        ArimaSeriesGenerator generator = ArimaSeriesGenerator.builder(rnd)
+                .build() ;
         airlineData = DoubleSeq.of(generator.generate(arima, 120));
         spec.setP(3);
         arima = SarimaModel.builder(spec)
@@ -68,7 +71,7 @@ public class HannanRissanenTest {
     @Test
     @Disabled
     public void test3101() {
-        HannanRissanen hr = HannanRissanen.builder().build();
+        HannanRissanen hr = HannanRissanen.builder().initialization(HannanRissanen.Initialization.Ols).build();
         SarmaOrders spec = new SarmaOrders(12);
         spec.setP(3);
         spec.setQ(1);
@@ -81,13 +84,26 @@ public class HannanRissanenTest {
     @Test
     @Disabled
     public void test3101_burg() {
-        HannanRissanen hr = HannanRissanen.builder().finalCorrection(false).initialization(HannanRissanen.Initialization.Burg).build();
+        HannanRissanen hr = HannanRissanen.builder().initialization(HannanRissanen.Initialization.Burg).build();
         SarmaOrders spec = new SarmaOrders(12);
         spec.setP(3);
         spec.setQ(1);
         spec.setBq(1);
         hr.process(data, spec);
         System.out.println("New 3101, Burg");
+        System.out.println(hr.getModel());
+    }
+
+    @Test
+    @Disabled
+    public void test3101_levinson() {
+        HannanRissanen hr = HannanRissanen.builder().initialization(HannanRissanen.Initialization.Levinson).build();
+        SarmaOrders spec = new SarmaOrders(12);
+        spec.setP(3);
+        spec.setQ(1);
+        spec.setBq(1);
+        hr.process(data, spec);
+        System.out.println("New 3101, Levinson");
         System.out.println(hr.getModel());
     }
 

@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.0.2</version>
+        <version>3.1.0</version>
     </parent>
 
     <artifactId>jdplus-main-bom</artifactId>
@@ -16,6 +16,10 @@
     <name>${project.artifactId}</name>
     <description>${project.parent.artifactId} - ${project.artifactId}</description>
     <url>${project.parent.url}</url>
+
+    <properties>
+        <java.bundled.version>jdk-17.0.8.1+1</java.bundled.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -37,7 +41,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>1.5.0</version>
                 <configuration>
                     <flattenMode>bom</flattenMode>
                     <outputDirectory>${project.build.directory}</outputDirectory>
@@ -61,7 +65,6 @@
         <profile>
             <id>full-release</id>
             <properties>
-                <java.bundled.version>jdk-17.0.7+7</java.bundled.version>
                 <jdkname>${java.bundled.version}-jre</jdkname>
             </properties>
             <build>
@@ -140,7 +143,7 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jdks-maven-plugin</artifactId>
-                        <version>1.6.0</version>
+                        <version>1.8.0</version>
                         <executions>
                             <execution>
                                 <id>download-windows-jre</id>
@@ -241,7 +244,7 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>1.5.1</version>
+                        <version>1.8.0</version>
                         <executions>
                             <execution>
                                 <id>release-assets</id>

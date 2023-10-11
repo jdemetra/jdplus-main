@@ -18,14 +18,16 @@
 package jdplus.toolkit.base.api.processing;
 
 import nbbrd.design.Development;
+import nbbrd.design.NotThreadSafe;
 
 
 /**
  * Generic interface that describes the making of output from a processing.
  *
- * @author Jean Palate
  * @param <D>
+ * @author Jean Palate
  */
+@NotThreadSafe
 @Development(status = Development.Status.Alpha)
 public interface Output<D> {
 
@@ -48,14 +50,14 @@ public interface Output<D> {
      *
      * @param document The considered document
      */
-    void process(D document)throws Exception;
+    void process(D document) throws Exception;
 
     /**
      * Starts the processing of the item identified by the given id;
      *
      * @param context
      */
-    void start(Object context)throws Exception;
+    void start(Object context) throws Exception;
 
     /**
      * Finishes the processing of the item identified by the given id;
@@ -63,5 +65,5 @@ public interface Output<D> {
      * @param context
      * @throws java.lang.Exception
      */
-    void end(Object context)throws Exception;
+    void end(Object context) throws Exception;
 }

@@ -220,7 +220,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a quarterly period
      *
-     * @param year    Year of the period
+     * @param year Year of the period
      * @param quarter Quarter of the period (in 1-4)
      * @return
      */
@@ -231,7 +231,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a monthly period
      *
-     * @param year  Year of the period
+     * @param year Year of the period
      * @param month Month of the period (in 1-12)
      * @return
      */
@@ -242,8 +242,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a period of one day
      *
-     * @param year       Year of the day
-     * @param month      Month of the day (in 1-12)
+     * @param year Year of the day
+     * @param month Month of the day (in 1-12)
      * @param dayOfMonth Day of month of the day (1-31)
      * @return
      */
@@ -254,8 +254,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a period of seven days
      *
-     * @param year       Year of the first day
-     * @param month      Month of the first day (in 1-12)
+     * @param year Year of the first day
+     * @param month Month of the first day (in 1-12)
      * @param dayOfMonth Day of month of the first day (1-31)
      * @return
      */
@@ -293,7 +293,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
         return new TsPeriod(epoch, unit, idAt(epoch, unit, date.atStartOfDay()));
     }
 
-    private static TsPeriod make(LocalDateTime epoch, TsUnit unit, LocalDateTime date) {
+    static TsPeriod make(LocalDateTime epoch, TsUnit unit, LocalDateTime date) {
         return new TsPeriod(epoch, unit, idAt(epoch, unit, date));
     }
 
@@ -332,8 +332,9 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
                 return Integer.toString(year());
             } else {
                 int pos = this.annualPosition() + 1;
-                if (freq < 12)
+                if (freq < 12) {
                     pos *= 12 / freq;
+                }
                 int year = this.year();
                 StringBuilder buffer = new StringBuilder(32);
                 buffer.append(pos).append('-').append(year);

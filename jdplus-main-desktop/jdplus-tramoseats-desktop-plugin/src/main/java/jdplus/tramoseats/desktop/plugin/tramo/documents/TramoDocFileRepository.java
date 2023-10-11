@@ -27,6 +27,7 @@ public final class TramoDocFileRepository extends AbstractFileItemRepository< Tr
     @Override
     public boolean load(WorkspaceItem<TramoDocument> item) {
         return loadFile(item, (TramoDocument o) -> {
+            o.setLocked(true);
             item.setElement(o);
             item.resetDirty();
         });

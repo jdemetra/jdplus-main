@@ -22,6 +22,9 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.xml.legacy.IXmlConverter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
@@ -42,17 +45,24 @@ public class XmlTsData implements IXmlConverter<TsData> {
      *
      */
     @XmlElement
-    public int freq;
+    public Integer freq;
     /**
      *
      */
     @XmlElement
-    public int firstYear;
+    public Integer firstYear;
     /**
      *
      */
     @XmlElement
     public Integer firstPeriod;
+
+    // Alternative storage for more general tsdata (high-frequency)
+    @XmlElement
+    public XmlTsUnit unit;
+
+    @XmlElement
+    public String start;
     /**
      *
      */
@@ -69,13 +79,20 @@ public class XmlTsData implements IXmlConverter<TsData> {
      */
     @Override
     public void copy(TsData t) {
-        TsPeriod start = t.getStart();
-        freq = start.getUnit().getAnnualFrequency();
-        firstYear = start.year();
-        if (freq != 1) {
-            firstPeriod = start.annualPosition() + 1;
+        TsPeriod tstart = t.getStart();
+        int ifreq = tstart.getUnit().getAnnualFrequency();
+        if (ifreq > 0) {
+            freq=ifreq;
+            firstYear = tstart.year();
+            if (freq != 1) {
+                firstPeriod = tstart.annualPosition() + 1;
+            } else {
+                firstPeriod = null;
+            }
         } else {
-            firstPeriod = null;
+            unit=new XmlTsUnit();
+            unit.copy(tstart.getUnit());
+            start = tstart.start().format(DateTimeFormatter.ISO_DATE_TIME);
         }
         if (!t.getValues().isEmpty()) {
             data = t.getValues().toArray();
@@ -88,19 +105,28 @@ public class XmlTsData implements IXmlConverter<TsData> {
      */
     @Override
     public TsData create() {
-        return of(freq, firstYear, firstPeriod, data);
+        if (freq != null) {
+            return of(freq, firstYear, firstPeriod, data);
+        } else {
+            LocalDateTime tstart=LocalDateTime.parse(start, DateTimeFormatter.ISO_DATE_TIME);
+            TsPeriod pstart=TsPeriod.of(unit.create(), tstart);
+            return TsData.ofInternal(pstart, data == null ? Doubles.EMPTYARRAY : data);
+        }
     }
 
     static TsData of(int freq, int year, int period, double[] data) {
         switch (freq) {
-            case 1:
+            case 1 -> {
                 return TsData.ofInternal(TsPeriod.yearly(year), data);
-            case 12:
+            }
+            case 12 -> {
                 return TsData.ofInternal(TsPeriod.monthly(year, period), data);
-            default:
+            }
+            default -> {
                 int c = 12 / freq;
                 TsPeriod pstart = TsPeriod.of(TsUnit.ofAnnualFrequency(freq), LocalDate.of(year, (period - 1) * c + 1, 1));
                 return TsData.ofInternal(pstart, data == null ? Doubles.EMPTYARRAY : data);
+            }
         }
 
     }

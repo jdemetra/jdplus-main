@@ -25,17 +25,24 @@ import nbbrd.design.Development;
  */
 @Development(status = Development.Status.Beta)
 @lombok.Value
-@lombok.Builder(toBuilder = true, builderClassName="Builder")
+@lombok.Builder(toBuilder = true, builderClassName = "Builder")
 public class TransformSpec {
-    
-    public static final TransformSpec DEFAULT=builder().build();
+
+    public static final TransformSpec DEFAULT = builder().build(),
+            DEF_AUTO = TransformSpec.builder()
+                    .function(TransformationType.Auto)
+                    .build();
 
     @lombok.NonNull
     private TransformationType function;
     private double aicDiff;
-    
-    public static Builder builder(){
+
+    public static Builder builder() {
         return new Builder().function(TransformationType.None);
     }
-    
+
+    public boolean isDefault() {
+        return this.equals(DEFAULT);
+    }
+
 }

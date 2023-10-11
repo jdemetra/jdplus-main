@@ -15,7 +15,6 @@ module jdplus.sa.base.api {
     exports jdplus.sa.base.api.benchmarking;
     exports jdplus.sa.base.api.diagnostics;
     exports jdplus.sa.base.api.extractors;
-    exports jdplus.sa.base.api.modelling;
     exports jdplus.sa.base.api;
 
     uses SaProcessingFactory;

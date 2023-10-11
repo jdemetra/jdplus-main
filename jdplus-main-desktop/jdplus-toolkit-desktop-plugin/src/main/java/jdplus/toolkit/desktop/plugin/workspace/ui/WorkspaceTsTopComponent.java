@@ -33,7 +33,7 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
     protected WorkspaceTsTopComponent(WorkspaceItem<T> doc) {
         super(doc);
     }
-    
+
     protected abstract TsProcessingViewer initViewer();
 
     public void updateUserInterfaceContext() {
@@ -72,27 +72,28 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
     @Override
     public void componentOpened() {
         super.componentOpened();
-        panel=initViewer();
+        WorkspaceItem<T> d = getDocument();
+        TsDynamicProvider.onDocumentOpened(d.getElement());
+        panel = initViewer();
         add(panel);
         panel.refreshHeader();
-         WorkspaceItem<T> d = getDocument();
         panel.addPropertyChangeListener((PropertyChangeEvent arg0) -> {
             switch (arg0.getPropertyName()) {
                 case DefaultProcessingViewer.INPUT_CHANGED -> {
-                    Object nval=arg0.getNewValue();
-                    if (nval instanceof Ts ts){
+                    Object nval = arg0.getNewValue();
+                    if (nval instanceof Ts ts) {
                         setTs(ts);
                     }
                 }
                 case DefaultProcessingViewer.SPEC_CHANGED -> {
                     WorkspaceFactory.Event ev = new WorkspaceFactory.Event(d.getOwner(), d.getId(), WorkspaceFactory.Event.ITEMCHANGED, WorkspaceTsTopComponent.this);
                     WorkspaceFactory.getInstance().notifyEvent(ev);
+                    d.setDirty();
                 }
-                    
+
             }
         });
 
-        TsDynamicProvider.onDocumentOpened(panel.getDocument());
         // TODO add custom code on component opening
     }
 
@@ -107,7 +108,7 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
     }
 
     @Override
-    public boolean hasContextMenu(){
+    public boolean hasContextMenu() {
         return true;
     }
 
@@ -128,7 +129,7 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
         if (TsManager.isDynamic(ts)) {
             cts = ts.freeze();
         } else {
-            cts = ts.load(TsInformationType.All, TsManager.get());
+            cts = ts.load(TsInformationType.All, TsManager.get()).freeze();
         }
         panel.getDocument().set(cts);
         panel.updateButtons(null);

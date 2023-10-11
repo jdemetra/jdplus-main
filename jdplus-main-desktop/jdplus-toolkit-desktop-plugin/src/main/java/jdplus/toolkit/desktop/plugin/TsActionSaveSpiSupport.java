@@ -5,7 +5,7 @@ import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
-import ec.util.various.swing.OnEDT;
+import nbbrd.design.swing.OnEDT;
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.util.List;

@@ -22,6 +22,7 @@ import java.util.Random;
 
 import jdplus.toolkit.base.api.timeseries.*;
 import nbbrd.service.ServiceProvider;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  *
@@ -41,12 +42,12 @@ public class TsTestProvider implements TsProvider{
     }
 
     @Override
-    public TsCollection getTsCollection(TsMoniker moniker, TsInformationType type) throws IOException, IllegalArgumentException {
+    public @NonNull TsCollection getTsCollection(@NonNull TsMoniker moniker, @NonNull TsInformationType type) throws IOException, IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Ts getTs(TsMoniker moniker, TsInformationType type) throws IOException, IllegalArgumentException {
+    public @NonNull Ts getTs(@NonNull TsMoniker moniker, @NonNull TsInformationType type) throws IOException, IllegalArgumentException {
         String[] split = moniker.getId().split(":");
         if (split.length != 2)
             throw new IllegalArgumentException();
@@ -61,7 +62,7 @@ public class TsTestProvider implements TsProvider{
     }
 
     @Override
-    public String getSource() {
+    public @NonNull String getSource() {
         return "test";
      }
 

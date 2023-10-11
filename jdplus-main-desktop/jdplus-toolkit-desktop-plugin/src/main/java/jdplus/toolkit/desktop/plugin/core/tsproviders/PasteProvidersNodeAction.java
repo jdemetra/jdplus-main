@@ -19,8 +19,6 @@ package jdplus.toolkit.desktop.plugin.core.tsproviders;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataSourceTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
-import jdplus.toolkit.base.tsp.DataSource;
-import jdplus.toolkit.base.tsp.DataSourceLoader;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -35,17 +33,11 @@ public final class PasteProvidersNodeAction extends NodeAction {
 
     public static final String ID = "demetra.desktop.core.tsproviders.PasteProvidersAction";
 
-    private static void pasteDataSource(DataSource source) {
-        TsManager.get()
-                .getProvider(DataSourceLoader.class, source)
-                .ifPresent(loader -> loader.open(source));
-    }
-
     @Override
     protected void performAction(Node[] activatedNodes) {
         DataSourceTransferManager.get()
                 .getDataSource(DataTransfers.systemClipboardAsTransferable())
-                .ifPresent(PasteProvidersNodeAction::pasteDataSource);
+                .ifPresent(source -> TsManager.get().open(source));
     }
 
     @Override

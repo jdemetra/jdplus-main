@@ -94,6 +94,10 @@ public class TsDataTableTest {
                 .extracting(TsDataTable::getDomain, TsDataTable::getData)
                 .containsExactly(p1m_jan2010.getDomain(), asList(p1m_jan2010, empty));
 
+        assertThat(TsDataTable.of(asList(p1m_jan2010, null)))
+                .returns(p1m_jan2010.getDomain(), TsDataTable::getDomain)
+                .returns(asList(p1m_jan2010, null), TsDataTable::getData);
+
         assertThat(TsDataTable.of(asList(empty, p1m_jan2010)))
                 .extracting(TsDataTable::getDomain, TsDataTable::getData)
                 .containsExactly(p1m_jan2010.getDomain(), asList(empty, p1m_jan2010));

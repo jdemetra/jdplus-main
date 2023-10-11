@@ -21,6 +21,7 @@ import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.protobuf.Spec;
 import jdplus.x13.base.protobuf.SpecProto;
@@ -90,4 +91,7 @@ public class X13 {
         return X13ProtosUtility.convert(output).toByteArray();
     }
 
+    public String[] dictionary(){
+        return X13Dictionaries.X13DICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
+    }
 }

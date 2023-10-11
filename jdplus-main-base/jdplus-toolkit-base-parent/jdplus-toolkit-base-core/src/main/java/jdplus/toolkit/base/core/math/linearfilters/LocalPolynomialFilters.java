@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 National Bank of Belgium.
+ * Copyright 2023 National Bank of Belgium.
  *
  * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
@@ -17,10 +17,13 @@
 package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.core.data.DataBlock;
-import java.util.function.IntToDoubleFunction;
-import jdplus.toolkit.base.core.data.DataBlockIterator;
-import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import java.util.function.IntToDoubleFunction;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.math.linearfilters.LocalPolynomialFilterSpec;
+import jdplus.toolkit.base.core.data.DataBlockIterator;
+import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
+import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
 import jdplus.toolkit.base.core.math.matrices.UpperTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.Householder2;
 import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
@@ -36,6 +39,122 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
 @lombok.experimental.UtilityClass
 public class LocalPolynomialFilters {
 
+    public IQuasiSymmetricFiltering of(LocalPolynomialFilterSpec spec) {
+        return spec.isSymmetric() ? new SFilter(spec) : new Filter(spec);
+    }
+
+    public ISymmetricFiltering ofSymmetric(LocalPolynomialFilterSpec spec) {
+        if (!spec.isSymmetric()) {
+            throw new IllegalArgumentException();
+        }
+        return new SFilter(spec);
+    }
+
+    private static IntToDoubleFunction kernel(LocalPolynomialFilterSpec spec) {
+        int len = spec.getFilterHorizon();
+        return switch (spec.getKernel()) {
+            case BiWeight ->
+                DiscreteKernel.biweight(len);
+            case TriWeight ->
+                DiscreteKernel.triweight(len);
+            case Uniform ->
+                DiscreteKernel.uniform(len);
+            case Triangular ->
+                DiscreteKernel.triangular(len);
+            case Epanechnikov ->
+                DiscreteKernel.epanechnikov(len);
+            case Henderson ->
+                DiscreteKernel.henderson(len);
+            default ->
+                null;
+        };
+    }
+
+    private static class SFilter implements ISymmetricFiltering {
+
+        private final SymmetricFilter symmetricFilter;
+        private final IFiniteFilter[] asymmetricFilters;
+
+        private SFilter(LocalPolynomialFilterSpec spec) {
+            int len = spec.getFilterHorizon();
+            symmetricFilter = ofDefault(len, spec.getPolynomialDegree(), kernel(spec));
+            asymmetricFilters = switch (spec.getAsymmetricFilters()) {
+                case CutAndNormalize ->
+                    AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
+                case MMSRE ->
+                    AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
+                    spec.getAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
+                    spec.getPassBand(), spec.getTimelinessWeight());
+                default ->
+                    directAsymmetricFilters(len, spec.getPolynomialDegree(), kernel(spec));
+            };
+        }
+
+        @Override
+        public DoubleSeq process(DoubleSeq in) {
+            return FilterUtility.filter(in, symmetricFilter, asymmetricFilters);
+        }
+
+        @Override
+        public SymmetricFilter centralFilter() {
+            return symmetricFilter;
+        }
+
+        @Override
+        public IFiniteFilter[] endPointsFilters() {
+            return asymmetricFilters;
+        }
+    }
+
+    private static class Filter implements IQuasiSymmetricFiltering {
+
+        private final SymmetricFilter symmetricFilter;
+        private final IFiniteFilter[] leftAsymmetricFilters, rightAsymmetricFilters;
+
+        private Filter(LocalPolynomialFilterSpec spec) {
+            int len = spec.getFilterHorizon();
+            symmetricFilter = ofDefault(len, spec.getPolynomialDegree(), kernel(spec));
+            rightAsymmetricFilters = switch (spec.getAsymmetricFilters()) {
+                case CutAndNormalize ->
+                    AsymmetricFiltersFactory.cutAndNormalizeFilters(symmetricFilter);
+                case MMSRE ->
+                    AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
+                    spec.getAsymmetricPolynomialDegree(), spec.getRightLinearModelCoefficients(), null,
+                    spec.getPassBand(), spec.getTimelinessWeight());
+                default ->
+                    directAsymmetricFilters(len, spec.getPolynomialDegree(), kernel(spec));
+            };
+            leftAsymmetricFilters = ISymmetricFiltering.mirror(switch (spec.getAsymmetricFilters()) {
+                case MMSRE ->
+                    AsymmetricFiltersFactory.mmsreFilters(symmetricFilter,
+                    spec.getAsymmetricPolynomialDegree(), spec.getLeftLinearModelCoefficients(), null,
+                    spec.getPassBand(), spec.getTimelinessWeight());
+                default ->
+                    rightAsymmetricFilters;
+            });
+        }
+
+        @Override
+        public DoubleSeq process(DoubleSeq in) {
+            return FilterUtility.filter(in, symmetricFilter, leftAsymmetricFilters, rightAsymmetricFilters);
+        }
+
+        @Override
+        public SymmetricFilter centralFilter() {
+            return symmetricFilter;
+        }
+
+        @Override
+        public IFiniteFilter[] leftEndPointsFilters() {
+            return leftAsymmetricFilters;
+        }
+
+        @Override
+        public IFiniteFilter[] rightEndPointsFilters() {
+            return rightAsymmetricFilters;
+        }
+    }
+
     /**
      *
      * @param h the number of lags (-> length of the filter is 2*h+1)
@@ -46,9 +165,12 @@ public class LocalPolynomialFilters {
      */
     public SymmetricFilter of(final int h, final int d, final IntToDoubleFunction k) {
         return switch (d) {
-            case 0, 1 -> of0_1(h, k);
-            case 2, 3 -> of2_3(h, k);
-            default -> ofDefault(h, d, k);
+            case 0, 1 ->
+                of0_1(h, k);
+            case 2, 3 ->
+                of2_3(h, k);
+            default ->
+                ofDefault(h, d, k);
         };
     }
 
@@ -77,9 +199,7 @@ public class LocalPolynomialFilters {
         }
         double[] u = new double[d + 1];
         u[0] = 1;
-//        Householder hous = new Householder(xkx);
-//        hous.solve(DataBlock.of(u));
-        LinearSystemSolver.fastSolver().solve(xkx, DataBlock.of(u));
+        LinearSystemSolver.robustSolver().solve(xkx, DataBlock.of(u));
         double[] w = new double[h + q + 1];
         w[h] = u[0] * k.applyAsDouble(0);
         for (int i = 1; i <= q; ++i) {
@@ -107,8 +227,8 @@ public class LocalPolynomialFilters {
 
     public FiniteFilter[] directAsymmetricFilters(int h, final int d, final IntToDoubleFunction k) {
         FiniteFilter[] ff = new FiniteFilter[h];
-        for (int i = 0; i < h; ++i) {
-            ff[i] = directAsymmetricFilter(h, i, d, k);
+        for (int i = 0, j = h - 1; i < h; ++i, --j) {
+            ff[i] = directAsymmetricFilter(h, j, d, k);
         }
         return ff;
     }
@@ -149,7 +269,7 @@ public class LocalPolynomialFilters {
 //    SymmetricFilter ofDefault2(int h, int d, IntToDoubleFunction k) {
 //        // w = KX (X'K X)^-1 e1
 //        // (X'K X)^-1 e1 = u <-> (X'K X) u = e1
-//        CanonicalMatrix xkx = CanonicalMatrix.square(d + 1);
+//        FastMatrix xkx = FastMatrix.square(d + 1);
 //        for (int i = 0; i <= d; ++i) {
 //            xkx.set(i, i, S_hd(h, 2 * i, k));
 //            for (int j = 0; j < i; ++j) {
@@ -184,7 +304,7 @@ public class LocalPolynomialFilters {
      * @param k The kernel (a uniform kernel is used if k is null)
      * @return
      */
-    SymmetricFilter ofDefault(int h, int d, IntToDoubleFunction k) {
+    public SymmetricFilter ofDefault(int h, int d, IntToDoubleFunction k) {
         double[] sk = new double[h + 1];
         if (k == null) {
             for (int i = 0; i < sk.length; ++i) {
@@ -197,6 +317,7 @@ public class LocalPolynomialFilters {
                     sk[i] = Math.sqrt(ki);
                 }
             }
+
         }
         FastMatrix Z = createZ(h, d);
         DataBlockIterator rows = Z.rowsIterator();
@@ -205,8 +326,7 @@ public class LocalPolynomialFilters {
             rows.next().mul(sk[Math.abs(pos++)]);
         }
 
-        Householder2 hous = new Householder2();
-        QRDecomposition qr = hous.decompose(Z);
+        QRDecomposition qr = new Householder2().decompose(Z);
         double[] z = new double[Z.getRowsCount()];
         z[0] = 1;
         UpperTriangularMatrix.solvexU(qr.rawR(), DataBlock.of(z, 0, d + 1, 1));
@@ -226,6 +346,50 @@ public class LocalPolynomialFilters {
         return 2 * s + k.applyAsDouble(0);
     }
 
+//    private double S_h2(int h, IntToDoubleFunction k) {
+//        double s = 0;
+//        for (int i = 1; i <= h; ++i) {
+//            double j = i * i;
+//            s += j * k.applyAsDouble(i);
+//        }
+//        return 2 * s;
+//    }
+//
+//    private double S_h4(int h, IntToDoubleFunction k) {
+//        double s = 0;
+//        for (int i = 1; i <= h; ++i) {
+//            double j = i * i;
+//            j *= j;
+//            s += j * k.applyAsDouble(i);
+//        }
+//        return 2 * s;
+//    }
+//
+//    private double S_hd(int h, int d, IntToDoubleFunction k) {
+//        switch (d) {
+//            case 0:
+//                return S_h0(h, k);
+//            case 2:
+//                return S_h2(h, k);
+//            case 4:
+//                return S_h4(h, k);
+//        }
+//        if (d % 2 != 0) {
+//            return 0;
+//        }
+//        int hd = d / 2;
+//        double s = 0;
+//        for (int i = 1; i <= h; ++i) {
+//            double ii = i * i;
+//            double j = ii;
+//            for (int l = 2; l <= hd; ++l) {
+//                j *= ii;
+//            }
+//            s += j * k.applyAsDouble(i);
+//        }
+//        return 2 * s;
+//    }
+//
     private double S_hqd(int h, int q, long d, IntToDoubleFunction k) {
         if (d == 0) {
             return S_hq0(h, q, k);
@@ -276,9 +440,9 @@ public class LocalPolynomialFilters {
      */
     public FastMatrix z(FastMatrix Z, int l, int u, int d0, int d1) {
         int nh = Math.max(Math.abs(l), Math.abs(u));
-//        if (Z == null || Z.getRowsCount() / 2 < nh || Z.getColumnsCount() < d1 + 1) {
-//            Z = createZ(nh, d1);
-//        }
+        if (Z == null || Z.getRowsCount() / 2 < nh || Z.getColumnsCount() < d1 + 1) {
+            Z = createZ(nh, d1);
+        }
         return Z.extract(l + nh, u - l + 1, d0, d1 - d0 + 1);
     }
 

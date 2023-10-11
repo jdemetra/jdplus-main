@@ -18,9 +18,8 @@ package internal.toolkit.base.tsp;
 
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.*;
-import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
-import jdplus.toolkit.base.api.util.List2;
 import jdplus.toolkit.base.tsp.fixme.Strings;
+import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -87,7 +86,7 @@ public class InternalTsProvider {
         }
 
         @Override
-        public String getDisplayName(DataSource dataSource) throws IllegalArgumentException {
+        public @NonNull String getDisplayName(@NonNull DataSource dataSource) throws IllegalArgumentException {
             checkProvider(dataSource);
             String result = dataSourceFormatter.formatAsString(dataSource);
             if (result == null) {
@@ -97,7 +96,7 @@ public class InternalTsProvider {
         }
 
         @Override
-        public String getDisplayName(DataSet dataSet) throws IllegalArgumentException {
+        public @NonNull String getDisplayName(@NonNull DataSet dataSet) throws IllegalArgumentException {
             checkProvider(dataSet);
             String result = dataSetFormatter.formatAsString(dataSet);
             if (result == null) {
@@ -123,7 +122,7 @@ public class InternalTsProvider {
         }
 
         @Override
-        public TsMoniker toMoniker(DataSource dataSource) throws IllegalArgumentException {
+        public @NonNull TsMoniker toMoniker(@NonNull DataSource dataSource) throws IllegalArgumentException {
             checkProvider(dataSource);
             String id = dataSourceFormatter.formatAsString(dataSource);
             if (id == null) {
@@ -133,7 +132,7 @@ public class InternalTsProvider {
         }
 
         @Override
-        public TsMoniker toMoniker(DataSet dataSet) throws IllegalArgumentException {
+        public @NonNull TsMoniker toMoniker(@NonNull DataSet dataSet) throws IllegalArgumentException {
             checkProvider(dataSet);
             String id = dataSetFormatter.formatAsString(dataSet);
             if (id == null) {
@@ -143,13 +142,13 @@ public class InternalTsProvider {
         }
 
         @Override
-        public Optional<DataSet> toDataSet(TsMoniker moniker) throws IllegalArgumentException {
+        public @NonNull Optional<DataSet> toDataSet(@NonNull TsMoniker moniker) throws IllegalArgumentException {
             checkProvider(moniker);
             return dataSetParser.parseValue(moniker.getId());
         }
 
         @Override
-        public Optional<DataSource> toDataSource(TsMoniker moniker) throws IllegalArgumentException {
+        public @NonNull Optional<DataSource> toDataSource(@NonNull TsMoniker moniker) throws IllegalArgumentException {
             checkProvider(moniker);
             return dataSourceParser.parseValue(moniker.getId());
         }
@@ -167,12 +166,12 @@ public class InternalTsProvider {
         }
 
         @Override
-        public T newBean() {
+        public @NonNull T newBean() {
             return param.getDefaultValue();
         }
 
         @Override
-        public DataSource encodeBean(Object bean) throws IllegalArgumentException {
+        public @NonNull DataSource encodeBean(@NonNull Object bean) throws IllegalArgumentException {
             Objects.requireNonNull(bean);
             try {
                 DataSource.Builder result = DataSource.builder(providerName, version);
@@ -184,7 +183,7 @@ public class InternalTsProvider {
         }
 
         @Override
-        public T decodeBean(DataSource dataSource) throws IllegalArgumentException {
+        public @NonNull T decodeBean(@NonNull DataSource dataSource) throws IllegalArgumentException {
             checkProvider(dataSource);
             return param.get(dataSource);
         }
@@ -198,31 +197,31 @@ public class InternalTsProvider {
 
         public DataSourceListSupport(String providerName, Iterable<DataSource> dataSources, Consumer<? super DataSource> cacheCleaner) {
             super(providerName);
-            this.dataSources = StreamSupport.stream(dataSources.spliterator(), false).collect(List2.toUnmodifiableList());
+            this.dataSources = StreamSupport.stream(dataSources.spliterator(), false).toList();
             this.eventSupport = DataSourceEventSupport.create();
             this.cacheCleaner = Objects.requireNonNull(cacheCleaner);
             dataSources.forEach(this::checkProvider);
         }
 
         @Override
-        public void reload(DataSource dataSource) {
+        public void reload(@NonNull DataSource dataSource) {
             checkProvider(dataSource);
             cacheCleaner.accept(dataSource);
             eventSupport.fireChanged(dataSource);
         }
 
         @Override
-        public List<DataSource> getDataSources() {
+        public @NonNull List<DataSource> getDataSources() {
             return dataSources;
         }
 
         @Override
-        public void addDataSourceListener(DataSourceListener listener) {
+        public void addDataSourceListener(@NonNull DataSourceListener listener) {
             eventSupport.add(listener);
         }
 
         @Override
-        public void removeDataSourceListener(DataSourceListener listener) {
+        public void removeDataSourceListener(@NonNull DataSourceListener listener) {
             eventSupport.remove(listener);
         }
     }
@@ -241,14 +240,14 @@ public class InternalTsProvider {
         }
 
         @Override
-        public void reload(DataSource dataSource) {
+        public void reload(@NonNull DataSource dataSource) {
             checkProvider(dataSource);
             cacheCleaner.accept(dataSource);
             eventSupport.fireChanged(dataSource);
         }
 
         @Override
-        public boolean open(DataSource dataSource) throws IllegalArgumentException {
+        public boolean open(@NonNull DataSource dataSource) throws IllegalArgumentException {
             checkProvider(dataSource);
             synchronized (dataSources) {
                 if (dataSources.add(dataSource)) {
@@ -260,7 +259,7 @@ public class InternalTsProvider {
         }
 
         @Override
-        public boolean close(DataSource dataSource) throws IllegalArgumentException {
+        public boolean close(@NonNull DataSource dataSource) throws IllegalArgumentException {
             checkProvider(dataSource);
             synchronized (dataSources) {
                 if (dataSources.remove(dataSource)) {
@@ -280,19 +279,19 @@ public class InternalTsProvider {
         }
 
         @Override
-        public List<DataSource> getDataSources() {
+        public @NonNull List<DataSource> getDataSources() {
             synchronized (dataSources) {
-                return List2.copyOf(dataSources);
+                return List.copyOf(dataSources);
             }
         }
 
         @Override
-        public void addDataSourceListener(DataSourceListener listener) {
+        public void addDataSourceListener(@NonNull DataSourceListener listener) {
             eventSupport.add(listener);
         }
 
         @Override
-        public void removeDataSourceListener(DataSourceListener listener) {
+        public void removeDataSourceListener(@NonNull DataSourceListener listener) {
             eventSupport.remove(listener);
         }
     }
@@ -330,13 +329,13 @@ public class InternalTsProvider {
         }
 
         @Override
-        public List<DataSet> children(DataSource dataSource) throws IllegalArgumentException, IOException {
+        public @NonNull List<DataSet> children(@NonNull DataSource dataSource) throws IllegalArgumentException, IOException {
             checkProvider(dataSource);
             return Collections.emptyList();
         }
 
         @Override
-        public List<DataSet> children(DataSet parent) throws IllegalArgumentException, IOException {
+        public @NonNull List<DataSet> children(@NonNull DataSet parent) throws IllegalArgumentException, IOException {
             checkProvider(parent);
             return Collections.emptyList();
         }

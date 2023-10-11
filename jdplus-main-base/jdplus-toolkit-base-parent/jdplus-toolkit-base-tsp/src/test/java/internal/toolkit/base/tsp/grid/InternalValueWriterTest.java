@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 
-import static _util.FixAssertj.assertDeepEqualTo;
+import static _test.FixAssertj.assertDeepEqualTo;
 import static internal.toolkit.base.tsp.grid.InternalValueWriter.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.atIndex;
@@ -46,7 +46,7 @@ public class InternalValueWriterTest {
         InternalValueWriter<Object> x = onNull();
         
         Object[][] data = {
-            {null, JAN_2010, FEB_2010, MAR_2010},
+            {null, JAN_, FEB_, MAR_},
             {"S1", 3.14, 4.56, 7.89}
         };
         
@@ -75,11 +75,11 @@ public class InternalValueWriterTest {
         
         ArrayGridOutput out = new ArrayGridOutput(GridLayout.VERTICAL, EnumSet.allOf(GridDataType.class));
         try (GridOutput.Stream stream = out.open("test", 1, 2)) {
-            x.write(stream, JAN_2010);
+            x.write(stream, JAN_);
             x.write(stream, null);
         }
         
-        assertThat(out.getData().get("test")).contains(new Object[]{JAN_2010, null}, atIndex(0));
+        assertThat(out.getData().get("test")).contains(new Object[]{JAN_, null}, atIndex(0));
     }
     
     @Test
@@ -114,12 +114,12 @@ public class InternalValueWriterTest {
         
         ArrayGridOutput out = new ArrayGridOutput(GridLayout.VERTICAL, EnumSet.allOf(GridDataType.class));
         try (GridOutput.Stream stream = out.open("test", 1, 4)) {
-            onStringFormatter(f.dateTimeFormatter()::formatAsString).write(stream, JAN_2010);
+            onStringFormatter(f.dateTimeFormatter()::formatAsString).write(stream, JAN_);
             onStringFormatter(f.dateTimeFormatter()::formatAsString).write(stream, null);
             onStringFormatter(f.numberFormatter()::formatAsString).write(stream, null);
             onStringFormatter(f.numberFormatter()::formatAsString).write(stream, 3.14);
         }
         
-        assertThat(out.getData().get("test")).contains(new Object[]{JAN_2010.format(DateTimeFormatter.ISO_DATE), null, null, "3.14"}, atIndex(0));
+        assertThat(out.getData().get("test")).contains(new Object[]{JAN_.format(DateTimeFormatter.ISO_DATE), null, null, "3.14"}, atIndex(0));
     }
 }

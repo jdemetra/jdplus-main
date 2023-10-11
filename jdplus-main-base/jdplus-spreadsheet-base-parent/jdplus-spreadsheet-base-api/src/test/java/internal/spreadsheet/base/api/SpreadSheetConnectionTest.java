@@ -17,16 +17,16 @@
 package internal.spreadsheet.base.api;
 
 import _test.DataForTest;
+import internal.toolkit.base.tsp.util.SimpleMapCache;
+import internal.spreadsheet.base.api.grid.SheetGrid;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.tsp.grid.GridReader;
-import jdplus.toolkit.base.tsp.util.IOCache;
-import internal.spreadsheet.base.api.grid.SheetGrid;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,50 +38,30 @@ public class SpreadSheetConnectionTest {
     @Test
     public void testWithCache() throws IOException {
         SheetGrid grid = SheetGrid.of(new File(""), DataForTest.FACTORY, GridReader.DEFAULT);
-        ConcurrentMap<String, Object> cache = new ConcurrentHashMap<>();
-        SpreadSheetConnection accessor = new CachedSpreadSheetConnection(grid, new FakeCache<>(cache));
+        SimpleMapCache<String, List<TsCollection>> cache = new SimpleMapCache<>(new HashMap<>());
+        try (var conn = new CachedSpreadSheetConnection(grid, cache)) {
 
-        cache.clear();
-        assertThat(accessor.getSheetByName("s1")).map(TsCollection::getName).contains("s1");
-        assertThat(cache).containsKeys("getSheetByName/s1");
+            cache.getMap().clear();
+            assertThat(conn.getSheetByName("s1")).map(TsCollection::getName).contains("s1");
+            assertThat(cache.getMap()).containsKeys("getSheetByName/s1");
 
-        cache.clear();
-        assertThat(accessor.getSheetByName("other")).isEmpty();
-        assertThat(cache).containsKeys("getSheetByName/other");
+            cache.getMap().clear();
+            assertThat(conn.getSheetByName("other")).isEmpty();
+            assertThat(cache.getMap()).containsKeys("getSheetByName/other");
 
-        cache.clear();
-        assertThat(accessor.getSheetNames()).containsExactly("s1", "s2");
-        assertThat(cache).containsKeys("getSheetNames");
+            cache.getMap().clear();
+            assertThat(conn.getSheetNames()).containsExactly("s1", "s2");
+            assertThat(cache.getMap()).containsKeys("getSheetNames");
 
-        cache.clear();
-        assertThat(accessor.getSheets()).extracting(o -> o.getName()).containsExactly("s1", "s2");
-        assertThat(cache).containsKeys("getSheets");
+            cache.getMap().clear();
+            assertThat(conn.getSheets()).extracting(TsCollection::getName).containsExactly("s1", "s2");
+            assertThat(cache.getMap()).containsKeys("getSheets");
 
-        cache.clear();
-        assertThat(accessor.getSheets()).extracting(o -> o.getName()).containsExactly("s1", "s2");
-        assertThat(accessor.getSheetByName("s1")).map(TsCollection::getName).contains("s1");
-        assertThat(accessor.getSheetNames()).containsExactly("s1", "s2");
-        assertThat(cache).containsKeys("getSheets");
-    }
-
-    @lombok.AllArgsConstructor
-    private static final class FakeCache<K, V> implements IOCache<K, V> {
-
-        @lombok.NonNull
-        private final ConcurrentMap<K, V> delegate;
-
-        @Override
-        public void put(K key, V value) {
-            delegate.put(key, value);
-        }
-
-        @Override
-        public V get(K key) {
-            return delegate.get(key);
-        }
-
-        @Override
-        public void close() throws IOException {
+            cache.getMap().clear();
+            assertThat(conn.getSheets()).extracting(TsCollection::getName).containsExactly("s1", "s2");
+            assertThat(conn.getSheetByName("s1")).map(TsCollection::getName).contains("s1");
+            assertThat(conn.getSheetNames()).containsExactly("s1", "s2");
+            assertThat(cache.getMap()).containsKeys("getSheets");
         }
     }
 }

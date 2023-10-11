@@ -145,10 +145,6 @@ public class WorkspaceItem<T> implements Modifiable, Comparable<WorkspaceItem> {
         return status_;
     }
 
-    void setStatus(Status status) {
-        status_ = status;
-    }
-
     public T getElement() {
         load();
         return element_;
@@ -197,6 +193,13 @@ public class WorkspaceItem<T> implements Modifiable, Comparable<WorkspaceItem> {
         } else {
             return false;
         }
+    }
+
+    public boolean save(DemetraVersion version) {
+        if (!status_.canBeSaved()) {
+            return false;
+        }
+        return owner_.getRepository().saveItem(this, version);
     }
 
     public boolean reload() {
