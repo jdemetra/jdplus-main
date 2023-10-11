@@ -8,20 +8,23 @@ import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.sa.base.api.EstimationPolicyType;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.LocalRefreshConcurrent")
+@ActionID(category = "SaProcessing", id = LocalRefreshConcurrent.ID)
 @ActionRegistration(displayName = "#CTL_LocalRefreshConcurrent", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.LOCALPATH + LocalRefresh.PATH, position = 1290)
 })
 @NbBundle.Messages("CTL_LocalRefreshConcurrent=Concurrent")
 public final class LocalRefreshConcurrent extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.LocalRefreshConcurrent";
 
     public LocalRefreshConcurrent() {
         super(SaBatchUI.class);

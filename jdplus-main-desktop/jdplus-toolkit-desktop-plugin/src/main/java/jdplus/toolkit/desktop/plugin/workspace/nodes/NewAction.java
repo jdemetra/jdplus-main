@@ -6,18 +6,21 @@ package jdplus.toolkit.desktop.plugin.workspace.nodes;
 
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-@ActionID(category = "Edit",
-id = "demetra.desktop.workspace.nodes.NewAction")
+@ActionID(category = "Edit", id = NewAction.ID)
 @ActionRegistration(
         displayName = "#CTL_NewAction", lazy=false)
 @NbBundle.Messages("CTL_NewAction=New")
 public final class NewAction extends SingleNodeAction<ManagerWsNode> {
-    
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.nodes.NewAction";
+
     public NewAction() {
         super(ManagerWsNode.class);
     }

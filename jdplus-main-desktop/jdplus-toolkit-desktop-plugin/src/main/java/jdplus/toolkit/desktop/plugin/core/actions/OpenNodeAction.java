@@ -17,6 +17,7 @@
 package jdplus.toolkit.desktop.plugin.core.actions;
 
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
@@ -33,7 +34,8 @@ import java.util.stream.Stream;
 @Messages("OpenNodeAction=Open")
 public final class OpenNodeAction extends AbilityNodeAction<Openable> {
 
-    public static final String ID = "demetra.desktop.core.actions.OpenNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.actions.OpenNodeAction";
 
     public OpenNodeAction() {
         super(Openable.class);

@@ -26,6 +26,7 @@ import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -34,14 +35,16 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.RenameSaItem")
+@ActionID(category = "SaProcessing", id = RenameSaItem.ID)
 @ActionRegistration(displayName = "#CTL_RenameSaItem", lazy = true)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.LOCALPATH, position = 1700)
 })
 @Messages("CTL_RenameSaItem=Rename...")
 public final class RenameSaItem extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.RenameSaItem";
 
     public static final String RENAME_TITLE = "Please enter the new name",
             NAME_MESSAGE = "New name:";

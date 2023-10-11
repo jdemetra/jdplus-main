@@ -23,19 +23,21 @@ package jdplus.toolkit.desktop.plugin.workspace.nodes;
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import jdplus.toolkit.desktop.plugin.workspace.Workspace;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
-@ActionID(
-        category = "Edit",
-        id = "demetra.desktop.workspace.nodes.SortAction")
+@ActionID(category = "Edit", id = SortAction.ID)
 @ActionRegistration(
         displayName = "#CTL_SortAction", lazy=false)
 @NbBundle.Messages("CTL_SortAction=New")
 public final class SortAction extends SingleNodeAction<ManagerWsNode> {
-    
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.nodes.SortAction";
+
     public SortAction() {
         super(ManagerWsNode.class);
     }

@@ -11,6 +11,7 @@ import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
+import nbbrd.design.ClassNameConstant;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -28,7 +29,7 @@ import org.openide.util.NbBundle;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Modelling", id = "demetra.desktop.tramo.ui.TramoTopComponent")
+@ActionID(category = "Modelling", id = TramoTopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Modelling/Single Analysis", position = 1000)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TramoAction")
 @NbBundle.Messages({
@@ -37,6 +38,9 @@ import org.openide.util.NbBundle;
     "HINT_TramoTopComponent=This is a Tramo window"
 })
 public final class TramoTopComponent extends WorkspaceTsTopComponent<TramoDocument> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.tramoseats.desktop.plugin.tramo.ui.TramoTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

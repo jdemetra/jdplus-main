@@ -38,6 +38,7 @@ import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import ec.util.list.swing.JLists;
 import jdplus.toolkit.base.core.regsarima.regular.CheckLast;
 import jdplus.tramoseats.base.core.tramo.TramoKernel;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.core.spi.multiview.CloseOperationState;
@@ -76,7 +77,7 @@ import java.util.logging.Level;
 @TopComponent.Description(preferredID = "CheckLastTopComponent",
         persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.anomalydetection.ui.CheckLastTopComponent")
+@ActionID(category = "Window", id = CheckLastTopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Anomaly Detection")
 @TopComponent.OpenActionRegistration(displayName = "#CTL_CheckLastTopComponentAction")
 @NbBundle.Messages({
@@ -86,6 +87,9 @@ import java.util.logging.Level;
 })
 @lombok.extern.java.Log
 public final class CheckLastTopComponent extends TopComponent implements ExplorerManager.Provider, MultiViewElement, ActiveView {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.tramoseats.desktop.plugin.anomalydetection.ui.CheckLastTopComponent";
 
     public static final String DEFAULT_SPECIFICATION_PROPERTY = "specificationProperty";
     public static final String STATE_PROPERTY = "state";

@@ -9,14 +9,14 @@ import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingController;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.Process")
+@ActionID(category = "SaProcessing", id = Process.ID)
 @ActionRegistration(displayName = "#CTL_Process", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1100),
@@ -24,6 +24,9 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_Process=Start")
 public final class Process extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.Process";
 
     public Process() {
         super(SaBatchUI.class);

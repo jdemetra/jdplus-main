@@ -17,6 +17,7 @@
 package jdplus.toolkit.desktop.plugin.core.tsproviders;
 
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.actions.Editable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
@@ -29,7 +30,8 @@ import java.util.stream.Stream;
 @Messages("CTL_EditSourceAction=Edit")
 public final class EditSourceNodeAction extends AbilityNodeAction<Editable> {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.EditSourceAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.EditSourceNodeAction";
 
     public EditSourceNodeAction() {
         super(Editable.class, true);

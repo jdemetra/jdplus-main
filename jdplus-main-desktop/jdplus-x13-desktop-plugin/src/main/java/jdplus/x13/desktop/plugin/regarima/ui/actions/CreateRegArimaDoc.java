@@ -26,20 +26,23 @@ import jdplus.x13.base.api.regarima.RegArimaSpec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Tools",
-        id = "demetra.desktop.regarima.ui.spec.actions.CreateRegArimaDoc")
+@ActionID(category = "Tools", id = CreateRegArimaDoc.ID)
 @ActionRegistration(displayName = "#CTL_CreateRegArimaDoc")
 @ActionReferences({
     @ActionReference(path = RegArimaSpecManager.ITEMPATH, position = 1620, separatorBefore = 1300)
 })
 @Messages("CTL_CreateRegArimaDoc=Create Document")
 public final class CreateRegArimaDoc implements ActionListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.regarima.ui.actions.CreateRegArimaDoc";
 
     private final WsNode context;
 

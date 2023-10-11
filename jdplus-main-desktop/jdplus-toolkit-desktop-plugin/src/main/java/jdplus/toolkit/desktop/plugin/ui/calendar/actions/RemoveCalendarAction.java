@@ -12,6 +12,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -21,13 +22,16 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Edit", id = "demetra.desktop.ui.calendars.actions.RemoveCalendarAction")
+@ActionID(category = "Edit", id = RemoveCalendarAction.ID)
 @ActionRegistration(displayName = "#CTL_RemoveCalendarAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = CalendarDocumentManager.ITEMPATH, position = 1422, separatorBefore = 1400)
 })
 @Messages("CTL_RemoveCalendarAction=Remove")
 public final class RemoveCalendarAction extends SingleNodeAction<ItemWsNode> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.calendar.actions.RemoveCalendarAction";
 
     public RemoveCalendarAction() {
         super(ItemWsNode.class);

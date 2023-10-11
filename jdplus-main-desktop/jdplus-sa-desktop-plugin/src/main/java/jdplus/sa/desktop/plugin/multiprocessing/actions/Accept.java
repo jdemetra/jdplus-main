@@ -8,20 +8,23 @@ import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.Accept")
+@ActionID(category = "SaProcessing", id = Accept.ID)
 @ActionRegistration(displayName = "#CTL_Accept", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.LOCALPATH, position = 1600, separatorBefore = 1599)
 })
 @NbBundle.Messages("CTL_Accept=Accept")
 public final class Accept extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.Accept";
 
     public Accept() {
         super(SaBatchUI.class);

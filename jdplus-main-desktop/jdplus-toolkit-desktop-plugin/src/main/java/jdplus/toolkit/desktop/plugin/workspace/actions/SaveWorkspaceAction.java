@@ -9,21 +9,25 @@ import jdplus.toolkit.desktop.plugin.workspace.Workspace;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "File", 
-id = "demetra.desktop.workspace.actions.SaveWorkspaceAction")
+@ActionID(category = "File", id = SaveWorkspaceAction.ID)
 @ActionRegistration(displayName = "#CTL_SaveWorkspaceAction", lazy=false)
 @ActionReferences({
     @ActionReference(path = "Menu/File", position = 300, separatorBefore=299)
 })
 @Messages("CTL_SaveWorkspaceAction=Save Workspace")
 public final class SaveWorkspaceAction extends AbstractAction{ // implements ContextAwareAction{
-    
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.actions.SaveWorkspaceAction";
+
     public SaveWorkspaceAction(){
         super(Bundle.CTL_SaveWorkspaceAction());
         refreshAction();

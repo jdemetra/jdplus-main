@@ -4,6 +4,7 @@
  */
 package jdplus.toolkit.desktop.plugin.core.tsproviders;
 
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -28,7 +29,7 @@ import javax.swing.text.DefaultEditorKit;
         iconBase = "jdplus/toolkit/desktop/plugin/icons/table.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
-@ActionID(category = "Window", id = "ec.nbdemetra.ui.ProvidersTopComponent")
+@ActionID(category = "Window", id = ProvidersTopComponent.ID)
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_ProvidersAction",
         preferredID = "ProvidersTopComponent")
@@ -38,6 +39,9 @@ import javax.swing.text.DefaultEditorKit;
         "HINT_ProvidersTopComponent=This is a Providers window"
 })
 public final class ProvidersTopComponent extends TopComponent implements ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.ProvidersTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
     private final InstanceContent content = new InstanceContent();

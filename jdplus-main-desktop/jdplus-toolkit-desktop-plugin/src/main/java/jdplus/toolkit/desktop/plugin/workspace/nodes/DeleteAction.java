@@ -18,6 +18,7 @@ package jdplus.toolkit.desktop.plugin.workspace.nodes;
 
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -25,13 +26,15 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Edit",
-id = "demetra.desktop.workspace.nodes.DeleteAction")
+@ActionID(category = "Edit", id = DeleteAction.ID)
 @ActionRegistration(
         displayName = "#CTL_DeleteAction", lazy=false)
 @Messages("CTL_DeleteAction=Delete")
 public final class DeleteAction extends SingleNodeAction<ItemWsNode> {
-    
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.nodes.DeleteAction";
+
     public static final String DELETE_MESSAGE ="Are you sure you want to delete this item?";
 
     public DeleteAction() {

@@ -1,17 +1,17 @@
 /*
  * Copyright 2016 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.x13.desktop.plugin.regarima.ui.actions;
@@ -27,6 +27,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.x13.base.api.regarima.RegArimaSpec;
 import jdplus.x13.base.information.RegArimaSpecMapping;
 import jdplus.x13.desktop.plugin.regarima.documents.RegArimaSpecManager;
+import nbbrd.design.ClassNameConstant;
 import nbbrd.io.text.Parser;
 import nbbrd.io.xml.bind.Jaxb;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -48,13 +49,16 @@ import java.util.Optional;
  *
  * @author Mats Maggi
  */
-@ActionID(category = "Edit", id = "demetra.desktop.regarima.ui.actions.ImportRegArimaSpec")
+@ActionID(category = "Edit", id = ImportRegArimaSpec.ID)
 @ActionRegistration(displayName = "#CTL_ImportRegArimaSpec", lazy = false)
 @ActionReferences({
     @ActionReference(path = RegArimaSpecManager.PATH, position = 1000)
 })
 @Messages("CTL_ImportRegArimaSpec=Import from")
 public class ImportRegArimaSpec extends SingleNodeAction<Node> implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.regarima.ui.actions.ImportRegArimaSpec";
 
     public ImportRegArimaSpec() {
         super(Node.class);
@@ -110,6 +114,6 @@ public class ImportRegArimaSpec extends SingleNodeAction<Node> implements Presen
                 .map(RegArimaSpecMapping.SERIALIZER_V3::read)
                 .orElse(null);
     }
-    
+
     private static final Parser<InformationSet> INFORMATIONPARSER = Jaxb.Parser.of(XmlInformationSet.class).asParser().andThen(XmlInformationSet::create);
 }

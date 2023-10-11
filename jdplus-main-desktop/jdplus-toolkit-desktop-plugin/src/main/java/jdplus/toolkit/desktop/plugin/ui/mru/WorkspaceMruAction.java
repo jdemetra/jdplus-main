@@ -30,6 +30,8 @@ import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -38,14 +40,16 @@ import org.openide.awt.DynamicMenuContent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 
-@ActionID(category = "File",
-        id = "ec.nbdemetra.ui.mru.WorkspaceMruAction")
+@ActionID(category = "File", id = WorkspaceMruAction.ID)
 @ActionRegistration(displayName = "#CTL_WorkspaceMruAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Menu/File", position = 210)
 })
 @Messages("CTL_WorkspaceMruAction=Open Recent Workspace")
 public final class WorkspaceMruAction extends AbstractAction implements Presenter.Popup, Presenter.Menu {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.mru.WorkspaceMruAction";
 
     @Override
     public JMenuItem getMenuPresenter() {

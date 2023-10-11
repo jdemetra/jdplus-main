@@ -23,6 +23,7 @@ import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.base.api.timeseries.TsDocument;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -35,9 +36,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Mats Maggi
  */
-@ActionID(
-        category = "Tools",
-        id = "demetra.desktop.core.ts.actions.ExportSpecToWorkSpace")
+@ActionID(category = "Tools", id = ExportSpecToWorkSpace.ID)
 @ActionRegistration(
         displayName = "#CTL_ExportSpecToWorkSpace", lazy = false)
 @ActionReferences({
@@ -45,6 +44,9 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_ExportSpecToWorkSpace=Copy spec. to workspace")
 public final class ExportSpecToWorkSpace extends ActiveViewAction<WorkspaceTsTopComponent> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.ts.actions.ExportSpecToWorkSpace";
 
     public ExportSpecToWorkSpace() {
         super(WorkspaceTsTopComponent.class);

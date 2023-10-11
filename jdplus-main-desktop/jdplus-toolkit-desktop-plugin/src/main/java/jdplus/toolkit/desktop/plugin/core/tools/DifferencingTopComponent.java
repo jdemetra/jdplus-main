@@ -19,6 +19,7 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -48,7 +49,7 @@ import org.openide.util.Exceptions;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "output", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.core.tools.DifferencingTopComponent")
+@ActionID(category = "Window", id = DifferencingTopComponent.ID)
 @ActionReference(path = "Menu/Tools", position = 334)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_DifferencingAction",
         preferredID = "DifferencingTopComponent")
@@ -58,6 +59,9 @@ import org.openide.util.Exceptions;
         "HINT_DifferencingTopComponent=This is a Differencing window"
 })
 public final class DifferencingTopComponent extends TopComponent  implements HasTs, ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.DifferencingTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
     private final JToolBar toolBar;

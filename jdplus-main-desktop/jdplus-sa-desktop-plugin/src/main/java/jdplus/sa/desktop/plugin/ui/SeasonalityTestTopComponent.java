@@ -16,6 +16,8 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import java.beans.PropertyVetoException;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -43,7 +45,7 @@ import org.openide.util.Exceptions;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "properties", openAtStartup = false)
-@ActionID(category = "Tool", id = "demetra.desktop.sa.ui.SeasonalityTestTopComponent")
+@ActionID(category = "Tool", id = SeasonalityTestTopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Seasonal Adjustment/Tools", position = 333)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_SeasonalityTestAction",
         preferredID = "SeasonalityTestTopComponent")
@@ -53,6 +55,9 @@ import org.openide.util.Exceptions;
     "HINT_SeasonalityTestTopComponent=This is a Seasonality Tests window"
 })
 public final class SeasonalityTestTopComponent extends TopComponent implements HasTs, ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.ui.SeasonalityTestTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
     private boolean isLog = false;

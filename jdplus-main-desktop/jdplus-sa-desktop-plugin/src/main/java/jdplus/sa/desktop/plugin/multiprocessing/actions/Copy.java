@@ -7,14 +7,14 @@ package jdplus.sa.desktop.plugin.multiprocessing.actions;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.Copy")
+@ActionID(category = "SaProcessing", id = Copy.ID)
 @ActionRegistration(displayName = "#CTL_Copy", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1320),
@@ -22,6 +22,9 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_Copy=Copy")
 public final class Copy extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.Copy";
 
     public Copy() {
         super(SaBatchUI.class);

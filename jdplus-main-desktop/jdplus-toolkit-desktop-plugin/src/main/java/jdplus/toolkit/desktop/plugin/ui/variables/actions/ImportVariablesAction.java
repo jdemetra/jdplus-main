@@ -29,6 +29,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import jdplus.toolkit.base.api.util.NameManager;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -43,13 +44,16 @@ import java.util.List;
  *
  * @author Philippe Charles
  */
-@ActionID(category = "Edit", id = "demetra.desktop.ui.variables.actions.ImportVariablesAction")
+@ActionID(category = "Edit", id = ImportVariablesAction.ID)
 @ActionRegistration(displayName = "#CTL_ImportVariablesAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = VariablesDocumentManager.PATH, position = 1430)
 })
 @Messages("CTL_ImportVariablesAction=Import from")
 public final class ImportVariablesAction extends SingleNodeAction<ItemWsNode> implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.variables.actions.ImportVariablesAction";
 
     private static final Converter<Config, TsDataSuppliers> CONVERTER = new VariablesConfig().reverse();
     private static final List<Importable> IMPORTABLES = List.of(new ImportableVariables());

@@ -15,6 +15,8 @@ import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeSupport;
 
 import java.awt.BorderLayout;
 import javax.swing.*;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -39,7 +41,7 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED)
 @TopComponent.Registration(mode = "output", openAtStartup = false)
-@ActionID(category = "Window", id = "ec.nbdemetra.ui.tools.ChartTopComponent")
+@ActionID(category = "Window", id = JTsChartTopComponent.ID)
 @ActionReference(path = "Menu/Tools/Container", position = 100)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_ChartAction")
 @Messages({
@@ -48,6 +50,9 @@ import org.openide.windows.WindowManager;
     "HINT_ChartTopComponent=This is a Chart window"
 })
 public final class JTsChartTopComponent extends TopComponent implements ExplorerManager.Provider, MultiViewElement {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.JTsChartTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

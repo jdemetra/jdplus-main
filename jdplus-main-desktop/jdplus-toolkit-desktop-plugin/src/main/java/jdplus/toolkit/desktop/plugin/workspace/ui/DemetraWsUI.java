@@ -12,6 +12,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.WsRootNode;
 import jdplus.toolkit.base.api.util.Id;
 import javax.swing.ActionMap;
 
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -38,7 +39,7 @@ import org.openide.windows.TopComponent;
         iconBase = "jdplus/toolkit/desktop/plugin/icons/table.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
-@ActionID(category = "Window", id = "demetra.desktop.workspace.ui.DemetraWsUI")
+@ActionID(category = "Window", id = DemetraWsUI.ID)
 @ActionReference(path = "Menu/Window" /*
          * , position = 444
  */)
@@ -50,6 +51,9 @@ import org.openide.windows.TopComponent;
     "HINT_WsTopComponent=This is a Workspace window"
 })
 public class DemetraWsUI extends TopComponent implements ExplorerManager.Provider, LookupListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.ui.DemetraWsUI";
 
     private final ExplorerManager mgr = new ExplorerManager();
     private final InstanceContent content = new InstanceContent();

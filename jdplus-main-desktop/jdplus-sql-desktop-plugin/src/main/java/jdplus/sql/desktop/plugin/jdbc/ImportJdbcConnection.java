@@ -20,6 +20,7 @@ import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
+import nbbrd.design.ClassNameConstant;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -33,13 +34,16 @@ import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 
-@ActionID(category = "Edit", id = "demetra.desktop.sql.jdbc.ImportJdbcConnection")
+@ActionID(category = "Edit", id = ImportJdbcConnection.ID)
 @ActionRegistration(displayName = "#CTL_ImportJdbcConnection", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Databases/Explorer/Root/Actions", position = 155, separatorAfter = 170)
 })
 @Messages("CTL_ImportJdbcConnection=Import from")
 public final class ImportJdbcConnection extends SingleNodeAction<Node> implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sql.desktop.plugin.jdbc.ImportJdbcConnection";
 
     public ImportJdbcConnection() {
         super(Node.class);

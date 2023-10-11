@@ -10,6 +10,7 @@ import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMo
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.tsp.DataSet;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -27,7 +28,7 @@ import java.util.Optional;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "explorer", openAtStartup = false)
-@ActionID(category = "Window", id = "ec.nbdemetra.core.PreviewTssTopComponent")
+@ActionID(category = "Window", id = PreviewTssTopComponent.ID)
 @ActionReference(path = "Menu/Window", position = 301)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_PreviewTssAction",
         preferredID = "PreviewTssTopComponent")
@@ -37,6 +38,9 @@ import java.util.Optional;
         "HINT_PreviewTssTopComponent=This is a Preview window"
 })
 public final class PreviewTssTopComponent extends TopComponent implements LookupListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.PreviewTssTopComponent";
 
     private Lookup.Result<DataSetNode> lookupResult = null;
 

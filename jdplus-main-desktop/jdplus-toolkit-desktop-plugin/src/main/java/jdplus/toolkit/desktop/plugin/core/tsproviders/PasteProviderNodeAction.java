@@ -8,6 +8,7 @@ import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataSourceTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
 import jdplus.toolkit.base.tsp.DataSourceLoader;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
@@ -19,7 +20,8 @@ import java.util.stream.Stream;
 @Messages("CTL_PasteProviderAction=Paste")
 public final class PasteProviderNodeAction extends AbilityNodeAction<DataSourceLoader> {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.PasteProviderAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.PasteProviderNodeAction";
 
     public PasteProviderNodeAction() {
         super(DataSourceLoader.class, true);

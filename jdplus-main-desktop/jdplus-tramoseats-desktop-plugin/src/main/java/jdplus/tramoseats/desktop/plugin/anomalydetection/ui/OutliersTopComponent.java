@@ -47,6 +47,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -69,7 +70,7 @@ import org.openide.windows.TopComponent;
 @TopComponent.Description(preferredID = "OutliersTopComponent",
         persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.anomalydetection.ui.OutliersTopComponent")
+@ActionID(category = "Window", id = OutliersTopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Anomaly Detection")
 @TopComponent.OpenActionRegistration(displayName = "#CTL_OutliersTopComponentAction")
 @NbBundle.Messages({
@@ -78,6 +79,9 @@ import org.openide.windows.TopComponent;
     "HINT_OutliersTopComponent=This is an Outlier Detection Window"
 })
 public final class OutliersTopComponent extends TopComponent implements ExplorerManager.Provider, MultiViewElement, ActiveView {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.tramoseats.desktop.plugin.anomalydetection.ui.OutliersTopComponent";
 
     public static final String STATE_CHANGED = "Processing state changed";
     private final JTsAnomalyGrid grid;

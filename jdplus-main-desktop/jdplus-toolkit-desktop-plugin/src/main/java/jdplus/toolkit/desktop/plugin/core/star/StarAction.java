@@ -21,6 +21,7 @@ import jdplus.toolkit.desktop.plugin.actions.Repaintable;
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import jdplus.toolkit.desktop.plugin.star.StarListManager;
 import lombok.NonNull;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -41,7 +42,8 @@ import java.util.Optional;
 })
 public final class StarAction extends SingleNodeAction<Node> {
 
-    public static final String ID = "demetra.desktop.core.star.StarAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.star.StarAction";
 
     public StarAction() {
         super(Node.class);

@@ -21,6 +21,7 @@ import jdplus.toolkit.base.api.timeseries.TsDocument;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -31,8 +32,7 @@ import org.openide.util.NbBundle;
  *
  * @author palatej
  */
-@ActionID(category = "Processing",
-        id = "demetra.desktop.core.ts.actions.LockDocument")
+@ActionID(category = "Processing", id = LockDocument.ID)
 @ActionRegistration(displayName = "#CTL_LockDocument", lazy = false)
 @ActionReferences({
     @ActionReference(path = WorkspaceFactory.TSCONTEXTPATH, position = 1500),
@@ -40,7 +40,10 @@ import org.openide.util.NbBundle;
 })
 @NbBundle.Messages("CTL_LockDocument=Lock")
 public final class LockDocument extends ActiveViewAction<WorkspaceTsTopComponent> {
-    
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.ts.actions.LockDocument";
+
     private boolean locked;
 
     public LockDocument() {
