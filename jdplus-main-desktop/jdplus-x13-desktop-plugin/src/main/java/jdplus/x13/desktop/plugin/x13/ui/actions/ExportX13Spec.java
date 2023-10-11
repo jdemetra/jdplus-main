@@ -26,6 +26,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.information.X13SpecMapping;
 import jdplus.x13.desktop.plugin.x13.documents.X13SpecManager;
+import nbbrd.design.ClassNameConstant;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.xml.bind.Jaxb;
 import org.openide.awt.ActionID;
@@ -48,14 +49,16 @@ import java.util.stream.Stream;
  *
  * @author Mats Maggi
  */
-@ActionID(category = "Tools",
-        id = "demetra.desktop.x13.ui.actions.ExportX13Spec")
+@ActionID(category = "Tools", id = ExportX13Spec.ID)
 @ActionRegistration(displayName = "#CTL_ExportX13Spec", lazy = false)
 @ActionReferences({
     @ActionReference(path = X13SpecManager.ITEMPATH, position = 1000, separatorAfter = 1090)
 })
 @NbBundle.Messages("CTL_ExportX13Spec=Export to")
 public class ExportX13Spec extends NodeAction implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.x13.ui.actions.ExportX13Spec";
 
     public ExportX13Spec() {
     }

@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.core.data.analysis.WindowFunction;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -37,7 +38,7 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "output", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.core.tools.TukeySpectrumTopComponent")
+@ActionID(category = "Window", id = TukeySpectrumTopComponent.ID)
 @ActionReference(path = "Menu/Tools/Spectral analysis", position = 300)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TukeySpectrumAction")
 @Messages({
@@ -46,6 +47,9 @@ import org.openide.windows.WindowManager;
     "HINT_TukeySpectrumTopComponent=This is a Tukey Spectrum window"
 })
 public final class TukeySpectrumTopComponent extends TopComponent implements HasTs, ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.TukeySpectrumTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

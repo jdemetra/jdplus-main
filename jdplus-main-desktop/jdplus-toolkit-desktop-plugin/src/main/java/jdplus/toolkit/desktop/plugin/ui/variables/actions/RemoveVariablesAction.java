@@ -11,6 +11,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import jdplus.toolkit.base.api.util.NameManager;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -20,8 +21,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Edit",
-id = "demetra.desktop.ui.variables.actions.RemoveVariablesAction")
+@ActionID(category = "Edit", id = RemoveVariablesAction.ID)
 @ActionRegistration(
         displayName = "#CTL_RemoveVariablesAction", lazy=false)
 @ActionReferences({
@@ -30,7 +30,10 @@ id = "demetra.desktop.ui.variables.actions.RemoveVariablesAction")
 })
 @Messages("CTL_RemoveVariablesAction=Remove")
 public final class RemoveVariablesAction extends SingleNodeAction<ItemWsNode> {
-    
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.variables.actions.RemoveVariablesAction";
+
     public static final String DELETE_MESSAGE ="Are you sure you want to delete this item?";
 
     public RemoveVariablesAction() {

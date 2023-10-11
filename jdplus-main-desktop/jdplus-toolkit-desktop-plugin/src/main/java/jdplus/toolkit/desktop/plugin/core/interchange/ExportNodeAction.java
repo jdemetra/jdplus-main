@@ -19,6 +19,7 @@ package jdplus.toolkit.desktop.plugin.core.interchange;
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.desktop.plugin.interchange.Exportable;
 import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -40,7 +41,8 @@ import java.util.stream.Stream;
 @Messages("CTL_ExportNodeAction=Export to")
 public final class ExportNodeAction extends AbilityNodeAction<Exportable> implements Presenter.Popup {
 
-    public static final String ID = "demetra.desktop.core.interchange.ExportNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.interchange.ExportNodeAction";
 
     public ExportNodeAction() {
         super(Exportable.class);

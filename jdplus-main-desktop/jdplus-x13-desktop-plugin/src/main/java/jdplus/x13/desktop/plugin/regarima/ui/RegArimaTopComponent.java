@@ -11,6 +11,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
+import nbbrd.design.ClassNameConstant;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -28,7 +29,7 @@ import org.openide.util.NbBundle;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Modelling", id = "demetra.desktop.regarima.ui.RegArimaTopComponent")
+@ActionID(category = "Modelling", id = RegArimaTopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Modelling/Single Analysis", position = 1010)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_RegArimaAction")
 @NbBundle.Messages({
@@ -37,6 +38,9 @@ import org.openide.util.NbBundle;
     "HINT_RegArimaTopComponent=This is a RegArima window"
 })
 public final class RegArimaTopComponent extends WorkspaceTsTopComponent<RegArimaDocument> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.regarima.ui.RegArimaTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

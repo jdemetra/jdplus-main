@@ -10,6 +10,7 @@ import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -32,7 +33,7 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "output", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.core.tools.PeriodogramTopComponent")
+@ActionID(category = "Window", id = PeriodogramTopComponent.ID)
 @ActionReference(path = "Menu/Tools/Spectral analysis", position = 200)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_PeriodogramAction")
 @Messages({
@@ -41,6 +42,9 @@ import org.openide.windows.WindowManager;
     "HINT_PeriodogramTopComponent=This is a Periodogram window"
 })
 public final class PeriodogramTopComponent extends TopComponent implements HasTs, ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.PeriodogramTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

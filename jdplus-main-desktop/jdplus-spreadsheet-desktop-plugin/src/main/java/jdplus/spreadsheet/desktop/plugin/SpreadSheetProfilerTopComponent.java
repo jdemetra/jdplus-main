@@ -24,6 +24,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.Date;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -49,7 +51,7 @@ import org.openide.windows.TopComponent;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Window", id = "be.nbb.demetra.spreadsheet.profiler.SpreadSheetProfilerTopComponent")
+@ActionID(category = "Window", id = SpreadSheetProfilerTopComponent.ID)
 @ActionReference(path = "Menu/Tools", position = 533, separatorBefore = 530)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_SpreadSheetProfilerAction",
@@ -60,6 +62,9 @@ import org.openide.windows.TopComponent;
     "HINT_SpreadSheetProfilerTopComponent=This is a Spreadsheet Profiler window"
 })
 public final class SpreadSheetProfilerTopComponent extends TopComponent implements ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.spreadsheet.desktop.plugin.SpreadSheetProfilerTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
     private final BasicFileViewer fileViewer;

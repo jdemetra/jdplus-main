@@ -8,20 +8,23 @@ import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.sa.base.api.EstimationPolicyType;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.LocalRefreshLastOutliers")
+@ActionID(category = "SaProcessing", id = LocalRefreshLastOutliers.ID)
 @ActionRegistration(displayName = "#CTL_LocalRefreshLastOutliers", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.LOCALPATH + LocalRefreshPartial.PATH, position = 1240)
 })
 @Messages("CTL_LocalRefreshLastOutliers=+ Last outliers")
 public final class LocalRefreshLastOutliers extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.LocalRefreshLastOutliers";
 
     public LocalRefreshLastOutliers() {
         super(SaBatchUI.class);

@@ -31,6 +31,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -38,8 +39,7 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.WindowManager;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.sa.multiprocessing.actions.EditRefSpecification")
+@ActionID(category = "SaProcessing", id = EditRefSpecification.ID)
 @ActionRegistration(displayName = "#CTL_EditRefSpecification", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + RefSpecification.PATH , position = 1510),
@@ -47,6 +47,9 @@ import org.openide.windows.WindowManager;
 })
 @Messages("CTL_EditRefSpecification=Modify...")
 public final class EditRefSpecification extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.EditRefSpecification";
 
     public EditRefSpecification() {
         super(SaBatchUI.class);

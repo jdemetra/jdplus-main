@@ -21,6 +21,7 @@ import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.sql.base.api.jdbc.JdbcBean;
 import jdplus.sql.base.api.jdbc.JdbcProvider;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -32,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
 import java.beans.IntrospectionException;
 import java.util.logging.Level;
 
-@ActionID(category = "Edit", id = "demetra.desktop.sql.jdbc.OpenJdbcDataSource")
+@ActionID(category = "Edit", id = OpenJdbcDataSource.ID)
 @ActionRegistration(displayName = "#CTL_OpenJdbcDataSource", lazy = false)
 @ActionReferences({
         @ActionReference(path = "Databases/Explorer/Connection/Actions", position = 1, separatorAfter = 10),
@@ -42,6 +43,9 @@ import java.util.logging.Level;
 @Messages("CTL_OpenJdbcDataSource=Open as JDemetra+ DataSource")
 @lombok.extern.java.Log
 public final class OpenJdbcDataSource extends SingleNodeAction<Node> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sql.desktop.plugin.jdbc.OpenJdbcDataSource";
 
     private final JdbcProvider provider;
 

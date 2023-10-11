@@ -13,22 +13,25 @@ import jdplus.x13.base.api.regarima.RegArimaSpec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Tools",
-id = "demetra.desktop.regarima.ui.spec.actions.CloneSpec")
+@ActionID(category = "Tools", id = CloneSpec.ID)
 @ActionRegistration(displayName = "#CTL_CloneSpec")
 @ActionReferences({
     @ActionReference(path = RegArimaSpecManager.ITEMPATH, position = 1700),
 })
 @Messages("CTL_CloneSpec=Clone")
 public final class CloneSpec implements ActionListener {
-    
-   private final WsNode context;
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.regarima.ui.actions.CloneSpec";
+
+    private final WsNode context;
 
     public CloneSpec(WsNode context) {
         this.context = context;

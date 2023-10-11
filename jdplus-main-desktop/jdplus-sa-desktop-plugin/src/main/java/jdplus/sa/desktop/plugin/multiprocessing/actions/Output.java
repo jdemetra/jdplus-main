@@ -37,6 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+
+import nbbrd.design.ClassNameConstant;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import javax.swing.SwingWorker;
 import org.netbeans.api.progress.ProgressHandle;
@@ -49,8 +51,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.Output")
+@ActionID(category = "SaProcessing", id = Output.ID)
 @ActionRegistration(displayName = "#CTL_Output", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 2000, separatorBefore = 1999),
@@ -58,6 +59,9 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_Output=Output...")
 public final class Output extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.Output";
 
     public Output() {
         super(SaBatchUI.class);

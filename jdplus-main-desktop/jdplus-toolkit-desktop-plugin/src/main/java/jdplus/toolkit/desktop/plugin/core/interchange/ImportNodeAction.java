@@ -21,6 +21,7 @@ import jdplus.toolkit.desktop.plugin.core.tsproviders.ProviderNode;
 import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
 import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -41,7 +42,8 @@ import java.util.stream.Stream;
 @Messages("CTL_ImportNodeAction=Import from")
 public final class ImportNodeAction extends AbilityNodeAction<Importable> implements Presenter.Popup {
 
-    public static final String ID = "demetra.desktop.core.interchange.ImportNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.interchange.ImportNodeAction";
 
     // FIXME: old code was "new ProvidersNode()" -> missing ability?
     private final Node fakeProviderNode = new AbstractNodeBuilder().build();

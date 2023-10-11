@@ -11,20 +11,24 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
 import jdplus.toolkit.desktop.plugin.workspace.nodes.WsNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Tools",
-id = "demetra.desktop.ui.variables.actions.AddVariablesAction")
+@ActionID(category = "Tools", id = AddVariablesAction.ID)
 @ActionRegistration(displayName = "#CTL_NewAction")
 @ActionReferences({
     @ActionReference(path = VariablesDocumentManager.PATH, position = 1000)
 })
 @Messages("CTL_NewAction=New")
 public class AddVariablesAction implements ActionListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.variables.actions.AddVariablesAction";
 
     private final WsNode context;
 

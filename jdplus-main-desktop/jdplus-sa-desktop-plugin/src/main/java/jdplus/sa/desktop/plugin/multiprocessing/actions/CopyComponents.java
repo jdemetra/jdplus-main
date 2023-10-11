@@ -30,6 +30,7 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -43,14 +44,16 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Mats Maggi
  */
-@ActionID(category = "SaProcessing",
-        id = "demetra.sa.multiprocessing.actions.CopyComponents")
+@ActionID(category = "SaProcessing", id = CopyComponents.ID)
 @ActionRegistration(displayName = "#CTL_CopyComponents", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1430)
 })
 @Messages("CTL_CopyComponents=Copy Components...")
 public final class CopyComponents extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.CopyComponents";
 
     public CopyComponents() {
         super(SaBatchUI.class);

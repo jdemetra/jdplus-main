@@ -22,6 +22,8 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -29,11 +31,13 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Edit",
-        id = "demetra.desktop.workspace.nodes.CommentAction")
+@ActionID(category = "Edit", id = CommentAction.ID)
 @ActionRegistration(displayName = "#CTL_CommentAction", lazy = false)
 @Messages("CTL_CommentAction=Edit comments")
 public final class CommentAction extends SingleNodeAction<ItemWsNode> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.nodes.CommentAction";
 
     public static final String TITLE = "Edit comments";
 

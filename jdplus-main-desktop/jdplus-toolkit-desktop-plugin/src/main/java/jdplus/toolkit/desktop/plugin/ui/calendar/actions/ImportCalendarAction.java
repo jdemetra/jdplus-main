@@ -28,6 +28,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -42,13 +43,16 @@ import java.util.List;
  *
  * @author Philippe Charles
  */
-@ActionID(category = "Edit", id = "demetra.desktop.ui.calendars.actions.ImportCalendarAction")
+@ActionID(category = "Edit", id = ImportCalendarAction.ID)
 @ActionRegistration(displayName = "#CTL_ImportCalendarAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = CalendarDocumentManager.PATH, position = 1430)
 })
 @Messages("CTL_ImportCalendarAction=Import from")
 public final class ImportCalendarAction extends SingleNodeAction<ItemWsNode> implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.calendar.actions.ImportCalendarAction";
 
     private static final Converter<Config, CalendarDefinition> CONVERTER = new CalendarConfig().reverse();
     private static final List<Importable> IMPORTABLES = List.of(new ImportableCalendar());

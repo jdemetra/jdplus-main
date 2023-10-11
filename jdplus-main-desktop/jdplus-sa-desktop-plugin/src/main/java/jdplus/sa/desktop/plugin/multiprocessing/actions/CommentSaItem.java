@@ -25,6 +25,7 @@ import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -33,14 +34,16 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.CommentSaItem")
+@ActionID(category = "SaProcessing", id = CommentSaItem.ID)
 @ActionRegistration(displayName = "#CTL_CommentSaItem", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1600)
 })
 @Messages("CTL_CommentSaItem=Comments...")
 public final class CommentSaItem extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.CommentSaItem";
 
     public static final String TITLE = "Comments";
 

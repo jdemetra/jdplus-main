@@ -29,8 +29,7 @@ import org.openide.awt.ActionReferences;
 @lombok.experimental.UtilityClass
 public class Actions {
 
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.RenameAction")
+    @ActionID(category = "Edit", id = RenameAction.ID)
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1150)
     })
@@ -38,8 +37,7 @@ public class Actions {
         return new RenameAction();
     }
 
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.CommentAction")
+    @ActionID(category = "Edit", id = CommentAction.ID)
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1200)
     })
@@ -47,8 +45,7 @@ public class Actions {
         return new CommentAction();
     }
 
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.DeleteAction")
+    @ActionID(category = "Edit", id = DeleteAction.ID)
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1050)
     })
@@ -56,8 +53,7 @@ public class Actions {
         return new DeleteAction();
     }
     
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.NewAction")
+    @ActionID(category = "Edit", id = NewAction.ID)
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.PATH, position = 1000)
     })
@@ -65,8 +61,7 @@ public class Actions {
         return new NewAction();
     }
     
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.SaveAction")
+    @ActionID(category = "Edit", id = SaveAction.ID)
     @ActionReferences({
         @ActionReference(path = MultiProcessingManager.ITEMPATH, position = 1100, separatorAfter=1110)
     })

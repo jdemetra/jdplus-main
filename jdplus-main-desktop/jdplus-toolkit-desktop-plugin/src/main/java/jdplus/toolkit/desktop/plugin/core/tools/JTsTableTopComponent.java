@@ -8,6 +8,8 @@ import jdplus.toolkit.desktop.plugin.tools.ToolsPersistence;
 import jdplus.toolkit.desktop.plugin.nodes.ControlNode;
 import jdplus.toolkit.desktop.plugin.components.JTsTable;
 import java.awt.BorderLayout;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -28,7 +30,7 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "tsnavigator", openAtStartup = false)
-@ActionID(category = "Window", id = "ec.nbdemetra.ui.tools.ListTopComponent")
+@ActionID(category = "Window", id = JTsTableTopComponent.ID)
 @ActionReference(path = "Menu/Tools/Container", position = 400)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_ListAction")
 @Messages({
@@ -37,6 +39,9 @@ import org.openide.windows.WindowManager;
     "HINT_ListTopComponent=This is a List window"
 })
 public final class JTsTableTopComponent extends TopComponent implements ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.JTsTableTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

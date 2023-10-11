@@ -25,6 +25,8 @@ import java.awt.event.KeyListener;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -32,11 +34,13 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Edit",
-        id = "demetra.desktop.workspace.nodes.RenameAction")
+@ActionID(category = "Edit", id = RenameAction.ID)
 @ActionRegistration(displayName = "#CTL_RenameAction", lazy = false)
 @Messages("CTL_RenameAction=Rename...")
 public final class RenameAction extends SingleNodeAction<ItemWsNode> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.nodes.RenameAction";
 
     public static final String RENAME_TITLE = "Please enter the new name",
             NAME_MESSAGE = "New name:";

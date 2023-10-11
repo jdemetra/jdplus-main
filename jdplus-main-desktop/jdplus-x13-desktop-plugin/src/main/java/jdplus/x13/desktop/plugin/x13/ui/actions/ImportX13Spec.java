@@ -27,6 +27,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.information.X13SpecMapping;
 import jdplus.x13.desktop.plugin.x13.documents.X13SpecManager;
+import nbbrd.design.ClassNameConstant;
 import nbbrd.io.text.Parser;
 import nbbrd.io.xml.bind.Jaxb;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -48,13 +49,16 @@ import java.util.Optional;
  *
  * @author Mats Maggi
  */
-@ActionID(category = "Edit", id = "demetra.desktop.x13.ui.actions.ImportX13Spec")
+@ActionID(category = "Edit", id = ImportX13Spec.ID)
 @ActionRegistration(displayName = "#CTL_ImportX13Spec", lazy = false)
 @ActionReferences({
     @ActionReference(path = X13SpecManager.PATH, position = 1000)
 })
 @Messages("CTL_ImportX13Spec=Import from")
 public class ImportX13Spec extends SingleNodeAction<Node> implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.x13.ui.actions.ImportX13Spec";
 
     public ImportX13Spec() {
         super(Node.class);

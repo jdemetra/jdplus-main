@@ -26,14 +26,14 @@ import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaManager;
 import jdplus.sa.base.api.SaSpecification;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.sa.multiprocessing.actions.ResultSpecification")
+@ActionID(category = "SaProcessing", id = ResultSpecification.ID)
 @ActionRegistration(displayName = "#CTL_ResultSpecification", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1520),
@@ -41,6 +41,9 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_ResultSpecification=Apply Result Specification")
 public final class ResultSpecification extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.ResultSpecification";
 
     public ResultSpecification() {
         super(SaBatchUI.class);

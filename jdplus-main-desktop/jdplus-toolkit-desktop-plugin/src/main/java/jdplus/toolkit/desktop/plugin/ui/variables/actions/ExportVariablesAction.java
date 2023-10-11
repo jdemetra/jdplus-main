@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.JMenuItem;
+
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -41,13 +43,16 @@ import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
  *
  * @author Philippe Charles
  */
-@ActionID(category = "Edit", id = "demetra.desktop.ui.variables.actions.ExportVariablesAction")
+@ActionID(category = "Edit", id = ExportVariablesAction.ID)
 @ActionRegistration(displayName = "#CTL_ExportVariablesAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = VariablesDocumentManager.ITEMPATH, position = 1430)
 })
 @Messages("CTL_ExportVariablesAction=Export to")
 public final class ExportVariablesAction extends NodeAction implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.variables.actions.ExportVariablesAction";
 
     private static final Converter<TsDataSuppliers, Config> CONVERTER = new VariablesConfig();
 

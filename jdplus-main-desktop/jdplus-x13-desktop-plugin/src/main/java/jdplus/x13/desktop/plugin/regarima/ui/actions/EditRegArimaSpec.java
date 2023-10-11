@@ -12,20 +12,23 @@ import jdplus.x13.base.api.regarima.RegArimaSpec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle;
 
-@ActionID(category = "Tools",
-id = "demetra.desktop.regarima.ui.spec.actions.EditRegArimaSpec")
+@ActionID(category = "Tools", id = EditRegArimaSpec.ID)
 @ActionRegistration(displayName = "#CTL_EditRegArimaSpec")
 @ActionReferences({
     @ActionReference(path = RegArimaSpecManager.ITEMPATH, position = 1000, separatorAfter=1090)
 })
 @NbBundle.Messages("CTL_EditRegArimaSpec=Open")
 public class EditRegArimaSpec implements ActionListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.regarima.ui.actions.EditRegArimaSpec";
 
     private final WsNode context;
 

@@ -19,6 +19,7 @@ package jdplus.sql.desktop.plugin.jdbc;
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.interchange.Exportable;
 import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
+import nbbrd.design.ClassNameConstant;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -34,13 +35,16 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@ActionID(category = "Edit", id = "demetra.desktop.sql.jdbc.ExportJdbcConnection")
+@ActionID(category = "Edit", id = ExportJdbcConnection.ID)
 @ActionRegistration(displayName = "#CTL_ExportJdbcConnection", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Databases/Explorer/Connection/Actions", position = 470)
 })
 @Messages("CTL_ExportJdbcConnection=Export to")
 public final class ExportJdbcConnection extends NodeAction implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sql.desktop.plugin.jdbc.ExportJdbcConnection";
 
     public ExportJdbcConnection() {
     }

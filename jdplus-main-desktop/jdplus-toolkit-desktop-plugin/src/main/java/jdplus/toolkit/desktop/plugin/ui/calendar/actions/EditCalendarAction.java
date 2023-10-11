@@ -16,6 +16,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.calendars.*;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.util.WeightedItem;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -30,13 +31,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-@ActionID(category = "Tools", id = "demetra.desktop.ui.calendars.actions.EditCalendarAction")
+@ActionID(category = "Tools", id = EditCalendarAction.ID)
 @ActionRegistration(displayName = "#CTL_EditCalendarAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = CalendarDocumentManager.ITEMPATH, position = 1420, separatorBefore = 1400)
 })
 @Messages("CTL_EditCalendarAction=Edit")
 public final class EditCalendarAction extends SingleNodeAction<ItemWsNode> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.calendar.actions.EditCalendarAction";
 
     public EditCalendarAction() {
         super(ItemWsNode.class);

@@ -8,6 +8,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTopComponent;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -27,7 +28,7 @@ autostore = false)
 //iconBase="SET/PATH/TO/ICON/HERE", 
 persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.ui.variables.VariablesTopComponent")
+@ActionID(category = "Window", id = VariablesTopComponent.ID)
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_VariablesAction",
@@ -38,7 +39,10 @@ preferredID = "VariablesTopComponent")
     "HINT_VariablesTopComponent=This is a Variables window"
 })
 public final class VariablesTopComponent extends WorkspaceTopComponent<TsDataSuppliers> {
-    
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.variables.VariablesTopComponent";
+
     private final ExplorerManager mgr = new ExplorerManager();
     
     private JTsVariableList list;

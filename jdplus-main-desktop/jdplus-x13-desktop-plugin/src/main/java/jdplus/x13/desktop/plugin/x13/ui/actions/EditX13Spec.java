@@ -12,20 +12,23 @@ import jdplus.x13.base.api.x13.X13Spec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle;
 
-@ActionID(category = "Tools",
-id = "demetra.desktop.x13.ui.actions.EditX13Spec")
+@ActionID(category = "Tools", id = EditX13Spec.ID)
 @ActionRegistration(displayName = "#CTL_EditX13Spec")
 @ActionReferences({
     @ActionReference(path = X13SpecManager.ITEMPATH, position = 1000, separatorAfter=1090)
 })
 @NbBundle.Messages("CTL_EditX13Spec=Open")
 public class EditX13Spec implements ActionListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.x13.ui.actions.EditX13Spec";
 
     private final WsNode context;
 

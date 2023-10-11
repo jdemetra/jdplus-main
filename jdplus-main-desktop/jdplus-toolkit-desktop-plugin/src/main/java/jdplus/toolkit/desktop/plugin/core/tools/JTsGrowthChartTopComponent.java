@@ -8,6 +8,8 @@ import jdplus.toolkit.desktop.plugin.nodes.ControlNode;
 import jdplus.toolkit.desktop.plugin.components.JTsGrowthChart;
 import jdplus.toolkit.desktop.plugin.tools.ToolsPersistence;
 import java.awt.BorderLayout;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -28,7 +30,7 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED)
 @TopComponent.Registration(mode = "output", openAtStartup = false)
-@ActionID(category = "Window", id = "ec.nbdemetra.ui.tools.GrowthChartTopComponent")
+@ActionID(category = "Window", id = JTsGrowthChartTopComponent.ID)
 @ActionReference(path = "Menu/Tools/Container", position = 300)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_GrowthChartAction")
 @Messages({
@@ -37,6 +39,9 @@ import org.openide.windows.WindowManager;
     "HINT_GrowthChartTopComponent=This is a GrowthChart window"
 })
 public final class JTsGrowthChartTopComponent extends TopComponent implements ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.JTsGrowthChartTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

@@ -7,6 +7,7 @@ package jdplus.toolkit.desktop.plugin.core.ts.actions;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -19,8 +20,7 @@ import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import java.util.Optional;
 
-@ActionID(category = "Processing",
-        id = "demetra.desktop.core.ts.actions.PasteTs")
+@ActionID(category = "Processing", id = PasteTs.ID)
 @ActionRegistration(displayName = "#CTL_PasteTs", lazy = false)
 @ActionReferences({
     @ActionReference(path = WorkspaceFactory.TSCONTEXTPATH, position = 1310),
@@ -28,6 +28,9 @@ import java.util.Optional;
 })
 @Messages("CTL_PasteTs=Paste")
 public final class PasteTs extends ActiveViewAction<WorkspaceTsTopComponent> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.ts.actions.PasteTs";
 
     public PasteTs() {
         super(WorkspaceTsTopComponent.class);

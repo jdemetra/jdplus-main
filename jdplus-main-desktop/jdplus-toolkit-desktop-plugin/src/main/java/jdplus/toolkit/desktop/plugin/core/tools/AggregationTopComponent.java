@@ -15,6 +15,8 @@ import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import java.awt.BorderLayout;
 import java.util.Optional;
 import javax.swing.JSplitPane;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -32,7 +34,7 @@ import org.openide.util.NbBundle.Messages;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.core.tools.AggregationTopComponent")
+@ActionID(category = "Window", id = AggregationTopComponent.ID)
 @ActionReference(path = "Menu/Tools", position = 332)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_AggregationAction")
@@ -42,6 +44,9 @@ import org.openide.util.NbBundle.Messages;
     "HINT_AggregationTopComponent=This is an Aggregation window"
 })
 public final class AggregationTopComponent extends TopComponent {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.AggregationTopComponent";
 
     private final JSplitPane mainPane;
     private final JTsTable inputList;

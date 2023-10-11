@@ -9,6 +9,8 @@ import jdplus.toolkit.desktop.plugin.components.tools.AutoRegressiveSpectrumView
 
 import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -33,7 +35,7 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "output", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.core.tools.AutoRegressiveSpectrumTopComponent")
+@ActionID(category = "Window", id = AutoRegressiveSpectrumTopComponent.ID)
 @ActionReference(path = "Menu/Tools/Spectral analysis", position = 100)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_AutoRegressiveSpectrumAction")
 @Messages({
@@ -42,6 +44,9 @@ import org.openide.windows.WindowManager;
     "HINT_AutoRegressiveSpectrumTopComponent=This is a Auto-regressive spectrum window"
 })
 public final class AutoRegressiveSpectrumTopComponent extends TopComponent implements HasTs, ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.AutoRegressiveSpectrumTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

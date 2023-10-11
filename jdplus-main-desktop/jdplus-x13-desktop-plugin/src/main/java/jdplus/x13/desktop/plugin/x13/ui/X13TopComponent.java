@@ -11,6 +11,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.x13.base.core.x13.X13Document;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -28,7 +29,7 @@ import org.openide.windows.TopComponent;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Seasonal Adjustment", id = "demetra.desktop.x13.ui.X13TopComponent")
+@ActionID(category = "Seasonal Adjustment", id = X13TopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Seasonal Adjustment/Single Analysis", position = 1010)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_X13Action")
 @NbBundle.Messages({
@@ -37,6 +38,9 @@ import org.openide.windows.TopComponent;
     "HINT_X13TopComponent=This is a X13 window"
 })
 public final class X13TopComponent extends WorkspaceTsTopComponent<X13Document> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.x13.ui.X13TopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

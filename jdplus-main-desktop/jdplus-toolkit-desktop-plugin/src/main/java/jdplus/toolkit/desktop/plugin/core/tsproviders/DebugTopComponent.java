@@ -7,6 +7,7 @@ package jdplus.toolkit.desktop.plugin.core.tsproviders;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -23,7 +24,7 @@ import org.openide.windows.TopComponent;
 //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "explorer", openAtStartup = false)
-@ActionID(category = "Window", id = "ec.nbdemetra.ui.DebugTopComponent")
+@ActionID(category = "Window", id = DebugTopComponent.ID)
 @ActionReference(path = "Menu/Window", position = 311)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_DebugAction",
         preferredID = "DebugTopComponent")
@@ -33,6 +34,9 @@ import org.openide.windows.TopComponent;
         "HINT_DebugTopComponent=This is a Debug window"
 })
 public final class DebugTopComponent extends TopComponent implements LookupListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.DebugTopComponent";
 
     private Lookup.Result<AbstractNode> lookupResult = null;
 

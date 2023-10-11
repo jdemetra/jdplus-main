@@ -21,6 +21,7 @@ import jdplus.toolkit.desktop.plugin.TsActionManager;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.tsp.DataSet;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -39,7 +40,8 @@ import java.awt.event.ActionEvent;
 @NbBundle.Messages("CTL_OpenWithSetAction=Open with")
 public final class OpenWithSetNodeAction extends AbstractAction implements Presenter.Popup {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.OpenWithSetAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.OpenWithSetNodeAction";
 
     @Override
     public void actionPerformed(ActionEvent e) {
