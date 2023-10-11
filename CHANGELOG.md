@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![UI] Fix action IDs to prevent conflicts
+
 ## [3.1.1] - 2023-10-11
 
 ### Fixed
