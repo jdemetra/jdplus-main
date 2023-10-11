@@ -7,6 +7,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.1.1] - 2023-10-11
+
+### Fixed
+
+- ![UI] Fix startup options that fail with bundled JRE
+
 ## [3.1.0] - 2023-10-11
 
 ### Changed
@@ -64,7 +70,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.1.1...HEAD
+[3.1.1]: https://github.com/jdemetra/jd3-main/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/jdemetra/jd3-main/compare/v3.0.2...v3.1.0
 [3.0.2]: https://github.com/jdemetra/jd3-main/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/jdemetra/jd3-main/compare/v3.0.0...v3.0.1
