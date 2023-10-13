@@ -103,8 +103,8 @@ public class HtmlSlidingSpanDocument<I> extends AbstractHtmlElement implements H
             double nbold = 2 * nabnormal;
             nbold /= freq;
 
-            while(iter.hasMoreElements()) {
-                TsDataView block = iter.nextElement();
+            while(iter.hasNext()) {
+                TsDataView block = iter.next();
                 DescriptiveStatistics desc = DescriptiveStatistics.of(block.getData());
                 int n = desc.countBetween(threshold_, Double.MAX_VALUE);
                 double m = desc.getAverage();
@@ -136,8 +136,8 @@ public class HtmlSlidingSpanDocument<I> extends AbstractHtmlElement implements H
 
             
             YearIterator yiter = new YearIterator(s);
-            while(yiter.hasMoreElements()) {
-                TsDataView block = yiter.nextElement();
+            while(yiter.hasNext()) {
+                TsDataView block = yiter.next();
                 DescriptiveStatistics desc = DescriptiveStatistics.of(block.getData());
                 int n = desc.countBetween(threshold_, Double.MAX_VALUE);
                 double m = desc.getAverage();
