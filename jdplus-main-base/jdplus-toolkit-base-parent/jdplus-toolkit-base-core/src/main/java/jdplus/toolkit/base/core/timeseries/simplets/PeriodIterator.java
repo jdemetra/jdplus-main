@@ -27,7 +27,7 @@ import nbbrd.design.Development;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Alpha)
-public class PeriodIterator implements java.util.Enumeration<TsDataView> {
+public class PeriodIterator implements java.util.Iterator<TsDataView> {
 
     /**
      * Returns an iterator considering only complete years
@@ -85,7 +85,7 @@ public class PeriodIterator implements java.util.Enumeration<TsDataView> {
     }
 
     @Override
-    public boolean hasMoreElements() {
+    public boolean hasNext() {
         if (data_ == null) {
             return false;
         }
@@ -93,7 +93,7 @@ public class PeriodIterator implements java.util.Enumeration<TsDataView> {
     }
 
     @Override
-    public TsDataView nextElement() {
+    public TsDataView next() {
         TsDataView view = cur_;
         if (view == null) {
             return null;
