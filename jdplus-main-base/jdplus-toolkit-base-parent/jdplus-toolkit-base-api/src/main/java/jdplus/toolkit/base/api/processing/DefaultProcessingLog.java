@@ -17,10 +17,8 @@
 package jdplus.toolkit.base.api.processing;
 
 import nbbrd.design.Development;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+
+import java.util.*;
 
 /**
  *
@@ -32,7 +30,7 @@ public class DefaultProcessingLog implements ProcessingLog{
     private static final String[] EMPTY=new String[0];
     
     private final List<Information> logs=new ArrayList<>();
-    private final Stack<String> context=new Stack<>();
+    private final LinkedList<String> context=new LinkedList<>();
     private boolean verbose=true;
     
     private static final String SEP=" > ";
