@@ -36,13 +36,8 @@ import jdplus.toolkit.base.core.ssf.UpdateInformation;
 public class MultivariateUpdateInformation {
 
     @lombok.Builder
-    public MultivariateUpdateInformation(DoubleSeq e, FastMatrix F, FastMatrix R, FastMatrix M, UpdateInformation.Status[] status) {
+    public MultivariateUpdateInformation(DoubleSeq e, FastMatrix R, FastMatrix M, UpdateInformation.Status[] status) {
         this.e = e;
-        if (F == null) {
-            this.F = SymmetricMatrix.LLt(R);
-        } else {
-            this.F = F;
-        }
         this.R = R;
         this.M = M;
         this.status = status;
@@ -74,7 +69,6 @@ public class MultivariateUpdateInformation {
     @lombok.NonNull
     private FastMatrix R;
     
-    private FastMatrix F;
 
     /**
      * K = P Z' L'^-1 dim x nvars

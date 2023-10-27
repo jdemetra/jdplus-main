@@ -97,7 +97,6 @@ public class MultivariateOrdinaryFilter {
             ZM(pos, status, M, R);
             addH(pos, status, R);
             SymmetricMatrix.reenforceSymmetry(R);
-            FastMatrix F = R.deepClone();
             SymmetricMatrix.lcholesky(R, State.ZERO);
 
             // We put in M  PZ'*(ZPZ'+H)^-1/2 = PZ'*(RR')^-1/2 = PZ'(R')^-1
@@ -113,7 +112,6 @@ public class MultivariateOrdinaryFilter {
                     .e(DoubleSeq.of(E))
                     .M(M)
                     .R(R)
-                    .F(F)
                     .status(status)
                     .build();
         } else {

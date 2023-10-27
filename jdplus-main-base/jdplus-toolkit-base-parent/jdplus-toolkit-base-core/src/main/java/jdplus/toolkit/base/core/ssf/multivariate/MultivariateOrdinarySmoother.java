@@ -38,6 +38,7 @@ public class MultivariateOrdinarySmoother {
         private final IMultivariateSsf ssf;
         private boolean rescaleVariance = false;
         private boolean calcVariance = true;
+        private boolean calcSmoothationsVariance = true;
 
         public Builder(IMultivariateSsf ssf) {
             this.ssf = ssf;
@@ -51,8 +52,13 @@ public class MultivariateOrdinarySmoother {
             return this;
         }
 
+        public Builder calcSmoothationsVariance(boolean calc) {
+            this.calcSmoothationsVariance = calc;
+            return this;
+        }
+        
         public MultivariateOrdinarySmoother build() {
-            return new MultivariateOrdinarySmoother(ssf, calcVariance);
+            return new MultivariateOrdinarySmoother(ssf, calcVariance, calcSmoothationsVariance);
         }
     }
 
@@ -63,7 +69,7 @@ public class MultivariateOrdinarySmoother {
     private final IMultivariateSsf ssf;
     private final ISsfDynamics dynamics;
     private final ISsfMeasurements measurements;
-    private final boolean calcvar;
+    private final boolean calcvar, calcsvar;
     private State state;
     private StateStorage srslts;
     private MultivariateFilteringInformation frslts;
@@ -76,9 +82,18 @@ public class MultivariateOrdinarySmoother {
     private FastMatrix N, sV;
     private int stop;
 
+    public MultivariateOrdinarySmoother(IMultivariateSsf ssf, boolean calcvar, boolean calcsvar) {
+        this.ssf = ssf;
+        this.calcvar = calcvar;
+        this.calcsvar=calcsvar;
+        dynamics = ssf.dynamics();
+        measurements = ssf.measurements();
+    }
+
     public MultivariateOrdinarySmoother(IMultivariateSsf ssf, boolean calcvar) {
         this.ssf = ssf;
         this.calcvar = calcvar;
+        this.calcsvar=calcvar;
         dynamics = ssf.dynamics();
         measurements = ssf.measurements();
     }
@@ -221,7 +236,7 @@ public class MultivariateOrdinarySmoother {
         s = u.deepClone();
         s.addAProduct(-1, r, K.columnsIterator());
         LowerTriangularMatrix.solvexL(R, s, State.ZERO);
-        if (calcvar) {
+        if (calcsvar) {
             // var(s) = R'^(-1)(I+K'NK)R^(-1)
             // <=> R' var(s)R = (I+K'NK)
             sV = SymmetricMatrix.XtSX(N, K);
