@@ -44,7 +44,8 @@ public class FiltersToolkit {
         map.put(LocalPolynomialFilterSpec.class, spec -> LocalPolynomialFilters.of((LocalPolynomialFilterSpec) spec));
         map.put(UserDefinedSymmetricFilterSpec.class, spec ->{
             if (spec instanceof UserDefinedSymmetricFilterSpec uspec){
-                return Filtering.of(uspec.getCentralFilter(), uspec.getEndPointsFilters());
+                // NOT CHECKED ! We suppose that the central filter is symmetric
+                return SymmetricFiltering.of(uspec.getCentralFilter(), uspec.getEndPointsFilters());
             }else
                 return null;
         } );
@@ -80,6 +81,7 @@ public class FiltersToolkit {
     @lombok.Value
     @lombok.AllArgsConstructor
     @lombok.Builder
+    @Deprecated
     public static class FiniteFilters implements GenericExplorable {
 
         private SymmetricFilter filter;
