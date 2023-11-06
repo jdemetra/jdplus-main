@@ -54,7 +54,7 @@
         <checker-qual.version>3.40.0</checker-qual.version>
 
         <!-- test frameworks -->
-        <junit.version>5.10.0</junit.version>
+        <junit.version>5.10.1</junit.version>
         <assertj-core.version>3.24.2</assertj-core.version>
 
         <!-- dependencies -->
