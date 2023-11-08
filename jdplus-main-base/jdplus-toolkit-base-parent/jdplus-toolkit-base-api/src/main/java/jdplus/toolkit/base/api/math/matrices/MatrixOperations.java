@@ -18,6 +18,7 @@ package jdplus.toolkit.base.api.math.matrices;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
@@ -55,6 +56,7 @@ public class MatrixOperations {
         return getComputer().AtB(A, B);
     }
 
+    @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     public static interface Computer {
@@ -117,6 +119,7 @@ public class MatrixOperations {
             return getComputer().inverse(M);
         }
 
+        @InterchangeableProcessor
         @Algorithm
         @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
         public static interface SymmetricComputer {
@@ -171,6 +174,7 @@ public class MatrixOperations {
             return getComputer().solvexL(L, b);
         }
 
+        @InterchangeableProcessor
         @Algorithm
         @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
         public static interface LowerTriangularComputer {
@@ -228,6 +232,7 @@ public class MatrixOperations {
             return getComputer().solvexU(U, b);
         }
 
+        @InterchangeableProcessor
         @Algorithm
         @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
         public static interface UpperTriangularComputer {

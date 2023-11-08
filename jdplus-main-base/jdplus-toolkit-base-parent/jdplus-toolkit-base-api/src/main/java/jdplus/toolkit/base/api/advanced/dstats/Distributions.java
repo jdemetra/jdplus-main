@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.api.advanced.dstats;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.service.ServiceDefinition;
 import jdplus.toolkit.base.api.stats.ProbabilityType;
 import nbbrd.service.Mutability;
@@ -63,6 +64,7 @@ public class Distributions {
         return PROCESSOR.get().gamma(alpha, beta);
     }
 
+    @InterchangeableProcessor
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     @Algorithm
     public static interface Processor {

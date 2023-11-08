@@ -17,6 +17,7 @@
 package jdplus.tramoseats.base.api.tramo;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.processing.GenericResults;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.ProcResults;
@@ -74,7 +75,8 @@ public class Tramo {
             return GenericResults.notImplemented();
         }
     }
-    
+
+    @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
     @FunctionalInterface

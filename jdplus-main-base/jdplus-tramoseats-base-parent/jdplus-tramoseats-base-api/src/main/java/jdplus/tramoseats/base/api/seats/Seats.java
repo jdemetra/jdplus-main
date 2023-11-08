@@ -17,6 +17,7 @@
 package jdplus.tramoseats.base.api.seats;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.processing.GenericResults;
 import jdplus.toolkit.base.api.processing.ProcResults;
 import nbbrd.design.Development;
@@ -71,7 +72,8 @@ public class Seats {
              return GenericResults.notImplemented();
        }
     }
-    
+
+    @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
     public static interface Processor {

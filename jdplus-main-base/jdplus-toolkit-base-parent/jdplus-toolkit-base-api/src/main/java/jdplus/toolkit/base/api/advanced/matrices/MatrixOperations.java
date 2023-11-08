@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.api.advanced.matrices;
 
 import jdplus.toolkit.base.api.advanced.algebra.Ring;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
@@ -83,7 +84,8 @@ public class MatrixOperations {
         return PROCESSOR.get().XtX(X);
     }
 
-    
+
+    @InterchangeableProcessor
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     public static interface Processor extends Ring<Matrix> {
         // Use the Ring definition to normalize the names. To get an actual ring, we should consider square matrices 

@@ -7,6 +7,7 @@ package jdplus.toolkit.base.api.advanced.math;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.advanced.algebra.Ring;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.math.Complex;
 import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
@@ -49,6 +50,7 @@ public class Polynomials {
         return PROCESSOR.get().evaluate(polynomial, x);
     }
 
+    @InterchangeableProcessor
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     public static interface Processor extends Ring<DoubleSeq> {
 
