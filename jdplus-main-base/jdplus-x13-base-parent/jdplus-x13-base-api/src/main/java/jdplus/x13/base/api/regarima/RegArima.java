@@ -76,7 +76,6 @@ public class RegArima {
     
    @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
-    @FunctionalInterface
     public static interface Processor {
 
         public ProcResults process(TsData series, RegArimaSpec spec, ModellingContext context, List<String> addtionalItems);

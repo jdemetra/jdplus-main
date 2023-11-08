@@ -4,6 +4,7 @@
  */
 package jdplus.toolkit.desktop.plugin.workspace;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.util.Id;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.openide.util.Lookup;
  * @author Jean Palate
  * @param <D>
  */
+@ExtensionPoint
 @ServiceDefinition
 public interface WorkspaceItemManager<D> {
 

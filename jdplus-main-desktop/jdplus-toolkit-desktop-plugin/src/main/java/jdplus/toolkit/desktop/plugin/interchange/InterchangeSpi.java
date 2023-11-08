@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.interchange;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.NamedService;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import nbbrd.design.swing.OnEDT;
@@ -33,6 +34,7 @@ import java.util.List;
  * @author Philippe Charles
  * @since 1.5.1
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

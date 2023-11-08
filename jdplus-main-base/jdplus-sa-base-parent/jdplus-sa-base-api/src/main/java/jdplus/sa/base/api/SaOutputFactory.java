@@ -16,6 +16,7 @@
  */
 package jdplus.sa.base.api;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.OutputFactory;
 import nbbrd.service.Mutability;
@@ -27,6 +28,7 @@ import nbbrd.service.ServiceDefinition;
  * @author PALATEJ
  * @param <R> Output
  */
+@ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
 public interface SaOutputFactory<R extends Explorable> extends OutputFactory<R> {
 

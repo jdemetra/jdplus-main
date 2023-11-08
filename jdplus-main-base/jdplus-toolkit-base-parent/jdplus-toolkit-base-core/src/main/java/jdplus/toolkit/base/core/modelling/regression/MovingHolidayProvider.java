@@ -18,6 +18,8 @@ package jdplus.toolkit.base.core.modelling.regression;
 
 import jdplus.toolkit.base.api.design.Algorithm;
 import java.time.LocalDate;
+
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -25,6 +27,7 @@ import nbbrd.service.ServiceDefinition;
  *
  * @author PALATEJ
  */
+@ExtensionPoint
 @Algorithm
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface MovingHolidayProvider {
