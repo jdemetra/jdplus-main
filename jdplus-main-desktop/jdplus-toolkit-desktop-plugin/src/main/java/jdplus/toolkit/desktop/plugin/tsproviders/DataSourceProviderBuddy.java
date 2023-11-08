@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.tsproviders;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
@@ -36,6 +37,7 @@ import java.util.List;
  * @author Philippe Charles
  * @since 1.0.0
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

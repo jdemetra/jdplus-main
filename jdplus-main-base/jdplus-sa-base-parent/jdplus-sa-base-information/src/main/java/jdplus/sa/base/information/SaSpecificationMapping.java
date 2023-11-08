@@ -6,6 +6,7 @@
 package jdplus.sa.base.information;
 
 import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.sa.base.api.SaSpecification;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
@@ -18,6 +19,7 @@ import nbbrd.service.ServiceDefinition;
  *
  * @author PALATEJ
  */
+@ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
 public interface SaSpecificationMapping{
     SaSpecification read(InformationSet info, TsDomain context);

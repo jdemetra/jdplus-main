@@ -16,6 +16,7 @@
  */
 package jdplus.sa.base.api;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +33,7 @@ import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
  * @param <C> Configuration
  * @param <R> Result
  */
+@ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
 public interface SaDiagnosticsFactory<C extends DiagnosticsConfiguration, R> extends DiagnosticsFactory<C, R> {
 

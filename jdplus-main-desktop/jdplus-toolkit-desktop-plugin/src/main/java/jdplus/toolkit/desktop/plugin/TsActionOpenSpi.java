@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import nbbrd.design.swing.OnEDT;
@@ -28,6 +29,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @author Philippe Charles
  * @since 1.0.0
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

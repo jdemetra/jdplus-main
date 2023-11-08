@@ -17,6 +17,7 @@
 package jdplus.toolkit.desktop.plugin.workspace;
 
 import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
@@ -32,6 +33,7 @@ import nbbrd.service.ServiceDefinition;
  * @author Jean Palate
  * @since 1.0.0
  */
+@ExtensionPoint
 @ServiceDefinition
 public interface WorkspaceRepository {
 

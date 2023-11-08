@@ -4,6 +4,7 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
@@ -16,6 +17,7 @@ import java.awt.*;
  *
  * @author Philippe Charles
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

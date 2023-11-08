@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.completion;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import ec.util.completion.swing.JAutoCompletion;
 import nbbrd.service.Quantifier;
@@ -29,6 +30,7 @@ import javax.swing.text.JTextComponent;
  * @author Philippe Charles
  * @since 1.3.2
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,
