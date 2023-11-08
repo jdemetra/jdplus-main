@@ -6,6 +6,7 @@
 package jdplus.x13.base.api.x11;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.processing.GenericResults;
 import jdplus.toolkit.base.api.processing.ProcResults;
 import nbbrd.design.Development;
@@ -46,7 +47,8 @@ public class X11 {
     public ProcResults process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec, List<String> items) {
         return PROCESSOR.get().process(timeSeries, spec, items);
     }
-    
+
+    @InterchangeableProcessor
    @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
     public static interface Processor {

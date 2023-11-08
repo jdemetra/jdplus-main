@@ -19,6 +19,7 @@ package jdplus.sa.base.api.diagnostics;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.stats.OneWayAnova;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import nbbrd.service.Mutability;
@@ -69,6 +70,7 @@ public class SeasonalityTests {
         return getFactory().fTest(data, period, model);
     }
 
+    @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     public static interface Factory {

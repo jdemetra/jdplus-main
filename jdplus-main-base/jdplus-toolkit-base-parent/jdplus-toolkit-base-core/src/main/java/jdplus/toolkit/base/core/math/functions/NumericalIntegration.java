@@ -6,6 +6,7 @@
 package jdplus.toolkit.base.core.math.functions;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.design.Development;
 import internal.toolkit.base.core.math.functions.gsl.integration.NumericalIntegrationProcessor;
 import java.util.function.DoubleUnaryOperator;
@@ -35,6 +36,7 @@ public class NumericalIntegration {
         return PROCESSOR.get().integrate(fn, a, b);
     }
 
+    @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT
       , fallback = NumericalIntegrationProcessor.class)

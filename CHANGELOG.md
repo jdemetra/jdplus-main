@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - ![OTHER] Set explicit declaration of extension points
+- ![OTHER] Set explicit declaration of interchangeable processors
 
 ### Fixed
 

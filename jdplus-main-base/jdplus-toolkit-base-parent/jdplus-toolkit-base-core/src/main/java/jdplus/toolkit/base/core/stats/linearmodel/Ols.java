@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.stats.linearmodel;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.design.Development;
 import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
@@ -44,6 +45,7 @@ public class Ols {
         return PROCESSOR.get().compute(model);
     }
 
+    @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, 
             mutability = Mutability.CONCURRENT,
