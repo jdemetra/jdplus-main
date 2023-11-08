@@ -16,6 +16,7 @@
  */
 package jdplus.sa.base.api;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.util.List;
@@ -32,6 +33,7 @@ import jdplus.toolkit.base.api.dictionaries.Dictionary;
  * @param <I> Specification
  * @param <R> Output
  */
+@ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
 public interface SaProcessingFactory<I extends SaSpecification, R extends Explorable> {
 

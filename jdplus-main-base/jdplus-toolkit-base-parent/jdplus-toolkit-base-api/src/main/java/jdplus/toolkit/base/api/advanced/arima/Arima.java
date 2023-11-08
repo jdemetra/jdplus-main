@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.api.advanced.arima;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.service.ServiceDefinition;
 import java.util.function.DoubleUnaryOperator;
 import java.util.function.IntToDoubleFunction;
@@ -76,6 +77,7 @@ public class Arima {
         return PROCESSOR.get().doCanonical(ucarima);
     }
 
+    @InterchangeableProcessor
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
     @Algorithm
     public static interface Processor {

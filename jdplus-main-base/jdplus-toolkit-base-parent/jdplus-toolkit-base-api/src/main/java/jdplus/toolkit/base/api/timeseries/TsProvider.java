@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import nbbrd.design.ThreadSafe;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
@@ -30,6 +31,7 @@ import java.io.IOException;
  * @author Jean Palate
  * @since 1.0.0
  */
+@ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 @ThreadSafe
 public interface TsProvider extends AutoCloseable {

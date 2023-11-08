@@ -5,6 +5,7 @@
 package jdplus.toolkit.desktop.plugin.workspace;
 
 import com.l2fprod.common.propertysheet.PropertySheetPanel;
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.desktop.plugin.descriptors.IObjectDescriptor;
@@ -25,6 +26,7 @@ import java.util.Optional;
  * @param <S>
  * @param <D>
  */
+@ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
 public interface DocumentUIServices<S extends ProcSpecification, D extends ProcDocument<S, ?, ?>> {
 

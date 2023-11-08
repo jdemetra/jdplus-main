@@ -5,6 +5,7 @@
  */
 package jdplus.toolkit.desktop.plugin;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import nbbrd.design.swing.OnEDT;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author Thomas Witthohn
  * @since 2.1.0
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,
