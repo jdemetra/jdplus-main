@@ -1,36 +1,34 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or â€“ as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or â€“ as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.Doubles;
+import nbbrd.design.Demo;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
 import static jdplus.toolkit.base.api.data.AggregationType.*;
 import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
-
-import jdplus.toolkit.base.api.timeseries.*;
-import nbbrd.design.Demo;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
-import static jdplus.toolkit.base.api.timeseries.TsPeriod.DEFAULT_EPOCH;
-import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**
- *
  * @author Jean Palate
  */
 public class TsDataTest {
@@ -102,7 +100,7 @@ public class TsDataTest {
         assertThat(x.getEmptyCause()).isNull();
 
         assertThatNullPointerException().isThrownBy(() -> TsData.ofInternal(null, values));
-        assertThatNullPointerException().isThrownBy(() -> TsData.of(start, (DoubleSeq)null));
+        assertThatNullPointerException().isThrownBy(() -> TsData.of(start, (DoubleSeq) null));
 
         x = TsData.ofInternal(start, values);
         assertThat(x.getStart()).isEqualTo(start);
@@ -138,89 +136,181 @@ public class TsDataTest {
         assertThat(random.getValues().allMatch(x -> x >= 100)).isTrue();
     }
 
-    @Test
-    public void testAggregationNoRatio() {
-        TsData ts = monthlyTs(DEFAULT_EPOCH.plusYears(40), 24);
-        assertThatExceptionOfType(TsException.class).isThrownBy(() ->ts.aggregate(DAY, First, true));
-    }
+    @Nested
+    public class AggregationTest {
 
-    @Test
-    public void testAggregationNoChange() {
-        TsData ts = monthlyTs(DEFAULT_EPOCH.plusYears(40), 24);
-        assertThat(ts.aggregate(MONTH, First, true)).isEqualTo(ts);
-    }
+        @Test
+        public void testNoRatio() {
+            TsData x = dataOf("R24/2010-01-01T00:00:00/P1M");
 
-    @Test
-    public void testAggregationCompleteAfterEpoch() {
-        TsData ts = monthlyTs(DEFAULT_EPOCH.plusYears(40), 24);
+            assertThatExceptionOfType(TsException.class)
+                    .isThrownBy(() -> x.aggregate(DAY, First, true));
+        }
 
-        assertThat(ts.aggregate(YEAR, First, false)).containsExactly(y(2010, 1), y(2011, 13));
-        assertThat(ts.aggregate(YEAR, First, true)).containsExactly(y(2010, 1), y(2011, 13));
+        @Test
+        public void testNoChange() {
+            TsData x = dataOf("R24/2010-01-01T00:00:00/P1M");
 
-        assertThat(ts.aggregate(YEAR, Last, false)).containsExactly(y(2010, 12), y(2011, 24));
-        assertThat(ts.aggregate(YEAR, Last, true)).containsExactly(y(2010, 12), y(2011, 24));
+            assertThatObject(x.aggregate(MONTH, First, true))
+                    .isEqualTo(x);
+        }
 
-        assertThat(ts.aggregate(QUARTER, First, false)).startsWith(q1(2010, 1), q2(2010, 4)).hasSize(8);
-        assertThat(ts.aggregate(QUARTER, First, true)).startsWith(q1(2010, 1), q2(2010, 4)).hasSize(8);
-    }
+        @Test
+        public void testCompleteAfterEpoch() {
+            TsData x = dataOf("R24/2010-01-01T00:00:00/P1M");
 
-    @Test
-    public void testAggregationIncompleteAfterEpoch() {
-        TsData ts = monthlyTs(DEFAULT_EPOCH.plusYears(40).plusMonths(1), 24);
+            assertThatObject(x.aggregate(YEAR, First, false))
+                    .isEqualTo(x.aggregate(YEAR, First, true))
+                    .returns("R2/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(1, 13), TsData::getValues);
 
-        assertThat(ts.aggregate(YEAR, First, false)).containsExactly(y(2010, 2), y(2011, 13), y(2012, 25));
-        assertThat(ts.aggregate(YEAR, First, true)).containsExactly(y(2011, 13));
+            assertThatObject(x.aggregate(YEAR, Last, false))
+                    .isEqualTo(x.aggregate(YEAR, Last, true))
+                    .returns("R2/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(12, 24), TsData::getValues);
 
-        assertThat(ts.aggregate(YEAR, Last, false)).containsExactly(y(2010, 12), y(2011, 24), y(2012, 25));
-        assertThat(ts.aggregate(YEAR, Last, true)).containsExactly(y(2011, 24));
+            assertThatObject(x.aggregate(QUARTER, First, false))
+                    .isEqualTo(x.aggregate(QUARTER, First, true))
+                    .returns("R8/2010-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(1, 4, 7, 10, 13, 16, 19, 22), TsData::getValues);
+        }
 
-        assertThat(ts.aggregate(QUARTER, First, false)).startsWith(q1(2010, 2), q2(2010, 4)).hasSize(9);
-        assertThat(ts.aggregate(QUARTER, First, true)).startsWith(q2(2010, 4), q3(2010, 7)).hasSize(7);
+        @Test
+        public void testIncompleteAfterEpoch() {
+            TsData x = dataOf("R24/2010-02-01T00:00:00/P1M");
 
-        TsData ts11 = monthlyTs(LocalDate.of(2010, 1, 1), 11);
-        assertThat(ts11.aggregate(YEAR, First, false)).containsExactly(y(2010, 1));
-        assertThat(ts11.aggregate(YEAR, First, true)).isEmpty();
-    }
+            assertThatObject(x.aggregate(YEAR, First, false))
+                    .returns("R3/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(2, 13, 25), TsData::getValues);
 
-    @Test
-    public void testAggregationCompleteBeforeEpoch() {
-        TsData ts = monthlyTs(DEFAULT_EPOCH.minusYears(1), 24);
+            assertThatObject(x.aggregate(YEAR, First, true))
+                    .returns("R1/2011-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(13), TsData::getValues);
 
-        assertThat(ts.aggregate(YEAR, First, false)).containsExactly(y(1969, 1), y(1970, 13));
-        assertThat(ts.aggregate(YEAR, First, true)).containsExactly(y(1969, 1), y(1970, 13));
+            assertThatObject(x.aggregate(YEAR, Last, false))
+                    .returns("R3/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(12, 24, 25), TsData::getValues);
 
-        assertThat(ts.aggregate(YEAR, Last, false)).containsExactly(y(1969, 12), y(1970, 24));
-        assertThat(ts.aggregate(YEAR, Last, true)).containsExactly(y(1969, 12), y(1970, 24));
+            assertThatObject(x.aggregate(YEAR, Last, true))
+                    .returns("R1/2011-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(24), TsData::getValues);
 
-        assertThat(ts.aggregate(QUARTER, First, false)).startsWith(q1(1969, 1), q2(1969, 4)).hasSize(8);
-        assertThat(ts.aggregate(QUARTER, First, true)).startsWith(q1(1969, 1), q2(1969, 4)).hasSize(8);
-    }
+            assertThatObject(x.aggregate(QUARTER, First, false))
+                    .returns("R9/2010-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(2, 4, 7, 10, 13, 16, 19, 22, 25), TsData::getValues);
 
-    @Test
-    public void testAggregationIncompleteBeforeEpoch() {
-        TsData ts = monthlyTs(DEFAULT_EPOCH.minusYears(1).plusMonths(1), 24);
+            assertThatObject(x.aggregate(QUARTER, First, true))
+                    .returns("R7/2010-04-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(4, 7, 10, 13, 16, 19, 22), TsData::getValues);
+        }
 
-        assertThat(ts.aggregate(YEAR, First, false)).containsExactly(y(1969, 2), y(1970, 13), y(1971, 25));
-        assertThat(ts.aggregate(YEAR, First, true)).containsExactly(y(1970, 13));
+        @Test
+        public void testPartialAfterEpoch() {
+            TsData x = dataOf("R11/2010-01-01T00:00:00/P1M");
 
-        assertThat(ts.aggregate(YEAR, Last, false)).containsExactly(y(1969, 12), y(1970, 24), y(1971, 25));
-        assertThat(ts.aggregate(YEAR, Last, true)).containsExactly(y(1970, 24));
+            assertThatObject(x.aggregate(YEAR, First, false))
+                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(1), TsData::getValues);
 
-        assertThat(ts.aggregate(QUARTER, First, false)).startsWith(q1(1969, 2), q2(1969, 4)).hasSize(9);
-        assertThat(ts.aggregate(QUARTER, First, true)).startsWith(q2(1969, 4), q3(1969, 7)).hasSize(7);
+            assertThatObject(x.aggregate(YEAR, First, true))
+                    .returns("R0/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(Doubles.EMPTY, TsData::getValues);
 
-        TsData ts11 = monthlyTs(DEFAULT_EPOCH.minusYears(1), 11);
-        assertThat(ts11.aggregate(YEAR, First, false)).containsExactly(y(1969, 1));
-        assertThat(ts11.aggregate(YEAR, First, true)).isEmpty();
-    }
-    
-    @Test
-    public void testAggregationByPosition() {
-        TsData ts = monthlyTs(DEFAULT_EPOCH.plusMonths(1), 61);
-        assertThat(ts.aggregateByPosition(YEAR, 3)).hasSize(5);
-        assertThat(ts.aggregateByPosition(YEAR, 0)).hasSize(5);
-        assertThat(ts.aggregateByPosition(YEAR, 11)).hasSize(5);
-        assertThat(ts.aggregateByPosition(YEAR, 1)).hasSize(6);
+            assertThatObject(TsData.ofInternal(TsPeriod.monthly(2010, 1), new double[]{1, 2, 3}).aggregate(YEAR, Sum, false))
+                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(6), TsData::getValues);
+
+            assertThatObject(TsData.ofInternal(TsPeriod.monthly(2010, 9), new double[]{1, 2, 3}).aggregate(YEAR, Sum, false))
+                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(6), TsData::getValues);
+
+            assertThatObject(TsData.ofInternal(TsPeriod.monthly(2010, 10), new double[]{1, 2, 3}).aggregate(YEAR, Sum, false))
+                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(6), TsData::getValues);
+        }
+
+        @Test
+        public void testCompleteBeforeEpoch() {
+            TsData x = dataOf("R24/1969-01-01T00:00:00/P1M");
+
+            assertThatObject(x.aggregate(YEAR, First, false))
+                    .isEqualTo(x.aggregate(YEAR, First, true))
+                    .returns("R2/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(1, 13), TsData::getValues);
+
+            assertThatObject(x.aggregate(YEAR, Last, false))
+                    .isEqualTo(x.aggregate(YEAR, Last, true))
+                    .returns("R2/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(12, 24), TsData::getValues);
+
+            assertThatObject(x.aggregate(QUARTER, First, false))
+                    .isEqualTo(x.aggregate(QUARTER, First, true))
+                    .returns("R8/1969-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(1, 4, 7, 10, 13, 16, 19, 22), TsData::getValues);
+        }
+
+        @Test
+        public void testIncompleteBeforeEpoch() {
+            TsData x = dataOf("R24/1969-02-01T00:00:00/P1M");
+
+            assertThatObject(x.aggregate(YEAR, First, false))
+                    .returns("R3/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(2, 13, 25), TsData::getValues);
+
+            assertThatObject(x.aggregate(YEAR, First, true))
+                    .returns("R1/1970-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(13), TsData::getValues);
+
+            assertThatObject(x.aggregate(YEAR, Last, false))
+                    .returns("R3/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(12, 24, 25), TsData::getValues);
+
+            assertThatObject(x.aggregate(YEAR, Last, true))
+                    .returns("R1/1970-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(24), TsData::getValues);
+
+            assertThatObject(x.aggregate(QUARTER, First, false))
+                    .returns("R9/1969-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(2, 4, 7, 10, 13, 16, 19, 22, 25), TsData::getValues);
+
+            assertThatObject(x.aggregate(QUARTER, First, true))
+                    .returns("R7/1969-04-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(4, 7, 10, 13, 16, 19, 22), TsData::getValues);
+        }
+
+        @Test
+        public void testPartialBeforeEpoch() {
+            TsData x = dataOf("R11/1969-01-01T00:00:00/P1M");
+
+            assertThatObject(x.aggregate(YEAR, First, false))
+                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(1), TsData::getValues);
+
+            assertThatObject(x.aggregate(YEAR, First, true))
+                    .returns("R0/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(Doubles.EMPTY, TsData::getValues);
+
+            assertThatObject(TsData.ofInternal(TsPeriod.monthly(1969, 1), new double[]{1, 2, 3}).aggregate(YEAR, Sum, false))
+                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(6), TsData::getValues);
+
+            assertThatObject(TsData.ofInternal(TsPeriod.monthly(1969, 9), new double[]{1, 2, 3}).aggregate(YEAR, Sum, false))
+                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(6), TsData::getValues);
+
+            assertThatObject(TsData.ofInternal(TsPeriod.monthly(1969, 10), new double[]{1, 2, 3}).aggregate(YEAR, Sum, false))
+                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns(DoubleSeq.of(6), TsData::getValues);
+        }
+
+        @Test
+        public void testByPosition() {
+            TsData x = dataOf("R61/1970-02-01T00:00:00/P1M");
+            assertThat(x.aggregateByPosition(YEAR, 3)).hasSize(5);
+            assertThat(x.aggregateByPosition(YEAR, 0)).hasSize(5);
+            assertThat(x.aggregateByPosition(YEAR, 11)).hasSize(5);
+            assertThat(x.aggregateByPosition(YEAR, 1)).hasSize(6);
+        }
     }
 
     @Test
@@ -309,28 +399,13 @@ public class TsDataTest {
         TsData end = TsData.ofInternal(TsPeriod.quarterly(1999, 1), new double[]{0, 1, 2});
         assertThatThrownBy(() -> TsData.update(start, end)).isInstanceOf(TsException.class).hasMessageContaining("Incompatible frequencies");
     }
-    
-    private static TsData monthlyTs(LocalDateTime start, int count) {
-        return TsData.of(TsPeriod.of(TsUnit.MONTH, start), DoubleSeq.onMapping(count, i -> i + start.getMonthValue()));
+
+    private static String getDomainAsString(TsData data) {
+        return data.getDomain().toString();
     }
 
-    private static TsData monthlyTs(LocalDate start, int count) {
-        return TsData.of(TsPeriod.of(TsUnit.MONTH, start), DoubleSeq.onMapping(count, i -> i + start.getMonthValue()));
-    }
-
-    private static TsObs y(int year, double val) {
-        return TsObs.of(TsPeriod.yearly(year), val);
-    }
-
-    private static TsObs q1(int year, double val) {
-        return TsObs.of(TsPeriod.quarterly(year, 1), val);
-    }
-
-    private static TsObs q2(int year, double val) {
-        return TsObs.of(TsPeriod.quarterly(year, 2), val);
-    }
-
-    private static TsObs q3(int year, double val) {
-        return TsObs.of(TsPeriod.quarterly(year, 3), val);
+    private static TsData dataOf(String domain) {
+        TsDomain value = TsDomain.parse(domain);
+        return TsData.of(value.getStartPeriod(), DoubleSeq.onMapping(value.getLength(), i -> i + value.getStartPeriod().start().getMonthValue()));
     }
 }

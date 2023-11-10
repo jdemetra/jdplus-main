@@ -14,6 +14,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- ![STAT] Fix TsData aggregation on limited data
 - ![UI] Fix action IDs to prevent conflicts
 
 ## [3.1.1] - 2023-10-11
