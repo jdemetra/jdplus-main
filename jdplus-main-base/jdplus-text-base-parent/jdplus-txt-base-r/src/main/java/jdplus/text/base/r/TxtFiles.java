@@ -17,6 +17,7 @@
 package jdplus.text.base.r;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
 
 /**
  *
@@ -102,10 +104,21 @@ public class TxtFiles {
         }
     }
 
-    public Ts series(DataSource source, int series) throws Exception {
+    public String seriesIdentifier(DataSource source, int series) throws IllegalArgumentException, IOException {
         TxtProvider currentProvider = currentProvider();
         if (currentProvider == null) {
-            throw new Exception("TxtProvider is not available");
+            throw new RuntimeException("TxtProvider is not available");
+        }
+        DataSet.Converter<Integer> seriesParam = PropertyHandler.onInteger("seriesIndex", -1).asDataSetConverter();
+        DataSet.Builder builder = DataSet.builder(source, DataSet.Kind.SERIES);
+        seriesParam.set(builder, series-1);
+        return currentProvider.toMoniker(builder.build()).getId();
+    }
+
+    public Ts series(DataSource source, int series) throws IllegalArgumentException, IOException {
+        TxtProvider currentProvider = currentProvider();
+        if (currentProvider == null) {
+            throw new RuntimeException("TxtProvider is not available");
         }
         try {
             currentProvider.open(source);
@@ -164,7 +177,7 @@ public class TxtFiles {
 
     public DataSet seriesDataSet(DataSource source, int series) {
         return DataSet.builder(source, DataSet.Kind.SERIES)
-                .parameter("seriesIndex", Integer.toString(series-1))
+                .parameter("seriesIndex", Integer.toString(series - 1))
                 .build();
     }
 }

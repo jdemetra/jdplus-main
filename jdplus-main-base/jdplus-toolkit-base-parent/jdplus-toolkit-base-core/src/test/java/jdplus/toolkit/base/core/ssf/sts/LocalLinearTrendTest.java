@@ -18,7 +18,6 @@ package jdplus.toolkit.base.core.ssf.sts;
 
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.ssf.StateComponent;
-import jdplus.toolkit.base.core.ssf.sts.LocalLinearTrend;
 import jdplus.toolkit.base.core.ssf.utility.DynamicsCoherence;
 import jdplus.toolkit.base.core.ssf.utility.LoadingCoherence;
 import org.junit.Test;

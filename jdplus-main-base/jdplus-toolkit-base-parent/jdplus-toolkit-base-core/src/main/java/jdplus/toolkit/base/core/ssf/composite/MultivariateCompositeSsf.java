@@ -16,9 +16,15 @@ import jdplus.toolkit.base.core.ssf.multivariate.MultivariateSsf;
 import java.util.ArrayList;
 import java.util.List;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.ssf.basic.Loading;
+import jdplus.toolkit.base.core.ssf.basic.MeasurementError;
 import jdplus.toolkit.base.core.ssf.basic.Measurements;
 import jdplus.toolkit.base.core.ssf.basic.MeasurementsError;
+import jdplus.toolkit.base.core.ssf.multivariate.M2uAdapter;
+import jdplus.toolkit.base.core.ssf.univariate.ISsf;
+import jdplus.toolkit.base.core.ssf.univariate.ISsfError;
+import jdplus.toolkit.base.core.ssf.univariate.Measurement;
 
 /**
  *
@@ -33,6 +39,31 @@ public class MultivariateCompositeSsf extends MultivariateSsf {
         super(initializer, dynamics, measurements);
         this.pos = pos;
         this.dim = dim;
+    }
+
+    public ISsf asSsf() {
+//        ISsfMeasurements ms = measurements();
+//        if (ms.getCount() == 1) {
+//            ISsfLoading loading = ms.loading(0);
+//            ISsfError err = null;
+//            ISsfErrors errors = ms.errors();
+//            if (errors != null) {
+//                FastMatrix tmp = FastMatrix.make(1, 1);
+//                if (errors.isTimeInvariant()) {
+//                    errors.H(0, tmp);
+//                    err = MeasurementError.of(tmp.get(0, 0));
+//                } else {
+//                    err = MeasurementError.of(
+//                            i -> {
+//                                errors.H(i, tmp);
+//                                return tmp.get(0, 0);
+//                            });
+//                }
+//            }
+//            return new CompositeSsf(pos, dim, this.initialization(), this.dynamics(), new Measurement(loading, err));
+//        } else {
+            return M2uAdapter.of(this);
+//        }
     }
 
     public int[] componentsPosition() {

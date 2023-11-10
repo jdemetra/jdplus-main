@@ -48,6 +48,7 @@ public class SsfData implements ISsfData  {
         data.copyTo(buffer, start);
     }
 
+    @Override
     public DoubleSeq extract(int start, int length) {
         return data.extract(start, length);
     }
