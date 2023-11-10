@@ -16,6 +16,9 @@
  */
 package jdplus.toolkit.base.core.math.linearfilters;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+
 /**
  *
  * @author PALATEJ
@@ -47,5 +50,15 @@ public class QuasiSymmetricFiltering implements IQuasiSymmetricFiltering {
         return rf.clone();
     }
 
+    public static QuasiSymmetricFiltering of(DoubleSeq cf, Matrix lf, Matrix rf) {
+        int l = rf.getColumnsCount();
+        if (cf.length() != 2 * l + 1) {
+            throw new IllegalArgumentException();
+        }
+        SymmetricFilter fcf = SymmetricFilter.of(cf);
+        IFiniteFilter[] flf = Filtering.leftFilters(lf);
+        IFiniteFilter[] frf = Filtering.rightFilters(rf);
+        return new QuasiSymmetricFiltering(fcf, flf, frf);
+    }
 
 }

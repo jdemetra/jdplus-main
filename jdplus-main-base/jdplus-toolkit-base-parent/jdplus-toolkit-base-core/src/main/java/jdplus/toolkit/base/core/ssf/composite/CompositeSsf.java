@@ -28,7 +28,7 @@ public class CompositeSsf extends Ssf {
     private final int[] pos;
     private final int[] dim;
 
-    private CompositeSsf(int[] cmpPos, int[] cmpDim, ISsfInitialization init, ISsfDynamics dynamics, ISsfMeasurement measurement) {
+    CompositeSsf(int[] cmpPos, int[] cmpDim, ISsfInitialization init, ISsfDynamics dynamics, ISsfMeasurement measurement) {
         super(init, dynamics, measurement);
         this.pos = cmpPos;
         this.dim = cmpDim;

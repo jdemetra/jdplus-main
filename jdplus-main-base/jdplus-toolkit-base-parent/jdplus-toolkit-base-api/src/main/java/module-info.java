@@ -36,6 +36,7 @@ module jdplus.toolkit.base.api {
     exports jdplus.toolkit.base.api.modelling.regular;
     exports jdplus.toolkit.base.api.processing;
     exports jdplus.toolkit.base.api.ssf;
+    exports jdplus.toolkit.base.api.ssf.sts;
     exports jdplus.toolkit.base.api.stats;
     exports jdplus.toolkit.base.api.time;
     exports jdplus.toolkit.base.api.timeseries;

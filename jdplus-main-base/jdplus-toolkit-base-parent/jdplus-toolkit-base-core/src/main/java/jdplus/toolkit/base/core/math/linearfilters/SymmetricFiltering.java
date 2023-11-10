@@ -17,7 +17,8 @@
 package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 
 /**
  *
@@ -43,5 +44,14 @@ public class SymmetricFiltering implements ISymmetricFiltering {
         return ff;
     }
 
+    public static SymmetricFiltering of(DoubleSeq cf, Matrix rf) {
+        int l = rf.getColumnsCount();
+        if (cf.length() != 2 * l + 1) {
+            throw new IllegalArgumentException();
+        }
+        SymmetricFilter fcf = SymmetricFilter.of(cf);
+        IFiniteFilter[] frf = Filtering.rightFilters(rf);
+        return new SymmetricFiltering(fcf, frf);
+    }
 
 }

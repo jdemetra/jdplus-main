@@ -116,7 +116,7 @@ public class GenericTradingDaysFactory implements RegressionVariableFactory<Gene
         if (var.isContrast()) {
             dataContrast(var.getClustering(), start, buffer);
         } else {
-            dataNoContrast(var.getClustering(), true, start, buffer);
+            dataNoContrast(var.getClustering(), false, start, buffer);
         }
         return true;
     }

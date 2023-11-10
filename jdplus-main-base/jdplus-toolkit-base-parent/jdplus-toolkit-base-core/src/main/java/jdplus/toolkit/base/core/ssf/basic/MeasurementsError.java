@@ -111,7 +111,7 @@ public class MeasurementsError {
 
         @Override
         public void addH(int pos, FastMatrix V) {
-            V.diagonal().apply(pos, x -> x + v[pos]);
+            V.diagonal().add(t -> v[t]);
         }
 
         @Override
