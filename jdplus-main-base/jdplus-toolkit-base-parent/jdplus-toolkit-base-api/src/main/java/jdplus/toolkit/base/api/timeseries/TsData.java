@@ -73,7 +73,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
      * @return
      */
     @StaticFactoryMethod
-    public static TsData of(@NonNull TsPeriod start, @NonNull DoubleSeq values) {
+    public static @NonNull TsData of(@NonNull TsPeriod start, @NonNull DoubleSeq values) {
         TsDomain domain = TsDomain.of(start, values.length());
         return domain.isEmpty()
                 ? new TsData(domain, Doubles.EMPTY, NO_DATA_CAUSE)
@@ -81,7 +81,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
     }
 
     @StaticFactoryMethod
-    public static TsData copyOf(@NonNull TsPeriod start, DoubleSeq.Mutable values) {
+    public static @NonNull TsData copyOf(@NonNull TsPeriod start, DoubleSeq.Mutable values) {
         TsDomain domain = TsDomain.of(start, values.length());
         return domain.isEmpty()
                 ? new TsData(domain, Doubles.EMPTY, NO_DATA_CAUSE)
@@ -89,8 +89,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
     }
 
     @StaticFactoryMethod
-    public static @NonNull
-    TsData ofInternal(@NonNull TsPeriod start, @NonNull double[] values) {
+    public static @NonNull TsData ofInternal(@NonNull TsPeriod start, @NonNull double[] values) {
         TsDomain domain = TsDomain.of(start, values.length);
         return domain.isEmpty()
                 ? new TsData(domain, Doubles.EMPTY, NO_DATA_CAUSE)
@@ -240,7 +239,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
      * series
      *
      * @param start Index of the start
-     * @param n Number of obs being extracted
+     * @param n     Number of obs being extracted
      * @return
      */
     public TsData extract(@NonNegative int start, @NonNegative int n) {
@@ -271,7 +270,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
      *
      * @param s
      * @param domain The domain of the new series. Must have the same frequency
-     * than the original series.
+     *               than the original series.
      * @return A new (possibly empty) series is returned (or null if the domain
      * hasn't the right frequency.
      */
@@ -508,7 +507,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
      * domain the union of both domains.
      *
      * @param start The update series
-     * @param end The updating series.
+     * @param end   The updating series.
      * @return The updated series. Null if the series don't have the same
      * frequency.
      */
@@ -641,14 +640,14 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
     /**
      * Makes a frequency change of this series.
      *
-     * @param newUnit The new frequency. Must be la divisor of the present
-     * frequency.
+     * @param newUnit    The new frequency. Must be la divisor of the present
+     *                   frequency.
      * @param conversion Aggregation mode.
-     * @param complete If true, the observation for a given period in the new
-     * series is set to Missing if some data in the original series are Missing.
+     * @param complete   If true, the observation for a given period in the new
+     *                   series is set to Missing if some data in the original series are Missing.
      * @return A new time series is returned.
      */
-    public TsData aggregate(@NonNull TsUnit newUnit, @NonNull AggregationType conversion, boolean complete) {
+    public @NonNull TsData aggregate(@NonNull TsUnit newUnit, @NonNull AggregationType conversion, boolean complete) throws TsException {
         int ratio = this.getTsUnit().ratioOf(newUnit);
         switch (ratio) {
             case TsUnit.NO_STRICT_RATIO:
@@ -657,13 +656,13 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
             case 1:
                 return this;
         }
-        if (this.isEmpty()) {
-            return TsData.of(this.getStart().withUnit(newUnit), this.getValues());
+        if (isEmpty()) {
+            return TsData.of(getStart().withUnit(newUnit), getValues());
         }
-        return changeUsingRatio(this, newUnit, InternalAggregator.of(conversion), ratio, complete);
+        return aggregateUsingRatio(this, newUnit, conversion, ratio, complete);
     }
 
-    public TsData aggregateByPosition(@NonNull TsUnit newUnit, int position) {
+    public @NonNull TsData aggregateByPosition(@NonNull TsUnit newUnit, int position) throws TsException {
         int ratio = this.getTsUnit().ratioOf(newUnit);
         switch (ratio) {
             case TsUnit.NO_STRICT_RATIO:
@@ -675,36 +674,44 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
         if (position < 0 || position >= ratio) {
             throw new IllegalArgumentException();
         }
-        if (this.isEmpty()) {
-            return TsData.of(this.getStart().withUnit(newUnit), Doubles.of(this.getValues()));
+        if (isEmpty()) {
+            return TsData.of(getStart().withUnit(newUnit), getValues());
         }
-        int oldLength = length();
-        TsPeriod start = getStart(), nstart = start.withUnit(newUnit);
-        int spos = TsDomain.splitOf(nstart, start.getUnit(), false).indexOf(start);
-        int head = position - spos;
-        if (head < 0) {
-            head += ratio;
-            nstart = nstart.next();
-        }
-        int nlength = 1 + (oldLength - head - 1) / ratio;
-        return TsData.ofInternal(nstart, values.extract(head, nlength, ratio).toArray());
+        return aggregateByPositionUsingRatio(this, newUnit, position, ratio);
     }
 
-    private static TsData changeUsingRatio(TsData s, TsUnit newUnit, InternalAggregator aggregator, int ratio, boolean complete) {
-        int oldLength = s.length();
-        TsPeriod start = s.getStart(), nstart = start.withUnit(newUnit);
-        int spos = TsDomain.splitOf(nstart, start.getUnit(), false).indexOf(start);
-        int head = spos > 0 ? ratio - spos : 0;
+    private static TsData aggregateUsingRatio(TsData data, TsUnit newUnit, AggregationType conversion, int ratio, boolean complete) {
+        int oldLength = data.length();
+        TsPeriod oldStart = data.getStart();
+        TsPeriod newStart = oldStart.withUnit(newUnit);
+        int offset = getAggregationOffset(newStart, oldStart);
+        int head = offset > 0 ? Math.min(ratio - offset, oldLength) : 0;
         int tail = (oldLength - head) % ratio;
         int body = oldLength - head - tail;
         if (complete && head > 0) {
-            nstart = nstart.next();
+            newStart = newStart.next();
         }
-        DoubleSeq newValues = aggregate(s.getValues(), aggregator, complete, ratio, head, body, tail);
-        return TsData.of(nstart, newValues);
+        return TsData.of(newStart, aggregateUsingRatio(data.getValues(), InternalAggregator.of(conversion), complete, ratio, head, body, tail));
     }
 
-    private static DoubleSeq aggregate(DoubleSeq values, InternalAggregator aggregator, boolean complete, int ratio, int head, int body, int tail) {
+    private static TsData aggregateByPositionUsingRatio(TsData data, TsUnit newUnit, int position, int ratio) {
+        int oldLength = data.length();
+        TsPeriod oldStart = data.getStart();
+        TsPeriod newStart = oldStart.withUnit(newUnit);
+        int offset = getAggregationOffset(newStart, oldStart);
+        int head = position - offset;
+        if (head < 0) {
+            head += ratio;
+            newStart = newStart.next();
+        }
+        return TsData.of(newStart, aggregateByPositionUsingRatio(data.getValues(), ratio, head, oldLength));
+    }
+
+    private static int getAggregationOffset(TsPeriod newStart, TsPeriod oldStart) {
+        return TsDomain.splitOf(newStart, oldStart.getUnit(), false).indexOf(oldStart);
+    }
+
+    private static DoubleSeq aggregateUsingRatio(DoubleSeq values, InternalAggregator aggregator, boolean complete, int ratio, int head, int body, int tail) {
         boolean appendHead = !complete && head > 0;
         boolean appendTail = !complete && tail > 0;
 
@@ -728,5 +735,10 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
         }
 
         return DoubleSeq.of(safeArray);
+    }
+
+    private static DoubleSeq aggregateByPositionUsingRatio(DoubleSeq values, int ratio, int head, int oldLength) {
+        int length = 1 + (oldLength - head - 1) / ratio;
+        return Doubles.of(values.extract(head, length, ratio));
     }
 }
