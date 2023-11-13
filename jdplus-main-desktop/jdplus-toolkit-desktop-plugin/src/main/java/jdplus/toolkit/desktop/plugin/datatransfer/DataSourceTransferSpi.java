@@ -23,7 +23,7 @@ import java.awt.datatransfer.Transferable;
 import java.util.Optional;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Class that can produce a DataSource from a Transferable. To be used through

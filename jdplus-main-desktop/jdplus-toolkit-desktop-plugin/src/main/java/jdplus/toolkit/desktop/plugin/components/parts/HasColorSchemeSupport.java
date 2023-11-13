@@ -21,7 +21,7 @@ import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.swing.ColorSchemeIcon;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;

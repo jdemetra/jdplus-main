@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.html;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

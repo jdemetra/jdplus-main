@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.beans;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.util.WeakListeners;
 
 import java.beans.PropertyChangeListener;

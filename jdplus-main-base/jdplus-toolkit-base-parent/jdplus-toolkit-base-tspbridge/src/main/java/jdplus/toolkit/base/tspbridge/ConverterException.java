@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.base.tspbridge;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.Locale;
 import java.util.Objects;

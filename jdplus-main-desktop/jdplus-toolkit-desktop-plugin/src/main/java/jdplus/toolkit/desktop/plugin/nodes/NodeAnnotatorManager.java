@@ -3,7 +3,7 @@ package jdplus.toolkit.desktop.plugin.nodes;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.nodes.Node;
 
 import java.awt.*;

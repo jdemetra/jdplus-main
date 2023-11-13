@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin;
 
 import nbbrd.design.swing.OnEDT;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.nodes.Sheet;
 

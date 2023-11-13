@@ -19,7 +19,7 @@ package jdplus.toolkit.desktop.plugin.core.components;
 import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
 import jdplus.toolkit.desktop.plugin.components.JTsGrid;
 import ec.util.various.swing.JCommand;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.util.EnumMap;

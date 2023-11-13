@@ -3,7 +3,7 @@ package jdplus.toolkit.base.tspbridge;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.FileBean;
 import jdplus.toolkit.base.tsp.FileLoader;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;

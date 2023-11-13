@@ -21,7 +21,7 @@ import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import ec.util.completion.swing.JAutoCompletion;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.text.JTextComponent;
 

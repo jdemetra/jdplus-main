@@ -20,7 +20,7 @@ import internal.toolkit.base.api.data.InternalSeq;
 import internal.toolkit.base.api.data.InternalSeqCursor;
 import nbbrd.design.Development;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.*;
 import java.util.function.Consumer;

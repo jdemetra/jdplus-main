@@ -25,7 +25,7 @@ import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import nbbrd.design.BuilderPattern;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.api.stats.TestType;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.core.stats.tests.TestsUtility;

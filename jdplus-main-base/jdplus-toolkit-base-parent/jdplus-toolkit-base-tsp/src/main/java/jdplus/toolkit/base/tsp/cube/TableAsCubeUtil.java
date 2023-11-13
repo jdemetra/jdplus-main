@@ -21,7 +21,7 @@ import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 
 import java.util.Locale;
 import java.util.stream.Collector;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

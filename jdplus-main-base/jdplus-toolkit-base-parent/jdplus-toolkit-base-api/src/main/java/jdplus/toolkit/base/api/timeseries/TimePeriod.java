@@ -21,7 +21,7 @@ import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

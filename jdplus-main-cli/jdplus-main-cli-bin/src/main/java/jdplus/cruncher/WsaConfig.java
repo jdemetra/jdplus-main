@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import nbbrd.io.WrappedIOException;
 import nbbrd.io.xml.bind.Jaxb;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

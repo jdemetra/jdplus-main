@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin.nodes;
 
 import jdplus.toolkit.base.api.util.TreeTraverser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.nodes.Node;
 import org.openide.util.Utilities;
 

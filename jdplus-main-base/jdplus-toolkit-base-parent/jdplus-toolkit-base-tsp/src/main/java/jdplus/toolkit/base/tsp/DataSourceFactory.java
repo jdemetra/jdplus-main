@@ -2,7 +2,7 @@ package jdplus.toolkit.base.tsp;
 
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.tsp.fixme.Files2;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,18 +87,15 @@ public interface DataSourceFactory extends TsFactory {
     default Optional<Ts> getTs(@NonNull DataSet dataSet, @NonNull TsInformationType info) {
         return getProvider(DataSourceProvider.class, dataSet)
                 .map(provider -> {
-                    switch (dataSet.getKind()) {
-                        case SERIES: {
-                            TsMoniker moniker = provider.toMoniker(dataSet);
-                            try {
-                                return provider.getTs(moniker, info);
-                            } catch (IOException ex) {
-                                return makeTs(moniker, ex);
-                            }
+                    if (dataSet.getKind() == DataSet.Kind.SERIES) {
+                        TsMoniker moniker = provider.toMoniker(dataSet);
+                        try {
+                            return provider.getTs(moniker, info);
+                        } catch (IOException ex) {
+                            return makeTs(moniker, ex);
                         }
-                        default:
-                            throw new RuntimeException("Not implemented");
                     }
+                    throw new RuntimeException("Not implemented");
                 });
     }
 

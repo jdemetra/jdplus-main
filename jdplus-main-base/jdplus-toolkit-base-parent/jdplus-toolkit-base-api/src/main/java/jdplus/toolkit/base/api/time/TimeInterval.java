@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.api.time;
 
 import jdplus.toolkit.base.api.data.Range;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;

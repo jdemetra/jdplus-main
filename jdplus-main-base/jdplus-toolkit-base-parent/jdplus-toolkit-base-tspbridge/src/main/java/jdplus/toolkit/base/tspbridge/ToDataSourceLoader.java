@@ -2,7 +2,7 @@ package jdplus.toolkit.base.tspbridge;
 
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceLoader;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 public class ToDataSourceLoader extends ToDataSourceProvider implements DataSourceLoader {
 

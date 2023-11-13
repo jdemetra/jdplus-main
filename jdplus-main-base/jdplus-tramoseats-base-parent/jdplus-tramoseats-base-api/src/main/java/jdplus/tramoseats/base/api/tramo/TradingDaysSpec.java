@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
 import nbbrd.design.Development;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

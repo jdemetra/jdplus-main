@@ -5,7 +5,7 @@ import jdplus.toolkit.desktop.plugin.components.JHtmlView;
 import jdplus.toolkit.desktop.plugin.components.parts.HasZoomRatioSupport;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import ec.util.various.swing.JCommand;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;

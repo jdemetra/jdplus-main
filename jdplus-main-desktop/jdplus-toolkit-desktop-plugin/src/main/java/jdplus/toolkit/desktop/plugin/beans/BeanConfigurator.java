@@ -3,7 +3,7 @@ package jdplus.toolkit.desktop.plugin.beans;
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.ConfigEditor;
 import jdplus.toolkit.desktop.plugin.Converter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.util.Exceptions;
 
 @lombok.AllArgsConstructor

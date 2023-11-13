@@ -22,7 +22,7 @@ import jdplus.toolkit.desktop.plugin.TsCollectable;
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import nbbrd.design.ClassNameConstant;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;

@@ -19,7 +19,7 @@ package jdplus.toolkit.desktop.plugin.util;
 import jdplus.toolkit.desktop.plugin.notification.MessageType;
 import jdplus.toolkit.desktop.plugin.notification.NotifyUtil;
 import nbbrd.design.LombokWorkaround;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

@@ -20,7 +20,7 @@ import nbbrd.design.LombokWorkaround;
 import nbbrd.design.VisibleForTesting;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.text.*;

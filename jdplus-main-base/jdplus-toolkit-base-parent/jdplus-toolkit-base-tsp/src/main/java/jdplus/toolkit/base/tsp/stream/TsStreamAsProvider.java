@@ -22,7 +22,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import nbbrd.design.ThreadSafe;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

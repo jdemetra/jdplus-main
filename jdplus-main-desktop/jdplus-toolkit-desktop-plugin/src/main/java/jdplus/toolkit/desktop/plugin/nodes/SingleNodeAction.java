@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.actions.NodeAction;

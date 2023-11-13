@@ -1,7 +1,7 @@
 package jdplus.toolkit.desktop.plugin;
 
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.EventObject;
 import java.util.Objects;

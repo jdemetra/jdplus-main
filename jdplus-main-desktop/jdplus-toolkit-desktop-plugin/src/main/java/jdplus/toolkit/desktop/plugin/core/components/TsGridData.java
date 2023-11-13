@@ -21,7 +21,7 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import ec.util.chart.ObsIndex;
 import java.util.Collections;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.List;
 

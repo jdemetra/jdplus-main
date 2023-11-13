@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin.util;
 
 import java.beans.PropertyChangeListener;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

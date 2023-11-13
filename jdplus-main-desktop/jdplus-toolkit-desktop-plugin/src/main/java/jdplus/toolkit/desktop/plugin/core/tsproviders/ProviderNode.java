@@ -30,7 +30,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceListener;
 import jdplus.toolkit.base.tsp.DataSourceLoader;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

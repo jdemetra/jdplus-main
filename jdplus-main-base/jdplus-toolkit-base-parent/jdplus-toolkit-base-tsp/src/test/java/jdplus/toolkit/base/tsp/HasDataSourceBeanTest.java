@@ -21,7 +21,7 @@ import jdplus.toolkit.base.tsp.HasDataSourceBean;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

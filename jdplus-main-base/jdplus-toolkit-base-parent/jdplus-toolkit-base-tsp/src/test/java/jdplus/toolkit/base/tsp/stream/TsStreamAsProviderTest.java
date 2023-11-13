@@ -22,7 +22,7 @@ import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
 import internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -107,11 +107,10 @@ public class TsStreamAsProviderTest {
         HasTsStream noOpCursor = HasTsStream.noOp(provider);
 
         assertThatThrownBy(() -> TsStreamAsProvider.of(provider, null, monikers, doNothing))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("HasTsCursor");
+                .isInstanceOf(NullPointerException.class);
+
         assertThatThrownBy(() -> TsStreamAsProvider.of(provider, noOpCursor, null, doNothing))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessageContaining("HasDataMoniker");
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test

@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.api.data;
 
 import nbbrd.design.Development;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

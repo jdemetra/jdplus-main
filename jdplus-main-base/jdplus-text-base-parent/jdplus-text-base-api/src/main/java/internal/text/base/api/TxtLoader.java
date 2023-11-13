@@ -12,7 +12,7 @@ import nbbrd.io.Resource;
 import nbbrd.io.picocsv.Picocsv;
 import nbbrd.io.text.TextParser;
 import nbbrd.picocsv.Csv;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.EnumSet;

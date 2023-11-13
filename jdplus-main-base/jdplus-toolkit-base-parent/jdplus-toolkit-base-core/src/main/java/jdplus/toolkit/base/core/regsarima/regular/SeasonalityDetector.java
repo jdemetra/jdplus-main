@@ -19,7 +19,7 @@ package jdplus.toolkit.base.core.regsarima.regular;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import nbbrd.design.Development;
 import nbbrd.design.RepresentableAsInt;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

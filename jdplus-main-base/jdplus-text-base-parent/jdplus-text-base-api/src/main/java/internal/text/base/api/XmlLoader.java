@@ -6,7 +6,7 @@ import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.tsp.HasFilePaths;
 import jdplus.toolkit.base.tsp.fixme.Strings;
 import nbbrd.io.xml.Stax;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;

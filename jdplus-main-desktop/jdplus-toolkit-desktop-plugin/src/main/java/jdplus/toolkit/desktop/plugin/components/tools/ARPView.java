@@ -32,7 +32,7 @@ import jdplus.toolkit.desktop.plugin.components.parts.*;
 import jdplus.toolkit.desktop.plugin.jfreechart.MatrixChartCommand;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;

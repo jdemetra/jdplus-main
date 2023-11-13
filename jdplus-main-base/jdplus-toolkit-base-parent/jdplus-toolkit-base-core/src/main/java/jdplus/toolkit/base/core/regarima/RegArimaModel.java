@@ -28,7 +28,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
 import nbbrd.design.Immutable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Description of a generic regarima model

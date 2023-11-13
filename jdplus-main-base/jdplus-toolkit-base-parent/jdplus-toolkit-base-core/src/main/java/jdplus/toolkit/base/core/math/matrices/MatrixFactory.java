@@ -11,7 +11,7 @@ import jdplus.toolkit.base.core.data.DataBlockIterator;
 import java.util.Arrays;
 import java.util.function.DoublePredicate;
 import jdplus.toolkit.base.core.data.DataBlock;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
@@ -107,7 +107,7 @@ public class MatrixFactory {
         return s;
     }
 
-    public static FastMatrix selectRows(FastMatrix m, @NonNull IntList selectedRows) {
+    public static FastMatrix selectRows(FastMatrix m, IntList selectedRows) {
         if (m == null) {
             return null;
         }

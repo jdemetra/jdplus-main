@@ -20,7 +20,7 @@ import nbbrd.design.ThreadSafe;
 import internal.toolkit.base.tsp.InternalTsProvider;
 import java.io.IOException;
 import java.util.List;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines the ability to browse a DataSource or a DataSet as a hierarchy. Note

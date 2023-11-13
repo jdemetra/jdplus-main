@@ -20,7 +20,7 @@ import nbbrd.design.Development;
 import internal.toolkit.base.api.data.InternalBlockCursors;
 import java.util.function.DoubleUnaryOperator;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Describes a double cursor.

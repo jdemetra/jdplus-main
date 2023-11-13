@@ -27,7 +27,7 @@ import jdplus.toolkit.base.api.util.Table;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.design.VisibleForTesting;
 import nbbrd.io.function.IOFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.awt.datatransfer.*;

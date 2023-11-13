@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * General-purpose utility to perform validation.

@@ -22,7 +22,7 @@ import jdplus.toolkit.base.api.util.Collections2;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.StaticFactoryMethod;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;

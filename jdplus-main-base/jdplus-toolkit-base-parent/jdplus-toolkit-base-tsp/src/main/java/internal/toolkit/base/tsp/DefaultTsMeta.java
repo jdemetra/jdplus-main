@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

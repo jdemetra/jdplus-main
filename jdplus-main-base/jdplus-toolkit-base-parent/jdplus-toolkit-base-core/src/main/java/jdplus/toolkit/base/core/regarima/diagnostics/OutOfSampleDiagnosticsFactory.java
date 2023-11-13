@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.processing.DiagnosticsFactory;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;

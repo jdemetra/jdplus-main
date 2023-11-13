@@ -8,7 +8,7 @@ import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import jdplus.toolkit.desktop.plugin.util.Persistence;
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.beans.PropertyChangeSupport;
 import nbbrd.design.MightBeGenerated;

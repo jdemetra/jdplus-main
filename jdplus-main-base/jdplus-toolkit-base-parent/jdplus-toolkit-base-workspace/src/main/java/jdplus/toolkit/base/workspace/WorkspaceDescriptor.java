@@ -20,7 +20,7 @@ import jdplus.toolkit.base.workspace.WorkspaceItemDescriptor.Key;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collection;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines an abstract way to load/store data from/to a workspace.

@@ -24,7 +24,7 @@ import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.nodes.Sheet;
 

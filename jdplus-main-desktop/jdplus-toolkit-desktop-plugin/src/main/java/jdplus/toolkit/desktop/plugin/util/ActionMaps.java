@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin.util;
 
 import ec.util.chart.swing.Charts;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

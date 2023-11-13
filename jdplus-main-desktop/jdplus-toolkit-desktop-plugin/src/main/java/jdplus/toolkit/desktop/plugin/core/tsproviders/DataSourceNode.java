@@ -43,7 +43,7 @@ import jdplus.toolkit.desktop.plugin.nodes.Nodes;
 import jdplus.toolkit.desktop.plugin.star.StarListManager;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.netbeans.api.actions.Closable;
 import org.netbeans.api.actions.Editable;
 import org.openide.DialogDisplayer;

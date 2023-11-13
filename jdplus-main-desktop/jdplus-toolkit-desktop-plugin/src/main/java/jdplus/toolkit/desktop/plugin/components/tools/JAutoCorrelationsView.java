@@ -41,7 +41,7 @@ import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import jdplus.toolkit.base.api.stats.AutoCovariances;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;

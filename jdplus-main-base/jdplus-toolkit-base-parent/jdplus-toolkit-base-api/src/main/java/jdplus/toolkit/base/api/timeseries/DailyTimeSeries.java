@@ -19,7 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import java.time.LocalDate;
 import java.util.List;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**

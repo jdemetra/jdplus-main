@@ -10,7 +10,7 @@ import jdplus.toolkit.base.tsp.util.ImmutableValuePool;
 import internal.text.base.api.*;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 
@@ -60,7 +60,7 @@ public final class TxtProvider implements FileLoader<TxtBean> {
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Txt files";
     }
 

@@ -25,7 +25,7 @@ import java.awt.Component;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;

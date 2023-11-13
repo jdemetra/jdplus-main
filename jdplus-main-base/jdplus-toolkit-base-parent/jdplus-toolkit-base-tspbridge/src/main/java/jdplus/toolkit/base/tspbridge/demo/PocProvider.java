@@ -25,7 +25,7 @@ import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -86,7 +86,7 @@ public final class PocProvider implements DataSourceProvider {
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Proof-of-concept";
     }
 

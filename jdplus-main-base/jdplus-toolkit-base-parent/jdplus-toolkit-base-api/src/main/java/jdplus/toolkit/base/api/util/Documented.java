@@ -20,7 +20,7 @@ package jdplus.toolkit.base.api.util;
 
 import java.util.Map;
 import nbbrd.design.Development;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 
 /**

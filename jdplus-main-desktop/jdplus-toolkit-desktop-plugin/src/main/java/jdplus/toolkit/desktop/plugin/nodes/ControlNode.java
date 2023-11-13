@@ -15,7 +15,7 @@ import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.tsp.DataSet;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;

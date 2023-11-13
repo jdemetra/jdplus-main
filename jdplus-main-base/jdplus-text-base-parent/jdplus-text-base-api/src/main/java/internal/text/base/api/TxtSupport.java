@@ -10,7 +10,7 @@ import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.util.ImmutableValueFactory;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import jdplus.toolkit.base.tsp.util.DataSetConversion;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.List;

@@ -37,7 +37,7 @@ import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
 import jdplus.toolkit.base.core.ssf.univariate.ISsf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.multiply;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

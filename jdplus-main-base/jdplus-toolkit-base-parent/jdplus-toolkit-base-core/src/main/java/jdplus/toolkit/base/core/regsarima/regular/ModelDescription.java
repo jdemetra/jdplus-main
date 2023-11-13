@@ -60,7 +60,7 @@ import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
 import jdplus.toolkit.base.core.timeseries.simplets.Transformations;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataTransformation;
 import nbbrd.design.Development;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

@@ -3,7 +3,7 @@ package jdplus.toolkit.base.tsp.util;
 import jdplus.toolkit.base.tsp.DataSource;
 import nbbrd.design.ThreadSafe;
 import nbbrd.io.function.IOFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;

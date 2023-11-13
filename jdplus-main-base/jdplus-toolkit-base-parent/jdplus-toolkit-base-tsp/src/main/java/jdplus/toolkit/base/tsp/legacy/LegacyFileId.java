@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.design.DemetraPlusLegacy;
 import jdplus.toolkit.base.tsp.DataSource;
 import java.io.File;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

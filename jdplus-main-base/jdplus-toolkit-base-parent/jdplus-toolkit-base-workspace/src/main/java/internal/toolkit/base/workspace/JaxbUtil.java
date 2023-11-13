@@ -18,7 +18,7 @@ package internal.toolkit.base.workspace;
 
 import java.util.Objects;
 import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

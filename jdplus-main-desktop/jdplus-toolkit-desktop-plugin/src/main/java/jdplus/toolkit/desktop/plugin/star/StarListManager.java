@@ -4,7 +4,7 @@ import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import nbbrd.design.swing.OnEDT;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.HashSet;
 import java.util.Iterator;

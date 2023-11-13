@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 

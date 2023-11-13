@@ -21,7 +21,7 @@ import jdplus.toolkit.base.tsp.fixme.Strings;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.LocalDateTime;
@@ -66,7 +66,7 @@ public interface TsMeta<T> {
 
     @NonNull
     static TsMeta<LocalDateTime> onDateTime(@NonNull String key, @NonNull String datePattern, @NonNull Locale locale) {
-        ObsFormat obsFormat = ObsFormat.builder().locale(locale).dateTimePattern(Strings.emptyToNull(datePattern)).build();
+        ObsFormat obsFormat = ObsFormat.builder().locale(locale).dateTimePattern(datePattern).build();
         return new DefaultTsMeta<>(key, obsFormat.dateTimeParser(), obsFormat.dateTimeFormatter());
     }
 

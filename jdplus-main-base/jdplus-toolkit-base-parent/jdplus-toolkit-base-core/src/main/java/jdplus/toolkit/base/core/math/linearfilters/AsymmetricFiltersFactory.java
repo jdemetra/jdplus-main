@@ -26,7 +26,7 @@ import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
 import jdplus.toolkit.base.core.math.functions.NumericalIntegration;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

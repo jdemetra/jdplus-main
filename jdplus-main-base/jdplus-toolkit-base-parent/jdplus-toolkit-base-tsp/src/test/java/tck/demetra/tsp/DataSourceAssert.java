@@ -19,7 +19,7 @@ package tck.demetra.tsp;
 import jdplus.toolkit.base.tsp.DataSource;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.util.Objects;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * {@link DataSource} specific assertions.

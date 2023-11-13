@@ -2,7 +2,7 @@ package jdplus.toolkit.desktop.plugin.components.parts;
 
 import jdplus.main.desktop.design.SwingAction;
 import jdplus.main.desktop.design.SwingProperty;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface HasChart {

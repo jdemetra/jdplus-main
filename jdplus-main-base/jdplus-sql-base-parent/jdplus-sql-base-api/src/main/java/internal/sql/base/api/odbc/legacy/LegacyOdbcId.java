@@ -19,7 +19,7 @@ package internal.sql.base.api.odbc.legacy;
 import jdplus.toolkit.base.api.design.DemetraPlusLegacy;
 import jdplus.toolkit.base.tsp.fixme.AbstractIterator;
 import java.util.Iterator;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

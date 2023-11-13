@@ -38,7 +38,7 @@ import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.service.ServiceProvider;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;

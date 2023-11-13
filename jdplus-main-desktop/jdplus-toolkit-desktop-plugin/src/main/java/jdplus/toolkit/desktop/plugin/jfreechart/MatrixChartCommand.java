@@ -8,7 +8,7 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import ec.util.chart.swing.ChartCommand;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYDataset;

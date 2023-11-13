@@ -20,7 +20,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Immutable;
 import nbbrd.design.BuilderPattern;
 import jdplus.toolkit.base.api.math.Constants;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.toolkit.base.api.data.DoublesMath;

@@ -26,6 +26,7 @@ import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
 import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
@@ -70,7 +71,7 @@ public final class JdbcProvider implements DataSourceLoader<JdbcBean>, HasSqlPro
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "JDBC resource";
     }
 

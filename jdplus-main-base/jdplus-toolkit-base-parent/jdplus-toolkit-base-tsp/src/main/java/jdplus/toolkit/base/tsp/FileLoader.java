@@ -18,7 +18,7 @@ package jdplus.toolkit.base.tsp;
 
 import nbbrd.design.ThreadSafe;
 import java.io.FileFilter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines a specialized provider whose source is a file.

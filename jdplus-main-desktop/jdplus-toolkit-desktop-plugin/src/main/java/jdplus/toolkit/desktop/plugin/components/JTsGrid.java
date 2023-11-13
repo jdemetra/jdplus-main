@@ -23,7 +23,7 @@ import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeSource;
 import jdplus.toolkit.desktop.plugin.components.parts.*;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;

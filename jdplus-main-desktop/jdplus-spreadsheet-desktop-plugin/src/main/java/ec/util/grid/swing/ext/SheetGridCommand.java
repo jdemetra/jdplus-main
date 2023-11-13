@@ -23,7 +23,7 @@ import ec.util.various.swing.JCommand;
 import jdplus.toolkit.base.api.data.Range;
 import jdplus.toolkit.base.api.util.Table;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.awt.*;

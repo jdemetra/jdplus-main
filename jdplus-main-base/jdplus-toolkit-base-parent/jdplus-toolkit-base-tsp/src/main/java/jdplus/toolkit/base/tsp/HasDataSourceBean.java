@@ -18,7 +18,7 @@ package jdplus.toolkit.base.tsp;
 
 import internal.toolkit.base.tsp.InternalTsProvider;
 import nbbrd.design.ThreadSafe;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines the ability to convert a DataSource from/to a bean. Note that the

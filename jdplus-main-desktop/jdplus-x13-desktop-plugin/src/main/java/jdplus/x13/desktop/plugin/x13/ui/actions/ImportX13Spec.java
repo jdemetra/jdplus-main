@@ -30,7 +30,7 @@ import jdplus.x13.desktop.plugin.x13.documents.X13SpecManager;
 import nbbrd.design.ClassNameConstant;
 import nbbrd.io.text.Parser;
 import nbbrd.io.xml.bind.Jaxb;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

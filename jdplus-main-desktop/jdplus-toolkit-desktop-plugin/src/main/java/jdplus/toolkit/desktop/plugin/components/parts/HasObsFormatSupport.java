@@ -23,7 +23,7 @@ import jdplus.toolkit.desktop.plugin.components.JObsFormatComponent;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

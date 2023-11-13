@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import nbbrd.design.NotThreadSafe;
 

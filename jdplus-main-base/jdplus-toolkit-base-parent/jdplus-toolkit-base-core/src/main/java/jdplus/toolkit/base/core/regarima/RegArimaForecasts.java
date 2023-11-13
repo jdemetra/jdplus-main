@@ -29,7 +29,7 @@ import jdplus.toolkit.base.core.ssf.dk.sqrt.DiffuseSquareRootInitializer;
 import jdplus.toolkit.base.core.ssf.univariate.OrdinaryFilter;
 import jdplus.toolkit.base.core.ssf.univariate.Ssf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**

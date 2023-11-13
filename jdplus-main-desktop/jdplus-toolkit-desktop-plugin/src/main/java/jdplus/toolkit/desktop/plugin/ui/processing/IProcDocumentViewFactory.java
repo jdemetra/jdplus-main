@@ -5,7 +5,7 @@
 package jdplus.toolkit.desktop.plugin.ui.processing;
 
 import jdplus.toolkit.base.api.processing.ProcDocument;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

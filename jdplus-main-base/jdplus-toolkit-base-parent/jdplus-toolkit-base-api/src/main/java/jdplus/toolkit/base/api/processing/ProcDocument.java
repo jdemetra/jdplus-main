@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.util.Documented;
 import java.util.Map;
 import java.util.UUID;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

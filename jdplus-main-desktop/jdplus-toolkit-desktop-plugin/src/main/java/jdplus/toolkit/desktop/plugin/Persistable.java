@@ -1,6 +1,6 @@
 package jdplus.toolkit.desktop.plugin;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 public interface Persistable {
 

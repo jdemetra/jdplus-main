@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.beans;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.beans.IntrospectionException;
 import java.util.function.Consumer;

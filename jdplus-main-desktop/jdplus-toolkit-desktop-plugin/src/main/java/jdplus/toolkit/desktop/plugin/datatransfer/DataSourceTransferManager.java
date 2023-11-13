@@ -23,7 +23,7 @@ import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import java.awt.datatransfer.Transferable;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * A support class that deals with DataSource in Transferable.

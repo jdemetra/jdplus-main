@@ -11,7 +11,7 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.List;
 

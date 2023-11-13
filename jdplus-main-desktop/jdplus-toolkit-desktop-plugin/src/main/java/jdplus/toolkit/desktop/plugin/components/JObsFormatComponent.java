@@ -23,7 +23,7 @@ import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.completion.swing.XPopup;
 import ec.util.various.swing.TextPrompt;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;

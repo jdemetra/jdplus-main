@@ -18,7 +18,7 @@ package jdplus.toolkit.base.api.timeseries;
 
 import internal.toolkit.base.api.timeseries.DefaultTsFactory;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.Objects;

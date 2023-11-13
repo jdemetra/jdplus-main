@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.interchange;
 
 import jdplus.toolkit.desktop.plugin.Config;
 import nbbrd.design.swing.OnEDT;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines the ability of a component to export its state/configuration.
