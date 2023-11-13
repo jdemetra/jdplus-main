@@ -6,6 +6,7 @@
 package jdplus.toolkit.base.core.ssf.univariate;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import lombok.NonNull;
 
 
 /**
@@ -44,12 +45,12 @@ public class SsfData implements ISsfData  {
     }
 
     @Override
-    public void copyTo(double[] buffer, int start) {
+    public void copyTo(double @NonNull [] buffer, int start) {
         data.copyTo(buffer, start);
     }
 
     @Override
-    public DoubleSeq extract(int start, int length) {
+    public @NonNull DoubleSeq extract(int start, int length) {
         return data.extract(start, length);
     }
     

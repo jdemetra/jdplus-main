@@ -30,7 +30,7 @@ public interface SeqCursor<E> extends BaseSeqCursor {
     /**
      * Returns the current element and advances the cursor.
      *
-     * @return
+     * @return the current element
      */
     E getAndNext() throws IndexOutOfBoundsException;
 }

@@ -33,7 +33,7 @@ public interface DoubleSeqCursor extends BaseSeqCursor {
     /**
      * Returns the current element and advances the cursor.
      *
-     * @return
+     * @return a value
      */
     double getAndNext() throws IndexOutOfBoundsException;
 
@@ -43,10 +43,10 @@ public interface DoubleSeqCursor extends BaseSeqCursor {
      * the first element of the array
      *
      * @param data The underlying array
-     * @return
+     * @return a new cursor
      */
     @NonNull
-    static DoubleSeqCursor of(@NonNull double[] data) {
+    static DoubleSeqCursor of(double @NonNull [] data) {
         return of(data, 0, 1);
     }
 
@@ -57,18 +57,15 @@ public interface DoubleSeqCursor extends BaseSeqCursor {
      * @param data The underlying array
      * @param pos The starting position
      * @param inc The increment between two successive items. Can be negative.
-     * @return
+     * @return a new cursor
      */
     @NonNull
-    static DoubleSeqCursor of(@NonNull double[] data, @NonNegative int pos, int inc) {
-        switch (inc) {
-            case 1:
-                return new InternalBlockCursors.BlockP1DoubleSeqCursor(data, pos);
-            case -1:
-                return new InternalBlockCursors.BlockM1DoubleSeqCursor(data, pos);
-            default:
-                return new InternalBlockCursors.BlockDoubleSeqCursor(data, inc, pos);
-        }
+    static DoubleSeqCursor of(double @NonNull [] data, @NonNegative int pos, int inc) {
+        return switch (inc) {
+            case 1 -> new InternalBlockCursors.BlockP1DoubleSeqCursor(data, pos);
+            case -1 -> new InternalBlockCursors.BlockM1DoubleSeqCursor(data, pos);
+            default -> new InternalBlockCursors.BlockDoubleSeqCursor(data, inc, pos);
+        };
     }
     //</editor-fold>
 
@@ -80,7 +77,7 @@ public interface DoubleSeqCursor extends BaseSeqCursor {
         /**
          * Sets the given value at the current position and advance the cursor.
          *
-         * @param newValue
+         * @param newValue the value to be set
          */
         void setAndNext(double newValue) throws IndexOutOfBoundsException;
 
@@ -97,14 +94,11 @@ public interface DoubleSeqCursor extends BaseSeqCursor {
          * @return The r/w iterator
          */
         static DoubleSeqCursor.OnMutable of(double[] data, int pos, int inc) {
-            switch (inc) {
-                case 1:
-                    return new InternalBlockCursors.BlockP1DoubleVectorCursor(data, pos);
-                case -1:
-                    return new InternalBlockCursors.BlockM1DoubleVectorCursor(data, pos);
-                default:
-                    return new InternalBlockCursors.BlockDoubleVectorCursor(data, inc, pos);
-            }
+            return switch (inc) {
+                case 1 -> new InternalBlockCursors.BlockP1DoubleVectorCursor(data, pos);
+                case -1 -> new InternalBlockCursors.BlockM1DoubleVectorCursor(data, pos);
+                default -> new InternalBlockCursors.BlockDoubleVectorCursor(data, inc, pos);
+            };
         }
         //</editor-fold>
     }

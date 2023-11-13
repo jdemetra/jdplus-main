@@ -240,7 +240,7 @@ public final class DataBlock implements DoubleSeq.Mutable {
     }
 
     @Override
-    public DoubleSeqCursor.OnMutable cursor() {
+    public DoubleSeqCursor.@NonNull OnMutable cursor() {
         return DoubleSeqCursor.OnMutable.of(data, beg, inc);
     }
 
@@ -263,7 +263,7 @@ public final class DataBlock implements DoubleSeq.Mutable {
      *
      */
     @Override
-    public void copyTo(@NonNull double[] buffer, @NonNegative int start) {
+    public void copyTo(double @NonNull [] buffer, @NonNegative int start) {
         for (int i = beg, j = start; i != end; i += inc, ++j) {
             buffer[j] = data[i];
         }
@@ -282,7 +282,7 @@ public final class DataBlock implements DoubleSeq.Mutable {
      * datablock has end > data.size or end < 0 ?
      */
     @Override
-    public DataBlock extract(@NonNegative int start, @NonNegative int length) {
+    public @NonNull DataBlock extract(@NonNegative int start, @NonNegative int length) {
         return new DataBlock(data, beg + start * inc, beg + (start + length) * inc, inc);
     }
 
@@ -404,7 +404,7 @@ public final class DataBlock implements DoubleSeq.Mutable {
      * order, what if count will give negative end? >> Out of bound exception?
      */
     @Override
-    public DataBlock extract(@NonNegative int start, int count, int inc) {
+    public @NonNull DataBlock extract(@NonNegative int start, int count, int inc) {
         int i0 = beg + start * this.inc, i1, ninc;
         ninc = inc * this.inc;
         if (count == -1) {

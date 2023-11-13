@@ -74,10 +74,10 @@ class LightMutableMatrix implements Matrix.Mutable{
     @Override
     public DoubleSeq.Mutable subDiagonal(int pos) {
         if (pos >= ncolumns) {
-            return DoubleSeq.Mutable.EMPTY;
+            return DoubleSeq.Mutable.empty();
         }
         if (-pos >= nrows) {
-            return DoubleSeq.Mutable.EMPTY;
+            return DoubleSeq.Mutable.empty();
         }
         int beg = 0, inc = 1 + nrows;
         int n;
