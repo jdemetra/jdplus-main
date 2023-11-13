@@ -24,7 +24,7 @@ import jdplus.toolkit.base.tsp.cube.CubeSupport;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * @author Philippe Charles

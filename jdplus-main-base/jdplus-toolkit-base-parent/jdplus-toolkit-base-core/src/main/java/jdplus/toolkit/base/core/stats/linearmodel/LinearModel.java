@@ -22,7 +22,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Immutable;
 import java.util.ArrayList;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import nbbrd.design.Internal;
 import jdplus.toolkit.base.api.data.DoubleSeq;

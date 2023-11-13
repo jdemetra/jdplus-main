@@ -27,7 +27,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Function;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

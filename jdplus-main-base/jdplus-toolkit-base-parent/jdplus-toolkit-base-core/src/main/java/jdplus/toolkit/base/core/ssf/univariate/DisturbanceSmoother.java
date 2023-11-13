@@ -13,7 +13,7 @@ import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

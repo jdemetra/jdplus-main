@@ -24,7 +24,7 @@ import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 

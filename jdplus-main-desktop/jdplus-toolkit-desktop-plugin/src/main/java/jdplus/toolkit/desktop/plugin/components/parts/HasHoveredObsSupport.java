@@ -2,7 +2,7 @@ package jdplus.toolkit.desktop.plugin.components.parts;
 
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import ec.util.chart.ObsIndex;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 @lombok.experimental.UtilityClass
 public class HasHoveredObsSupport {

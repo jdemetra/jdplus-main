@@ -21,7 +21,7 @@ import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import internal.toolkit.base.tsp.stream.NoOpTsStream;
 import nbbrd.design.ThreadSafe;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.stream.Stream;

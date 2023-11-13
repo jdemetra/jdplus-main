@@ -20,7 +20,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Set;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

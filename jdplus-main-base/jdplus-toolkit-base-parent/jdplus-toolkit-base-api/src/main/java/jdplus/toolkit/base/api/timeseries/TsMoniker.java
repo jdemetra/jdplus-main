@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.api.timeseries;
 
 import java.util.UUID;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import lombok.AccessLevel;
 
 /**

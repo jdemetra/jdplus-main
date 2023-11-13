@@ -3,7 +3,7 @@ package jdplus.toolkit.base.tspbridge;
 import ec.tss.TsCollectionInformation;
 import ec.tss.TsInformation;
 import jdplus.toolkit.base.api.timeseries.*;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 

@@ -19,7 +19,7 @@ package internal.toolkit.base.workspace.file;
 import jdplus.toolkit.base.workspace.WorkspaceItemDescriptor.Key;
 import jdplus.toolkit.base.workspace.WorkspaceItemDescriptor.Attributes;
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

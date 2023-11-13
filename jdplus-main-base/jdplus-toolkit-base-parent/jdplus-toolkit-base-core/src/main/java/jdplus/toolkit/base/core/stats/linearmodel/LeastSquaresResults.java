@@ -29,7 +29,7 @@ import nbbrd.design.Immutable;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.api.stats.TestType;
 import nbbrd.design.BuilderPattern;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.stats.StatisticalTest;

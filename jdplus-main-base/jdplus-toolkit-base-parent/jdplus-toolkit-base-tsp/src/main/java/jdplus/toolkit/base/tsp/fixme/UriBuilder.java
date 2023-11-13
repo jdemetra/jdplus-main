@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.function.BiConsumer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -48,11 +48,11 @@ public final class UriBuilder {
     private SortedMap<String, String> fragment;
 
     public UriBuilder(@NonNull String scheme, @NonNull String host) {
-        if (Strings.isNullOrEmpty(scheme)) {
-            throw new IllegalArgumentException("scheme can't be null or empty");
+        if (scheme.isEmpty()) {
+            throw new IllegalArgumentException("scheme can't be empty");
         }
-        if (Strings.isNullOrEmpty(host)) {
-            throw new IllegalArgumentException("host can't be null or empty");
+        if (host.isEmpty()) {
+            throw new IllegalArgumentException("host can't be empty");
         }
         this.scheme = scheme;
         this.host = host;

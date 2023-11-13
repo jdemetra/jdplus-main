@@ -21,7 +21,7 @@ import internal.toolkit.base.tsp.InternalTsProvider;
 import java.util.List;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines the ability to watch a list of data sources. Note that the

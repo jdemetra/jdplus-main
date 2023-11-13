@@ -19,7 +19,7 @@ package test.tsprovider.grid;
 import jdplus.toolkit.base.tsp.grid.GridDataType;
 import jdplus.toolkit.base.tsp.grid.GridLayout;
 import jdplus.toolkit.base.tsp.grid.GridOutput;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;

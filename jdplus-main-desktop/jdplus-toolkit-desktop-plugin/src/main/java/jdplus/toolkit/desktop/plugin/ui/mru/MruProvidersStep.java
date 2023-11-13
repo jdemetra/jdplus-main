@@ -12,7 +12,7 @@ import jdplus.toolkit.desktop.plugin.util.InstallerStep;
 import java.util.prefs.Preferences;
 
 import jdplus.toolkit.base.tsp.DataSource;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 

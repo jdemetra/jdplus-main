@@ -73,7 +73,7 @@ import jdplus.toolkit.base.core.regsarima.regular.IModelBuilder;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import nbbrd.design.Development;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

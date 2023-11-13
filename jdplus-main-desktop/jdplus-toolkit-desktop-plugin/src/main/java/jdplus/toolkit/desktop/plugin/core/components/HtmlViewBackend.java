@@ -4,7 +4,7 @@ import jdplus.toolkit.desktop.plugin.components.ComponentBackendSpi;
 import jdplus.toolkit.desktop.plugin.components.JHtmlView;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 

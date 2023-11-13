@@ -21,7 +21,7 @@ import jdplus.toolkit.base.tsp.util.ShortLivedCache;
 import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import lombok.AccessLevel;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.File;
 import java.io.IOException;

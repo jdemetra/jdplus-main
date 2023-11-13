@@ -20,7 +20,7 @@ package jdplus.toolkit.desktop.plugin.util;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 import java.util.LinkedList;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

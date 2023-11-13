@@ -20,7 +20,7 @@ import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceListener;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;

@@ -21,7 +21,7 @@ import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import nbbrd.design.ClassNameConstant;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

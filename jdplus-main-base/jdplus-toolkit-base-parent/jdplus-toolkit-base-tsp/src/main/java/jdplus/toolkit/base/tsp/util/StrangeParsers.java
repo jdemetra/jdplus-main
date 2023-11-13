@@ -19,7 +19,7 @@ package jdplus.toolkit.base.tsp.util;
 import jdplus.toolkit.base.api.timeseries.TsException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import java.time.LocalDate;
 import nbbrd.io.text.Parser;
 

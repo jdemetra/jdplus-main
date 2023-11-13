@@ -23,7 +23,7 @@ import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import jdplus.toolkit.base.core.math.polynomials.UnitRootsSolver;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Box-Jenkins ARIMA model P(B)D(B) y(t) = Q(B) e(t). P(B) is the stationary

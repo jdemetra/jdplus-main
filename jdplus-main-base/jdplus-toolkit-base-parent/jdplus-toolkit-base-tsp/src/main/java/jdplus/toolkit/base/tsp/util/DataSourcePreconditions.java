@@ -19,7 +19,7 @@ package jdplus.toolkit.base.tsp.util;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -20,7 +20,7 @@ import jdplus.toolkit.base.tsp.grid.GridOutput;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.function.Function;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

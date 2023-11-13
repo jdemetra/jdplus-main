@@ -19,7 +19,7 @@ package internal.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import nbbrd.design.RepresentableAsInt;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

@@ -1,7 +1,7 @@
 package jdplus.toolkit.desktop.plugin;
 
 import nbbrd.design.swing.OnEDT;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.EventListener;
 

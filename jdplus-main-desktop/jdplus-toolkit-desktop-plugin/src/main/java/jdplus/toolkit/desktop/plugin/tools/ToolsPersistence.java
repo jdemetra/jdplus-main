@@ -30,7 +30,7 @@ import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.xml.Xml;
 import nbbrd.io.xml.bind.Jaxb;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

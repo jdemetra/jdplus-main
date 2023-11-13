@@ -4,7 +4,7 @@ import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.awt.*;

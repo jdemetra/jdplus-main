@@ -21,7 +21,7 @@ package jdplus.toolkit.base.core.regsarima.regular;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.arima.IArimaModel;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

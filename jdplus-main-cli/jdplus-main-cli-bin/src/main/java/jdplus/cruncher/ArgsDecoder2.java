@@ -24,7 +24,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.concurrent.Callable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import picocli.CommandLine;
 import picocli.jansi.graalvm.AnsiConsole;

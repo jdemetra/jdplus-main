@@ -21,7 +21,7 @@ import internal.toolkit.base.tsp.InternalTsProvider;
 import nbbrd.design.ThreadSafe;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.Optional;
 

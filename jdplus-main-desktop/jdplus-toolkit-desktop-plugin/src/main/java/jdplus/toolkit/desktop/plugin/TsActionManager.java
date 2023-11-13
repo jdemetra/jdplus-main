@@ -23,7 +23,7 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.design.MightBePromoted;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.util.Exceptions;
 

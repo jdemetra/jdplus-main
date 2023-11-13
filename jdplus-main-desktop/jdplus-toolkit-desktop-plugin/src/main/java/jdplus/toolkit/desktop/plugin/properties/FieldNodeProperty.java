@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.properties;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.nodes.Node;
 
 import java.lang.reflect.Field;

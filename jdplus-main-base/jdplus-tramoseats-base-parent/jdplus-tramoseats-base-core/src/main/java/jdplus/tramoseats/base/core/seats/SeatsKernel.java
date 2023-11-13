@@ -21,7 +21,7 @@ import jdplus.tramoseats.base.api.seats.SeatsException;
 import jdplus.tramoseats.base.api.seats.SeatsModelSpec;
 import jdplus.toolkit.base.core.ucarima.UcarimaModel;
 import nbbrd.design.Development;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * @author Jean Palate

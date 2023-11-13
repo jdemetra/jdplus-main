@@ -17,7 +17,7 @@
 package tck.demetra.tsp;
 
 import jdplus.toolkit.base.tsp.*;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Entry point for assertions of different data types. Each method in this class

@@ -22,7 +22,7 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

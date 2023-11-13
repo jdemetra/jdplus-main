@@ -19,7 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Clock;

@@ -2,7 +2,7 @@ package jdplus.toolkit.desktop.plugin.components;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 @lombok.Value
 public class TsIdentifier {

@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 import lombok.AccessLevel;
 import nbbrd.io.xml.Xml;
 import nbbrd.io.xml.bind.Jaxb;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

@@ -21,7 +21,7 @@ import nbbrd.design.ThreadSafe;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.ServiceFilter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 

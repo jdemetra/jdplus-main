@@ -22,7 +22,7 @@ import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.stream.DataSetTs;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

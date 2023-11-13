@@ -22,7 +22,7 @@ import nbbrd.design.ThreadSafe;
 import nbbrd.io.AbstractIOIterator;
 import nbbrd.io.WrappedIOException;
 import nbbrd.io.function.IORunnable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;

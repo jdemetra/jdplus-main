@@ -21,7 +21,7 @@ import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.interchange.InterchangeSpi;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;

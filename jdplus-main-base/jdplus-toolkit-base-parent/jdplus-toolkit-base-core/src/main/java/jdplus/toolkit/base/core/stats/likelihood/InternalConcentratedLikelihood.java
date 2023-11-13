@@ -19,7 +19,7 @@ package jdplus.toolkit.base.core.stats.likelihood;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Immutable;
 import jdplus.toolkit.base.api.math.Constants;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import nbbrd.design.Development;
 

@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.base.tsp;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * @author Philippe Charles

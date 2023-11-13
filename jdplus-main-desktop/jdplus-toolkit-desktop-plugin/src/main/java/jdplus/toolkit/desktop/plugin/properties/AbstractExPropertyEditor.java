@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin.properties;
 
 import jdplus.toolkit.desktop.plugin.util.Collections2;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.explorer.propertysheet.ExPropertyEditor;
 import org.openide.explorer.propertysheet.InplaceEditor;

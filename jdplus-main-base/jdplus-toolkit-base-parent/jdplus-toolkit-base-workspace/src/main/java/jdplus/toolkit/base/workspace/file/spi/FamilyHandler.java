@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines an extension point for FileWorkspace that allows it to deal with new

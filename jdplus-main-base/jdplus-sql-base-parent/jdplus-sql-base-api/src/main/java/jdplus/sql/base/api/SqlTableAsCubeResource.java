@@ -51,7 +51,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
 import nbbrd.sql.jdbc.SqlIdentifierQuoter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

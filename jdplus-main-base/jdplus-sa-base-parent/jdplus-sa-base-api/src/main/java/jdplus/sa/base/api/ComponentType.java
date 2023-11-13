@@ -19,7 +19,7 @@ package jdplus.sa.base.api;
 
 import nbbrd.design.Development;
 import nbbrd.design.RepresentableAsInt;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 
 /**

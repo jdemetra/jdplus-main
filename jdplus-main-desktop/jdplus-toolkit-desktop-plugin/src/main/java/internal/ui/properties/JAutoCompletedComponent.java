@@ -26,7 +26,7 @@ import ec.util.list.swing.JLists;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
 import jdplus.toolkit.base.tsp.fixme.Strings;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

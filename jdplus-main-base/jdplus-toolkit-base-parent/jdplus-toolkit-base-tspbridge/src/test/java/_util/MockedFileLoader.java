@@ -5,7 +5,7 @@ import jdplus.toolkit.base.tsp.*;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import nbbrd.io.function.IORunnable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;

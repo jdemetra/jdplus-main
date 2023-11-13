@@ -24,7 +24,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.internal.Iterables;
 import org.assertj.core.util.Objects;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.File;
 import java.io.IOException;

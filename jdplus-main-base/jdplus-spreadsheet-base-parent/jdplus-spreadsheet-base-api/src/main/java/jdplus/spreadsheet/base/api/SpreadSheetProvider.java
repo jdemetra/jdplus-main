@@ -28,6 +28,7 @@ import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.FallbackDataMoniker;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
 import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -82,12 +83,12 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Spreadsheets";
     }
 
     @Override
-    public String getFileDescription() {
+    public @NonNull String getFileDescription() {
         return "Spreadsheet file";
     }
 

@@ -72,7 +72,7 @@ public class UriBuilderTest {
         new UriBuilder("", host).build();
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.Test(expected = NullPointerException.class)
     public void testSchemeNull() {
         new UriBuilder(null, host).build();
     }
@@ -88,7 +88,7 @@ public class UriBuilderTest {
         new UriBuilder(scheme, "").build();
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.Test(expected = NullPointerException.class)
     public void testHostNull() {
         new UriBuilder("", null).build();
     }

@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.util;
 
 import ec.util.desktop.Desktop;
 import ec.util.desktop.DesktopManager;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.util.Exceptions;
 
 import java.awt.event.ActionEvent;

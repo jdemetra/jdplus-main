@@ -22,7 +22,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.stream.DataSetTs;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.Objects;

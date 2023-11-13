@@ -25,7 +25,7 @@ import internal.toolkit.base.core.math.linearfilters.SymmetricFilterAlgorithms;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntToDoubleFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 

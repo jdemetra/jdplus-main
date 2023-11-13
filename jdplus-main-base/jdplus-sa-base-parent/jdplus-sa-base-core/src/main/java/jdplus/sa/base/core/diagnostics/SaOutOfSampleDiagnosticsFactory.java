@@ -21,7 +21,7 @@ import java.util.function.Function;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsFactory;
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

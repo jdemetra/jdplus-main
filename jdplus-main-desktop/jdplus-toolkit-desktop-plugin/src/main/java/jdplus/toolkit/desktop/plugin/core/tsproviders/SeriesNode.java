@@ -22,7 +22,7 @@ import jdplus.toolkit.desktop.plugin.core.actions.TsSaveNodeAction;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.tsp.DataSet;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;

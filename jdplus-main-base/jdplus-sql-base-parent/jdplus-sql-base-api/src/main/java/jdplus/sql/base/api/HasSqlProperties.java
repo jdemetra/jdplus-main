@@ -20,7 +20,7 @@ import internal.sql.base.api.SqlPropertiesSupport;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

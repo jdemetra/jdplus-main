@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.tsproviders;
 
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.desktop.plugin.Config;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.ErrorManager;
 
 import java.beans.IntrospectionException;

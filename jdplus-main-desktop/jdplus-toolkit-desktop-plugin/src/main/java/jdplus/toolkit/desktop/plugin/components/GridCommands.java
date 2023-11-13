@@ -23,7 +23,7 @@ import ec.util.grid.swing.JGrid;
 import ec.util.various.swing.JCommand;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import javax.swing.ListSelectionModel;
 import jdplus.toolkit.base.api.util.Table;
 

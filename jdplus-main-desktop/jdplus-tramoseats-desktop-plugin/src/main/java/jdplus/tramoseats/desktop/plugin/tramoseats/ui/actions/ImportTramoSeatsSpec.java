@@ -29,7 +29,7 @@ import jdplus.tramoseats.base.information.TramoSeatsSpecMapping;
 import jdplus.tramoseats.desktop.plugin.tramoseats.documents.TramoSeatsSpecManager;
 import nbbrd.io.text.Parser;
 import nbbrd.io.xml.bind.Jaxb;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

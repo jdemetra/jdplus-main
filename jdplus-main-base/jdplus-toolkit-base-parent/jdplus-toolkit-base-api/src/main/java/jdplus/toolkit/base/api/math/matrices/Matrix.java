@@ -19,7 +19,7 @@ package jdplus.toolkit.base.api.math.matrices;
 import jdplus.toolkit.base.api.data.BaseTable;
 import nbbrd.design.Development;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import java.util.function.DoubleUnaryOperator;
 

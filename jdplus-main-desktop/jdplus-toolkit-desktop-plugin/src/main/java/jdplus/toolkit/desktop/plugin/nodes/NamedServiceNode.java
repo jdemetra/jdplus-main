@@ -21,7 +21,7 @@ import jdplus.toolkit.desktop.plugin.NamedService;
 import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.actions.Configurable;
 import jdplus.toolkit.desktop.plugin.actions.Resetable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;

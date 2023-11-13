@@ -1,7 +1,7 @@
 package jdplus.toolkit.desktop.plugin.components.parts;
 
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 @lombok.experimental.UtilityClass
 public class HasTsActionSupport {

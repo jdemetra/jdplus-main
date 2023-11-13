@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.api.time;
 
 import jdplus.toolkit.base.api.data.Seq;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Framework-level interface defining repeating intervals formed by a number of

@@ -2,7 +2,7 @@ package jdplus.toolkit.base.tsp.util;
 
 import jdplus.toolkit.base.tsp.DataSource;
 import nbbrd.design.ThreadSafe;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.Closeable;
 import java.io.IOException;

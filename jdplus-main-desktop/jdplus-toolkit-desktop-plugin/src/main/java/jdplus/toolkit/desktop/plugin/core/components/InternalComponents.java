@@ -28,7 +28,7 @@ import ec.util.chart.swing.JTimeSeriesChartCommand;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
 import nbbrd.io.text.Formatter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.text.FieldPosition;

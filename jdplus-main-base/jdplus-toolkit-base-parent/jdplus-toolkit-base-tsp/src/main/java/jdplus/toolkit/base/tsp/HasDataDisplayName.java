@@ -21,7 +21,7 @@ import internal.toolkit.base.tsp.InternalTsProvider;
 import java.io.IOException;
 
 import nbbrd.io.text.Formatter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines the ability to get a label from a DataSource or a DataSet. Note that

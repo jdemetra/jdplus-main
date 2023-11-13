@@ -31,7 +31,7 @@ import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.nodes.Nodes;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
 import jdplus.toolkit.desktop.plugin.ui.mru.ProviderMruAction;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;

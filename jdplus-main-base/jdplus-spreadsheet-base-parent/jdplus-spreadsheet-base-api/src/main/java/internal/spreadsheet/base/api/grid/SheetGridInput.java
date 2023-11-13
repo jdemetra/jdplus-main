@@ -19,6 +19,8 @@ package internal.spreadsheet.base.api.grid;
 import jdplus.toolkit.base.tsp.grid.GridDataType;
 import ec.util.spreadsheet.Sheet;
 import jdplus.toolkit.base.tsp.grid.GridInput;
+import lombok.NonNull;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,7 +41,7 @@ public final class SheetGridInput implements GridInput {
     private final ZoneId zoneId = ZoneId.systemDefault();
 
     @Override
-    public Set<GridDataType> getDataTypes() {
+    public @NonNull Set<GridDataType> getDataTypes() {
         EnumSet<GridDataType> dataTypes = EnumSet.noneOf(GridDataType.class);
         if (isSupportedDataType.test(String.class)) {
             dataTypes.add(GridDataType.STRING);
@@ -54,12 +56,12 @@ public final class SheetGridInput implements GridInput {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return sheet.getName();
     }
 
     @Override
-    public Stream open() throws IOException {
+    public @NonNull Stream open() throws IOException {
         return new SheetGridInputStream();
     }
 

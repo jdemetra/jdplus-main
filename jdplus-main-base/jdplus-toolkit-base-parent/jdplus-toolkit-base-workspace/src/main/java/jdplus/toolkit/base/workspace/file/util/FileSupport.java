@@ -23,7 +23,7 @@ import internal.toolkit.base.workspace.file.util.QuickHandler;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

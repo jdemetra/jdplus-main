@@ -32,7 +32,7 @@ import jdplus.toolkit.base.api.util.WeightedItem;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

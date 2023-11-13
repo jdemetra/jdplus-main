@@ -20,7 +20,7 @@ import nbbrd.design.ThreadSafe;
 import internal.toolkit.base.tsp.InternalTsProvider;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines the ability to modify a list of data sources. Note that the

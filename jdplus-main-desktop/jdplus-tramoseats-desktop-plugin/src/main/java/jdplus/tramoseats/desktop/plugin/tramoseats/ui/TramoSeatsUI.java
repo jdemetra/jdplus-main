@@ -11,7 +11,7 @@ import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import jdplus.toolkit.desktop.plugin.util.Persistence;
 import jdplus.sa.base.api.SaDiagnosticsFactory;
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;

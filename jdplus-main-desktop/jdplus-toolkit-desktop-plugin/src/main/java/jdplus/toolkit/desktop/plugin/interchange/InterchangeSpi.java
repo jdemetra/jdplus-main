@@ -23,7 +23,7 @@ import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.ServiceSorter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.List;

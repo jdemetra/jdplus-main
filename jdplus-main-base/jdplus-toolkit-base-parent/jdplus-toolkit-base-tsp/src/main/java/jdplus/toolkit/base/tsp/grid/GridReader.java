@@ -30,7 +30,7 @@ import jdplus.toolkit.base.tsp.fixme.Substitutor;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import lombok.AccessLevel;
 import nbbrd.design.LombokWorkaround;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Closeable;

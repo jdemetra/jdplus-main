@@ -22,7 +22,7 @@ import nbbrd.design.Internal;
 import java.util.function.IntToDoubleFunction;
 import java.util.stream.DoubleStream;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import lombok.AccessLevel;
 
 /**
