@@ -1,23 +1,26 @@
 /*
  * Copyright 2018 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package internal.toolkit.base.api.data;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.util.function.BiDoublePredicate;
+import lombok.NonNull;
+
 import java.util.NoSuchElementException;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
@@ -28,11 +31,8 @@ import java.util.function.DoublePredicate;
 import java.util.function.IntToDoubleFunction;
 import java.util.stream.DoubleStream;
 import java.util.stream.StreamSupport;
-import jdplus.toolkit.base.api.data.DoubleSeq;
-import java.util.Objects;
 
 /**
- *
  * @author Philippe Charles
  */
 @lombok.experimental.UtilityClass
@@ -182,64 +182,6 @@ public class InternalDoubleSeq {
         return Double.doubleToLongBits(left) == Double.doubleToLongBits(right);
     }
 
-    public static class EmptyDoubleSeq extends InternalBaseSeq.EmptyBaseSeq implements DoubleSeq {
-
-        public static final EmptyDoubleSeq DOUBLE_SEQ = new EmptyDoubleSeq();
-
-        @Override
-        public double get(int index) throws IndexOutOfBoundsException {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
-
-        @Override
-        public double[] toArray() {
-            return new double[0];
-        }
-
-        @Override
-        public void copyTo(double[] buffer, int offset) {
-            Objects.requireNonNull(buffer);
-        }
-
-        @Override
-        public DoubleSeqCursor cursor() {
-            return InternalDoubleSeqCursor.EmptyDoubleSeqCursor.DOUBLE_SEQ;
-        }
-    }
-
-    @lombok.AllArgsConstructor
-    public static class SingleDoubleSeq extends InternalBaseSeq.SingleBaseSeq implements DoubleSeq {
-
-        protected double value;
-
-        public double getValue() {
-            return value;
-        }
-
-        @Override
-        public double get(int index) throws IndexOutOfBoundsException {
-            if (index == 0) {
-                return value;
-            }
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
-
-        @Override
-        public double[] toArray() {
-            return new double[]{value};
-        }
-
-        @Override
-        public void copyTo(double[] buffer, int offset) {
-            buffer[offset] = value;
-        }
-
-        @Override
-        public DoubleSeqCursor cursor() {
-            return new InternalDoubleSeqCursor.SingleDoubleSeqCursor(this::getValue);
-        }
-    }
-
     @lombok.AllArgsConstructor
     @lombok.EqualsAndHashCode(callSuper = false)
     public static class MultiDoubleSeq extends InternalBaseSeq.MultiBaseSeq implements DoubleSeq {
@@ -258,17 +200,17 @@ public class InternalDoubleSeq {
         }
 
         @Override
-        public double[] toArray() {
+        public double @NonNull [] toArray() {
             return values.clone();
         }
 
         @Override
-        public void copyTo(double[] buffer, int offset) {
+        public void copyTo(double @NonNull [] buffer, int offset) {
             System.arraycopy(values, 0, buffer, offset, values.length);
         }
 
         @Override
-        public DoubleSeqCursor cursor() {
+        public @NonNull DoubleSeqCursor cursor() {
             return new InternalDoubleSeqCursor.MultiDoubleSeqCursor(values);
         }
 
@@ -288,7 +230,7 @@ public class InternalDoubleSeq {
         }
 
         @Override
-        public DoubleSeqCursor cursor() {
+        public @NonNull DoubleSeqCursor cursor() {
             return new InternalDoubleSeqCursor.SubDoubleSeqCursor(values, begin);
         }
 
@@ -298,7 +240,7 @@ public class InternalDoubleSeq {
         }
 
         @Override
-        public double[] toArray() {
+        public double @NonNull [] toArray() {
             double[] ndata = new double[length];
             System.arraycopy(values, begin, ndata, 0, length);
             return ndata;
@@ -325,7 +267,7 @@ public class InternalDoubleSeq {
         }
 
         @Override
-        public DoubleSeqCursor cursor() {
+        public @NonNull DoubleSeqCursor cursor() {
             return new InternalDoubleSeqCursor.DefaultDoubleSeqCursor(this);
         }
 
@@ -342,7 +284,7 @@ public class InternalDoubleSeq {
         private final int beg, len, inc;
 
         @Override
-        public DoubleSeqCursor cursor() {
+        public @NonNull DoubleSeqCursor cursor() {
             return new Cell();
         }
 
@@ -357,7 +299,7 @@ public class InternalDoubleSeq {
         }
 
         @Override
-        public double[] toArray() {
+        public double @NonNull [] toArray() {
             double[] ndata = new double[len];
             for (int i = 0, j = beg; i < len; ++i, j += inc) {
                 ndata[i] = data[j];

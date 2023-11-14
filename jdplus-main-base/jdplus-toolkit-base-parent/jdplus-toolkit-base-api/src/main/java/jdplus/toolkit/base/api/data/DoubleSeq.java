@@ -16,28 +16,24 @@
  */
 package jdplus.toolkit.base.api.data;
 
-import nbbrd.design.Development;
-import nbbrd.design.ReturnNew;
-import jdplus.toolkit.base.api.util.IntList;
-import jdplus.toolkit.base.api.util.function.BiDoublePredicate;
-import jdplus.toolkit.base.api.util.function.IntDoubleConsumer;
 import internal.toolkit.base.api.data.InternalDoubleSeq;
 import internal.toolkit.base.api.data.InternalDoubleSeqCursor;
 import internal.toolkit.base.api.data.InternalDoubleVector;
 import internal.toolkit.base.api.data.InternalDoubleVectorCursor;
+import jdplus.toolkit.base.api.util.IntList;
+import jdplus.toolkit.base.api.util.function.BiDoublePredicate;
+import jdplus.toolkit.base.api.util.function.IntDoubleConsumer;
+import lombok.NonNull;
+import nbbrd.design.Development;
+import nbbrd.design.ReturnNew;
+import nbbrd.design.StaticFactoryMethod;
+import org.checkerframework.checker.index.qual.NonNegative;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-import java.util.function.DoubleBinaryOperator;
-import java.util.function.DoubleConsumer;
-import java.util.function.DoublePredicate;
-import java.util.function.DoubleSupplier;
-import java.util.function.DoubleUnaryOperator;
-import java.util.function.IntToDoubleFunction;
-import java.util.function.IntUnaryOperator;
+import java.util.function.*;
 import java.util.stream.DoubleStream;
-import org.checkerframework.checker.index.qual.NonNegative;
-import lombok.NonNull;
 
 /**
  * Describes a sequence of doubles.
@@ -47,19 +43,13 @@ import lombok.NonNull;
 @Development(status = Development.Status.Release)
 public interface DoubleSeq extends BaseSeq {
 
-    static final DoubleSeq ZERO = of(0.0);
-    static final DoubleSeq ONE = of(1.0);
-
     interface Mutable extends DoubleSeq {
-
-        static final Mutable EMPTY = of(Doubles.EMPTYARRAY);
 
         /**
          * Sets <code>double</code> value at the specified index.
          *
-         *
          * @param index the index of the <code>double</code> value to be
-         * modified
+         *              modified
          * @param value the specified <code>double</code> value
          */
         void set(@NonNegative int index, double value) throws IndexOutOfBoundsException;
@@ -74,22 +64,22 @@ public interface DoubleSeq extends BaseSeq {
         }
 
         @Override
-        default DoubleSeqCursor.OnMutable cursor() {
-            return new InternalDoubleVectorCursor.DefaultDoubleVectorCursor(this);
+        default DoubleSeqCursor.@NonNull OnMutable cursor() {
+            return new InternalDoubleVectorCursor.DefaultDoubleVectorCursor<>(this);
         }
 
         @Override
-        default DoubleSeq.Mutable map(int length, IntUnaryOperator indexMapper) {
+        default DoubleSeq.@NonNull Mutable map(int length, @NonNull IntUnaryOperator indexMapper) {
             return onMapping(length, i -> get(indexMapper.applyAsInt(i)), (i, v) -> set(indexMapper.applyAsInt(i), v));
         }
 
         @Override
-        default DoubleSeq.Mutable extract(int start, int length) {
+        default DoubleSeq.@NonNull Mutable extract(int start, int length) {
             return map(length, i -> start + i);
         }
 
         @Override
-        default DoubleSeq.Mutable extract(int start, int length, int increment) {
+        default DoubleSeq.@NonNull Mutable extract(int start, int length, int increment) {
             return map(length, i -> start + i * increment);
         }
 
@@ -109,14 +99,22 @@ public interface DoubleSeq extends BaseSeq {
             return map(n, i -> n - 1 - i);
         }
 
-        static DoubleSeq.@NonNull Mutable of(@NonNull double[] values) {
+        @StaticFactoryMethod
+        static DoubleSeq.@NonNull Mutable empty() {
+            return InternalDoubleVector.MultiDoubleVector.EMPTY;
+        }
+
+        @StaticFactoryMethod
+        static DoubleSeq.@NonNull Mutable of(double @NonNull [] values) {
             return new InternalDoubleVector.MultiDoubleVector(values);
         }
 
-        static DoubleSeq.@NonNull Mutable of(@NonNull double[] data, @NonNegative int start, @NonNegative int len, int inc) {
+        @StaticFactoryMethod
+        static DoubleSeq.@NonNull Mutable of(double @NonNull [] data, @NonNegative int start, @NonNegative int len, int inc) {
             return new InternalDoubleVector.MappingDoubleVector(len, i -> data[start + i * inc], (i, x) -> data[start + i * inc] = x);
         }
 
+        @StaticFactoryMethod
         static DoubleSeq.@NonNull Mutable onMapping(@NonNegative int length, @NonNull IntToDoubleFunction getter, @NonNull IntDoubleConsumer setter) {
             return new InternalDoubleVector.MappingDoubleVector(length, getter, setter);
         }
@@ -261,16 +259,15 @@ public interface DoubleSeq extends BaseSeq {
      * as for array indexing.
      *
      * @param index the index of the <code>double</code> value to be returned
-     *
      * @return the specified <code>double</code> value
      * @throws IndexOutOfBoundsException if the <tt>index</tt> argument is
-     * negative or not less than <tt>length()</tt>
+     *                                   negative or not less than <tt>length()</tt>
      */
     double get(@NonNegative int index) throws IndexOutOfBoundsException;
 
     @Override
-    default DoubleSeqCursor cursor() {
-        return new InternalDoubleSeqCursor.DefaultDoubleSeqCursor(this);
+    default @NonNull DoubleSeqCursor cursor() {
+        return new InternalDoubleSeqCursor.DefaultDoubleSeqCursor<>(this);
     }
 
     /**
@@ -278,11 +275,11 @@ public interface DoubleSeq extends BaseSeq {
      *
      * @param buffer The buffer that will receive the data.
      * @param offset The start position in the buffer for the copy. The data
-     * will be copied in the buffer at the indexes [start, start+getLength()[.
-     * The length of the buffer is not checked (it could be larger than this
-     * array.
+     *               will be copied in the buffer at the indexes [start, start+getLength()[.
+     *               The length of the buffer is not checked (it could be larger than this
+     *               array.
      */
-    default void copyTo(@NonNull double[] buffer, @NonNegative int offset) {
+    default void copyTo(double @NonNull [] buffer, @NonNegative int offset) {
         InternalDoubleSeq.copyToByCursor(this, buffer, offset);
     }
 
@@ -290,8 +287,7 @@ public interface DoubleSeq extends BaseSeq {
      * @return @see DoubleStream#toArray()
      */
     @ReturnNew
-    @NonNull
-    default double[] toArray() {
+    default double @NonNull [] toArray() {
         return InternalDoubleSeq.toArrayByCursor(this);
     }
 
@@ -312,7 +308,6 @@ public interface DoubleSeq extends BaseSeq {
 
     /**
      * @param pred
-     *
      * @return
      * @see DoubleStream#allMatch(java.util.function.DoublePredicate))
      */
@@ -323,7 +318,6 @@ public interface DoubleSeq extends BaseSeq {
     /**
      * @param seq
      * @param pred
-     *
      * @return
      */
     default boolean allMatch(@NonNull DoubleSeq seq, @NonNull BiDoublePredicate pred) {
@@ -332,7 +326,6 @@ public interface DoubleSeq extends BaseSeq {
 
     /**
      * @param pred
-     *
      * @return
      * @see DoubleStream#anyMatch(java.util.function.DoublePredicate))
      */
@@ -341,10 +334,8 @@ public interface DoubleSeq extends BaseSeq {
     }
 
     /**
-     *
      * @param initial
      * @param fn
-     *
      * @return
      * @see DoubleStream#reduce(double, java.util.function.DoubleBinaryOperator)
      */
@@ -377,11 +368,10 @@ public interface DoubleSeq extends BaseSeq {
     /**
      * Makes an extract of this data block.
      *
-     * @param start The position of the first extracted item.
+     * @param start  The position of the first extracted item.
      * @param length The number of extracted items. The size of the result could
-     * be smaller than length, if the data block doesn't contain enough items.
-     * Cannot be null.
-     *
+     *               be smaller than length, if the data block doesn't contain enough items.
+     *               Cannot be null.
      * @return A new (read only) toArray block. Cannot be null (but the length
      * of the result could be 0.
      */
@@ -400,7 +390,6 @@ public interface DoubleSeq extends BaseSeq {
      *
      * @param beg The number of items dropped at the beginning
      * @param end The number of items dropped at the end
-     *
      * @return The shortened array
      */
     default DoubleSeq drop(int beg, int end) {
@@ -412,7 +401,6 @@ public interface DoubleSeq extends BaseSeq {
      *
      * @param beg The first item
      * @param end The last item
-     *
      * @return
      */
     default DoubleSeq range(int beg, int end) {
@@ -425,11 +413,11 @@ public interface DoubleSeq extends BaseSeq {
      * @return
      */
     default DoubleSeq cleanExtremities() {
-        int first = indexOf(x -> Double.isFinite(x));
+        int first = indexOf(Double::isFinite);
         if (first == -1) {
             return Doubles.EMPTY;
         }
-        int last = 1 + lastIndexOf(x -> Double.isFinite(x));
+        int last = 1 + lastIndexOf(Double::isFinite);
         if (first == 0 && last == length()) {
             return this;
         }
@@ -507,7 +495,7 @@ public interface DoubleSeq extends BaseSeq {
      * Computes y(t)=fn(x(t-lag), x(t))
      *
      * @param lag The lag
-     * @param fn The applied function
+     * @param fn  The applied function
      * @return A n-lag sequence of doubles, where n is the length of the initial
      * array.
      */
@@ -875,80 +863,72 @@ public interface DoubleSeq extends BaseSeq {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Factories">
-    static final double[] EMPTYARRAY = new double[0];
+    double[] EMPTYARRAY = new double[0];
 
     /**
      * Creates a new value using an array of doubles.
      *
      * @param data
-     *
      * @return
      */
+    @StaticFactoryMethod
     @NonNull
-    static DoubleSeq of(@NonNull double... data) {
-        return new InternalDoubleSeq.MultiDoubleSeq(data);
+    static DoubleSeq of(double @NonNull ... data) {
+        return Doubles.ofInternal(data);
     }
 
     /**
-     *
-     * @param data Storage
+     * @param data  Storage
      * @param start Position of the first item (non negative)
-     * @param len Number of items (non negative)
-     *
+     * @param len   Number of items (non negative)
      * @return
      */
+    @StaticFactoryMethod
     @NonNull
-    static DoubleSeq of(@NonNull double[] data, @NonNegative int start, @NonNegative int len) {
+    static DoubleSeq of(double @NonNull [] data, @NonNegative int start, @NonNegative int len) {
         return new InternalDoubleSeq.SubDoubleSeq(data, start, len);
     }
 
     /**
      * Makes a sequence of regularly spaced doubles
      *
-     * @param data Storage
+     * @param data  Storage
      * @param start Position of the first item (non negative)
-     * @param len Number of items (non negative)
-     * @param inc Increment in the underlying storage of two succesive items
-     *
+     * @param len   Number of items (non negative)
+     * @param inc   Increment in the underlying storage of two succesive items
      * @return
      */
+    @StaticFactoryMethod
     @NonNull
-    static DoubleSeq of(@NonNull double[] data, @NonNegative int start, @NonNegative int len, int inc) {
+    static DoubleSeq of(double @NonNull [] data, @NonNegative int start, @NonNegative int len, int inc) {
         return new InternalDoubleSeq.RegularlySpacedDoubles(data, start, len, inc);
     }
 
+    @StaticFactoryMethod
     @NonNull
     static DoubleSeq empty() {
-        return Mutable.EMPTY;
+        return Doubles.EMPTY;
     }
 
+    @StaticFactoryMethod
     @NonNull
     static DoubleSeq zero() {
-        return ZERO;
+        return Doubles.ZERO;
     }
 
+    @StaticFactoryMethod
     @NonNull
     static DoubleSeq one() {
-        return ONE;
+        return Doubles.ONE;
     }
 
-    @Deprecated
-    @NonNull
-    static Doubles copyOf(@NonNull double[] data) {
-        return Doubles.of(data);
-    }
-
-    @Deprecated
-    @NonNull
-    static Doubles copyOf(@NonNull DoubleStream stream) {
-        return Doubles.of(stream);
-    }
-
+    @StaticFactoryMethod
     @NonNull
     static DoubleSeq onMapping(@NonNegative int length, @NonNull IntToDoubleFunction getter) {
         return new InternalDoubleSeq.MappingDoubleSeq(length, getter);
     }
 
+    @StaticFactoryMethod
     @NonNull
     static DoubleSeq pooled(@NonNull DoubleSeq[] seqs) {
         // TODO improve the current solution (without necessarly copying the data)

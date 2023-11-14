@@ -51,7 +51,7 @@ public interface Seq<E> extends BaseSeq, Iterable<E> {
     E get(@NonNegative int index) throws IndexOutOfBoundsException;
 
     @Override
-    default SeqCursor<E> cursor() {
+    default @NonNull SeqCursor<E> cursor() {
         return new InternalSeqCursor.DefaultSeqCursor(this);
     }
 

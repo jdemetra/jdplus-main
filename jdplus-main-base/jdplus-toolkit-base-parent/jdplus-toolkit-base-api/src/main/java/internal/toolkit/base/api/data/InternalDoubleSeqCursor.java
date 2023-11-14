@@ -18,7 +18,6 @@ package internal.toolkit.base.api.data;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
-import java.util.function.DoubleSupplier;
 
 /**
  *
@@ -36,34 +35,6 @@ public class InternalDoubleSeqCursor {
         @Override
         public double getAndNext() {
             return data.get(cursor++);
-        }
-    }
-
-    public static class EmptyDoubleSeqCursor extends InternalBaseSeqCursor.EmptyBaseSeqCursor implements DoubleSeqCursor {
-
-        public static final EmptyDoubleSeqCursor DOUBLE_SEQ = new EmptyDoubleSeqCursor();
-
-        @Override
-        public double getAndNext() throws IndexOutOfBoundsException {
-            throw new IndexOutOfBoundsException("Empty");
-        }
-    }
-
-    public static class SingleDoubleSeqCursor extends InternalBaseSeqCursor.SingleBaseSeqCursor implements DoubleSeqCursor {
-
-        protected final DoubleSupplier getter;
-
-        public SingleDoubleSeqCursor(DoubleSupplier getter) {
-            this.getter = getter;
-        }
-
-        @Override
-        public double getAndNext() throws IndexOutOfBoundsException {
-            if (cursor != 0) {
-                throw new IndexOutOfBoundsException(String.valueOf(cursor));
-            }
-            cursor++;
-            return getter.getAsDouble();
         }
     }
 

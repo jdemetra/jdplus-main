@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.api.data;
 
+import lombok.NonNull;
 import nbbrd.design.Development;
 import nbbrd.design.PrimitiveReplacementOf;
 import jdplus.toolkit.base.api.util.IntList;
@@ -85,24 +86,24 @@ public final class DoubleList implements DoubleSeq {
     }
 
     @Override
-    public double[] toArray() {
+    public double @NonNull [] toArray() {
         double[] result = new double[length];
         System.arraycopy(values, 0, result, 0, length);
         return result;
     }
 
     @Override
-    public void copyTo(double[] buffer, int offset) {
+    public void copyTo(double @NonNull [] buffer, int offset) {
         System.arraycopy(values, 0, buffer, offset, length);
     }
 
     @Override
-    public DoubleStream stream() {
+    public @NonNull DoubleStream stream() {
         return Arrays.stream(values, 0, length);
     }
 
     @Override
-    public DoubleSeqCursor.OnMutable cursor() {
+    public DoubleSeqCursor.@NonNull OnMutable cursor() {
         return new Cell();
     }
 
@@ -198,7 +199,7 @@ public final class DoubleList implements DoubleSeq {
         if (index > length) {
             throw new IndexOutOfBoundsException();
         }
-        if (c.length() != 0) {
+        if (!c.isEmpty()) {
             if ((length + c.length()) > values.length) {
                 growArray(length + c.length());
             }
@@ -244,7 +245,7 @@ public final class DoubleList implements DoubleSeq {
      * collection.
      */
     public boolean containsAll(DoubleSeq c) {
-        return this != c ? allMatch(o -> contains(o)) : true;
+        return this != c ? allMatch(this::contains) : true;
     }
 
     /**

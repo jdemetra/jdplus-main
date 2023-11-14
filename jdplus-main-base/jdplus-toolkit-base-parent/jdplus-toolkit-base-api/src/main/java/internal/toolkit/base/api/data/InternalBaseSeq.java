@@ -25,32 +25,6 @@ import jdplus.toolkit.base.api.data.BaseSeq;
 @lombok.experimental.UtilityClass
 public class InternalBaseSeq {
 
-    public static abstract class EmptyBaseSeq implements BaseSeq {
-
-        @Override
-        public int length() {
-            return 0;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return true;
-        }
-    }
-
-    public static abstract class SingleBaseSeq implements BaseSeq {
-
-        @Override
-        public int length() {
-            return 1;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-    }
-
     public static abstract class MultiBaseSeq implements BaseSeq {
 
     }

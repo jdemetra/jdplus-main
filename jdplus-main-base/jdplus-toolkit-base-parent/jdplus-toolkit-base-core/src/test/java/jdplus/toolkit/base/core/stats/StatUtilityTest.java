@@ -27,10 +27,10 @@ public class StatUtilityTest {
         assertThat(StatUtility.theilInequalityCoefficient2(y, f2))
                 .isEqualTo(1);
         
-        assertThat(StatUtility.theilInequalityCoefficient2(DoubleSeq.ZERO, DoubleSeq.ONE))
+        assertThat(StatUtility.theilInequalityCoefficient2(DoubleSeq.zero(), DoubleSeq.one()))
                 .isNaN();
         
-        assertThat(StatUtility.theilInequalityCoefficient2(DoubleSeq.ONE, DoubleSeq.ZERO))
+        assertThat(StatUtility.theilInequalityCoefficient2(DoubleSeq.one(), DoubleSeq.zero()))
                 .isEqualTo(0);
         
         assertThatExceptionOfType(StatException.class)

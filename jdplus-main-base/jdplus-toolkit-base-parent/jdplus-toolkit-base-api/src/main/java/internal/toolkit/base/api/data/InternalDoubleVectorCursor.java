@@ -18,8 +18,7 @@ package internal.toolkit.base.api.data;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
-import java.util.function.DoubleConsumer;
-import java.util.function.DoubleSupplier;
+
 import java.util.function.DoubleUnaryOperator;
 
 /**
@@ -43,49 +42,6 @@ public class InternalDoubleVectorCursor {
         @Override
         public void applyAndNext(DoubleUnaryOperator fn) {
             data.apply(cursor++, fn);
-        }
-    }
-
-    public static class EmptyDoubleVectorCursor extends InternalDoubleSeqCursor.EmptyDoubleSeqCursor implements DoubleSeqCursor.OnMutable {
-
-        public static final EmptyDoubleVectorCursor DOUBLE_VECTOR = new EmptyDoubleVectorCursor();
-
-        @Override
-        public void setAndNext(double newValue) throws IndexOutOfBoundsException {
-            throw new IndexOutOfBoundsException("Empty");
-        }
-
-        @Override
-        public void applyAndNext(DoubleUnaryOperator fn) throws IndexOutOfBoundsException {
-            throw new IndexOutOfBoundsException("Empty");
-        }
-    }
-
-    public static class SingleDoubleVectorCursor extends InternalDoubleSeqCursor.SingleDoubleSeqCursor implements DoubleSeqCursor.OnMutable {
-
-        protected final DoubleConsumer setter;
-
-        public SingleDoubleVectorCursor(DoubleSupplier getter, DoubleConsumer setter) {
-            super(getter);
-            this.setter = setter;
-        }
-
-        @Override
-        public void setAndNext(double newValue) throws IndexOutOfBoundsException {
-            if (cursor != 0) {
-                throw new IndexOutOfBoundsException(String.valueOf(cursor));
-            }
-            cursor++;
-            setter.accept(newValue);
-        }
-
-        @Override
-        public void applyAndNext(DoubleUnaryOperator fn) throws IndexOutOfBoundsException {
-            if (cursor != 0) {
-                throw new IndexOutOfBoundsException(String.valueOf(cursor));
-            }
-            cursor++;
-            setter.accept(fn.applyAsDouble(getter.getAsDouble()));
         }
     }
 
