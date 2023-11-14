@@ -274,7 +274,7 @@ public class DataSourceProviderAssert extends AbstractAssert<DataSourceProviderA
      * @throws AssertionError - if the actual IDataSourceProvider is not
      *                        compliant.
      */
-    public static <P extends DataSourceProvider> void assertCompliance(@NonNull Supplier<P> factory, @NonNull Sampler sampler) {
+    public static <P extends DataSourceProvider> void assertCompliance(@NonNull Supplier<P> factory, @NonNull Sampler<P> sampler) {
         TsProviderAssert.assertCompliance(factory, sampler);
         SoftAssertions s = new SoftAssertions();
         checkGetDisplayName(s, factory, sampler);
@@ -297,23 +297,20 @@ public class DataSourceProviderAssert extends AbstractAssert<DataSourceProviderA
     public interface Sampler<P extends DataSourceProvider> extends TsProviderAssert.Sampler<P> {
 
         @Override
-        public default Optional<TsMoniker> tsMoniker(P p) {
+        default @NonNull Optional<TsMoniker> tsMoniker(@NonNull P p) {
             return tsDataSet(p).map(p::toMoniker);
         }
 
         @Override
-        public default Optional<TsMoniker> tsCollectionMoniker(P p) {
+        default @NonNull Optional<TsMoniker> tsCollectionMoniker(@NonNull P p) {
             return tsCollectionDataSet(p).map(p::toMoniker);
         }
 
-        @NonNull
-        Optional<DataSource> dataSource(@NonNull P p);
+        @NonNull Optional<DataSource> dataSource(@NonNull P p);
 
-        @NonNull
-        Optional<DataSet> tsDataSet(@NonNull P p);
+        @NonNull Optional<DataSet> tsDataSet(@NonNull P p);
 
-        @NonNull
-        Optional<DataSet> tsCollectionDataSet(@NonNull P p);
+        @NonNull Optional<DataSet> tsCollectionDataSet(@NonNull P p);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Implementation details">
