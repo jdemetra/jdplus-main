@@ -93,7 +93,7 @@ public class TsCollectionCsvFormatter {
             }
 
             for (int j = 0; j < ndata; ++j) {
-                writer.write(domain.get(j).toString());
+                writer.write(domain.get(j).start().toLocalDate().format(DateTimeFormatter.ISO_DATE));
                 for (int i = 0; i < nseries; ++i) {
                     writer.write(comma);
                     cursor.moveTo(j, i);
