@@ -16,6 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![STAT] Fix TsData aggregation on limited data
 - ![UI] Fix action IDs to prevent conflicts
+- ![IO] Fix date format in multi-document export to VTable CSV [#156](https://github.com/jdemetra/jdplus-main/issues/156)
 
 ## [3.1.1] - 2023-10-11
 
