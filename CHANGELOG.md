@@ -9,14 +9,21 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- ![STAT] Move seasonal component from incubator to main
 - ![OTHER] Set explicit declaration of extension points
 - ![OTHER] Set explicit declaration of interchangeable processors
 
 ### Fixed
 
 - ![STAT] Fix TsData aggregation on limited data
+- ![STAT] Correct raw figures for trading days effects
 - ![UI] Fix action IDs to prevent conflicts
 - ![IO] Fix date format in multi-document export to VTable CSV [#156](https://github.com/jdemetra/jdplus-main/issues/156)
+
+### Added
+
+- ![STAT] Generate forecasts in univariate state space models
+- ![OTHER] Add R facilities for time series providers
 
 ## [3.1.1] - 2023-10-11
 

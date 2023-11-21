@@ -19,6 +19,7 @@ package jdplus.toolkit.base.core.ssf.dk;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.ssf.sts.SeasonalModel;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.ssf.StateComponent;
 import jdplus.toolkit.base.core.ssf.composite.CompositeSsf;
 import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
@@ -35,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author palatej
  */
 public class DkToolkitTest {
-    
+
     public DkToolkitTest() {
     }
 
@@ -51,30 +52,56 @@ public class DkToolkitTest {
                 .build();
         DiffuseLikelihood dll0 = DkToolkit.likelihoodComputer(true, true, true)
                 .compute(ssf, new SsfData(Data.PROD));
-        System.out.println(dll0);
+//        System.out.println(dll0);
         DiffuseConcentratedLikelihood dll1 = DkToolkit.concentratedLikelihoodComputer(true, true, false).compute(ssf, new SsfData(Data.PROD));
-        System.out.println(dll1);
+//        System.out.println(dll1);
         DiffuseLikelihood dll2 = DkToolkit.likelihoodComputer(true, false, true)
                 .compute(ssf, new SsfData(Data.PROD));
-        System.out.println(dll2);
+//        System.out.println(dll2);
     }
-    
-   @Test
+
+    @Test
     public void testLikelihood2() {
-        StateComponent ll = LocalLinearTrend.stateComponent(25*0.5, 25*0.1);
-        StateComponent s = SeasonalComponent.of(SeasonalModel.HarrisonStevens, 12, 25*0.2);
-        StateComponent n = Noise.of(25*1.5);
+        StateComponent ll = LocalLinearTrend.stateComponent(25 * 0.5, 25 * 0.1);
+        StateComponent s = SeasonalComponent.of(SeasonalModel.HarrisonStevens, 12, 25 * 0.2);
+        StateComponent n = Noise.of(25 * 1.5);
         CompositeSsf ssf = CompositeSsf.builder()
                 .add(ll, LocalLinearTrend.defaultLoading())
                 .add(s, SeasonalComponent.defaultLoading())
                 .add(n, Noise.defaultLoading())
                 .build();
-        double[] D=Data.PROD;
+        double[] D = Data.PROD;
         DiffuseLikelihood dll1 = DkToolkit.likelihoodComputer(true, true, true)
-                .compute(ssf, new SsfData(DoubleSeq.onMapping(D.length, i->5*D[i])));
-        System.out.println(dll1);
+                .compute(ssf, new SsfData(DoubleSeq.onMapping(D.length, i -> 5 * D[i])));
+//        System.out.println(dll1);
         DiffuseLikelihood dll2 = DkToolkit.likelihoodComputer(true, false, true)
-                .compute(ssf, new SsfData(DoubleSeq.onMapping(D.length, i->5*D[i])));
-        System.out.println(dll2);
+                .compute(ssf, new SsfData(DoubleSeq.onMapping(D.length, i -> 5 * D[i])));
+//        System.out.println(dll2);
     }
+
+    @Test
+    public void testForecast() {
+        StateComponent ll = LocalLinearTrend.stateComponent(0.5, 0.1);
+        StateComponent s = SeasonalComponent.of(SeasonalModel.HarrisonStevens, 12, 0.2);
+        StateComponent n = Noise.of(1.5);
+        CompositeSsf ssf = CompositeSsf.builder()
+                .add(ll, LocalLinearTrend.defaultLoading())
+                .add(s, SeasonalComponent.defaultLoading())
+                .add(n, Noise.defaultLoading())
+                .build();
+        double[] D = Data.PROD;
+        FastMatrix F = DkToolkit.forecast(ssf, new SsfData(D), 60, true);
+        ssf = CompositeSsf.builder()
+                .add(ll, LocalLinearTrend.defaultLoading())
+                .add(s, SeasonalComponent.defaultLoading())
+                .measurementError(1.5)
+                .build();
+        FastMatrix F2 = DkToolkit.forecast(ssf, new SsfData(DoubleSeq.onMapping(D.length, i -> 5 * D[i])), 60, true);
+        F2.column(0).div(5);
+        F2.column(1).div(25);
+
+        assertTrue(F.column(0).distance(F2.column(0)) < 1e-6);
+        assertTrue(F.column(1).distance(F2.column(1)) < 1e-6);
+    }
+
 }
