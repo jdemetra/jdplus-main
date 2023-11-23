@@ -3,7 +3,7 @@ package jdplus.toolkit.desktop.plugin.components.parts;
 import jdplus.toolkit.desktop.plugin.ColorSchemeManager;
 import jdplus.toolkit.desktop.plugin.DemetraUI;
 import ec.util.chart.swing.SwingColorSchemeSupport;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

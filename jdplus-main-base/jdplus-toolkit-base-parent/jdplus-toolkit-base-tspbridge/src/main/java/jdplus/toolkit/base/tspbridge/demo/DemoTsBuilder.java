@@ -24,7 +24,7 @@ import jdplus.toolkit.base.tsp.TsMeta;
 import ec.tstoolkit.random.IRandomNumberGenerator;
 import ec.tstoolkit.random.XorshiftRNG;
 import nbbrd.design.BuilderPattern;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.time.ZoneOffset;
 import java.util.Objects;

@@ -18,7 +18,7 @@ package jdplus.toolkit.base.tsp;
 
 import jdplus.toolkit.base.api.timeseries.TsProvider;
 import nbbrd.design.ThreadSafe;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines a provider that is used to discover and browse DataSources and
@@ -43,8 +43,7 @@ public interface DataSourceProvider extends TsProvider, HasDataSourceList, HasDa
      *
      * @return a non-empty label.
      */
-    @NonNull
-    default String getDisplayName() {
+    default @NonNull String getDisplayName() {
         return getSource();
     }
 }

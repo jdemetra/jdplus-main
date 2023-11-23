@@ -4,10 +4,11 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.nodes.Node;
 
 import java.awt.*;
@@ -16,6 +17,7 @@ import java.awt.*;
  *
  * @author Philippe Charles
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

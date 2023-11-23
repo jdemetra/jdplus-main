@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin;
 
 import jdplus.toolkit.base.api.timeseries.TsCollection;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

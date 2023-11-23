@@ -18,7 +18,7 @@ package jdplus.toolkit.base.api.util;
 
 import java.util.Collections;
 import java.util.function.Function;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

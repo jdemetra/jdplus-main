@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.time.ISO_8601;
 import lombok.AccessLevel;
 import nbbrd.design.RepresentableAsString;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.time.Duration;
 import java.time.Period;

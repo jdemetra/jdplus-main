@@ -19,7 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.data.Range;
 import nbbrd.design.Development;
 import java.time.LocalDateTime;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import lombok.AccessLevel;
 
 /**

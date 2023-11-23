@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.NamedService;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
@@ -25,7 +26,7 @@ import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.ServiceSorter;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
@@ -38,6 +39,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
  * @author Philippe Charles
  * @since 1.3.0
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

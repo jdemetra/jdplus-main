@@ -8,6 +8,8 @@ package jdplus.toolkit.base.core.ssf.multivariate;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.ssf.univariate.ISsfData;
+import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 
 
 /**
@@ -62,5 +64,12 @@ public class SsfMatrix implements IMultivariateSsfData {
     @Override
     public DoubleSeq get(int pos) {
         return pos < x.getRowsCount() ? x.row(pos) : DataBlock.EMPTY;
+    }
+    
+    public ISsfData asSsfData(){
+        if (x.getColumnsCount() == 1)
+            return new SsfData(x.column(0));
+        else
+            return M2uAdapter.of(this);
     }
 }

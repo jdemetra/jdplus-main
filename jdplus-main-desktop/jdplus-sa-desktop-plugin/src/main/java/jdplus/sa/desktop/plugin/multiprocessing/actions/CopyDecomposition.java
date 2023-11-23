@@ -24,6 +24,7 @@ import jdplus.sa.base.api.SaDictionaries;
 import java.util.ArrayList;
 import java.util.List;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -35,14 +36,16 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Mats Maggi
  */
-@ActionID(category = "SaProcessing",
-        id = "demetra.sa.multiprocessing.actions.CopyDecomposition")
+@ActionID(category = "SaProcessing", id = CopyDecomposition.ID)
 @ActionRegistration(displayName = "#CTL_CopyDecomposition", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1410)
 })
 @Messages("CTL_CopyDecomposition=Copy Decomposition")
 public final class CopyDecomposition extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.CopyDecomposition";
 
 //    private final List<String> allFields;
 //    private final JListSelection<String> fieldSelectionComponent;

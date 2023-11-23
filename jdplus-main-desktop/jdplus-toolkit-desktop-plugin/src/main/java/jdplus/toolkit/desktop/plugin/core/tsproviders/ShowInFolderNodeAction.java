@@ -22,6 +22,7 @@ import jdplus.toolkit.desktop.plugin.actions.Actions;
 import jdplus.toolkit.base.tsp.DataSource;
 import ec.util.desktop.Desktop;
 import ec.util.desktop.DesktopManager;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
@@ -51,7 +52,8 @@ import org.openide.util.actions.Presenter;
 @Messages("CTL_ShowInFolderAction=Show in folder")
 public final class ShowInFolderNodeAction extends AbilityNodeAction<DataSource> implements Presenter.Popup {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.ShowInFolderAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.ShowInFolderNodeAction";
 
     public ShowInFolderNodeAction() {
         super(DataSource.class, true);

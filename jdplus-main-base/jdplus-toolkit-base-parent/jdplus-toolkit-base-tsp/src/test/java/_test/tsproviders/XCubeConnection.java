@@ -22,7 +22,7 @@ import jdplus.toolkit.base.tsp.cube.CubeId;
 import jdplus.toolkit.base.tsp.cube.CubeSeries;
 import jdplus.toolkit.base.tsp.cube.CubeSeriesWithData;
 import nbbrd.io.function.IORunnable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.Objects;

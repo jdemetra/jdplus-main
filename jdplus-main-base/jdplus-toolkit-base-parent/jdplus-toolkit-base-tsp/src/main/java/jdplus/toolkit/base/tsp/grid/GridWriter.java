@@ -26,7 +26,7 @@ import internal.toolkit.base.tsp.grid.InternalValueWriter;
 import lombok.AccessLevel;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.MightBePromoted;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;

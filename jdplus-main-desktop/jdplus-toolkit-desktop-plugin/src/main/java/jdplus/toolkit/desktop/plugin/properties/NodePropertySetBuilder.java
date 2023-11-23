@@ -20,7 +20,7 @@ import jdplus.toolkit.desktop.plugin.util.Collections2;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.AutoCompletionSources;
 import nbbrd.design.BuilderPattern;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.nodes.Node;
 import org.openide.nodes.Node.Property;

@@ -18,7 +18,7 @@ package jdplus.sql.desktop.plugin.jdbc;
 
 import java.util.Optional;
 import java.util.Properties;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;

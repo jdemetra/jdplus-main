@@ -19,7 +19,6 @@ package jdplus.toolkit.base.core.math.linearfilters;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.base.core.data.DataBlock;
 
 /**
  *
@@ -45,54 +44,70 @@ public class Filtering implements IFiltering {
         FiniteFilter fcf = new FiniteFilter(Polynomial.of(cf.toArray()), -lb);
         IFiniteFilter[] flf = new IFiniteFilter[lb];
         for (int i = 0; i < lb; ++i) {
-            flf[i] = new FiniteFilter(lfilter(lf.column(i)), i - lb + 1);
+           double[] p = lf.column(i).drop(0, i).toArray();
+            FiniteFilter f = FiniteFilter.of(p, i+1-lb);
+            flf[i] = f;
         }
         IFiniteFilter[] frf = new IFiniteFilter[rb];
+        int nr=rf.getRowsCount()-rb;
         for (int i = 0; i < rb; ++i) {
-            Polynomial r = rfilter(rf.column(i));
-            frf[i] = new FiniteFilter(r, rb-i-r.degree()-1);
+            double[] p = rf.column(i).drop(0, i).toArray();
+            FiniteFilter f = FiniteFilter.of(p, -nr);
+            frf[i] = f;
+            flf[i]=f.mirror();                    
         }
         return new Filtering(fcf, flf, frf);
     }
 
-    public static Filtering of(DoubleSeq cf, Matrix lf) {
-        int l = lf.getColumnsCount();
-        if (cf.length() != 2 * l + 1) {
+    public static Filtering of(DoubleSeq cf, Matrix rf) {
+        int nlags = rf.getColumnsCount();
+        if (cf.length() != 2 * nlags + 1) {
             throw new IllegalArgumentException();
         }
-        FiniteFilter fcf = new FiniteFilter(Polynomial.of(cf.toArray()), -l);
-        IFiniteFilter[] flf = new IFiniteFilter[l];
-        IFiniteFilter[] frf = new IFiniteFilter[l];
-        for (int i = 0; i < l; ++i) {
-            FiniteFilter f = new FiniteFilter(lfilter(lf.column(i)), i - l + 1);
-            flf[i] = f;
-            frf[i] = f.mirror();
+        FiniteFilter fcf = new FiniteFilter(Polynomial.of(cf.toArray()), -nlags);
+        IFiniteFilter[] flf = new IFiniteFilter[nlags];
+        IFiniteFilter[] frf = new IFiniteFilter[nlags];
+        for (int i = 0; i < nlags; ++i) {
+            double[] p = rf.column(i).drop(0, i).toArray();
+            FiniteFilter f = FiniteFilter.of(p, -nlags);
+            frf[i] = f;
+            flf[i]=f.mirror();                    
         }
         return new Filtering(fcf, flf, frf);
     }
 
-    private static Polynomial lfilter(DoubleSeq col) {
-        int n = col.length(), pos = n - 1;
-        while (pos > 0) {
-            double cur = col.get(pos);
-            if (cur != 0) {
-                break;
-            }
-            --pos;
+    /**
+     *
+     * @param lf The columns of the matrix contains the longest to the shortest
+     * filter
+     * @return
+     */
+    public static IFiniteFilter[] leftFilters(Matrix lf) {
+        int nlags = lf.getColumnsCount();
+        IFiniteFilter[] flf = new IFiniteFilter[nlags];
+        for (int i = 0; i < nlags; ++i) {
+            double[] p = lf.column(i).drop(0, i).toArray();
+            FiniteFilter f = FiniteFilter.of(p, i+1-nlags);
+            flf[i] = f;
         }
-        return Polynomial.raw(col.extract(0, pos + 1).toArray());
+        return flf;
     }
 
-    private static Polynomial rfilter(DoubleSeq col) {
-        int n = col.length(), pos = 0;
-        while (pos < n) {
-            double cur = col.get(pos);
-            if (cur != 0) {
-                break;
-            }
-            ++pos;
+    /**
+     *
+     * @param rf The columns of the matrix contains the longest to the shortest
+     * filter
+     * @return
+     */
+    public static IFiniteFilter[] rightFilters(Matrix rf) {
+        int nlags = rf.getColumnsCount();
+        IFiniteFilter[] frf = new IFiniteFilter[nlags];
+        for (int i = 0; i < nlags; ++i) {
+            double[] p = rf.column(i).drop(0, i).toArray();
+            FiniteFilter f = FiniteFilter.of(p, -nlags);
+            frf[i] = f;
         }
-        return Polynomial.raw(col.range(pos, n).toArray());
+        return frf;
     }
 
     @Override

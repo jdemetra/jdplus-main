@@ -5,6 +5,7 @@
 package jdplus.toolkit.desktop.plugin.workspace;
 
 import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import nbbrd.service.ServiceDefinition;
 
 
@@ -13,6 +14,7 @@ import nbbrd.service.ServiceDefinition;
  * @author Jean Palate
  * @param <D>
  */
+@ExtensionPoint
 @ServiceDefinition
 public interface WorkspaceItemRepository<D> {
     

@@ -36,7 +36,7 @@ import nbbrd.io.text.Formatter;
 import nbbrd.io.text.IntProperty;
 import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.netbeans.api.options.OptionsDisplayer;
 
 /**

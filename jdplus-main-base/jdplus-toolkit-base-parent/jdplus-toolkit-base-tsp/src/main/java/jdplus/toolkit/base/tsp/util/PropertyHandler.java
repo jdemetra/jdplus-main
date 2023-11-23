@@ -7,7 +7,7 @@ import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.io.text.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
 import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public interface PropertyHandler<P> {
     void set(@NonNull BiConsumer<? super String, ? super String> properties, @Nullable P value);
 
     default DataSource.@NonNull Converter<P> asDataSourceConverter() {
-        return new DataSource.Converter<P>() {
+        return new DataSource.Converter<>() {
             @Override
             public @NonNull P getDefaultValue() {
                 return PropertyHandler.this.getDefaultValue();
@@ -50,7 +51,7 @@ public interface PropertyHandler<P> {
     }
 
     default DataSet.@NonNull Converter<P> asDataSetConverter() {
-        return new DataSet.Converter<P>() {
+        return new DataSet.Converter<>() {
             @Override
             public @NonNull P getDefaultValue() {
                 return PropertyHandler.this.getDefaultValue();
@@ -70,7 +71,7 @@ public interface PropertyHandler<P> {
 
     static @NonNull PropertyHandler<Boolean> onBoolean(String key, boolean defaultValue) {
         BooleanProperty delegate = BooleanProperty.of(key, defaultValue);
-        return new PropertyHandler<Boolean>() {
+        return new PropertyHandler<>() {
             @Override
             public @NonNull Boolean getDefaultValue() {
                 return delegate.isDefaultValue();
@@ -134,7 +135,7 @@ public interface PropertyHandler<P> {
 
     @Deprecated
     static <T> @NonNull PropertyHandler<T> of(Property<T> delegate) {
-        return new PropertyHandler<T>() {
+        return new PropertyHandler<>() {
             @Override
             public @NonNull T getDefaultValue() {
                 return delegate.getDefaultValue();
@@ -154,7 +155,7 @@ public interface PropertyHandler<P> {
 
     default PropertyHandler<P> withPrefix(String prefix) {
         PropertyHandler<P> delegate = this;
-        return new PropertyHandler<P>() {
+        return new PropertyHandler<>() {
             @Override
             public @NonNull P getDefaultValue() {
                 return delegate.getDefaultValue();

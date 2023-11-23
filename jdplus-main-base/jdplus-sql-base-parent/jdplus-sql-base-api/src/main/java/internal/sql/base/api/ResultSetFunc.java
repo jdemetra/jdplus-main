@@ -23,7 +23,7 @@ import java.sql.Types;
 import nbbrd.io.text.Parser;
 import nbbrd.sql.jdbc.SqlFunc;
 import nbbrd.sql.jdbc.SqlTypes;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

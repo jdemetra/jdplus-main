@@ -22,7 +22,7 @@ import jdplus.toolkit.base.api.time.TimeRecurrenceFormatter;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;

@@ -99,7 +99,7 @@ class LightMutableSubMatrix implements Matrix.Mutable {
     @Override
     public DoubleSeq.Mutable subDiagonal(int pos) {
         if (pos > nc || pos < -nr) {
-            return DoubleSeq.Mutable.EMPTY;
+            return DoubleSeq.Mutable.empty();
         }
         int del = c0 - r0;
         int cpos=del+pos;

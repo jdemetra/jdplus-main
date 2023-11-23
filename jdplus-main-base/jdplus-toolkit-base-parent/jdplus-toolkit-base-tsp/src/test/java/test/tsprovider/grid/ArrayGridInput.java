@@ -18,6 +18,8 @@ package test.tsprovider.grid;
 
 import jdplus.toolkit.base.tsp.grid.GridDataType;
 import jdplus.toolkit.base.tsp.grid.GridInput;
+import lombok.NonNull;
+
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
@@ -33,12 +35,12 @@ public final class ArrayGridInput implements GridInput {
     private final Object[][] array;
 
     @Override
-    public Set<GridDataType> getDataTypes() {
+    public @NonNull Set<GridDataType> getDataTypes() {
         return EnumSet.allOf(GridDataType.class);
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "";
     }
 
@@ -64,7 +66,7 @@ public final class ArrayGridInput implements GridInput {
     }
 
     @Override
-    public Stream open() throws IOException {
+    public @NonNull Stream open() throws IOException {
         return new Stream() {
             private int row = -1;
             private int col = -1;

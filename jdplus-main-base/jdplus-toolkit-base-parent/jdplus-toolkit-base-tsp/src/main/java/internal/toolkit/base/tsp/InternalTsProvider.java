@@ -22,7 +22,7 @@ import jdplus.toolkit.base.tsp.fixme.Strings;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -23,7 +23,7 @@ import ec.util.chart.swing.Charts;
 
 import java.util.*;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.jfree.data.DomainOrder;
 import org.jfree.data.general.AbstractSeriesDataset;
 import org.jfree.data.xy.IntervalXYDataset;

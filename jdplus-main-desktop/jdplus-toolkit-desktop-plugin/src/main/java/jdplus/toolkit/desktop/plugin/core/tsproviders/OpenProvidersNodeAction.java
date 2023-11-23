@@ -19,6 +19,7 @@ package jdplus.toolkit.desktop.plugin.core.tsproviders;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.base.tsp.FileLoader;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
@@ -38,7 +39,8 @@ import java.util.Comparator;
 @Messages("CTL_OpenProvidersAction=Open")
 public final class OpenProvidersNodeAction extends AbstractAction implements Presenter.Popup {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.OpenProvidersAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.OpenProvidersNodeAction";
 
     @Override
     public void actionPerformed(ActionEvent e) {

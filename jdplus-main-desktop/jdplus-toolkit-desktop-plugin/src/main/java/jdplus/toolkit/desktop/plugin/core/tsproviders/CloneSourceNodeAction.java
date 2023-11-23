@@ -9,6 +9,7 @@ import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceLoader;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
@@ -21,7 +22,8 @@ import java.util.stream.Stream;
 @Messages("CTL_CloneSourceAction=Clone")
 public final class CloneSourceNodeAction extends AbilityNodeAction<DataSource> {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.CloneSourceAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.CloneSourceNodeAction";
 
     public CloneSourceNodeAction() {
         super(DataSource.class, true);

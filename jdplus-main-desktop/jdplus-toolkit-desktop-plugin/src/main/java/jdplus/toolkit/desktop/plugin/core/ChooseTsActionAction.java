@@ -7,6 +7,7 @@ package jdplus.toolkit.desktop.plugin.core;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
 import jdplus.toolkit.desktop.plugin.TsActionManager;
 import jdplus.toolkit.desktop.plugin.nodes.NamedServiceChoicePanel;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -25,8 +26,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
-@ActionID(category = "Edit",
-        id = "ec.nbdemetra.ui.ChooseTsActionAction")
+@ActionID(category = "Edit", id = ChooseTsActionAction.ID)
 @ActionRegistration(
         displayName = "#CTL_ChooseTsActionAction",
         lazy = false)
@@ -35,6 +35,9 @@ import java.beans.VetoableChangeListener;
 })
 @Messages("CTL_ChooseTsActionAction=Choose TsAction")
 public final class ChooseTsActionAction extends AbstractAction implements Presenter.Toolbar, VetoableChangeListener, PropertyChangeListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.ChooseTsActionAction";
 
     final NamedServiceChoicePanel choicePanel;
 

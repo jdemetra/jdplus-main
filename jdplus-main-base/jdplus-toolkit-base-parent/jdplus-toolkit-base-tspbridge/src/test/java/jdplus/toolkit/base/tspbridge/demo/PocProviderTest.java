@@ -16,82 +16,76 @@
  */
 package jdplus.toolkit.base.tspbridge.demo;
 
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsInformationType;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
-import tck.demetra.tsp.DataSourceProviderAssert;
+import lombok.NonNull;
 import org.junit.jupiter.api.Test;
+import tck.demetra.tsp.DataSourceProviderAssert;
 
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static jdplus.toolkit.base.api.timeseries.TsInformationType.All;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author Philippe Charles
  */
+@lombok.extern.java.Log
 public class PocProviderTest {
 
     @Test
     public void testTspCompliance() {
-        DataSourceProviderAssert.Sampler<DataSourceProvider> sampler = new DataSourceProviderAssert.Sampler<DataSourceProvider>() {
+        var sampler = new DataSourceProviderAssert.Sampler<>() {
             @Override
-            public Optional<DataSource> dataSource(DataSourceProvider p) {
+            public @NonNull Optional<DataSource> dataSource(@NonNull DataSourceProvider p) {
                 return p.getDataSources().stream().findFirst();
             }
 
             @Override
-            public Optional<DataSet> tsDataSet(DataSourceProvider p) {
+            public @NonNull Optional<DataSet> tsDataSet(@NonNull DataSourceProvider p) {
                 return dataSource(p).map(o -> {
                     try {
                         return p.children(o).get(0);
                     } catch (IllegalArgumentException | IOException ex) {
-                        Logger.getLogger(PocProviderTest.class.getName()).log(Level.SEVERE, null, ex);
+                        log.log(Level.SEVERE, "Unexpected error in '#toDataSet(DataSourceProvider)'", ex);
                     }
                     return null;
                 });
             }
 
             @Override
-            public Optional<DataSet> tsCollectionDataSet(DataSourceProvider p) {
+            public @NonNull Optional<DataSet> tsCollectionDataSet(@NonNull DataSourceProvider p) {
                 return dataSource(p).map(o -> {
                     try {
                         return p.children(o).get(0);
                     } catch (IllegalArgumentException | IOException ex) {
-                        Logger.getLogger(PocProviderTest.class.getName()).log(Level.SEVERE, null, ex);
+                        log.log(Level.SEVERE, "Unexpected error in '#tsCollectionDataSet(DataSourceProvider)'", ex);
                     }
                     return null;
                 });
             }
         };
-        DataSourceProviderAssert.assertCompliance(() -> new PocProvider(), sampler);
+        DataSourceProviderAssert.assertCompliance(PocProvider::new, sampler);
     }
 
     @Test
     public void testSample() throws IOException {
-        try (PocProvider p = new PocProvider()) {
+        try (var x = new PocProvider()) {
             DataSource normalSource = DataSource.of(PocProvider.NAME, "");
 
-            assertThat(p.getDataSources())
+            assertThat(x.getDataSources())
                     .hasSize(6)
-                    .element(0)
-                    .isEqualTo(normalSource);
+                    .contains(normalSource, atIndex(0));
 
-            assertThat(p.getDisplayName()).isEqualTo("Proof-of-concept");
-            assertThat(p.getSource()).isEqualTo("poc");
+            assertThat(x.getDisplayName()).isEqualTo("Proof-of-concept");
+            assertThat(x.getSource()).isEqualTo("poc");
 
-            TsMoniker normalMoniker = p.toMoniker(normalSource);
-
-            assertThat(p.getTsCollection(normalMoniker, TsInformationType.All)).satisfies(o -> {
-                assertThat(((TsCollection) o).getMoniker().getSource()).isEqualTo(PocProvider.NAME);
-                assertThat(((TsCollection) o)).hasSize(25);
-            });
-
+            assertThatObject(x.getTsCollection(x.toMoniker(normalSource), All))
+                    .returns(PocProvider.NAME, o -> o.getMoniker().getSource())
+                    .returns(25, o -> o.getItems().size());
         }
     }
 }

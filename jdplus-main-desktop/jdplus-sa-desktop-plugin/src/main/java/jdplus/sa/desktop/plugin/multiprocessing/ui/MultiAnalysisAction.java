@@ -10,6 +10,8 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewFactory;
@@ -21,13 +23,16 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
-@ActionID(category = "Seasonal Adjustment", id = "ec.nbdemetra.sa.MultiAnalysisAction")
+@ActionID(category = "Seasonal Adjustment", id = MultiAnalysisAction.ID)
 @ActionRegistration(displayName = "#CTL_MultiAnalysisAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Statistical methods/Seasonal Adjustment/Multi Processing", position = 10000)
 })
 @Messages("CTL_MultiAnalysisAction=New")
 public final class MultiAnalysisAction implements ActionListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.ui.MultiAnalysisAction";
 
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.core.data.analysis.WindowFunction;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -33,7 +34,7 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "output", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.sa.ui.CanovaHansenTopComponent")
+@ActionID(category = "Window", id = CanovaHansenTopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Seasonal Adjustment/Tools", position = 350)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_CanovaHansenAction")
 @Messages({
@@ -42,6 +43,9 @@ import org.openide.windows.WindowManager;
     "HINT_CanovaHansenTopComponent=This is a Canova-Hansen window"
 })
 public final class CanovaHansenTopComponent extends TopComponent implements HasTs, ExplorerManager.Provider {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.ui.CanovaHansenTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

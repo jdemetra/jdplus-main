@@ -11,6 +11,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.DynamicTsDataSupplier;
 import jdplus.toolkit.base.api.timeseries.TsDataSupplier;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -20,15 +21,16 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(
-    category = "Tools",
-id = "demetra.desktop.ui.variables.actions.RefreshAction")
+@ActionID(category = "Tools", id = RefreshAction.ID)
 @ActionRegistration(displayName = "#CTL_RefreshAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = VariablesDocumentManager.ITEMPATH, position = 1700, separatorBefore = 1699)
 })
 @Messages("CTL_RefreshAction=Refresh")
 public final class RefreshAction extends SingleNodeAction<ItemWsNode> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.variables.actions.RefreshAction";
 
     public static final String WARNING_MESSAGE = "Refreshing variables may modify some estimations. Are you sure you want to continue?";
 

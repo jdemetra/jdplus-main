@@ -19,7 +19,7 @@ package jdplus.toolkit.desktop.plugin.properties;
 import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
 import jdplus.toolkit.base.api.util.TreeTraverser;
 import ec.util.table.swing.JTables;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;

@@ -21,7 +21,7 @@ import nbbrd.design.Development;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Alpha)
-public class YearIterator implements java.util.Enumeration<TsDataView> {
+public class YearIterator implements java.util.Iterator<TsDataView> {
 
     /**
      *
@@ -74,7 +74,7 @@ public class YearIterator implements java.util.Enumeration<TsDataView> {
     }
 
     @Override
-    public boolean hasMoreElements() {
+    public boolean hasNext() {
         if (m_data == null) {
             return false;
         }
@@ -93,7 +93,7 @@ public class YearIterator implements java.util.Enumeration<TsDataView> {
     }
 
     @Override
-    public TsDataView nextElement() {
+    public TsDataView next() {
         TsDataView view = m_cur;
         if (view == null) {
             return null;

@@ -18,6 +18,7 @@ package jdplus.toolkit.desktop.plugin.core.actions;
 
 import java.io.IOException;
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
@@ -36,7 +37,8 @@ import org.openide.util.Exceptions;
 @Messages("SaveNodeAction=Save")
 public final class SaveNodeAction extends AbilityNodeAction<Savable> {
 
-    public static final String ID = "demetra.desktop.core.actions.SaveNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.actions.SaveNodeAction";
 
     public SaveNodeAction() {
         super(Savable.class);

@@ -8,6 +8,7 @@ import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.FallbackDataMoniker;
 import jdplus.toolkit.base.tsp.util.ImmutableValuePool;
 import internal.text.base.api.*;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -60,7 +61,7 @@ public final class XmlProvider implements FileLoader<XmlBean> {
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Xml files";
     }
 

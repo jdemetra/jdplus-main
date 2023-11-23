@@ -33,7 +33,7 @@ import jdplus.toolkit.base.core.regarima.AICcComparator;
 import jdplus.toolkit.base.core.regsarima.regular.RegressionVariablesTest;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.x13.base.core.x13.regarima.RegArimaKernel.AmiOptions;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.timeseries.regression.IEasterVariable;
 import jdplus.x13.base.api.regarima.EasterSpec;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;

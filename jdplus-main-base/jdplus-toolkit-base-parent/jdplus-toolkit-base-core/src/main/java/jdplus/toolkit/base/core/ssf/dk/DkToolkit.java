@@ -52,6 +52,9 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.HouseholderWithPivoting;
 import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolver;
+import jdplus.toolkit.base.core.ssf.multivariate.ExtendedMultivariateSsfData;
+import jdplus.toolkit.base.core.ssf.univariate.ExtendedSsfData;
+import jdplus.toolkit.base.core.ssf.univariate.ISsfMeasurement;
 
 /**
  *
@@ -218,7 +221,7 @@ public class DkToolkit {
      * returned.
      * @return
      */
-    public static boolean smooth(ISsf ssf, ISsfData data, ISmoothingResults sresults, boolean rescaleVariance) {
+    public boolean smooth(ISsf ssf, ISsfData data, ISmoothingResults sresults, boolean rescaleVariance) {
         boolean all = sresults.hasVariances();
         DiffuseSmoother smoother = DiffuseSmoother
                 .builder(ssf)
@@ -235,12 +238,12 @@ public class DkToolkit {
      * @param data
      * @return
      */
-    public static DataBlockStorage fastSmooth(ISsf ssf, ISsfData data) {
+    public DataBlockStorage fastSmooth(ISsf ssf, ISsfData data) {
         FastStateSmoother smoother = new FastStateSmoother(ssf);
         return smoother.process(data);
     }
 
-    public static DefaultSmoothingResults sqrtSmooth(ISsf ssf, ISsfData data, boolean all, boolean rescaleVariance) {
+    public DefaultSmoothingResults sqrtSmooth(ISsf ssf, ISsfData data, boolean all, boolean rescaleVariance) {
         DiffuseSquareRootSmoother smoother = DiffuseSquareRootSmoother
                 .builder(ssf)
                 .calcVariance(all)
@@ -256,7 +259,7 @@ public class DkToolkit {
         }
     }
 
-    public static boolean sqrtSmooth(ISsf ssf, ISsfData data, ISmoothingResults sresults, boolean rescaleVariance) {
+    public boolean sqrtSmooth(ISsf ssf, ISsfData data, ISmoothingResults sresults, boolean rescaleVariance) {
         boolean all = sresults.hasVariances();
         DiffuseSquareRootSmoother smoother = DiffuseSquareRootSmoother
                 .builder(ssf)
@@ -266,6 +269,29 @@ public class DkToolkit {
         return smoother.process(data, sresults);
     }
 
+    public FastMatrix forecast(ISsf ssf, ISsfData data, int nf, boolean variance) {
+        ExtendedSsfData datax = new ExtendedSsfData(data, 0, nf);
+        DefaultDiffuseFilteringResults frslts = filter(ssf, datax, variance);
+        FastMatrix F = FastMatrix.make(nf, variance ? 2 : 1);
+
+        ISsfMeasurement m = ssf.measurement();
+        double var = frslts.var();
+        int n=data.length();
+        for (int i = 0, pos=n; i < nf; ++i, ++pos) {
+            DataBlock a = frslts.a(pos);
+            F.set(i, 0, m.loading().ZX(pos, a));
+            if (variance) {
+                FastMatrix P = frslts.P(pos);
+                double v = m.loading().ZVZ(pos, P);
+                if (m.hasError()) {
+                    v += m.error().at(pos);
+                }
+                F.set(i, 1, v*var);
+            }
+        }
+        return F;
+    }
+    
     private static class LLComputer1 implements ILikelihoodComputer<DiffuseLikelihood> {
 
         private final boolean scalingfactor, res;

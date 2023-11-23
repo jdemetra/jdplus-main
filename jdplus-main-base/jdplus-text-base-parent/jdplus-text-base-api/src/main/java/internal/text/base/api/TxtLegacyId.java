@@ -2,7 +2,7 @@ package internal.text.base.api;
 
 import jdplus.toolkit.base.api.design.DemetraPlusLegacy;
 import nbbrd.io.text.Parser;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

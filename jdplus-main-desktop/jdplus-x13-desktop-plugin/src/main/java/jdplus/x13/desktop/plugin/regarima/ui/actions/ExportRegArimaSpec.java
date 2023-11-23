@@ -26,6 +26,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.x13.base.api.regarima.RegArimaSpec;
 import jdplus.x13.base.information.RegArimaSpecMapping;
 import jdplus.x13.desktop.plugin.regarima.documents.RegArimaSpecManager;
+import nbbrd.design.ClassNameConstant;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.xml.bind.Jaxb;
 import org.openide.awt.ActionID;
@@ -48,14 +49,16 @@ import java.util.stream.Stream;
  *
  * @author Mats Maggi
  */
-@ActionID(category = "Tools",
-        id = "demetra.desktop.regarima.ui.actions.ExportRegArimaSpec")
+@ActionID(category = "Tools", id = ExportRegArimaSpec.ID)
 @ActionRegistration(displayName = "#CTL_ExportRegArimaSpec", lazy = false)
 @ActionReferences({
     @ActionReference(path = RegArimaSpecManager.ITEMPATH, position = 1000, separatorAfter = 1090)
 })
 @NbBundle.Messages("CTL_ExportRegArimaSpec=Export to")
 public class ExportRegArimaSpec extends NodeAction implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.regarima.ui.actions.ExportRegArimaSpec";
 
     public ExportRegArimaSpec() {
     }

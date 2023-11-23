@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.JMenuItem;
+
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -42,13 +44,16 @@ import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
  *
  * @author Philippe Charles
  */
-@ActionID(category = "Edit", id = "demetra.descop.ui.calendars.actions.ExportCalendarAction")
+@ActionID(category = "Edit", id = ExportCalendarAction.ID)
 @ActionRegistration(displayName = "#CTL_ExportCalendarAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = CalendarDocumentManager.ITEMPATH, position = 1430)
 })
 @Messages("CTL_ExportCalendarAction=Export to")
 public final class ExportCalendarAction extends NodeAction implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.calendar.actions.ExportCalendarAction";
 
     private static final Converter<CalendarDefinition, Config> CONVERTER = new CalendarConfig();
 

@@ -29,7 +29,7 @@ import jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview;
 import jdplus.toolkit.desktop.plugin.actions.ResetableZoom;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeSource;
 import jdplus.toolkit.desktop.plugin.components.parts.*;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.awt.*;

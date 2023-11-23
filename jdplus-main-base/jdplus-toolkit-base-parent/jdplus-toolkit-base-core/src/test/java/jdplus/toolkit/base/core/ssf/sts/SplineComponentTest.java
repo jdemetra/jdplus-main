@@ -16,9 +16,6 @@
  */
 package jdplus.toolkit.base.core.ssf.sts;
 
-import jdplus.toolkit.base.core.ssf.sts.LocalLinearTrend;
-import jdplus.toolkit.base.core.ssf.sts.Noise;
-import jdplus.toolkit.base.core.ssf.sts.RegularSplineComponent;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.ssf.akf.AkfToolkit;

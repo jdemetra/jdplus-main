@@ -10,6 +10,8 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 import java.awt.BorderLayout;
+
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.explorer.ExplorerManager;
@@ -25,7 +27,7 @@ import org.openide.util.NbBundle.Messages;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Window", id = "demetra.desktop.workspace.ui.CalendarTopComponent")
+@ActionID(category = "Window", id = CalendarTopComponent.ID)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_CalendarAction",
         preferredID = "CalendarTopComponent")
 @Messages({
@@ -34,6 +36,9 @@ import org.openide.util.NbBundle.Messages;
     "HINT_CalendarTopComponent=This is a Calendar window"
 })
 public final class CalendarTopComponent extends WorkspaceTopComponent<CalendarDefinition> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.ui.CalendarTopComponent";
 
     private final transient ExplorerManager explorerManager = new ExplorerManager();
     private final JCalendarView view = new JCalendarView();

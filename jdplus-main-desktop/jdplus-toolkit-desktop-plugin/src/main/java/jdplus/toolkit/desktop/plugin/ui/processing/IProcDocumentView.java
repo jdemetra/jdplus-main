@@ -7,7 +7,7 @@ package jdplus.toolkit.desktop.plugin.ui.processing;
 import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.desktop.plugin.interfaces.Disposable;
 import jdplus.toolkit.base.api.util.Id;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;

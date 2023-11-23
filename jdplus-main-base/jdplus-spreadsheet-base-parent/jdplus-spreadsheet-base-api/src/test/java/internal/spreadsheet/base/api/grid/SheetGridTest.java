@@ -20,7 +20,7 @@ import _test.DataForTest;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.tsp.grid.GridReader;
 import ec.util.spreadsheet.Book;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

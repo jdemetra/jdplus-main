@@ -26,20 +26,23 @@ import jdplus.x13.base.api.x13.X13Spec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import jdplus.x13.base.core.x13.X13Document;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Tools",
-id = "demetra.desktop.x13.ui.actions.CreateX13Doc")
+@ActionID(category = "Tools", id = CreateX13Doc.ID)
 @ActionRegistration(displayName = "#CTL_CreateX13Doc")
 @ActionReferences({
     @ActionReference(path = X13SpecManager.ITEMPATH, position = 1620, separatorBefore = 1300)
 })
 @Messages("CTL_CreateX13Doc=Create Document")
 public final class CreateX13Doc implements ActionListener {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.x13.desktop.plugin.x13.ui.actions.CreateX13Doc";
 
     private final WsNode context;
 

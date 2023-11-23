@@ -23,6 +23,7 @@ import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -35,8 +36,7 @@ import org.openide.util.actions.Presenter;
  *
  * @author Mats Maggi
  */
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.Specification")
+@ActionID(category = "SaProcessing", id = Specification.ID)
 @ActionRegistration(displayName = "#CTL_Specification", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1500),
@@ -44,6 +44,9 @@ import org.openide.util.actions.Presenter;
 })
 @Messages("CTL_Specification=Specification")
 public class Specification extends ActiveViewAction<SaBatchUI> implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.Specification";
 
     public static final String PATH = "/Specification";
 

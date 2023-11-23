@@ -22,7 +22,7 @@ import java.util.Random;
 
 import jdplus.toolkit.base.api.timeseries.*;
 import nbbrd.service.ServiceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

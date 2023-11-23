@@ -21,7 +21,8 @@ import jdplus.toolkit.desktop.plugin.TsActionManager;
 import jdplus.toolkit.desktop.plugin.TsCollectable;
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import nbbrd.design.ClassNameConstant;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -44,7 +45,8 @@ import java.util.stream.Stream;
 @Messages("CTL_TsSaveNodeAction=Save to")
 public final class TsSaveNodeAction extends AbilityNodeAction<TsCollectable> implements Presenter.Popup {
 
-    public static final String ID = "demetra.desktop.core.actions.TsSaveNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.actions.TsSaveNodeAction";
 
     public TsSaveNodeAction() {
         super(TsCollectable.class);

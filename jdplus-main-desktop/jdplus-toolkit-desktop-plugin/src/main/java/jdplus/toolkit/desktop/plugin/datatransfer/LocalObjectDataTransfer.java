@@ -6,7 +6,7 @@ package jdplus.toolkit.desktop.plugin.datatransfer;
 
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.util.Table;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;

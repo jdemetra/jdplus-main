@@ -2,7 +2,7 @@ package internal.spreadsheet.desktop.plugin;
 
 import jdplus.toolkit.base.tsp.grid.GridReader;
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;

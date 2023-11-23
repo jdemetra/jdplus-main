@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import jdplus.toolkit.base.workspace.file.spi.FamilyHandlerLoader;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines a kind of workspace that uses files as storage.

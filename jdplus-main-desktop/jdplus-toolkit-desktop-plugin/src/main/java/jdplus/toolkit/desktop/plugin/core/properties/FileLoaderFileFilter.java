@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.core.properties;
 
 import jdplus.toolkit.base.tsp.FileLoader;
 import java.io.File;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

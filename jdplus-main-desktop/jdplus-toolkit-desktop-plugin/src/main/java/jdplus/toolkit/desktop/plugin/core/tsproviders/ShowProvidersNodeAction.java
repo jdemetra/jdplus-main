@@ -17,6 +17,7 @@
 package jdplus.toolkit.desktop.plugin.core.tsproviders;
 
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
@@ -32,7 +33,8 @@ import java.beans.PropertyChangeListener;
 @Messages("CTL_ShowProvidersAction=Show provider nodes")
 public final class ShowProvidersNodeAction extends AbstractAction implements Presenter.Popup, PropertyChangeListener {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.ShowProvidersAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.ShowProvidersNodeAction";
 
     private final JCheckBoxMenuItem item;
 

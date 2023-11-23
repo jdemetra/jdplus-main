@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin.actions;
 
 import jdplus.main.desktop.design.SwingAction;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.util.Optional;

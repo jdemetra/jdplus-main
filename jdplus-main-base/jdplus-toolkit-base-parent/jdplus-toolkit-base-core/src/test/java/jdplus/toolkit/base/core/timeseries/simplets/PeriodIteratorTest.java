@@ -22,8 +22,8 @@ public class PeriodIteratorTest {
         TsPeriod start=TsPeriod.monthly(2000, 1);
         TsData s=TsData.of(start, DoubleSeq.onMapping(36, i->i));
         PeriodIterator iter=new PeriodIterator(s);
-        while (iter.hasMoreElements()){
-            TsDataView view = iter.nextElement();
+        while (iter.hasNext()){
+            TsDataView view = iter.next();
             System.out.println(view.getStart().display());
             System.out.print('\t');
             System.out.println(view.getData());
@@ -35,8 +35,8 @@ public class PeriodIteratorTest {
         TsPeriod start=TsPeriod.monthly(2000, 3);
         TsData s=TsData.of(start, DoubleSeq.onMapping(31, i->i));
         PeriodIterator iter=new PeriodIterator(s);
-        while (iter.hasMoreElements()){
-            TsDataView view = iter.nextElement();
+        while (iter.hasNext()){
+            TsDataView view = iter.next();
             System.out.println(view.getStart().display());
             System.out.print('\t');
             System.out.println(view.getData());

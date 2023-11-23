@@ -146,7 +146,7 @@ public class HtmlSaSlidingSpanSummary<I> extends AbstractHtmlElement implements 
             stream.write(new HtmlTableCell(Integer.toString(i + 1)));
             for (int j = 0; j < ncols; ++j) {
                 if (siter[j] != null) {
-                    TsDataView block = siter[j].nextElement();
+                    TsDataView block = siter[j].next();
                     double v = block.getData().average();
                     if (multiplicative) {
                         stream.write(new HtmlTableCell(df4.format(v)));

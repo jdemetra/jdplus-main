@@ -20,7 +20,7 @@ import jdplus.toolkit.base.workspace.WorkspaceItemDescriptor.Key;
 import java.io.Closeable;
 import java.io.IOException;
 import nbbrd.io.Resource;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

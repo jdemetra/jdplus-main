@@ -30,7 +30,8 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataSourceTransferManager;
 import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.nodes.Nodes;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddyUtil;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import jdplus.toolkit.desktop.plugin.ui.mru.ProviderMruAction;
+import lombok.NonNull;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -65,7 +66,7 @@ import static jdplus.toolkit.desktop.plugin.tsproviders.TsProviderNodes.PROVIDER
  */
 @ActionReferences({
         @ActionReference(path = PROVIDERS_ACTION_PATH, separatorBefore = 300, position = 310, id = @ActionID(category = "File", id = OpenProvidersNodeAction.ID)),
-        @ActionReference(path = PROVIDERS_ACTION_PATH, separatorBefore = 300, position = 320, id = @ActionID(category = "File", id = "ec.nbdemetra.ui.mru.ProviderMruAction")),
+        @ActionReference(path = PROVIDERS_ACTION_PATH, separatorBefore = 300, position = 320, id = @ActionID(category = "File", id = ProviderMruAction.ID)),
         @ActionReference(path = PROVIDERS_ACTION_PATH, separatorBefore = 400, position = 410, id = @ActionID(category = "Edit", id = PasteProvidersNodeAction.ID)),
         @ActionReference(path = PROVIDERS_ACTION_PATH, separatorBefore = 400, position = 430, id = @ActionID(category = "File", id = ImportNodeAction.ID)),
         @ActionReference(path = PROVIDERS_ACTION_PATH, separatorBefore = 450, position = 460, id = @ActionID(category = "Edit", id = ShowProvidersNodeAction.ID)),

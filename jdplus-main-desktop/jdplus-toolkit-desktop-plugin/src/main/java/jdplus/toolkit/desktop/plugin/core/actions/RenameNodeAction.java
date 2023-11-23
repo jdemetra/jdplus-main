@@ -6,6 +6,7 @@ package jdplus.toolkit.desktop.plugin.core.actions;
 
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.desktop.plugin.actions.Renameable;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
@@ -21,7 +22,8 @@ import java.util.stream.Stream;
 @NbBundle.Messages({"RenameNodeAction=Rename..."})
 public final class RenameNodeAction extends AbilityNodeAction<Renameable> {
 
-    public static final String ID = "demetra.desktop.core.actions.RenameNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.actions.RenameNodeAction";
 
     public RenameNodeAction() {
         super(Renameable.class);

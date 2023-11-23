@@ -16,6 +16,7 @@
  */
 package jdplus.tramoseats.desktop.plugin.anomalydetection.report;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import java.util.Map;
 import nbbrd.service.Quantifier;
@@ -25,6 +26,7 @@ import nbbrd.service.ServiceDefinition;
  *
  * @author Mats Maggi
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

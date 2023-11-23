@@ -71,7 +71,7 @@ import jdplus.toolkit.base.core.modelling.regression.TransitoryChangeFactory;
 import jdplus.toolkit.base.core.regsarima.regular.IModelBuilder;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.api.timeseries;
 
 import nbbrd.design.RepresentableAsInt;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

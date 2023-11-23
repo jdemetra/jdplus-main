@@ -21,6 +21,7 @@ import jdplus.toolkit.base.tsp.DataSourceLoader;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import lombok.NonNull;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.*;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
@@ -31,13 +32,16 @@ import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-@ActionID(category = "File", id = "ec.nbdemetra.ui.mru.ProviderMruAction")
+@ActionID(category = "File", id = ProviderMruAction.ID)
 @ActionRegistration(displayName = "#CTL_ProviderMruAction", lazy = false)
 @ActionReferences({
         @ActionReference(path = "Menu/File", position = 810)
 })
 @Messages("CTL_ProviderMruAction=Open recent")
 public final class ProviderMruAction extends AbstractAction implements Presenter.Popup, Presenter.Menu {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.mru.ProviderMruAction";
 
     @Override
     public JMenuItem getMenuPresenter() {

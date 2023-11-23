@@ -25,6 +25,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.toolkit.desktop.plugin.workspace.ui.JSpecSelectionComponent;
 import jdplus.sa.base.api.SaSpecification;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -34,8 +35,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.sa.multiprocessing.actions.SelectRefSpecification")
+@ActionID(category = "SaProcessing", id = SelectRefSpecification.ID)
 @ActionRegistration(displayName = "#CTL_SelectRefSpecification", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + RefSpecification.PATH, position = 1505),
@@ -43,6 +43,9 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_SelectRefSpecification=Select...")
 public final class SelectRefSpecification extends ActiveViewAction<SaBatchUI> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.SelectRefSpecification";
 
     public SelectRefSpecification() {
         super(SaBatchUI.class);

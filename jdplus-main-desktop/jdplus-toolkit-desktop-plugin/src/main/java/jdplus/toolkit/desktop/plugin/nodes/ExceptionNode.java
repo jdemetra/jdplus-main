@@ -19,7 +19,7 @@ package jdplus.toolkit.desktop.plugin.nodes;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.toolkit.desktop.plugin.components.JExceptionPanel;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.DialogDisplayer;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;

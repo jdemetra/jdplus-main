@@ -24,7 +24,7 @@ import ec.util.spreadsheet.helpers.CellRefHelper;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.Date;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import javax.swing.JLabel;
 import javax.swing.JTable;

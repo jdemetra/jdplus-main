@@ -23,7 +23,7 @@ import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import ec.util.various.swing.JCommand;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 

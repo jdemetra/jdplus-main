@@ -14,6 +14,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.calendars.*;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.util.WeightedItem;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -30,13 +31,16 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-@ActionID(category = "Tools", id = "demetra.desktop.ui.calendars.actions.AddCalendarAction")
+@ActionID(category = "Tools", id = AddCalendarAction.ID)
 @ActionRegistration(displayName = "#CTL_AddCalendarAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = CalendarDocumentManager.PATH, position = 1000)
 })
 @Messages("CTL_AddCalendarAction=Add Calendar")
 public final class AddCalendarAction extends AbstractAction implements Presenter.Popup, Presenter.Menu {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.calendar.actions.AddCalendarAction";
 
     @Override
     public void actionPerformed(ActionEvent ae) {

@@ -4,10 +4,11 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.processing;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.base.api.util.Id;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -20,6 +21,7 @@ import nbbrd.service.ServiceSorter;
  *
  * @author Philippe Charles
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

@@ -24,7 +24,7 @@ import ec.util.desktop.DesktopManager;
 import ec.util.desktop.MailtoBuilder;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.List;

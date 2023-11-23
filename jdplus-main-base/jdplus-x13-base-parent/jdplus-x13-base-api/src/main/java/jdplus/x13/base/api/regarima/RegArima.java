@@ -17,6 +17,7 @@
 package jdplus.x13.base.api.regarima;
 
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.processing.GenericResults;
 import jdplus.toolkit.base.api.processing.ProcResults;
 import jdplus.toolkit.base.api.timeseries.TsData;
@@ -73,10 +74,10 @@ public class RegArima {
             return GenericResults.notImplemented();
         }
     }
-    
+
+    @InterchangeableProcessor
    @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
-    @FunctionalInterface
     public static interface Processor {
 
         public ProcResults process(TsData series, RegArimaSpec spec, ModellingContext context, List<String> addtionalItems);

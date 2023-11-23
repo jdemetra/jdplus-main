@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.1.1</version>
+        <version>3.2.0</version>
     </parent>
 
     <artifactId>jdplus-main-bom</artifactId>
@@ -18,7 +18,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java.bundled.version>jdk-17.0.8.1+1</java.bundled.version>
+        <java.bundled.version>jdk-17.0.9+9</java.bundled.version>
     </properties>
 
     <dependencyManagement>
@@ -143,7 +143,7 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jdks-maven-plugin</artifactId>
-                        <version>1.8.0</version>
+                        <version>1.9.0</version>
                         <executions>
                             <execution>
                                 <id>download-windows-jre</id>
@@ -162,6 +162,31 @@
                                         </pkg>
                                     </pkgs>
                                     <unpack>true</unpack>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>check-binaries-jre</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <inherited>false</inherited>
+                                <configuration>
+                                    <rules>
+                                        <requireFilesExist>
+                                            <files>
+                                                <file>${project.build.directory}/windows/jwsacruncher-${project.version}</file>
+                                                <file>${project.build.directory}/windows/nbdemetra</file>
+                                                <file>${project.build.directory}/jdks/temurin17/${jdkname}</file>
+                                            </files>
+                                        </requireFilesExist>
+                                    </rules>
                                 </configuration>
                             </execution>
                         </executions>
@@ -244,7 +269,7 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>1.8.0</version>
+                        <version>1.9.0</version>
                         <executions>
                             <execution>
                                 <id>release-assets</id>

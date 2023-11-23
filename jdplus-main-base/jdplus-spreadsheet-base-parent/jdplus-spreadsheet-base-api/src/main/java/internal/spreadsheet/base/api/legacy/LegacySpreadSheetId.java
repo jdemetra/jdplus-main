@@ -17,7 +17,7 @@
 package internal.spreadsheet.base.api.legacy;
 
 import jdplus.toolkit.base.api.design.DemetraPlusLegacy;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

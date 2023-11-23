@@ -25,7 +25,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
 import jdplus.toolkit.base.tsp.legacy.LegacyFileId;
 import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.File;
 import java.util.Optional;

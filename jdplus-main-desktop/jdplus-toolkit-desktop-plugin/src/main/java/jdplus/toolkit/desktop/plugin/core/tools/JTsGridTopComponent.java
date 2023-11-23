@@ -4,18 +4,13 @@
  */
 package jdplus.toolkit.desktop.plugin.core.tools;
 
-import jdplus.toolkit.desktop.plugin.tools.ToolsPersistence;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.util.NbComponents;
-import jdplus.toolkit.desktop.plugin.nodes.ControlNode;
 import jdplus.toolkit.desktop.plugin.components.JTsGrid;
-
-import static jdplus.toolkit.desktop.plugin.components.JTsGrid.REVERSE_ACTION;
-import static jdplus.toolkit.desktop.plugin.components.JTsGrid.TRANSPOSE_ACTION;
-import java.awt.BorderLayout;
-import java.util.Set;
-import javax.swing.*;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
+import jdplus.toolkit.desktop.plugin.nodes.ControlNode;
+import jdplus.toolkit.desktop.plugin.tools.ToolsPersistence;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
+import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -30,6 +25,12 @@ import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
+import javax.swing.*;
+import java.awt.*;
+
+import static jdplus.toolkit.desktop.plugin.components.JTsGrid.REVERSE_ACTION;
+import static jdplus.toolkit.desktop.plugin.components.JTsGrid.TRANSPOSE_ACTION;
+
 /**
  * Top component which displays something.
  */
@@ -39,15 +40,18 @@ import org.openide.windows.WindowManager;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED)
 @TopComponent.Registration(mode = "tsnavigator", openAtStartup = false)
-@ActionID(category = "Window", id = "ec.nbdemetra.ui.tools.GridTopComponent")
+@ActionID(category = "Window", id = JTsGridTopComponent.ID)
 @ActionReference(path = "Menu/Tools/Container", position = 200)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_GridAction")
 @Messages({
-    "CTL_GridAction=Grid",
-    "CTL_GridTopComponent=Grid",
-    "HINT_GridTopComponent=This is a Grid window"
+        "CTL_GridAction=Grid",
+        "CTL_GridTopComponent=Grid",
+        "HINT_GridTopComponent=This is a Grid window"
 })
 public final class JTsGridTopComponent extends TopComponent implements ExplorerManager.Provider, MultiViewElement {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tools.JTsGridTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 

@@ -20,7 +20,7 @@ import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
 import ec.util.various.swing.FontAwesome;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 

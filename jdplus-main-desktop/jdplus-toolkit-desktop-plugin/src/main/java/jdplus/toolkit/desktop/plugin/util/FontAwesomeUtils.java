@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.util;
 
 import ec.util.various.swing.FontAwesome;
 import nbbrd.design.swing.OnEDT;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import javax.swing.*;
 import java.awt.*;

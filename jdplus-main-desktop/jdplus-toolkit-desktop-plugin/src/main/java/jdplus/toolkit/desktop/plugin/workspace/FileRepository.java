@@ -36,7 +36,7 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import nbbrd.io.sys.SystemProperties;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

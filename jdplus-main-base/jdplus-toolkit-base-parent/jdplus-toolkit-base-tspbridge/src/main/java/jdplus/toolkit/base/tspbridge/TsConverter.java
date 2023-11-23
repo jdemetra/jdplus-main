@@ -23,7 +23,7 @@ import jdplus.toolkit.base.api.util.Table;
 import ec.tss.TsBypass;
 import ec.tstoolkit.maths.matrices.Matrix;
 import jdplus.toolkit.base.tsp.fixme.Strings;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.LocalDateTime;

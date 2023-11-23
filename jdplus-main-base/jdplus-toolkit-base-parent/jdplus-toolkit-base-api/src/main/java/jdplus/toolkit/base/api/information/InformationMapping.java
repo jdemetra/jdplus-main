@@ -27,7 +27,7 @@ import jdplus.toolkit.base.api.util.WildCards;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Basic information extractor for a given type

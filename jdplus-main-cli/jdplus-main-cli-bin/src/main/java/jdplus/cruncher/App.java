@@ -52,7 +52,7 @@ import java.util.stream.Stream;
 import jdplus.cruncher.batch.SaBatchInformation;
 import jdplus.cruncher.batch.SaBatchProcessor;
 import jdplus.cruncher.core.FileRepository;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import picocli.CommandLine;
 
 /**

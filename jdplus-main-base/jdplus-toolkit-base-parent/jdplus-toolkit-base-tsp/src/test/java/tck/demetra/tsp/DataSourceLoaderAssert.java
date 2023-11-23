@@ -25,7 +25,7 @@ import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.internal.Iterables;
 import org.assertj.core.util.Objects;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -315,17 +315,17 @@ public class DataSourceLoaderAssert extends AbstractAssert<DataSourceLoaderAsser
     public interface Sampler<P extends DataSourceLoader> extends DataSourceProviderAssert.Sampler<P> {
 
         @Override
-        default Optional<DataSource> dataSource(P p) {
+        default @NonNull Optional<DataSource> dataSource(@NonNull P p) {
             return Optional.of(p.encodeBean(bean(p)));
         }
 
         @Override
-        default Optional<DataSet> tsDataSet(P p) {
+        default @NonNull Optional<DataSet> tsDataSet(@NonNull P p) {
             return dataSource(p).map(target -> firstSeriesOrNull(p, target));
         }
 
         @Override
-        default Optional<DataSet> tsCollectionDataSet(P p) {
+        default @NonNull Optional<DataSet> tsCollectionDataSet(@NonNull P p) {
             return dataSource(p).map(target -> firstCollectionOrNull(p, target));
         }
 

@@ -19,7 +19,7 @@ package jdplus.toolkit.base.api.timeseries.regression;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import java.util.Arrays;
 import java.util.stream.Stream;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Root of all regression variable definition. All definitions must contain

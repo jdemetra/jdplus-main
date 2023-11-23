@@ -17,26 +17,27 @@
 package jdplus.toolkit.base.tspbridge.demo;
 
 import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.util.IntList;
 import jdplus.toolkit.base.tsp.*;
 import jdplus.toolkit.base.tsp.stream.DataSetTs;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
-import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
-import nbbrd.io.text.Formatter;
-import nbbrd.io.text.Parser;
-import nbbrd.io.text.Property;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
+import lombok.NonNull;
+import nbbrd.design.BuilderPattern;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.logging.Level;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+
+import static jdplus.toolkit.base.api.timeseries.TsInformationType.*;
+import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
+import static jdplus.toolkit.base.tsp.util.DataSourcePreconditions.checkProvider;
 
 /**
  * @author Philippe Charles
@@ -46,8 +47,8 @@ public final class PocProvider implements DataSourceProvider {
 
     public static final String NAME = "poc";
 
-    private static final Property<DataType> TYPE_PARAM = Property.of("t", DataType.NORMAL, Parser.onEnum(DataType.class), Formatter.onEnum());
-    private static final Property<Integer> INDEX_PARAM = Property.of("i", -1, Parser.onInteger(), Formatter.onInteger());
+    private static final PropertyHandler<DataType> TYPE_PARAM = PropertyHandler.onEnum("t", DataType.NORMAL);
+    private static final PropertyHandler<Integer> INDEX_PARAM = PropertyHandler.onInteger("i", -1);
 
     @lombok.experimental.Delegate(types = HasDataHierarchy.class)
     private final PocDataSupport dataSupport;
@@ -76,17 +77,16 @@ public final class PocProvider implements DataSourceProvider {
 
         this.updater = new Timer(true);
         updater.schedule(new TimerTask() {
-            private final DataSource updatingSource = createDataSource(DataType.UPDATING);
 
             @Override
             public void run() {
-                reload(updatingSource);
+                reload(DataType.UPDATING.getDataSource());
             }
         }, 1000, 1000);
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Proof-of-concept";
     }
 
@@ -97,47 +97,33 @@ public final class PocProvider implements DataSourceProvider {
     }
 
     private static List<DataSource> createDataSources() {
-        return Stream.of(DataType.values()).map(PocProvider::createDataSource).collect(Collectors.toList());
-    }
-
-    private static DataSource createDataSource(DataType o) {
-        DataSource.Builder result = DataSource.builder(NAME, "");
-        TYPE_PARAM.set(result::parameter, o);
-        return result.build();
+        return Stream.of(DataType.values()).map(DataType::getDataSource).toList();
     }
 
     private static final class PocDataDisplayName implements HasDataDisplayName {
 
         @Override
         public @NonNull String getDisplayName(@NonNull DataSource dataSource) throws IllegalArgumentException {
-            DataSourcePreconditions.checkProvider(NAME, dataSource);
-            switch (TYPE_PARAM.get(dataSource::getParameter)) {
-                case NORMAL:
-                    return "Normal async";
-                case FAILING_META:
-                    return "Failing on meta";
-                case FAILING_DATA:
-                    return "Failing on data";
-                case FAILING_DEF:
-                    return "Failing on definition";
-                case UPDATING:
-                    return "Auto updating";
-                case SLOW:
-                    return "Slow retrieval";
-                default:
-                    throw new IllegalArgumentException();
-            }
+            checkProvider(NAME, dataSource);
+            return switch (TYPE_PARAM.get(dataSource::getParameter)) {
+                case NORMAL -> "Normal async";
+                case FAILING_META -> "Failing on meta";
+                case FAILING_DATA -> "Failing on data";
+                case FAILING_DEF -> "Failing on definition";
+                case UPDATING -> "Auto updating";
+                case SLOW -> "Slow retrieval";
+            };
         }
 
         @Override
         public @NonNull String getDisplayName(@NonNull DataSet dataSet) throws IllegalArgumentException {
-            DataSourcePreconditions.checkProvider(NAME, dataSet);
+            checkProvider(NAME, dataSet);
             return getDisplayName(dataSet.getDataSource()) + System.lineSeparator() + getDisplayNodeName(dataSet);
         }
 
         @Override
         public @NonNull String getDisplayNodeName(@NonNull DataSet dataSet) throws IllegalArgumentException {
-            DataSourcePreconditions.checkProvider(NAME, dataSet);
+            checkProvider(NAME, dataSet);
             TsDomain domain = TYPE_PARAM.get(dataSet.getDataSource()::getParameter).getDomain(INDEX_PARAM.get(dataSet::getParameter));
             return domain.getStartPeriod().getUnit() + "#" + domain.getLength();
         }
@@ -145,21 +131,21 @@ public final class PocProvider implements DataSourceProvider {
 
     private static final class PocDataSupport implements HasTsStream, HasDataHierarchy {
 
-        private final Function<Integer, TsData> normalData;
-        private final Function<Integer, TsData> updatingData;
-        private final Function<Integer, TsData> slowData;
+        private final List<TsData> normalData;
+        private final IntFunction<TsData> updatingData;
+        private final IntFunction<TsData> slowData;
 
         public PocDataSupport() {
-            normalData = createData(DataType.NORMAL)::get;
+            normalData = createData(DataType.NORMAL);
             updatingData = shiftingValues(createData(DataType.UPDATING));
             slowData = createData(DataType.SLOW)::get;
         }
 
         @Override
         public @NonNull List<DataSet> children(@NonNull DataSource dataSource) throws IllegalArgumentException, IOException {
-            DataSourcePreconditions.checkProvider(NAME, dataSource);
-            try (Stream<DataSetTs> cursor = cursorOf(dataSource, TsInformationType.Definition)) {
-                return cursor.map(DataSetTs::getId).collect(Collectors.toList());
+            checkProvider(NAME, dataSource);
+            try (var cursor = cursorOf(dataSource, Definition)) {
+                return cursor.map(DataSetTs::getId).toList();
             } catch (UncheckedIOException ex) {
                 throw ex.getCause();
             }
@@ -167,19 +153,19 @@ public final class PocProvider implements DataSourceProvider {
 
         @Override
         public @NonNull List<DataSet> children(@NonNull DataSet parent) throws IllegalArgumentException, IOException {
-            DataSourcePreconditions.checkProvider(NAME, parent);
+            checkProvider(NAME, parent);
             throw new IllegalArgumentException("Invalid hierarchy");
         }
 
         @Override
         public @NonNull Stream<DataSetTs> getData(@NonNull DataSource dataSource, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
-            DataSourcePreconditions.checkProvider(NAME, dataSource);
+            checkProvider(NAME, dataSource);
             return cursorOf(dataSource, type);
         }
 
         @Override
         public @NonNull Stream<DataSetTs> getData(@NonNull DataSet dataSet, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {
-            DataSourcePreconditions.checkProvider(NAME, dataSet);
+            checkProvider(NAME, dataSet);
             if (!dataSet.getKind().equals(DataSet.Kind.SERIES)) {
                 throw new IllegalArgumentException("Invalid hierarchy");
             }
@@ -187,104 +173,70 @@ public final class PocProvider implements DataSourceProvider {
                     .filter(o -> o.getId().equals(dataSet));
         }
 
-        private static Function<Integer, DataSet> dataSetFunc(DataSource dataSource) {
-            DataSet.Builder b = DataSet.builder(dataSource, DataSet.Kind.SERIES);
-            return index -> {
-                INDEX_PARAM.set(b::parameter, index);
+        private Stream<DataSetTs> cursorOf(DataSource source, TsInformationType type) throws IOException {
+            DataType dt = TYPE_PARAM.get(source::getParameter);
+            dt.sleep(type);
+            return IntStream
+                    .range(0, dt.getSeriesCount())
+                    .mapToObj(seriesFunc(idFunc(source), dataFunc(dt, type), metaFunc(dt, type), labelFunc(dt)));
+        }
+
+        private static IntFunction<DataSetTs> seriesFunc(
+                IntFunction<DataSet> toId,
+                IntFunction<TsData> toData,
+                IntFunction<Map<String, String>> toMeta,
+                IntFunction<String> toLabel) {
+            return seriesIndex -> new DataSetTs(toId.apply(seriesIndex), toLabel.apply(seriesIndex), toMeta.apply(seriesIndex), toData.apply(seriesIndex));
+        }
+
+        private static IntFunction<DataSet> idFunc(DataSource dataSource) {
+            return seriesIndex -> {
+                DataSet.Builder b = DataSet.builder(dataSource, DataSet.Kind.SERIES);
+                INDEX_PARAM.set(b::parameter, seriesIndex);
                 return b.build();
             };
         }
 
-        static Stream<DataSetTs> from(
-                Iterator<Integer> iterator,
-                Function<Integer, DataSet> toId,
-                Function<Integer, TsData> toData,
-                Function<Integer, Map<String, String>> toMeta,
-                Function<Integer, String> toLabel) {
-            return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), true)
-                    .map(index -> new DataSetTs(toId.apply(index), toLabel.apply(index), toMeta.apply(index), toData.apply(index)));
+        private IntFunction<TsData> dataFunc(DataType dt, TsInformationType type) throws IOException {
+            return switch (dt) {
+                case NORMAL -> dataFunc(normalData::get, type);
+                case FAILING_META -> failingDataFunc(MetaData);
+                case FAILING_DATA -> failingDataFunc(Data);
+                case FAILING_DEF -> failingDataFunc(Definition);
+                case UPDATING -> dataFunc(updatingData, type);
+                case SLOW -> dataFunc(slowData, type);
+            };
         }
 
-        static Stream<DataSetTs> from(Iterator<Integer> iterator, Function<Integer, DataSet> toId) {
-            return from(iterator, toId, o -> DataSetTs.DATA_NOT_REQUESTED, o -> Collections.emptyMap(), Object::toString);
+        private static IntFunction<TsData> dataFunc(IntFunction<TsData> delegate, TsInformationType type) {
+            return type.encompass(Data) ? delegate : ignore -> DataSetTs.DATA_NOT_REQUESTED;
         }
 
-        private Stream<DataSetTs> cursorOf(DataSource source, TsInformationType type) throws IOException {
-            DataType dt = TYPE_PARAM.get(source::getParameter);
-            Function<Integer, DataSet> dataSetFunc = dataSetFunc(source);
-            Iterator<Integer> iter = seriesIndexIterator(dt);
-            switch (dt) {
-                case NORMAL:
-                    sleep(dt, type);
-                    return from(iter, dataSetFunc, dataFunc(normalData, type), metaFunc(dt, type), labelFunc(dt));
-                case FAILING_META:
-                    sleep(dt, type);
-                    if (type.encompass(TsInformationType.MetaData)) {
-                        throw new IOException("Cannot load meta");
-                    }
-                    return from(iter, dataSetFunc);
-                case FAILING_DATA:
-                    sleep(dt, type);
-                    if (type.encompass(TsInformationType.Data)) {
-                        throw new IOException("Cannot load data");
-                    }
-                    return from(iter, dataSetFunc);
-                case FAILING_DEF:
-                    sleep(dt, type);
-                    if (type.encompass(TsInformationType.Definition)) {
-                        throw new IOException("Cannot load definition");
-                    }
-                    return from(iter, dataSetFunc);
-                case UPDATING:
-                    return from(iter, dataSetFunc, dataFunc(updatingData, type), metaFunc(dt, type), labelFunc(dt));
-                case SLOW:
-                    log.log(Level.INFO, "Getting data {0} - {1}", new Object[]{dt, type});
-                    sleep(dt, type);
-                    return from(iter, dataSetFunc, dataFunc(slowData, type), metaFunc(dt, type), labelFunc(dt));
-                default:
-                    throw new IllegalArgumentException("Invalid data type");
+        private static IntFunction<TsData> failingDataFunc(TsInformationType type) throws IOException {
+            if (type.encompass(type)) {
+                throw new IOException("Cannot load " + type);
             }
+            return ignore -> DataSetTs.DATA_NOT_REQUESTED;
         }
 
-        private static Iterator<Integer> seriesIndexIterator(DataType dt) {
-            return IntStream.range(0, dt.getSeriesCount()).iterator();
+        private static IntFunction<Map<String, String>> metaFunc(DataType dt, TsInformationType type) {
+            return type.encompass(MetaData)
+                    ? seriesIndex -> Map.of(
+                    "Type", dt.name(),
+                    "Index", String.valueOf(seriesIndex),
+                    "Sleep meta", String.valueOf(dt.getSleepDuration(MetaData)),
+                    "Sleep data", String.valueOf(dt.getSleepDuration(Data)))
+                    : ignore -> Collections.emptyMap();
         }
 
-        private static Function<Integer, TsData> dataFunc(Function<Integer, TsData> delegate, TsInformationType type) {
-            return type.encompass(TsInformationType.Data)
-                    ? delegate
-                    : o -> DataSetTs.DATA_NOT_REQUESTED;
+        private static IntFunction<String> labelFunc(DataType dt) {
+            return seriesIndex -> dt.name() + "#" + seriesIndex;
         }
 
-        private static Function<Integer, Map<String, String>> metaFunc(DataType dt, TsInformationType type) {
-            return type.encompass(TsInformationType.MetaData)
-                    ? o -> {
-                Map<String, String> result = new HashMap<>();
-                result.put("Type", dt.name());
-                result.put("Index", String.valueOf(o));
-                result.put("Sleep meta", String.valueOf(dt.getSleepDuration(TsInformationType.MetaData)));
-                result.put("Sleep data", String.valueOf(dt.getSleepDuration(TsInformationType.Data)));
-                return Collections.unmodifiableMap(result);
-            }
-                    : o -> Collections.emptyMap();
-        }
-
-        private static Function<Integer, String> labelFunc(DataType dt) {
-            return o -> dt.name() + "#" + o;
-        }
-
-        private void sleep(DataType dt, TsInformationType type) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(dt.getSleepDuration(type));
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        private static Function<Integer, TsData> shiftingValues(List<TsData> list) {
-            return o -> {
-                TsData result = shiftValues(list.get(o));
-                list.set(o, result);
+        private static IntFunction<TsData> shiftingValues(List<TsData> list) {
+            return seriesIndex -> {
+                TsData result = shiftValues(list.get(seriesIndex));
+                list.set(seriesIndex, result);
                 return result;
             };
         }
@@ -300,50 +252,50 @@ public final class PocProvider implements DataSourceProvider {
             return input;
         }
 
-        private static List<TsData> createData(DataType dt) {
+        private static List<TsData> createData(DataType dataType) {
             return IntStream
-                    .range(0, dt.getSeriesCount())
-                    .mapToObj(o -> createData(dt, o))
+                    .range(0, dataType.getSeriesCount())
+                    .mapToObj(seriesIndex -> createData(dataType, seriesIndex))
                     .collect(Collectors.toList());
         }
 
         private static TsData createData(DataType dt, int seriesIndex) {
-            TsDomain domain = dt.getDomain(seriesIndex);
-            return TsData.ofInternal(domain.getStartPeriod(), vals(new Random(0), domain.getLength()));
-        }
-
-        private static double[] vals(Random rnd, int obsCount) {
-            double[] data = new double[obsCount];
-            double cur = rnd.nextDouble() + 100;
-            for (int i = 0; i < obsCount; ++i) {
-                cur = cur + rnd.nextDouble() - .5;
-                data[i] = cur;
-            }
-            return data;
+            return PocDomainBuilder.createData(dt.getDomain(seriesIndex));
         }
     }
 
+    @lombok.RequiredArgsConstructor
     private enum DataType {
 
-        NORMAL(doms(
-                new TsUnit[]{TsUnit.YEAR, TsUnit.HALF_YEAR, TsUnit.QUARTER, TsUnit.MONTH, TsUnit.DAY},
-                new int[]{0, 1, 24, 60, 120})
-        ),
-        FAILING_DATA(60, 120),
-        FAILING_META(60, 120),
-        FAILING_DEF(60, 120),
-        UPDATING(0, 1, 24, 60, 120),
-        SLOW(60, 120);
+        NORMAL(new PocDomainBuilder()
+                .units(YEAR, HALF_YEAR, QUARTER, MONTH, DAY)
+                .sizes(0, 1, 24, 60, 120)
+                .build()),
+        FAILING_DATA(new PocDomainBuilder()
+                .units(MONTH)
+                .sizes(60, 120)
+                .build()),
+        FAILING_META(new PocDomainBuilder()
+                .units(MONTH)
+                .sizes(60, 120)
+                .build()),
+        FAILING_DEF(new PocDomainBuilder()
+                .units(MONTH)
+                .sizes(60, 120)
+                .build()),
+        UPDATING(new PocDomainBuilder()
+                .units(MONTH)
+                .sizes(0, 1, 24, 60, 120)
+                .build()),
+        SLOW(new PocDomainBuilder()
+                .units(MONTH)
+                .sizes(60, 120)
+                .build());
 
         private final TsDomain[] domains;
 
-        private DataType(int... obsCounts) {
-            this.domains = doms(new TsUnit[]{TsUnit.MONTH}, obsCounts);
-        }
-
-        private DataType(TsDomain... domains) {
-            this.domains = domains;
-        }
+        @lombok.Getter(lazy = true)
+        private final DataSource dataSource = initDataSource();
 
         public int getSeriesCount() {
             return domains.length;
@@ -354,33 +306,69 @@ public final class PocProvider implements DataSourceProvider {
         }
 
         public long getSleepDuration(TsInformationType type) {
-            switch (this) {
-                case NORMAL:
-                    return type.needsData() ? 2000 : 150;
-                case FAILING_META:
-                    return type.needsData() ? 2000 : 150;
-                case FAILING_DATA:
-                    return type.needsData() ? 2000 : 150;
-                case FAILING_DEF:
-                    return type.needsData() ? 2000 : 150;
-                case UPDATING:
-                    return 0;
-                case SLOW:
-                    return type.needsData() ? 5000 : type.equals(TsInformationType.Definition) ? 0 : 1000;
-                default:
-                    throw new RuntimeException();
+            return switch (this) {
+                case NORMAL, FAILING_META, FAILING_DATA, FAILING_DEF -> type.needsData() ? 2000 : 150;
+                case UPDATING -> 0;
+                case SLOW -> type.needsData() ? 5000 : type.equals(Definition) ? 0 : 1000;
+            };
+        }
+
+        public void sleep(TsInformationType type) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(getSleepDuration(type));
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
             }
         }
 
-        private static TsDomain[] doms(TsUnit[] units, int[] sizes) {
-            return Stream
-                    .of(units)
-                    .flatMap(x -> IntStream.of(sizes).mapToObj(o -> dom(x, o)))
+        private DataSource initDataSource() {
+            DataSource.Builder result = DataSource.builder(NAME, "");
+            TYPE_PARAM.set(result::parameter, this);
+            return result.build();
+        }
+    }
+
+    @BuilderPattern(TsDomain[].class)
+    private static final class PocDomainBuilder {
+
+        private final List<TsUnit> units = new ArrayList<>();
+        private final IntList sizes = new IntList();
+
+        public PocDomainBuilder units(TsUnit... unitArray) {
+            units.addAll(Arrays.asList(unitArray));
+            return this;
+        }
+
+        public PocDomainBuilder sizes(int... sizeArray) {
+            for (int size : sizeArray) {
+                sizes.add(size);
+            }
+            return this;
+        }
+
+        public TsDomain[] build() {
+            return units
+                    .stream()
+                    .flatMap(unit -> sizes.stream().mapToObj(size -> domainOf(unit, size)))
                     .toArray(TsDomain[]::new);
         }
 
-        private static TsDomain dom(TsUnit unit, int size) {
+        private static TsDomain domainOf(TsUnit unit, int size) {
             return TsDomain.of(TsPeriod.of(unit, 0), size);
+        }
+
+        public static TsData createData(TsDomain domain) {
+            return TsData.ofInternal(domain.getStartPeriod(), createValues(new Random(0), domain.getLength()));
+        }
+
+        private static double[] createValues(Random rnd, int obsCount) {
+            double[] data = new double[obsCount];
+            double cur = rnd.nextDouble() + 100;
+            for (int i = 0; i < obsCount; ++i) {
+                cur = cur + rnd.nextDouble() - .5;
+                data[i] = cur;
+            }
+            return data;
         }
     }
 }

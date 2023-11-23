@@ -20,7 +20,7 @@ import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

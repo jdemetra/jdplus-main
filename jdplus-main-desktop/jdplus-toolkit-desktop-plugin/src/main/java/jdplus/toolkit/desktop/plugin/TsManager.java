@@ -25,7 +25,7 @@ import jdplus.toolkit.base.tsp.DataSourceListener;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
 import nbbrd.design.swing.OnAnyThread;
 import nbbrd.design.swing.OnEDT;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.util.WeakListeners;
 
 import javax.swing.*;

@@ -23,7 +23,7 @@ import jdplus.toolkit.base.core.arima.Spectrum;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
 import java.util.ArrayList;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Represents an Unobserved Components Arima model. Such a model is the sum of

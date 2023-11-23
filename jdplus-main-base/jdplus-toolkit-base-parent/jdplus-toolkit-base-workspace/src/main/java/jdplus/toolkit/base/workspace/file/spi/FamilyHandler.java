@@ -17,12 +17,13 @@
 package jdplus.toolkit.base.workspace.file.spi;
 
 import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.workspace.WorkspaceFamily;
 import java.io.IOException;
 import java.nio.file.Path;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Defines an extension point for FileWorkspace that allows it to deal with new
@@ -31,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * @author Philippe Charles
  * @since 2.2.0
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE
 )

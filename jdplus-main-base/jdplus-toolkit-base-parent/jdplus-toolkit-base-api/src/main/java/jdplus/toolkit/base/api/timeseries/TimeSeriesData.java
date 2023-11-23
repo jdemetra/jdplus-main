@@ -18,7 +18,7 @@ package jdplus.toolkit.base.api.timeseries;
 
 import java.util.function.ObjDoubleConsumer;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Seq;
 

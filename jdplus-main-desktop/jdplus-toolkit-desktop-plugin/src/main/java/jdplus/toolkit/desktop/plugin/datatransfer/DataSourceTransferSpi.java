@@ -16,13 +16,14 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
+import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import java.awt.datatransfer.Transferable;
 import java.util.Optional;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Class that can produce a DataSource from a Transferable. To be used through
@@ -30,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author Philippe Charles
  */
+@ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
         backend = NetBeansServiceBackend.class,

@@ -21,7 +21,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.BitSet;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * Drop-in replacement of {@link java.net.URLEncoder} to improve performances

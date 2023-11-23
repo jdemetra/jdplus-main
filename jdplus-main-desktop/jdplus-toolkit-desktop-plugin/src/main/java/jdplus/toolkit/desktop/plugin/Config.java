@@ -19,7 +19,7 @@ package jdplus.toolkit.desktop.plugin;
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import jdplus.toolkit.base.tsp.fixme.SortedMaps;
 import nbbrd.design.ThreadSafe;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Map;

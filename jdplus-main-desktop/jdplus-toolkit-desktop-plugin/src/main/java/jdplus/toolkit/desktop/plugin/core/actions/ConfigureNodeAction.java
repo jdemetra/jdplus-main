@@ -18,6 +18,7 @@ package jdplus.toolkit.desktop.plugin.core.actions;
 
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -35,7 +36,8 @@ import java.util.stream.Stream;
 @NbBundle.Messages("ConfigureAction=Configure")
 public final class ConfigureNodeAction extends AbilityNodeAction<Configurable> {
 
-    public static final String ID = "demetra.desktop.core.actions.ConfigureNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.actions.ConfigureNodeAction";
 
     public ConfigureNodeAction() {
         super(Configurable.class);

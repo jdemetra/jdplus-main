@@ -19,6 +19,7 @@ package jdplus.toolkit.desktop.plugin.core.tsproviders;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataSourceTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
@@ -31,7 +32,8 @@ import org.openide.util.actions.NodeAction;
 @Messages("CTL_PasteProvidersAction=Paste")
 public final class PasteProvidersNodeAction extends NodeAction {
 
-    public static final String ID = "demetra.desktop.core.tsproviders.PasteProvidersAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.tsproviders.PasteProvidersNodeAction";
 
     @Override
     protected void performAction(Node[] activatedNodes) {

@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin.util;
 
 import ec.util.various.swing.ModernUI;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.awt.Toolbar;
 import org.openide.windows.TopComponent;
 

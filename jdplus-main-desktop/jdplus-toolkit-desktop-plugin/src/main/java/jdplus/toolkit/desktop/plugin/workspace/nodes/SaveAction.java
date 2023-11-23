@@ -20,6 +20,7 @@ import jdplus.toolkit.base.api.DemetraVersion;
 import jdplus.toolkit.desktop.plugin.nodes.SingleNodeAction;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -27,12 +28,14 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Edit",
-        id = "demetra.desktop.workspace.nodes.SaveAction")
+@ActionID(category = "Edit", id = SaveAction.ID)
 @ActionRegistration(
         displayName = "#CTL_SaveAction", lazy = false)
 @Messages("CTL_SaveAction=Save")
 public final class SaveAction extends SingleNodeAction<ItemWsNode> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.workspace.nodes.SaveAction";
 
     public static final String SAVE_MESSAGE = "Are you sure you want to save this item?";
 

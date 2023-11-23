@@ -21,7 +21,7 @@ import jdplus.toolkit.base.core.arima.IArimaModel;
 import jdplus.toolkit.base.core.math.functions.IFunctionDerivatives;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.arima.estimation.IArimaMapping;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.stats.likelihood.DefaultLikelihoodEvaluation;

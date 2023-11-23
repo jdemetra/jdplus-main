@@ -30,7 +30,7 @@ import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.FrozenTsHelper;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import nbbrd.design.MightBePromoted;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.ErrorManager;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Node;

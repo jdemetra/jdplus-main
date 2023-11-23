@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

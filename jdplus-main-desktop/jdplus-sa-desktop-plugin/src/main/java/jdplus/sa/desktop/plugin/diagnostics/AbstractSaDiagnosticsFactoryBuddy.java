@@ -23,7 +23,7 @@ import jdplus.toolkit.desktop.plugin.actions.Configurable;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
 import java.awt.Image;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 

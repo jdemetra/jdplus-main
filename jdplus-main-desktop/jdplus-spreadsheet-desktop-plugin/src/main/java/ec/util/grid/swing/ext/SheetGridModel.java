@@ -18,7 +18,7 @@ package ec.util.grid.swing.ext;
 
 import ec.util.grid.swing.AbstractGridModel;
 import ec.util.spreadsheet.Sheet;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

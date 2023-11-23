@@ -22,8 +22,8 @@ public class YearIteratorTest {
         TsPeriod start=TsPeriod.monthly(2000, 1);
         TsData s=TsData.of(start, DoubleSeq.onMapping(36, i->i));
         YearIterator iter=new YearIterator(s);
-        while (iter.hasMoreElements()){
-            TsDataView view = iter.nextElement();
+        while (iter.hasNext()){
+            TsDataView view = iter.next();
             System.out.println(view.getStart().display());
             System.out.print('\t');
             System.out.println(view.getData());
@@ -35,8 +35,8 @@ public class YearIteratorTest {
         TsPeriod start=TsPeriod.monthly(2000, 4);
         TsData s=TsData.of(start, DoubleSeq.onMapping(35, i->i));
         YearIterator iter=new YearIterator(s);
-        while (iter.hasMoreElements()){
-            TsDataView view = iter.nextElement();
+        while (iter.hasNext()){
+            TsDataView view = iter.next();
             System.out.println(view.getStart().display());
             System.out.print('\t');
             System.out.println(view.getData());

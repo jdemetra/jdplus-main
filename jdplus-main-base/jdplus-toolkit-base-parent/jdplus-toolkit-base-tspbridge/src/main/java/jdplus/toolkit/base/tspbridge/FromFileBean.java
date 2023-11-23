@@ -18,7 +18,7 @@ package jdplus.toolkit.base.tspbridge;
 
 import jdplus.toolkit.base.tsp.FileBean;
 import lombok.AccessLevel;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  * @author Philippe Charles

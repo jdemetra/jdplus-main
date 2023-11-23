@@ -24,7 +24,7 @@ import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import java.io.IOException;
 import java.util.stream.Stream;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

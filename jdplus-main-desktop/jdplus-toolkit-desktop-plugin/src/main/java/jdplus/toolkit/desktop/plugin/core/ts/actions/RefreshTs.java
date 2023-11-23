@@ -23,14 +23,14 @@ import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "Processing",
-        id = "demetra.desktop.core.ts.actions.RefreshTs")
+@ActionID(category = "Processing", id = RefreshTs.ID)
 @ActionRegistration(displayName = "#CTL_RefreshTs", lazy = false)
 @ActionReferences({
     @ActionReference(path = WorkspaceFactory.TSCONTEXTPATH, position = 1510),
@@ -38,6 +38,9 @@ import org.openide.util.NbBundle.Messages;
 })
 @Messages("CTL_RefreshTs=Refresh Data")
 public final class RefreshTs extends ActiveViewAction<WorkspaceTsTopComponent> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.ts.actions.RefreshTs";
 
     public RefreshTs() {
         super(WorkspaceTsTopComponent.class);

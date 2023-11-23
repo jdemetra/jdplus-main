@@ -1,7 +1,7 @@
 package jdplus.toolkit.base.api.util;
 
 import jdplus.toolkit.base.api.data.Seq;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.util.Collection;
 import java.util.stream.Stream;

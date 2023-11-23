@@ -34,7 +34,7 @@ import nbbrd.design.ThreadSafe;
 import nbbrd.io.Resource;
 import nbbrd.io.function.IOFunction;
 import nbbrd.io.function.IORunnable;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.Closeable;
 import java.io.IOException;

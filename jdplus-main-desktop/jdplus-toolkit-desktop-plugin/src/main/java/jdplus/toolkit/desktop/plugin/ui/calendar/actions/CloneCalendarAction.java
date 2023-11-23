@@ -13,6 +13,7 @@ import jdplus.toolkit.desktop.plugin.workspace.nodes.ItemWsNode;
 import jdplus.toolkit.base.api.timeseries.calendars.*;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.util.WeightedItem;
+import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -25,13 +26,16 @@ import org.openide.util.NbBundle.Messages;
 import java.util.Arrays;
 import java.util.List;
 
-@ActionID(category = "Tools", id = "demetra.desktop.ui.calendars.actions.CloneCalendarAction")
+@ActionID(category = "Tools", id = CloneCalendarAction.ID)
 @ActionRegistration(displayName = "#CTL_CloneCalendarAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = CalendarDocumentManager.ITEMPATH, position = 1421, separatorBefore = 1400)
 })
 @Messages("CTL_CloneCalendarAction=Clone")
 public final class CloneCalendarAction extends SingleNodeAction<ItemWsNode> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.ui.calendar.actions.CloneCalendarAction";
 
     public CloneCalendarAction() {
         super(ItemWsNode.class);

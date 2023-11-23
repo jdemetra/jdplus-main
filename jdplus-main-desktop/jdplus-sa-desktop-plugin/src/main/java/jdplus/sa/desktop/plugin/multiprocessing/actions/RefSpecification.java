@@ -11,6 +11,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -18,8 +19,7 @@ import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 
-@ActionID(category = "SaProcessing",
-        id = "demetra.desktop.sa.multiprocessing.actions.RefSpecification")
+@ActionID(category = "SaProcessing", id = RefSpecification.ID)
 @ActionRegistration(displayName = "#CTL_RefSpecification", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1500, separatorBefore = 1499),
@@ -28,6 +28,9 @@ import org.openide.util.actions.Presenter;
 })
 @Messages("CTL_RefSpecification=Reference specification")
 public final class RefSpecification extends AbstractAction implements Presenter.Popup {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.RefSpecification";
 
     public static final String PATH = Edit.PATH+"/RefSpecification";
 

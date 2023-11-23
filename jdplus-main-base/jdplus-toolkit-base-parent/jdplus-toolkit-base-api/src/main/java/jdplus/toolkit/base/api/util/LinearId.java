@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.api.util;
 
 import java.util.Arrays;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

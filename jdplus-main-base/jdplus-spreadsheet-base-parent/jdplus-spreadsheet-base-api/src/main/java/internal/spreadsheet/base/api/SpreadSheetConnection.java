@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import nbbrd.design.NotThreadSafe;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

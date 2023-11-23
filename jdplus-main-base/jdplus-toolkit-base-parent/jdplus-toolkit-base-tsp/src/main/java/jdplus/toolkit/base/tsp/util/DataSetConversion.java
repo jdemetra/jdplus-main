@@ -1,7 +1,7 @@
 package jdplus.toolkit.base.tsp.util;
 
 import jdplus.toolkit.base.tsp.DataSet;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 import java.io.IOException;
 

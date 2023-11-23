@@ -6,6 +6,7 @@ package jdplus.toolkit.desktop.plugin.core.actions;
 
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
 import jdplus.toolkit.desktop.plugin.actions.Reloadable;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
@@ -21,7 +22,8 @@ import java.util.stream.Stream;
 @NbBundle.Messages({"ReloadNodeAction=Reload"})
 public final class ReloadNodeAction extends AbilityNodeAction<Reloadable> {
 
-    public static final String ID = "demetra.desktop.core.actions.ReloadNodeAction";
+    @ClassNameConstant
+    public static final String ID = "jdplus.toolkit.desktop.plugin.core.actions.ReloadNodeAction";
 
     public ReloadNodeAction() {
         super(Reloadable.class);

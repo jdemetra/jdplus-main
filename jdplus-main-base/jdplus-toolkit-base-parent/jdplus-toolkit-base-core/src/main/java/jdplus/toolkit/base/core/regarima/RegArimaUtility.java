@@ -36,7 +36,7 @@ import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
 import jdplus.toolkit.base.core.regsarima.GlsSarimaComputer;
 import jdplus.toolkit.base.core.regsarima.internal.HannanRissanenInitializer;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 
 /**
  *

@@ -1,6 +1,6 @@
 package jdplus.toolkit.desktop.plugin.util;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import lombok.NonNull;
 import org.openide.util.Lookup;
 
 import java.util.Collection;

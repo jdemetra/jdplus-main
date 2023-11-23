@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.api.data;
 
+import lombok.NonNull;
 import nbbrd.design.Development;
 import internal.toolkit.base.api.data.InternalSeqCursor;
 import java.util.function.UnaryOperator;
@@ -44,7 +45,7 @@ public interface Vector<E> extends Seq<E> {
     }
 
     @Override
-    default VectorCursor<E> cursor() {
-        return new InternalSeqCursor.DefaultVectorCursor(this);
+    default @NonNull VectorCursor<E> cursor() {
+        return new InternalSeqCursor.DefaultVectorCursor<>(this);
     }
 }

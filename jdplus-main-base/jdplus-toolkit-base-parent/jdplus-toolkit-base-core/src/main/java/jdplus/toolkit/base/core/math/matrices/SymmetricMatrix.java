@@ -7,6 +7,7 @@ package jdplus.toolkit.base.core.math.matrices;
 
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.design.Algorithm;
+import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.data.LogSign;
@@ -33,6 +34,7 @@ public class SymmetricMatrix {
 
     private final SymmetricMatrixLoader.CholeskyProcessor CHOLESKY = new SymmetricMatrixLoader.CholeskyProcessor();
 
+    @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE,
             mutability = Mutability.CONCURRENT,

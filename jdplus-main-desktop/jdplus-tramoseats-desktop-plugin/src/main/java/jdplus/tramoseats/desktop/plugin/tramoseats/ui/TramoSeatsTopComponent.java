@@ -11,6 +11,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
+import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
@@ -26,7 +27,7 @@ import org.openide.windows.TopComponent;
         //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Seasonal Adjustment", id = "demetra.desktop.tramoseats.ui.TramoSeatsTopComponent")
+@ActionID(category = "Seasonal Adjustment", id = TramoSeatsTopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Seasonal Adjustment/Single Analysis", position = 1000)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TramoSeatsAction")
 @NbBundle.Messages({
@@ -35,6 +36,9 @@ import org.openide.windows.TopComponent;
     "HINT_TramoSeatsTopComponent=This is a TramoSeats window"
 })
 public final class TramoSeatsTopComponent extends WorkspaceTsTopComponent<TramoSeatsDocument> {
+
+    @ClassNameConstant
+    public static final String ID = "jdplus.tramoseats.desktop.plugin.tramoseats.ui.TramoSeatsTopComponent";
 
     private final ExplorerManager mgr = new ExplorerManager();
 
