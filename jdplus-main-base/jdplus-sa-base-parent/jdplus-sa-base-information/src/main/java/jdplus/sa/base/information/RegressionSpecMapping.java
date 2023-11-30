@@ -29,6 +29,7 @@ import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.util.List;
+import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
 
 /**
  *
@@ -50,21 +51,26 @@ class RegressionSpecMapping {
         if (info == null) {
             return RegressionSpec.DEFAULT;
         }
+        MeanSpec mean = MeanSpec.DEFAULT_UNUSED;
+        Parameter mu = info.get(MU, Parameter.class);
+        if (mu != null) {
+            Boolean tmu = info.get(CHECKMU, Boolean.class);
+            mean = MeanSpec.builder()
+                    .trendConstant(true)
+                    .test(tmu == null ? false : tmu)
+                    .coefficient(mu)
+                    .build();
+        }
         CalendarSpec cal = CalendarSpec.builder()
                 .tradingDays(TradingDaysSpecMapping.read(info.getSubSet(TD)))
                 .easter(EasterSpecMapping.read(info.getSubSet(EASTER)))
                 .build();
         RegressionSpec.Builder builder = RegressionSpec.builder()
-                .mean(info.get(MU, Parameter.class))
+                .mean(mean)
                 .calendar(cal);
         Double aic = info.get(AICDIFF, Double.class);
         if (aic != null) {
             builder.aicDiff(aic);
-        }
-
-        Boolean cmu = info.get(CHECKMU, Boolean.class);
-        if (cmu != null) {
-            builder.checkMu(cmu);
         }
 
         List<Information<InformationSet>> sel = info.select(OUTLIERS, InformationSet.class);
@@ -107,12 +113,12 @@ class RegressionSpecMapping {
         if (verbose || spec.getAicDiff() != RegressionSpec.DEF_AICCDIFF) {
             info.set(AICDIFF, spec.getAicDiff());
         }
-        Parameter mean = spec.getMean();
-        if (mean != null) {
-            info.set(MU, mean);
-        }
-        if (verbose || spec.isCheckMu() != RegressionSpec.DEF_CHECKMU) {
-            info.set(CHECKMU, spec.isCheckMu());
+        MeanSpec mean = spec.getMean();
+        if (mean.isUsed()) {
+            info.set(MU, mean.getCoefficient());
+            if (verbose || mean.isTest()) {
+                info.set(CHECKMU, mean.isTest());
+            }
         }
         InformationSet tdinfo = TradingDaysSpecMapping.write(spec.getCalendar().getTradingDays(), verbose);
         if (tdinfo != null) {

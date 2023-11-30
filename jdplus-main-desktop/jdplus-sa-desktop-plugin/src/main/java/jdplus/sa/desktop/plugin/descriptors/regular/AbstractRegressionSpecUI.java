@@ -56,20 +56,14 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
     }
 
     protected abstract RegressionSpec spec();
-    
+
     protected abstract RegularSpecUI root();
-    
-    
-    
+
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         // regression
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
         EnhancedPropertyDescriptor desc = meanDesc();
-        if (desc != null) {
-            descs.add(desc);
-        }
-        desc = muDesc();
         if (desc != null) {
             descs.add(desc);
         }
@@ -90,6 +84,10 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
             descs.add(desc);
         }
         desc = userdefinedDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        desc = aiccDesc();
         if (desc != null) {
             descs.add(desc);
         }
@@ -195,57 +193,28 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         root().update(spec().toBuilder().clearUserDefinedVariables().userDefinedVariables(list).build());
     }
 
-    public boolean isMean() {
-        return spec().getMean() != null;
+    public abstract IPropertyDescriptors getMean();
+
+    public double getAiccDiff() {
+        return spec().getAicDiff();
     }
 
-    public void setMean(boolean m) {
-        if (m) {
-            root().update(spec().toBuilder().mean(Parameter.undefined()).build());
-        } else {
-            root().update(spec().toBuilder().mean(null).build());
-        }
-    }
-    
-    public Parameter getMu(){
-        return spec().getMean();
+    public void setAiccDiff(double ad) {
+        root().update(spec().toBuilder().aicDiff(ad).build());
     }
 
-    public void setMu(Parameter mu){
-        root().update(spec().toBuilder().mean(mu).build());
-    }
-
-    private static final int MEAN_ID = 1, CALENDAR_ID = 2, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6, FCOEFF_ID = 7, MU_ID = 8;
+    private static final int MEAN_ID = 1, CALENDAR_ID = 2, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6, AICCDIFF_ID = 7, MU_ID = 8;
 
     @Messages({
         "regular.regressionSpecUI.meanDesc.desc=[imean] Mean correction"
     })
     private EnhancedPropertyDescriptor meanDesc() {
         try {
-            PropertyDescriptor desc = new PropertyDescriptor("Mean", this.getClass());
+            PropertyDescriptor desc = new PropertyDescriptor("Mean", this.getClass(), "getMean", null);
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, MEAN_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setShortDescription(Bundle.regular_regressionSpecUI_meanDesc_desc());
             edesc.setReadOnly(root().isRo());
-            return edesc;
-        } catch (IntrospectionException ex) {
-            return null;
-        }
-    }
-
-    @Messages({
-        "regular.regressionSpecUI.muDesc.desc=Mean coefficient"
-    })
-    private EnhancedPropertyDescriptor muDesc() {
-        if ( ! isMean()) {
-            return null;
-        }
-        try {
-            PropertyDescriptor desc = new PropertyDescriptor("mu", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, MU_ID);
-            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
-            desc.setShortDescription(Bundle.regular_regressionSpecUI_muDesc_desc());
-            edesc.setReadOnly(root().isRo() || root().transform().getFunction() == TransformationType.Auto);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -324,6 +293,22 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         }
     }
 
+    @Messages({
+        "regular.regressionSpecUI.aiccDesc.name=AICC diff.",
+        "regular.regressionSpecUI.aiccDesc.desc=AICC diff. to accept/reject a regression variable"
+    })
+    private EnhancedPropertyDescriptor aiccDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("AiccDiff", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, AICCDIFF_ID);
+            desc.setDisplayName(Bundle.regular_regressionSpecUI_aiccDesc_name());
+            desc.setShortDescription(Bundle.regular_regressionSpecUI_aiccDesc_desc());
+            edesc.setReadOnly(root().isRo());
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
 //    @Messages({
 //        "regular.regressionSpecUI.fixedCoefficientsDesc.name=Fixed regression coefficients",
 //        "regular.regressionSpecUI.fixedCoefficientsDesc.desc="
@@ -343,6 +328,7 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
 //        }
 //    }
 //
+
     @Messages({
         "regular.regressionSpecUI.calendarDesc.name=Calendar",
         "regular.regressionSpecUI.calendarDesc.desc=Calendar effects"

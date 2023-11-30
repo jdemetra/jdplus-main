@@ -12,7 +12,7 @@ package jdplus.toolkit.base.api.dictionaries;
 public class LikelihoodDictionaries {
 
     public final String LL = "ll", LLC = "adjustedll", SSQ = "ssqerr", AIC = "aic", BIC = "bic", AICC = "aicc", BICC = "bicc", BIC2 = "bic2", HQ = "hannanquinn",
-            NPARAMS = "nparams", NOBS = "nobs", NEFFECTIVEOBS = "neffectiveobs", DF = "df", NDIFFUSE = "ndiffuse";
+            NPARAMS = "nparams", NOBS = "nobs", NEFFECTIVEOBS = "neffectiveobs", DF = "df", NDIFFUSE = "ndiffuse", DCORRECTION="dcorrection", MCORRECTION="mcorrection";
 
     public final AtomicDictionary LIKELIHOOD = AtomicDictionary.builder()
             .name("likelihood")
@@ -43,7 +43,12 @@ public class LikelihoodDictionaries {
             .item(AtomicDictionary.Item.builder().name(NPARAMS).description("number of parameters").outputClass(Integer.class).build())
             .item(AtomicDictionary.Item.builder().name(NOBS).description("number of observtions").outputClass(Integer.class).build())
             .item(AtomicDictionary.Item.builder().name(NDIFFUSE).description("number of diffuse effects").outputClass(Integer.class).build())
+            .item(AtomicDictionary.Item.builder().name(DCORRECTION).description("correction for the diffuse effects").outputClass(Double.class).build())
             .item(AtomicDictionary.Item.builder().name(DF).description("degrees of freedom (=number of obs - number of diffuse - number of parameters)").outputClass(Integer.class).build())
             .build();
 
+    public final AtomicDictionary MARGINALLIKELIHOOD = AtomicDictionary.builder()
+            .name("marginal likelihood")
+            .item(AtomicDictionary.Item.builder().name(MCORRECTION).description("marginal correction").outputClass(Double.class).build())
+            .build();
 }
