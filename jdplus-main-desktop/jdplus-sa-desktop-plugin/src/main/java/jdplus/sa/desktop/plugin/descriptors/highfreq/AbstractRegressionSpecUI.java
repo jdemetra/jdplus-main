@@ -79,7 +79,6 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         if (desc != null) {
             descs.add(desc);
         }
-
         return descs;
     }
 
@@ -95,8 +94,7 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         }
         return new Parameter[]{p};
     }
-
-
+        
     public HighFreqOutlierDescriptor[] getPreSpecifiedOutliers() {
         return spec().getOutliers()
                 .stream()
@@ -158,7 +156,7 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
     }
 
 
-    private static final int CALENDAR_ID = 1, EASTER_ID = 2, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6;
+    private static final int CALENDAR_ID = 1, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6;
 
     @NbBundle.Messages({
         "highfreq.regressionSpecUI.interventionDesc.name=Intervention variables",
@@ -213,22 +211,6 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         }
     }
 
-    @NbBundle.Messages({
-        "regressionSpecUI.easterDesc.name=Easter",
-        "regressionSpecUI.easterDesc.desc=Easter"
-    })
-    private EnhancedPropertyDescriptor easterDesc() {
-        try {
-            PropertyDescriptor desc = new PropertyDescriptor("calendar", this.getClass(), "getEaster", null);
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, EASTER_ID);
-            desc.setDisplayName(Bundle.regressionSpecUI_easterDesc_name());
-            desc.setShortDescription(Bundle.regressionSpecUI_easterDesc_desc());
-            edesc.setReadOnly(root().isRo());
-            return edesc;
-        } catch (IntrospectionException ex) {
-            return null;
-        }
-    }
 
     @NbBundle.Messages({
         "highfreq.regressionSpecUI.prespecDesc.name=Pre-specified outliers",

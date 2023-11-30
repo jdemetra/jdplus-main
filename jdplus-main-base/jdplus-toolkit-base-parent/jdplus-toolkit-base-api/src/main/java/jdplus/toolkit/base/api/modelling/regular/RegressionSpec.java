@@ -41,8 +41,9 @@ public final class RegressionSpec implements Validatable<RegressionSpec> {
 
     private double aicDiff;
 
-    Parameter mean;
-    boolean checkMu;
+    @lombok.NonNull
+    MeanSpec mean;
+
     CalendarSpec calendar;
 
     @lombok.Singular
@@ -60,12 +61,12 @@ public final class RegressionSpec implements Validatable<RegressionSpec> {
     public static Builder builder() {
         return new Builder()
                 .aicDiff(DEF_AICCDIFF)
-                .checkMu(DEF_CHECKMU)
-                .calendar(CalendarSpec.builder().build());
+               .mean(MeanSpec.DEFAULT_UNUSED)
+                 .calendar(CalendarSpec.builder().build());
     }
 
     public boolean isUsed() {
-        return mean != null || calendar.isUsed() || !outliers.isEmpty()
+        return mean.isUsed() || calendar.isUsed() || !outliers.isEmpty()
                 || !ramps.isEmpty() || !interventionVariables.isEmpty()
                 || !userDefinedVariables.isEmpty();
     }
@@ -87,14 +88,14 @@ public final class RegressionSpec implements Validatable<RegressionSpec> {
         return !(calendar.getEaster().isTest()
                 || calendar.getTradingDays().isAutomatic()
                 || calendar.getTradingDays().isTest()
-                || checkMu);
+                || mean.isTest());
     }
 
     public boolean hasFixedCoefficients() {
         if (!isUsed()) {
             return false;
         }
-        return (mean != null && mean.isFixed()) || calendar.hasFixedCoefficients()
+        return mean.hasFixedCoefficient() || calendar.hasFixedCoefficients()
                 || outliers.stream().anyMatch(var -> !var.isFree())
                 || ramps.stream().anyMatch(var -> !var.isFree())
                 || interventionVariables.stream().anyMatch(var -> !var.isFree())

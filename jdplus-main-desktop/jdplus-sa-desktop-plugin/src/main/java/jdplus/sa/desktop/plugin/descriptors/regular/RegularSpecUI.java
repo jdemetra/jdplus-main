@@ -16,9 +16,11 @@
  */
 package jdplus.sa.desktop.plugin.descriptors.regular;
 
+import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.modelling.regular.CalendarSpec;
 import jdplus.toolkit.base.api.modelling.regular.EasterSpec;
 import jdplus.toolkit.base.api.modelling.regular.EstimateSpec;
+import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
 import jdplus.toolkit.base.api.modelling.regular.ModellingSpec;
 import jdplus.toolkit.base.api.modelling.regular.OutlierSpec;
 import jdplus.toolkit.base.api.modelling.regular.RegressionSpec;
@@ -46,6 +48,10 @@ public interface RegularSpecUI {
         return preprocessing().isEnabled();
     }
 
+    default boolean isTransformationDefined(){
+        return preprocessing().getTransform().getFunction() != TransformationType.Auto;
+    }
+    
     ModellingSpec preprocessing();
 
     default TradingDaysSpec td() {
@@ -81,6 +87,11 @@ public interface RegularSpecUI {
 
     default void update(SeriesSpec spec) {
         update(preprocessing().toBuilder().series(spec).build());
+    }
+
+    default void update(MeanSpec spec) {
+        update(preprocessing().getRegression().toBuilder()
+                .mean(spec).build());
     }
 
     default void update(EasterSpec spec) {
