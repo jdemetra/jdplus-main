@@ -17,9 +17,14 @@ import jdplus.x13.base.core.x11.pseudoadd.X11BStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11CStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11DStepPseudoAdd;
 import java.util.Arrays;
+import jdplus.toolkit.base.api.data.Doubles;
+import jdplus.toolkit.base.api.data.DoublesMath;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.x13.base.api.x11.BiasCorrection;
+import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
+import jdplus.x13.base.core.x11.filter.endpoints.CopyEndPoints;
 
 /**
  *
@@ -33,7 +38,6 @@ public class X11Kernel {
     private X11DStep dstep;
     private TsData input;
     private X11Context context;
-    private DoubleSeq kernelD13;
 
     public static double[] table(int n, double value) {
         double[] x = new double[n];
@@ -42,10 +46,10 @@ public class X11Kernel {
     }
 
     /**
-     * 
+     *
      * @param timeSeries Time series including forecasts/backcasts
      * @param spec
-     * @return 
+     * @return
      */
     public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec) {
         clear();
@@ -102,9 +106,11 @@ public class X11Kernel {
     }
 
     private X11Results buildResults(TsPeriod start, X11Spec spec) {
-        int nb=spec.getBackcastHorizon()>=0 ? spec.getBackcastHorizon() : -spec.getBackcastHorizon()*start.annualFrequency();
-        int nf=spec.getForecastHorizon()>=0 ? spec.getForecastHorizon(): -spec.getForecastHorizon()*start.annualFrequency();
-        return X11Results.builder()
+        int nb = spec.getBackcastHorizon() >= 0 ? spec.getBackcastHorizon() : -spec.getBackcastHorizon() * start.annualFrequency();
+        int nf = spec.getForecastHorizon() >= 0 ? spec.getForecastHorizon() : -spec.getForecastHorizon() * start.annualFrequency();
+
+        // bias correction for s // sa // t // i
+        X11Results.Builder builder = X11Results.builder()
                 .nbackcasts(nb)
                 .nforecasts(nf)
                 //B-Tables
@@ -144,10 +150,6 @@ public class X11Kernel {
                 .d7(TsData.of(start, prepare(dstep.getD7())))
                 .d8(TsData.of(start, prepare(dstep.getD8())))
                 .d9(TsData.of(start, prepare(dstep.getD9())))
-                .d10(TsData.of(start, prepare(dstep.getD10())))
-                .d11(TsData.of(start, prepare(dstep.getD11())))
-                .d12(TsData.of(start, prepare(dstep.getD12(), dstep.getD10(), cstep.getC13())))
-                .d13(TsData.of(start, kernelD13))
                 //msr
                 .d9Msr(dstep.getD9msr())
                 .d9default(dstep.isD9default())
@@ -155,55 +157,121 @@ public class X11Kernel {
                 // trend selection
                 .iCRatio(dstep.getICRatio())
                 .finalHendersonFilterLength(dstep.getFinalHendersonFilterLength())
-                
-                .mode(spec.getMode())
-                .build();
+                .finalSeasonalFilter(dstep.getSeasFilter())
+                .mode(spec.getMode());
+
+        return finalResults(builder, start, spec).build();
+    }
+
+    // fill D10, d11, d12, d13
+    private X11Results.Builder finalResults(X11Results.Builder builder, TsPeriod start, X11Spec spec) {
+        if (spec.getMode() != DecompositionMode.LogAdditive || !spec.isSeasonal() || spec.getBias() == BiasCorrection.None) {
+            builder.d10(TsData.of(start, prepare(dstep.getD10())))
+                    .d11(TsData.of(start, prepare(dstep.getD11())))
+                    .d12(TsData.of(start, prepare(dstep.getD12())))
+                    .d13(TsData.of(start, prepare(dstep.getD13())));
+        } else {
+            biasCorrection(builder, start);
+        }
+        return builder;
     }
 
     private DoubleSeq prepare(final DoubleSeq in) {
-        return prepare(in, null, null);
+        return context.isLogAdd() ? in.exp() : in;
     }
 
-    private DoubleSeq prepare(final DoubleSeq t, final DoubleSeq s, final DoubleSeq i) {
-        DoubleSeq dsT = t;
-        if (context.isLogAdd()) {
-            dsT = dsT.exp();
-            if (s != null && i != null) {
-                dsT = legacyBiasCorrection(dsT, s, i);
-                DoubleSeq dsTpos = X11Context.makePositivity(dsT);
-                DoubleSeq dsS = DoubleSeq.onMapping(s.length(), l -> bstep.getB1().exp().get(l) / s.exp().get(l));
-                kernelD13 = DoubleSeq.onMapping(dsTpos.length(), k -> dsS.get(k) / dsTpos.get(k));
-            }
-        } else {
-            kernelD13 = dstep.getD13();
+    // input are in logs
+    private void biasCorrection(X11Results.Builder builder, TsPeriod start) {
+        switch (context.getBias()) {
+            case Legacy ->
+                legacyBiasCorrection(builder, start);
+            case Smooth ->
+                smoothBiasCorrection(builder, start);
+            case Ratio ->
+                ratioBiasCorrection(builder, start);
         }
-        return dsT;
     }
 
-    private DoubleSeq legacyBiasCorrection(DoubleSeq t, DoubleSeq s, DoubleSeq i) {
-        s = prepare(s);
-        i = prepare(i);
-        double issq = i.log().ssq();
-        double sig = Math.exp(issq / (2 * i.length()));
+    private void fill(X11Results.Builder builder, TsPeriod start, DoubleSeq d10, DoubleSeq d12) {
+        d12 = X11Context.makePositivity(d12);
+        DoubleSeq d11 = DoublesMath.divide(input.getValues(), d10);
+        DoubleSeq d13 = DoublesMath.divide(d11, d12);
+        builder.d10(TsData.of(start, d10))
+                .d11(TsData.of(start, d11))
+                .d12(TsData.of(start, d12))
+                .d13(TsData.of(start, d13));
+    }
+
+    private void smoothBiasCorrection(X11Results.Builder builder, TsPeriod start) {
+        DoubleSeq d13 = dstep.getD13(), d10 = dstep.getD10(), d12 = dstep.getD12();
+        double issq = d13.ssq();
+        double sig = Math.exp(issq / (2 * d13.length()));
+        int ifreq = context.getPeriod();
+        SymmetricFilter filter = X11TrendCycleFilterFactory.makeTrendFilter(ifreq);
+        int ndrop = filter.length() / 2;
+        double[] x = new double[d10.length()];
+        DataBlock out = DataBlock.of(x, ndrop, x.length - ndrop);
+        d10 = d10.exp();
+        filter.apply(d10, out);
+        CopyEndPoints cp = new CopyEndPoints(ndrop);
+        DataBlock X = DataBlock.of(x);
+        cp.process(d10, X);
+        d12 = d12.fn(X, (a, b) -> Math.exp(a) * b * sig).commit();
+
+        fill(builder, start, d10, d12);
+    }
+
+    private void ratioBiasCorrection(X11Results.Builder builder, TsPeriod start) {
+        DoubleSeq d10 = dstep.getD10().exp();
+        DoubleSeq d12 = dstep.getD12().exp();
+        DoubleSeq d13 = dstep.getD13().exp();
+
+        int ifreq = context.getPeriod();
+        int s0 = start.annualPosition(), ny = (d10.length() - s0) / ifreq;
+
+        double sbias = d10.range(s0, s0 + ny * ifreq).average(), ibias = d13.average();
+        d10 = d10.fn(x -> x / sbias);
+        double tbias = sbias * ibias;
+        d12 = d12.fn(x -> x * tbias);
+        fill(builder, start, d10, d12);
+    }
+
+    private void legacyBiasCorrection(X11Results.Builder builder, TsPeriod start) {
+        DoubleSeq d13 = cstep.getC13(), d10 = dstep.getD10(), d12 = dstep.getD12();
+        double issq = d13.ssq();
+        double sig = Math.exp(issq / (2 * d13.length()));
         int ifreq = context.getPeriod();
         int length = (ifreq == 2) ? 5 : 2 * ifreq - 1;
-
-        double[] x = table(s.length(), Double.NaN);
+        double[] x = table(d10.length(), Double.NaN);
         int ndrop = length / 2;
         DataBlock out = DataBlock.of(x, ndrop, x.length - ndrop);
-
+        d10 = d10.exp();
         SymmetricFilter smoother = context.trendFilter(length);
-        smoother.apply(s, out);
+        smoother.apply(d10, out);
         FiniteFilter[] musgraveFilters = MusgraveFilterFactory.makeFilters(smoother, 4.5);
         AsymmetricEndPoints aepFilter = new AsymmetricEndPoints(musgraveFilters, 0);
-        DataBlock dbout2 = out.extend(ndrop, ndrop);
-        aepFilter.process(s, dbout2);
+        DataBlock hs = out.extend(ndrop, ndrop);
+        aepFilter.process(d10, hs);
+        d12 = d12.fn(hs, (a, b) -> Math.exp(a) * b * sig).commit();
 
-        DoubleSeq hs = DoubleSeq.of(dbout2.toArray());
-
-        int n = t.length();
-
-        return DoubleSeq.onMapping(n, j -> t.get(j) * hs.get(j) * sig);
+        fill(builder, start, d10, d12);
     }
 
+//    private TsData smoothBiasCorrection(DoubleSeq t, DoubleSeq s, DoubleSeq i) {
+//        double issq = i.ssq();
+//        double sig = Math.exp(issq / (2 * i.length()));
+//        int ifreq = context.getPeriod();
+//        int length = (ifreq == 2) ? 5 : 2 * ifreq - 1;
+//        s = prepare(s);
+//        TsData hs=new DefaultNormalizingStrategie().process(s, null, ifreq);
+//        hs.applyOnFinite(x -> x * sig);
+//        return t.times(hs);
+//    }
+//
+//    private TsData ratioBiasCorrection(DoubleSeq t, DoubleSeq s, DoubleSeq i) {
+//        // average of s, i on complete years
+//        double sbias=s.fullYears().average(), ibias=i.average();
+//        s.apply(x->x/sbias);
+//        return t.times(sbias*ibias);
+//    }
 }

@@ -230,7 +230,13 @@ public class X13Kernel {
         }
         if (spec.getMode() != DecompositionMode.PseudoAdditive) {
             boolean mul = model.getDescription().isLogTransformation();
-            builder.mode(mul ? DecompositionMode.Multiplicative : DecompositionMode.Additive);
+            if (mul) {
+                if (spec.getMode() != DecompositionMode.Multiplicative && spec.getMode() != DecompositionMode.LogAdditive) {
+                    builder.mode(DecompositionMode.Multiplicative);
+                }
+            } else {
+                builder.mode(DecompositionMode.Additive);
+            }
         }
         return builder.build();
     }
@@ -253,7 +259,7 @@ public class X13Kernel {
      * @return A new time series is returned
      */
     private TsData invOp(DecompositionMode mode, TsData l, TsData r) {
-        if (mode != DecompositionMode.Multiplicative && mode != DecompositionMode.PseudoAdditive) {
+        if (! mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
             return TsData.add(l, r);
         } else {
             return TsData.multiply(l, r);
@@ -261,7 +267,7 @@ public class X13Kernel {
     }
 
     private double mean(DecompositionMode mode) {
-        if (mode != DecompositionMode.Multiplicative && mode != DecompositionMode.PseudoAdditive) {
+        if (! mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
             return 0;
         } else {
             return 1;

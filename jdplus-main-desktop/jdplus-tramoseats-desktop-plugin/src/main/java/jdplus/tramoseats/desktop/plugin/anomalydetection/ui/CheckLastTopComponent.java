@@ -102,7 +102,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
     private JLabel itemsLabel;
     private JLabel defSpecLabel;
     private JButton prefButton;
-    private JButton reportButton;
+//    private JButton reportButton;
     // Visual Stuff
     private final JTsCheckLastList list;
     private final JCheckLastSummary summary;
@@ -209,16 +209,16 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
         toolBar.add(Box.createHorizontalGlue());
         toolBar.addSeparator();
 
-        reportButton = toolBar.add(new AbstractAction("", DemetraIcons.DOCUMENT_16) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                generateReport();
-            }
-        });
-        reportButton.setText("Generate Report");
-        reportButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        reportButton.setToolTipText("Generate report of the check last processing");
-        reportButton.setEnabled(false);
+//        reportButton = toolBar.add(new AbstractAction("", DemetraIcons.DOCUMENT_16) {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                generateReport();
+//            }
+//        });
+//        reportButton.setText("Generate Report");
+//        reportButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+//        reportButton.setToolTipText("Generate report of the check last processing");
+//        reportButton.setEnabled(false);
 
         return toolBar;
     }
@@ -256,7 +256,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
                 item.setState(view.getSpec().display().equals(o.getName()));
                 item.setEnabled(!item.isSelected());
                 defSpecLabel.setText(view.getSpec().display());
-                reportButton.setEnabled(false);
+//                reportButton.setEnabled(false);
             }
         });
 
@@ -448,7 +448,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
             case DONE:
                 runButton.setEnabled(true);
                 if (!list.getMap().isEmpty()) {
-                    reportButton.setEnabled(true);
+//                    reportButton.setEnabled(true);
                 }
                 makeBusy(false);
 
@@ -458,11 +458,11 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
                 break;
             case PENDING:
                 runButton.setEnabled(true);
-                reportButton.setEnabled(false);
+//                reportButton.setEnabled(false);
                 break;
             case STARTED:
                 runButton.setEnabled(false);
-                reportButton.setEnabled(false);
+//                reportButton.setEnabled(false);
                 progressHandle = ProgressHandle.createHandle("Processing Check Last...", () -> worker.cancel(true));
                 progressHandle.start(100);
                 break;
@@ -517,11 +517,11 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
 
         runButton.setEnabled(nbElements != 0);
 
-        reportButton.setEnabled(false);
+//        reportButton.setEnabled(false);
     }
 
     private void onNbCheckLastChange() {
-        reportButton.setEnabled(false);
+//        reportButton.setEnabled(false);
     }
     // </editor-fold>
 

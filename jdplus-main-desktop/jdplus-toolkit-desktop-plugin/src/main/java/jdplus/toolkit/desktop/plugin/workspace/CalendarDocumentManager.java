@@ -106,4 +106,8 @@ public class CalendarDocumentManager extends AbstractWorkspaceItemManager<Calend
     public static WorkspaceItem<CalendarDefinition> systemItem(String name, CalendarDefinition p) {
         return WorkspaceItem.system(ID, name, p);
     }
+
+    public static WorkspaceItem<CalendarDefinition> newItem(String name, CalendarDefinition p) {
+        return WorkspaceItem.newItem(ID, name, p);
+    }
 }

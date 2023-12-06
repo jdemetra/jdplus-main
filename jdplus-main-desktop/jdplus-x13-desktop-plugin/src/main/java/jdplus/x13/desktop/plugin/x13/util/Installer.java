@@ -30,6 +30,8 @@ import java.util.prefs.BackingStoreException;
 import org.openide.modules.ModuleInstall;
 
 import java.util.prefs.Preferences;
+import jdplus.x13.base.api.x11.SigmaVecOption;
+import jdplus.x13.desktop.plugin.x13.descriptors.SigmaVecPropertyEditor;
 import org.openide.util.Exceptions;
 
 public final class Installer extends ModuleInstall {
@@ -67,14 +69,12 @@ public final class Installer extends ModuleInstall {
         public void close() {
             X13DiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy -> {
                 Config config = buddy.getConfig();
-                if (config != null) {
-                    Preferences nprefs = prefs.node(buddy.getDisplayName());
-                    put(nprefs, config);
-                    try {
-                        nprefs.flush();
-                    } catch (BackingStoreException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                Preferences nprefs = prefs.node(buddy.getDisplayName());
+                put(nprefs, config);
+                try {
+                    nprefs.flush();
+                } catch (BackingStoreException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             });
         }
@@ -86,12 +86,14 @@ public final class Installer extends ModuleInstall {
         public void restore() {
             CustomPropertyEditorRegistry.INSTANCE.register(SeasonalFilterOption[].class, new SeasonalFilterPropertyEditor());
             CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(SeasonalFilterOption[].class, new ArrayRenderer());
+            CustomPropertyEditorRegistry.INSTANCE.register(SigmaVecOption[].class, new SigmaVecPropertyEditor());
+            CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(SigmaVecOption[].class, new ArrayRenderer());
         }
 
         @Override
         public void close() {
             CustomPropertyEditorRegistry.INSTANCE.unregister(SeasonalFilterOption[].class);
-            CustomPropertyEditorRegistry.INSTANCE.unregister(SeasonalFilterOption[].class);
+            CustomPropertyEditorRegistry.INSTANCE.unregister(SigmaVecOption[].class);
         }
     }
 

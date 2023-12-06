@@ -10,7 +10,6 @@ import jdplus.x13.base.core.x11.extremevaluecorrector.IExtremeValuesCorrector;
 import jdplus.x13.base.core.x11.filter.AutomaticHenderson;
 import jdplus.x13.base.core.x11.filter.DefaultSeasonalNormalizer;
 import jdplus.x13.base.core.x11.filter.MusgraveFilterFactory;
-import jdplus.x13.base.core.x11.filter.X11FilterFactory;
 import jdplus.x13.base.core.x11.filter.X11SeasonalFilterProcessor;
 import jdplus.x13.base.core.x11.filter.X11SeasonalFiltersFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.AsymmetricEndPoints;
@@ -18,6 +17,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.x13.base.core.x11.filter.DummyFilter;
+import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 
 /**
  *
@@ -48,7 +48,7 @@ public class X11BStep {
     }
 
     private void b2Step(X11Context context) {
-        SymmetricFilter filter = X11FilterFactory.makeSymmetricFilter(context.getPeriod());
+        SymmetricFilter filter = X11TrendCycleFilterFactory.makeTrendFilter(context.getPeriod());
         b2drop = filter.length() / 2;
 
         double[] x = X11Kernel.table(b1.length() - 2 * b2drop, Double.NaN);
@@ -164,8 +164,8 @@ public class X11BStep {
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
             DoubleSeq b10a = processor.process(b9g, context.getFirstPeriod());
             b10 = DefaultSeasonalNormalizer.normalize(b10a, 0, context);
-        }else{
-            b10=DummyFilter.filter(context.isMultiplicative(), b9g);
+        } else {
+            b10 = DummyFilter.filter(context.isMultiplicative(), b9g);
         }
         b11 = b11(context);
         b13 = context.remove(b11, b7);

@@ -89,7 +89,7 @@ public final class AddCalendarAction extends AbstractAction implements Presenter
 
     static void add(CalendarManager manager, String name, CalendarDefinition p) {
         manager.set(name, p);
-        WorkspaceFactory.getInstance().getActiveWorkspace().add(CalendarDocumentManager.systemItem(name, p));
+        WorkspaceFactory.getInstance().getActiveWorkspace().add(CalendarDocumentManager.newItem(name, p));
     }
 
     @Messages({

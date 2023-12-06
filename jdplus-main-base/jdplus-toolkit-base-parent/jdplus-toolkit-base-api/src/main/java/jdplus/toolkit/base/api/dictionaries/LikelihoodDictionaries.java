@@ -26,8 +26,8 @@ public class LikelihoodDictionaries {
             .item(AtomicDictionary.Item.builder().name(BIC2).description("bic corrected for length").outputClass(Double.class).build())
             .item(AtomicDictionary.Item.builder().name(HQ).description("hannan-quinn").outputClass(Double.class).build())
             .item(AtomicDictionary.Item.builder().name(NPARAMS).description("number of parameters").outputClass(Integer.class).build())
-            .item(AtomicDictionary.Item.builder().name(NOBS).description("number of observtions").outputClass(Integer.class).build())
-            .item(AtomicDictionary.Item.builder().name(NEFFECTIVEOBS).description("number of effective observtions").outputClass(Integer.class).build())
+            .item(AtomicDictionary.Item.builder().name(NOBS).description("number of observations").outputClass(Integer.class).build())
+            .item(AtomicDictionary.Item.builder().name(NEFFECTIVEOBS).description("number of effective observations").outputClass(Integer.class).build())
             .item(AtomicDictionary.Item.builder().name(DF).description("degrees of freedom (=number of effective obs - number of parameters)").outputClass(Integer.class).build())
             .build();
 

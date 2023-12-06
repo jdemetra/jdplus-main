@@ -88,10 +88,6 @@ public final class JX13Summary extends JComponent implements Disposable {
             TsData si = TsData.fitToDomain(results.getDecomposition().getD8(), dom);
             TsData seas = TsData.fitToDomain(results.getDecomposition().getD10(), dom);
 
-            if (x11.getMode() == DecompositionMode.LogAdditive) {
-                si = si.exp();
-            }
-
             siPanel.setSiData(seas, si);
         } else {
             siPanel.reset();

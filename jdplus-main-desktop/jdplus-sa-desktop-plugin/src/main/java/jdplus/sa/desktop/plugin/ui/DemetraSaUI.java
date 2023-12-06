@@ -126,7 +126,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         return defaultSaSpec;
     }
 
-    public void setDefaultSaSpec(@NonNull SaSpecification spec) {
+    public void setDefaultSaSpec(SaSpecification spec) {
         SaSpecification old = this.defaultSaSpec;
         this.defaultSaSpec = spec;
         broadcaster.firePropertyChange(DEFAULT_SA_SPEC_PROPERTY, old, this.defaultSaSpec);

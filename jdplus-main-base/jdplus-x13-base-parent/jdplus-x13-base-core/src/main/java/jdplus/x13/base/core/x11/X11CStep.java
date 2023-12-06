@@ -12,12 +12,12 @@ import jdplus.x13.base.core.x11.extremevaluecorrector.IExtremeValuesCorrector;
 import jdplus.x13.base.core.x11.filter.AutomaticHenderson;
 import jdplus.x13.base.core.x11.filter.DefaultSeasonalNormalizer;
 import jdplus.x13.base.core.x11.filter.MusgraveFilterFactory;
-import jdplus.x13.base.core.x11.filter.X11FilterFactory;
 import jdplus.x13.base.core.x11.filter.X11SeasonalFilterProcessor;
 import jdplus.x13.base.core.x11.filter.X11SeasonalFiltersFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.AsymmetricEndPoints;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.x13.base.core.x11.filter.DummyFilter;
+import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 
 /**
  *
@@ -52,7 +52,7 @@ public class X11CStep {
     }
 
     private void c2Step(X11Context context) {
-        SymmetricFilter filter = X11FilterFactory.makeSymmetricFilter(context.getPeriod());
+        SymmetricFilter filter = X11TrendCycleFilterFactory.makeTrendFilter(context.getPeriod());
         c2drop = filter.length() / 2;
 
         double[] x = X11Kernel.table(c1.length() - 2 * c2drop, Double.NaN);
