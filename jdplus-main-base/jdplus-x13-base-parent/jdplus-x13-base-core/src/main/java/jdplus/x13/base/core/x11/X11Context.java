@@ -26,6 +26,7 @@ import jdplus.toolkit.base.core.math.linearfilters.AsymmetricFiltersFactory;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.x13.base.api.x11.BiasCorrection;
 import lombok.experimental.NonFinal;
 
 /**
@@ -58,6 +59,7 @@ public class X11Context {
      * the calculation of the standard deviation of the extreme values
      */
     boolean excludefcast;
+    BiasCorrection bias;
 
     @NonFinal
     IExtremeValuesCorrector extremeValuesCorrector;
@@ -75,6 +77,7 @@ public class X11Context {
         builder.lowerSigma = 1.5;
         builder.upperSigma = 2.5;
         builder.firstPeriod = 0;
+        builder.bias = BiasCorrection.Legacy;
         return builder;
     }
 
@@ -83,7 +86,6 @@ public class X11Context {
         if (!spec.isSeasonal()) {
             filters = null;
         } else {
-            filters = new SeasonalFilterOption[data.getAnnualFrequency()];
             if (spec.getFilters().length == 1) {
                 filters = new SeasonalFilterOption[data.getAnnualFrequency()];
                 SeasonalFilterOption filter = spec.getFilters()[0];
@@ -116,6 +118,7 @@ public class X11Context {
                 .backcastHorizon(nb)
                 .initialSeasonalFilter(filters)
                 .finalSeasonalFilter(filters)
+                .bias(spec.getBias())
                 .build();
     }
 
@@ -262,8 +265,9 @@ public class X11Context {
     }
 
     public SeasonalFilterOption[] getFinalSeasonalFilter() {
-        if (finalSeasonalFilter == null)
+        if (finalSeasonalFilter == null) {
             return null;
+        }
         SeasonalFilterOption[] result = new SeasonalFilterOption[period];
         for (int i = 0; i < period; i++) {
             result[i] = finalSeasonalFilter[i];

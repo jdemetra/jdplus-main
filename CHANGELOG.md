@@ -7,6 +7,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+### Fixed
+
+- ![STAT] Provide missing final seasonal filter in X11
+- ![STAT] Fix sigma vector in the X11 specification box
+- ![UI] Fix missing default SA specification in the lauching of the GUI
+- ![UI] Fix missing local menu actions
+
+### Added
+
+- ![STAT] Provide additional bias correction in X11 (log-additive decomposition)
+
+
 ## [3.2.0] - 2023-11-23
 
 ### Changed

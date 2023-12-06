@@ -29,8 +29,7 @@ import org.openide.awt.ActionReferences;
 @lombok.experimental.UtilityClass
 public class Actions {
 
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.RenameAction")
+    @ActionID(category = "Edit", id=RenameAction.ID)
     @ActionReferences({
         @ActionReference(path = TramoSeatsSpecManager.ITEMPATH, position = 1050),
         @ActionReference(path = TramoSeatsDocumentManager.ITEMPATH, position = 1050)
@@ -39,8 +38,7 @@ public class Actions {
         return new RenameAction();
     }
 
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.CommentAction")
+    @ActionID(category = "Edit", id=CommentAction.ID)
     @ActionReferences({
         @ActionReference(path = TramoSeatsSpecManager.ITEMPATH, position = 1150),
         @ActionReference(path = TramoSeatsDocumentManager.ITEMPATH, position = 1150)
@@ -49,8 +47,7 @@ public class Actions {
         return new CommentAction();
     }
 
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.DeleteAction")
+    @ActionID(category = "Edit", id=DeleteAction.ID)
     @ActionReferences({
         @ActionReference(path = TramoSeatsSpecManager.ITEMPATH, position = 1100),
         @ActionReference(path = TramoSeatsDocumentManager.ITEMPATH, position = 1100)
@@ -59,8 +56,7 @@ public class Actions {
         return new DeleteAction();
     }
     
-    @ActionID(category = "Edit",
-            id = "demetra.desktop.workspace.nodes.NewAction")
+    @ActionID(category = "Edit", id = NewAction.ID)
     @ActionReferences({
         @ActionReference(path = TramoSeatsDocumentManager.PATH, position = 1000),
         @ActionReference(path = TramoSeatsSpecManager.PATH, position = 1000)

@@ -17,7 +17,9 @@
 package jdplus.tramoseats.base.r;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.stream.Stream;
 import jdplus.sa.base.api.EstimationPolicyType;
+import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
@@ -94,6 +96,12 @@ public class TramoSeats {
     
     public String[] dictionary(){
         return TramoSeatsDictionaries.TRAMOSEATSDICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
+    }
+
+    public String[] fullDictionary(){
+//        Stream<? extends Dictionary.Entry> entries = TramoSeatsDictionaries.TRAMOSEATSDICTIONARY.entries();
+//        return .map(entry->entry.fullName()).toArray(n->new String[n]);
+return null;
     }
 
 }
