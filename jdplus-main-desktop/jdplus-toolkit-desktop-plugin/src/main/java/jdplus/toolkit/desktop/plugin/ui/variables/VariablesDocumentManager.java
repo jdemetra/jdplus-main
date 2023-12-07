@@ -124,6 +124,10 @@ public class VariablesDocumentManager extends AbstractWorkspaceItemManager<TsDat
         return WorkspaceItem.system(ID, name, p);
     }
 
+    public static WorkspaceItem<TsDataSuppliers> newItem(String name, TsDataSuppliers p) {
+        return WorkspaceItem.newItem(ID, name, p);
+    }
+
     @Override
     public boolean isAutoLoad() {
         return true;

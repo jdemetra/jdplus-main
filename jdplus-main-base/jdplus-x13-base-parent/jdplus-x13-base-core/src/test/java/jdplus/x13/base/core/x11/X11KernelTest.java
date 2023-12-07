@@ -17,6 +17,7 @@ import ec.satoolkit.x11.X11Toolkit;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import java.util.Arrays;
+import jdplus.x13.base.api.x11.BiasCorrection;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -200,6 +201,7 @@ public class X11KernelTest {
                 .calendarSigma(CalendarSigmaOption.valueOf(calendarSigma))
                 .filters(seasonalFilterOptions)
                 .forecastHorizon(forecastHorizon)
+                .bias(BiasCorrection.Legacy)
                 .build();
 
         X11Results x11Results = instanceKernel.process(tsData, spec);

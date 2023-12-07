@@ -115,7 +115,7 @@ public final class X11Spec implements Validatable<X11Spec> {
                 .filters(MSR)
                 .calendarSigma(CalendarSigmaOption.None)
                 .excludeForecast(false)
-                .bias(BiasCorrection.Legacy)
+                .bias(BiasCorrection.Ratio)
                 .hendersonFilterLength(0)
                 .forecastHorizon(DEFAULT_FORECAST_HORIZON)
                 .backcastHorizon(DEFAULT_BACKCAST_HORIZON)

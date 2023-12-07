@@ -92,6 +92,10 @@ public class X11SpecUI extends BaseX13SpecUI {
         if (desc != null) {
             descs.add(desc);
         }
+        desc = biasDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
         return descs;
     }
 
@@ -213,10 +217,14 @@ public class X11SpecUI extends BaseX13SpecUI {
 
     public void setCalendarSigma(CalendarSigmaOption calendarsigma) {
         X11Spec.Builder builder = x11().toBuilder().calendarSigma(calendarsigma);
-        if (calendarsigma == CalendarSigmaOption.Select && x11().getSigmaVec() == null) {
-            builder.sigmaVec(getSigmavec());
+        if (calendarsigma == CalendarSigmaOption.Select) {
+            if (x11().getSigmaVec() == null) {
+                builder.sigmaVec(getSigmavec());
+            }
+        } else {
+            builder.sigmaVec(null);
         }
-        update(builder.build());
+        update(builder.calendarSigma(calendarsigma).build());
     }
 
     public SigmaVecOption[] getSigmavec() {
@@ -246,9 +254,17 @@ public class X11SpecUI extends BaseX13SpecUI {
     public boolean isExcludefcst() {
         return x11().isExcludeForecast();
     }
+    
+    public BiasCorrection getBiasCorrection(){
+        return x11().getBias();
+    }
+    
+    public void setBiasCorrection(BiasCorrection bias){
+        update(x11().toBuilder().bias(bias).build());
+    }
 
     private static final int MODE_ID = 0, SEAS_ID = 1, FORECAST_ID = 2, BACKCAST_ID = 12, LSIGMA_ID = 3, USIGMA_ID = 4, AUTOTREND_ID = 5,
-            TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11;
+            TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11, BIAS_ID=12;
 
     @Messages({
         "x11SpecUI.calendarsigmaDesc.name=Calendarsigma",
@@ -513,4 +529,25 @@ public class X11SpecUI extends BaseX13SpecUI {
             return null;
         }
     }
+    
+        @Messages({
+        "x11SpecUI.biasDesc.name=Bias correction",
+        "x11SpecUI.biasDesc.desc=Bias correction for log-additive decomposition"
+    })
+    private EnhancedPropertyDescriptor biasDesc() {
+        if (x11().getMode() != DecompositionMode.LogAdditive)
+            return null;
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("biasCorrection", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, BIAS_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.x11SpecUI_biasDesc_name());
+            desc.setShortDescription(Bundle.x11SpecUI_biasDesc_desc());
+            edesc.setReadOnly(isRo());
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
 }

@@ -58,7 +58,7 @@ public class DefaultSeasonalNormalizer {
         }
 
         int start_period_input = (nextend + context.getFirstPeriod()) % context.getPeriod();
-        SymmetricFilter filter = X11FilterFactory.makeSymmetricFilter(context.getPeriod());
+        SymmetricFilter filter = X11TrendCycleFilterFactory.makeTrendFilter(context.getPeriod());
         int ndrop = filter.length() / 2;
 
         double[] x = new double[in.length()];

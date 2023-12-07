@@ -137,7 +137,7 @@ public interface DiffuseConcentratedLikelihood extends ConcentratedLikelihood {
                 .observationsCount(this.dim())
                 .ssqErr(ssq())
                 .diffuseCount(ndiffuse())
-                .estimatedParametersCount(nparams + (nx()-ndiffuseRegressors()) + 1)
+                .estimatedParametersCount(nparams + (nx()-ndiffuseRegressors()))
                 .build();
     }
 

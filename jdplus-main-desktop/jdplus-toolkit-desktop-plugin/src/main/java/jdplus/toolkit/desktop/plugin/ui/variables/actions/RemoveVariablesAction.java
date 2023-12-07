@@ -61,7 +61,7 @@ public final class RemoveVariablesAction extends SingleNodeAction<ItemWsNode> {
     }
 
     @Messages({
-        "RemoveVariables.dialog.title=Remove calendar",
+        "RemoveVariables.dialog.title=Remove variables",
         "RemoveVariables.dialog.message=Are you sure?"
     })
     static void removeVariables(TsDataSuppliers p, ItemWsNode node) {

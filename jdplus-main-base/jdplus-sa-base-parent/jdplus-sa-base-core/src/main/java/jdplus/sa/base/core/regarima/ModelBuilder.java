@@ -62,6 +62,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
 import jdplus.toolkit.base.core.data.interpolation.AverageInterpolator;
 import jdplus.toolkit.base.core.modelling.regression.AdditiveOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.HolidaysCorrectionFactory;
@@ -143,12 +144,12 @@ public class ModelBuilder implements IModelBuilder{
         model.setPreadjustment(fnSpec.getAdjust());
     }
 
-    private void initializeMean(ModelDescription model, Parameter mu) {
-        if (mu == null) {
+   private void initializeMean(ModelDescription model, MeanSpec mu) {
+        if (! mu.isUsed()) {
             model.setMean(false);
-        } else if (mu.isFixed()) {
+        } else if (Parameter.isFixed(mu.getCoefficient())) {
             int d = spec.getArima().getD(), bd = spec.getArima().getBd();
-            add(model, new TrendConstant(d, bd), "const", ComponentType.Undefined, new Parameter[]{mu});
+            add(model, new TrendConstant(d, bd), "const", ComponentType.Undefined, new Parameter[]{mu.getCoefficient()});
             model.setMean(false);
         } else {
             model.setMean(true);

@@ -95,7 +95,7 @@ public final class ImportCalendarAction extends SingleNodeAction<ItemWsNode> imp
             Workspace ws = WorkspaceFactory.getInstance().getActiveWorkspace();
             if (ws.searchDocumentByElement(cal) == null) {
                 String name = ModellingContext.getActiveContext().getCalendars().get(cal);
-                ws.add(WorkspaceItem.system(CalendarDocumentManager.ID, name, cal));
+                ws.add(WorkspaceItem.loadedItem(CalendarDocumentManager.ID, name, cal));
             }
         }
     }

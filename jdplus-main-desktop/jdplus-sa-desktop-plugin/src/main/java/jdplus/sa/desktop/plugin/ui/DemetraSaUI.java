@@ -126,7 +126,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         return defaultSaSpec;
     }
 
-    public void setDefaultSaSpec(@NonNull SaSpecification spec) {
+    public void setDefaultSaSpec(SaSpecification spec) {
         SaSpecification old = this.defaultSaSpec;
         this.defaultSaSpec = spec;
         broadcaster.firePropertyChange(DEFAULT_SA_SPEC_PROPERTY, old, this.defaultSaSpec);
@@ -180,8 +180,8 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         STABILITY_LENGTH_CONFIG.set(b::parameter, getStabilityLength());
         ESTIMATION_POLICY_TYPE_CONFIG.set(b::parameter, getEstimationPolicyType());
         DEFAULT_SA_SPEC_CONFIG.set(b::parameter, idOf(getDefaultSaSpec()));
-        SELECTED_DIAG_FIELDS_CONFIG.set(b::parameter, getSelectedDiagFields().toArray(n->new String[n]));
-        SELECTED_SERIES_FIELDS_CONFIG.set(b::parameter, getSelectedSeriesFields().toArray(n->new String[n]));
+        SELECTED_DIAG_FIELDS_CONFIG.set(b::parameter, getSelectedDiagFields().toArray(n -> new String[n]));
+        SELECTED_SERIES_FIELDS_CONFIG.set(b::parameter, getSelectedSeriesFields().toArray(n -> new String[n]));
         return b.build();
     }
 
@@ -192,7 +192,10 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         setSeasonalityLength(SEASONALITY_LENGTH_CONFIG.get(config::getParameter));
         setStabilityLength(STABILITY_LENGTH_CONFIG.get(config::getParameter));
         setEstimationPolicyType(ESTIMATION_POLICY_TYPE_CONFIG.get(config::getParameter));
-        setDefaultSaSpec(specOf(DEFAULT_SA_SPEC_CONFIG.get(config::getParameter)));
+        SaSpecification saspec = specOf(DEFAULT_SA_SPEC_CONFIG.get(config::getParameter));
+        if (saspec != null) {
+            setDefaultSaSpec(saspec);
+        }
         setSelectedDiagFields(Arrays.asList(SELECTED_DIAG_FIELDS_CONFIG.get(config::getParameter)));
         setSelectedSeriesFields(Arrays.asList(SELECTED_SERIES_FIELDS_CONFIG.get(config::getParameter)));
     }
@@ -206,7 +209,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         if (id == null || id.length() == 0) {
             return null;
         }
-        
+
         List<WorkspaceItem<SaSpecification>> items = WorkspaceFactory.getInstance().getActiveWorkspace().searchDocuments(SaSpecification.class);
         Optional<WorkspaceItem<SaSpecification>> fspec = items.stream().filter(c -> c.getId().toString().equals(id)).findFirst();
         return fspec.map(WorkspaceItem::getElement).orElse(null);
