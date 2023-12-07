@@ -6,7 +6,7 @@
 
     <groupId>eu.europa.ec.joinup.sat</groupId>
     <artifactId>jdplus-main</artifactId>
-    <version>3.2.1</version>
+    <version>3.2.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
