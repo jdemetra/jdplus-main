@@ -2,7 +2,17 @@
 
 [![Download](https://img.shields.io/github/release/jdemetra/jdplus-main.svg)](https://github.com/jdemetra/jdplus-main/releases/latest)
 
-**JDemetra+ is a tool for seasonal adjustment (SA)** developed by the National Bank of Belgium (NBB) in cooperation with the Deutsche Bundesbank and Eurostat in accordance with the Guidelines of the European Statistical System (ESS).
+**JDemetra+ is a seasonal adjustment and time series analysis tool** developed by the National Bank of Belgium in collaboration with the Deutsche Bundesbank, Insee and Eurostat in accordance with the [Guidelines of the European Statistical System](https://ec.europa.eu/eurostat/documents/3859598/6830795/KS-GQ-15-001-EN-N.pdf) (ESS).
+
+Since 2 February 2015, JDemetra+ has been [officially recommended](https://ec.europa.eu/eurostat/cros/system/files/Jdemetra_%20release.pdf) to the members of the ESS and the European System of Central Banks as the software for seasonal and calendar adjustment of official statistics.
+
+JDemetra+ implements the concepts and algorithms used in the two leading SA methods: TRAMO/SEATS and X-12ARIMA. These methods have been re-engineered using an object-oriented approach, which makes them easier to use, extend and modify.
+
+In addition to seasonal adjustment, JDemetra+ bundles other time series models useful for the production or analysis of economic statistics, such as outlier detection, nowcasting, temporal disaggregation or benchmarking.
+
+Version 3 offers enhanced seasonal adjustment and trend estimation capabilities, including for high frequency data.
+
+Technically, JDemetra+ is a collection of reusable and extensible Java components, easily accessed through a rich graphical interface. The software is Free and Open Source Software (FOSS) developed under the EUPL licence.
 
 Its main **documentation** is available at https://jdemetra-new-documentation.netlify.app.
 
@@ -93,7 +103,7 @@ Git repositories names, Maven modules artifactId, Java modules names and Java pa
 
 This naming convention is enforced by the following regex pattern:
 ```regexp
-^(jdplus)-(\w+)(?:-(base|cli|desktop)(?:-(\w+))?)?$
+^(jdplus)-(\w+)(?:-(base|cli|desktop|bom)(?:-(\w+))?)?$
 ```
 
 ## Contributing
