@@ -7,7 +7,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### Changed
+## [3.2.1] - 2023-12-07
 
 ### Fixed
 
@@ -19,7 +19,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - ![STAT] Provide additional bias correction in X11 (log-additive decomposition)
-
 
 ## [3.2.0] - 2023-11-23
 
@@ -104,7 +103,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.2.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.2.1...HEAD
+[3.2.1]: https://github.com/jdemetra/jd3-main/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/jdemetra/jd3-main/compare/v3.1.1...v3.2.0
 [3.1.1]: https://github.com/jdemetra/jd3-main/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/jdemetra/jd3-main/compare/v3.0.2...v3.1.0
