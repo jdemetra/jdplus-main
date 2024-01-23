@@ -39,10 +39,10 @@ import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.modelling.RegArimaDecomposer;
 import jdplus.sa.base.core.modelling.SaVariablesMapping;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
+import jdplus.toolkit.base.core.ssf.arima.ExactArimaForecasts;
 import jdplus.x13.base.core.x11.X11Kernel;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x11.X11Utility;
-import jdplus.toolkit.base.core.ssf.arima.FastArimaForecasts;
 import jdplus.x13.base.core.x13.regarima.RegArimaKernel;
 
 /**
@@ -172,12 +172,14 @@ public class X13Kernel {
         if (nb > 0 || nf > 0) {
             TsData lin = TsData.subtract(s, detall);
             SarimaModel arima = model.arima();
-            FastArimaForecasts fcasts = new FastArimaForecasts();
-            double mean = 0;
-            Optional<Variable> mu = Arrays.stream(model.getDescription().getVariables()).filter(v -> v.getCore() instanceof TrendConstant).findFirst();
-            if (mu.isPresent()) {
-                mean = mu.orElseThrow().getCoefficient(0).getValue();
-            }
+//            FastArimaForecasts fcasts = new FastArimaForecasts();
+//            double mean = 0;
+//            Optional<Variable> mu = Arrays.stream(model.getDescription().getVariables()).filter(v -> v.getCore() instanceof TrendConstant).findFirst();
+//            if (mu.isPresent()) {
+//                mean = mu.orElseThrow().getCoefficient(0).getValue();
+//            }
+            ExactArimaForecasts fcasts = new ExactArimaForecasts();
+            boolean mean=model.isMeanCorrection();
             fcasts.prepare(arima, mean);
 
             if (nb > 0) {
