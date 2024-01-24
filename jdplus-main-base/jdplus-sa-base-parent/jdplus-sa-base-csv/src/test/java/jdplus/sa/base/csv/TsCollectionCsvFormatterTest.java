@@ -10,10 +10,34 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
+import java.util.Locale;
+import static jdplus.sa.base.csv.CsvInformationFormatter.getCsvSeparator;
+import static jdplus.sa.base.csv.CsvInformationFormatter.getLocale;
+import static jdplus.sa.base.csv.CsvInformationFormatter.setCsvSeparator;
+import static jdplus.sa.base.csv.CsvInformationFormatter.setLocale;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 public class TsCollectionCsvFormatterTest {
+
+    private static Locale SAVED_LOCALE;
+    private static char SAVED_CSV_SEPARATOR;
+
+    @BeforeAll
+    public static void beforeAll() {
+        SAVED_LOCALE = getLocale();
+        setLocale(Locale.ROOT);
+        SAVED_CSV_SEPARATOR = getCsvSeparator();
+        setCsvSeparator(',');
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        setLocale(SAVED_LOCALE);
+        setCsvSeparator(SAVED_CSV_SEPARATOR);
+    }
 
     @Test
     public void testWriteVTable() throws IOException {

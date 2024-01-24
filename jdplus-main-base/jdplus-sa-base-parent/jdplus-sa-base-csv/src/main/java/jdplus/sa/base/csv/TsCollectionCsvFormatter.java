@@ -28,7 +28,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 /**
  *
@@ -38,16 +37,16 @@ public class TsCollectionCsvFormatter {
 
     private CsvLayout layout_ = CsvLayout.VTable;
     private final char comma;
-    private static final String newLine = System.lineSeparator();
+    private static final String NEWLINE = System.lineSeparator();
     private final DecimalFormat fmt;
     private final NumberFormat ifmt;
     private boolean fullName;
 
     public TsCollectionCsvFormatter() {
-        ifmt = NumberFormat.getIntegerInstance(Locale.getDefault());
+        ifmt = NumberFormat.getIntegerInstance(CsvInformationFormatter.getLocale());
         ifmt.setGroupingUsed(false);
         comma = CsvInformationFormatter.getCsvSeparator();
-        fmt = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.getDefault());
+        fmt = (DecimalFormat) DecimalFormat.getNumberInstance(CsvInformationFormatter.getLocale());
         fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
         fmt.setGroupingUsed(false);
     }
@@ -88,7 +87,7 @@ public class TsCollectionCsvFormatter {
                 if (i != nseries - 1) {
                     writer.write(comma);
                 } else {
-                    writer.write(newLine);
+                    writer.write(NEWLINE);
                 }
             }
 
@@ -101,7 +100,7 @@ public class TsCollectionCsvFormatter {
                         write(fmt.format(cursor.getValue()), writer);
                     }
                 }
-                writer.write(newLine);
+                writer.write(NEWLINE);
             }
         } else {
             writer.write(comma);
@@ -110,7 +109,7 @@ public class TsCollectionCsvFormatter {
                 if (i != ndata - 1) {
                     writer.write(comma);
                 } else {
-                    writer.write(newLine);
+                    writer.write(NEWLINE);
                 }
             }
             for (int j = 0; j < nseries; ++j) {
@@ -122,7 +121,7 @@ public class TsCollectionCsvFormatter {
                         write(fmt.format(cursor.getValue()), writer);
                     }
                 }
-                writer.write(newLine);
+                writer.write(NEWLINE);
             }
         }
         return true;
@@ -152,7 +151,7 @@ public class TsCollectionCsvFormatter {
                     }
                 }
             }
-            writer.write(newLine);
+            writer.write(NEWLINE);
         }
         return true;
     }

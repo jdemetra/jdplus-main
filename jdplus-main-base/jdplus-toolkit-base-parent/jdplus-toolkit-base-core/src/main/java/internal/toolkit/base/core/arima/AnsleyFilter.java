@@ -16,6 +16,7 @@
  */
 package internal.toolkit.base.core.arima;
 
+import java.util.function.IntToDoubleFunction;
 import jdplus.toolkit.base.core.arima.IArimaModel;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
@@ -123,7 +124,7 @@ public class AnsleyFilter implements ArmaFilter {
             }
         }
 
-        Polynomial sma = SymmetricFilter.convolutionOf(arima.getMa(), var).coefficientsAsPolynomial();
+        IntToDoubleFunction sma = SymmetricFilter.convolutionOf(arima.getMa(), var).weights();
 
         L = FastMatrix.make(r, n);
         // complete the matrix
@@ -146,7 +147,7 @@ public class AnsleyFilter implements ArmaFilter {
 
         int pos=0;
         while (rows.hasNext()) {
-            double s=sma.get(pos++);
+            double s=sma.applyAsDouble(pos++);
             DataBlock row = rows.next();
             if ( s!= 0) {
                 row.set(s);

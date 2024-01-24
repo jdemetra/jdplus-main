@@ -25,17 +25,17 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import internal.toolkit.base.core.arima.MaLjungBoxFilter;
 
 /**
- * Computes the forecasts of an Arima model using the approach followed in
- * X12/X13.
+ * The class has been moved to the package
+ * jdplus.toolkit.base.core.arima.estimation
  *
  * @author Jean Palate
  */
 @Development(status = Development.Status.Alpha)
+@Deprecated
 public class FastArimaForecasts implements ArimaForecasts {
 
-    private IArimaModel arima;
-    private Polynomial ar, ma;
-    private double mean;
+    private jdplus.toolkit.base.core.arima.estimation.FastArimaForecasts core
+            = new jdplus.toolkit.base.core.arima.estimation.FastArimaForecasts();
 
     /**
      *
@@ -45,34 +45,19 @@ public class FastArimaForecasts implements ArimaForecasts {
 
     @Override
     public boolean prepare(IArimaModel model, boolean bmean) {
-        if (bmean) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-        arima = model;
-        ar = arima.getAr().asPolynomial();
-        ma = arima.getMa().asPolynomial();
-        mean = 0;
-        return true;
+        return core.prepare(model, bmean);
     }
 
     /**
-     * 
+     *
      * @param model
-     * @param mu Value of the mean estimated by regression. Will be internally modified by the stationary AR polynomial
-     * @return 
+     * @param mu Value of the mean estimated by regression. Will be internally
+     * modified by the stationary AR polynomial
+     * @return
      */
     @Override
     public boolean prepare(IArimaModel model, double mu) {
-        arima = model;
-        ar = arima.getAr().asPolynomial();
-        ma = arima.getMa().asPolynomial();
-        if (mu != 0 && model.getStationaryArOrder() > 0) {
-            Polynomial c = model.getStationaryAr().asPolynomial();
-            mean = mu * c.evaluateAt(1);
-        } else {
-            mean = mu;
-        }
-        return true;
+        return core.prepare(model, mu);
     }
 
     /**
@@ -83,80 +68,11 @@ public class FastArimaForecasts implements ArimaForecasts {
      */
     @Override
     public DoubleSeq forecasts(DoubleSeq data, int nf) {
-        try {
-            DataBlock res = residuals(data);
-            // residuals i correspond to t=i+p-q
-            double[] fcasts = new double[nf];
-            int p = ar.degree();
-            double[] y = new double[p];
-            // copy the last obs, in reverse order.
-            int last = data.length() - 1;
-            for (int i = 0; i < p; ++i) {
-                y[i] = data.get(last - i);
-            }
-            // copy the last residuals in reverse order
-            int q = ma.degree();
-            double[] e = new double[q];
-            // copy the last obs, in reverse order.
-            last = res.length() - 1;
-            for (int i = 0; i < q; ++i) {
-                e[i] = res.get(last - i);
-            }
-            for (int i = 0; i < nf; ++i) {
-                double s = mean;
-                for (int j = 0; j < p; ++j) {
-                    s -= ar.get(j + 1) * y[j];
-                }
-                for (int j = i; j < q; ++j) {
-                    s += ma.get(j + 1) * e[j - i];
-                }
-                for (int j = p - 1; j > 0; --j) {
-                    y[j] = y[j - 1];
-                }
-                if (p > 0) {
-                    y[0] = s;
-                }
-                fcasts[i] = s;
-            }
-            return DoubleSeq.of(fcasts);
-        } catch (Exception err) {
-            return null;
-        }
-    }
-
-    // computes the residuals;
-    private DataBlock residuals(DoubleSeq data) {
-        DataBlock w = DataBlock.of(data);
-        try {
-            // step 1. AR filter w, if necessary
-            DataBlock z = w;
-
-            int p = ar.degree();
-            int q = ma.degree();
-            if (p > 0) {
-                z = DataBlock.make(w.length() - p);
-                arima.getAr().apply(w, z);
-            }
-            if (mean != 0) {
-                z.sub(mean);
-            }
-            // filter z (pure ma part)
-            if (q > 0) {
-                MaLjungBoxFilter malb = new MaLjungBoxFilter();
-                int nwl = malb.prepare((IArimaModel) arima.stationaryTransformation().getStationaryModel(), z.length());
-                DataBlock wl = DataBlock.make(nwl);
-                malb.filter(z, wl);
-                return wl;
-            } else {
-                return z;
-            }
-        } catch (Exception err) {
-            return w;
-        }
+        return core.forecasts(data, nf);
     }
 
     @Override
     public double getMean() {
-        return mean;
+        return core.getMean();
     }
 }
