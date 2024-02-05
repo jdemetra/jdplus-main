@@ -23,7 +23,6 @@ import static jdplus.toolkit.base.core.data.analysis.DiscreteKernel.tricube;
 import static jdplus.toolkit.base.core.data.analysis.DiscreteKernel.triweight;
 import static jdplus.toolkit.base.core.data.analysis.DiscreteKernel.uniform;
 
-import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import java.util.function.IntToDoubleFunction;
 import org.junit.jupiter.api.Test;
@@ -130,7 +129,7 @@ public class DiscreteKernelTest {
     @Test
     public void testTrapezoidal() {
         IntToDoubleFunction kernel = DiscreteKernel.Trapezoidal.asFunction(K);
-//        System.out.println("Triangular");
+//        System.out.println("Trapezoidal");
         double s = 0;
         for (int i = -K; i <= K; ++i) {
             double q = kernel.applyAsDouble(i);
@@ -140,6 +139,21 @@ public class DiscreteKernelTest {
         }
         assertEquals(1, s, 1e-9);
     }
+
+    @Test
+    public void testTrapezoidal2() {
+        IntToDoubleFunction kernel = DiscreteKernel.trapezoidal(K+15, K);
+//        System.out.println("Trapezoidal");
+        double s = 0;
+        for (int i = -K-15; i <= K+15; ++i) {
+            double q = kernel.applyAsDouble(i);
+            assertTrue(q > 0);
+            s += q;
+//            System.out.println(kernel.applyAsDouble(i));
+        }
+        assertEquals(1, s, 1e-9);
+    }
+
 //    @Test
 //    public void testGaussian() {
 //        IntToDoubleFunction kernel = gaussian(4 * K);
