@@ -322,7 +322,7 @@ public final class CsvInformationFormatter {
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
             for (List<MatrixItem> row : rows) {
                 MatrixItem item = row.get(nameIndex);
-                if (item.items != null) {
+                if (item.items.length>0) {
                     for (int j = 0; j < item.items.length; j++) {
                         Integer length = map.get(item.items[j]);
                         if (length == null || length < item.length) {
@@ -372,8 +372,12 @@ public final class CsvInformationFormatter {
                     }
                 }
             } else {
-                for (int j = 0; j < length; ++j) {
+                if (length == 0) {
                     writer.writeField(null);
+                } else {
+                    for (int j = 0; j < length; ++j) {
+                        writer.writeField(null);
+                    }
                 }
             }
         }
