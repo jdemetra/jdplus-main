@@ -58,7 +58,8 @@ public class MatrixOperations {
 
     @InterchangeableProcessor
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
+    @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
     public static interface Computer {
 
         Matrix At(Matrix A);
@@ -121,7 +122,8 @@ public class MatrixOperations {
 
         @InterchangeableProcessor
         @Algorithm
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
+        @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
         public static interface SymmetricComputer {
 
             Matrix t(Matrix M);
@@ -176,7 +178,8 @@ public class MatrixOperations {
 
         @InterchangeableProcessor
         @Algorithm
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
+        @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
         public static interface LowerTriangularComputer {
 
             Matrix t(Matrix L);
@@ -234,7 +237,8 @@ public class MatrixOperations {
 
         @InterchangeableProcessor
         @Algorithm
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
+        @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
         public static interface UpperTriangularComputer {
 
             Matrix inverse(Matrix M);
