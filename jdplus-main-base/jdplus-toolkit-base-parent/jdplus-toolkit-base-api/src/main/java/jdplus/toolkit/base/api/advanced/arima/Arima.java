@@ -78,7 +78,8 @@ public class Arima {
     }
 
     @InterchangeableProcessor
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
+    @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
     @Algorithm
     public static interface Processor {
 
