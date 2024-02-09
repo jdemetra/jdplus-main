@@ -27,5 +27,6 @@ public enum KernelOption {
     BiWeight,
     TriWeight,
     Henderson, 
-    TriCube
+    TriCube,
+    Trapezoidal
 }

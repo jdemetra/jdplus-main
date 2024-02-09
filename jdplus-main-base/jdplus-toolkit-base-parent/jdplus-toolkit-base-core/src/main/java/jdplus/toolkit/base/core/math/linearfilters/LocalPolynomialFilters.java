@@ -57,6 +57,8 @@ public class LocalPolynomialFilters {
                 DiscreteKernel.biweight(len);
             case TriWeight ->
                 DiscreteKernel.triweight(len);
+            case TriCube ->
+                DiscreteKernel.tricube(len);
             case Uniform ->
                 DiscreteKernel.uniform(len);
             case Triangular ->
@@ -65,6 +67,8 @@ public class LocalPolynomialFilters {
                 DiscreteKernel.epanechnikov(len);
             case Henderson ->
                 DiscreteKernel.henderson(len);
+            case Trapezoidal ->
+                DiscreteKernel.trapezoidal(len);
             default ->
                 null;
         };

@@ -122,6 +122,30 @@ public enum DiscreteKernel {
         };
     }
 
+    /**
+     * Trapezoidal kernel
+     * @param lH Number of lags in the large base (in [-lH, lH])
+     * @param lh Number of lags in the small base (in [-lh, lh])
+     * @return 
+     */
+    public static IntToDoubleFunction trapezoidal(final int lH, final int lh) {
+        if (lh > lH) {
+            throw new IllegalArgumentException();
+        }
+        int del = 1 + lH - lh;
+        int n = 2 * lh + del;
+        double H = 1.0 / n, D = H / del;
+        return i -> {
+            if (i < -lh) {
+                return D * (del + lh + i);
+            }
+            if (i > lh) {
+                return D * (del + lh - i);
+            }
+            return H;
+        };
+    }
+
     public static IntToDoubleFunction henderson(final int h) {
         double A = h + 1, A2 = A * A;
         double B = h + 2, B2 = B * B;
