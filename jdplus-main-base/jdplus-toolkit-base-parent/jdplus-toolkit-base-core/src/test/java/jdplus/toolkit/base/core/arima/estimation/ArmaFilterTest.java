@@ -55,7 +55,7 @@ public class ArmaFilterTest {
     @Test
     public void testAirline() {
         
-        ArmaFilter filter = ArmaFilter.ansley();
+        ArmaFilter filter = ArmaFilter.ljungBox(true);
         int m = filter.prepare((IArimaModel) airline.stationaryTransformation().getStationaryModel(), data.length());
         DataBlock s = DataBlock.make(m);
         filter.apply(data, s);
@@ -102,7 +102,7 @@ public class ArmaFilterTest {
 
     @Test
     public void testArima() {
-        ArmaFilter filter = ArmaFilter.ansley();
+        ArmaFilter filter = ArmaFilter.ljungBox(true);
         int m = filter.prepare((IArimaModel) arima.stationaryTransformation().getStationaryModel(), data.length());
         DataBlock s = DataBlock.make(m);
         filter.apply(data, s);

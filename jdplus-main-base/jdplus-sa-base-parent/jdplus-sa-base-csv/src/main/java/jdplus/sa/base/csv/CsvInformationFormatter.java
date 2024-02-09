@@ -71,6 +71,7 @@ public final class CsvInformationFormatter {
         DICTIONARY.put(Boolean.class, new BooleanFormatter("1", "0"));
         DICTIONARY.put(Complex.class, new ComplexFormatter());
         DICTIONARY.put(String.class, new StringFormatter());
+        DICTIONARY.put(String[].class, new StringArrayFormatter());
         DICTIONARY.put(SarimaOrders.class, new SarimaFormatter());
         DICTIONARY.put(Parameter.class, new ParameterFormatter());
         DICTIONARY.put(TsPeriod.class, new PeriodFormatter());
@@ -215,9 +216,8 @@ public final class CsvInformationFormatter {
                             }
                         });
                         // update unspecified length
-                        int n = ids.size();
-                        results = objs.toArray(EMPTY);
-                        items = ids.toArray(SEMPTY);
+                        results = objs.toArray(Object[]::new);
+                        items = ids.toArray(String[]::new);
 
                         if (length == 0 && isHomogeneous()) {
                             updateLength();
@@ -271,12 +271,6 @@ public final class CsvInformationFormatter {
             }
         }
 
-        void fillDictionary(Set<String> ids) {
-            for (int i = 0; i < items.length; ++i) {
-                ids.add(items[i]);
-            }
-        }
-
         Object search(String id) {
             for (int i = 0; i < items.length; ++i) {
                 if (items[i].equals(id)) {
@@ -300,19 +294,20 @@ public final class CsvInformationFormatter {
         format(writer, rows, names.size(), null, false);
     }
 
-    public static void formatResults(Writer writer, List<NamedObject<Explorable>> records, List<String> names, boolean shortColName, boolean fullRowName) {
+    public static void formatResults(Writer writer, List<NamedObject<Explorable>> records, List<String> items, boolean shortColName, boolean fullRowName) {
         // STEP 1: we retrieve all information for all records/names
+        // each item of the list contains a row
         List<List<MatrixItem>> rows = new ArrayList<>();
         List<String> rowHeaders = new ArrayList<>();
         records.forEach(record -> {
-            rows.add(names
+            rows.add(items
                     .stream()
-                    .map(name -> MatrixItem.ofExplorable(name, record.getObject(), shortColName))
+                    .map(item -> MatrixItem.ofExplorable(item, record.getObject(), shortColName))
                     .toList()
             );
             rowHeaders.add(record.getName());
         });
-        format(writer, rows, names.size(), rowHeaders, fullRowName);
+        format(writer, rows, items.size(), rowHeaders, fullRowName);
     }
 
     private static void format(Writer writer, List<List<MatrixItem>> rows, int nameCount, List<String> rowHeaders, boolean fullRowName) {
@@ -322,16 +317,18 @@ public final class CsvInformationFormatter {
             LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
             for (List<MatrixItem> row : rows) {
                 MatrixItem item = row.get(nameIndex);
-                if (item.items.length>0) {
-                    for (int j = 0; j < item.items.length; j++) {
-                        Integer length = map.get(item.items[j]);
+                if (item.items.length > 0) {
+                    for (String citem : item.items) {
+                        Integer length = map.get(citem);
                         if (length == null || length < item.length) {
-                            map.put(item.items[j], item.length);
+                            map.put(citem, item.length);
                         }
                     }
                 }
             }
-            wnames.add(map);
+            if (!map.isEmpty()) {
+                wnames.add(map);
+            }
         }
         // STEP 3: write the output
         Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder().separator(NEWLINE).delimiter(CSV_SEPARATOR).build();
