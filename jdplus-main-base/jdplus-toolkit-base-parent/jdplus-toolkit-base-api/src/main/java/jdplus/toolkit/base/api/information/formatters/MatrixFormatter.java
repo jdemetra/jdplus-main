@@ -50,6 +50,7 @@ public class MatrixFormatter {
         DICTIONARY.put(Long.class, new LongFormatter());
         DICTIONARY.put(Boolean.class, new BooleanFormatter("1", "0"));
         DICTIONARY.put(String.class, new StringFormatter());
+        DICTIONARY.put(String[].class, new StringArrayFormatter());
 //        DICTIONARY.put(SarimaModel.class, new SarimaFormatter());
         DICTIONARY.put(Parameter.class, new ParameterFormatter());
 //        DICTIONARY.put(ParameterInfo.class, new ParameterInfoFormatter());

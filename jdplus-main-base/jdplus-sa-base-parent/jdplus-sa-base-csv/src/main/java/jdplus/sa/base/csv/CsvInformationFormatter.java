@@ -326,9 +326,7 @@ public final class CsvInformationFormatter {
                     }
                 }
             }
-            if (!map.isEmpty()) {
-                wnames.add(map);
-            }
+            wnames.add(map);
         }
         // STEP 3: write the output
         Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder().separator(NEWLINE).delimiter(CSV_SEPARATOR).build();

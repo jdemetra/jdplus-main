@@ -31,12 +31,9 @@ public final class StringArrayFormatter implements InformationFormatter {
         }
         String[] input = (String[]) obj;
         return switch (input.length) {
-            case 0 ->
-                "";
-            case 1 ->
-                input[0];
-            default ->
-                concatenate(input);
+            case 0 -> "";
+            case 1 -> input[0];
+            default -> concatenate(input);
         };
     }
 
