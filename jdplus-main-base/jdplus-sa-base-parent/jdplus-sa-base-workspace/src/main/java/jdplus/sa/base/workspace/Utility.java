@@ -27,6 +27,7 @@ import jdplus.toolkit.base.api.timeseries.Ts;
  */
 @lombok.experimental.UtilityClass
 public class Utility {
+
     public SaItem withTsMetaData(SaItem item, String key, String value) {
         SaDefinition definition = item.getDefinition();
         Ts cur = definition.getTs();
@@ -50,5 +51,4 @@ public class Utility {
         return cur.getMeta().get(key);
     }
 
-    
 }
