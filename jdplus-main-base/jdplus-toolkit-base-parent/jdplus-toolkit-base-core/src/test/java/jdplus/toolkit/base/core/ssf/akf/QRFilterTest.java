@@ -26,18 +26,17 @@ public class QRFilterTest {
     static final double[] data;
 
     static {
-        SarimaOrders spec=SarimaOrders.airline(12);
+        SarimaOrders spec = SarimaOrders.airline(12);
         arima1 = SarimaModel.builder(spec).theta(1, -.6).btheta(1, -.8).build();
         arima2 = SarimaModel.builder(spec).theta(1, .3).btheta(1, -.4).build();
         data = Data.PROD.clone();
-//        data[3]=Double.NaN;
-//        data[7]=Double.NaN;
-//        data[8]=Double.NaN;
+        data[data.length - 1] = Double.NaN;
+        data[17] = Double.NaN;
+        data[8] = Double.NaN;
     }
 
     public QRFilterTest() {
     }
-
 
     @Test
     public void testDiffuse() {
@@ -48,6 +47,8 @@ public class QRFilterTest {
         filter.process(ssf, ssfData);
         DiffuseLikelihood ll1 = filter.diffuseLikelihood(true, true);
         DiffuseLikelihood ll2 = DkToolkit.likelihood(ssf, ssfData, true, true);
+        DiffuseLikelihood ll3 = AkfToolkit.likelihoodComputer(true, true, true).compute(ssf, ssfData);
         assertEquals(ll1.logLikelihood(), ll2.logLikelihood(), 1e-6);
+        assertEquals(ll1.logLikelihood(), ll3.logLikelihood(), 1e-6);
     }
 }
