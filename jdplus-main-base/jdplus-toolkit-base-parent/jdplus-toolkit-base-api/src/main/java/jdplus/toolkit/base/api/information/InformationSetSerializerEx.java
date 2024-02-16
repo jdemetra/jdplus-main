@@ -20,7 +20,7 @@ package jdplus.toolkit.base.api.information;
 /**
  *
  * @author Jean Palate
- * @param <T>
+ * @param <T, C>
  */
 public interface InformationSetSerializerEx<T, C> extends InformationSetSerializer<T>{
     @Override
