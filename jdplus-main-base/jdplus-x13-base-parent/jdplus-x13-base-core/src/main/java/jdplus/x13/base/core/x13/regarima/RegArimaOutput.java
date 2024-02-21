@@ -16,11 +16,10 @@
  */
 package jdplus.x13.base.core.x13.regarima;
 
-import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.x13.base.api.regarima.RegArimaSpec;
-import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import java.util.Map;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 
 /**
  *
@@ -29,7 +28,7 @@ import java.util.Map;
 @lombok.Value
 @lombok.Builder
 public class RegArimaOutput {
-    GeneralLinearModel<SarimaSpec> result;
+    RegSarimaModel result;
 
     @lombok.NonNull
     RegArimaSpec estimationSpec;

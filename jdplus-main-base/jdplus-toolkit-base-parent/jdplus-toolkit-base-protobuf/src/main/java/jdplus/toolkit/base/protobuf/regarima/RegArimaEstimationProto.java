@@ -19,6 +19,7 @@ package jdplus.toolkit.base.protobuf.regarima;
 import jdplus.toolkit.base.api.data.Iterables;
 import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.toolkit.base.api.data.ParametersEstimation;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
@@ -44,6 +45,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaModel;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
@@ -83,7 +85,7 @@ public class RegArimaEstimationProto {
                 .build();
     }
 
-    public RegArimaProtos.RegArimaModel.Estimation convert(GeneralLinearModel.Estimation estimation) {
+    public RegArimaProtos.RegArimaModel.Estimation convert(GeneralLinearModel.Estimation estimation, DoubleSeq res) {
         RegArimaProtos.RegArimaModel.Estimation.Builder builder = RegArimaProtos.RegArimaModel.Estimation.newBuilder();
 
         Matrix cov = estimation.getCoefficientsCovariance();
@@ -94,7 +96,8 @@ public class RegArimaEstimationProto {
                 .setParameters(ToolkitProtosUtility.convert(estimation.getParameters()))
                 .setLikelihood(ToolkitProtosUtility.convert(statistics))
                 .addAllB(Iterables.of(estimation.getCoefficients()))
-                .setBcovariance(ToolkitProtosUtility.convert(cov));
+                .setBcovariance(ToolkitProtosUtility.convert(cov))
+                .addAllResiduals(Iterables.of(res));
 
         // missing
         MissingValueEstimation[] missing = estimation.getMissing();
@@ -132,10 +135,11 @@ public class RegArimaEstimationProto {
         return builder.build();
     }
 
-    public RegArimaProtos.RegArimaModel convert(GeneralLinearModel<SarimaSpec> model) {
-        return RegArimaProtos.RegArimaModel.newBuilder()
+    public RegArimaProtos.RegArimaModel convert(RegSarimaModel model) {
+        DoubleSeq res = model.fullResiduals().getValues();
+                return RegArimaProtos.RegArimaModel.newBuilder()
                 .setDescription(convert(model.getDescription()))
-                .setEstimation(convert(model.getEstimation()))
+                .setEstimation(convert(model.getEstimation(), res))
                 .setDiagnostics(diagnosticsOf(model))
                 .build();
 

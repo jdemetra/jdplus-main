@@ -58,6 +58,11 @@ public class X13 {
         return X13Factory.getInstance().refreshSpec(currentSpec, domainSpec, EstimationPolicyType.valueOf(policy), domain);
     }
 
+    /**
+     * 
+     * @param spec
+     * @return 
+     */
     public byte[] toBuffer(X13Spec spec) {
         return SpecProto.convert(spec).toByteArray();
     }
@@ -82,6 +87,12 @@ public class X13 {
                 .build();
     }
 
+    /**
+     * 
+     * @param series
+     * @param defSpec
+     * @return 
+     */
     public X13Output fullProcess(TsData series, String defSpec) {
         X13Spec spec = X13Spec.fromString(defSpec);
         return fullProcess(series, spec, null);
@@ -92,6 +103,10 @@ public class X13 {
     }
 
     public String[] dictionary(){
+        return X13Dictionaries.X13DICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
+    }
+
+    public String[] fullDictionary(){
         return X13Dictionaries.X13DICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
     }
 }
