@@ -1,10 +1,12 @@
 # JDemetra+ v3
 
 [![Download](https://img.shields.io/github/release/jdemetra/jdplus-main.svg)](https://github.com/jdemetra/jdplus-main/releases/latest)
+![GitHub All Releases](https://img.shields.io/github/downloads/jdemetra/jdplus-main/total)
+![GitHub Releases](https://img.shields.io/github/downloads/jdemetra/jdplus-main/latest/total)
 
 **JDemetra+ is a seasonal adjustment and time series analysis tool** developed by the National Bank of Belgium in collaboration with the Deutsche Bundesbank, Insee and Eurostat in accordance with the [Guidelines of the European Statistical System](https://ec.europa.eu/eurostat/documents/3859598/6830795/KS-GQ-15-001-EN-N.pdf) (ESS).
 
-Since 2 February 2015, JDemetra+ has been [officially recommended](https://ec.europa.eu/eurostat/cros/system/files/Jdemetra_%20release.pdf) to the members of the ESS and the European System of Central Banks as the software for seasonal and calendar adjustment of official statistics.
+Since 2015, JDemetra+ has been [officially recommended](https://ec.europa.eu/eurostat/cros/system/files/Jdemetra_%20release.pdf) to the members of the ESS and the European System of Central Banks as the software for seasonal and calendar adjustment of official statistics.
 
 JDemetra+ implements the concepts and algorithms used in the two leading SA methods: TRAMO/SEATS and X-12ARIMA. These methods have been re-engineered using an object-oriented approach, which makes them easier to use, extend and modify.
 
@@ -50,12 +52,28 @@ mvn clean install
 
 Daily builds are also available at https://github.com/nbbrd/jdemetra-app-snapshot.
 
+Examples of how to use the libraries can be found at https://github.com/jdemetra/jdplus-examples/.
+
 ### Structure
 
-JDemetra+ code is **divided into topics** (toolkit, x13, ...) and is **grouped by lifecycle** (main, experimental, ...).  
-Each group is hosted in a separate Git repository while each topic has its own Maven module.
+JDemetra+ code is **divided into topics** (`toolkit`, `x13`, ...) and is **grouped by lifecycles** (`main`, `experimental`, ...).
+Each lifecycle is hosted in a separate Git repository while each topic has its own Maven modules.
 
-For example, the x13 topic can be found in the Maven module `jdplus-x13-base-parent` of the repository `jdplus-main`.
+For example, the `x13` topic can be found in the `main` lifecycle.
+Here is the corresponding Maven module structure in the `jdplus-main` repository:
+```
+jdplus-main
+├─ jdplus-main-base
+│  └─ jdplus-x13-base-parent
+│     ├─ jdplus-x13-base-api
+│     ├─ jdplus-x13-base-core
+│     ├─ ...
+│     └─ jdplus-x13-base-xml
+├─ jdplus-main-cli
+│  └─ jdplus-x13-cli-plugin
+└─ jdplus-main-desktop
+   └─ jdplus-x13-desktop-plugin
+```
 
 Here is the schema of all the groups and their topics: 
 
@@ -98,7 +116,7 @@ flowchart BT
 
 ### Naming
 
-Git repositories names, Maven modules artifactId, Java modules names and Java packages names follow this naming convention:  
+Git repositories names, Maven modules artifactId, Java modules names and Java packages names follow this naming convention:
 `PREFIX-TOPIC[-STEREOTYPE[-CLASSIFIER]]` 
 
 This naming convention is enforced by the following regex pattern:
