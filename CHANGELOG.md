@@ -7,13 +7,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+### Changed
+
+- ![UI] Modify branding to differentiate from v2
+- ![OTHER] Bump bundled runtime in platform-specific packages to JDK21
+
 ## [3.2.1] - 2023-12-07
 
 ### Fixed
 
 - ![STAT] Provide missing final seasonal filter in X11
 - ![STAT] Fix sigma vector in the X11 specification box
-- ![UI] Fix missing default SA specification in the lauching of the GUI
+- ![UI] Fix missing default SA specification in the launching of the GUI
 - ![UI] Fix missing local menu actions
 
 ### Added
