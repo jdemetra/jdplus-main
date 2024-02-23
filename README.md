@@ -18,25 +18,38 @@ Technically, JDemetra+ is a collection of reusable and extensible Java component
 
 Its main **documentation** is available at https://jdemetra-new-documentation.netlify.app.
 
+[ [Installing](#installing) | [Developing](#developing) | [Contributing](#contributing) | [Licensing](#licensing) ]
+
 ## Installing
 
 JDemetra+ v3 runs on any desktop operating system such as Microsoft **Windows**, **Solaris OS**, Apple **macOS**, **Ubuntu** and other various **Linux** distributions.
 
-Windows-specific packages are provided in addition to the platform-independent packages.
+Platform-specific packages are provided in addition to the platform-independent packages.
 These specific packages are self-sufficient and therefore don't require Java to run.
 
-### Microsoft Windows
+### ☕️ Bundled Java runtime
 
-1. **Download** the [Windows-specific package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-*-windows-bin.zip`)
-2. **Extract** it to any folder on your system (i.e. `_DEMETRA_PATH_`)
-3. **Run** the executable file `nbdemetra64.exe` located in the `_DEMETRA_PATH_/bin` directory
+This binary provides its own Java runtime.
 
-### Other operating systems
+1. **Download** the [platform-specific package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-standalone-VERSION-PLATFORM.zip`)
+
+   | `PLATFORM`  | Intel            | Arm              |
+   |:-----------:|------------------|------------------|
+   |  **MacOS**  | `osx-x86_64`     | `osx-aarch_64`   |
+   |  **Linux**  | `linux-x86_64`   | `linux-aarch_64` |
+   | **Windows** | `windows-x86_64` |                  |
+
+2. **Extract** it to any folder on your system (i.e. `DEMETRA_PATH`)
+3. **Run** the executable file located in the `DEMETRA_PATH/bin` directory
+
+### 🌟 Universal
+
+This binary requires an external Java runtime.
 
 1. **Install** [Java version 17 or later](https://whichjdk.com/)
-2. **Download** the [platform-independent package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-*-bin.zip`)
-3. **Extract** it to any folder on your system (i.e. `_DEMETRA_PATH_`)
-4. **Run** the executable file `$ ./nbdemetra` located in the `_DEMETRA_PATH_/bin` directory
+2. **Download** the [platform-independent package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-VERSION.zip`)
+3. **Extract** it to any folder on your system (i.e. `DEMETRA_PATH`)
+4. **Run** the executable file located in the `DEMETRA_PATH/bin` directory
 
 ## Developing
 

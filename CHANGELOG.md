@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![OTHER] Add more platform-specific packages [#226](https://github.com/jdemetra/jdplus-main/issues/226)
+
 ### Fixed
 
 ### Changed
