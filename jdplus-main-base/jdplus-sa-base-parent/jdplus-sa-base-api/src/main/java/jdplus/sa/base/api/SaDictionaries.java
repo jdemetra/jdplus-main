@@ -134,7 +134,7 @@ public final class SaDictionaries {
             .item(Item.builder().name(MODE).description("decomposition mode").outputClass(String.class).build())
             .item(Item.builder().name(SEASONAL).description("has a seasonal component").outputClass(Integer.class).build())
             //            .item(Item.builder().name(Y).description("series").outputClass(TsData.class).build())
-            .item(Item.builder().name(SA).description("seasonal adjusted").outputClass(TsData.class).build())
+            .item(Item.builder().name(SA).description("seasonally adjusted").outputClass(TsData.class).build())
             .item(Item.builder().name(T).description("trend").outputClass(TsData.class).build())
             .item(Item.builder().name(S).description("seasonal").outputClass(TsData.class).build())
             .item(Item.builder().name(I).description("irregular").outputClass(TsData.class).build())

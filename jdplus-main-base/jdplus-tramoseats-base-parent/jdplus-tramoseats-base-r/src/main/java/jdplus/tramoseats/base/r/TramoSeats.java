@@ -17,12 +17,11 @@
 package jdplus.tramoseats.base.r;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.stream.Stream;
 import jdplus.sa.base.api.EstimationPolicyType;
-import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.r.util.Dictionaries;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsDictionaries;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import jdplus.tramoseats.base.protobuf.Spec;
@@ -93,15 +92,13 @@ public class TramoSeats {
     public byte[] toBuffer(TramoSeatsOutput output) {
         return TramoSeatsProtosUtility.convert(output).toByteArray();
     }
-    
-    public String[] dictionary(){
-        return TramoSeatsDictionaries.TRAMOSEATSDICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
+
+    public String[] dictionary() {
+        return Dictionaries.entries(TramoSeatsDictionaries.TRAMOSEATSDICTIONARY);
     }
 
-    public String[] fullDictionary(){
-//        Stream<? extends Dictionary.Entry> entries = TramoSeatsDictionaries.TRAMOSEATSDICTIONARY.entries();
-//        return .map(entry->entry.fullName()).toArray(n->new String[n]);
-return null;
+    public String[] fullDictionary() {
+        return Dictionaries.all(TramoSeatsDictionaries.TRAMOSEATSDICTIONARY);
     }
 
 }

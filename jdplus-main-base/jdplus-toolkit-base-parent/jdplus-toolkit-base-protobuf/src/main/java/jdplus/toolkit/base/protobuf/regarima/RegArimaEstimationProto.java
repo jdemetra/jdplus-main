@@ -137,7 +137,7 @@ public class RegArimaEstimationProto {
 
     public RegArimaProtos.RegArimaModel convert(RegSarimaModel model) {
         DoubleSeq res = model.fullResiduals().getValues();
-                return RegArimaProtos.RegArimaModel.newBuilder()
+        return RegArimaProtos.RegArimaModel.newBuilder()
                 .setDescription(convert(model.getDescription()))
                 .setEstimation(convert(model.getEstimation(), res))
                 .setDiagnostics(diagnosticsOf(model))

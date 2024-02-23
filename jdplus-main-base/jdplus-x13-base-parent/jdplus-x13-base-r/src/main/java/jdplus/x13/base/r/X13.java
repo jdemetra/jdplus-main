@@ -21,6 +21,7 @@ import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.r.util.Dictionaries;
 import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.protobuf.Spec;
@@ -59,9 +60,9 @@ public class X13 {
     }
 
     /**
-     * 
+     *
      * @param spec
-     * @return 
+     * @return
      */
     public byte[] toBuffer(X13Spec spec) {
         return SpecProto.convert(spec).toByteArray();
@@ -88,10 +89,10 @@ public class X13 {
     }
 
     /**
-     * 
+     *
      * @param series
      * @param defSpec
-     * @return 
+     * @return
      */
     public X13Output fullProcess(TsData series, String defSpec) {
         X13Spec spec = X13Spec.fromString(defSpec);
@@ -102,11 +103,11 @@ public class X13 {
         return X13ProtosUtility.convert(output).toByteArray();
     }
 
-    public String[] dictionary(){
-        return X13Dictionaries.X13DICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
+    public String[] dictionary() {
+        return Dictionaries.entries(X13Dictionaries.X13DICTIONARY);
     }
 
-    public String[] fullDictionary(){
-        return X13Dictionaries.X13DICTIONARY.entries().map(entry->entry.fullName()).toArray(n->new String[n]);
+    public String[] fullDictionary() {
+        return Dictionaries.all(X13Dictionaries.X13DICTIONARY);
     }
 }

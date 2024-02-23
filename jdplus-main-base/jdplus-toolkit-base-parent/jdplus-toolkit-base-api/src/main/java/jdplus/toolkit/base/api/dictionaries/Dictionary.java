@@ -20,13 +20,11 @@ public interface Dictionary {
     }
     
      public static String fullName(String name, EntryType type){
-            switch (type){
-                case Parametric:
-                    return name+"(?)";
-                case Array:
-                    return name+"(*)";
-                default: return name;
-            }
+        return switch (type) {
+            case Parametric -> name+"(?)";
+            case Array -> name+"(*)";
+            default -> name;
+        };
         }
 
 
@@ -35,6 +33,8 @@ public interface Dictionary {
         String getName();
 
         String getDescription();
+
+        String getDetail();
 
         Class getOutputClass();
         

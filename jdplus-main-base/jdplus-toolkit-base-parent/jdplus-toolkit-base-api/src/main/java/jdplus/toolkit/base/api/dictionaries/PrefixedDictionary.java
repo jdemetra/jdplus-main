@@ -61,6 +61,11 @@ public class PrefixedDictionary implements Dictionary {
         }
 
         @Override
+        public String getDetail() {
+            return core.getDetail();
+        }
+
+        @Override
         public Class getOutputClass() {
             return core.getOutputClass();
         }

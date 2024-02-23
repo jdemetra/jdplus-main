@@ -92,10 +92,10 @@ public class X13Dictionaries {
     
     public final Dictionary ETABLES = AtomicDictionary.builder()
             .name(E_TABLES)
-            .item(AtomicDictionary.Item.builder().name(E1).description("TODO").outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E2).description("TODO").outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E3).description("TODO").outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E11).description("TODO").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E1).outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E2).outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E3).outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E11).outputClass(TsData.class).build())
             .build();
     
     public static final String MSTATISTICS = "m-statistics";
@@ -107,19 +107,19 @@ public class X13Dictionaries {
     
     public final Dictionary MSTATS = AtomicDictionary.builder()
             .name(MSTATISTICS)
-            .item(AtomicDictionary.Item.builder().name(M1).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M2).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M3).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M4).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M5).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M6).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M7).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M8).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M9).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M10).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M11).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(Q).description("TODO").outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(Q2).description("TODO").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M1).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M2).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M3).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M4).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M5).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M6).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M7).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M8).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M9).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M10).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M11).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(Q).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(Q2).outputClass(Double.class).build())
             .build();
     
     public final Dictionary X13DICTIONARY=ComplexDictionary.builder()
