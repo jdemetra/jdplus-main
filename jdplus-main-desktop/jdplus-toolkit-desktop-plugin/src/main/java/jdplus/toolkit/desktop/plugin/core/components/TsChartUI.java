@@ -16,25 +16,29 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
-import jdplus.toolkit.desktop.plugin.components.parts.*;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
-import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.actions.Configurable;
-import jdplus.toolkit.desktop.plugin.components.JTsChart;
-import jdplus.toolkit.desktop.plugin.components.TsFeatureHelper;
-import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
-import jdplus.toolkit.desktop.plugin.util.ActionMaps;
-import jdplus.toolkit.desktop.plugin.util.InputMaps;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
-import jdplus.toolkit.base.api.util.IntList;
 import ec.util.chart.*;
 import ec.util.chart.TimeSeriesChart.Element;
 import ec.util.chart.swing.JTimeSeriesChart;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.util.IntList;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.components.JTsChart;
+import jdplus.toolkit.desktop.plugin.components.TsFeatureHelper;
+import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
+import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
+import jdplus.toolkit.desktop.plugin.util.ActionMaps;
+import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
+import jdplus.toolkit.desktop.plugin.util.InputMaps;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickMarkPosition;
+import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.data.xy.IntervalXYDataset;
 
 import javax.swing.*;
@@ -52,10 +56,6 @@ import java.util.stream.Stream;
 
 import static jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview.PRINT_ACTION;
 import static jdplus.toolkit.desktop.plugin.actions.ResetableZoom.RESET_ZOOM_ACTION;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.DateTickMarkPosition;
-import org.jfree.chart.plot.CombinedDomainXYPlot;
 
 public final class TsChartUI implements InternalUI<JTsChart> {
 
@@ -242,7 +242,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     //<editor-fold defaultstate="collapsed" desc="Event Handlers">
     private void onDataFormatChange() {
         ObsFormat obsFormat = obsFormatResolver.resolve();
-        chartPanel.setPeriodFormat(new DateFormatAdapter(obsFormat));
+        chartPanel.setPeriodFormat(DateFormatAdapter.of(obsFormat));
         chartPanel.setValueFormat(new InternalComponents.NumberFormatAdapter(obsFormat));
     }
 

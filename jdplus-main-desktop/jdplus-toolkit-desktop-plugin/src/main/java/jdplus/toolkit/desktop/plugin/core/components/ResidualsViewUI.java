@@ -16,22 +16,24 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
-import jdplus.toolkit.desktop.plugin.components.parts.*;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.desktop.plugin.components.ComponentBackendSpi;
-import jdplus.toolkit.desktop.plugin.components.JTsGrid;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
-import jdplus.toolkit.desktop.plugin.util.NbComponents;
-import jdplus.toolkit.desktop.plugin.components.JResidualsView;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsMoniker;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.desktop.plugin.components.ComponentBackendSpi;
+import jdplus.toolkit.desktop.plugin.components.JResidualsView;
+import jdplus.toolkit.desktop.plugin.components.JTsGrid;
+import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
+import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.jfree.chart.ChartFactory;
@@ -51,13 +53,11 @@ import org.jfree.ui.RectangleInsets;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
+import java.util.DoubleSummaryStatistics;
+import java.util.stream.DoubleStream;
 
 import static jdplus.toolkit.desktop.plugin.components.parts.HasObsFormat.OBS_FORMAT_PROPERTY;
 import static jdplus.toolkit.desktop.plugin.components.parts.HasTsData.TS_DATA_PROPERTY;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
-import java.util.DoubleSummaryStatistics;
-import java.util.stream.DoubleStream;
 
 /**
  * @author Philippe Charles
@@ -153,7 +153,7 @@ public final class ResidualsViewUI implements InternalUI<JResidualsView> {
     private void onDataFormatChange(JResidualsView view) {
         grid.setObsFormat(view.getObsFormat());
         ObsFormat obsFormat = obsFormatResolver.resolve();
-        ((DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis()).setDateFormatOverride(new DateFormatAdapter(obsFormat));
+        ((DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis()).setDateFormatOverride(DateFormatAdapter.of(obsFormat));
     }
 
     private void onColorSchemeChange() {
