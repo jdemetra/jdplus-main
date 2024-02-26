@@ -62,7 +62,7 @@
         <jd2.version>2.2.4</jd2.version>
         <protobuf.version>3.25.3</protobuf.version>
         <java-io-util.version>0.0.27</java-io-util.version>
-        <java-sql-util.version>1.0.3</java-sql-util.version>
+        <java-sql-util.version>1.0.4</java-sql-util.version>
         <spreadsheet4j.version>2.5.8</spreadsheet4j.version>
     </properties>
 
