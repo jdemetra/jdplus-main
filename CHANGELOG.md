@@ -13,6 +13,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- ![UI] Fix NPE when exporting image to the clipboard [#216](https://github.com/jdemetra/jdplus-main/issues/216)
+
 ### Changed
 
 - ![UI] Modify branding to differentiate from v2

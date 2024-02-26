@@ -16,22 +16,22 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
-import jdplus.toolkit.desktop.plugin.components.parts.*;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
-import jdplus.toolkit.desktop.plugin.actions.Actions;
-import jdplus.toolkit.desktop.plugin.components.JTsGrowthChart;
-import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
-import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
-import jdplus.toolkit.desktop.plugin.util.ActionMaps;
-import jdplus.toolkit.desktop.plugin.util.InputMaps;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.chart.ObsFunction;
 import ec.util.chart.SeriesFunction;
 import ec.util.chart.SeriesPredicate;
 import ec.util.chart.TimeSeriesChart;
 import ec.util.chart.swing.JTimeSeriesChart;
 import ec.util.various.swing.JCommand;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.desktop.plugin.actions.Actions;
+import jdplus.toolkit.desktop.plugin.components.JTsGrowthChart;
+import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
+import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
+import jdplus.toolkit.desktop.plugin.util.ActionMaps;
+import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
+import jdplus.toolkit.desktop.plugin.util.InputMaps;
 import org.jfree.data.xy.IntervalXYDataset;
 
 import javax.swing.*;
@@ -204,7 +204,7 @@ public final class TsGrowthChartUI implements InternalUI<JTsGrowthChart> {
     //<editor-fold defaultstate="collapsed" desc="Event handlers">
     private void onDataFormatChange() {
         ObsFormat obsFormat = obsFormatResolver.resolve();
-        chartPanel.setPeriodFormat(new DateFormatAdapter(obsFormat));
+        chartPanel.setPeriodFormat(DateFormatAdapter.of(obsFormat));
     }
 
     private void onColorSchemeChange() {
