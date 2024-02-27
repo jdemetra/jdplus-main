@@ -1,9 +1,10 @@
 package jdplus.toolkit.desktop.plugin.completion;
 
+import ec.util.completion.swing.JAutoCompletion;
+import internal.uihelpers.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
-import ec.util.completion.swing.JAutoCompletion;
 import lombok.NonNull;
 
 import javax.swing.text.JTextComponent;
@@ -22,7 +23,7 @@ public final class AutoCompletionManager {
     private AutoCompletionManager() {
     }
 
-    private final CollectionSupplier<AutoCompletionSpi> providers = AutoCompletionSpiLoader::get;
+    private final CollectionSupplier<AutoCompletionSpi> providers = FixmeCollectionSupplier.of(AutoCompletionSpi.class, AutoCompletionSpiLoader::load);
 
     @NonNull
     public JAutoCompletion bind(@NonNull Class<?> path, @NonNull JTextComponent textComponent) {

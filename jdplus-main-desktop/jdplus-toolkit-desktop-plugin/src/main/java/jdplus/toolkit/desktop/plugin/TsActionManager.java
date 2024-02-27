@@ -1,29 +1,30 @@
 /*
  * Copyright 2018 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.desktop.plugin;
 
+import internal.uihelpers.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
-import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
-import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
-import nbbrd.design.swing.OnEDT;
-import nbbrd.design.MightBePromoted;
+import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBePromoted;
+import nbbrd.design.swing.OnEDT;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.util.Exceptions;
 
@@ -34,7 +35,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- *
  * @author Philippe Charles
  */
 @GlobalService
@@ -50,8 +50,8 @@ public final class TsActionManager {
 
     public static final String NO_ACTION = "";
 
-    private final CollectionSupplier<TsActionOpenSpi> openActions = TsActionOpenSpiLoader::get;
-    private final CollectionSupplier<TsActionSaveSpi> saveActions = TsActionSaveSpiLoader::get;
+    private final CollectionSupplier<TsActionOpenSpi> openActions = FixmeCollectionSupplier.of(TsActionOpenSpi.class, TsActionOpenSpiLoader::load);
+    private final CollectionSupplier<TsActionSaveSpi> saveActions = FixmeCollectionSupplier.of(TsActionSaveSpi.class, TsActionSaveSpiLoader::load);
 
     @NonNull
     public Collection<? extends NamedService> getOpenActions() {

@@ -42,8 +42,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 @ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class,
-        singleton = true
+        backend = NetBeansServiceBackend.class
 )
 public interface DataTransferSpi extends NamedService {
 

@@ -1,5 +1,6 @@
 package jdplus.toolkit.desktop.plugin.nodes;
 
+import internal.uihelpers.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
@@ -19,7 +20,7 @@ public final class NodeAnnotatorManager {
     private NodeAnnotatorManager() {
     }
 
-    private final CollectionSupplier<NodeAnnotatorSpi> providers = NodeAnnotatorSpiLoader::get;
+    private final CollectionSupplier<NodeAnnotatorSpi> providers = FixmeCollectionSupplier.of(NodeAnnotatorSpi.class, NodeAnnotatorSpiLoader::load);
 
     public Image annotateIcon(Node node, Image image) {
         Image result = image;
