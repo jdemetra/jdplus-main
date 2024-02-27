@@ -16,19 +16,20 @@
  */
 package jdplus.toolkit.desktop.plugin.components.parts;
 
+import jdplus.toolkit.base.api.data.Range;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import jdplus.toolkit.desktop.plugin.actions.Actions;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
+import jdplus.toolkit.desktop.plugin.core.tools.JTsChartTopComponent;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
 import jdplus.toolkit.desktop.plugin.datatransfer.LocalObjectDataTransfer;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.util.Collections2;
 import jdplus.toolkit.desktop.plugin.util.KeyStrokes;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsInformationType;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
 import ec.util.list.swing.JLists;
 import ec.util.various.swing.FontAwesome;
@@ -50,6 +51,8 @@ import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeListener;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
@@ -95,7 +98,7 @@ public class HasTsCollectionSupport {
         am.put(HasTsCollection.OPEN_ACTION, OpenCommand.INSTANCE.toAction(component));
         am.put(HasTsCollection.SELECT_ALL_ACTION, SelectAllCommand.INSTANCE.toAction(component));
         am.put(HasTsCollection.RENAME_ACTION, RenameCommand.INSTANCE.toAction(component));
-//        am.put(SPLIT_ACTION, HasChartCommands.splitIntoYearlyComponents().toAction(view));
+        am.put(HasTsCollection.SPLIT_ACTION, SplitIntoYearlyComponentsCommand.INSTANCE.toAction(component));
 //        if (this instanceof HasColorScheme) {
 //            am.put(HasColorScheme.DEFAULT_COLOR_SCHEME_ACTION, HasColorScheme.commandOf(null).toAction((HasColorScheme) this));
 //        }
@@ -243,11 +246,11 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newSplitMenu(C component) {
-        JMenuItem item = new JMenuItem(component.getActionMap().get(HasTsCollection.SPLIT_ACTION));
-        item.setText("Split into yearly components");
-        item.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_CHAIN_BROKEN));
-        Actions.hideWhenDisabled(item);
-        return item;
+        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.SPLIT_ACTION));
+        result.setText("Split into yearly components");
+        result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_CHAIN_BROKEN));
+        Actions.hideWhenDisabled(result);
+        return result;
     }
 
     //<editor-fold defaultstate="collapsed" desc="Commands">
@@ -543,6 +546,63 @@ public class HasTsCollectionSupport {
         @Override
         public boolean isEnabled(HasTsCollection component) {
             return !component.getTsSelectionModel().isSelectionEmpty();
+        }
+    }
+
+    private static final class SplitIntoYearlyComponentsCommand extends ComponentCommand<HasTsCollection> {
+
+        private static final SplitIntoYearlyComponentsCommand INSTANCE = new SplitIntoYearlyComponentsCommand();
+
+        private SplitIntoYearlyComponentsCommand() {
+            super(TsSelectionBridge.TS_SELECTION_PROPERTY);
+        }
+
+        @Override
+        public boolean isEnabled(HasTsCollection c) {
+            OptionalInt selection = JLists.getSelectionIndexStream(c.getTsSelectionModel()).findFirst();
+            if (selection.isPresent()) {
+                TsData data = c.getTsCollection().get(selection.getAsInt()).getData();
+                return !data.isEmpty() && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365;
+            }
+            return false;
+        }
+
+        @Override
+        public void execute(HasTsCollection component) throws Exception {
+            Ts ts = (component.getTsCollection().get(component.getTsSelectionModel().getMinSelectionIndex()));
+            JTsChartTopComponent c = new JTsChartTopComponent();
+            c.getChart().setTitle(ts.getName());
+            c.getChart().setObsFormat(ObsFormat.builder().locale(null).dateTimePattern("MMM").build());
+            c.getChart().setTsUpdateMode(HasTsCollection.TsUpdateMode.None);
+            c.getChart().setTsCollection(split(ts));
+            c.setIcon(DataSourceManager.get().getImage(ts.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
+            c.open();
+            c.requestActive();
+        }
+
+        private static TsDomain yearsOf(TsDomain domain) {
+            return domain.aggregate(TsUnit.YEAR, false);
+        }
+
+        private static Ts dataOf(Range<LocalDateTime> year, TsData data) {
+            TsData select = data.select(TimeSelector.between(year));
+            TsData result = withYear(2000, select);
+            return Ts.builder().moniker(TsMoniker.of()).data(result).name(year.start().getYear() + "").build();
+        }
+
+        private static TsData withYear(int year, TsData data) {
+            return TsData.of(withYear(year, data.getStart()), data.getValues());
+        }
+
+        private static TsPeriod withYear(int year, TsPeriod start) {
+            return start.withDate(start.start().withYear(year));
+        }
+
+        private static TsCollection split(Ts ts) {
+            return yearsOf(ts.getData().getDomain())
+                    .stream()
+                    .map(year -> dataOf(year, ts.getData()))
+                    .collect(TsCollection.toTsCollection());
         }
     }
     //</editor-fold>
