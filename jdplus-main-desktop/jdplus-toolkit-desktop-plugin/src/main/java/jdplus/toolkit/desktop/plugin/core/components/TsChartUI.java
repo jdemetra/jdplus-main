@@ -19,14 +19,12 @@ package jdplus.toolkit.desktop.plugin.core.components;
 import ec.util.chart.*;
 import ec.util.chart.TimeSeriesChart.Element;
 import ec.util.chart.swing.JTimeSeriesChart;
-import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.util.IntList;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
-import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.actions.ConfigurableSupport;
 import jdplus.toolkit.desktop.plugin.components.JTsChart;
 import jdplus.toolkit.desktop.plugin.components.TsFeatureHelper;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
@@ -98,6 +96,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         HasTsCollectionSupport.registerActions(target, target.getActionMap());
         HasChartSupport.registerActions(target, target.getActionMap());
         HasObsFormatSupport.registerActions(target, target.getActionMap());
+        ConfigurableSupport.registerActions(target, target.getActionMap());
         target.getActionMap().put(PRINT_ACTION, JCommand.of(JTimeSeriesChart::printImage).toAction(chartPanel));
         target.getActionMap().put(RESET_ZOOM_ACTION, JCommand.of(JTimeSeriesChart::resetZoom).toAction(chartPanel));
         ActionMaps.copyEntries(target.getActionMap(), false, chartPanel.getActionMap());
@@ -157,7 +156,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         });
         fixDateTickMarkPosition();
     }
-    
+
     private void fixDateTickMarkPosition() {
         ChartPanel cp = (ChartPanel) chartPanel.getComponent(0);
         CombinedDomainXYPlot plot = (CombinedDomainXYPlot) cp.getChart().getPlot();
@@ -386,23 +385,22 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         result.add(HasTsCollectionSupport.newCopyMenu(target));
         result.add(HasTsCollectionSupport.newPasteMenu(target));
         result.add(HasTsCollectionSupport.newDeleteMenu(target));
+
         result.addSeparator();
         result.add(HasTsCollectionSupport.newSelectAllMenu(target));
         result.add(HasTsCollectionSupport.newClearMenu(target));
 
         result.addSeparator();
-        JMenuItem item = new JMenuItem(am.get(Configurable.CONFIGURE_ACTION));
-        item.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_COGS));
-        item.setText("Configure...");
-        result.add(item);
-
+        result.add(ConfigurableSupport.newConfigureMenu(target));
         result.add(HasTsCollectionSupport.newSplitMenu(target));
+
         result.addSeparator();
         result.add(HasChartSupport.newToggleTitleVisibilityMenu(target));
         result.add(HasChartSupport.newToggleLegendVisibilityMenu(target));
         result.add(HasObsFormatSupport.newEditFormatMenu(target));
         result.add(HasColorSchemeSupport.menuOf(target));
         result.add(HasChartSupport.newLinesThicknessMenu(target));
+
         result.addSeparator();
         result.add(InternalComponents.newResetZoomMenu(am));
 
