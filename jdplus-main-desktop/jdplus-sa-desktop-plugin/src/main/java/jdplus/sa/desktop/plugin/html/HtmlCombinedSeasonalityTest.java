@@ -147,12 +147,12 @@ public class HtmlCombinedSeasonalityTest extends AbstractHtmlElement implements 
                     .newLines(2);
         }
 
-        stream.write(HtmlTag.HEADER2, "Kruskall-Wallis test").newLine();
+        stream.write(HtmlTag.HEADER2, "Kruskal-Wallis test").newLine();
         KruskalWallis kw = combinedTest
                 .getNonParametricTestForStableSeasonality();
         StatisticalTest ktest = kw.build();
         stream.write(
-                        "Kruskall-Wallis statistic = "
+                        "Kruskal-Wallis statistic = "
                         + Double.toString(ktest.getValue())).newLine();
         stream.write("Distribution: " + ktest.getDescription())
                 .newLine();

@@ -96,7 +96,7 @@ public class ResidualSeasonalityTests {
         return test;
     }
 
-    public StatisticalTest kruskallWallisTest() {
+    public StatisticalTest kruskalWallisTest() {
         StatisticalTest test = kruskalWallisTest;
         if (test == null) {
             synchronized (this) {

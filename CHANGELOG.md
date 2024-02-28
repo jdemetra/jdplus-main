@@ -17,6 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix split-into-yearly-components action [#145](https://github.com/jdemetra/jdplus-main/issues/145)
 - ![UI] Fix configure action [#215](https://github.com/jdemetra/jdplus-main/issues/215)
 - ![UI] Fix drag&drop from Excel [#197](https://github.com/jdemetra/jdplus-main/issues/197)
+- ![UI] Fix typo in "Kruskal-Wallis" [#203](https://github.com/jdemetra/jdplus-main/issues/203)
 
 ### Changed
 
