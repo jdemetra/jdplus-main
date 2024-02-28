@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.tsproviders;
 
+import internal.uihelpers.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.*;
@@ -29,8 +30,8 @@ import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.FrozenTsHelper;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
-import nbbrd.design.MightBePromoted;
 import lombok.NonNull;
+import nbbrd.design.MightBePromoted;
 import org.openide.ErrorManager;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Node;
@@ -65,7 +66,7 @@ public final class DataSourceManager {
     private final SheetStrategy sheets;
 
     private DataSourceManager() {
-        this.providers = DataSourceProviderBuddyLoader::get;
+        this.providers = FixmeCollectionSupplier.of(DataSourceProviderBuddy.class, DataSourceProviderBuddyLoader::load);
         this.images = new DefaultImageStrategy();
         this.sheets = new DefaultSheetStrategy();
     }

@@ -33,8 +33,7 @@ import javax.swing.text.JTextComponent;
 @ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class,
-        singleton = true
+        backend = NetBeansServiceBackend.class
 )
 public interface AutoCompletionSpi {
     
