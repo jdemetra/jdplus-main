@@ -18,6 +18,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix configure action [#215](https://github.com/jdemetra/jdplus-main/issues/215)
 - ![UI] Fix drag&drop from Excel [#197](https://github.com/jdemetra/jdplus-main/issues/197)
 - ![UI] Fix typo in "Kruskal-Wallis" [#203](https://github.com/jdemetra/jdplus-main/issues/203)
+- ![UI] Fix missing chart export to SVG [#238](https://github.com/jdemetra/jdplus-main/issues/238)
 
 ### Changed
 

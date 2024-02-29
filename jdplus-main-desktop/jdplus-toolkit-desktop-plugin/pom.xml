@@ -200,6 +200,11 @@
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreesvg</artifactId>
+            <version>3.4.3</version>
+        </dependency>
 
         <!-- FIXME: demetra-desktop-util -->
         <dependency>
