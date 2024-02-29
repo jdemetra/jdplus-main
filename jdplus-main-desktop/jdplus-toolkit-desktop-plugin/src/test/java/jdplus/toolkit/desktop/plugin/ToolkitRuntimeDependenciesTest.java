@@ -25,7 +25,7 @@ public class ToolkitRuntimeDependenciesTest {
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaIoUtil)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkJavaDesktopUtil)
                 .satisfies(ToolkitRuntimeDependenciesTest::checkExternalSwingComponents)
-                .hasSize(32);
+                .hasSize(33);
     }
 
     private static void checkToolkit(List<? extends GAV> coordinates) {
@@ -85,7 +85,7 @@ public class ToolkitRuntimeDependenciesTest {
 
         assertThatGroupId(coordinates, "org.jfree")
                 .extracting(GAV::getArtifactId)
-                .containsExactlyInAnyOrder("jcommon", "jfreechart");
+                .containsExactlyInAnyOrder("jcommon", "jfreechart", "jfreesvg");
     }
 
     private static void checkExternalSwingComponents(List<? extends GAV> coordinates) {
