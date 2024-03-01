@@ -76,7 +76,7 @@ public class QRFilter {
         DoubleSeq vars = fr.errorVariances();
         for (int i = 0; i < vars.length(); ++i) {
             double v = vars.get(i);
-            if (Double.isFinite(v) && v != 0) {
+            if (!data.isMissing(i) && v != 0) {
                 det.add(v);
             }
         }

@@ -16,6 +16,9 @@
  */
 package jdplus.x13.base.protobuf;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import jdplus.x13.base.api.regarima.RegressionTestSpec;
 import jdplus.x13.base.api.regarima.EasterSpec;
 import jdplus.x13.base.api.regarima.TradingDaysSpec;
@@ -99,6 +102,25 @@ public class X13ProtosUtility {
                 return SeasonalFilterOption.X11Default;
             default:
                 return SeasonalFilterOption.Msr;
+        }
+    }
+
+    public List<SeasonalFilter> convert(SeasonalFilterOption[] sf) {
+        if (sf == null || sf.length == 0) {
+            return null;
+        }
+        SeasonalFilterOption sf0 = sf[0];
+        boolean same = true;
+        for (int i = 1; i < sf.length; ++i) {
+            if (sf[i] != sf0) {
+                same = false;
+                break;
+            }
+        }
+        if (same) {
+            return Collections.singletonList(convert(sf0));
+        } else {
+            return Arrays.stream(sf).map(s -> convert(s)).toList();
         }
     }
 
