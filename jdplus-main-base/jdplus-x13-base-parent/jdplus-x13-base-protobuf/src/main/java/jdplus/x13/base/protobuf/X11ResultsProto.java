@@ -67,7 +67,7 @@ public class X11ResultsProto {
                 .setD12(ToolkitProtosUtility.convert(x11.getD12()))
                 .setD13(ToolkitProtosUtility.convert(x11.getD13()))
                 .setFinalHendersonFilter(x11.getFinalHendersonFilterLength())
-//                .addFinalSeasonalFilter(X13ProtosUtility.convert(x11.getFinalSeasonalFilter()[0]))
+                .addAllFinalSeasonalFilters(X13ProtosUtility.convert(x11.getFinalSeasonalFilter()))
                 .build();
     }
 }
