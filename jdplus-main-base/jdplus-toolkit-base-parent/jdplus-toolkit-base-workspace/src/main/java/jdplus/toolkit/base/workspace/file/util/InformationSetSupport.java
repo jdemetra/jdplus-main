@@ -73,7 +73,7 @@ public final class InformationSetSupport implements FileSupport {
         return xmlToItem(factory, unmarshalItem(file));
     }
 
-    public static void writeItem(Path file, InformationSetSerializer factory, Object value) throws IOException {
+    public static <T> void writeItem(Path file, InformationSetSerializer<T> factory, T value) throws IOException {
         marshalItem(file, itemToXml(factory, value));
     }
 
