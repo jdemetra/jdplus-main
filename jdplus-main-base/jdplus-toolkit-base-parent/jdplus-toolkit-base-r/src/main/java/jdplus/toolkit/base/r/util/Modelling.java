@@ -10,6 +10,7 @@ import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.protobuf.modelling.ModellingProtosUtility;
 import jdplus.toolkit.base.protobuf.toolkit.CalendarProtosUtility;
 import jdplus.toolkit.base.protobuf.toolkit.ModellingContextProto;
 import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos;
@@ -43,6 +44,19 @@ public class Modelling {
         try {
             ToolkitProtos.CalendarDefinition spec = ToolkitProtos.CalendarDefinition.parseFrom(buffer);
             return CalendarProtosUtility.convert(spec);
+        } catch (InvalidProtocolBufferException ex) {
+            return null;
+        }
+    }
+
+    public byte[] toBuffer(CalendarManager cntx) {
+        return ModellingContextProto.convert(cntx).toByteArray();
+    }
+
+    public CalendarManager calendarsOf(byte[] buffer) {
+        try {
+            ToolkitProtos.Calendars cals = ToolkitProtos.Calendars.parseFrom(buffer);
+            return ModellingContextProto.convert(cals);
         } catch (InvalidProtocolBufferException ex) {
             return null;
         }

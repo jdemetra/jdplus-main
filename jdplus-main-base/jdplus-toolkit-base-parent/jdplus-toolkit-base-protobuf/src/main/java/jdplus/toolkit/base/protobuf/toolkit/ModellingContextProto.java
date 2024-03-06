@@ -89,6 +89,30 @@ public class ModellingContextProto {
         return rslt;
     }
 
+    public ToolkitProtos.Calendars convert(CalendarManager cmgr) {
+        ToolkitProtos.Calendars.Builder builder = ToolkitProtos.Calendars.newBuilder();
+
+         for (String key : cmgr.getNames()) {
+            if (!key.equals(CalendarManager.DEF)) {
+                CalendarDefinition cd = cmgr.get(key);
+                ToolkitProtos.CalendarDefinition cdef = CalendarProtosUtility.convert(cd);
+                if (cdef != null) {
+                    builder.putCalendars(key, cdef);
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    public CalendarManager convert(ToolkitProtos.Calendars cal) {
+        CalendarManager rslt = new CalendarManager();
+        Map<String, ToolkitProtos.CalendarDefinition> cmgr = cal.getCalendarsMap();
+        for (Map.Entry<String, ToolkitProtos.CalendarDefinition> entry : cmgr.entrySet()) {
+            rslt.set(entry.getKey(), CalendarProtosUtility.convert(entry.getValue()));
+        }
+        return rslt;
+    }
+
     public ToolkitProtos.ModellingContext convert(ModellingContext context) {
         ToolkitProtos.ModellingContext.Builder builder = ToolkitProtos.ModellingContext.newBuilder();
 
@@ -112,5 +136,4 @@ public class ModellingContextProto {
         }
         return builder.build();
     }
-
 }

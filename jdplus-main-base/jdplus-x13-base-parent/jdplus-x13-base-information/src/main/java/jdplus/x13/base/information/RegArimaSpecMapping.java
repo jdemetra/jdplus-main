@@ -67,7 +67,7 @@ public class RegArimaSpecMapping {
         }
     };
 
-    public static final String METHOD = "tramo";
+    public static final String METHOD = "regarima";
     public static final String FAMILY = "Modelling";
     public static final String VERSION_LEGACY = "0.1.0.0";
     public static final AlgorithmDescriptor DESCRIPTOR_LEGACY = new AlgorithmDescriptor(FAMILY, METHOD, VERSION_LEGACY);
