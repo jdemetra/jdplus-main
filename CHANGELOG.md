@@ -9,21 +9,29 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- ![STAT] Add some kernels in linear filters (trapezoidal...)
+- ![STAT] Add output in X13
 - ![OTHER] Add more platform-specific packages [#226](https://github.com/jdemetra/jdplus-main/issues/226)
+- ![OTHER] Add methods to simplify the serialization of spec files from external tools (R)
 
 ### Fixed
 
+- ![STAT] Correct the computation of the likelihood in robust augmented Kalman filter in case of missing values
+- ![STAT] Complete Seats computed by the Kalman smoother (add SA series)
 - ![UI] Fix NPE when exporting image to the clipboard [#216](https://github.com/jdemetra/jdplus-main/issues/216)
 - ![UI] Fix split-into-yearly-components action [#145](https://github.com/jdemetra/jdplus-main/issues/145)
 - ![UI] Fix configure action [#215](https://github.com/jdemetra/jdplus-main/issues/215)
 - ![UI] Fix drag&drop from Excel [#197](https://github.com/jdemetra/jdplus-main/issues/197)
 - ![UI] Fix typo in "Kruskal-Wallis" [#203](https://github.com/jdemetra/jdplus-main/issues/203)
 - ![UI] Fix missing chart export to SVG [#238](https://github.com/jdemetra/jdplus-main/issues/238)
+- ![OTHER] Fix shifts in csv output
 
 ### Changed
 
+- ![STAT] Use exact forecasts in X12 (as in J+D 2.x), instead of conditional forecasts (as in FORTRAN)
 - ![UI] Modify branding to differentiate from v2
 - ![OTHER] Bump bundled runtime in platform-specific packages to JDK21
+- ![OTHER] Improve the output dictionaries for the main algorithms
 
 ## [3.2.1] - 2023-12-07
 

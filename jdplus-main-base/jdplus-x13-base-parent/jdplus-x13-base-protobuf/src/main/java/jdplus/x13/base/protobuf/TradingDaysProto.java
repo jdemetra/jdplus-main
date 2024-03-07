@@ -40,7 +40,9 @@ public class TradingDaysProto {
                     .setTd(ModellingProtosUtility.convert(spec.getTradingDaysType()))
                     .setAuto(X13ProtosUtility.convert(spec.getAutomaticMethod()))
                     .setTest(X13ProtosUtility.convert(spec.getRegressionTestType()))
-                    .setAutoAdjust(spec.isAutoAdjust());
+                    .setAutoAdjust(spec.isAutoAdjust())
+                    .setPtest1(spec.getAutoPvalue1())
+                    .setPtest2(spec.getAutoPvalue2());
             return;
         }
 
