@@ -10,11 +10,9 @@ import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
-import jdplus.toolkit.base.protobuf.modelling.ModellingProtosUtility;
 import jdplus.toolkit.base.protobuf.toolkit.CalendarProtosUtility;
 import jdplus.toolkit.base.protobuf.toolkit.ModellingContextProto;
 import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos;
-import jdplus.toolkit.base.r.modelling.Variables;
 
 /**
  *
