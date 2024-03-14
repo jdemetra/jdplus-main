@@ -30,6 +30,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![STAT] Use exact forecasts in X12 (as in J+D 2.x), instead of conditional forecasts (as in FORTRAN)
 - ![UI] Modify branding to differentiate from v2
+- ![UI] Simplify action enablers [#247](https://github.com/jdemetra/jdplus-main/issues/247)
 - ![OTHER] Bump bundled runtime in platform-specific packages to JDK21
 - ![OTHER] Improve the output dictionaries for the main algorithms
 

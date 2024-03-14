@@ -16,9 +16,15 @@
  */
 package jdplus.toolkit.desktop.plugin.components.parts;
 
+import ec.util.list.swing.JLists;
+import ec.util.various.swing.FontAwesome;
+import ec.util.various.swing.JCommand;
 import jdplus.toolkit.base.api.data.Range;
 import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.desktop.plugin.*;
 import jdplus.toolkit.desktop.plugin.actions.Actions;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
@@ -30,12 +36,6 @@ import jdplus.toolkit.desktop.plugin.datatransfer.LocalObjectDataTransfer;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.util.Collections2;
 import jdplus.toolkit.desktop.plugin.util.KeyStrokes;
-import jdplus.toolkit.base.tsp.DataSourceProvider;
-import ec.util.list.swing.JLists;
-import ec.util.various.swing.FontAwesome;
-import ec.util.various.swing.JCommand;
-import jdplus.toolkit.base.tsp.DataSet;
-import jdplus.toolkit.desktop.plugin.*;
 import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.DialogDisplayer;
@@ -54,11 +54,16 @@ import java.beans.PropertyChangeListener;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TooManyListenersException;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static jdplus.toolkit.base.api.timeseries.TsCollection.toTsCollection;
+import static jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.*;
 
 /**
  * @author Philippe Charles
@@ -73,9 +78,9 @@ public class HasTsCollectionSupport {
     }
 
     @NonNull
-    public static HasTsCollection of(@NonNull PropertyChangeBroadcaster broadcaster, TsInformationType broadcastinfo, TsInformationType loadinfo) {
-        TsInformationType type = broadcastinfo.encompass(loadinfo) ? broadcastinfo : loadinfo;
-        return new HasTsCollectionImpl(broadcaster, broadcastinfo, type).watch(TsManager.get());
+    public static HasTsCollection of(@NonNull PropertyChangeBroadcaster broadcaster, TsInformationType broadcastInfo, TsInformationType loadInfo) {
+        TsInformationType type = broadcastInfo.encompass(loadInfo) ? broadcastInfo : loadInfo;
+        return new HasTsCollectionImpl(broadcaster, broadcastInfo, type).watch(TsManager.get());
     }
 
     @NonNull
@@ -88,32 +93,32 @@ public class HasTsCollectionSupport {
         return new HasTsCollectionDropTargetListener(component, DataTransferManager.get()).watch(dropTarget);
     }
 
-    public static void registerActions(HasTsCollection component, ActionMap am) {
-        am.put(HasTsCollection.FREEZE_ACTION, FreezeCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.COPY_ACTION, CopyCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.COPY_ALL_ACTION, CopyAllCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.DELETE_ACTION, DeleteCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.CLEAR_ACTION, ClearCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.PASTE_ACTION, PasteCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.OPEN_ACTION, OpenCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.SELECT_ALL_ACTION, SelectAllCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.RENAME_ACTION, RenameCommand.INSTANCE.toAction(component));
-        am.put(HasTsCollection.SPLIT_ACTION, SplitIntoYearlyComponentsCommand.INSTANCE.toAction(component));
+    public static void registerActions(@NonNull HasTsCollection component, @NonNull ActionMap am) {
+        am.put(FREEZE_ACTION, FreezeCommand.INSTANCE.toAction(component));
+        am.put(COPY_ACTION, CopyCommand.INSTANCE.toAction(component));
+        am.put(COPY_ALL_ACTION, CopyAllCommand.INSTANCE.toAction(component));
+        am.put(DELETE_ACTION, DeleteCommand.INSTANCE.toAction(component));
+        am.put(CLEAR_ACTION, ClearCommand.INSTANCE.toAction(component));
+        am.put(PASTE_ACTION, PasteCommand.INSTANCE.toAction(component));
+        am.put(OPEN_ACTION, OpenCommand.INSTANCE.toAction(component));
+        am.put(SELECT_ALL_ACTION, SelectAllCommand.INSTANCE.toAction(component));
+        am.put(RENAME_ACTION, RenameCommand.INSTANCE.toAction(component));
+        am.put(SPLIT_ACTION, SplitCommand.INSTANCE.toAction(component));
 //        if (this instanceof HasColorScheme) {
 //            am.put(HasColorScheme.DEFAULT_COLOR_SCHEME_ACTION, HasColorScheme.commandOf(null).toAction((HasColorScheme) this));
 //        }
     }
 
-    public static void registerInputs(InputMap im) {
-        KeyStrokes.putAll(im, KeyStrokes.COPY, HasTsCollection.COPY_ACTION);
-        KeyStrokes.putAll(im, KeyStrokes.PASTE, HasTsCollection.PASTE_ACTION);
-        KeyStrokes.putAll(im, KeyStrokes.DELETE, HasTsCollection.DELETE_ACTION);
-        KeyStrokes.putAll(im, KeyStrokes.SELECT_ALL, HasTsCollection.SELECT_ALL_ACTION);
-        KeyStrokes.putAll(im, KeyStrokes.OPEN, HasTsCollection.OPEN_ACTION);
-        KeyStrokes.putAll(im, KeyStrokes.CLEAR, HasTsCollection.CLEAR_ACTION);
+    public static void registerInputs(@NonNull InputMap im) {
+        KeyStrokes.putAll(im, KeyStrokes.COPY, COPY_ACTION);
+        KeyStrokes.putAll(im, KeyStrokes.PASTE, PASTE_ACTION);
+        KeyStrokes.putAll(im, KeyStrokes.DELETE, DELETE_ACTION);
+        KeyStrokes.putAll(im, KeyStrokes.SELECT_ALL, SELECT_ALL_ACTION);
+        KeyStrokes.putAll(im, KeyStrokes.OPEN, OPEN_ACTION);
+        KeyStrokes.putAll(im, KeyStrokes.CLEAR, CLEAR_ACTION);
     }
 
-    public static <C extends JComponent & HasTsCollection> JMenu newDefaultMenu(C component) {
+    public static <C extends JComponent & HasTsCollection> @NonNull JMenu newDefaultMenu(@NonNull C component) {
         JMenu result = new JMenu();
 
         result.add(newOpenMenu(component));
@@ -137,7 +142,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newRenameMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.RENAME_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(RENAME_ACTION));
         result.setText("Rename");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_PENCIL_SQUARE_O));
         Actions.hideWhenDisabled(result);
@@ -145,7 +150,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newOpenMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.OPEN_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(OPEN_ACTION));
         result.setText("Open");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_FOLDER_OPEN_O));
         Actions.hideWhenDisabled(result);
@@ -159,18 +164,19 @@ public class HasTsCollectionSupport {
         result.setText("Open with");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_BAR_CHART_O));
         Actions.hideWhenDisabled(result);
+        TsActionManager.get().getOpenActions().stream().map(o -> newOpenWithMenu(component, o)).forEach(result::add);
+        return result;
+    }
 
-        for (NamedService o : TsActionManager.get().getOpenActions()) {
-            JMenuItem item = new JMenuItem(((JCommand<HasTsCollection>) new OpenWithCommand(o.getName())).toAction(component));
-            item.setName(o.getName());
-            item.setText(o.getDisplayName());
-            if (DemetraUI.get().isPopupMenuIconsVisible()) {
-                Image image = o.getIcon(BeanInfo.ICON_COLOR_16x16, false);
-                if (image != null) {
-                    item.setIcon(ImageUtilities.image2Icon(image));
-                }
+    private static <C extends JComponent & HasTsCollection> JMenuItem newOpenWithMenu(C component, NamedService o) {
+        JMenuItem result = new JMenuItem(new OpenWithCommand(o.getName()).toAction(component));
+        result.setName(o.getName());
+        result.setText(o.getDisplayName());
+        if (DemetraUI.get().isPopupMenuIconsVisible()) {
+            Image image = o.getIcon(BeanInfo.ICON_COLOR_16x16, false);
+            if (image != null) {
+                result.setIcon(ImageUtilities.image2Icon(image));
             }
-            result.add(item);
         }
         return result;
     }
@@ -179,23 +185,25 @@ public class HasTsCollectionSupport {
         JMenu result = new JMenu(new MainSaveCommand().toAction(component));
         result.setText("Save");
         Actions.hideWhenDisabled(result);
-        for (NamedService o : TsActionManager.get().getSaveActions()) {
-            JMenuItem item = new JMenuItem(((JCommand<HasTsCollection>) new SaveCommand(o)).toAction(component));
-            item.setName(o.getName());
-            item.setText(o.getDisplayName());
-            if (DemetraUI.get().isPopupMenuIconsVisible()) {
-                Image image = o.getIcon(BeanInfo.ICON_COLOR_16x16, false);
-                if (image != null) {
-                    item.setIcon(ImageUtilities.image2Icon(image));
-                }
-            }
-            result.add(item);
-        }
+        TsActionManager.get().getSaveActions().stream().map(o -> newSaveMenu(component, o)).forEach(result::add);
         return result;
     }
 
+    private static <C extends JComponent & HasTsCollection> JMenuItem newSaveMenu(C component, NamedService o) {
+        JMenuItem item = new JMenuItem(new SaveCommand(o.getName()).toAction(component));
+        item.setName(o.getName());
+        item.setText(o.getDisplayName());
+        if (DemetraUI.get().isPopupMenuIconsVisible()) {
+            Image image = o.getIcon(BeanInfo.ICON_COLOR_16x16, false);
+            if (image != null) {
+                item.setIcon(ImageUtilities.image2Icon(image));
+            }
+        }
+        return item;
+    }
+
     public static <C extends JComponent & HasTsCollection> JMenuItem newCopyMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.COPY_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(COPY_ACTION));
         result.setText("Copy");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_FILES_O));
         result.setAccelerator(KeyStrokes.COPY.get(0));
@@ -204,7 +212,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newPasteMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.PASTE_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(PASTE_ACTION));
         result.setText("Paste");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_CLIPBOARD));
         result.setAccelerator(KeyStrokes.PASTE.get(0));
@@ -213,7 +221,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newDeleteMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.DELETE_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(DELETE_ACTION));
         result.setText("Remove");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_TRASH_O));
         result.setAccelerator(KeyStrokes.DELETE.get(0));
@@ -222,7 +230,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newClearMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.CLEAR_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(CLEAR_ACTION));
         result.setText("Clear");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_ERASER));
         result.setAccelerator(KeyStrokes.CLEAR.get(0));
@@ -230,7 +238,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newSelectAllMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.SELECT_ALL_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(SELECT_ALL_ACTION));
         result.setText("Select all");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_ASTERISK));
         result.setAccelerator(KeyStrokes.SELECT_ALL.get(0));
@@ -238,7 +246,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newFreezeMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.FREEZE_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(FREEZE_ACTION));
         result.setText("Freeze");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_LOCK));
         Actions.hideWhenDisabled(result);
@@ -246,7 +254,7 @@ public class HasTsCollectionSupport {
     }
 
     public static <C extends JComponent & HasTsCollection> JMenuItem newSplitMenu(C component) {
-        JMenuItem result = new JMenuItem(component.getActionMap().get(HasTsCollection.SPLIT_ACTION));
+        JMenuItem result = new JMenuItem(component.getActionMap().get(SPLIT_ACTION));
         result.setText("Split into yearly components");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_CHAIN_BROKEN));
         Actions.hideWhenDisabled(result);
@@ -259,7 +267,7 @@ public class HasTsCollectionSupport {
         public static final CopyAllCommand INSTANCE = new CopyAllCommand();
 
         public CopyAllCommand() {
-            super(HasTsCollection.TS_COLLECTION_PROPERTY);
+            super(TS_COLLECTION_PROPERTY);
         }
 
         @Override
@@ -268,37 +276,49 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
+        public void execute(HasTsCollection c) {
             Transferable transferable = DataTransferManager.get().fromTsCollection(c.getTsCollection());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferable, null);
         }
     }
 
-    private static abstract class SingleSelectionCommand extends ComponentCommand<HasTsCollection> {
+    private static abstract sealed class SingleSelectionCommand
+            extends ComponentCommand<HasTsCollection>
+            permits MainOpenWithCommand, OpenCommand, OpenWithCommand, RenameCommand, SplitCommand {
 
         public SingleSelectionCommand() {
-            super(TsSelectionBridge.TS_SELECTION_PROPERTY);
+            super(TsSelectionBridge.TS_SELECTION_PROPERTY, TS_COLLECTION_PROPERTY);
         }
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
-            return JLists.isSingleSelectionIndex(c.getTsSelectionModel());
+            return c.getTsCollection().size() == 1 || JLists.isSingleSelectionIndex(c.getTsSelectionModel());
         }
 
-        protected Ts getSingleTs(HasTsCollection c) {
-            return c.getTsCollection().get(c.getTsSelectionModel().getMinSelectionIndex());
+        protected final @NonNull Ts getSingle(@NonNull HasTsCollection c) {
+            return c.getTsCollection().size() == 1
+                    ? c.getTsCollection().get(0)
+                    : c.getTsCollection().get(c.getTsSelectionModel().getMinSelectionIndex());
         }
     }
 
-    private static abstract class AnySelectionCommand extends ComponentCommand<HasTsCollection> {
+    private static abstract sealed class AnySelectionCommand
+            extends ComponentCommand<HasTsCollection>
+            permits CopyCommand, MainSaveCommand, SaveCommand {
 
         public AnySelectionCommand() {
-            super(TsSelectionBridge.TS_SELECTION_PROPERTY);
+            super(TsSelectionBridge.TS_SELECTION_PROPERTY, TS_COLLECTION_PROPERTY);
         }
 
         @Override
-        public boolean isEnabled(HasTsCollection component) {
-            return !component.getTsSelectionModel().isSelectionEmpty();
+        public boolean isEnabled(HasTsCollection c) {
+            return !c.getTsSelectionModel().isSelectionEmpty() || !c.getTsCollection().isEmpty();
+        }
+
+        protected final @NonNull Stream<Ts> getAny(@NonNull HasTsCollection c) {
+            return !c.getTsSelectionModel().isSelectionEmpty()
+                    ? c.getTsSelectionStream()
+                    : c.getTsCollection().stream();
         }
     }
 
@@ -307,8 +327,8 @@ public class HasTsCollectionSupport {
         public static final RenameCommand INSTANCE = new RenameCommand();
 
         @Override
-        public void execute(final HasTsCollection c) throws Exception {
-            final Ts ts = getSingleTs(c);
+        public void execute(final @NonNull HasTsCollection c) {
+            final Ts ts = getSingle(c);
             NotifyDescriptor.InputLine descriptor = new NotifyDescriptor.InputLine("New name:", "Rename time series");
             descriptor.setInputText(ts.getName());
             if (ts.getMoniker().isProvided()) {
@@ -342,59 +362,54 @@ public class HasTsCollectionSupport {
         public static final OpenCommand INSTANCE = new OpenCommand();
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
+        public boolean isEnabled(HasTsCollection c) {
+            return super.isEnabled(c) && c instanceof HasTsAction;
+        }
+
+        @Override
+        public void execute(@NonNull HasTsCollection c) {
             if (c instanceof HasTsAction) {
                 String actionName = ((HasTsAction) c).getTsAction();
-                if (actionName == null) {
-                    actionName = DemetraBehaviour.get().getTsActionName();
-                }
-                TsActionManager.get().openWith(getSingleTs(c), actionName);
+                TsActionManager.get().openWith(getSingle(c), actionName != null ? actionName : DemetraBehaviour.get().getTsActionName());
             }
         }
     }
 
-    private static final class MainOpenWithCommand extends ComponentCommand<HasTsCollection> {
-
-        public MainOpenWithCommand() {
-            super(TsSelectionBridge.TS_SELECTION_PROPERTY);
-        }
+    private static final class MainOpenWithCommand extends SingleSelectionCommand {
 
         @Override
-        public void execute(HasTsCollection component) throws Exception {
+        public void execute(@NonNull HasTsCollection ignore) {
             // do nothing
-        }
-
-        @Override
-        public boolean isEnabled(HasTsCollection component) {
-            return JLists.isSingleSelectionIndex(component.getTsSelectionModel());
         }
     }
 
     @lombok.AllArgsConstructor
     private static final class OpenWithCommand extends SingleSelectionCommand {
 
-        private final String tsAction;
+        private final @Nullable String tsAction;
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
-            TsActionManager.get().openWith(getSingleTs(c), tsAction);
+        public void execute(@NonNull HasTsCollection c) {
+            TsActionManager.get().openWith(getSingle(c), tsAction);
+        }
+    }
+
+    private static final class MainSaveCommand extends AnySelectionCommand {
+
+        @Override
+        public void execute(@NonNull HasTsCollection ignore) {
+            // do nothing
         }
     }
 
     @lombok.AllArgsConstructor
     private static final class SaveCommand extends AnySelectionCommand {
 
-        private final NamedService tsSave;
+        private final @Nullable String tsSave;
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
-            TsCollection selection = JLists.getSelectionIndexStream(c.getTsSelectionModel())
-                    .mapToObj(c.getTsCollection()::get)
-                    .collect(TsCollection.toTsCollection());
-            if (!selection.isEmpty()) {
-                List<TsCollection> data = Collections.singletonList(selection);
-                TsActionManager.get().saveWith(data, tsSave.getName());
-            }
+        public void execute(@NonNull HasTsCollection c) {
+            TsActionManager.get().saveWith(List.of(getAny(c).collect(toTsCollection())), tsSave);
         }
     }
 
@@ -403,9 +418,9 @@ public class HasTsCollectionSupport {
         public static final CopyCommand INSTANCE = new CopyCommand();
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
-            TsCollection data = c.getTsSelectionStream().collect(TsCollection.toTsCollection());
-            Transferable transferable = DataTransferManager.get().fromTsCollection(data);
+        public void execute(@NonNull HasTsCollection c) {
+            TsCollection selection = getAny(c).collect(toTsCollection());
+            Transferable transferable = DataTransferManager.get().fromTsCollection(selection);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferable, null);
         }
     }
@@ -421,20 +436,19 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
+        public void execute(@NonNull HasTsCollection c) {
             HasTsCollectionTransferHandler.importData(c, DataTransferManager.get(), DataTransfers::systemClipboardAsTransferable);
         }
 
         @Override
-        public ActionAdapter toAction(HasTsCollection c) {
+        public @NonNull ActionAdapter toAction(@NonNull HasTsCollection c) {
             final ActionAdapter result = super.toAction(c);
             if (c instanceof Component) {
                 result.withWeakPropertyChangeListener((Component) c, HasTsCollection.TS_UPDATE_MODE_PROPERTY);
             }
-            DataTransferManager source = DataTransferManager.get();
             PropertyChangeListener realListener = evt -> result.refreshActionState();
+            DataTransferManager.get().addWeakPropertyChangeListener(DataTransferManager.VALID_CLIPBOARD_PROPERTY, realListener);
             result.putValue("TssTransferSupport", realListener);
-            source.addWeakPropertyChangeListener(DataTransferManager.VALID_CLIPBOARD_PROPERTY, realListener);
             return result;
         }
     }
@@ -454,12 +468,12 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
+        public void execute(HasTsCollection c) {
             Set<Ts> selection = c.getTsSelectionStream().collect(Collectors.toSet());
             TsCollection result = c.getTsCollection()
                     .stream()
                     .filter(ts -> !selection.contains(ts))
-                    .collect(TsCollection.toTsCollection());
+                    .collect(toTsCollection());
             c.setTsCollection(result);
         }
     }
@@ -469,7 +483,7 @@ public class HasTsCollectionSupport {
         public static final ClearCommand INSTANCE = new ClearCommand();
 
         public ClearCommand() {
-            super(HasTsCollection.TS_COLLECTION_PROPERTY, HasTsCollection.TS_UPDATE_MODE_PROPERTY);
+            super(TS_COLLECTION_PROPERTY, HasTsCollection.TS_UPDATE_MODE_PROPERTY);
         }
 
         @Override
@@ -478,7 +492,7 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public void execute(HasTsCollection component) throws Exception {
+        public void execute(HasTsCollection component) {
             component.setTsCollection(TsCollection.EMPTY);
         }
     }
@@ -488,7 +502,7 @@ public class HasTsCollectionSupport {
         public static final SelectAllCommand INSTANCE = new SelectAllCommand();
 
         public SelectAllCommand() {
-            super(TsSelectionBridge.TS_SELECTION_PROPERTY, HasTsCollection.TS_COLLECTION_PROPERTY);
+            super(TsSelectionBridge.TS_SELECTION_PROPERTY, TS_COLLECTION_PROPERTY);
         }
 
         @Override
@@ -497,7 +511,7 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
+        public void execute(HasTsCollection c) {
             c.getTsSelectionModel().setSelectionInterval(0, c.getTsCollection().size());
         }
     }
@@ -517,7 +531,7 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public void execute(HasTsCollection c) throws Exception {
+        public void execute(HasTsCollection c) {
             JLists.getSelectionIndexStream(c.getTsSelectionModel())
                     .findFirst()
                     .ifPresent(i -> {
@@ -532,52 +546,30 @@ public class HasTsCollectionSupport {
         }
     }
 
-    private static final class MainSaveCommand extends ComponentCommand<HasTsCollection> {
+    private static final class SplitCommand extends SingleSelectionCommand {
 
-        public MainSaveCommand() {
-            super(TsSelectionBridge.TS_SELECTION_PROPERTY);
-        }
-
-        @Override
-        public void execute(HasTsCollection component) throws Exception {
-            // do nothing
-        }
-
-        @Override
-        public boolean isEnabled(HasTsCollection component) {
-            return !component.getTsSelectionModel().isSelectionEmpty();
-        }
-    }
-
-    private static final class SplitIntoYearlyComponentsCommand extends ComponentCommand<HasTsCollection> {
-
-        private static final SplitIntoYearlyComponentsCommand INSTANCE = new SplitIntoYearlyComponentsCommand();
-
-        private SplitIntoYearlyComponentsCommand() {
-            super(TsSelectionBridge.TS_SELECTION_PROPERTY);
-        }
+        private static final SplitCommand INSTANCE = new SplitCommand();
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
-            OptionalInt selection = JLists.getSelectionIndexStream(c.getTsSelectionModel()).findFirst();
-            if (selection.isPresent()) {
-                TsData data = c.getTsCollection().get(selection.getAsInt()).getData();
-                return !data.isEmpty() && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365;
-            }
-            return false;
+            return super.isEnabled(c) && isValid(getSingle(c).getData());
+        }
+
+        private static boolean isValid(TsData data) {
+            return !data.isEmpty() && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365;
         }
 
         @Override
-        public void execute(HasTsCollection component) throws Exception {
-            Ts ts = (component.getTsCollection().get(component.getTsSelectionModel().getMinSelectionIndex()));
-            JTsChartTopComponent c = new JTsChartTopComponent();
-            c.getChart().setTitle(ts.getName());
-            c.getChart().setObsFormat(ObsFormat.builder().locale(null).dateTimePattern("MMM").build());
-            c.getChart().setTsUpdateMode(HasTsCollection.TsUpdateMode.None);
-            c.getChart().setTsCollection(split(ts));
-            c.setIcon(DataSourceManager.get().getImage(ts.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
-            c.open();
-            c.requestActive();
+        public void execute(@NonNull HasTsCollection c) {
+            Ts ts = getSingle(c);
+            JTsChartTopComponent result = new JTsChartTopComponent();
+            result.getChart().setTitle(ts.getName());
+            result.getChart().setObsFormat(ObsFormat.builder().locale(null).dateTimePattern("MMM").build());
+            result.getChart().setTsUpdateMode(HasTsCollection.TsUpdateMode.None);
+            result.getChart().setTsCollection(split(ts));
+            result.setIcon(DataSourceManager.get().getImage(ts.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
+            result.open();
+            result.requestActive();
         }
 
         private static TsDomain yearsOf(TsDomain domain) {
@@ -602,7 +594,7 @@ public class HasTsCollectionSupport {
             return yearsOf(ts.getData().getDomain())
                     .stream()
                     .map(year -> dataOf(year, ts.getData()))
-                    .collect(TsCollection.toTsCollection());
+                    .collect(toTsCollection());
         }
     }
     //</editor-fold>
@@ -629,7 +621,7 @@ public class HasTsCollectionSupport {
 
         @Override
         protected Transferable createTransferable(JComponent c) {
-            TsCollection data = delegate.getTsSelectionStream().collect(TsCollection.toTsCollection());
+            TsCollection data = delegate.getTsSelectionStream().collect(toTsCollection());
             return dataTransfer.fromTsCollection(data);
         }
 
@@ -660,7 +652,7 @@ public class HasTsCollectionSupport {
         public static boolean importData(@NonNull HasTsCollection view, @NonNull DataTransferManager tssSupport, @NonNull Supplier<Transferable> toData) {
             if (!view.getTsUpdateMode().isReadOnly()) {
                 // merge the collections
-                List<TsCollection> all = tssSupport.toTsCollectionStream(toData.get()).collect(Collectors.toList());
+                List<TsCollection> all = tssSupport.toTsCollectionStream(toData.get()).toList();
                 switch (all.size()) {
                     case 0:
                         return false;
@@ -710,7 +702,7 @@ public class HasTsCollectionSupport {
                 case Append:
                     Set<TsMoniker> firstMonikers = first.stream().map(Ts::getMoniker).collect(Collectors.toSet());
                     Predicate<TsMoniker> filter = moniker -> !moniker.isProvided() || !firstMonikers.contains(moniker);
-                    return Stream.concat(first.stream(), second.stream().filter(Collections2.compose(filter, Ts::getMoniker))).collect(TsCollection.toTsCollection());
+                    return Stream.concat(first.stream(), second.stream().filter(Collections2.compose(filter, Ts::getMoniker))).collect(toTsCollection());
             }
             return first;
         }
@@ -775,7 +767,7 @@ public class HasTsCollectionSupport {
                     TsCollection dropContent = transferSupport
                             .toTsCollectionStream(t)
                             .flatMap(TsCollection::stream)
-                            .collect(TsCollection.toTsCollection());
+                            .collect(toTsCollection());
                     target.setDropContent(dropContent);
                 }
             }
