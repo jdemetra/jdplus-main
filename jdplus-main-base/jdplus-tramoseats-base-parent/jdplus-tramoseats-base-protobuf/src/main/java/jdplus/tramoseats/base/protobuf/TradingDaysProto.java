@@ -29,7 +29,8 @@ public class TradingDaysProto {
                     .setTd(ModellingProtosUtility.convert(spec.getTradingDaysType()))
                     .setAuto(TramoSeatsProtosUtility.convert(spec.getAutomaticMethod()))
                     .setTest(TramoSeatsProtosUtility.convert(spec.getRegressionTestType()))
-                    .setAutoAdjust(spec.isAutoAdjust());
+                    .setAutoAdjust(spec.isAutoAdjust())
+                    .setPtest(spec.getProbabilityForFTest());
             return;
         }
 

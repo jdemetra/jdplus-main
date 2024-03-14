@@ -50,6 +50,7 @@ public class TableFormatter {
         DICTIONARY.put(Boolean.class, new BooleanFormatter("1", "0"));
         DICTIONARY.put(Complex.class, new ComplexFormatter());
         DICTIONARY.put(String.class, new StringFormatter());
+        DICTIONARY.put(String[].class, new StringArrayFormatter());
         DICTIONARY.put(SarimaOrders.class, new SarimaFormatter());
         DICTIONARY.put(Parameter.class, new ParameterFormatter());
 //        DICTIONARY.put(ParameterInfo.class, new ParameterInfoFormatter());

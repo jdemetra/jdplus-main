@@ -34,7 +34,7 @@ public class CombinedSeasonality {
 
     private double thfs = 0.001, thfm = 0.05, thkw = 0.001;
     private final OneWayAnova stable, evolutive;
-    private final KruskalWallis kruskallwallis;
+    private final KruskalWallis kruskalWallis;
     
     public static CombinedSeasonality of(TsData s, double xbar){
         TsPeriod start = s.getStart();
@@ -50,7 +50,7 @@ public class CombinedSeasonality {
      */
     public CombinedSeasonality(DoubleSeq series, int period, int startPeriod, double xbar)
     {
-	kruskallwallis = new KruskalWallis(series, period);
+	kruskalWallis = new KruskalWallis(series, period);
 	stable = StableSeasonality.of(series, period);
 	evolutive = EvolutiveSeasonality.of(series, period, startPeriod, xbar);
 
@@ -89,7 +89,7 @@ public class CombinedSeasonality {
      */
     public KruskalWallis getNonParametricTestForStableSeasonality()
     {
-	return kruskallwallis;
+	return kruskalWallis;
     }
 
     /**
@@ -143,7 +143,7 @@ public class CombinedSeasonality {
 	if (T1 >= 1.0 || T2 >= 1.0)
 	    return CombinedSeasonalityTest.IdentifiableSeasonality.ProbablyNone;
 
-	if (kruskallwallis.build().getPvalue() >= thkw)
+	if (kruskalWallis.build().getPvalue() >= thkw)
 	    return CombinedSeasonalityTest.IdentifiableSeasonality.ProbablyNone;
 	return CombinedSeasonalityTest.IdentifiableSeasonality.Present;
     }

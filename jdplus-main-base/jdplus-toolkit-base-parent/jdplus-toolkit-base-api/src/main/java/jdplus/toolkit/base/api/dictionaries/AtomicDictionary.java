@@ -20,16 +20,19 @@ public class AtomicDictionary implements Dictionary {
     @lombok.Value
     @lombok.Builder
     public static class Item implements Dictionary.Entry {
+        
+        public static final String EMPTY="", TODO="TODO";
 
         String name;
         String description;
+        String detail;
         Class outputClass;
         
         EntryType type;
 
         @LombokWorkaround
         public static Item.Builder builder() {
-            return new Builder().type(EntryType.Normal);
+            return new Builder().description(TODO).detail(EMPTY).type(EntryType.Normal);
         }
     }
 

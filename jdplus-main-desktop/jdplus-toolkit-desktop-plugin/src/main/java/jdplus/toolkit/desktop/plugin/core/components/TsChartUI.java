@@ -16,25 +16,27 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
-import jdplus.toolkit.desktop.plugin.components.parts.*;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
-import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.actions.Configurable;
-import jdplus.toolkit.desktop.plugin.components.JTsChart;
-import jdplus.toolkit.desktop.plugin.components.TsFeatureHelper;
-import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
-import jdplus.toolkit.desktop.plugin.util.ActionMaps;
-import jdplus.toolkit.desktop.plugin.util.InputMaps;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
-import jdplus.toolkit.base.api.util.IntList;
 import ec.util.chart.*;
 import ec.util.chart.TimeSeriesChart.Element;
 import ec.util.chart.swing.JTimeSeriesChart;
-import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.util.IntList;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.desktop.plugin.actions.ConfigurableSupport;
+import jdplus.toolkit.desktop.plugin.components.JTsChart;
+import jdplus.toolkit.desktop.plugin.components.TsFeatureHelper;
+import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
+import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
+import jdplus.toolkit.desktop.plugin.util.ActionMaps;
+import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
+import jdplus.toolkit.desktop.plugin.util.InputMaps;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickMarkPosition;
+import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.data.xy.IntervalXYDataset;
 
 import javax.swing.*;
@@ -52,10 +54,6 @@ import java.util.stream.Stream;
 
 import static jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview.PRINT_ACTION;
 import static jdplus.toolkit.desktop.plugin.actions.ResetableZoom.RESET_ZOOM_ACTION;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.DateTickMarkPosition;
-import org.jfree.chart.plot.CombinedDomainXYPlot;
 
 public final class TsChartUI implements InternalUI<JTsChart> {
 
@@ -98,6 +96,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         HasTsCollectionSupport.registerActions(target, target.getActionMap());
         HasChartSupport.registerActions(target, target.getActionMap());
         HasObsFormatSupport.registerActions(target, target.getActionMap());
+        ConfigurableSupport.registerActions(target, target.getActionMap());
         target.getActionMap().put(PRINT_ACTION, JCommand.of(JTimeSeriesChart::printImage).toAction(chartPanel));
         target.getActionMap().put(RESET_ZOOM_ACTION, JCommand.of(JTimeSeriesChart::resetZoom).toAction(chartPanel));
         ActionMaps.copyEntries(target.getActionMap(), false, chartPanel.getActionMap());
@@ -157,7 +156,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         });
         fixDateTickMarkPosition();
     }
-    
+
     private void fixDateTickMarkPosition() {
         ChartPanel cp = (ChartPanel) chartPanel.getComponent(0);
         CombinedDomainXYPlot plot = (CombinedDomainXYPlot) cp.getChart().getPlot();
@@ -242,7 +241,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     //<editor-fold defaultstate="collapsed" desc="Event Handlers">
     private void onDataFormatChange() {
         ObsFormat obsFormat = obsFormatResolver.resolve();
-        chartPanel.setPeriodFormat(new DateFormatAdapter(obsFormat));
+        chartPanel.setPeriodFormat(DateFormatAdapter.of(obsFormat));
         chartPanel.setValueFormat(new InternalComponents.NumberFormatAdapter(obsFormat));
     }
 
@@ -386,23 +385,22 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         result.add(HasTsCollectionSupport.newCopyMenu(target));
         result.add(HasTsCollectionSupport.newPasteMenu(target));
         result.add(HasTsCollectionSupport.newDeleteMenu(target));
+
         result.addSeparator();
         result.add(HasTsCollectionSupport.newSelectAllMenu(target));
         result.add(HasTsCollectionSupport.newClearMenu(target));
 
         result.addSeparator();
-        JMenuItem item = new JMenuItem(am.get(Configurable.CONFIGURE_ACTION));
-        item.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_COGS));
-        item.setText("Configure...");
-        result.add(item);
-
+        result.add(ConfigurableSupport.newConfigureMenu(target));
         result.add(HasTsCollectionSupport.newSplitMenu(target));
+
         result.addSeparator();
         result.add(HasChartSupport.newToggleTitleVisibilityMenu(target));
         result.add(HasChartSupport.newToggleLegendVisibilityMenu(target));
         result.add(HasObsFormatSupport.newEditFormatMenu(target));
         result.add(HasColorSchemeSupport.menuOf(target));
         result.add(HasChartSupport.newLinesThicknessMenu(target));
+
         result.addSeparator();
         result.add(InternalComponents.newResetZoomMenu(am));
 

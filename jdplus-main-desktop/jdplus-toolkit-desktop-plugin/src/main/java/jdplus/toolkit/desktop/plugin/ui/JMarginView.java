@@ -16,40 +16,37 @@
  */
 package jdplus.toolkit.desktop.plugin.ui;
 
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.desktop.plugin.components.parts.HasColorScheme;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
-import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
-import jdplus.toolkit.desktop.plugin.components.parts.HasObsFormat;
-import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
-import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeResolver;
-import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeSupport;
-import jdplus.toolkit.desktop.plugin.components.parts.HasObsFormatResolver;
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import ec.util.chart.ColorScheme.KnownColor;
 import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.Charts;
 import ec.util.chart.swing.SwingColorSchemeSupport;
-import jdplus.toolkit.desktop.plugin.components.parts.HasObsFormatSupport;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import jdplus.toolkit.base.api.util.Arrays2;
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.Toolkit;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
+import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
+import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
+import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
+import nbbrd.design.SkipProcessing;
+import org.jfree.chart.*;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickMarkPosition;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.entity.XYItemEntity;
+import org.jfree.chart.plot.*;
+import org.jfree.chart.renderer.AbstractRenderer;
+import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.ui.Layer;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -61,33 +58,6 @@ import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Stream;
-import javax.swing.AbstractAction;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
-import nbbrd.design.SkipProcessing;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartMouseEvent;
-import org.jfree.chart.ChartMouseListener;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.DateTickMarkPosition;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.entity.XYItemEntity;
-import org.jfree.chart.plot.DatasetRenderingOrder;
-import org.jfree.chart.plot.IntervalMarker;
-import org.jfree.chart.plot.Marker;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.ValueMarker;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.AbstractRenderer;
-import org.jfree.chart.renderer.xy.XYDifferenceRenderer;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.Layer;
 
 /**
  *
@@ -184,7 +154,7 @@ public final class JMarginView extends JComponent implements TimeSeriesComponent
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
     private void onDataFormatChange() {
         DateAxis domainAxis = (DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis();
-        domainAxis.setDateFormatOverride(new DateFormatAdapter(obsFormatResolver.resolve()));
+        domainAxis.setDateFormatOverride(DateFormatAdapter.of(obsFormatResolver.resolve()));
     }
 
     private void onColorSchemeChange() {

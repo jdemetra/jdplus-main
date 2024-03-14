@@ -7,13 +7,42 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.2.2] - 2024-03-14
+
+### Added
+
+- ![STAT] Add some kernels in linear filters (trapezoidal...)
+- ![STAT] Add output in X13
+- ![OTHER] Add more platform-specific packages [#226](https://github.com/jdemetra/jdplus-main/issues/226)
+- ![OTHER] Add methods to simplify the serialization of spec files from external tools (R)
+
+### Fixed
+
+- ![STAT] Correct the computation of the likelihood in robust augmented Kalman filter in case of missing values
+- ![STAT] Complete Seats computed by the Kalman smoother (add SA series)
+- ![UI] Fix NPE when exporting image to the clipboard [#216](https://github.com/jdemetra/jdplus-main/issues/216)
+- ![UI] Fix split-into-yearly-components action [#145](https://github.com/jdemetra/jdplus-main/issues/145)
+- ![UI] Fix configure action [#215](https://github.com/jdemetra/jdplus-main/issues/215)
+- ![UI] Fix drag&drop from Excel [#197](https://github.com/jdemetra/jdplus-main/issues/197)
+- ![UI] Fix typo in "Kruskal-Wallis" [#203](https://github.com/jdemetra/jdplus-main/issues/203)
+- ![UI] Fix missing chart export to SVG [#238](https://github.com/jdemetra/jdplus-main/issues/238)
+- ![OTHER] Fix shifts in csv output
+
+### Changed
+
+- ![STAT] Use exact forecasts in X12 (as in J+D 2.x), instead of conditional forecasts (as in FORTRAN)
+- ![UI] Modify branding to differentiate from v2
+- ![UI] Simplify action enablers [#247](https://github.com/jdemetra/jdplus-main/issues/247)
+- ![OTHER] Bump bundled runtime in platform-specific packages to JDK21
+- ![OTHER] Improve the output dictionaries for the main algorithms
+
 ## [3.2.1] - 2023-12-07
 
 ### Fixed
 
 - ![STAT] Provide missing final seasonal filter in X11
 - ![STAT] Fix sigma vector in the X11 specification box
-- ![UI] Fix missing default SA specification in the lauching of the GUI
+- ![UI] Fix missing default SA specification in the launching of the GUI
 - ![UI] Fix missing local menu actions
 
 ### Added
@@ -103,7 +132,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.2.1...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.2.2...HEAD
+[3.2.2]: https://github.com/jdemetra/jd3-main/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/jdemetra/jd3-main/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/jdemetra/jd3-main/compare/v3.1.1...v3.2.0
 [3.1.1]: https://github.com/jdemetra/jd3-main/compare/v3.1.0...v3.1.1

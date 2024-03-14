@@ -64,7 +64,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.SEAS_RES_KW, StatisticalTest.class, source -> {
             ResidualSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
             if (test != null) {
-                return test.kruskallWallisTest();
+                return test.kruskalWallisTest();
             }
             return null;
         });
@@ -116,7 +116,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.SEAS_I_KW, StatisticalTest.class, source -> {
             ResidualSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
             if (test != null) {
-                return test.kruskallWallisTest();
+                return test.kruskalWallisTest();
             }
             return null;
         });
@@ -168,7 +168,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.SEAS_SA_KW, StatisticalTest.class, source -> {
             ResidualSeasonalityTests test = source.residualSeasonalityTestsOnSa();
             if (test != null) {
-                return test.kruskallWallisTest();
+                return test.kruskalWallisTest();
             }
             return null;
         });
@@ -221,7 +221,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.SEAS_LIN_KW, StatisticalTest.class, source -> {
             ResidualSeasonalityTests test = source.seasonalityTestsOnLinearized();
             if (test != null) {
-                return test.kruskallWallisTest();
+                return test.kruskalWallisTest();
             }
             return null;
         });

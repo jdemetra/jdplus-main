@@ -45,8 +45,7 @@ public class X11Extractor extends InformationMapping<X11Results> {
 //        set(SaDictionaries.S_CMP, TsData.class, source -> source.getD10());
 ////        set(SaDictionaries.S_CMP+ SeriesInfo.F_SUFFIX, TsData.class, source->source.getD10a());
 //        set(SaDictionaries.I_CMP, TsData.class, source -> source.getD13());
-
-        set(SaDictionaries.MODE, String.class, source ->source.getMode().name());
+        set(SaDictionaries.MODE, String.class, source -> source.getMode().name());
         set(X11Dictionaries.B1, TsData.class, source -> source.getB1());
         set(X11Dictionaries.B2, TsData.class, source -> source.getB2());
         set(X11Dictionaries.B3, TsData.class, source -> source.getB3());
@@ -86,42 +85,58 @@ public class X11Extractor extends InformationMapping<X11Results> {
         set(X11Dictionaries.D12, TsData.class, source -> source.getD12());
         set(X11Dictionaries.D13, TsData.class, source -> source.getD13());
         set(X11Dictionaries.TRENDFILTER, Integer.class, source -> source.getFinalHendersonFilterLength());
-        set(X11Dictionaries.SEASONALFILTERS, String[].class, (X11Results source) ->{
-            SeasonalFilterOption[] filters=source.getFinalSeasonalFilter();
-            if (filters == null)
+        set(X11Dictionaries.SEASONALFILTERS, String[].class, (X11Results source) -> {
+            SeasonalFilterOption[] filters = source.getFinalSeasonalFilter();
+            if (filters == null || filters.length == 0) {
                 return null;
-            String[] f=new String[filters.length];
-            for (int i=0; i<f.length; ++i){
-                f[i]=filters[i].name();
+            }
+            SeasonalFilterOption f0 = filters[0];
+            int n = 1;
+            while (n < filters.length) {
+                if (filters[n] != f0) {
+                    break;
+                } else {
+                    ++n;
+                }
+            }
+            if (n == filters.length) {
+                return new String[]{f0.name()};
+            }
+            String[] f = new String[filters.length];
+            for (int i = 0; i < f.length; ++i) {
+                f[i] = filters[i].name();
             }
             return f;
         });
-        set(X11Dictionaries.D9_GLOBALMSR, Double.class,(X11Results source) -> {
+        set(X11Dictionaries.D9_GLOBALMSR, Double.class, (X11Results source) -> {
             MsrTable msr = source.getD9Msr();
             return msr == null ? null : msr.getGlobalMsr();
         });
 
-        set(X11Dictionaries.D9_MSR, double[].class,(X11Results source) -> {
+        set(X11Dictionaries.D9_MSR, double[].class, (X11Results source) -> {
             MsrTable msr = source.getD9Msr();
-            if (msr == null)
+            if (msr == null) {
                 return null;
-            
-            double[] m=new double[msr.getCount()];
-            for (int i=0; i<m.length; ++i)
-                m[i]=msr.getMsr(i);
+            }
+
+            double[] m = new double[msr.getCount()];
+            for (int i = 0; i < m.length; ++i) {
+                m[i] = msr.getMsr(i);
+            }
             return m;
         });
-         
-        set(X11Dictionaries.D9_MSRTABLE, Matrix.class,(X11Results source) -> {
+
+        set(X11Dictionaries.D9_MSRTABLE, Matrix.class, (X11Results source) -> {
             MsrTable msr = source.getD9Msr();
-            if (msr == null)
+            if (msr == null) {
                 return null;
-            
-            int n=msr.getCount();
-            FastMatrix M=FastMatrix.make(3, n);
+            }
+
+            int n = msr.getCount();
+            FastMatrix M = FastMatrix.make(3, n);
             double[] irr = msr.getMeanIrregularEvolutions();
             double[] seas = msr.getMeanSeasonalEvolutions();
-            for (int i=0; i<n; ++i){
+            for (int i = 0; i < n; ++i) {
                 M.set(0, i, irr[i]);
                 M.set(1, i, seas[i]);
                 M.set(2, i, msr.getMsr(i));

@@ -86,7 +86,8 @@ public class MatrixOperations {
 
 
     @InterchangeableProcessor
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
+    @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
     public static interface Processor extends Ring<Matrix> {
         // Use the Ring definition to normalize the names. To get an actual ring, we should consider square matrices 
         // of size n.

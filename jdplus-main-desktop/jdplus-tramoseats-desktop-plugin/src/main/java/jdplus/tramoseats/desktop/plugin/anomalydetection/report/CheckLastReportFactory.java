@@ -29,8 +29,7 @@ import nbbrd.service.ServiceDefinition;
 @ExtensionPoint
 @ServiceDefinition(
         quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class,
-        singleton = true
+        backend = NetBeansServiceBackend.class
 )
 public interface CheckLastReportFactory {
 

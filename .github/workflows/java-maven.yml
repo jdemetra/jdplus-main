@@ -1,6 +1,6 @@
 name: Java with Maven
 
-on: [ push, pull_request ]
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   build-and-test-job:
@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ 17 ]
+        java: [ 21 ]
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
 
     name: JDK${{ matrix.java }} on ${{ matrix.os }}
@@ -34,7 +34,7 @@ jobs:
       - name: Build and (headless) test with Maven
         uses: smithki/xvfb-action@v1.1.2
         with:
-          run: mvn -U -B -ntp package
+          run: mvn -U -B -ntp verify
 
   auto-merge-job:
     needs: build-and-test-job
@@ -58,7 +58,7 @@ jobs:
     if: startsWith(github.repository, 'jdemetra/') && startsWith(github.ref, 'refs/heads/develop')
     strategy:
       matrix:
-        java: [ 17 ]
+        java: [ 21 ]
         os: [ ubuntu-latest ]
 
     name: Snapshot on develop
@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload JReleaser output
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: assets-snapshot-log
           path: |
@@ -108,7 +108,7 @@ jobs:
     if: startsWith(github.repository, 'jdemetra/') && startsWith(github.ref, 'refs/tags/v')
     strategy:
       matrix:
-        java: [ 17 ]
+        java: [ 21 ]
         os: [ ubuntu-latest ]
 
     name: Release on tag
@@ -148,7 +148,7 @@ jobs:
 
       - name: Upload JReleaser output
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: assets-release-log
           path: |

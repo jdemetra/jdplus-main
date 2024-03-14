@@ -33,8 +33,8 @@ import lombok.NonNull;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
- * f = X'b + L(y-X'b) = Ly + (X - LX)'b
- * var(f) = var (Ly)+ (X - LX)' var(b)(X - LX)
+ * f = X'b + L(y-X'b) = Ly + (X - LX)'b var(f) = var (Ly)+ (X - LX)' var(b)(X -
+ * LX)
  *
  * @author PALATEJ
  */
@@ -108,8 +108,8 @@ public class RegArimaForecasts {
         if (nx > 0) {
             // compute DX = X-LX 
             FastMatrix xall = FastMatrix.of(X);
-             filter.filter(xall);
-             FastMatrix dx = xall.extract(n, nf, 0, nx);
+            filter.filter(xall);
+            FastMatrix dx = xall.extract(n, nf, 0, nx);
 //          dx.sub(xall.extract(n, nf, 0, nx));
             // F += DX * b, varF += DX*varB*DX'
             DataBlockIterator xrows = dx.rowsIterator();

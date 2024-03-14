@@ -31,23 +31,15 @@ public final class SarimaFormatter implements InformationFormatter {
     public String format(Object obj, int item, Locale locale) {
 
         SarimaOrders orders = (SarimaOrders) obj;
-        switch (item) {
-            case 0:
-                return orders.toString();
-            case 1:
-                return Integer.toString(orders.getP());
-            case 2:
-                return Integer.toString(orders.getD());
-            case 3:
-                return Integer.toString(orders.getQ());
-            case 4:
-                return Integer.toString(orders.getBp());
-            case 5:
-                return Integer.toString(orders.getBd());
-            case 6:
-                return Integer.toString(orders.getBq());
-            default:
-                return null;
-        }
+        return switch (item) {
+            case 0 -> orders.toString();
+            case 1 -> Integer.toString(orders.getP());
+            case 2 -> Integer.toString(orders.getD());
+            case 3 -> Integer.toString(orders.getQ());
+            case 4 -> Integer.toString(orders.getBp());
+            case 5 -> Integer.toString(orders.getBd());
+            case 6 -> Integer.toString(orders.getBq());
+            default -> null;
+        };
     }
 }

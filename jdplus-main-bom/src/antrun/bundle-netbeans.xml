@@ -1,0 +1,82 @@
+<project name="bundle-netbeans">
+
+    <tempfile property="x.tempDirectory" destdir="${project.build.directory}"/>
+    <property name="x.configFile" value="${x.branding}/etc/${x.branding}.conf"/>
+
+    <target name="check-parameters">
+        <prop-require prop="x.bundleInput"/>
+        <prop-require prop="x.bundleOutput"/>
+        <prop-require prop="x.branding"/>
+        <prop-require prop="x.jdkArchive"/>
+        <prop-require prop="x.jdkDirectory"/>
+    </target>
+
+    <target name="process-scripts">
+        <unzip src="${x.bundleInput}" dest="${x.tempDirectory}">
+            <patternset>
+                <include name="${x.configFile}"/>
+            </patternset>
+        </unzip>
+
+        <replace file="${x.tempDirectory}/${x.configFile}"
+                 token="#jdkhome=&quot;/path/to/jdk&quot;" value="jdkhome=${x.jdkDirectory}"/>
+        <touch file="${x.tempDirectory}/${x.configFile}"
+               datetime="${project.build.outputTimestamp}"
+               pattern="yyyy-MM-dd'T'HH:mm:ssXXX"/>
+    </target>
+
+    <target name="cleanup-scripts">
+        <delete dir="${x.tempDirectory}"/>
+    </target>
+
+    <target name="bundle.zip">
+        <antcall target="check-parameters"/>
+        <antcall target="process-scripts"/>
+
+        <!-- merge bundleInput, config and jdk into binary -->
+        <zip destfile="${x.bundleOutput}" keepcompression="true">
+            <zipfileset src="${x.bundleInput}" excludes="${x.configFile}"/>
+            <zipfileset dir="${x.tempDirectory}" includes="${x.configFile}"/>
+            <zipfileset src="${x.jdkArchive}" prefix="${x.branding}"/>
+        </zip>
+
+        <antcall target="cleanup-scripts"/>
+    </target>
+
+    <target name="bundle.tar.gz">
+        <antcall target="check-parameters"/>
+        <antcall target="process-scripts"/>
+
+        <!-- expand jdk archive first for avoid performance issue -->
+        <gunzip src="${x.jdkArchive}" dest="${x.tempDirectory}/jdk.tar"/>
+
+        <!-- merge bundleInput, config and jdk into binary -->
+        <zip destfile="${x.bundleOutput}" keepcompression="true">
+            <zipfileset src="${x.bundleInput}" excludes="${x.configFile}"/>
+            <zipfileset dir="${x.tempDirectory}" includes="${x.configFile}"/>
+            <tarfileset src="${x.tempDirectory}/jdk.tar" prefix="${x.branding}"/>
+        </zip>
+
+        <antcall target="cleanup-scripts"/>
+    </target>
+
+    <!-- Macro to require a property is not blank -->
+    <macrodef name="prop-require">
+        <attribute name="prop"/>
+        <sequential>
+            <fail message="Property &quot;@{prop}&quot; must be set">
+                <condition>
+                    <not>
+                        <isset property="@{prop}"/>
+                    </not>
+                </condition>
+            </fail>
+
+            <fail message="Property &quot;@{prop}&quot; must not be empty">
+                <condition>
+                    <equals arg1="${@{prop}}" arg2=""/>
+                </condition>
+            </fail>
+        </sequential>
+    </macrodef>
+</project>

@@ -77,7 +77,7 @@ public class KalmanEstimator implements IComponentsEstimator {
             srslts = DkToolkit.sqrtSmooth(ssf, data, true, true);
         }
 
-        TsPeriod start=s.getStart(), bstart=start.plus(-nb), fstart=start.plus(n);
+        TsPeriod start = s.getStart(), bstart = start.plus(-nb), fstart = start.plus(n);
         int[] pos = ssf.componentsPosition();
         TsData cmp;
         int scmp = -1;
@@ -107,6 +107,9 @@ public class KalmanEstimator implements IComponentsEstimator {
                 builder.add(cmp.extract(nb, n), ComponentType.SeasonallyAdjusted, ComponentInformation.Stdev);
             }
         }
+        if (scmp < 0) {
+            builder.add(s, ComponentType.SeasonallyAdjusted);
+        }
 
         DataBlock z = DataBlock.make(ssf.getStateDim());
         ssf.measurement().loading().Z(0, z);
@@ -117,28 +120,28 @@ public class KalmanEstimator implements IComponentsEstimator {
                 a[i] = srslts.a(i).dot(z);
                 e[i] = QuadraticForm.apply(srslts.P(i), z);
             }
-            TsData sb=TsData.ofInternal(bstart, a);
+            TsData sb = TsData.ofInternal(bstart, a);
             builder.add(sb, ComponentType.Series, ComponentInformation.Backcast);
             cmp = TsData.of(bstart, DoubleSeq.of(e).fn(x -> x <= 0 ? 0 : Math.sqrt(x)));
             builder.add(cmp, ComponentType.Series, ComponentInformation.StdevBackcast);
             if (scmp < 0) {  // SA == y
-                builder.add(sb, ComponentType.SeasonallyAdjusted, ComponentInformation.Backcast); 
+                builder.add(sb, ComponentType.SeasonallyAdjusted, ComponentInformation.Backcast);
                 builder.add(cmp, ComponentType.SeasonallyAdjusted, ComponentInformation.StdevBackcast);
             }
         }
         if (nf > 0) {
             double[] a = new double[nf];
             double[] e = new double[nf];
-            for (int i = 0, j=nb+n; i < a.length; ++i, ++j) {
+            for (int i = 0, j = nb + n; i < a.length; ++i, ++j) {
                 a[i] = srslts.a(j).dot(z);
                 e[i] = QuadraticForm.apply(srslts.P(j), z);
             }
-            TsData sf=TsData.ofInternal(fstart, a);
+            TsData sf = TsData.ofInternal(fstart, a);
             builder.add(sf, ComponentType.Series, ComponentInformation.Forecast);
             cmp = TsData.of(fstart, DoubleSeq.of(e).fn(x -> x <= 0 ? 0 : Math.sqrt(x)));
             builder.add(cmp, ComponentType.Series, ComponentInformation.StdevForecast);
             if (scmp < 0) {  // SA == y
-                builder.add(sf, ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast); 
+                builder.add(sf, ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast);
                 builder.add(cmp, ComponentType.SeasonallyAdjusted, ComponentInformation.StdevForecast);
             }
         }
@@ -158,7 +161,7 @@ public class KalmanEstimator implements IComponentsEstimator {
                 builder.add(cmp, ComponentType.SeasonallyAdjusted, ComponentInformation.StdevBackcast);
             }
             if (nf > 0) {
-                builder.add(sa.range(nb+n, nb+n+nf), ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast);
+                builder.add(sa.range(nb + n, nb + n + nf), ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast);
                 double[] a = new double[nf];
                 for (int i = 0, j = n + nb; i < a.length; ++i, ++j) {
                     a[i] = QuadraticForm.apply(srslts.P(j), z);

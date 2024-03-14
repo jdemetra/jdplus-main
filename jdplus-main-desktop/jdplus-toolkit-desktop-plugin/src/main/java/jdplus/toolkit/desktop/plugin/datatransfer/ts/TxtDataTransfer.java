@@ -1,21 +1,26 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.desktop.plugin.datatransfer.ts;
 
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.desktop.plugin.*;
 import jdplus.toolkit.desktop.plugin.actions.Configurable;
 import jdplus.toolkit.desktop.plugin.beans.BeanConfigurator;
 import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
@@ -23,11 +28,6 @@ import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
-import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.base.api.timeseries.*;
-import jdplus.toolkit.base.api.util.MultiLineNameUtil;
-import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import jdplus.toolkit.desktop.plugin.*;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Parser;
 import org.openide.nodes.Sheet;
@@ -49,10 +49,11 @@ import java.util.Locale;
  * @author Jean Palate
  */
 @ServiceProviders({
-    @ServiceProvider(service = DataTransferSpi.class, position = 1000)
+        @ServiceProvider(service = DataTransferSpi.class, position = TxtDataTransfer.POSITION)
 })
 public final class TxtDataTransfer implements DataTransferSpi, Configurable, Persistable, ConfigEditor {
 
+    static final int POSITION = 2000;
     private static final char DELIMITOR = '\t';
     private static final String NEWLINE = System.lineSeparator();
     private static final int MINDATES = 2;
@@ -71,7 +72,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
 
     @Override
     public int getPosition() {
-        return 1000;
+        return POSITION;
     }
 
     //<editor-fold defaultstate="collapsed" desc="INamedService">
@@ -320,8 +321,8 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
             LocalDate[] dates;
             String[] titles;
             FastMatrix data;
-            int nr=(hasTitles || datesAreHorizontal) ? nrows-1 : nrows;
-            int nc=(hasTitles || datesAreVertical) ? ncols-1 : ncols;
+            int nr = (hasTitles || datesAreHorizontal) ? nrows - 1 : nrows;
+            int nc = (hasTitles || datesAreVertical) ? ncols - 1 : ncols;
             if (datesAreVertical) {
                 titles = new String[ncols - 1];
                 if (hasTitles) {
@@ -364,10 +365,10 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
                 for (int k = 0, l = (datesAreVertical || hasTitles) ? 1 : 0; k < nc; ++k, ++l) {
                     Number value = valueParser.parse(cols[l]);
                     if (value != null) {
-                        if (datesAreVertical) 
-                        data.set(i, k, value.doubleValue());
+                        if (datesAreVertical)
+                            data.set(i, k, value.doubleValue());
                         else
-                        data.set(k,i, value.doubleValue());
+                            data.set(k, i, value.doubleValue());
                     }
                 }
             }
@@ -419,7 +420,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
         return null;
     }
 
-//    private static final ThreadLocal<Parser<LocalDate>> FALLBACK_PARSER = new ThreadLocal<Parser<LocalDate>>() {
+    //    private static final ThreadLocal<Parser<LocalDate>> FALLBACK_PARSER = new ThreadLocal<Parser<LocalDate>>() {
 //        @Override
 //        protected Parser<LocalDate> initialValue() {
 //            ImmutableList.Builder<Parser<Date>> list = ImmutableList.builder();
@@ -432,44 +433,44 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
 //    };
     // fallback formats; order matters!
     private static final String[] FALLBACK_FORMATS = {
-        "yyyy-MM-dd",
-        "yyyy MM dd",
-        "yyyy.MM.dd",
-        "yyyy-MMM-dd",
-        "yyyy MMM dd",
-        "yyyy.MMM.dd",
-        "dd-MM-yyyy",
-        "dd MM yyyy",
-        "dd.MM.yyyy",
-        "dd/MM/yyyy",
-        "dd-MM-yy",
-        "dd MM yy",
-        "dd.MM.yy",
-        "dd/MM/yy",
-        "dd-MMM-yy",
-        "dd MMM yy",
-        "dd.MMM.yy",
-        "dd/MMM/yy",
-        "dd-MMM-yyyy",
-        "dd MMM yyyy",
-        "dd.MMM.yyyy",
-        "dd/MMM/yyyy",
-        "yyyy-MM-dd hh:mm:ss",
-        "yyyy MM dd hh:mm:ss",
-        "yyyy.MM.dd hh:mm:ss",
-        "yyyy/MM/dd hh:mm:ss",
-        "yyyy-MMM-dd hh:mm:ss",
-        "yyyy MMM dd hh:mm:ss",
-        "yyyy.MMM.dd hh:mm:ss",
-        "yyyy/MMM/dd hh:mm:ss",
-        "dd-MM-yyyy hh:mm:ss",
-        "dd MM yyyy hh:mm:ss",
-        "dd.MM.yyyy hh:mm:ss",
-        "dd/MM/yyyy hh:mm:ss",
-        "dd-MMM-yyyy hh:mm:ss",
-        "dd MMM yyyy hh:mm:ss",
-        "dd.MMM.yyyy hh:mm:ss",
-        "dd/MMM/yyyy hh:mm:ss"};
+            "yyyy-MM-dd",
+            "yyyy MM dd",
+            "yyyy.MM.dd",
+            "yyyy-MMM-dd",
+            "yyyy MMM dd",
+            "yyyy.MMM.dd",
+            "dd-MM-yyyy",
+            "dd MM yyyy",
+            "dd.MM.yyyy",
+            "dd/MM/yyyy",
+            "dd-MM-yy",
+            "dd MM yy",
+            "dd.MM.yy",
+            "dd/MM/yy",
+            "dd-MMM-yy",
+            "dd MMM yy",
+            "dd.MMM.yy",
+            "dd/MMM/yy",
+            "dd-MMM-yyyy",
+            "dd MMM yyyy",
+            "dd.MMM.yyyy",
+            "dd/MMM/yyyy",
+            "yyyy-MM-dd hh:mm:ss",
+            "yyyy MM dd hh:mm:ss",
+            "yyyy.MM.dd hh:mm:ss",
+            "yyyy/MM/dd hh:mm:ss",
+            "yyyy-MMM-dd hh:mm:ss",
+            "yyyy MMM dd hh:mm:ss",
+            "yyyy.MMM.dd hh:mm:ss",
+            "yyyy/MMM/dd hh:mm:ss",
+            "dd-MM-yyyy hh:mm:ss",
+            "dd MM yyyy hh:mm:ss",
+            "dd.MM.yyyy hh:mm:ss",
+            "dd/MM/yyyy hh:mm:ss",
+            "dd-MMM-yyyy hh:mm:ss",
+            "dd MMM yyyy hh:mm:ss",
+            "dd.MMM.yyyy hh:mm:ss",
+            "dd/MMM/yyyy hh:mm:ss"};
 
     public static final class InternalConfig {
 
@@ -573,9 +574,9 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
 
         @Override
         public InternalConfig doBackward(Config config) {
-            if(!DOMAIN.equals(config.getDomain()))
+            if (!DOMAIN.equals(config.getDomain()))
                 throw new IllegalArgumentException();
-            if(!NAME.equals(config.getName()))
+            if (!NAME.equals(config.getName()))
                 throw new IllegalArgumentException();
             InternalConfig result = new InternalConfig();
             result.vertical = VERTICAL.get(config::getParameter);

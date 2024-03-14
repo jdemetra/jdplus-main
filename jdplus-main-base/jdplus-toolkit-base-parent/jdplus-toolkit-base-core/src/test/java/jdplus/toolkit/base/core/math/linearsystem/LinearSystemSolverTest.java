@@ -7,9 +7,6 @@ package jdplus.toolkit.base.core.math.linearsystem;
 
 import java.util.Random;
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.math.linearsystem.LULinearSystemSolver;
-import jdplus.toolkit.base.core.math.linearsystem.LULinearSystemSolver2;
-import jdplus.toolkit.base.core.math.linearsystem.QRLinearSystemSolver;
 import jdplus.toolkit.base.core.math.matrices.decomposition.CroutDoolittle;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.Householder2;

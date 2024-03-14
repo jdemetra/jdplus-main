@@ -1,10 +1,11 @@
 package jdplus.toolkit.desktop.plugin.interchange;
 
+import internal.uihelpers.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
-import nbbrd.design.VisibleForTesting;
 import lombok.NonNull;
+import nbbrd.design.VisibleForTesting;
 import org.openide.util.Exceptions;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public final class InterchangeManager {
     private final CollectionSupplier<InterchangeSpi> providers;
 
     private InterchangeManager() {
-        this(InterchangeSpiLoader::get);
+        this(FixmeCollectionSupplier.of(InterchangeSpi.class, InterchangeSpiLoader::load));
     }
 
     @VisibleForTesting

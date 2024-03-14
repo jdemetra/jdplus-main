@@ -209,7 +209,7 @@ public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements H
         stream.close(HtmlTag.TABLEROW);
 
         stream.open(HtmlTag.TABLEROW);
-        stream.write(new HtmlTableCell("3. Kruskall-Wallis (non parametric)").withWidth(250));
+        stream.write(new HtmlTableCell("3. Kruskal-Wallis (non parametric)").withWidth(250));
         stream.write(getCellSummary(kwTest.getPvalue(), 50));
         stream.close(HtmlTag.TABLEROW);
 

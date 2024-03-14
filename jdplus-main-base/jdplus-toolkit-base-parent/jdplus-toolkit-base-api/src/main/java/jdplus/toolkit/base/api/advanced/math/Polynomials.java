@@ -51,7 +51,8 @@ public class Polynomials {
     }
 
     @InterchangeableProcessor
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, noFallback = true)
+    @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
     public static interface Processor extends Ring<DoubleSeq> {
 
         Complex[] rootsOf(DoubleSeq polynomial, Solver solver);

@@ -4,6 +4,7 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.util.Table;
 import lombok.NonNull;
@@ -15,14 +16,14 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
- *
  * @author Philippe Charles
  */
-@ServiceProvider(service = DataTransferSpi.class, position = 0)
+@ServiceProvider(service = DataTransferSpi.class, position = LocalObjectDataTransfer.POSITION)
 public final class LocalObjectDataTransfer implements DataTransferSpi {
+
+    static final int POSITION = 0;
 
     public static final DataFlavor DATA_FLAVOR = DataTransfers.newLocalObjectDataFlavor(LocalObjectDataTransfer.class);
 
@@ -31,7 +32,7 @@ public final class LocalObjectDataTransfer implements DataTransferSpi {
 
     @Override
     public int getPosition() {
-        return 0;
+        return POSITION;
     }
 
     @Override
