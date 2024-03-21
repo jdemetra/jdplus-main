@@ -55,11 +55,11 @@ public final class Top5Browsers extends Book.Factory {
     }
 
     @Override
-    public @NonNull Book load(@NonNull InputStream stream) throws IOException {
+    public @NonNull Book load(@NonNull InputStream stream) {
         return ArrayBook
                 .builder()
-                .sheet(ArraySheet.copyOf("Top 5 Browsers - Monthly", DATA_1))
-                .sheet(ArraySheet.copyOf("Top 5 Browsers - Quarterly", DATA_2))
+                .sheet(ArraySheet.copyOf("Monthly", DATA_1))
+                .sheet(ArraySheet.copyOf("Quarterly", DATA_2))
                 .sheet(ArraySheet.copyOf("DataTest", DATA_3))
                 .build();
     }
@@ -70,7 +70,7 @@ public final class Top5Browsers extends Book.Factory {
     }
 
     @Override
-    public void store(@NonNull OutputStream stream, @NonNull Book book) throws IOException {
+    public void store(@NonNull OutputStream stream, @NonNull Book book) {
         throw new UnsupportedOperationException();
     }
 

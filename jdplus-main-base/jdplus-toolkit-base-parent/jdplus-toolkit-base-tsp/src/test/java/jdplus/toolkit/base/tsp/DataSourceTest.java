@@ -16,9 +16,6 @@
  */
 package jdplus.toolkit.base.tsp;
 
-import jdplus.toolkit.base.tsp.DataSource;
-import nbbrd.io.text.Formatter;
-import nbbrd.io.text.Parser;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -30,9 +27,6 @@ import static java.util.Collections.emptySortedMap;
 import static java.util.Collections.unmodifiableSortedMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.HamcrestCondition.matching;
-import static org.assertj.core.condition.MappedCondition.mappedCondition;
-import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * @author Philippe Charles
@@ -145,48 +139,32 @@ public class DataSourceTest {
     @Test
     public void testRepresentableAsString() {
         DataSource dataSource = DataSource
-                .builder("ABC", "123")
-                .parameter("k1", "v1")
+                .builder("+ ABC", "12 3+")
+                .parameter("k 1+", "v 1+")
                 .build();
 
-        String expected = "demetra://tsprovider/ABC/123?k1=v1";
+        String legacy = "demetra://tsprovider/%2B+ABC/12+3%2B?k+1%2B=v+1%2B";
+        String expected = "demetra://tsprovider/%2B%20ABC/12%203%2B?k%201%2B=v%201%2B";
 
         assertThat(dataSource)
                 .hasToString(expected)
+                .isEqualTo(DataSource.parse(legacy))
                 .isEqualTo(DataSource.parse(expected));
     }
 
     @Test
     public void testRepresentableAsURI() {
         DataSource dataSource = DataSource
-                .builder("ABC", "123")
-                .parameter("k1", "v1")
+                .builder("+ ABC", "12 3+")
+                .parameter("k 1+", "v 1+")
                 .build();
 
-        URI expected = URI.create("demetra://tsprovider/ABC/123?k1=v1");
+        URI legacy = URI.create("demetra://tsprovider/%2B+ABC/12+3%2B?k+1%2B=v+1%2B");
+        URI expected = URI.create("demetra://tsprovider/%2B%20ABC/12%203%2B?k%201%2B=v%201%2B");
 
         assertThat(dataSource)
-                .has(mappedCondition(DataSource::toURI, matching(equalTo(expected))))
+                .returns(expected, DataSource::toURI)
+                .isEqualTo(DataSource.parseURI(legacy))
                 .isEqualTo(DataSource.parseURI(expected));
-    }
-
-    @Test
-    public void testUriFormatter() {
-        Formatter<DataSource> formatter = Formatter.of(DataSource::toString);
-
-        assertThat(formatter.format(newSample()))
-                .isNotEmpty()
-                .isEqualTo(formatter.format(newSample()))
-                .isEqualTo(formatter.format(new DataSource(PNAME, VERSION, unmodifiableSortedMap(new TreeMap<>(Map.of(K3, V3, K2, V2, K1, V1))))))
-                .isNotEqualTo(formatter.format(ZERO))
-                .startsWith("demetra://tsprovider/");
-    }
-
-    @Test
-    public void testUriParser() {
-        Formatter<DataSource> formatter = Formatter.of(DataSource::toString);
-        Parser<DataSource> parser = Parser.of(DataSource::parse);
-
-        assertThat(parser.parse(formatter.formatValue(newSample()).orElseThrow())).isEqualTo(newSample());
     }
 }
