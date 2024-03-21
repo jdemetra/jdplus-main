@@ -46,7 +46,7 @@ public class UriBuilderTest {
     final String rawScheme = "http";
     final String rawHost = "www.nbb.be";
     final String rawPath = "/dq%2Frd/demetra%2B";
-    final String rawQuery = "*=%5B1.2%2C+2.6%5D&email=contact%40nbb.be&file=C%3A%5CProgram+Files%5Cdata.xls";
+    final String rawQuery = "*=%5B1.2%2C%202.6%5D&email=contact%40nbb.be&file=C%3A%5CProgram%20Files%5Cdata.xls";
 
     @Test
     public void testBuildString() {

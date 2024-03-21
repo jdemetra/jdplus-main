@@ -106,14 +106,18 @@ public final class UriBuilder {
         return URI.create(buildString());
     }
 
-    private static String decodeUrlUtf8(String o) {
+    private static String encode(String o) {
+        return URLEncoder.encode(o, UTF_8).replace("+", "%20");
+    }
+
+    private static String decode(String o) {
         return URLDecoder.decode(o, UTF_8);
     }
 
     private static void appendKeyValuePair(@NonNull StringBuilder sb, @NonNull Entry<String, String> o) {
-        sb.append(URLEncoder.encode(o.getKey(), UTF_8));
+        sb.append(encode(o.getKey()));
         sb.append('=');
-        sb.append(URLEncoder.encode(o.getValue(), UTF_8));
+        sb.append(encode(o.getValue()));
     }
 
     private static void appendKeyValuePairs(@NonNull StringBuilder sb, @NonNull Map<String, String> keyValues) {
@@ -129,17 +133,11 @@ public final class UriBuilder {
     private static void appendPathElements(@NonNull StringBuilder sb, @NonNull String[] array) {
         if (array.length > 0) {
             int i = 0;
-            sb.append(URLEncoder.encode(array[i], UTF_8));
+            sb.append(encode(array[i]));
             while (++i < array.length) {
-                sb.append('/').append(URLEncoder.encode(array[i], UTF_8));
+                sb.append('/').append(encode(array[i]));
             }
         }
-    }
-
-    @Nullable
-    public static String[] getPathArray(@NonNull URI uri) {
-        String path = uri.getRawPath();
-        return path != null && !path.isEmpty() ? splitToArray(path.subSequence(1, path.length())) : null;
     }
 
     @Nullable
@@ -161,11 +159,6 @@ public final class UriBuilder {
     }
 
     @Nullable
-    private static String[] splitToArray(@NonNull CharSequence input) {
-        return Strings.splitToStream('/', input).map(UriBuilder::decodeUrlUtf8).toArray(String[]::new);
-    }
-
-    @Nullable
     private static String[] splitToArray(@NonNull CharSequence input, int expectedSize) {
         Iterator<String> items = Strings.splitToIterator('/', input);
         if (expectedSize == 0 || !items.hasNext()) {
@@ -174,7 +167,7 @@ public final class UriBuilder {
         String[] result = new String[expectedSize];
         int index = 0;
         do {
-            result[index++] = decodeUrlUtf8(items.next());
+            result[index++] = decode(items.next());
         } while (index < expectedSize && items.hasNext());
         return !items.hasNext() && index == expectedSize ? result : null;
     }
@@ -204,7 +197,7 @@ public final class UriBuilder {
             if (entryFields.hasNext()) {
                 return false;
             }
-            consumer.accept(decodeUrlUtf8(key), decodeUrlUtf8(value));
+            consumer.accept(decode(key), decode(value));
         }
         return true;
     }

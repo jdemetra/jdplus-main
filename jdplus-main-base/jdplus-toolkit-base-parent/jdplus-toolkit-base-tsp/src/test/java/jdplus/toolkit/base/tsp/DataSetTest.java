@@ -16,9 +16,6 @@
  */
 package jdplus.toolkit.base.tsp;
 
-import nbbrd.io.text.Formatter;
-import nbbrd.io.text.Parser;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -29,9 +26,6 @@ import java.util.TreeMap;
 import static java.util.Collections.emptySortedMap;
 import static java.util.Collections.unmodifiableSortedMap;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.HamcrestCondition.matching;
-import static org.assertj.core.condition.MappedCondition.mappedCondition;
-import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * @author Philippe Charles
@@ -88,64 +82,42 @@ public class DataSetTest {
     @Test
     public void testRepresentableAsString() {
         DataSource dataSource = DataSource
-                .builder("ABC", "123")
-                .parameter("k1", "v1")
+                .builder("+ ABC", "12 3+")
+                .parameter("k 1+", "v 1+")
                 .build();
 
         DataSet dataSet = DataSet
                 .builder(dataSource, DataSet.Kind.COLLECTION)
-                .parameter("k2", "v2")
+                .parameter("k 2+", "v 2+")
                 .build();
 
-        String expected = "demetra://tsprovider/ABC/123/COLLECTION?k1=v1#k2=v2";
+        String legacy = "demetra://tsprovider/%2B+ABC/12+3%2B/COLLECTION?k+1%2B=v+1%2B#k+2%2B=v+2%2B";
+        String expected = "demetra://tsprovider/%2B%20ABC/12%203%2B/COLLECTION?k%201%2B=v%201%2B#k%202%2B=v%202%2B";
 
         assertThat(dataSet)
                 .hasToString(expected)
+                .isEqualTo(DataSet.parse(legacy))
                 .isEqualTo(DataSet.parse(expected));
     }
 
     @Test
     public void testRepresentableAsURI() {
         DataSource dataSource = DataSource
-                .builder("ABC", "123")
-                .parameter("k1", "v1")
+                .builder("+ ABC", "12 3+")
+                .parameter("k 1+", "v 1+")
                 .build();
 
         DataSet dataSet = DataSet
                 .builder(dataSource, DataSet.Kind.COLLECTION)
-                .parameter("k2", "v2")
+                .parameter("k 2+", "v 2+")
                 .build();
 
-        URI expected = URI.create("demetra://tsprovider/ABC/123/COLLECTION?k1=v1#k2=v2");
+        URI legacy = URI.create("demetra://tsprovider/%2B+ABC/12+3%2B/COLLECTION?k+1%2B=v+1%2B#k+2%2B=v+2%2B");
+        URI expected = URI.create("demetra://tsprovider/%2B%20ABC/12%203%2B/COLLECTION?k%201%2B=v%201%2B#k%202%2B=v%202%2B");
 
         assertThat(dataSet)
-                .has(mappedCondition(DataSet::toURI, matching(equalTo(expected))))
+                .returns(expected, DataSet::toURI)
+                .isEqualTo(DataSet.parseURI(legacy))
                 .isEqualTo(DataSet.parseURI(expected));
-    }
-
-    @Test
-    public void testUriFormatter() {
-        DataSet dataSet = newSample();
-        Formatter<DataSet> formatter = Formatter.of(DataSet::toString);
-        Assertions.assertNotNull(formatter.format(dataSet));
-
-        DataSet d1 = new DataSet(id, DataSet.Kind.COLLECTION, content);
-        DataSet d2 = new DataSet(id, DataSet.Kind.COLLECTION, content);
-        Assertions.assertEquals(formatter.format(d1), formatter.format(d2));
-
-        DataSet empty = new DataSet(id, DataSet.Kind.COLLECTION, emptyContent);
-        Assertions.assertEquals("demetra://tsprovider/SPREADSHEET/20111209/COLLECTION?datePattern=yyyy-MM-dd&file=c%3A%5Cdata.txt&locale=fr_BE#", formatter.format(empty));
-    }
-
-    @Test
-    public void testUriParser() {
-        Formatter<DataSet> dataSetFormatter = Formatter.of(DataSet::toString);
-        Parser<DataSet> dataSetParser = Parser.of(DataSet::parse);
-
-        DataSet dataSet = newSample();
-        Assertions.assertEquals(dataSet, dataSetParser.parse(dataSetFormatter.formatValue(dataSet).orElseThrow()));
-
-        DataSet empty = new DataSet(id, DataSet.Kind.COLLECTION, emptyContent);
-        Assertions.assertEquals(empty, dataSetParser.parse(dataSetFormatter.formatValue(empty).orElseThrow()));
     }
 }
