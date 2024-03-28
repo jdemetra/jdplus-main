@@ -51,7 +51,7 @@
         <!-- annotations & processors -->
         <lombok.version>1.18.32</lombok.version>
         <java-service.version>1.9.0</java-service.version>
-        <java-design.version>1.5.0</java-design.version>
+        <java-design.version>1.5.1</java-design.version>
         <checker-qual.version>3.42.0</checker-qual.version>
 
         <!-- test frameworks -->
