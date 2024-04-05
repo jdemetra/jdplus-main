@@ -51,7 +51,7 @@
         <!-- annotations & processors -->
         <lombok.version>1.18.32</lombok.version>
         <java-service.version>1.9.0</java-service.version>
-        <java-design.version>1.5.0</java-design.version>
+        <java-design.version>1.5.1</java-design.version>
         <checker-qual.version>3.42.0</checker-qual.version>
 
         <!-- test frameworks -->
@@ -211,7 +211,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -345,7 +345,7 @@
                     <dependency>
                         <groupId>org.kordamp.maven</groupId>
                         <artifactId>pomchecker-enforcer-rules</artifactId>
-                        <version>1.10.0</version>
+                        <version>1.11.0</version>
                     </dependency>
                 </dependencies>
                 <executions>
