@@ -8,6 +8,7 @@ package jdplus.tramoseats.base.r;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.tramoseats.base.api.seats.DecompositionSpec;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsOutput;
@@ -27,6 +28,19 @@ public class TramoSeatsTest {
     @Test
     public void testProd() {
         TramoSeatsResults rslt = TramoSeats.process(Data.TS_PROD, "rsafull");
+        assertTrue(rslt != null);
+        assertTrue(TramoSeats.toBuffer(rslt) != null);
+    }
+
+    @Test
+    public void testBackcast() {
+        TramoSeatsSpec nspec = TramoSeatsSpec.RSAfull
+                .toBuilder()
+                .seats(DecompositionSpec.builder()
+                        .backcastCount(18)
+                        .build())
+                .build();
+        TramoSeatsResults rslt = TramoSeats.process(Data.TS_PROD, nspec, null);
         assertTrue(rslt != null);
         assertTrue(TramoSeats.toBuffer(rslt) != null);
     }
