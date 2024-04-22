@@ -103,8 +103,9 @@ public class ResidualTradingDaysTests {
     }
 
     public StatisticalTest residualsTest(boolean last) {
-        if (residuals == null)
+        if (residuals == null) {
             return null;
+        }
         if (last && options.getFlast() > 0) {
             StatisticalTest test = residualsLastTest;
             if (test == null) {
@@ -139,8 +140,8 @@ public class ResidualTradingDaysTests {
         }
         return TradingDaysTest.olsTest(s, lag);
     }
-    
-        private StatisticalTest td2(TsData s, int ny, boolean seas) {
+
+    private StatisticalTest td2(TsData s, int ny, boolean seas) {
         int ifreq = annualFrequency();
         if (ny > 0) {
             s = s.drop(Math.max(0, s.length() - ifreq * ny), 0);
