@@ -87,7 +87,7 @@ public abstract class AbstractEstimateSpecUI implements IPropertyDescriptors {
     private static final int SPAN_ID = 0, TOL_ID = 1, HESSIAN_ID = 2;
 
     @NbBundle.Messages({
-        "estimateSpecUI.spanDesc.name=Model span",
+        "estimateSpecUI.spanDesc.name=Estimation span",
         "estimateSpecUI.spanDesc.desc=Span used for the estimation of the pre-processing model"
     })
     private EnhancedPropertyDescriptor spanDesc() {

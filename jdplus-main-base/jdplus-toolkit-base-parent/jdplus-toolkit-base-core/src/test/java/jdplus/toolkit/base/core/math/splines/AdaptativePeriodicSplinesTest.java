@@ -76,7 +76,8 @@ public class AdaptativePeriodicSplinesTest {
                     .y(Y)
                     .period(P)
                     .knots(knots)
-                    .fixedKnots(null)
+                    .minKnots(15)
+                    .fixedKnots(fixedKnots)
                     .build();
 
             AdaptativePeriodicSplines kernel = AdaptativePeriodicSplines.of(spec);
