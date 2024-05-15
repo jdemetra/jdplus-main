@@ -16,15 +16,11 @@ import jdplus.toolkit.base.core.ssf.multivariate.MultivariateSsf;
 import java.util.ArrayList;
 import java.util.List;
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.ssf.basic.Loading;
-import jdplus.toolkit.base.core.ssf.basic.MeasurementError;
 import jdplus.toolkit.base.core.ssf.basic.Measurements;
 import jdplus.toolkit.base.core.ssf.basic.MeasurementsError;
 import jdplus.toolkit.base.core.ssf.multivariate.M2uAdapter;
 import jdplus.toolkit.base.core.ssf.univariate.ISsf;
-import jdplus.toolkit.base.core.ssf.univariate.ISsfError;
-import jdplus.toolkit.base.core.ssf.univariate.Measurement;
 
 /**
  *

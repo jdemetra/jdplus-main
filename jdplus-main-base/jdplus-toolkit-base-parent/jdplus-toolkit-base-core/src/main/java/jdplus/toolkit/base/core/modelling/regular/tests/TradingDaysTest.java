@@ -107,7 +107,7 @@ public class TradingDaysTest {
                             .setDefault().build())
                     .build();
             RegArimaEstimation rslt = RegSarimaComputer.PROCESSOR.process(regarima, null);
-            return new JointTest(rslt.getConcentratedLikelihood()).build();
+            return new JointTest(rslt.getConcentratedLikelihood()).hyperParametersCount(seas ? 2 : 1).build();
         } catch (Exception err) {
             return null;
         }

@@ -45,7 +45,7 @@ public class JointTest {
     private FastMatrix R;
     private DoubleSeq alpha;
     private int[] coef;
-    private boolean blue = true, deterministicRegressors = true;
+    private boolean blue = true;
 
     public JointTest(final DoubleSeq coefficients, final FastMatrix unscaledVariance, final double rss, final int n) {
         this.b = coefficients;
@@ -106,7 +106,6 @@ public class JointTest {
     }
 
     public JointTest deterministicRegressors(boolean det) {
-        this.deterministicRegressors=det;
         return this;
     }
 
