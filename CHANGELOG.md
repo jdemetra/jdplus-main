@@ -11,6 +11,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![IO] Fix encoding of space characters in URI [#254](https://github.com/jdemetra/jdplus-main/issues/254)
 
+### Changed
+
+- ![UI] Replace splash screen with AI-generated image by [@jadoull](https://github.com/jadoull)
+
 ## [3.2.2] - 2024-03-14
 
 ### Added
