@@ -16,18 +16,20 @@
  */
 package jdplus.toolkit.desktop.plugin.util;
 
+import ec.util.chart.swing.Charts;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+import jdplus.toolkit.base.tsp.FileLoader;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
 import jdplus.toolkit.desktop.plugin.DemetraUI;
 import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.concurrent.ThreadPriority;
+import jdplus.toolkit.desktop.plugin.concurrent.UIExecutors;
 import jdplus.toolkit.desktop.plugin.core.star.StarStep;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruProvidersStep;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruWorkspacesStep;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
-import jdplus.toolkit.base.api.timeseries.TsProvider;
-import jdplus.toolkit.base.tsp.FileLoader;
-import ec.util.chart.swing.Charts;
 import nbbrd.design.MightBePromoted;
 import nbbrd.io.FileParser;
 import nbbrd.io.text.Formatter;
@@ -41,14 +43,18 @@ import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -66,7 +72,8 @@ public final class Installer extends ModuleInstall {
             new MruWorkspacesStep(),
             new JFreeChartStep(),
             new StarStep(),
-            new DemetraOptionsStep()
+            new DemetraOptionsStep(),
+            new FileChooserStep()
     );
 
     @Override
@@ -271,6 +278,48 @@ public final class Installer extends ModuleInstall {
                 prefs.flush();
             } catch (BackingStoreException ex) {
                 Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+
+    private static final class FileChooserStep extends InstallerStep {
+
+        @Override
+        public void restore() {
+            UIExecutors.newSingleThreadExecutor(ThreadPriority.MIN)
+                    .execute(FileChooserStep::warmupFileSystemView);
+        }
+
+        private static void warmupFileSystemView() {
+            try {
+                Stopwatch stopwatch = Stopwatch.createStarted();
+                List<SystemFile> files = SystemFile.load();
+                log.log(Level.INFO, "FileSystemView warmed up on " + files.size() + " files in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
+            } catch (RuntimeException ex) {
+                log.log(Level.WARNING, "Failed to warmup FileSystemView", ex);
+            }
+        }
+
+        private record SystemFile(File file, String displayName, Icon icon) {
+
+            static List<SystemFile> load() {
+                FileSystemView fsv = FileSystemView.getFileSystemView();
+                Dimension shortcutsIconSize = getShortcutsIconSize();
+                return Stream.concat(
+                                Stream.of(fsv.getChooserComboBoxFiles()).map(f -> SystemFile.of(f, fsv, null)),
+                                Stream.of(fsv.getChooserShortcutPanelFiles()).map(f -> SystemFile.of(f, fsv, shortcutsIconSize)))
+                        .toList();
+            }
+
+            private static SystemFile of(File file, FileSystemView fsv, Dimension size) {
+                return size == null
+                        ? new SystemFile(file, fsv.getSystemDisplayName(file), fsv.getSystemIcon(file))
+                        : new SystemFile(file, fsv.getSystemDisplayName(file), fsv.getSystemIcon(file, size.width, size.height));
+            }
+
+            private static Dimension getShortcutsIconSize() {
+                Dimension result = UIManager.getDimension("FileChooser.shortcuts.iconSize");
+                return result == null ? new Dimension(32, 32) : result;
             }
         }
     }
