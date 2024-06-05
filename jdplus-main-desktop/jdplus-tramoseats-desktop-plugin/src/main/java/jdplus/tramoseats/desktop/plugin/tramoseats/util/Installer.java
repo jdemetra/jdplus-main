@@ -16,18 +16,12 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramoseats.util;
 
-import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.util.InstallerStep;
 import jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddies;
 import jdplus.tramoseats.desktop.plugin.tramoseats.ui.TramoSeatsUI;
-import jdplus.toolkit.desktop.plugin.util.InstallerStep;
-
-import static jdplus.toolkit.desktop.plugin.util.InstallerStep.tryGet;
-import java.util.prefs.BackingStoreException;
-
 import org.openide.modules.ModuleInstall;
 
 import java.util.prefs.Preferences;
-import org.openide.util.Exceptions;
 
 public final class Installer extends ModuleInstall {
 
@@ -63,16 +57,7 @@ public final class Installer extends ModuleInstall {
         @Override
         public void close() {
             TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                Config config = buddy.getConfig();
-                if (config != null){
-                    Preferences nprefs = prefs.node(buddy.getDisplayName());
-                    put(nprefs, config);
-                    try {
-                        nprefs.flush();
-                    } catch (BackingStoreException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
+                set(prefs.node(buddy.getDisplayName()), buddy.getConfig());
             });
         }
     }
@@ -89,13 +74,7 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void close() {
-            TramoSeatsUI ui = TramoSeatsUI.get();
-            put(prefs, ui.getConfig());
-            try {
-                prefs.flush();
-            } catch (BackingStoreException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            set(prefs, TramoSeatsUI.get().getConfig());
         }
     }
 }

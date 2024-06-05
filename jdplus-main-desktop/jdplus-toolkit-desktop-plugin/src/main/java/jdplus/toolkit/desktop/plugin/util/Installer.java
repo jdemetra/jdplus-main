@@ -262,23 +262,14 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-            DemetraUI ui = DemetraUI.get();
-            tryGet(prefs.node(UI)).ifPresent(ui::setConfig);
-            DemetraBehaviour behaviour = DemetraBehaviour.get();
-            tryGet(prefs.node(BEHAVIOUR)).ifPresent(behaviour::setConfig);
+            tryGet(prefs.node(UI)).ifPresent(DemetraUI.get()::setConfig);
+            tryGet(prefs.node(BEHAVIOUR)).ifPresent(DemetraBehaviour.get()::setConfig);
         }
 
         @Override
         public void close() {
-            DemetraUI ui = DemetraUI.get();
-            put(prefs.node(UI), ui.getConfig());
-            DemetraBehaviour behaviour = DemetraBehaviour.get();
-            put(prefs.node(BEHAVIOUR), behaviour.getConfig());
-            try {
-                prefs.flush();
-            } catch (BackingStoreException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            set(prefs.node(UI), DemetraUI.get().getConfig());
+            set(prefs.node(BEHAVIOUR), DemetraBehaviour.get().getConfig());
         }
     }
 

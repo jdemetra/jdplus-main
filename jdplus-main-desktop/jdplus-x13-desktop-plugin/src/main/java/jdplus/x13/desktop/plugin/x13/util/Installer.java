@@ -16,23 +16,19 @@
  */
 package jdplus.x13.desktop.plugin.x13.util;
 
-import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.ArrayRenderer;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.CustomPropertyEditorRegistry;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.CustomPropertyRendererFactory;
 import jdplus.toolkit.desktop.plugin.util.InstallerStep;
+import jdplus.x13.base.api.x11.SeasonalFilterOption;
+import jdplus.x13.base.api.x11.SigmaVecOption;
 import jdplus.x13.desktop.plugin.x13.descriptors.SeasonalFilterPropertyEditor;
+import jdplus.x13.desktop.plugin.x13.descriptors.SigmaVecPropertyEditor;
 import jdplus.x13.desktop.plugin.x13.diagnostics.X13DiagnosticsFactoryBuddies;
 import jdplus.x13.desktop.plugin.x13.ui.X13UI;
-import jdplus.x13.base.api.x11.SeasonalFilterOption;
-import java.util.prefs.BackingStoreException;
-
 import org.openide.modules.ModuleInstall;
 
 import java.util.prefs.Preferences;
-import jdplus.x13.base.api.x11.SigmaVecOption;
-import jdplus.x13.desktop.plugin.x13.descriptors.SigmaVecPropertyEditor;
-import org.openide.util.Exceptions;
 
 public final class Installer extends ModuleInstall {
 
@@ -68,14 +64,7 @@ public final class Installer extends ModuleInstall {
         @Override
         public void close() {
             X13DiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy -> {
-                Config config = buddy.getConfig();
-                Preferences nprefs = prefs.node(buddy.getDisplayName());
-                put(nprefs, config);
-                try {
-                    nprefs.flush();
-                } catch (BackingStoreException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                set(prefs.node(buddy.getDisplayName()), buddy.getConfig());
             });
         }
     }
@@ -109,13 +98,7 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void close() {
-            X13UI ui = X13UI.get();
-            put(prefs, ui.getConfig());
-            try {
-                prefs.flush();
-            } catch (BackingStoreException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            set(prefs, X13UI.get().getConfig());
         }
     }
 

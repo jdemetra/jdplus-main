@@ -16,25 +16,19 @@
  */
 package jdplus.sa.desktop.plugin.util;
 
-import jdplus.toolkit.desktop.plugin.Config;
-import jdplus.sa.desktop.plugin.output.OutputFactoryBuddies;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariablesEditor;
 import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
 import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptorsEditor;
+import jdplus.sa.desktop.plugin.output.OutputFactoryBuddies;
 import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.ArrayRenderer;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.CustomPropertyEditorRegistry;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.CustomPropertyRendererFactory;
 import jdplus.toolkit.desktop.plugin.util.InstallerStep;
-
-import static jdplus.toolkit.desktop.plugin.util.InstallerStep.tryGet;
-import java.util.prefs.BackingStoreException;
-
 import org.openide.modules.ModuleInstall;
 
 import java.util.prefs.Preferences;
-import org.openide.util.Exceptions;
 
 public final class Installer extends ModuleInstall {
 
@@ -66,13 +60,7 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void close() {
-            DemetraSaUI ui = DemetraSaUI.get();
-            put(prefs, ui.getConfig());
-            try {
-                prefs.flush();
-            } catch (BackingStoreException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            set(prefs, DemetraSaUI.get().getConfig());
         }
     }
     
@@ -91,16 +79,7 @@ public final class Installer extends ModuleInstall {
         @Override
         public void close() {
             OutputFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                Config config = buddy.getConfig();
-                if (config != null){
-                    Preferences nprefs = prefs.node(buddy.getDisplayName());
-                    put(nprefs, config);
-                    try {
-                        nprefs.flush();
-                    } catch (BackingStoreException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
+                set(prefs.node(buddy.getDisplayName()), buddy.getConfig());
             });
         }
     }
