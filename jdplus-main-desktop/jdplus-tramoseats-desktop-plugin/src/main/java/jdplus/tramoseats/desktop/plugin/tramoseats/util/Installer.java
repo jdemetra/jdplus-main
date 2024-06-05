@@ -47,34 +47,30 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                    Preferences nprefs = prefs.node(buddy.getDisplayName());
-                    tryGet(nprefs).ifPresent(buddy::setConfig);
-            });
+            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy-> load(prefs.node(buddy.getDisplayName()), buddy));
             TramoSeatsUI.setDiagnostics();
         }
 
         @Override
         public void close() {
-            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                set(prefs.node(buddy.getDisplayName()), buddy.getConfig());
-            });
+            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy -> store(prefs.node(buddy.getDisplayName()), buddy));
         }
     }
     
     private static final class TramoSeatsOptionsStep extends InstallerStep {
 
-        final Preferences prefs = prefs().node("options");
+        private final Preferences options = prefs().node("options");
 
         @Override
         public void restore() {
-            TramoSeatsUI ui = TramoSeatsUI.get();
-            tryGet(prefs).ifPresent(ui::setConfig);
+            load(options, TramoSeatsUI.get());
         }
 
         @Override
         public void close() {
-            set(prefs, TramoSeatsUI.get().getConfig());
+            store(options, TramoSeatsUI.get());
         }
     }
 }

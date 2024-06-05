@@ -25,6 +25,7 @@ import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.toolkit.desktop.plugin.NamedServiceSupport;
 import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.datatransfer.ts.TxtDataTransfer;
+import lombok.NonNull;
 import nbbrd.design.swing.OnAnyThread;
 import nbbrd.design.swing.OnEDT;
 import internal.text.base.api.TxtFileFilter;
@@ -131,12 +132,12 @@ public final class TxtTsSave implements TsActionSaveSpi, Persistable {
         }
 
         @Override
-        public Config getConfig() {
+        public @NonNull Config getConfig() {
             return PERSISTENCE.loadConfig(this);
         }
 
         @Override
-        public void setConfig(Config config) throws IllegalArgumentException {
+        public void setConfig(@NonNull Config config) throws IllegalArgumentException {
             PERSISTENCE.storeConfig(this, config);
         }
 

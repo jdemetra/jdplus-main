@@ -1,17 +1,17 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.desktop.plugin.util;
@@ -54,36 +54,31 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-            DemetraSaUI ui = DemetraSaUI.get();
-            tryGet(prefs).ifPresent(ui::setConfig);
+            load(prefs, DemetraSaUI.get());
         }
 
         @Override
         public void close() {
-            set(prefs, DemetraSaUI.get().getConfig());
+            store(prefs, DemetraSaUI.get());
         }
     }
-    
-        private static final class SaOutputStep extends InstallerStep {
 
-        final Preferences prefs = prefs().node("outputs");
+    private static final class SaOutputStep extends InstallerStep {
+
+        private final Preferences outputs = prefs().node("outputs");
 
         @Override
         public void restore() {
-            OutputFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                    Preferences nprefs = prefs.node(buddy.getDisplayName());
-                    tryGet(nprefs).ifPresent(buddy::setConfig);
-            });
+            OutputFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy -> load(outputs.node(buddy.getDisplayName()), buddy));
         }
 
         @Override
         public void close() {
-            OutputFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                set(prefs.node(buddy.getDisplayName()), buddy.getConfig());
-            });
+            OutputFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy -> store(outputs.node(buddy.getDisplayName()), buddy));
         }
     }
-    
 
 
     private static final class PropertiesStep extends InstallerStep {

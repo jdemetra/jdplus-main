@@ -35,6 +35,7 @@ import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
 import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
+import lombok.NonNull;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
@@ -78,17 +79,17 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
     }
 
     @Override
-    public Config getConfig() {
+    public @NonNull Config getConfig() {
         return configurator.getConfig(this);
     }
 
     @Override
-    public void setConfig(Config config) throws IllegalArgumentException {
+    public void setConfig(@NonNull Config config) throws IllegalArgumentException {
         configurator.setConfig(this, config);
     }
 
     @Override
-    public Config editConfig(Config config) throws IllegalArgumentException {
+    public @NonNull Config editConfig(@NonNull Config config) throws IllegalArgumentException {
         return configurator.editConfig(config);
     }
 

@@ -54,18 +54,15 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-            X13DiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy -> {
-                Preferences nprefs = prefs.node(buddy.getDisplayName());
-                tryGet(nprefs).ifPresent(buddy::setConfig);
-            });
+            X13DiagnosticsFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy -> load(prefs.node(buddy.getDisplayName()), buddy));
             X13UI.setDiagnostics();
         }
 
         @Override
         public void close() {
-            X13DiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy -> {
-                set(prefs.node(buddy.getDisplayName()), buddy.getConfig());
-            });
+            X13DiagnosticsFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy -> store(prefs.node(buddy.getDisplayName()), buddy));
         }
     }
 
@@ -88,18 +85,16 @@ public final class Installer extends ModuleInstall {
 
     private static final class X13OptionsStep extends InstallerStep {
 
-        final Preferences prefs = prefs().node("options");
+        private final Preferences options = prefs().node("options");
 
         @Override
         public void restore() {
-            X13UI ui = X13UI.get();
-            tryGet(prefs).ifPresent(ui::setConfig);
+            load(options, X13UI.get());
         }
 
         @Override
         public void close() {
-            set(prefs, X13UI.get().getConfig());
+            store(options, X13UI.get());
         }
     }
-
 }

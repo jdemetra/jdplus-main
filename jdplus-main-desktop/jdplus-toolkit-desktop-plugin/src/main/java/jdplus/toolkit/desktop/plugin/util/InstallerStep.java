@@ -5,6 +5,7 @@
 package jdplus.toolkit.desktop.plugin.util;
 
 import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.Persistable;
 import lombok.NonNull;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
@@ -127,6 +128,20 @@ public abstract class InstallerStep {
     @Deprecated
     public static void put(Preferences preferences, Config config) {
         set(preferences, config);
+    }
+
+    public static void load(@NonNull Preferences preferences, @NonNull Persistable persistable) {
+        tryGet(preferences)
+                .filter(config -> isValidConfig(config, persistable))
+                .ifPresent(persistable::setConfig);
+    }
+
+    private static boolean isValidConfig(Config config, Persistable persistable) {
+        return config.getDomain().equals(persistable.getConfig().getDomain());
+    }
+
+    public static void store(@NonNull Preferences preferences, @NonNull Persistable persistable) {
+        set(preferences, persistable.getConfig());
     }
 
     /**
