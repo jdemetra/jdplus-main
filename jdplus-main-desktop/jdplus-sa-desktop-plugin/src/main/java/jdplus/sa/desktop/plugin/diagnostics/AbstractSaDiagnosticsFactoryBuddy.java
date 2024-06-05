@@ -79,7 +79,7 @@ public abstract class AbstractSaDiagnosticsFactoryBuddy<C extends DiagnosticsCon
     }
     
     @Override
-    public Config getConfig(){
+    public @NonNull Config getConfig(){
         return coreConverter.doForward(core);
     }
     

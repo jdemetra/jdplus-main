@@ -133,9 +133,9 @@ public final class Installer extends ModuleInstall {
             Preferences pathsNode = prefs.node("paths");
             for (TsProvider o : providers) {
                 TsManager.get().register(o);
-                if (o instanceof FileLoader) {
+                if (o instanceof FileLoader<?> fileLoader) {
                     tryGet(pathsNode, o.getSource(), pathsParser)
-                            .ifPresent(((FileLoader) o)::setPaths);
+                            .ifPresent(fileLoader::setPaths);
                 }
             }
 //            TsManager.get().register(new PocProvider());
@@ -144,15 +144,15 @@ public final class Installer extends ModuleInstall {
         private void unregister(Iterable<? extends TsProvider> providers) {
             Preferences pathsNode = prefs.node("paths");
             for (TsProvider o : providers) {
-                if (o instanceof FileLoader) {
-                    tryPut(pathsNode, o.getSource(), pathsFormatter, ((FileLoader) o).getPaths());
+                if (o instanceof FileLoader<?> fileLoader) {
+                    tryPut(pathsNode, o.getSource(), pathsFormatter, fileLoader.getPaths());
                 }
                 TsManager.get().unregister(o);
             }
         }
 
         private static <X> List<X> except(List<X> l, List<X> r) {
-            List<X> result = new ArrayList(l);
+            List<X> result = new ArrayList<>(l);
             result.removeAll(r);
             return result;
         }
@@ -256,29 +256,20 @@ public final class Installer extends ModuleInstall {
 
     private static final class DemetraOptionsStep extends InstallerStep {
 
-        final Preferences prefs = prefs().node("options");
+        private final Preferences options = prefs().node("options");
 
         private static final String UI = "ui", BEHAVIOUR = "behaviour";
 
         @Override
         public void restore() {
-            DemetraUI ui = DemetraUI.get();
-            tryGet(prefs.node(UI)).ifPresent(ui::setConfig);
-            DemetraBehaviour behaviour = DemetraBehaviour.get();
-            tryGet(prefs.node(BEHAVIOUR)).ifPresent(behaviour::setConfig);
+            load(options.node(UI), DemetraUI.get());
+            load(options.node(BEHAVIOUR), DemetraBehaviour.get());
         }
 
         @Override
         public void close() {
-            DemetraUI ui = DemetraUI.get();
-            put(prefs.node(UI), ui.getConfig());
-            DemetraBehaviour behaviour = DemetraBehaviour.get();
-            put(prefs.node(BEHAVIOUR), behaviour.getConfig());
-            try {
-                prefs.flush();
-            } catch (BackingStoreException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            store(options.node(UI), DemetraUI.get());
+            store(options.node(BEHAVIOUR), DemetraBehaviour.get());
         }
     }
 

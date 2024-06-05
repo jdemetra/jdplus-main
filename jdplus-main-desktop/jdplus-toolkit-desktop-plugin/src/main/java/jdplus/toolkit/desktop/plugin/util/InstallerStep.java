@@ -5,15 +5,18 @@
 package jdplus.toolkit.desktop.plugin.util;
 
 import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.Persistable;
+import lombok.NonNull;
+import nbbrd.io.text.Formatter;
+import nbbrd.io.text.Parser;
+import org.openide.util.Exceptions;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
+import org.openide.util.NbPreferences;
 
 import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import nbbrd.io.text.Formatter;
-import nbbrd.io.text.Parser;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -119,11 +122,46 @@ public abstract class InstallerStep {
         return true;
     }
 
-    public static void put(Preferences prefs, Config config) {
-        prefs.put("domain", config.getDomain());
-        prefs.put("name", config.getName());
-        prefs.put("version", config.getVersion());
-        config.getParameters().forEach((k, v) -> prefs.put(k, v));
+    /**
+     * @deprecated see {@link #set(Preferences, Config)}
+     */
+    @Deprecated
+    public static void put(Preferences preferences, Config config) {
+        set(preferences, config);
+    }
+
+    public static void load(@NonNull Preferences preferences, @NonNull Persistable persistable) {
+        tryGet(preferences)
+                .filter(config -> isValidConfig(config, persistable))
+                .ifPresent(persistable::setConfig);
+    }
+
+    private static boolean isValidConfig(Config config, Persistable persistable) {
+        return config.getDomain().equals(persistable.getConfig().getDomain());
+    }
+
+    public static void store(@NonNull Preferences preferences, @NonNull Persistable persistable) {
+        set(preferences, persistable.getConfig());
+    }
+
+    /**
+     * Set the specified config parameters into the specified preferences node.
+     * Note that all node items are removed prior to setting new items and the content is automatically flushed.
+     *
+     * @param preferences a non-null preferences node
+     * @param config a non-null config
+     */
+    public static void set(@NonNull Preferences preferences, @NonNull Config config) {
+        try {
+            preferences.clear();
+            preferences.put("domain", config.getDomain());
+            preferences.put("name", config.getName());
+            preferences.put("version", config.getVersion());
+            config.getParameters().forEach(preferences::put);
+            preferences.flush();
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     public static Optional<Config> tryGet(Preferences prefs) {

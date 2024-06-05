@@ -29,6 +29,7 @@ import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import ec.util.spreadsheet.Book;
 import ec.util.spreadsheet.helpers.ArraySheet;
+import lombok.NonNull;
 import nbbrd.design.swing.OnAnyThread;
 import nbbrd.design.swing.OnEDT;
 import java.io.File;
@@ -187,12 +188,12 @@ public final class SpreadsheetTsSave implements TsActionSaveSpi, Persistable {
         }
 
         @Override
-        public Config getConfig() {
+        public @NonNull Config getConfig() {
             return PERSISTENCE.loadConfig(this);
         }
 
         @Override
-        public void setConfig(Config config) throws IllegalArgumentException {
+        public void setConfig(@NonNull Config config) throws IllegalArgumentException {
             PERSISTENCE.storeConfig(this, config);
         }
 
