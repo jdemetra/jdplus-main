@@ -16,6 +16,8 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import lombok.NonNull;
+
 /**
  *
  * @author PALATEJ
@@ -28,7 +30,7 @@ public class StaticTsDataSupplier extends TsDataSupplier{
     TsData data;
     
     @Override
-    public TsData get() {
+    public @NonNull TsData get() {
         return data;
     }
     

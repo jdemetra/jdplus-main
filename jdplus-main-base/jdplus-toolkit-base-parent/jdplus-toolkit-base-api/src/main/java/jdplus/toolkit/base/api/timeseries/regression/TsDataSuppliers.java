@@ -27,12 +27,13 @@ import jdplus.toolkit.base.api.util.NameManager;
  * @author Jean Palate
  */
 @Development(status=Development.Status.Release)
-public class TsDataSuppliers extends NameManager<TsDataSupplier> {
+public final class TsDataSuppliers extends NameManager<TsDataSupplier> {
 
-    public static final String X = "x_";
+    private static final String DEFAULT_PREFIX = "x_";
+    public static final String DEFAULT_INVALID_CHARS = ".+-*/";
 
     public TsDataSuppliers() {
-        super(TsDataSupplier.class, X, new DefaultNameValidator(".+-*/"));
+        super(TsDataSupplier.class, DEFAULT_PREFIX, new DefaultNameValidator(DEFAULT_INVALID_CHARS));
     }
 
     public TsDataSuppliers(String prefix, INameValidator validator) {
