@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![UI] Add link to online help documentation [#217](https://github.com/jdemetra/jdplus-main/issues/217)
+
 ### Fixed
 
 - ![IO] Fix encoding of space characters in URI [#254](https://github.com/jdemetra/jdplus-main/issues/254)
