@@ -19,6 +19,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix slow dialog box when opening a file [#313](https://github.com/jdemetra/jdplus-main/issues/313)
 - ![UI] Fix option show-provider-nodes cannot be reset between sessions [#292](https://github.com/jdemetra/jdplus-main/issues/292)
 - ![UI] Fix missing description field [#291](https://github.com/jdemetra/jdplus-main/issues/291)
+- ![UI] Fix "Copy spec. to workspace" button [#228](https://github.com/jdemetra/jdplus-main/issues/228)
 
 ### Changed
 
