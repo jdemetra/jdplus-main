@@ -1,68 +1,74 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.util;
 
+import lombok.NonNull;
+
+import java.util.Arrays;
+
 /**
- *
  * @author Jean Palate
  */
-public class DefaultNameValidator implements INameValidator {
+@lombok.ToString(of = "invalidChars")
+public final class DefaultNameValidator implements INameValidator {
 
-    private final CharSequence ex;
-    private String msg;
-    private static final String EMPTY_ERROR = "The name can't be empty",
-            WS_ERROR = "The name can't contain leading or trailing ws";
+    private static final String EMPTY_ERROR = "The name can't be empty";
+    private static final String WS_ERROR = "The name can't contain leading or trailing ws";
 
-    public DefaultNameValidator(CharSequence ex) {
-        this.ex = ex;
-    }
+    private final char[] invalidChars;
+    private String lastError;
 
-    private String error(char c) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("The name can't contain '").append(c).append('\'');
-        return builder.toString();
+    public DefaultNameValidator(String invalidChars) {
+        this.invalidChars = invalidChars.toCharArray();
     }
 
     @Override
     public boolean accept(String name) {
-        msg = null;
         if (name == null || name.isEmpty()) {
-            msg = EMPTY_ERROR;
+            lastError = EMPTY_ERROR;
             return false;
         }
 
         if (Character.isWhitespace(name.charAt(0)) || Character.isWhitespace(name.charAt(name.length() - 1))) {
-            msg = WS_ERROR;
+            lastError = WS_ERROR;
             return false;
         }
 
-        for (int i = 0; i < ex.length(); ++i) {
-            char c = ex.charAt(i);
+        for (char c : invalidChars) {
             if (name.indexOf(c) >= 0) {
-                msg = error(c);
+                lastError = error(c);
                 return false;
             }
         }
+
+        lastError = null;
         return true;
+    }
+
+    public char[] getInvalidChars() {
+        return invalidChars.clone();
     }
 
     @Override
     public String getLastError() {
-        return msg;
+        return lastError;
     }
 
+    private static String error(char c) {
+        return "The name can't contain '" + c + "'";
+    }
 }

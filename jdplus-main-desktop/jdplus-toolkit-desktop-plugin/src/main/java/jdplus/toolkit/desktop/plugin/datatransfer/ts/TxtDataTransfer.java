@@ -28,6 +28,7 @@ import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
+import lombok.NonNull;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Parser;
 import org.openide.nodes.Sheet;
@@ -177,17 +178,17 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
 
     //<editor-fold defaultstate="collapsed" desc="IConfigurable">
     @Override
-    public Config getConfig() {
+    public @NonNull Config getConfig() {
         return configurator.getConfig(this);
     }
 
     @Override
-    public void setConfig(Config config) {
+    public void setConfig(@NonNull Config config) {
         configurator.setConfig(this, config);
     }
 
     @Override
-    public Config editConfig(Config config) {
+    public @NonNull Config editConfig(@NonNull Config config) {
         return configurator.editConfig(config);
     }
 

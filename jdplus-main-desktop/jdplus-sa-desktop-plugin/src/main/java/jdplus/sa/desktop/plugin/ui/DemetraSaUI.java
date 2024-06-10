@@ -173,7 +173,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
     private static final String DOMAIN = DemetraSaUI.class.getName(), NAME = "demetra-sa", VERSION = "3.0.0";
 
     @Override
-    public Config getConfig() {
+    public @NonNull Config getConfig() {
         Config.Builder b = Config.builder(DOMAIN, NAME, VERSION);
         SPECTRAL_LAST_YEARS_CONFIG.set(b::parameter, getSpectralLastYears());
         SEASONALITY_LENGTH_CONFIG.set(b::parameter, getSeasonalityLength());
@@ -186,7 +186,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
     }
 
     @Override
-    public void setConfig(Config config) {
+    public void setConfig(@NonNull Config config) {
         Config.checkDomain(config, DOMAIN);
         setSpectralLastYears(SPECTRAL_LAST_YEARS_CONFIG.get(config::getParameter));
         setSeasonalityLength(SEASONALITY_LENGTH_CONFIG.get(config::getParameter));

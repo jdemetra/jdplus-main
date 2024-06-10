@@ -129,17 +129,17 @@ public final class JTsChart extends JComponent implements TimeSeriesComponent, P
     }
 
     @Override
-    public Config getConfig() {
+    public @NonNull Config getConfig() {
         return JTsChartConfig.CONFIGURATOR.getConfig(this);
     }
 
     @Override
-    public void setConfig(Config config) {
+    public void setConfig(@NonNull Config config) {
         JTsChartConfig.CONFIGURATOR.setConfig(this, config);
     }
 
     @Override
-    public Config editConfig(Config config) {
+    public @NonNull Config editConfig(@NonNull Config config) {
         return JTsChartConfig.CONFIGURATOR.editConfig(config);
     }
 

@@ -16,18 +16,20 @@
  */
 package jdplus.toolkit.desktop.plugin.util;
 
+import ec.util.chart.swing.Charts;
+import jdplus.toolkit.base.api.timeseries.TsProvider;
+import jdplus.toolkit.base.tsp.FileLoader;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
 import jdplus.toolkit.desktop.plugin.DemetraUI;
 import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.concurrent.ThreadPriority;
+import jdplus.toolkit.desktop.plugin.concurrent.UIExecutors;
 import jdplus.toolkit.desktop.plugin.core.star.StarStep;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruProvidersStep;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruWorkspacesStep;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
-import jdplus.toolkit.base.api.timeseries.TsProvider;
-import jdplus.toolkit.base.tsp.FileLoader;
-import ec.util.chart.swing.Charts;
 import nbbrd.design.MightBePromoted;
 import nbbrd.io.FileParser;
 import nbbrd.io.text.Formatter;
@@ -41,14 +43,18 @@ import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -66,7 +72,8 @@ public final class Installer extends ModuleInstall {
             new MruWorkspacesStep(),
             new JFreeChartStep(),
             new StarStep(),
-            new DemetraOptionsStep()
+            new DemetraOptionsStep(),
+            new FileChooserStep()
     );
 
     @Override
@@ -126,9 +133,9 @@ public final class Installer extends ModuleInstall {
             Preferences pathsNode = prefs.node("paths");
             for (TsProvider o : providers) {
                 TsManager.get().register(o);
-                if (o instanceof FileLoader) {
+                if (o instanceof FileLoader<?> fileLoader) {
                     tryGet(pathsNode, o.getSource(), pathsParser)
-                            .ifPresent(((FileLoader) o)::setPaths);
+                            .ifPresent(fileLoader::setPaths);
                 }
             }
 //            TsManager.get().register(new PocProvider());
@@ -137,15 +144,15 @@ public final class Installer extends ModuleInstall {
         private void unregister(Iterable<? extends TsProvider> providers) {
             Preferences pathsNode = prefs.node("paths");
             for (TsProvider o : providers) {
-                if (o instanceof FileLoader) {
-                    tryPut(pathsNode, o.getSource(), pathsFormatter, ((FileLoader) o).getPaths());
+                if (o instanceof FileLoader<?> fileLoader) {
+                    tryPut(pathsNode, o.getSource(), pathsFormatter, fileLoader.getPaths());
                 }
                 TsManager.get().unregister(o);
             }
         }
 
         private static <X> List<X> except(List<X> l, List<X> r) {
-            List<X> result = new ArrayList(l);
+            List<X> result = new ArrayList<>(l);
             result.removeAll(r);
             return result;
         }
@@ -249,28 +256,61 @@ public final class Installer extends ModuleInstall {
 
     private static final class DemetraOptionsStep extends InstallerStep {
 
-        final Preferences prefs = prefs().node("options");
+        private final Preferences options = prefs().node("options");
 
         private static final String UI = "ui", BEHAVIOUR = "behaviour";
 
         @Override
         public void restore() {
-            DemetraUI ui = DemetraUI.get();
-            tryGet(prefs.node(UI)).ifPresent(ui::setConfig);
-            DemetraBehaviour behaviour = DemetraBehaviour.get();
-            tryGet(prefs.node(BEHAVIOUR)).ifPresent(behaviour::setConfig);
+            load(options.node(UI), DemetraUI.get());
+            load(options.node(BEHAVIOUR), DemetraBehaviour.get());
         }
 
         @Override
         public void close() {
-            DemetraUI ui = DemetraUI.get();
-            put(prefs.node(UI), ui.getConfig());
-            DemetraBehaviour behaviour = DemetraBehaviour.get();
-            put(prefs.node(BEHAVIOUR), behaviour.getConfig());
+            store(options.node(UI), DemetraUI.get());
+            store(options.node(BEHAVIOUR), DemetraBehaviour.get());
+        }
+    }
+
+    private static final class FileChooserStep extends InstallerStep {
+
+        @Override
+        public void restore() {
+            UIExecutors.newSingleThreadExecutor(ThreadPriority.MIN)
+                    .execute(FileChooserStep::warmupFileSystemView);
+        }
+
+        private static void warmupFileSystemView() {
             try {
-                prefs.flush();
-            } catch (BackingStoreException ex) {
-                Exceptions.printStackTrace(ex);
+                Stopwatch stopwatch = Stopwatch.createStarted();
+                List<SystemFile> files = SystemFile.load();
+                log.log(Level.INFO, "FileSystemView warmed up on " + files.size() + " files in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
+            } catch (RuntimeException ex) {
+                log.log(Level.WARNING, "Failed to warmup FileSystemView", ex);
+            }
+        }
+
+        private record SystemFile(File file, String displayName, Icon icon) {
+
+            static List<SystemFile> load() {
+                FileSystemView fsv = FileSystemView.getFileSystemView();
+                Dimension shortcutsIconSize = getShortcutsIconSize();
+                return Stream.concat(
+                                Stream.of(fsv.getChooserComboBoxFiles()).map(f -> SystemFile.of(f, fsv, null)),
+                                Stream.of(fsv.getChooserShortcutPanelFiles()).map(f -> SystemFile.of(f, fsv, shortcutsIconSize)))
+                        .toList();
+            }
+
+            private static SystemFile of(File file, FileSystemView fsv, Dimension size) {
+                return size == null
+                        ? new SystemFile(file, fsv.getSystemDisplayName(file), fsv.getSystemIcon(file))
+                        : new SystemFile(file, fsv.getSystemDisplayName(file), fsv.getSystemIcon(file, size.width, size.height));
+            }
+
+            private static Dimension getShortcutsIconSize() {
+                Dimension result = UIManager.getDimension("FileChooser.shortcuts.iconSize");
+                return result == null ? new Dimension(32, 32) : result;
             }
         }
     }

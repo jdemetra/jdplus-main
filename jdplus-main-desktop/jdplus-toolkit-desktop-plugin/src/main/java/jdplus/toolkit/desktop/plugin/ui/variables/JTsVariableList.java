@@ -16,61 +16,52 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.variables;
 
+import ec.util.grid.swing.XTable;
+import ec.util.table.swing.JTables;
+import ec.util.various.swing.JCommand;
 import jdplus.main.desktop.design.SwingAction;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
+import jdplus.toolkit.base.api.util.DefaultNameValidator;
+import jdplus.toolkit.base.api.util.INameValidator;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.tsp.util.ShortLivedCache;
+import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
 import jdplus.toolkit.desktop.plugin.NamedService;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsActionSupport;
 import jdplus.toolkit.desktop.plugin.TsActionManager;
 import jdplus.toolkit.desktop.plugin.TsManager;
-import jdplus.toolkit.desktop.plugin.util.NbComponents;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsAction;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsActionSupport;
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsSparklineCellRenderer;
+import jdplus.toolkit.desktop.plugin.notification.NotifyUtil;
 import jdplus.toolkit.desktop.plugin.util.ActionMaps;
 import jdplus.toolkit.desktop.plugin.util.InputMaps;
 import jdplus.toolkit.desktop.plugin.util.KeyStrokes;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsSparklineCellRenderer;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.TransferHandler;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
+import lombok.NonNull;
+import nbbrd.design.MightBePromoted;
+import nbbrd.design.SkipProcessing;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsAction;
-import ec.util.table.swing.JTables;
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
-import jdplus.main.desktop.design.SwingComponent;
-import jdplus.toolkit.base.api.timeseries.DynamicTsDataSupplier;
-import jdplus.toolkit.base.api.timeseries.StaticTsDataSupplier;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsDataSupplier;
-import jdplus.toolkit.base.api.timeseries.TsFactory;
-import jdplus.toolkit.base.api.timeseries.TsInformationType;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
-import jdplus.toolkit.base.api.util.MultiLineNameUtil;
-import ec.util.grid.swing.XTable;
-import ec.util.various.swing.JCommand;
-import nbbrd.design.SkipProcessing;
+
+import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.time.Duration;
+import java.util.function.UnaryOperator;
 
 /**
- *
  * @author Jean Palate
  */
 @SwingComponent
@@ -112,7 +103,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         add(NbComponents.newJScrollPane(table), BorderLayout.CENTER);
     }
 
-    protected JPopupMenu buildPopupMenu() {
+    private JPopupMenu buildPopupMenu() {
         ActionMap actionMap = getActionMap();
 
         JMenu result = new JMenu();
@@ -130,7 +121,11 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         result.add(item);
 
         item = new JMenuItem(actionMap.get(RENAME_ACTION));
-        item.setText("Rename");
+        item.setText("Rename...");
+        result.add(item);
+
+        item = new JMenuItem(RenameUsingDescriptionCommand.INSTANCE.toAction(this));
+        item.setText("Rename using description");
         result.add(item);
 
         result.addSeparator();
@@ -162,8 +157,9 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         result.setNoDataRenderer(new XTable.DefaultNoDataRenderer("Drop data here", "Drop data here"));
 
         result.setDefaultRenderer(TsData.class, new TsSparklineCellRenderer());
-        result.setDefaultRenderer(TsPeriod.class, new TsPeriodTableCellRenderer());
-        result.setDefaultRenderer(String.class, new MultiLineNameTableCellRenderer());
+        result.setDefaultRenderer(TsPeriod.class, JTables.cellRendererOf(JTsVariableList::renderPeriod));
+        result.setDefaultRenderer(TsMoniker.class, JTables.cellRendererOf(JTsVariableList::renderMoniker));
+        result.setDefaultRenderer(String.class, JTables.cellRendererOf(JTsVariableList::renderMultiLine));
 
         result.setModel(new CustomTableModel());
         JTables.setWidthAsPercentages(result, .1, .1, .1, .1, .3);
@@ -224,28 +220,44 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         ((CustomTableModel) table.getModel()).fireTableStructureChanged();
     }
 
-    private static final class MultiLineNameTableCellRenderer extends DefaultTableCellRenderer {
+    private static final ShortLivedCache<TsMoniker, String> DESCRIPTION_CACHE = ShortLivedCachingLoader.get().ofTtl(Duration.ofMinutes(5));
 
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel result = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value instanceof String) {
-                String text = (String) value;
-                if (text.isEmpty()) {
-                    result.setText(" ");
-                    result.setToolTipText(null);
-                } else if (text.startsWith("<html>")) {
-                    result.setText(text);
-                    result.setToolTipText(text);
-                } else {
-                    result.setText(MultiLineNameUtil.join(text));
-                    result.setToolTipText(MultiLineNameUtil.toHtml(text));
-                }
-            }
-            return result;
+    // FIXME: this is a quick&dirty fix; should be replaced by a proper cache+async solution
+    private static String getDescription(TsMoniker moniker) {
+        String result = DESCRIPTION_CACHE.get(moniker);
+        if (result == null) {
+            // Possibly slow retrieval
+            result = TsFactory.getDefault().makeTs(moniker, TsInformationType.None).getName();
+            DESCRIPTION_CACHE.put(moniker, result);
+        }
+        return result;
+    }
+
+    private static void renderPeriod(JLabel label, TsPeriod value) {
+        label.setHorizontalAlignment(SwingConstants.TRAILING);
+    }
+
+    private static void renderMoniker(JLabel label, TsMoniker value) {
+        renderMultiLine(label, value != null ? getDescription(value) : null);
+    }
+
+    private static void renderMultiLine(JLabel label, String value) {
+        if (value == null) {
+            label.setText(null);
+            label.setToolTipText(null);
+        } else if (value.isEmpty()) {
+            label.setText(" ");
+            label.setToolTipText(null);
+        } else if (value.startsWith("<html>")) {
+            label.setText(value);
+            label.setToolTipText(value);
+        } else {
+            label.setText(MultiLineNameUtil.join(value));
+            label.setToolTipText(MultiLineNameUtil.toHtml(value));
         }
     }
-    private static final String[] information = new String[]{"Name", "Type", "Start", "End", "Data"};
+
+    private static final String[] COLUMNS = new String[]{"Name", "Description", "Type", "Start", "End", "Data"};
 
     private class CustomTableModel extends AbstractTableModel {
 
@@ -268,56 +280,38 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
 
         @Override
         public int getColumnCount() {
-            return 5;
+            return COLUMNS.length;
         }
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            if (columnIndex == 0) {
-                return names[rowIndex];
-            }
+            String name = names[rowIndex];
 
-            TsDataSupplier var = variables.get(names[rowIndex]);
-                TsData data = var.get();
-            switch (columnIndex) {
-                case 0:
-                    return names[rowIndex];
-                case 1:
-                    return var.getClass().getSimpleName();
-                case 2:
-                    if (data != null)
-                        return data.getStart();
-                    break;
-                case 3: 
-                   if (data != null)
-                        return data.getEnd().previous();
-                   break;
-                case 4: 
-                    return data;                
-                default:
-                    return null;
-            }
-            return null;
+            return switch (columnIndex) {
+                case 0 -> name;
+                case 1 -> variables.get(name) instanceof DynamicTsDataSupplier supplier ? supplier.getMoniker() : null;
+                case 2 -> variables.get(name) instanceof DynamicTsDataSupplier ? "Dynamic" : "Static";
+                case 3 -> variables.get(name).get().getStart();
+                case 4 -> variables.get(name).get().getEnd().previous();
+                case 5 -> variables.get(name).get();
+                default -> null;
+            };
         }
 
         @Override
         public String getColumnName(int column) {
-            return information[column];
+            return COLUMNS[column];
         }
 
         @Override
         public Class<?> getColumnClass(int columnIndex) {
-            switch (columnIndex) {
-                case 1:
-                    return String.class;
-                case 2:
-                case 3:
-                    return TsPeriod.class;
-                case 4:
-                    return TsData.class;
-
-            }
-            return super.getColumnClass(columnIndex);
+            return switch (columnIndex) {
+                case 0, 2 -> String.class;
+                case 1 -> TsMoniker.class;
+                case 3, 4 -> TsPeriod.class;
+                case 5 -> TsData.class;
+                default -> super.getColumnClass(columnIndex);
+            };
         }
     }
 
@@ -373,7 +367,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         am.put(OPEN_ACTION, OpenCommand.INSTANCE.toAction(this));
         am.put(RENAME_ACTION, RenameCommand.INSTANCE.toAction(this));
         am.put(DELETE_ACTION, DeleteCommand.INSTANCE.toAction(this));
-//        am.put(CLEAR_ACTION, ClearCommand.INSTANCE.toAction(this));
+        am.put(CLEAR_ACTION, ClearCommand.INSTANCE.toAction(this));
         ActionMaps.copyEntries(am, false, table.getActionMap());
     }
 
@@ -396,17 +390,16 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
     private JMenu buildOpenWithMenu() {
         JMenu result = new JMenu(OpenWithCommand.INSTANCE.toAction(this));
 
-//        for (NamedService o : TsActions.getDefault().getOpenActions()) {
-//            JMenuItem item = new JMenuItem(new OpenWithItemCommand(o).toAction(this));
-//            item.setName(o.getName());
-//            item.setText(o.getDisplayName());
-//            result.add(item);
-//        }
+        for (NamedService o : TsActionManager.get().getOpenActions()) {
+            JMenuItem item = new JMenuItem(new OpenWithItemCommand(o).toAction(this));
+            item.setName(o.getName());
+            item.setText(o.getDisplayName());
+            result.add(item);
+        }
 
         return result;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Commands">
     private static String getSelectedVariable(JTsVariableList c) {
         if (c.table.getSelectedRowCount() == 1) {
             int idx = c.table.convertRowIndexToModel(c.table.getSelectedRow());
@@ -417,13 +410,10 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
 
     private static Ts toTs(TsDataSuppliers vars, String name) {
         TsDataSupplier variable = vars.get(name);
-        if (variable == null)
-            return null;
-        return variable instanceof DynamicTsDataSupplier
-                ? TsFactory.getDefault()
-                        .makeTs( ((DynamicTsDataSupplier) variable).getMoniker(), TsInformationType.None)
-                        
-                :  Ts.of(name, variable.get());
+        if (variable == null) return null;
+        return variable instanceof DynamicTsDataSupplier dynamicSupplier
+                ? TsFactory.getDefault().makeTs(dynamicSupplier.getMoniker(), TsInformationType.None)
+                : Ts.of(name, variable.get());
     }
 
     private static final class OpenCommand extends JCommand<JTsVariableList> {
@@ -431,23 +421,25 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         public static final OpenCommand INSTANCE = new OpenCommand();
 
         @Override
-        public void execute(JTsVariableList c) throws Exception {
+        public void execute(JTsVariableList c) {
             String actionName = c.getTsAction();
             if (actionName == null) {
                 actionName = DemetraBehaviour.get().getTsActionName();
             }
             String selectedVariable = getSelectedVariable(c);
-            if (selectedVariable != null)
-            TsActionManager.get().openWith(toTs(c.variables, selectedVariable), actionName);
+            if (selectedVariable != null) {
+                Ts ts = toTs(c.variables, selectedVariable);
+                if (ts != null) TsActionManager.get().openWith(ts, actionName);
+            }
         }
 
         @Override
-        public boolean isEnabled(JTsVariableList c) {
+        public boolean isEnabled(@NonNull JTsVariableList c) {
             return getSelectedVariable(c) != null;
         }
 
         @Override
-        public ActionAdapter toAction(JTsVariableList c) {
+        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
@@ -457,7 +449,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         public static final OpenWithCommand INSTANCE = new OpenWithCommand();
 
         @Override
-        public void execute(JTsVariableList c) throws Exception {
+        public void execute(@NonNull JTsVariableList ignore) {
             // do nothing
         }
 
@@ -467,7 +459,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public JCommand.ActionAdapter toAction(JTsVariableList c) {
+        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
@@ -478,8 +470,9 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         private final NamedService tsAction;
 
         @Override
-        public void execute(JTsVariableList c) throws Exception {
-            TsActionManager.get().openWith(toTs(c.variables, getSelectedVariable(c)), tsAction.getName());
+        public void execute(JTsVariableList c) {
+            Ts ts = toTs(c.variables, getSelectedVariable(c));
+            if (ts != null) TsActionManager.get().openWith(ts, tsAction.getName());
         }
     }
 
@@ -488,13 +481,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         public static final RenameCommand INSTANCE = new RenameCommand();
 
         @Override
-        public void execute(JTsVariableList c) throws java.lang.Exception {
-            int[] sel = c.table.getSelectedRows();
-            if (sel.length != 1) {
-                return;
-            }
-
-            String oldName = c.names(sel)[0], newName;
+        public void execute(JTsVariableList c) {
+            String oldName = c.names(c.table.getSelectedRows())[0], newName;
             VarName nd = new VarName(c.variables, "New name:", "Please enter the new name", oldName);
             if (DialogDisplayer.getDefault().notify(nd) != NotifyDescriptor.OK_OPTION) {
                 return;
@@ -513,8 +501,64 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public ActionAdapter toAction(JTsVariableList c) {
+        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
+        }
+    }
+
+    private static final class RenameUsingDescriptionCommand extends JCommand<JTsVariableList> {
+
+        public static final RenameUsingDescriptionCommand INSTANCE = new RenameUsingDescriptionCommand();
+
+        @Override
+        public void execute(JTsVariableList c) {
+            UnaryOperator<String> nameFixer = getNameFixer(c.variables.getNameValidator(), '_');
+
+            for (String oldName : c.names(c.table.getSelectedRows())) {
+                TsDataSupplier supplier = c.variables.get(oldName);
+                if (supplier instanceof DynamicTsDataSupplier dynamic) {
+                    String description = getDescription(dynamic.getMoniker());
+                    c.variables.rename(oldName, nameFixer.apply(description));
+                }
+            }
+
+            ((CustomTableModel) c.table.getModel()).fireTableStructureChanged();
+        }
+
+        private static boolean isReplaceable(char[] invalidChars, char fallbackChar) {
+            return String.valueOf(invalidChars).indexOf(fallbackChar) == -1;
+        }
+
+        private static String replaceChars(String text, char[] invalidChars, char fallbackChar) {
+            for (char c : invalidChars) {
+                text = text.replace(c, fallbackChar);
+            }
+            return text;
+        }
+
+        @SuppressWarnings("SameParameterValue")
+        private static UnaryOperator<String> getNameFixer(INameValidator validator, char fallbackChar) {
+            if (validator instanceof DefaultNameValidator defaultNameValidator) {
+                char[] invalidChars = defaultNameValidator.getInvalidChars();
+                if (isReplaceable(invalidChars, fallbackChar))
+                    return name -> replaceChars(name, invalidChars, fallbackChar);
+            }
+            return UnaryOperator.identity();
+        }
+
+        @Override
+        public boolean isEnabled(JTsVariableList c) {
+            return !c.table.getSelectionModel().isSelectionEmpty();
+        }
+
+        @Override
+        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
+            return new ActionAdapter(c) {
+                @Override
+                public void handleException(ActionEvent event, Exception ex) {
+                    NotifyUtil.error("Renaming", "Failed to rename item", ex);
+                }
+            }.withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
 
@@ -523,18 +567,13 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         public static final DeleteCommand INSTANCE = new DeleteCommand();
 
         @Override
-        public void execute(JTsVariableList c) throws java.lang.Exception {
-            int[] sel = c.table.getSelectedRows();
-            if (sel.length == 0) {
-                return;
-            }
+        public void execute(@NonNull JTsVariableList c) {
             NotifyDescriptor nd = new NotifyDescriptor.Confirmation("Are you sure you want to delete the selected items?", NotifyDescriptor.OK_CANCEL_OPTION);
             if (DialogDisplayer.getDefault().notify(nd) != NotifyDescriptor.OK_OPTION) {
                 return;
             }
 
-            String[] n = c.names(sel);
-            for (String s : n) {
+            for (String s : c.names(c.table.getSelectedRows())) {
                 c.variables.remove(s);
             }
             ((CustomTableModel) c.table.getModel()).fireTableStructureChanged();
@@ -546,20 +585,80 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public ActionAdapter toAction(JTsVariableList c) {
+        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
 
-    private static final class ClearCommand extends JCommand<JTsVariableList> {
+    private static final class ClearCommand extends JCommand2<JTsVariableList> {
 
         public static final ClearCommand INSTANCE = new ClearCommand();
 
         @Override
-        public void execute(JTsVariableList c) throws java.lang.Exception {
+        public void execute(@NonNull JTsVariableList c) {
+            NotifyDescriptor nd = new NotifyDescriptor.Confirmation("Are you sure you want to clear all items?", NotifyDescriptor.OK_CANCEL_OPTION);
+            if (DialogDisplayer.getDefault().notify(nd) != NotifyDescriptor.OK_OPTION) {
+                return;
+            }
+
             c.variables.clear();
             ((CustomTableModel) c.table.getModel()).fireTableStructureChanged();
         }
+
+        @Override
+        public boolean isEnabled(JTsVariableList c) {
+            return c.table.getRowCount() > 0;
+        }
+
+        @Override
+        public @NonNull ActionAdapter2 toAction(@NonNull JTsVariableList c) {
+            return super.toAction(c).withWeakTableModelListener(c.table.getModel());
+        }
     }
-    //</editor-fold>
+
+    @MightBePromoted
+    private static abstract class JCommand2<T> extends JCommand<T> {
+
+        @Override
+        public @NonNull ActionAdapter2 toAction(@NonNull T component) {
+            return new ActionAdapter2(component);
+        }
+
+        public class ActionAdapter2 extends ActionAdapter {
+
+            public ActionAdapter2(@NonNull T component) {
+                super(component);
+            }
+
+            @NonNull
+            public ActionAdapter2 withWeakTableModelListener(@NonNull TableModel source) {
+                TableModelListener realListener = evt -> refreshActionState();
+                putValue("TableModelListener", realListener);
+                source.addTableModelListener(new WeakTableModelListener(realListener) {
+                    @Override
+                    protected void unregister(@NonNull Object source) {
+                        ((TableModel) source).removeTableModelListener(this);
+                    }
+                });
+                return this;
+            }
+
+            private abstract static class WeakTableModelListener extends WeakEventListener<TableModelListener> implements TableModelListener {
+
+                public WeakTableModelListener(@NonNull TableModelListener delegate) {
+                    super(delegate);
+                }
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    TableModelListener listener = delegate.get();
+                    if (listener != null) {
+                        listener.tableChanged(e);
+                    } else {
+                        unregister(e.getSource());
+                    }
+                }
+            }
+        }
+    }
 }

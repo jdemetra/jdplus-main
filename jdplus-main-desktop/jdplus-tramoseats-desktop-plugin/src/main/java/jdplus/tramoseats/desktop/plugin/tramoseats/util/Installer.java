@@ -16,18 +16,12 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramoseats.util;
 
-import jdplus.toolkit.desktop.plugin.Config;
+import jdplus.toolkit.desktop.plugin.util.InstallerStep;
 import jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddies;
 import jdplus.tramoseats.desktop.plugin.tramoseats.ui.TramoSeatsUI;
-import jdplus.toolkit.desktop.plugin.util.InstallerStep;
-
-import static jdplus.toolkit.desktop.plugin.util.InstallerStep.tryGet;
-import java.util.prefs.BackingStoreException;
-
 import org.openide.modules.ModuleInstall;
 
 import java.util.prefs.Preferences;
-import org.openide.util.Exceptions;
 
 public final class Installer extends ModuleInstall {
 
@@ -53,49 +47,30 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                    Preferences nprefs = prefs.node(buddy.getDisplayName());
-                    tryGet(nprefs).ifPresent(buddy::setConfig);
-            });
+            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy-> load(prefs.node(buddy.getDisplayName()), buddy));
             TramoSeatsUI.setDiagnostics();
         }
 
         @Override
         public void close() {
-            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories().forEach(buddy->{
-                Config config = buddy.getConfig();
-                if (config != null){
-                    Preferences nprefs = prefs.node(buddy.getDisplayName());
-                    put(nprefs, config);
-                    try {
-                        nprefs.flush();
-                    } catch (BackingStoreException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            });
+            TramoSeatsDiagnosticsFactoryBuddies.getInstance().getFactories()
+                    .forEach(buddy -> store(prefs.node(buddy.getDisplayName()), buddy));
         }
     }
     
     private static final class TramoSeatsOptionsStep extends InstallerStep {
 
-        final Preferences prefs = prefs().node("options");
+        private final Preferences options = prefs().node("options");
 
         @Override
         public void restore() {
-            TramoSeatsUI ui = TramoSeatsUI.get();
-            tryGet(prefs).ifPresent(ui::setConfig);
+            load(options, TramoSeatsUI.get());
         }
 
         @Override
         public void close() {
-            TramoSeatsUI ui = TramoSeatsUI.get();
-            put(prefs, ui.getConfig());
-            try {
-                prefs.flush();
-            } catch (BackingStoreException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            store(options, TramoSeatsUI.get());
         }
     }
 }

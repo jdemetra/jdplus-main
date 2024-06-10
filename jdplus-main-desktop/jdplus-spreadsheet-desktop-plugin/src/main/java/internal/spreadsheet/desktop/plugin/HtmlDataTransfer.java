@@ -25,6 +25,7 @@ import jdplus.toolkit.desktop.plugin.actions.Configurable;
 import jdplus.toolkit.desktop.plugin.beans.BeanConfigurator;
 import jdplus.toolkit.desktop.plugin.beans.BeanHandler;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
+import lombok.NonNull;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
@@ -79,17 +80,17 @@ public final class HtmlDataTransfer implements DataTransferSpi, Configurable, Pe
     }
 
     @Override
-    public Config getConfig() {
+    public @NonNull Config getConfig() {
         return configurator.getConfig(this);
     }
 
     @Override
-    public void setConfig(Config config) {
+    public void setConfig(@NonNull Config config) {
         configurator.setConfig(this, config);
     }
 
     @Override
-    public Config editConfig(Config config) {
+    public @NonNull Config editConfig(@NonNull Config config) {
         return configurator.editConfig(config);
     }
 
