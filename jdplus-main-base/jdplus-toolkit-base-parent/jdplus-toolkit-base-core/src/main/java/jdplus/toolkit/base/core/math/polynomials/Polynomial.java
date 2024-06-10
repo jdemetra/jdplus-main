@@ -249,7 +249,7 @@ public final class Polynomial {
     }
 
     /**
-     * The constructor takes an array ofFunction doubles. The array represents
+     * The constructor takes an array of doubles. The array represents
      * the coefficients of the polynomial.
      *
      * @param coefficients
@@ -491,16 +491,20 @@ public final class Polynomial {
     /**
      * The operator subtracts two polynomials creating a new polynomial as a
      * result. The algorithm checks the getDegree (equal highest power
-     * coefficients will annihilate this power). The roots ofFunction the
-     * resulting polynomial are only calculated when the roots ofFunction l and
-     * r have been calculated before.
+     * coefficients will annihilate this power). The roots of the
+     * resulting polynomial are only calculated when the roots of both polynomials have been calculated previously.
      *
      * @param r A polynomial ofFunction getDegree d'
+     * @param simplify
      * @return The difference ofFunction l and r
      */
-    public Polynomial minus(final Polynomial r) {
+    public Polynomial minus(final Polynomial r, boolean simplify) {
         double[] result = Polynomials.minus(coeff, r.coeff);
-        return new Polynomial(Coefficients.ofInternal(result));
+        return simplify ? new Polynomial(Coefficients.ofInternal(result)) : new Polynomial(result);
+    }
+    
+    public Polynomial minus(final Polynomial r){
+        return minus(r, degree() == r.degree());
     }
 
     /**
