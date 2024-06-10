@@ -200,7 +200,6 @@ public class HtmlRegSarima extends AbstractHtmlElement {
     public void writeArima(HtmlStream stream) throws IOException {
         SarimaSpec arima = model.getDescription().getStochasticComponent();
         LikelihoodStatistics ll = model.getEstimation().getStatistics();
-        int nhp = model.freeArimaParametersCount();
         SarimaOrders sspec = arima.orders();
         stream.write('[').write(sspec.toString()).write(']').newLines(2);
         if (sspec.getParametersCount() == 0) {
@@ -218,8 +217,7 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         int nobs = ll.getEffectiveObservationsCount(), nparams = ll.getEstimatedParametersCount();
         DoubleSeqCursor vars = model.getEstimation().getParameters().getCovariance().diagonal().cursor();
         double ndf = nobs - nparams;
-        double vcorr = (ndf - nhp) / ndf;
-        T t = new T(ndf - nhp);
+        T t = new T(ndf);
         List<String> headers = new ArrayList<>();
         for (int j = 0; j < P; ++j) {
             stream.open(HtmlTag.TABLEROW);
@@ -228,7 +226,7 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             double val = p[j].getValue();
             stream.write(new HtmlTableCell(df4.format(val)).withWidth(100));
             if (!p[j].isFixed()) {
-                double stde = Math.sqrt(vars.getAndNext() * vcorr);
+                double stde = Math.sqrt(vars.getAndNext());
                 headers.add(header);
                 double tval = val / stde;
                 stream.write(new HtmlTableCell(formatT(tval)).withWidth(100));
@@ -246,7 +244,7 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             double val = p[j].getValue();
             stream.write(new HtmlTableCell(df4.format(val)).withWidth(100));
             if (!p[j].isFixed()) {
-                double stde = Math.sqrt(vars.getAndNext() * vcorr);
+                double stde = Math.sqrt(vars.getAndNext());
                 headers.add(header);
                 double tval = val / stde;
                 stream.write(new HtmlTableCell(formatT(tval)).withWidth(100));
@@ -264,7 +262,7 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             double val = p[j].getValue();
             stream.write(new HtmlTableCell(df4.format(val)).withWidth(100));
             if (!p[j].isFixed()) {
-                double stde = Math.sqrt(vars.getAndNext() * vcorr);
+                double stde = Math.sqrt(vars.getAndNext());
                 headers.add(header);
                 double tval = val / stde;
                 stream.write(new HtmlTableCell(formatT(tval)).withWidth(100));
@@ -282,7 +280,7 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             double val = p[j].getValue();
             stream.write(new HtmlTableCell(df4.format(val)).withWidth(100));
             if (!p[j].isFixed()) {
-                double stde = Math.sqrt(vars.getAndNext() * vcorr);
+                double stde = Math.sqrt(vars.getAndNext());
                 headers.add(header);
                 double tval = val / stde;
                 stream.write(new HtmlTableCell(formatT(tval)).withWidth(100));
