@@ -12,6 +12,7 @@ import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
 import jdplus.sa.desktop.plugin.util.ActionsHelper;
 import jdplus.sa.desktop.plugin.util.ActionsHelpers;
 import jdplus.toolkit.base.api.processing.ProcQuality;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.processing.ProcessingLog.InformationType;
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
@@ -1161,10 +1162,13 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             if (!item.isProcessed() || item.results() == null) {
                 return label;
             }
-            String[] warnings = item.results().getLog().
-                    all().stream()
+            ProcessingLog processingLog = item.results().getLog();
+            String[] warnings = processingLog != null
+                    ? processingLog.all()
+                    .stream()
                     .filter(log -> log.getType() == InformationType.Warning)
-                    .map(info -> info.getMsg()).toArray(n -> new String[n]);
+                    .map(ProcessingLog.Information::getMsg).toArray(String[]::new)
+                    : new String[0];
             if (warnings.length == 0) {
                 return label;
             }
