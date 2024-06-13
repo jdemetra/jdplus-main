@@ -86,9 +86,12 @@ public class GridReaderTest {
     public void testReadVertical() throws IOException {
         GridReader x = GridReader.DEFAULT.toBuilder().namePattern("Series ${index}").build();
 
-        for (GridInput o : new GridInput[]{VGRID, VGRID_GAP, VGRID_OVERFLOW, VGRID_CORNER_LABEL}) {
+        for (GridInput o : new GridInput[]{VGRID, VGRID_GAP1, VGRID_GAP2, VGRID_OVERFLOW, VGRID_CORNER_LABEL}) {
             assertThat(x.read(o)).isEqualTo(c(VERTICAL, s("S1", MONTH, 2010, 0, 3.14, 4.56, 7.89)));
         }
+
+        assertThat(x.read(VGRID_GAP3))
+                .isEqualTo(c(VERTICAL, s("G1\nS1", MONTH, 2010, 0, 3.14, 4.56, 7.89)));
 
         assertThat(x.read(VGRID_UNDERFLOW))
                 .isEqualTo(c(VERTICAL, s("S1", MONTH, 2010, 0, 3.14, 4.56)));

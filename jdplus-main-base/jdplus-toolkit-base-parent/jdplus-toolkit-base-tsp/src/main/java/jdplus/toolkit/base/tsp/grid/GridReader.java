@@ -29,8 +29,8 @@ import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.tsp.fixme.Substitutor;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import lombok.AccessLevel;
-import nbbrd.design.LombokWorkaround;
 import lombok.NonNull;
+import nbbrd.design.LombokWorkaround;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Closeable;
@@ -287,6 +287,7 @@ public final class GridReader {
                     : null;
         }
 
+        @SuppressWarnings("StatementWithEmptyBody")
         void skip(TypedInputStream stream) throws IOException {
             for (int row = 0; row < rows && stream.readRow(); row++) {
             }
@@ -311,19 +312,20 @@ public final class GridReader {
                     List<String> result = new ArrayList<>();
                     for (int column = 0; column < columns; column++) {
                         boolean hasHeader = false;
-                        for (int row = 0; row < path.length; row++) {
+                        for (int row = 0; row < rows - 1; row++) {
                             String name = values[row][column];
                             if (name != null) {
                                 hasHeader = true;
                                 path[row] = name;
-                            } else if (hasHeader) {
-                                path[row] = null;
                             }
                         }
-                        if (!hasHeader) {
-                            break;
+                        String lastCell = values[rows - 1][column];
+                        if (lastCell != null || hasHeader) {
+                            path[rows - 1] = lastCell;
+                            result.add(joinSkippingNulls(path, nameJoiner));
+                        } else {
+                            result.add(null);
                         }
-                        result.add(joinSkippingNulls(path, nameJoiner));
                     }
                     return result;
                 }
