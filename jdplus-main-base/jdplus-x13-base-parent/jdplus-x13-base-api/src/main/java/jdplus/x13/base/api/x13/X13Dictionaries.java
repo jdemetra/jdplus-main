@@ -139,6 +139,7 @@ public class X13Dictionaries {
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICSEASONALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICTRADINGDAYS))
             .dictionary(new PrefixedDictionary(MSTATISTICS, MSTATS))
+            .dictionary(new PrefixedDictionary(SaDictionaries.BENCHMARKING, SaDictionaries.SABENCHMARKING))
             .build();
     
 }
