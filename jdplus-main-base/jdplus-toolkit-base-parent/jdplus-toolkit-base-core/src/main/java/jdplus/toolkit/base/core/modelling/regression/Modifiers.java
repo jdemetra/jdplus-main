@@ -9,6 +9,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ModifiedTsVariable;
 import jdplus.toolkit.base.api.timeseries.regression.TsLags;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.timeseries.regression.TsLag;
 
 
 /**
@@ -41,6 +42,7 @@ public class Modifiers {
     static {
         synchronized (FACTORIES) {
             // Basic
+            FACTORIES.put(TsLag.class, LagFactory.FACTORY);
             FACTORIES.put(TsLags.class, LagsFactory.FACTORY);
         }
     }
