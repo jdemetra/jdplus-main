@@ -340,18 +340,18 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         writeFixedRegressionItems(stream, "Fixed trading days", edom, true, var -> !var.isFree() && var.getCore() instanceof ITradingDaysVariable);
         writeFixedRegressionItems(stream, "Fixed leap year", edom, true, var -> !var.isFree() && var.getCore() instanceof ILengthOfPeriodVariable);
         writeRegressionItems(stream, "Easter", edom, true, var -> !var.isPreadjustment() && var.getCore() instanceof IEasterVariable);
-        writeFixedRegressionItems(stream, "Fixed Easter", edom, false,var -> var.isPreadjustment() && var.getCore() instanceof IEasterVariable);
+        writeFixedRegressionItems(stream, "Fixed Easter", edom, true,var -> var.isPreadjustment() && var.getCore() instanceof IEasterVariable);
         if (outliers) {
             writeOutliers(stream, true, edom);
             writeOutliers(stream, false, edom);
             writeFixedRegressionItems(stream, "Fixed outliers", edom, false, var -> var.isPreadjustment() && var.getCore() instanceof IOutlier);
         }
-        writeRegressionItems(stream, "Ramps", edom, false, var -> var.isFree() && var.getCore() instanceof Ramp);
+        writeRegressionItems(stream, "Ramps", edom, true, var -> var.isFree() && var.getCore() instanceof Ramp);
         writeRegressionItems(stream, "Intervention variables", edom, false, var -> var.isFree() && var.getCore() instanceof InterventionVariable);
-        writeRegressionItems(stream, "User variables", edom, false, var -> !var.isPreadjustment() && var.test(v -> v instanceof UserVariable));
-        writeFixedRegressionItems(stream, "Fixed ramps", edom, false, var -> !var.isFree() && var.getCore() instanceof Ramp);
+        writeRegressionItems(stream, "User variables", edom, true, var -> !var.isPreadjustment() && var.test(v -> v instanceof UserVariable));
+        writeFixedRegressionItems(stream, "Fixed ramps", edom, true, var -> !var.isFree() && var.getCore() instanceof Ramp);
         writeFixedRegressionItems(stream, "Fixed intervention variables", edom, false, var -> !var.isFree() && var.getCore() instanceof InterventionVariable);
-        writeFixedRegressionItems(stream, "Other fixed regression effects", edom, false, var -> !var.isFree() && var.getCore() instanceof UserVariable);
+        writeFixedRegressionItems(stream, "Fixed user variables", edom, true, var -> !var.isFree() && var.test(v -> v instanceof UserVariable));
         writeMissing(stream);
     }
 
