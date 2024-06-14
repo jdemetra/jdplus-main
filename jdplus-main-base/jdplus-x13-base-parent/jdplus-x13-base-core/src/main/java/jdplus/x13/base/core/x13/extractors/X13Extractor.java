@@ -5,6 +5,8 @@
  */
 package jdplus.x13.base.core.x13.extractors;
 
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.api.DecompositionMode;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
@@ -14,6 +16,8 @@ import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.modelling.ComponentInformation;
 import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Diagnostics;
@@ -28,7 +32,6 @@ import nbbrd.service.ServiceProvider;
 @Development(status = Development.Status.Release)
 @ServiceProvider(InformationExtractor.class)
 public class X13Extractor extends InformationMapping<X13Results> {
-
 
     private String decompositionItem(String key) {
         return Dictionary.concatenate(SaDictionaries.DECOMPOSITION, key);
@@ -65,6 +68,18 @@ public class X13Extractor extends InformationMapping<X13Results> {
 //        MAPPING.set(FINAL + SaDictionaries.T + SeriesInfo.EB_SUFFIX, TsData.class, source
 //                -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.StdevBackcast));
 //
+        set(SaDictionaries.MODE, DecompositionMode.class, source -> source.getDecomposition().getMode());
+
+        set(SaDictionaries.SEASONAL, Integer.class, source -> {
+            TsData s = source.getDecomposition().getD10();
+            if (s == null) {
+                return 0;
+            } else {
+                double x0 = s.getValue(0);
+                return s.getValues().allMatch(x -> x == x0) ? 0 : 1;
+            }
+        }
+        );
 
         set(preadjustItem(X13Dictionaries.A1), TsData.class, source
                 -> source.getPreadjustment().getA1());
@@ -113,7 +128,28 @@ public class X13Extractor extends InformationMapping<X13Results> {
                 -> source.getFinals().getD12b());
         set(SaDictionaries.I, TsData.class, source
                 -> source.getFinals().getD13final());
-
+        set(SaDictionaries.I + SeriesInfo.F_SUFFIX, TsData.class, source
+                -> {
+            TsData d12a = source.getFinals().getD12a();
+            if (d12a == null || d12a.size() == 0) {
+                return null;
+            }
+            DecompositionMode mode = source.getDecomposition().getMode();
+            double m = mode.isMultiplicative() ? 1 : 0;
+            return TsData.of(d12a.getStart(), DoubleSeq.onMapping(d12a.size(), i -> m));
+        }
+        );
+        set(SaDictionaries.I + SeriesInfo.B_SUFFIX, TsData.class, source
+                -> {
+            TsData d12b = source.getFinals().getD12b();
+            if (d12b == null || d12b.size() == 0) {
+                return null;
+            }
+            DecompositionMode mode = source.getDecomposition().getMode();
+            double m = mode.isMultiplicative() ? 1 : 0;
+            return TsData.of(d12b.getStart(), DoubleSeq.onMapping(d12b.size(), i -> m));
+        }
+        );
         set(decompositionItem(SaDictionaries.Y_CMP), TsData.class, source
                 -> TsData.fitToDomain(source.getDecomposition().getB1(), source.getDecomposition().getActualDomain()));
         set(decompositionItem(SaDictionaries.Y_CMP_F), TsData.class, source
@@ -156,7 +192,7 @@ public class X13Extractor extends InformationMapping<X13Results> {
                 -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
         set(ModellingDictionary.CAL + SaDictionaries.FORECAST, TsData.class, source
                 -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
-        
+
         set(finalItem(X13Dictionaries.D11), TsData.class, source
                 -> source.getFinals().getD11final());
         set(finalItem(X13Dictionaries.D12), TsData.class, source

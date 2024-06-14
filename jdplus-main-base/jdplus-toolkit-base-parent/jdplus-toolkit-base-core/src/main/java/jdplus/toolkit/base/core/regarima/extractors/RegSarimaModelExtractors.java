@@ -5,7 +5,10 @@
  */
 package jdplus.toolkit.base.core.regarima.extractors;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.information.InformationDelegate;
 import jdplus.toolkit.base.api.information.InformationExtractor;
@@ -28,11 +31,19 @@ import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
 import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
 import jdplus.toolkit.base.api.dictionaries.UtilityDictionaries;
+import jdplus.toolkit.base.api.stats.ProbabilityType;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.dstats.F;
 import jdplus.toolkit.base.core.dstats.T;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
+import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
+import jdplus.toolkit.base.core.modelling.regression.RegressionDesc;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import nbbrd.design.Development;
@@ -252,12 +263,12 @@ public class RegSarimaModelExtractors {
                 TsData det = source.deterministicEffect(null, v -> true);
                 return source.backTransform(det, true);
             });
-            setArray(RegressionDictionaries.DET + SeriesInfo.F_SUFFIX, NFCAST, TsData.class,
+            setArray(RegressionDictionaries.DET_F, NFCAST, TsData.class,
                     (source, i) -> {
                         TsData det = source.deterministicEffect(source.forecastDomain(i), v -> true);
                         return source.backTransform(det, true);
                     });
-            setArray(RegressionDictionaries.DET + SeriesInfo.B_SUFFIX, NBCAST, TsData.class,
+            setArray(RegressionDictionaries.DET_B, NBCAST, TsData.class,
                     (source, i) -> {
                         TsData det = source.deterministicEffect(source.backcastDomain(i), v -> true);
                         return source.backTransform(det, true);
@@ -265,9 +276,9 @@ public class RegSarimaModelExtractors {
 
 // All calendar effects
             set(RegressionDictionaries.CAL, TsData.class, source -> source.getCalendarEffect(null));
-            setArray(RegressionDictionaries.CAL + SeriesInfo.F_SUFFIX, NFCAST, TsData.class,
+            setArray(RegressionDictionaries.CAL_F, NFCAST, TsData.class,
                     (source, i) -> source.getCalendarEffect(source.forecastDomain(i)));
-            setArray(RegressionDictionaries.CAL + SeriesInfo.B_SUFFIX, NBCAST, TsData.class,
+            setArray(RegressionDictionaries.CAL_B, NBCAST, TsData.class,
                     (source, i) -> source.getCalendarEffect(source.backcastDomain(i)));
 
 // Trading days effects
@@ -325,13 +336,36 @@ public class RegSarimaModelExtractors {
                         return i <= 0 || i > missing.length ? null : missing[i - 1];
                     });
 
-            set(RegressionDictionaries.EE, TsData.class, source -> source.getEasterEffect(null));
-            setArray(RegressionDictionaries.EE + SeriesInfo.F_SUFFIX, NFCAST, TsData.class,
-                    (source, i) -> source.getEasterEffect(source.forecastDomain(i)));
-            setArray(RegressionDictionaries.EE + SeriesInfo.B_SUFFIX, NBCAST, TsData.class,
-                    (source, i) -> source.getEasterEffect(source.backcastDomain(i)));
+            set(RegressionDictionaries.REG, TsData.class, (RegSarimaModel source) -> {
+                TsData reg = source.deterministicEffect(null,
+                        v -> !ModellingUtility.isCalendar(v) && !ModellingUtility.isOutlier(v));
+                return source.backTransform(reg, false);
+            });
+            setArray(RegressionDictionaries.REG_F, NFCAST, TsData.class,
+                    (source, i) -> {
+                        TsData reg = source.deterministicEffect(source.forecastDomain(i),
+                                v -> !ModellingUtility.isCalendar(v) && !ModellingUtility.isOutlier(v));
+                        return source.backTransform(reg, false);
+                    });
+            setArray(RegressionDictionaries.REG_B, NBCAST, TsData.class,
+                    (source, i) -> {
+                        TsData reg = source.deterministicEffect(source.backcastDomain(i),
+                                v -> !ModellingUtility.isCalendar(v) && !ModellingUtility.isOutlier(v));
+                        return source.backTransform(reg, false);
+                    });
 
-//        MAPPING.set(FULLRES, source -> source.getFullResiduals());
+            set(regressionItem(RegressionDictionaries.TDDERIVED), RegressionItem.class, source -> {
+                RegressionDesc desc = source.getDetails().getDerivedTradingDay();
+                if (desc == null) {
+                    return null;
+                }
+                return new RegressionItem(desc.getCoef(), desc.getStderr(), desc.getPvalue(), desc.getName());
+            }
+            );
+            
+            set(regressionItem(RegressionDictionaries.TDF), StatisticalTest.class, 
+                    source -> source.getDetails().getFTestonTradingDays());
+            
 //        MAPPING.setList(InformationSet.item(REGRESSION, TD), 1, 15, RegressionItem.class, (source, i) -> source.getRegressionItem(ITradingDaysVariable.class, i - 1));
 //        MAPPING.set(InformationSet.item(REGRESSION, TD_DERIVED), RegressionItem.class, source -> {
 //            TsVariableSelection<ITsVariable> regs = source.x_.select(var -> var instanceof ITradingDaysVariable);
