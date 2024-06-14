@@ -44,6 +44,7 @@ import org.openide.util.lookup.ServiceProvider;
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static jdplus.toolkit.base.tsp.fixme.Strings.nullToEmpty;
 import static jdplus.toolkit.base.tsp.fixme.Strings.splitToStream;
@@ -184,7 +185,7 @@ public final class SpreadsheetOutputBuddy implements OutputFactoryBuddy, Configu
                     .description("Base output folder. Will be extended by the workspace and processing names")
                     .add();
             b.with(String.class)
-                    .select("FileName", config::getFileName, config::setFileName)
+                    .select("FileName", config::getFileName, fixFileNameExtension(config::setFileName))
                     .display("File name")
                     .add();
             sheet.put(b.build());
@@ -219,6 +220,14 @@ public final class SpreadsheetOutputBuddy implements OutputFactoryBuddy, Configu
         @Override
         public SaOutputFactory getFactory() {
             return new SpreadsheetOutputFactory(getLookup().lookup(SpreadsheetOutputConfiguration.class));
+        }
+
+        private Consumer<String> fixFileNameExtension(Consumer<String> setter) {
+            return fileName -> setter.accept(fixFileNameExtension(fileName));
+        }
+
+        private String fixFileNameExtension(String fileName) {
+            return fileName.lastIndexOf('.') == -1 ? (fileName + ".xlsx") : fileName;
         }
     }
 }
