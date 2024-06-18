@@ -22,6 +22,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix missing description field [#291](https://github.com/jdemetra/jdplus-main/issues/291)
 - ![UI] Fix "Copy spec. to workspace" button [#228](https://github.com/jdemetra/jdplus-main/issues/228)
 - ![UI] Fix NPE in SaBatchUI renderer [#326](https://github.com/jdemetra/jdplus-main/issues/326)
+- ![UI] Fix GUI Excel output [#303](https://github.com/jdemetra/jdplus-main/issues/303)
 
 ### Changed
 
