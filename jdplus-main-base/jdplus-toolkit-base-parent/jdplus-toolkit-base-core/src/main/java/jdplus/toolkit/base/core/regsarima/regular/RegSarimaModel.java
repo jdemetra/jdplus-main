@@ -41,20 +41,31 @@ import jdplus.toolkit.base.api.timeseries.regression.ResidualsType;
 import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
 import jdplus.toolkit.base.api.util.Arrays2;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
+import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
+import jdplus.toolkit.base.api.timeseries.regression.HolidaysCorrectedTradingDays;
+import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.core.arima.estimation.IArimaMapping;
+import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
+import jdplus.toolkit.base.core.dstats.F;
 import jdplus.toolkit.base.core.dstats.LogNormal;
 import jdplus.toolkit.base.core.dstats.T;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
 import jdplus.toolkit.base.core.math.functions.IFunction;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
+import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
+import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.toolkit.base.core.modelling.LightweightLinearModel;
 import jdplus.toolkit.base.core.modelling.Residuals;
@@ -91,6 +102,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
         int free = arima.freeParametersCount();
         RegArimaModel<SarimaModel> model = estimation.getModel();
         ConcentratedLikelihoodWithMissing ll = estimation.getConcentratedLikelihood();
+        LikelihoodStatistics statistics = estimation.statistics();
 
         List<Variable> vars = description.variables().sequential().collect(Collectors.toList());
         int nvars = (int) vars.size();
@@ -98,8 +110,10 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
             ++nvars;
         }
         Variable[] variables = new Variable[nvars];
-        DoubleSeqCursor cursor = estimation.getConcentratedLikelihood().coefficients().cursor();
-        DoubleSeqCursor.OnMutable diag = estimation.getConcentratedLikelihood().unscaledCovariance().diagonal().cursor();
+        DoubleSeq coeffs = estimation.getConcentratedLikelihood().coefficients();
+        DoubleSeqCursor cursor = coeffs.cursor();
+        FastMatrix varcoeffs = estimation.getConcentratedLikelihood().unscaledCovariance();
+        DoubleSeqCursor diag = varcoeffs.diagonal().cursor();
         int df = ll.degreesOfFreedom() - free;
         double vscale = ll.ssq() / df;
         T tstat = new T(df);
@@ -115,28 +129,54 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                     .withCoefficient(Parameter.estimated(c));
         }
         // fill the free coefficients
+        TsDomain domain = description.getDomain();
+
+        StatisticalTest tdf = null;
+        RegressionDesc tdderived = null;
         for (Variable var : vars) {
             int nfree = var.freeCoefficientsCount();
-            if (nfree == var.dim()) {
+            if (nfree == var.dim() && nfree > 1) {
+                int startpos = pos;
                 Parameter[] p = new Parameter[nfree];
                 for (int j = 0; j < nfree; ++j) {
                     double c = cursor.getAndNext(), e = Math.sqrt(diag.getAndNext() * vscale);
                     if (e == 0) {
                         p[j] = Parameter.zero();
-                        regressionDesc.add(new RegressionDesc(var.getName(), var.getCore(), j, pos++, 0, 0, 0));
+                        regressionDesc.add(new RegressionDesc(var.getCore().description(j, domain), var.getCore(), j, pos++, 0, 0, 0));
                     } else {
                         p[j] = Parameter.estimated(c);
-                        regressionDesc.add(new RegressionDesc(var.getName(), var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
+                        regressionDesc.add(new RegressionDesc(var.getCore().description(j, domain), var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
                     }
                 }
                 variables[k++] = var.withCoefficients(p);
+                if (var.getCore() instanceof ITradingDaysVariable iTradingDaysVariable) {
+                    DoubleSeq coef = coeffs.extract(startpos, nfree);
+                    FastMatrix bvar = FastMatrix.of(varcoeffs.extract(startpos, nfree, startpos, nfree));
+                    DataBlock w = weights(iTradingDaysVariable);
+                    if (w != null) {
+                        double c = -coef.dot(w);
+                        double v = QuadraticForm.apply(bvar, w), e = Math.sqrt(v * vscale);
+                        tdderived = new RegressionDesc("td-derived", var.getCore(), -1, -1, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper));
+                    }
+                    try {
+                        SymmetricMatrix.lcholesky(bvar);
+                        DataBlock r = DataBlock.of(coef);
+                        LowerTriangularMatrix.solveLx(bvar, r);
+                        double f = r.ssq() / (vscale * nfree);
+                        F fdist = new F(nfree, df);
+                        double pval = fdist.getProbability(f, ProbabilityType.Upper);
+                        tdf = new StatisticalTest(f, pval, fdist.getDescription());
+                    } catch (Exception ex) {
+                    }
+                }
             } else if (nfree > 0) {
                 Parameter[] p = var.getCoefficients();
                 for (int j = 0; j < p.length; ++j) {
                     if (p[j].isFree()) {
                         double c = cursor.getAndNext(), e = Math.sqrt(diag.getAndNext() * vscale);
                         p[j] = Parameter.estimated(c);
-                        regressionDesc.add(new RegressionDesc(var.getName(), var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
+                        regressionDesc.add(new RegressionDesc(p.length > 1 ? var.getCore().description(j, domain) : var.getCore().description(domain),
+                                var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
                     }
                 }
                 variables[k++] = var.withCoefficients(p);
@@ -184,7 +224,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                 .coefficients(ll.coefficients())
                 .coefficientsCovariance(ll.covariance(free, true))
                 .parameters(pestim)
-                .statistics(estimation.statistics())
+                .statistics(statistics)
                 .missing(missing)
                 .logs(log.all())
                 .build();
@@ -216,6 +256,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                 .test(ResidualsDictionaries.LUDRUNS, niid.upAndDownRunsLength())
                 .build();
 
+        // Fill TD stats
         return RegSarimaModel.builder()
                 .description(desc)
                 .estimation(est)
@@ -223,6 +264,8 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                 .details(Details.builder()
                         .independentResiduals(ll.e())
                         .regressionItems(regressionDesc)
+                        .derivedTradingDay(tdderived)
+                        .FTestonTradingDays(tdf)
                         .build())
                 .build();
     }
@@ -238,6 +281,9 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
 
         DoubleSeq independentResiduals;
         List<RegressionDesc> regressionItems;
+
+        RegressionDesc derivedTradingDay;
+        StatisticalTest FTestonTradingDays;
     }
 
     Description<SarimaSpec> description;
@@ -348,10 +394,10 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
         }
         return bcasts;
     }
-    
-    private TsData regY(){
-        TsData s=transformedSeries();
-        TsData preadjust=this.preadjustmentEffect(s.getDomain(), v->true);
+
+    private TsData regY() {
+        TsData s = transformedSeries();
+        TsData preadjust = this.preadjustmentEffect(s.getDomain(), v -> true);
         return TsData.subtract(s, preadjust);
     }
 
@@ -361,7 +407,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
             TsData empty = TsData.of(dom.getEndPeriod(), DoubleSeq.empty());
             return new Forecasts(empty, empty, empty, empty);
         }
-        
+
         RegArimaForecasts.Result fcasts;
         DoubleSeq b = getEstimation().getCoefficients();
         LikelihoodStatistics ll = getEstimation().getStatistics();
@@ -464,4 +510,33 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
         }
         return null;
     }
+
+    public <T extends ITsVariable> int countVariables(Class<T> tclass, boolean fixed) {
+        Variable[] variables = description.getVariables();
+        if (fixed) {
+            return Arrays.stream(variables).filter(var -> tclass.isInstance(var.getCore())).mapToInt(var -> var.fixedCoefficientsCount()).sum();
+        } else {
+            return Arrays.stream(variables).filter(var -> tclass.isInstance(var.getCore())).mapToInt(var -> var.freeCoefficientsCount()).sum();
+        }
+    }
+
+    private static DataBlock weights(ITradingDaysVariable var) {
+        if (var instanceof GenericTradingDaysVariable td) {
+            return weights(td.getClustering());
+        } else if (var instanceof HolidaysCorrectedTradingDays td) {
+            return weights(td.getClustering());
+        } else {
+            return null;
+        }
+    }
+
+    private static DataBlock weights(DayClustering td) {
+        int n = td.getGroupsCount();
+        double[] w = new double[n - 1];
+        for (int i = 1; i < n; ++i) {
+            w[i - 1] = td.getGroupCount(i);
+        }
+        return DataBlock.of(w);
+    }
+
 }
