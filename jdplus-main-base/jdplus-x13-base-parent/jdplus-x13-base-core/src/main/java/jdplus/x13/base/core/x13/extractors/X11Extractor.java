@@ -26,6 +26,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Development;
 import nbbrd.service.ServiceProvider;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.x13.base.api.x11.MsrTable;
 import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import jdplus.x13.base.api.x11.X11Dictionaries;
@@ -81,9 +82,16 @@ public class X11Extractor extends InformationMapping<X11Results> {
         set(X11Dictionaries.D8, TsData.class, source -> source.getD8());
         set(X11Dictionaries.D9, TsData.class, source -> source.getD9());
         set(X11Dictionaries.D10, TsData.class, source -> source.getD10());
+//        set(X11Dictionaries.D10A, TsData.class, source -> TsData.fitToDomain(source.getD10(), source.getForecastDomain()));
+//        set(X11Dictionaries.D10B, TsData.class, source -> TsData.fitToDomain(source.getD10(), source.getBackcastDomain()));
         set(X11Dictionaries.D11, TsData.class, source -> source.getD11());
+//        set(X11Dictionaries.D11A, TsData.class, source -> TsData.fitToDomain(source.getD11(), source.getForecastDomain()));
+//        set(X11Dictionaries.D11B, TsData.class, source -> TsData.fitToDomain(source.getD11(), source.getBackcastDomain()));
         set(X11Dictionaries.D12, TsData.class, source -> source.getD12());
+//        set(X11Dictionaries.D12A, TsData.class, source -> TsData.fitToDomain(source.getD12(), source.getForecastDomain()));
+//        set(X11Dictionaries.D12B, TsData.class, source -> TsData.fitToDomain(source.getD12(), source.getBackcastDomain()));
         set(X11Dictionaries.D13, TsData.class, source -> source.getD13());
+        set(X11Dictionaries.ICRATIO, Double.class, source -> source.getICRatio());
         set(X11Dictionaries.TRENDFILTER, Integer.class, source -> source.getFinalHendersonFilterLength());
         set(X11Dictionaries.SEASONALFILTERS, String[].class, (X11Results source) -> {
             SeasonalFilterOption[] filters = source.getFinalSeasonalFilter();

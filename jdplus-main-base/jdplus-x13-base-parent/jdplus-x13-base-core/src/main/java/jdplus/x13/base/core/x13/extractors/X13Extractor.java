@@ -11,14 +11,21 @@ import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.sa.base.api.SaDictionaries;
+import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
+import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
+import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
 import jdplus.toolkit.base.api.modelling.ModellingDictionary;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.util.IntList;
+import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Diagnostics;
 import jdplus.x13.base.core.x13.X13Results;
@@ -43,6 +50,10 @@ public class X13Extractor extends InformationMapping<X13Results> {
 
     private String finalItem(String key) {
         return Dictionary.concatenate(X13Dictionaries.FINAL, key);
+    }
+
+    private String advancedItem(String key) {
+        return Dictionary.concatenate(RegArimaDictionaries.ADVANCED, key);
     }
 
     public X13Extractor() {
@@ -229,6 +240,22 @@ public class X13Extractor extends InformationMapping<X13Results> {
         set(finalItem(X13Dictionaries.E11), TsData.class, source
                 -> source.getFinals().getE11());
 
+        set(advancedItem(RegressionDictionaries.REGTYPE), int[].class,
+                source -> {
+                    GeneralLinearModel.Description<SarimaSpec> desc = source.getPreprocessing().getDescription();
+                    Variable[] vars = desc.getVariables();
+                    IntList list = new IntList();
+                    for (int i = 0; i < vars.length; ++i) {
+                        int n = vars[i].freeCoefficientsCount();
+                        if (n > 0) {
+                            ComponentType regressionEffect = SaVariable.regressionEffect(vars[i]);
+                            for (int j = 0; j < n; ++j) {
+                                list.add(regressionEffect.toInt());
+                            }
+                        }
+                    }
+                    return list.toArray();
+                });
         delegate(null, RegSarimaModel.class, source -> source.getPreprocessing());
 
         delegate(SaDictionaries.DECOMPOSITION, X11Results.class, source -> source.getDecomposition());

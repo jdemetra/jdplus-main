@@ -35,6 +35,7 @@ import jdplus.toolkit.base.api.stats.ProbabilityType;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.util.IntList;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.dstats.F;
 import jdplus.toolkit.base.core.dstats.T;
@@ -362,59 +363,15 @@ public class RegSarimaModelExtractors {
                 return new RegressionItem(desc.getCoef(), desc.getStderr(), desc.getPvalue(), desc.getName());
             }
             );
-            
-            set(regressionItem(RegressionDictionaries.TDF), StatisticalTest.class, 
+
+            set(regressionItem(RegressionDictionaries.TDF), StatisticalTest.class,
                     source -> source.getDetails().getFTestonTradingDays());
-            
-//        MAPPING.setList(InformationSet.item(REGRESSION, TD), 1, 15, RegressionItem.class, (source, i) -> source.getRegressionItem(ITradingDaysVariable.class, i - 1));
-//        MAPPING.set(InformationSet.item(REGRESSION, TD_DERIVED), RegressionItem.class, source -> {
-//            TsVariableSelection<ITsVariable> regs = source.x_.select(var -> var instanceof ITradingDaysVariable);
-//            if (regs.isEmpty() || regs.getItemsCount() > 1) {
-//                return null;
-//            }
-//            Item<ITsVariable> reg = regs.elements()[0];
-//            int ndim = reg.variable.getDim();
-//            if (ndim <= 1) {
-//                return null;
-//            } else {
-//                ConcentratedLikelihood ll = source.estimation.getLikelihood();
-//                int nhp = source.description.getArimaComponent().getFreeParametersCount();
-//                int start = source.description.getRegressionVariablesStartingPosition();
-//                double[] b = ll.getB();
-//                int k0 = start + reg.position, k1 = k0 + ndim;
-//                double bd = 0;
-//                for (int k = k0; k < k1; ++k) {
-//                    bd -= b[k];
-//                }
-//                double var = ll.getBVar(true, nhp).subMatrix(k0, k1, k0, k1).sum();
-//                double tval = bd / Math.sqrt(var);
-//                T t = new T();
-//                t.setDegreesofFreedom(ll.getDegreesOfFreedom(true, nhp));
-//                double prob = 1 - t.getProbabilityForInterval(-tval, tval);
-//                return new RegressionItem("td-derived", bd, Math.sqrt(var), prob);
-//            }
-//        });
-//        MAPPING.set(InformationSet.item(REGRESSION, TD_FTEST), Double.class, source -> {
-//            TsVariableSelection<ITsVariable> regs = source.x_.select(var -> var instanceof ITradingDaysVariable);
-//            if (regs.isEmpty()) {
-//                return null;
-//            }
-//            int nvars = regs.getVariablesCount();
-//            if (regs.getItemsCount() == 1 && nvars > 1) {
-//                try {
-//                    JointRegressionTest jtest = new JointRegressionTest(.05);
-//                    jtest.accept(source.estimation.getLikelihood(),
-//                            source.description.getArimaComponent().getFreeParametersCount(),
-//                            source.description.getRegressionVariablesStartingPosition() + regs.get(0).position,
-//                            nvars, null);
-//                    return jtest.getTest().getPValue();
-//                } catch (Exception ex) {
-//                }
-//            }
-//            return null;
-//        });
-// 
-//        MAPPING.setList(InformationSet.item(REGRESSION, USER), 1, 31, RegressionItem.class, (source, i) -> source.getRegressionItem(IUserTsVariable.class, i - 1));
+
+            set(advancedItem(RegressionDictionaries.COEFFDESC), String[].class,
+                    source -> source.getDetails().getRegressionItems().stream()
+                            .map(r -> r.getName())
+                            .toArray(String[]::new));
+
             set(mlItem(UtilityDictionaries.PCORR), Matrix.class, source -> {
                 FastMatrix cov = FastMatrix.of(source.getEstimation().getParameters().getCovariance());
                 DataBlock diag = cov.diagonal();

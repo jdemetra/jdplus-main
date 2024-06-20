@@ -117,7 +117,7 @@ public class SaProtosUtility {
         TsData es = decomp.getSeries(type, ComponentInformation.Stdev);
         TsData efs = decomp.getSeries(type, ComponentInformation.StdevForecast);
         TsData ebs = decomp.getSeries(type, ComponentInformation.StdevBackcast);
-        if (es == null){
+        if (es == null && s != null){
             es=TsData.of(s.getStart(), DoubleSeq.onMapping(s.length(), i->0));
         }
         TsData S = TsData.concatenate(bs, s, fs);

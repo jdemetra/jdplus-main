@@ -129,6 +129,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                     .withCoefficient(Parameter.estimated(c));
         }
         // fill the free coefficients
+        TsDomain domain = description.getDomain();
 
         StatisticalTest tdf = null;
         RegressionDesc tdderived = null;
@@ -141,17 +142,17 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                     double c = cursor.getAndNext(), e = Math.sqrt(diag.getAndNext() * vscale);
                     if (e == 0) {
                         p[j] = Parameter.zero();
-                        regressionDesc.add(new RegressionDesc(var.getName(), var.getCore(), j, pos++, 0, 0, 0));
+                        regressionDesc.add(new RegressionDesc(var.getCore().description(j, domain), var.getCore(), j, pos++, 0, 0, 0));
                     } else {
                         p[j] = Parameter.estimated(c);
-                        regressionDesc.add(new RegressionDesc(var.getName(), var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
+                        regressionDesc.add(new RegressionDesc(var.getCore().description(j, domain), var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
                     }
                 }
                 variables[k++] = var.withCoefficients(p);
-                if (var.getCore() instanceof ITradingDaysVariable) {
+                if (var.getCore() instanceof ITradingDaysVariable iTradingDaysVariable) {
                     DoubleSeq coef = coeffs.extract(startpos, nfree);
                     FastMatrix bvar = FastMatrix.of(varcoeffs.extract(startpos, nfree, startpos, nfree));
-                    DataBlock w = weights((ITradingDaysVariable) var.getCore());
+                    DataBlock w = weights(iTradingDaysVariable);
                     if (w != null) {
                         double c = -coef.dot(w);
                         double v = QuadraticForm.apply(bvar, w), e = Math.sqrt(v * vscale);
@@ -161,7 +162,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                         SymmetricMatrix.lcholesky(bvar);
                         DataBlock r = DataBlock.of(coef);
                         LowerTriangularMatrix.solveLx(bvar, r);
-                        double f = r.ssq()  / (vscale * nfree);
+                        double f = r.ssq() / (vscale * nfree);
                         F fdist = new F(nfree, df);
                         double pval = fdist.getProbability(f, ProbabilityType.Upper);
                         tdf = new StatisticalTest(f, pval, fdist.getDescription());
@@ -174,7 +175,8 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                     if (p[j].isFree()) {
                         double c = cursor.getAndNext(), e = Math.sqrt(diag.getAndNext() * vscale);
                         p[j] = Parameter.estimated(c);
-                        regressionDesc.add(new RegressionDesc(var.getName(), var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
+                        regressionDesc.add(new RegressionDesc(p.length > 1 ? var.getCore().description(j, domain) : var.getCore().description(domain),
+                                var.getCore(), j, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
                     }
                 }
                 variables[k++] = var.withCoefficients(p);
