@@ -16,6 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![IO] Fix encoding of space characters in URI [#254](https://github.com/jdemetra/jdplus-main/issues/254)
 - ![IO] Fix parsing of .ods files [#309](https://github.com/jdemetra/jdplus-main/issues/309)
 - ![IO] Fix grid parsing when some headers are null [#328](https://github.com/jdemetra/jdplus-main/issues/328)
+- ![IO] Fix reading v2 legacy WS when some user defined calendars have fixed and non-fixed coefficients [#183](https://github.com/jdemetra/jdplus-main/issues/183)
 - ![UI] Fix default toolbar and menu [#311](https://github.com/jdemetra/jdplus-main/issues/311)
 - ![UI] Fix slow dialog box when opening a file [#313](https://github.com/jdemetra/jdplus-main/issues/313)
 - ![UI] Fix option show-provider-nodes cannot be reset between sessions [#292](https://github.com/jdemetra/jdplus-main/issues/292)
