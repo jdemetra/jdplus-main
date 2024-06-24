@@ -78,7 +78,16 @@ public final class JdbcProvider implements DataSourceLoader<JdbcBean>, HasSqlPro
     private static CubeConnection openConnection(DataSource key, HasSqlProperties properties, JdbcParam param) {
         JdbcBean bean = param.get(key);
 
-        SqlTableAsCubeResource sqlResource = SqlTableAsCubeResource.of(properties.getConnectionSupplier(), bean.getDatabase(), bean.getTable(), toRoot(bean), toDataParams(bean), bean.getCube().getGathering(), bean.getCube().getLabel());
+        SqlTableAsCubeResource sqlResource = SqlTableAsCubeResource
+                .builder()
+                .supplier(properties.getConnectionSupplier())
+                .db(bean.getDatabase())
+                .table(bean.getTable())
+                .root(toRoot(bean))
+                .tdp(toDataParams(bean))
+                .gathering(bean.getCube().getGathering())
+                .labelColumn(bean.getCube().getLabel())
+                .build();
 
         CubeConnection result = TableAsCubeConnection.of(sqlResource);
         return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCachingLoader.get());
