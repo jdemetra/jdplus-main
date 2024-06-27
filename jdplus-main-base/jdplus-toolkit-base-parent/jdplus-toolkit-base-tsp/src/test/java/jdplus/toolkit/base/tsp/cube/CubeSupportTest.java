@@ -16,11 +16,12 @@
  */
 package jdplus.toolkit.base.tsp.cube;
 
-import _test.tsproviders.XCubeConnection;
-import jdplus.toolkit.base.tsp.fixme.ResourceWatcher;
+import _test.tsproviders.WatchingCubeConnection;
+import internal.toolkit.base.tsp.cube.CubeRepository;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
+import jdplus.toolkit.base.tsp.fixme.ResourceWatcher;
 import jdplus.toolkit.base.tsp.stream.DataSetTs;
 import lombok.NonNull;
 import org.junit.jupiter.api.Test;
@@ -125,9 +126,10 @@ public class CubeSupportTest {
 
     @Test
     public void testResourceLeak() throws IOException {
+        CubeRepository data = CubeRepository.builder().name("resourceLeak").root(DIM2_LEV0).build();
         ResourceWatcher watcher = new ResourceWatcher();
 
-        CubeSupport support = CubeSupport.of(providerName, dataSource1 -> new XCubeConnection(DIM2_LEV0, watcher), o -> cubeIdParam);
+        CubeSupport support = CubeSupport.of(providerName, dataSource1 -> WatchingCubeConnection.of(data.asConnection(), watcher), o -> cubeIdParam);
         support.children(dataSource);
         support.children(col);
         readAllAndClose(support.getData(dataSource, TsInformationType.All));
