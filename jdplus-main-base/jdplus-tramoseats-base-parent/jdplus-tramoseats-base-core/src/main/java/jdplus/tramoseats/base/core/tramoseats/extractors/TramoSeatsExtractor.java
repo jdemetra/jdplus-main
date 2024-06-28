@@ -5,6 +5,8 @@
  */
 package jdplus.tramoseats.base.core.tramoseats.extractors;
 
+import java.util.ArrayList;
+import java.util.List;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
@@ -21,11 +23,14 @@ import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
+import jdplus.toolkit.base.api.processing.ProcDiagnostic;
+import jdplus.toolkit.base.api.processing.ProcQuality;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.api.util.IntList;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDiagnostics;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsFactory;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import nbbrd.design.Development;
 import nbbrd.service.ServiceProvider;
@@ -42,6 +47,10 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
 
     private String advancedItem(String key) {
         return Dictionary.concatenate(RegArimaDictionaries.ADVANCED, key);
+    }
+
+    private String qualityItem(String key) {
+        return Dictionary.concatenate(SaDictionaries.QUALITY, key);
     }
 
     public TramoSeatsExtractor() {
@@ -136,6 +145,13 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
 
         delegate(null, TramoSeatsDiagnostics.class, source -> source.getDiagnostics());
 
+        set(qualityItem(SaDictionaries.QUALITY_SUMMARY), String.class, source -> {
+            List<ProcDiagnostic> tests = new ArrayList<>();
+            TramoSeatsFactory.getInstance().fillDiagnostics(tests, source);
+            ProcQuality quality = ProcDiagnostic.summary(tests);
+            return quality.name();
+        });
+        
         delegate(SaDictionaries.BENCHMARKING, SaBenchmarkingResults.class, source -> source.getBenchmarking());
     }
 

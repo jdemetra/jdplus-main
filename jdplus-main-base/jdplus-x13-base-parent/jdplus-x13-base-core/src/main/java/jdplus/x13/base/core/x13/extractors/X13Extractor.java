@@ -5,6 +5,8 @@
  */
 package jdplus.x13.base.core.x13.extractors;
 
+import java.util.ArrayList;
+import java.util.List;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.toolkit.base.api.information.InformationExtractor;
@@ -21,13 +23,15 @@ import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
-import jdplus.toolkit.base.api.modelling.ComponentInformation;
 import jdplus.toolkit.base.api.modelling.ModellingDictionary;
+import jdplus.toolkit.base.api.processing.ProcDiagnostic;
+import jdplus.toolkit.base.api.processing.ProcQuality;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.api.util.IntList;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Diagnostics;
+import jdplus.x13.base.core.x13.X13Factory;
 import jdplus.x13.base.core.x13.X13Results;
 import nbbrd.design.Development;
 import nbbrd.service.ServiceProvider;
@@ -54,6 +58,10 @@ public class X13Extractor extends InformationMapping<X13Results> {
 
     private String advancedItem(String key) {
         return Dictionary.concatenate(RegArimaDictionaries.ADVANCED, key);
+    }
+
+    private String qualityItem(String key) {
+        return Dictionary.concatenate(SaDictionaries.QUALITY, key);
     }
 
     public X13Extractor() {
@@ -262,7 +270,14 @@ public class X13Extractor extends InformationMapping<X13Results> {
 
         delegate(null, X13Diagnostics.class, source -> source.getDiagnostics());
 
-        delegate(SaDictionaries.BENCHMARKING, SaBenchmarkingResults.class, source -> source.getBenchmarking());
+        set(qualityItem(SaDictionaries.QUALITY_SUMMARY), String.class, source -> {
+            List<ProcDiagnostic> tests = new ArrayList<>();
+            X13Factory.getInstance().fillDiagnostics(tests, source);
+            ProcQuality quality = ProcDiagnostic.summary(tests);
+            return quality.name();
+        });
+        
+         delegate(SaDictionaries.BENCHMARKING, SaBenchmarkingResults.class, source -> source.getBenchmarking());
 
     }
 

@@ -107,7 +107,7 @@ public class BasicSpecUI extends BaseTramoSpecUI {
 
     @Messages({
         "basicSpecUI.pcDesc.name=Preliminary Check",
-        "basicSpecUI.pcDesc.desc="
+        "basicSpecUI.pcDesc.desc=Checks that the series doesn't contain too many missing or identical values. In such a case, it is not processed"
     })
     private EnhancedPropertyDescriptor pcDesc() {
         try {
