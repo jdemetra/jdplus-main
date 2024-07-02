@@ -53,7 +53,7 @@ class SqlTableAsCubeResourceTest {
 
         assertThatIllegalArgumentException().isThrownBy(() -> AllSeriesWithData.of(x, root));
 
-        assertThat(Series.of(x, root)).hasSize(2).containsOnly(
+        assertThat(Series.of(x, root)).containsOnly(
                 Series.builder().build()
         );
 
@@ -134,7 +134,7 @@ class SqlTableAsCubeResourceTest {
 
         assertThatIllegalArgumentException().isThrownBy(() -> Series.of(x, root));
         assertThatIllegalArgumentException().isThrownBy(() -> Series.of(x, node));
-        assertThat(Series.of(x, leaf)).hasSize(2).containsOnly(
+        assertThat(Series.of(x, leaf)).containsOnly(
                 Series.builder().build()
         );
 

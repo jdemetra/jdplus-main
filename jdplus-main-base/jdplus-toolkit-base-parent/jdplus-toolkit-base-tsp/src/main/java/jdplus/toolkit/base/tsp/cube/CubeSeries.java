@@ -24,14 +24,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Philippe Charles
  */
 @lombok.Value
-public class CubeSeries {
+public class CubeSeries implements HasCubeId {
 
     @lombok.NonNull
-    private CubeId id;
+    CubeId id;
 
     @Nullable
-    private String label;
+    String label;
 
     @lombok.NonNull
-    private Map<String, String> meta;
+    Map<String, String> meta;
 }

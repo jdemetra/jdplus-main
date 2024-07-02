@@ -20,6 +20,8 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -29,11 +31,13 @@ import lombok.NonNull;
 public final class ResourceWatcher {
 
     private final List<Id> resources;
-    private int cpt;
+
+    @Getter
+    private int count;
 
     public ResourceWatcher() {
         this.resources = new ArrayList<>();
-        cpt = 0;
+        count = 0;
     }
 
     public boolean isLeaking() {
@@ -43,7 +47,7 @@ public final class ResourceWatcher {
     @NonNull
     public Id watch(@NonNull String name) {
         Objects.requireNonNull(name);
-        Id result = new Id(name, cpt++);
+        Id result = new Id(name, count++);
         resources.add(result);
         return result;
     }

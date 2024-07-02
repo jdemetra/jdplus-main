@@ -16,16 +16,24 @@
  */
 package jdplus.toolkit.base.tsp.poc;
 
+import internal.toolkit.base.tsp.cube.CubeRepository;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
 import jdplus.toolkit.base.tsp.DataSourceLoader;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
 import jdplus.toolkit.base.tsp.HasDataSourceBean;
 import jdplus.toolkit.base.tsp.HasDataSourceMutableList;
 import jdplus.toolkit.base.tsp.cube.CubeConnection;
+import jdplus.toolkit.base.tsp.cube.CubeId;
+import jdplus.toolkit.base.tsp.cube.CubeSeriesWithData;
 import jdplus.toolkit.base.tsp.cube.CubeSupport;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
+
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.joining;
+import static jdplus.toolkit.base.api.timeseries.TsUnit.MONTH;
 
 /**
  * @author Philippe Charles
@@ -56,7 +64,24 @@ public final class FakeDbProvider implements DataSourceLoader<FakeDbBean> {
         this.mutableListSupport = HasDataSourceMutableList.of(NAME, pool::remove);
         this.monikerSupport = HasDataMoniker.usingUri(NAME);
         this.beanSupport = HasDataSourceBean.of(NAME, param, param.getVersion());
-        this.cubeSupport = CubeSupport.of(NAME, pool.asFactory(o -> new FakeDbConnection()), param::getCubeIdParam);
+        this.cubeSupport = CubeSupport.of(NAME, pool.asFactory(o -> create().asConnection()), param::getCubeIdParam);
         this.tsSupport = TsStreamAsProvider.of(NAME, cubeSupport, monikerSupport, pool::clear);
+    }
+
+    private static CubeRepository create() {
+        CubeId root = CubeId.root("REGION", "SECTOR");
+        return CubeRepository
+                .builder()
+                .root(root)
+                .item(of(root.child("BE", "INDUSTRY"), TsData.random(MONTH, 1)))
+                .item(of(root.child("FR", "INDUSTRY"), TsData.random(MONTH, 2)))
+                .item(of(root.child("BE", "STUFF"), TsData.random(MONTH, 3)))
+                .item(of(root.child("FR", "STUFF"), TsData.empty("Not enough data")))
+                .name("Fake")
+                .build();
+    }
+
+    private static CubeSeriesWithData of(CubeId id, TsData data) {
+        return new CubeSeriesWithData(id, id.getDimensionValueStream().collect(joining("/")), emptyMap(), data);
     }
 }
