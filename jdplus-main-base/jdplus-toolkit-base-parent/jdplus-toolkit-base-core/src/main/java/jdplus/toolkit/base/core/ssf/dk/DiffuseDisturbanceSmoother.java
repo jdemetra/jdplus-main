@@ -29,6 +29,8 @@ import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.core.ssf.ISsfInitialization;
 import jdplus.toolkit.base.core.ssf.univariate.ISsfError;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
+import jdplus.toolkit.base.core.ssf.SsfException;
+import jdplus.toolkit.base.core.ssf.State;
 import lombok.NonNull;
 
 /**
