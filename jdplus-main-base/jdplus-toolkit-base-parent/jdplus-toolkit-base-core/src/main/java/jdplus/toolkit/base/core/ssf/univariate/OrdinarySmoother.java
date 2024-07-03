@@ -214,7 +214,7 @@ public class OrdinarySmoother {
                 // uvar = 1/f(t)+ K'NK
                 // = 1/f + 1/f*M'T'*N*T*M/f
                 uVariance = 1 / errVariance + QuadraticForm.apply(N, k);
-                if (uVariance < Constants.getEpsilon()) {
+                if (uVariance < State.ZERO) {
                     uVariance = 0;
                 }
 //                if (uVariance == 0) {
