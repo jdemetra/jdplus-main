@@ -18,8 +18,8 @@ package jdplus.sql.desktop.plugin;
 
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
+import jdplus.sql.base.api.ConnectionManager;
 import nbbrd.sql.jdbc.SqlColumn;
-import nbbrd.sql.jdbc.SqlConnectionSupplier;
 import nbbrd.sql.jdbc.SqlIdentifierQuoter;
 import nbbrd.sql.jdbc.SqlTable;
 
@@ -54,9 +54,9 @@ public class SqlProviderBuddy {
         return value != null && !value.isEmpty();
     }
 
-    public static AutoCompletionSource getTableSource(SqlConnectionSupplier supplier, Supplier<String> connectionString, Supplier<String> tableName) {
+    public static AutoCompletionSource getTableSource(ConnectionManager manager, Supplier<String> connectionString, Supplier<String> tableName) {
         return ExtAutoCompletionSource
-                .builder(o -> getJdbcTables(supplier, connectionString.get()))
+                .builder(o -> getJdbcTables(manager, connectionString.get()))
                 .behavior(o -> isValidConnectionString(connectionString) ? ASYNC : NONE)
                 .postProcessor(SqlProviderBuddy::getJdbcTables)
                 .valueToString(SqlTable::getName)
@@ -64,9 +64,9 @@ public class SqlProviderBuddy {
                 .build();
     }
 
-    public static AutoCompletionSource getColumnSource(SqlConnectionSupplier supplier, Supplier<String> connectionString, Supplier<String> tableName) {
+    public static AutoCompletionSource getColumnSource(ConnectionManager manager, Supplier<String> connectionString, Supplier<String> tableName) {
         return ExtAutoCompletionSource
-                .builder(o -> getJdbcColumns(supplier, connectionString.get(), tableName.get()))
+                .builder(o -> getJdbcColumns(manager, connectionString.get(), tableName.get()))
                 .behavior(o -> isValidConnectionString(connectionString) && isValidTableName(tableName) ? ASYNC : NONE)
                 .postProcessor(SqlProviderBuddy::getJdbcColumns)
                 .valueToString(SqlColumn::getName)
@@ -74,14 +74,14 @@ public class SqlProviderBuddy {
                 .build();
     }
 
-    private static List<SqlTable> getJdbcTables(SqlConnectionSupplier supplier, String connectionString) throws SQLException {
-        try (Connection c = supplier.getConnection(connectionString)) {
+    private static List<SqlTable> getJdbcTables(ConnectionManager manager, String connectionString) throws SQLException {
+        try (Connection c = manager.getSource(connectionString).open()) {
             return SqlTable.allOf(c.getMetaData(), c.getCatalog(), c.getSchema(), "%", new String[]{"TABLE", "VIEW"});
         }
     }
 
-    private static List<SqlColumn> getJdbcColumns(SqlConnectionSupplier supplier, String connectionString, String tableName) throws SQLException {
-        try (Connection c = supplier.getConnection(connectionString)) {
+    private static List<SqlColumn> getJdbcColumns(ConnectionManager manager, String connectionString, String tableName) throws SQLException {
+        try (Connection c = manager.getSource(connectionString).open()) {
             SqlIdentifierQuoter quoter = SqlIdentifierQuoter.of(c.getMetaData());
             try (Statement st = c.createStatement()) {
                 try (ResultSet rs = st.executeQuery("select * from " + quoter.quote(tableName, false) + " where 1 = 0")) {

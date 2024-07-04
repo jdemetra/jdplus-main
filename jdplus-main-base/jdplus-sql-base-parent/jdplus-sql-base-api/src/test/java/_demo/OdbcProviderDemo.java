@@ -16,15 +16,15 @@
  */
 package _demo;
 
-import jdplus.toolkit.base.tspbridge.demo.ProviderDemo;
+import _test.MyDbConnectionManager;
 import jdplus.sql.base.api.odbc.OdbcBean;
 import jdplus.sql.base.api.odbc.OdbcProvider;
 import jdplus.toolkit.base.api.timeseries.TsDataTable;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.cube.TableAsCube;
+import jdplus.toolkit.base.tspbridge.demo.ProviderDemo;
 
 import java.io.IOException;
-import java.sql.DriverManager;
 
 /**
  * @author Philippe Charles
@@ -34,7 +34,7 @@ public class OdbcProviderDemo {
     public static void main(String[] args) throws IOException {
         // 1. create and configure the provider
         try (OdbcProvider provider = new OdbcProvider()) {
-            provider.setConnectionSupplier(o -> DriverManager.getConnection("jdbc:hsqldb:res:mydb", "sa", ""));
+            provider.setConnectionManager(new MyDbConnectionManager());
 
             // 2. create and configure a bean
             OdbcBean bean = provider.newBean();
@@ -44,7 +44,7 @@ public class OdbcProviderDemo {
                     .builder()
                     .dimension("Sector")
                     .dimension("Region")
-                    .timeDimension("Table2.Period")
+                    .timeDimension("Period")
                     .measure("Rate")
                     .build());
 

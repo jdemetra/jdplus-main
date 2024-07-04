@@ -4,6 +4,7 @@ import _test.TableAsCubes.AllSeries;
 import _test.TableAsCubes.AllSeriesWithData;
 import _test.TableAsCubes.Series;
 import _test.TableAsCubes.SeriesWithData;
+import internal.sql.base.api.DefaultConnectionSource;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 import jdplus.toolkit.base.tsp.cube.CubeId;
 import jdplus.toolkit.base.tsp.cube.TableDataParams;
@@ -24,8 +25,7 @@ class SqlTableAsCubeResourceTest {
 
         SqlTableAsCubeResource x = SqlTableAsCubeResource
                 .builder()
-                .supplier(o -> DriverManager.getConnection("jdbc:hsqldb:res:mydb", "sa", ""))
-                .db("mydb")
+                .source(new DefaultConnectionSource(ignore -> DriverManager.getConnection("jdbc:hsqldb:res:mydb", "sa", ""), "mydb"))
                 .table("Table0")
                 .root(root)
                 .tdp(TableDataParams
@@ -71,8 +71,7 @@ class SqlTableAsCubeResourceTest {
 
         SqlTableAsCubeResource x = SqlTableAsCubeResource
                 .builder()
-                .supplier(o -> DriverManager.getConnection("jdbc:hsqldb:res:mydb", "sa", ""))
-                .db("mydb")
+                .source(new DefaultConnectionSource(ignore -> DriverManager.getConnection("jdbc:hsqldb:res:mydb", "sa", ""), "mydb"))
                 .table("Table2")
                 .root(root)
                 .tdp(TableDataParams
