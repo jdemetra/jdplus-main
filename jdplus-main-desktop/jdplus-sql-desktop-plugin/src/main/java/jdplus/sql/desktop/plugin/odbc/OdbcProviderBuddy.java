@@ -1,23 +1,26 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sql.desktop.plugin.odbc;
 
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
+import internal.sql.base.api.DefaultConnectionSource;
+import jdplus.sql.base.api.ConnectionManager;
+import jdplus.sql.base.api.ConnectionSource;
 import jdplus.sql.base.api.HasSqlProperties;
 import jdplus.sql.base.api.odbc.OdbcBean;
 import jdplus.sql.desktop.plugin.SqlColumnListCellRenderer;
@@ -29,12 +32,11 @@ import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
 import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
-import nbbrd.sql.jdbc.SqlConnectionSupplier;
 import nbbrd.sql.odbc.OdbcDataSource;
 import nbbrd.sql.odbc.OdbcRegistry;
-import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -44,7 +46,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.IntrospectionException;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.*;
@@ -53,7 +54,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Philippe Charles
  */
 @DirectImpl
@@ -62,14 +62,14 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
 
     private static final String SOURCE = "ODBCPRVDR";
 
-    private final SqlConnectionSupplier supplier;
+    private final ConnectionManager manager;
     private final AutoCompletionSource dbSource;
     private final ListCellRenderer dbRenderer;
     private final ListCellRenderer tableRenderer;
     private final ListCellRenderer columnRenderer;
 
     public OdbcProviderBuddy() {
-        this.supplier = getOdbcConnectionSupplier();
+        this.manager = getOdbcConnectionManager();
         this.dbSource = odbcDsnSource();
         this.dbRenderer = new SimpleHtmlCellRenderer<>((OdbcDataSource o) -> "<html><b>" + o.getName() + "</b> - <i>" + o.getServerName() + "</i>");
         this.tableRenderer = new SqlTableListCellRenderer();
@@ -107,12 +107,12 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.source.display=Source",
-        "bean.source.description=",
-        "bean.dsn.display=Data source name",
-        "bean.dsn.description=Data structure describing the connection to the database.",
-        "bean.table.display=Table name",
-        "bean.table.description=The name of the table (or view) that contains observations.",})
+            "bean.source.display=Source",
+            "bean.source.description=",
+            "bean.dsn.display=Data source name",
+            "bean.dsn.description=Data structure describing the connection to the database.",
+            "bean.table.display=Table name",
+            "bean.table.description=The name of the table (or view) that contains observations.",})
     private Sheet.Set createSource(NodePropertySetBuilder b, OdbcBean bean) {
         b.reset("source")
                 .display(Bundle.bean_source_display())
@@ -128,7 +128,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
 
         b.withAutoCompletion()
                 .select("table", bean::getTable, bean::setTable)
-                .source(SqlProviderBuddy.getTableSource(supplier, bean::getDsn, bean::getTable))
+                .source(SqlProviderBuddy.getTableSource(manager, bean::getDsn, bean::getTable))
                 .cellRenderer(tableRenderer)
                 .display(Bundle.bean_table_display())
                 .description(Bundle.bean_table_description())
@@ -138,15 +138,15 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.cube.display=Cube structure",
-        "bean.cube.description=",})
+            "bean.cube.display=Cube structure",
+            "bean.cube.description=",})
     private Sheet.Set createCube(NodePropertySetBuilder b, OdbcBean bean) {
         b.reset("cube")
                 .display(Bundle.bean_cube_display())
                 .description(Bundle.bean_cube_description());
 
         TsProviderProperties.addTableAsCubeStructure(b, bean::getCube, bean::setCube,
-                SqlProviderBuddy.getColumnSource(supplier, bean::getDsn, bean::getTable),
+                SqlProviderBuddy.getColumnSource(manager, bean::getDsn, bean::getTable),
                 columnRenderer
         );
 
@@ -154,8 +154,8 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.parsing.display=Parsing",
-        "bean.parsing.description=",})
+            "bean.parsing.display=Parsing",
+            "bean.parsing.description=",})
     private Sheet.Set createParsing(NodePropertySetBuilder b, OdbcBean bean) {
         b.reset("parsing")
                 .display(Bundle.bean_parsing_display())
@@ -167,8 +167,8 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.cache.display=Cache",
-        "bean.cache.description=Mechanism used to improve performance.",})
+            "bean.cache.display=Cache",
+            "bean.cache.description=Mechanism used to improve performance.",})
     private Sheet.Set createCache(NodePropertySetBuilder b, OdbcBean bean) {
         b.reset("cache")
                 .display(Bundle.bean_cache_display())
@@ -188,27 +188,34 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
         }
     }
 
-    private static SqlConnectionSupplier getOdbcConnectionSupplier() {
+    private static ConnectionManager getOdbcConnectionManager() {
         Optional<HasSqlProperties> provider = TsManager.get()
                 .getProvider(SOURCE)
                 .filter(HasSqlProperties.class::isInstance)
                 .map(HasSqlProperties.class::cast);
         return provider.isPresent()
-                ? provider.orElseThrow().getConnectionSupplier()
-                : new FailingConnectionSupplier("Cannot load OdbcProvider");
+                ? provider.orElseThrow().getConnectionManager()
+                : new FailingConnectionManager("Cannot load OdbcProvider");
     }
 
-    private static final class FailingConnectionSupplier implements SqlConnectionSupplier {
+    private static final class FailingConnectionManager implements ConnectionManager {
 
         private final String cause;
 
-        public FailingConnectionSupplier(String cause) {
+        public FailingConnectionManager(String cause) {
             this.cause = cause;
         }
 
         @Override
-        public Connection getConnection(String dbName) throws SQLException {
-            throw new SQLException(cause);
+        public @NonNull String getId() {
+            return "failing";
+        }
+
+        @Override
+        public @NonNull ConnectionSource getSource(@NonNull String dbName) {
+            return new DefaultConnectionSource(o -> {
+                throw new SQLException(cause);
+            }, dbName);
         }
     }
 

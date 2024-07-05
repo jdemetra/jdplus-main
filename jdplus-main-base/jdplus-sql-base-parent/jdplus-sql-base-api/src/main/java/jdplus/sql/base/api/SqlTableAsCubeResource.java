@@ -32,7 +32,6 @@ import jdplus.toolkit.base.tsp.cube.TableDataParams;
 import lombok.NonNull;
 import nbbrd.design.NotThreadSafe;
 import nbbrd.design.VisibleForTesting;
-import nbbrd.sql.jdbc.SqlConnectionSupplier;
 import nbbrd.sql.jdbc.SqlIdentifierQuoter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -55,10 +54,7 @@ import static internal.sql.base.api.ResultSetFunc.*;
 public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resource<java.util.Date>, Validatable<SqlTableAsCubeResource> {
 
     @lombok.NonNull
-    private final SqlConnectionSupplier supplier;
-
-    @lombok.NonNull
-    private final String db;
+    private final ConnectionSource source;
 
     @lombok.NonNull
     private final String table;
@@ -79,7 +75,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
 
     @Override
     public Exception testConnection() {
-        try (Connection ignore = supplier.getConnection(db)) {
+        try (Connection ignore = source.open()) {
             return null;
         } catch (SQLException ex) {
             return ex;
@@ -93,12 +89,12 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
 
     @Override
     public @NonNull AllSeriesCursor getAllSeriesCursor(@NonNull CubeId id) throws Exception {
-        return new AllSeriesQuery(checkNode(id), table, labelColumn).call(supplier, db, onCall);
+        return new AllSeriesQuery(checkNode(id), table, labelColumn).call(source, onCall);
     }
 
     @Override
     public @NonNull AllSeriesWithDataCursor<java.util.Date> getAllSeriesWithDataCursor(@NonNull CubeId id) throws Exception {
-        return new AllSeriesWithDataQuery(checkNode(id), table, labelColumn, tdp).call(supplier, db, onCall);
+        return new AllSeriesWithDataQuery(checkNode(id), table, labelColumn, tdp).call(source, onCall);
     }
 
     @Override
@@ -107,17 +103,17 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         if (labelColumn.isEmpty()) {
             return SqlTableAsCubeUtil.noLabelSeriesCursor();
         }
-        return new SeriesQuery(id, table, labelColumn).call(supplier, db, onCall);
+        return new SeriesQuery(id, table, labelColumn).call(source, onCall);
     }
 
     @Override
     public @NonNull SeriesWithDataCursor<java.util.Date> getSeriesWithDataCursor(@NonNull CubeId id) throws Exception {
-        return new SeriesWithDataQuery(checkLeaf(id), table, labelColumn, tdp).call(supplier, db, onCall);
+        return new SeriesWithDataQuery(checkLeaf(id), table, labelColumn, tdp).call(source, onCall);
     }
 
     @Override
     public @NonNull ChildrenCursor getChildrenCursor(@NonNull CubeId id) throws Exception {
-        return new ChildrenQuery(checkNode(id), table).call(supplier, db, onCall);
+        return new ChildrenQuery(checkNode(id), table).call(source, onCall);
     }
 
     @Override
@@ -127,7 +123,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
 
     @Override
     public @NonNull String getDisplayName() throws Exception {
-        return TableAsCubeUtil.getDisplayName(db, table, tdp.getValueColumn(), gathering);
+        return TableAsCubeUtil.getDisplayName(source.getId(), table, tdp.getValueColumn(), gathering);
     }
 
     @Override
@@ -146,7 +142,6 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
 
     @Override
     public @NonNull SqlTableAsCubeResource validate() throws IllegalArgumentException {
-        Validations.notBlank(db, "db");
         Validations.notBlank(table, "table");
         return this;
     }
@@ -241,15 +236,15 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         T process(@NonNull ResultSet rs, @NonNull AutoCloseable closeable) throws SQLException;
 
         @NonNull
-        default T call(@NonNull SqlConnectionSupplier supplier, @NonNull String connectionString, @Nullable Consumer<String> onCall) throws SQLException {
+        default T call(@NonNull ConnectionSource supplier, @Nullable Consumer<String> onCall) throws SQLException {
             Connection conn = null;
             PreparedStatement cmd = null;
             ResultSet rs = null;
             try {
-                conn = supplier.getConnection(connectionString);
+                conn = supplier.open();
                 String queryString = getQueryString(conn.getMetaData());
                 if (onCall != null) {
-                    onCall.accept("Calling " + getClass().getSimpleName() + " on '" + connectionString + "' with '" + queryString + "'");
+                    onCall.accept("Calling " + getClass().getSimpleName() + "' with '" + queryString + "'");
                 }
                 cmd = conn.prepareStatement(queryString);
                 setParameters(cmd);

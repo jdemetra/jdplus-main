@@ -16,11 +16,11 @@
  */
 package _test;
 
-import jdplus.toolkit.base.tspbridge.demo.ProviderResources;
+import ec.tss.tsproviders.jdbc.jndi.JndiJdbcProvider;
 import jdplus.sql.base.api.jdbc.JdbcBean;
 import jdplus.sql.base.api.jdbc.JdbcProvider;
 import jdplus.toolkit.base.tsp.cube.TableAsCube;
-import ec.tss.tsproviders.jdbc.jndi.JndiJdbcProvider;
+import jdplus.toolkit.base.tspbridge.demo.ProviderResources;
 
 import java.sql.DriverManager;
 
@@ -51,7 +51,7 @@ public enum JdbcSamples implements ProviderResources.Loader2<JndiJdbcProvider>, 
     @Override
     public JdbcProvider getProvider3() {
         JdbcProvider provider = new JdbcProvider();
-        provider.setConnectionSupplier((java.lang.String o) -> DriverManager.getConnection("jdbc:hsqldb:res:mydb", "sa", ""));
+        provider.setConnectionManager(new MyDbConnectionManager());
         return provider;
     }
 
