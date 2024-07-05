@@ -13,6 +13,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- ![STAT] Fix ArrayOutOfBoundsException for edge case in extreme value correction [[#368](https://github.com/jdemetra/jdplus-main/issues/368)]
 - ![IO] Fix encoding of space characters in URI [#254](https://github.com/jdemetra/jdplus-main/issues/254)
 - ![IO] Fix parsing of .ods files [#309](https://github.com/jdemetra/jdplus-main/issues/309)
 - ![IO] Fix grid parsing when some headers are null [#328](https://github.com/jdemetra/jdplus-main/issues/328)
