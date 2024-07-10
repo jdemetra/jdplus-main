@@ -26,18 +26,15 @@ import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
-import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.x13.base.api.x11.X11Spec;
 import jdplus.x13.base.api.x13.X13Spec;
-import java.util.Arrays;
-import java.util.Optional;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.CholetteProcessor;
 import jdplus.sa.base.core.PreliminaryChecks;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.modelling.RegArimaDecomposer;
 import jdplus.sa.base.core.modelling.SaVariablesMapping;
+import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.ssf.arima.ExactArimaForecasts;
 import jdplus.x13.base.core.x11.X11Kernel;
@@ -73,6 +70,10 @@ public class X13Kernel {
     public static X13Kernel of(X13Spec spec, ModellingContext context) {
         PreliminaryChecks.Tool check = of(spec);
         boolean blPreprop = spec.getRegArima().getBasic().isPreprocessing();
+//        boolean blPreprop = 
+//                spec.getRegArima().getBasic().isPreprocessing() &&
+//                (spec.getRegArima().getTransform().getFunction() != TransformationType.None ||
+//                spec.getRegArima().getOutliers().isUsed() || spec.getRegArima().getRegression().isUsed());
         RegArimaKernel regarima = RegArimaKernel.of(spec.getRegArima(), context);
         SaVariablesMapping mapping = new SaVariablesMapping();
         // TO DO: fill maping with existing information in TramoSpec (section Regression)
