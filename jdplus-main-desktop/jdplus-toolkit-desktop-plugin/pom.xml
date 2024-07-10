@@ -17,7 +17,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java-desktop-util.version>2.3.2</java-desktop-util.version>
+        <java-desktop-util.version>2.4.0</java-desktop-util.version>
     </properties>
 
     <dependencies>
