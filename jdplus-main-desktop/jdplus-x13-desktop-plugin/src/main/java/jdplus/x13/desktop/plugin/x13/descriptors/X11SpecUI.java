@@ -15,12 +15,71 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.modelling.TransformationType;
 
 /**
  *
  * @author PALATEJ
  */
 public class X11SpecUI extends BaseX13SpecUI {
+
+    public static enum X11Mode {
+        Additive,
+        Multiplicative,
+        LogAdditive,
+        PseudoAdditive;
+
+        static X11Mode of(DecompositionMode mode) {
+            return switch (mode) {
+                case Multiplicative ->
+                    X11Mode.Multiplicative;
+                case LogAdditive ->
+                    X11Mode.LogAdditive;
+                case PseudoAdditive ->
+                    X11Mode.PseudoAdditive;
+                default ->
+                    X11Mode.Additive;
+            };
+        }
+
+        static DecompositionMode of(X11Mode mode) {
+            return switch (mode) {
+                case Multiplicative ->
+                    DecompositionMode.Multiplicative;
+                case LogAdditive ->
+                    DecompositionMode.LogAdditive;
+                case PseudoAdditive ->
+                    DecompositionMode.PseudoAdditive;
+                default ->
+                    DecompositionMode.Additive;
+            };
+        }
+    }
+
+    public static enum MultiplicativeMode {
+        Multiplicative,
+        LogAdditive;
+
+        static MultiplicativeMode of(DecompositionMode mode) {
+            return switch (mode) {
+                case LogAdditive ->
+                    LogAdditive;
+                default ->
+                    Multiplicative;
+            };
+        }
+
+        static DecompositionMode of(MultiplicativeMode mode) {
+            return switch (mode) {
+                case Multiplicative ->
+                    DecompositionMode.Multiplicative;
+                case LogAdditive ->
+                    DecompositionMode.LogAdditive;
+                default ->
+                    DecompositionMode.Multiplicative;
+            };
+        }
+    }
 
     X11SpecUI(X13SpecRoot root) {
         super(root);
@@ -42,6 +101,11 @@ public class X11SpecUI extends BaseX13SpecUI {
         EnhancedPropertyDescriptor desc = modeDesc();
         if (desc != null) {
             descs.add(desc);
+        } else {
+            desc = multiplicativeModeDesc();
+            if (desc != null) {
+                descs.add(desc);
+            }
         }
         desc = seasDesc();
         if (desc != null) {
@@ -105,12 +169,20 @@ public class X11SpecUI extends BaseX13SpecUI {
         return Bundle.x11SpecUI_getDisplayName();
     }
 
-    public DecompositionMode getMode() {
-        return x11().getMode();
+    public X11Mode getMode() {
+        return X11Mode.of(x11().getMode());
     }
 
-    public void setMode(DecompositionMode value) {
-        update(x11().toBuilder().mode(value).build());
+    public void setMode(X11Mode value) {
+        update(x11().toBuilder().mode(X11Mode.of(value)).build());
+    }
+
+    public MultiplicativeMode getMultiplicativeMode() {
+        return MultiplicativeMode.of(x11().getMode());
+    }
+
+    public void setMultiplicativeMode(MultiplicativeMode value) {
+        update(x11().toBuilder().mode(MultiplicativeMode.of(value)).build());
     }
 
 //    public boolean isUseForecast() {
@@ -254,17 +326,17 @@ public class X11SpecUI extends BaseX13SpecUI {
     public boolean isExcludefcst() {
         return x11().isExcludeForecast();
     }
-    
-    public BiasCorrection getBiasCorrection(){
+
+    public BiasCorrection getBiasCorrection() {
         return x11().getBias();
     }
-    
-    public void setBiasCorrection(BiasCorrection bias){
+
+    public void setBiasCorrection(BiasCorrection bias) {
         update(x11().toBuilder().bias(bias).build());
     }
 
     private static final int MODE_ID = 0, SEAS_ID = 1, FORECAST_ID = 2, BACKCAST_ID = 12, LSIGMA_ID = 3, USIGMA_ID = 4, AUTOTREND_ID = 5,
-            TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11, BIAS_ID=12;
+            TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11, BIAS_ID = 12;
 
     @Messages({
         "x11SpecUI.calendarsigmaDesc.name=Calendarsigma",
@@ -328,11 +400,41 @@ public class X11SpecUI extends BaseX13SpecUI {
 
     @Messages({
         "x11SpecUI.modeDesc.name=Mode",
-        "x11SpecUI.modeDesc.desc=[mode] Decomposition mode. Could be changed by the program, if needed."
+        "x11SpecUI.modeDesc.desc=[mode] Decomposition mode."
     })
     private EnhancedPropertyDescriptor modeDesc() {
         try {
+//            if (regarima().getTransform().getFunction() != TransformationType.None || 
+//                    regarima().getOutliers().isUsed() || 
+//                    regarima().getRegression().isUsed() ) {
+//                return null;
+//            }
+            if (isPreprocessing()) {
+                return null;
+            }
             PropertyDescriptor desc = new PropertyDescriptor("Mode", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, MODE_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.x11SpecUI_modeDesc_name());
+            desc.setShortDescription(Bundle.x11SpecUI_modeDesc_desc());
+            edesc.setReadOnly(isRo());
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    @Messages({
+        "x11SpecUI.multiplicativeModeDesc.name=Mode",
+        "x11SpecUI.multiplicativeModeDesc.desc=[mode] Decomposition mode."
+    })
+    private EnhancedPropertyDescriptor multiplicativeModeDesc() {
+        try {
+            // only in the case of log transformation
+            if (regarima().getTransform().getFunction() != TransformationType.Log) {
+                return null;
+            }
+            PropertyDescriptor desc = new PropertyDescriptor("MultiplicativeMode", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, MODE_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.x11SpecUI_modeDesc_name());
@@ -529,14 +631,15 @@ public class X11SpecUI extends BaseX13SpecUI {
             return null;
         }
     }
-    
-        @Messages({
+
+    @Messages({
         "x11SpecUI.biasDesc.name=Bias correction",
         "x11SpecUI.biasDesc.desc=Bias correction for log-additive decomposition"
     })
     private EnhancedPropertyDescriptor biasDesc() {
-        if (x11().getMode() != DecompositionMode.LogAdditive)
+        if (x11().getMode() != DecompositionMode.LogAdditive) {
             return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("biasCorrection", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, BIAS_ID);

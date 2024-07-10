@@ -26,15 +26,22 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
     }
 
     public DateSelectorUI getSpan() {
-        return new DateSelectorUI(core().getBasic().getSpan(), UserInterfaceContext.INSTANCE.getDomain(), isRo(), selector->updateSpan(selector));
+        return new DateSelectorUI(core().getBasic().getSpan(), UserInterfaceContext.INSTANCE.getDomain(), isRo(), selector -> updateSpan(selector));
     }
-    
-    public void updateSpan(TimeSelector span){
+
+    public void updateSpan(TimeSelector span) {
         update(core().getBasic().toBuilder().span(span).build());
     }
 
     public boolean isPreprocessing() {
         return core().getBasic().isPreprocessing();
+    }
+
+    public void setPreprocessing(boolean pc) {
+        if (pc != isPreprocessing()) {
+            update(core().getBasic().toBuilder()
+                    .preprocessing(pc).build());
+        }
     }
 
     public boolean isPreliminaryCheck() {
@@ -58,10 +65,11 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
         if (desc != null) {
             descs.add(desc);
         }
-        desc = automdlDesc();
-        if (desc != null) {
-            descs.add(desc);
-        }
+//      excluded for the moment. That could change in the future        
+//        desc = preprocessingDesc();
+//        if (desc != null) {
+//            descs.add(desc);
+//        }
         return descs;
     }
 
@@ -92,12 +100,12 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
     }
 
     @Messages({
-        "basicSpecUI.automdlDesc.name=auto modelling",
-        "basicSpecUI.automdlDesc.desc=Allows automatic model identification"
+        "basicSpecUI.automdlDesc.name=Preprocessing",
+        "basicSpecUI.automdlDesc.desc=Preprocessing"
     })
-    private EnhancedPropertyDescriptor automdlDesc() {
+    private EnhancedPropertyDescriptor preprocessingDesc() {
         try {
-            PropertyDescriptor desc = new PropertyDescriptor("autoMdl", this.getClass());
+            PropertyDescriptor desc = new PropertyDescriptor("preprocessing", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, AUTOMDL_ID);
             desc.setDisplayName(Bundle.basicSpecUI_automdlDesc_name());
             desc.setShortDescription(Bundle.basicSpecUI_automdlDesc_desc());
