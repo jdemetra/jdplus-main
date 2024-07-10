@@ -10,6 +10,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - ![UI] Add link to online help documentation [#217](https://github.com/jdemetra/jdplus-main/issues/217)
+- ![UI] Add additional output in TramoSeats/X13 [#217](https://github.com/jdemetra/jdplus-main/issues/217)
+- ![UI] Add benchmarking results in TramoSeats/X13 output [#289](https://github.com/jdemetra/jdplus-main/issues/289)
 
 ### Fixed
 
@@ -26,10 +28,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix "Copy spec. to workspace" button [#228](https://github.com/jdemetra/jdplus-main/issues/228)
 - ![UI] Fix NPE in SaBatchUI renderer [#326](https://github.com/jdemetra/jdplus-main/issues/326)
 - ![UI] Fix GUI Excel output [#303](https://github.com/jdemetra/jdplus-main/issues/303)
+- ![UI] Fix some problems in saving regression effects [#295](https://github.com/jdemetra/jdplus-main/issues/295)
+- ![UI] Fix typos in spec dialog boxes
+- ![UI] Fix handling of regression variables with lags [#323](https://github.com/jdemetra/jdplus-main/issues/323)
+- ![UI] Fix numerical issues in canonical decomposition [#301](https://github.com/jdemetra/jdplus-main/issues/301)
+- ![UI] Fix a bug in protobuf translation of TramoSeats results
 
 ### Changed
 
 - ![UI] Replace splash screen with AI-generated image by [@jadoull](https://github.com/jadoull)
+- ![UI] Change the layout of SA summaries (TramoSeats/X13) [#262](https://github.com/jdemetra/jdplus-main/issues/262)
+- ![UI] Change the handling of the decomposition mode in X11 spec box
+
 
 ## [3.2.2] - 2024-03-14
 
