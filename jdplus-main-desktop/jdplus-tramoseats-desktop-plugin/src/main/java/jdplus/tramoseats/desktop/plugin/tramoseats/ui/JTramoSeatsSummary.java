@@ -83,15 +83,15 @@ public final class JTramoSeatsSummary extends JComponent implements Disposable{
         chart_.setTsUpdateMode(TsUpdateMode.None);
         siPanel_ = new JSIView();
 
-        JSplitPane split1 = NbComponents.newJSplitPane(JSplitPane.HORIZONTAL_SPLIT, chart_, siPanel_);
-        split1.setDividerLocation(0.6);
+        JSplitPane split1 = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, chart_, siPanel_);
+        split1.setDividerLocation(0.5);
         split1.setResizeWeight(.5);
 
         document_ = Box.createHorizontalBox();
 
-        JSplitPane split2 = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, document_, split1);
+        JSplitPane split2 = NbComponents.newJSplitPane(JSplitPane.HORIZONTAL_SPLIT, document_, split1);
         split2.setDividerLocation(0.5);
-        split2.setResizeWeight(.5);
+        split2.setResizeWeight(.4);
 
         add(split2, BorderLayout.CENTER);
     }

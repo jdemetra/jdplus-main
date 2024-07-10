@@ -51,15 +51,15 @@ public final class JX13Summary extends JComponent implements Disposable {
         chart.setTsUpdateMode(TsUpdateMode.None);
         this.siPanel = new JSIView();
 
-        JSplitPane split1 = NbComponents.newJSplitPane(JSplitPane.HORIZONTAL_SPLIT, chart, siPanel);
-        split1.setDividerLocation(0.6);
+        JSplitPane split1 = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, chart, siPanel);
+        split1.setDividerLocation(0.5);
         split1.setResizeWeight(.5);
 
         this.document = Box.createHorizontalBox();
 
-        JSplitPane split2 = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, document, split1);
+        JSplitPane split2 = NbComponents.newJSplitPane(JSplitPane.HORIZONTAL_SPLIT, document, split1);
         split2.setDividerLocation(0.5);
-        split2.setResizeWeight(.5);
+        split2.setResizeWeight(.4);
 
         add(split2, BorderLayout.CENTER);
     }

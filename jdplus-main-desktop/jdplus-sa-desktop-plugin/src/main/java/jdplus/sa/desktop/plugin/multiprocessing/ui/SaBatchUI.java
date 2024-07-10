@@ -280,7 +280,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         detail.addPropertyChangeListener(DefaultProcessingViewer.SPEC_SAVED, evt -> save((TsDocument) detail.getDocument()));
         detail.addPropertyChangeListener(DefaultProcessingViewer.SPEC_CHANGED, evt -> detail.onDocumentChanged());
         visualRepresentation = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, NbComponents.newJScrollPane(master), detail);
-        visualRepresentation.setResizeWeight(.60d);
+        visualRepresentation.setResizeWeight(.40d);
         visualRepresentation.setOneTouchExpandable(true);
 
         setLayout(new BorderLayout());
