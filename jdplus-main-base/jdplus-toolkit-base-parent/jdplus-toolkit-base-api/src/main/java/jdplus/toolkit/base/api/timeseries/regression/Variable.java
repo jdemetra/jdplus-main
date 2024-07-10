@@ -31,7 +31,8 @@ import lombok.NonNull;
  */
 @Development(status = Development.Status.Release)
 @lombok.Value
-@lombok.EqualsAndHashCode(exclude = {"attributes"})
+//@lombok.EqualsAndHashCode(exclude = {"attributes"})
+/* Some attributes could change the behaviour of some algorithms. So, they can't be excluded */
 @lombok.Builder(toBuilder = true)
 public class Variable<V extends ITsVariable> {
     
