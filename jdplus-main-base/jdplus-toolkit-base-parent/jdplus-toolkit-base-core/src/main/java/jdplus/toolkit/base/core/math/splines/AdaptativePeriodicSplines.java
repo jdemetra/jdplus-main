@@ -40,14 +40,15 @@ public class AdaptativePeriodicSplines {
         int[] fixedKnots;
         double precision;
         double selectionThreshold;
-        int maxIter;
+        int maxIter, minKnots;
 
         public static Builder builder() {
             return new Builder()
                     .splineOrder(4)
                     .precision(1e-6)
                     .selectionThreshold(.99)
-                    .maxIter(20);
+                    .maxIter(20)
+                    .minKnots(0);
         }
     }
 
@@ -156,6 +157,9 @@ public class AdaptativePeriodicSplines {
                 if (z[i] >= spec.getSelectionThreshold()) {
                     ++n;
                 }
+            }
+            if (n < spec.minKnots || (fixedKnots!= null && n == fixedKnots.length)) {
+                break;
             }
             aic = -2 * (ll - n);
             bic = -2 * ll + Math.log(B.getRowsCount()) * n;

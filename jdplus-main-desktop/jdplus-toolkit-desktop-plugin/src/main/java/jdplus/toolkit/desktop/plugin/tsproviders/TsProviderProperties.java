@@ -75,12 +75,12 @@ public class TsProviderProperties {
     }
 
     @NbBundle.Messages({
-        "bean.frequency.display=Frequency",
-        "bean.frequency.description=.",
+        "bean.frequency.display=Forced Frequency",
+        "bean.frequency.description=[Undefined] automatic detection of frequency; [specified frequency is the same as in the data source] this frequency is used; [specified frequency is lower than the one in the data source] specified Aggregation type is used to calculate the figures for the time series with the specified frequency; [specified frequency is higher than the one in the data source] the timeseries is filled with missing values to fit the specified frequency",
         "bean.aggregationType.display=Aggregation type",
         "bean.aggregationType.description=.",
         "bean.cleanMissing.display=Clean missing",
-        "bean.cleanMissing.description=Erases the Missing values of the series.",
+        "bean.cleanMissing.description=Erases the missing values at the beginning and at the end of the series.",
         "bean.allowPartial.display=Partial aggregation",
         "bean.allowPartial.description=Allow partial aggregation (only with average and sum aggregation)."
     })

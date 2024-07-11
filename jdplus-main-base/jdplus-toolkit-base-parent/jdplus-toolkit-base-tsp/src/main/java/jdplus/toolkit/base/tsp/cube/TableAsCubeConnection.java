@@ -16,13 +16,13 @@
  */
 package jdplus.toolkit.base.tsp.cube;
 
+import internal.toolkit.base.tsp.cube.CubeRepository;
 import jdplus.toolkit.base.api.timeseries.util.TsDataBuilder;
+import lombok.NonNull;
 import nbbrd.design.NotThreadSafe;
-import nbbrd.design.ThreadSafe;
 import nbbrd.io.AbstractIOIterator;
 import nbbrd.io.WrappedIOException;
 import nbbrd.io.function.IORunnable;
-import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
@@ -33,12 +33,12 @@ import java.util.stream.Stream;
  * @author Philippe Charles
  * @since 2.2.0
  */
-@ThreadSafe
+@NotThreadSafe
 @lombok.AllArgsConstructor(staticName = "of")
-public final class TableAsCubeConnection implements CubeConnection {
+public final class TableAsCubeConnection<DATE> implements CubeConnection {
 
-    @ThreadSafe
-    public interface Resource<DATE> {
+    @NotThreadSafe
+    public interface Resource<DATE> extends AutoCloseable {
 
         @Nullable
         Exception testConnection();
@@ -124,7 +124,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @lombok.NonNull
-    private final Resource<?> resource;
+    private final Resource<DATE> resource;
 
     @Override
     public @NonNull Optional<IOException> testConnection() {
@@ -143,6 +143,7 @@ public final class TableAsCubeConnection implements CubeConnection {
 
     @Override
     public @NonNull Stream<CubeSeries> getAllSeries(@NonNull CubeId id) throws IOException {
+        CubeRepository.checkNode(id);
         try {
             AllSeriesCursor cursor = resource.getAllSeriesCursor(id);
             return new AllSeriesIterator(id, cursor).asStream();
@@ -153,9 +154,10 @@ public final class TableAsCubeConnection implements CubeConnection {
 
     @Override
     public @NonNull Stream<CubeSeriesWithData> getAllSeriesWithData(@NonNull CubeId id) throws IOException {
+        CubeRepository.checkNode(id);
         try {
-            AllSeriesWithDataCursor cursor = resource.getAllSeriesWithDataCursor(id);
-            return new AllSeriesWithDataIterator(id, cursor, resource.newBuilder()).asStream();
+            AllSeriesWithDataCursor<DATE> cursor = resource.getAllSeriesWithDataCursor(id);
+            return new AllSeriesWithDataIterator<>(id, cursor, resource.newBuilder()).asStream();
         } catch (Exception ex) {
             throw WrappedIOException.wrap(ex);
         }
@@ -163,6 +165,7 @@ public final class TableAsCubeConnection implements CubeConnection {
 
     @Override
     public @NonNull Optional<CubeSeries> getSeries(@NonNull CubeId id) throws IOException {
+        CubeRepository.checkLeaf(id);
         try (SeriesCursor cursor = resource.getSeriesCursor(id)) {
             AbstractIOIterator<CubeSeries> result = new SeriesIterator(id, cursor);
             return result.hasNextWithIO() ? Optional.of(result.nextWithIO()) : Optional.empty();
@@ -173,8 +176,9 @@ public final class TableAsCubeConnection implements CubeConnection {
 
     @Override
     public @NonNull Optional<CubeSeriesWithData> getSeriesWithData(@NonNull CubeId id) throws IOException {
-        try (SeriesWithDataCursor cursor = resource.getSeriesWithDataCursor(id)) {
-            AbstractIOIterator<CubeSeriesWithData> result = new SeriesWithDataIterator(id, cursor, resource.newBuilder());
+        CubeRepository.checkLeaf(id);
+        try (SeriesWithDataCursor<DATE> cursor = resource.getSeriesWithDataCursor(id)) {
+            AbstractIOIterator<CubeSeriesWithData> result = new SeriesWithDataIterator<>(id, cursor, resource.newBuilder());
             return result.hasNextWithIO() ? Optional.of(result.nextWithIO()) : Optional.empty();
         } catch (Exception ex) {
             throw WrappedIOException.wrap(ex);
@@ -183,6 +187,7 @@ public final class TableAsCubeConnection implements CubeConnection {
 
     @Override
     public @NonNull Stream<CubeId> getChildren(@NonNull CubeId id) throws IOException {
+        CubeRepository.checkNode(id);
         try {
             ChildrenCursor cursor = resource.getChildrenCursor(id);
             return new ChildrenIterator(id, cursor).asStream();
@@ -220,6 +225,11 @@ public final class TableAsCubeConnection implements CubeConnection {
 
     @Override
     public void close() throws IOException {
+        try {
+            resource.close();
+        } catch (Exception ex) {
+            throw WrappedIOException.wrap(ex);
+        }
     }
 
     //<editor-fold defaultstate="collapsed" desc="Implementation details">
@@ -230,7 +240,7 @@ public final class TableAsCubeConnection implements CubeConnection {
         abstract protected TableCursor getTableCursor();
 
         @Override
-        public Stream<T> asStream() {
+        public @NonNull Stream<T> asStream() {
             return super.asStream().onClose(IORunnable.unchecked(this::close));
         }
 
@@ -292,7 +302,7 @@ public final class TableAsCubeConnection implements CubeConnection {
                     t0 = cursor.nextRow();
                     first = false;
                 }
-                while (t0) {
+                if (t0) {
                     data.clear();
                     currentId = cursor.getDimValues();
                     currentLabel = cursor.getLabelOrNull();
@@ -320,7 +330,7 @@ public final class TableAsCubeConnection implements CubeConnection {
         }
 
         @Override
-        protected CubeSeriesWithData get() throws IOException {
+        protected CubeSeriesWithData get() {
             return new CubeSeriesWithData(parentId.child(currentId), currentLabel, NO_META, data.build());
         }
 
@@ -331,7 +341,7 @@ public final class TableAsCubeConnection implements CubeConnection {
     }
 
     @lombok.RequiredArgsConstructor
-    private static final class SeriesIterator<DATE> extends AbstractTableIterator<CubeSeries> {
+    private static final class SeriesIterator extends AbstractTableIterator<CubeSeries> {
 
         private final CubeId parentId;
         private final SeriesCursor cursor;
@@ -354,7 +364,7 @@ public final class TableAsCubeConnection implements CubeConnection {
         }
 
         @Override
-        protected CubeSeries get() throws IOException {
+        protected CubeSeries get() {
             return new CubeSeries(parentId, currentLabel, NO_META);
         }
 
@@ -401,7 +411,7 @@ public final class TableAsCubeConnection implements CubeConnection {
         }
 
         @Override
-        protected CubeSeriesWithData get() throws IOException {
+        protected CubeSeriesWithData get() {
             return new CubeSeriesWithData(parentId, currentLabel, NO_META, data.build());
         }
 

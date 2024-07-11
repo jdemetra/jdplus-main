@@ -216,6 +216,8 @@ class TradingDaysSpecMapping {
                 if (p != null) {
                     ok = true;
                     tdcoef[j] = p;
+                } else {
+                    tdcoef[j] = Parameter.undefined();
                 }
             }
             if (!ok) {

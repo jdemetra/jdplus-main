@@ -87,7 +87,25 @@ public class Data {
             {MAR_, 7.89}
     });
 
-    public final ArrayGridInput VGRID_GAP = ArrayGridInput.of(new Object[][]{
+    public final ArrayGridInput VGRID_GAP1 = ArrayGridInput.of(new Object[][]{
+            {null, null, "S1", null},
+            {JAN_, null, 3.14, null},
+            {FEB_, null, 4.56, null},
+            {MAR_, null, 7.89, null},
+            {null, null, null, null}
+    });
+
+    public final ArrayGridInput VGRID_GAP2 = ArrayGridInput.of(new Object[][]{
+            {null, null, null, null},
+            {null, null, "S1", null},
+            {JAN_, null, 3.14, null},
+            {FEB_, null, 4.56, null},
+            {MAR_, null, 7.89, null},
+            {null, null, null, null}
+    });
+
+    public final ArrayGridInput VGRID_GAP3 = ArrayGridInput.of(new Object[][]{
+            {null, null, "G1", null},
             {null, null, "S1", null},
             {JAN_, null, 3.14, null},
             {FEB_, null, 4.56, null},

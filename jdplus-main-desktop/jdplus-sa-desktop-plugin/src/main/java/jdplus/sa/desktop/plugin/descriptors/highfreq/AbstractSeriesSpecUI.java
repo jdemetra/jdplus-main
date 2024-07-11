@@ -62,8 +62,8 @@ public abstract class AbstractSeriesSpecUI implements IPropertyDescriptors {
     private static final int SPAN_ID = 1, LOG_ID = 2;
 
     @NbBundle.Messages({
-        "seriesSpecUI.spanDesc.name=Model span",
-        "seriesSpecUI.spanDesc.desc=Span used for the estimation of the pre-processing model"
+        "seriesSpecUI.spanDesc.name=Series span",
+        "seriesSpecUI.spanDesc.desc=Time span used for the processing"
     })
     private EnhancedPropertyDescriptor spanDesc() {
         try {

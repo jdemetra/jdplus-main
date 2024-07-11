@@ -84,7 +84,11 @@ public class X13Dictionaries {
             .item(Item.builder().name(D12A).description("forecasts of the final trend component").outputClass(TsData.class).build())
             .item(Item.builder().name(D16A).description("forecasts of the final seasonal component").outputClass(TsData.class).build())
             .item(Item.builder().name(D18A).description("forecasts of the calendar effects").outputClass(TsData.class).build())
-            .build();
+             .item(Item.builder().name(D11B).description("backcasts of the final seasonally adjusted series").outputClass(TsData.class).build())
+            .item(Item.builder().name(D12B).description("backcasts of the final trend component").outputClass(TsData.class).build())
+            .item(Item.builder().name(D16B).description("backcasts of the final seasonal component").outputClass(TsData.class).build())
+            .item(Item.builder().name(D18B).description("backcasts of the calendar effects").outputClass(TsData.class).build())
+           .build();
     
     public final String E1="e1", E2="e2", E3="e3", E11="e11", E_TABLES="e-tables";
     
@@ -139,6 +143,8 @@ public class X13Dictionaries {
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICSEASONALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICTRADINGDAYS))
             .dictionary(new PrefixedDictionary(MSTATISTICS, MSTATS))
+            .dictionary(new PrefixedDictionary(SaDictionaries.QUALITY, SaDictionaries.SA_QUALITY))
+            .dictionary(new PrefixedDictionary(SaDictionaries.BENCHMARKING, SaDictionaries.SABENCHMARKING))
             .build();
     
 }

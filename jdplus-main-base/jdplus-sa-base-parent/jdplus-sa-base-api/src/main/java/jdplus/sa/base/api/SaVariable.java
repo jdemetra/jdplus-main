@@ -84,7 +84,7 @@ public class SaVariable {
     
     public ComponentType regressionEffect(Variable var){
         String effect=var.attribute(REGEFFECT);
-        return effect == null ? null : ComponentType.valueOf(effect);
+        return effect == null ? ComponentType.Undefined : ComponentType.valueOf(effect);
     }
     
     public Variable setComponentType(Variable var, ComponentType type){

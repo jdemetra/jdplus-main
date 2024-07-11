@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package internal.util;
+package jdplus.toolkit.base.tsp.fixme;
 
 import jdplus.toolkit.base.tsp.fixme.Strings;
 import org.junit.jupiter.api.Test;

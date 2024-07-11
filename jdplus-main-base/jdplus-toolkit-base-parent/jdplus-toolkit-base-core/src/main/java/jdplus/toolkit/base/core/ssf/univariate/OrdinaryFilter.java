@@ -78,10 +78,13 @@ public class OrdinaryFilter {
             // compute ZPZ'
             double v = loading.ZX(t, M);
             // check that ZPZ' is non negative (P semi-definite positive)
-            if (v < -Constants.getEpsilon()) {
-                throw new SsfException();
-            }
-            if (v < Constants.getEpsilon()) {
+            // Theoretically, that should never happen, by construction. 
+            // But for numerical reasons, it could appears. Difficult to find a meaningful 
+            // limit. The next statement tries to correct the problem
+//            if (v < -Constants.getEpsilon()) {
+//                throw new SsfException();
+//            }
+            if (v < State.ZERO) {
                 v = 0;
             }
             if (error != null) {

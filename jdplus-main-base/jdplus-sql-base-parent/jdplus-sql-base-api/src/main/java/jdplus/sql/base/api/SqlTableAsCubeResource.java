@@ -1,72 +1,60 @@
 /*
  * Copyright 2016 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sql.base.api;
 
-import nbbrd.design.ThreadSafe;
-import internal.sql.base.api.SqlTableAsCubeUtil;
-import internal.sql.base.api.SelectBuilder;
 import internal.sql.base.api.ResultSetFunc;
-import nbbrd.design.VisibleForTesting;
-import static internal.sql.base.api.ResultSetFunc.onDate;
-import static internal.sql.base.api.ResultSetFunc.onGetString;
-import static internal.sql.base.api.ResultSetFunc.onGetStringArray;
-import static internal.sql.base.api.ResultSetFunc.onNull;
-import static internal.sql.base.api.ResultSetFunc.onNumber;
-import jdplus.toolkit.base.tsp.cube.CubeId;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.AllSeriesCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.AllSeriesWithDataCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.ChildrenCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.SeriesWithDataCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeUtil;
-import jdplus.toolkit.base.tsp.cube.TableDataParams;
+import internal.sql.base.api.SelectBuilder;
+import internal.sql.base.api.SqlTableAsCubeUtil;
 import jdplus.toolkit.base.api.timeseries.util.ObsCharacteristics;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 import jdplus.toolkit.base.api.timeseries.util.TsDataBuilder;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.SeriesCursor;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import jdplus.toolkit.base.api.util.Validatable;
+import jdplus.toolkit.base.api.util.Validations;
+import jdplus.toolkit.base.tsp.cube.CubeId;
+import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection;
+import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.*;
+import jdplus.toolkit.base.tsp.cube.TableAsCubeUtil;
+import jdplus.toolkit.base.tsp.cube.TableDataParams;
+import lombok.NonNull;
+import nbbrd.design.NotThreadSafe;
+import nbbrd.design.VisibleForTesting;
+import nbbrd.sql.jdbc.SqlIdentifierQuoter;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.sql.*;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import nbbrd.sql.jdbc.SqlConnectionSupplier;
-import nbbrd.sql.jdbc.SqlIdentifierQuoter;
-import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
+import static internal.sql.base.api.ResultSetFunc.*;
 
 /**
- *
  * @author Philippe Charles
  */
-@ThreadSafe
-@lombok.AllArgsConstructor(staticName = "of")
-public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resource<java.util.Date> {
+@SuppressWarnings("RedundantThrows")
+@NotThreadSafe
+@lombok.Builder(buildMethodName = "buildWithoutValidation")
+public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resource<java.util.Date>, Validatable<SqlTableAsCubeResource> {
 
     @lombok.NonNull
-    private final SqlConnectionSupplier supplier;
-
-    @lombok.NonNull
-    private final String db;
+    private final ConnectionSource source;
 
     @lombok.NonNull
     private final String table;
@@ -83,9 +71,15 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
     @lombok.NonNull
     private final String labelColumn;
 
+    private final Consumer<String> onCall;
+
     @Override
     public Exception testConnection() {
-        return null;
+        try (Connection ignore = source.open()) {
+            return null;
+        } catch (SQLException ex) {
+            return ex;
+        }
     }
 
     @Override
@@ -95,27 +89,31 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
 
     @Override
     public @NonNull AllSeriesCursor getAllSeriesCursor(@NonNull CubeId id) throws Exception {
-        return new AllSeriesQuery(id, table, labelColumn).call(supplier, db);
+        return new AllSeriesQuery(checkNode(id), table, labelColumn).call(source, onCall);
     }
 
     @Override
     public @NonNull AllSeriesWithDataCursor<java.util.Date> getAllSeriesWithDataCursor(@NonNull CubeId id) throws Exception {
-        return new AllSeriesWithDataQuery(id, table, labelColumn, tdp).call(supplier, db);
+        return new AllSeriesWithDataQuery(checkNode(id), table, labelColumn, tdp).call(source, onCall);
     }
 
     @Override
     public @NonNull SeriesCursor getSeriesCursor(@NonNull CubeId id) throws Exception {
-        return new SeriesQuery(id, table, labelColumn).call(supplier, db);
+        checkLeaf(id);
+        if (labelColumn.isEmpty()) {
+            return SqlTableAsCubeUtil.noLabelSeriesCursor();
+        }
+        return new SeriesQuery(id, table, labelColumn).call(source, onCall);
     }
 
     @Override
     public @NonNull SeriesWithDataCursor<java.util.Date> getSeriesWithDataCursor(@NonNull CubeId id) throws Exception {
-        return new SeriesWithDataQuery(id, table, labelColumn, tdp).call(supplier, db);
+        return new SeriesWithDataQuery(checkLeaf(id), table, labelColumn, tdp).call(source, onCall);
     }
 
     @Override
     public @NonNull ChildrenCursor getChildrenCursor(@NonNull CubeId id) throws Exception {
-        return new ChildrenQuery(id, table).call(supplier, db);
+        return new ChildrenQuery(checkNode(id), table).call(source, onCall);
     }
 
     @Override
@@ -125,7 +123,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
 
     @Override
     public @NonNull String getDisplayName() throws Exception {
-        return TableAsCubeUtil.getDisplayName(db, table, tdp.getValueColumn(), gathering);
+        return TableAsCubeUtil.getDisplayName(source.getId(), table, tdp.getValueColumn(), gathering);
     }
 
     @Override
@@ -138,7 +136,33 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         return TableAsCubeUtil.getDisplayNodeName(id);
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Implementation details">
+    @Override
+    public void close() throws Exception {
+    }
+
+    @Override
+    public @NonNull SqlTableAsCubeResource validate() throws IllegalArgumentException {
+        Validations.notBlank(table, "table");
+        return this;
+    }
+
+    public static final class Builder implements Validatable.Builder<SqlTableAsCubeResource> {
+    }
+
+    private static CubeId checkNode(CubeId id) {
+        if (id.isSeries() || id.isVoid()) {
+            throw new IllegalArgumentException(id.toString());
+        }
+        return id;
+    }
+
+    private static CubeId checkLeaf(CubeId id) {
+        if (!id.isSeries() && !id.isVoid()) {
+            throw new IllegalArgumentException(id.toString());
+        }
+        return id;
+    }
+
     private static final Collector<? super String, ?, String> LABEL_COLLECTOR = Collectors.joining(", ");
 
     private static void closeAll(Exception root, AutoCloseable... items) {
@@ -182,12 +206,12 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
     }
 
     /**
-     * An class that handles SQL queries from Jdbc.
+     * A class that handles SQL queries from Jdbc.
      *
      * @author Philippe Charles
      */
     @VisibleForTesting
-    interface JdbcQuery<T> {
+    sealed interface JdbcQuery<T extends AutoCloseable> permits AllSeriesQuery, AllSeriesWithDataQuery, SeriesQuery, SeriesWithDataQuery, ChildrenQuery {
 
         /**
          * Creates an SQL statement that may contain one or more '?' IN
@@ -205,20 +229,23 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
          * result.
          *
          * @param rs the ResultSet to be processed
-         * @return
-         * @throws SQLException
+         * @return a non-null resource
+         * @throws SQLException if something goes wrong on JDBC side
          */
-        @Nullable
+        @NonNull
         T process(@NonNull ResultSet rs, @NonNull AutoCloseable closeable) throws SQLException;
 
-        @Nullable
-        default T call(@NonNull SqlConnectionSupplier supplier, @NonNull String connectionString) throws SQLException {
+        @NonNull
+        default T call(@NonNull ConnectionSource supplier, @Nullable Consumer<String> onCall) throws SQLException {
             Connection conn = null;
             PreparedStatement cmd = null;
             ResultSet rs = null;
             try {
-                conn = supplier.getConnection(connectionString);
+                conn = supplier.open();
                 String queryString = getQueryString(conn.getMetaData());
+                if (onCall != null) {
+                    onCall.accept("Calling " + getClass().getSimpleName() + "' with '" + queryString + "'");
+                }
                 cmd = conn.prepareStatement(queryString);
                 setParameters(cmd);
                 rs = cmd.executeQuery();
@@ -239,7 +266,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         private final String labelColumn;
 
         @Override
-        public String getQueryString(DatabaseMetaData metaData) throws SQLException {
+        public @NonNull String getQueryString(@NonNull DatabaseMetaData metaData) throws SQLException {
             return SelectBuilder.from(tableName)
                     .distinct(true)
                     .select(toSelect(ref)).select(labelColumn)
@@ -250,14 +277,14 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         }
 
         @Override
-        public void setParameters(PreparedStatement statement) throws SQLException {
+        public void setParameters(@NonNull PreparedStatement statement) throws SQLException {
             for (int i = 0; i < ref.getLevel(); i++) {
                 statement.setString(i + 1, ref.getDimensionValue(i));
             }
         }
 
         @Override
-        public AllSeriesCursor process(ResultSet rs, AutoCloseable closeable) throws SQLException {
+        public @NonNull AllSeriesCursor process(@NonNull ResultSet rs, @NonNull AutoCloseable closeable) {
             ResultSetFunc<String[]> toDimValues = onGetStringArray(1, ref.getDepth());
             ResultSetFunc<String> toLabel = !labelColumn.isEmpty() ? onGetString(2) : onNull();
 
@@ -275,7 +302,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         private final TableDataParams tdp;
 
         @Override
-        public String getQueryString(DatabaseMetaData metaData) throws SQLException {
+        public @NonNull String getQueryString(@NonNull DatabaseMetaData metaData) throws SQLException {
             return SelectBuilder.from(tableName)
                     .select(toSelect(ref)).select(tdp.getPeriodColumn(), tdp.getValueColumn()).select(labelColumn)
                     .filter(toFilter(ref))
@@ -285,14 +312,14 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         }
 
         @Override
-        public void setParameters(PreparedStatement statement) throws SQLException {
+        public void setParameters(@NonNull PreparedStatement statement) throws SQLException {
             for (int i = 0; i < ref.getLevel(); i++) {
                 statement.setString(i + 1, ref.getDimensionValue(i));
             }
         }
 
         @Override
-        public AllSeriesWithDataCursor<java.util.Date> process(ResultSet rs, AutoCloseable closeable) throws SQLException {
+        public @NonNull AllSeriesWithDataCursor<java.util.Date> process(@NonNull ResultSet rs, @NonNull AutoCloseable closeable) throws SQLException {
             // Beware that some jdbc drivers require to get the columns values
             // in the order of the query and only once.
             // So, call the following methods once per row and in this order.
@@ -315,8 +342,9 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         private final String labelColumn;
 
         @Override
-        public String getQueryString(DatabaseMetaData metaData) throws SQLException {
+        public @NonNull String getQueryString(@NonNull DatabaseMetaData metaData) throws SQLException {
             return SelectBuilder.from(tableName)
+                    .distinct(true)
                     .select(labelColumn)
                     .filter(toFilter(ref))
                     .withQuoter(SqlIdentifierQuoter.of(metaData))
@@ -324,14 +352,14 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         }
 
         @Override
-        public void setParameters(PreparedStatement statement) throws SQLException {
+        public void setParameters(@NonNull PreparedStatement statement) throws SQLException {
             for (int i = 0; i < ref.getLevel(); i++) {
                 statement.setString(i + 1, ref.getDimensionValue(i));
             }
         }
 
         @Override
-        public SeriesCursor process(ResultSet rs, AutoCloseable closeable) throws SQLException {
+        public @NonNull SeriesCursor process(@NonNull ResultSet rs, @NonNull AutoCloseable closeable) {
             ResultSetFunc<String> toLabel = !labelColumn.isEmpty() ? onGetString(1) : onNull();
 
             return SqlTableAsCubeUtil.seriesCursor(rs, closeable, toLabel);
@@ -348,7 +376,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         private final TableDataParams tdp;
 
         @Override
-        public String getQueryString(DatabaseMetaData metaData) throws SQLException {
+        public @NonNull String getQueryString(@NonNull DatabaseMetaData metaData) throws SQLException {
             return SelectBuilder.from(tableName)
                     .select(tdp.getPeriodColumn(), tdp.getValueColumn()).select(labelColumn)
                     .filter(toFilter(ref))
@@ -358,14 +386,14 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         }
 
         @Override
-        public void setParameters(PreparedStatement statement) throws SQLException {
+        public void setParameters(@NonNull PreparedStatement statement) throws SQLException {
             for (int i = 0; i < ref.getLevel(); i++) {
                 statement.setString(i + 1, ref.getDimensionValue(i));
             }
         }
 
         @Override
-        public SeriesWithDataCursor<java.util.Date> process(ResultSet rs, AutoCloseable closeable) throws SQLException {
+        public @NonNull SeriesWithDataCursor<java.util.Date> process(@NonNull ResultSet rs, @NonNull AutoCloseable closeable) throws SQLException {
             // Beware that some jdbc drivers require to get the columns values
             // in the order of the query and only once.
             // So, call the following methods once per row and in this order.
@@ -386,7 +414,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         private final String tableName;
 
         @Override
-        public String getQueryString(DatabaseMetaData metaData) throws SQLException {
+        public @NonNull String getQueryString(@NonNull DatabaseMetaData metaData) throws SQLException {
             String column = ref.getDimensionId(ref.getLevel());
             return SelectBuilder.from(tableName)
                     .distinct(true)
@@ -398,18 +426,17 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         }
 
         @Override
-        public void setParameters(PreparedStatement statement) throws SQLException {
+        public void setParameters(@NonNull PreparedStatement statement) throws SQLException {
             for (int i = 0; i < ref.getLevel(); i++) {
                 statement.setString(i + 1, ref.getDimensionValue(i));
             }
         }
 
         @Override
-        public ChildrenCursor process(ResultSet rs, AutoCloseable closeable) throws SQLException {
+        public @NonNull ChildrenCursor process(@NonNull ResultSet rs, @NonNull AutoCloseable closeable) {
             ResultSetFunc<String> toChild = onGetString(1);
 
             return SqlTableAsCubeUtil.childrenCursor(rs, closeable, toChild);
         }
     }
-    //</editor-fold>
 }

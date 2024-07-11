@@ -591,12 +591,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D8),
             Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D9),
             Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D10),
-            Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D10A),
-            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D11),
-            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D11A),
-            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D12),
-            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D12A),
-            Dictionary.concatenate(X13Dictionaries.X11, X13Dictionaries.D13)
+            Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D11),
+            Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D12),
+            Dictionary.concatenate(X13Dictionaries.X11, X11Dictionaries.D13)
         };
 
         public DTablesFactory() {

@@ -224,7 +224,7 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
         preArray();
         DataBlock z = zconstraints();
         double fi = z.ssq();
-        if (fi < Constants.getEpsilon()) {
+        if (fi < State.ZERO) {
             fi = 0;
         }
         updateInfo.setDiffuseVariance(fi);
@@ -233,7 +233,7 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
         if (error != null) {
             f += error.at(t);
         }
-        if (Math.abs(f) < Constants.getEpsilon()) {
+        if (Math.abs(f) < State.ZERO) {
             f = 0;
         }
 
@@ -244,7 +244,7 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
             return false;
         } else {
             double e = y - loading.ZX(t, astate.a());
-            if (Math.abs(e) < scale * Constants.getEpsilon()) {
+            if (Math.abs(e) < scale * State.ZERO) {
                 e = 0;
             }
             if (fi == 0 && f == 0 && e != 0) {
@@ -259,7 +259,7 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
             FastMatrix B = constraints();
             fn.transform(z, B);
             updateInfo.Mi().setAY(z.get(0), B.column(0));
-            updateInfo.Mi().apply(x -> Math.abs(x) < Constants.getEpsilon() ? 0 : x);
+            updateInfo.Mi().apply(x -> Math.abs(x) < State.ZERO ? 0 : x);
             // move right
             astate.dropDiffuseConstraint();
         }

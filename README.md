@@ -1,6 +1,7 @@
 # JDemetra+ v3
 
 [![Download](https://img.shields.io/github/release/jdemetra/jdplus-main.svg)](https://github.com/jdemetra/jdplus-main/releases/latest)
+[![Changes](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fjdemetra%2Fjdplus-main%2Fbadges%2Funreleased-changes.json)](https://github.com/jdemetra/jdplus-main/blob/develop/CHANGELOG.md)
 ![GitHub All Releases](https://img.shields.io/github/downloads/jdemetra/jdplus-main/total)
 ![GitHub Releases](https://img.shields.io/github/downloads/jdemetra/jdplus-main/latest/total)
 

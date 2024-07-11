@@ -5,6 +5,8 @@
 package jdplus.tramoseats.base.api.tramoseats;
 
 import jdplus.sa.base.api.SaDictionaries;
+import jdplus.toolkit.base.api.dictionaries.AtomicDictionary;
+import jdplus.toolkit.base.api.dictionaries.AtomicDictionary.Item;
 import jdplus.tramoseats.base.api.seats.SeatsDictionaries;
 import jdplus.toolkit.base.api.dictionaries.ComplexDictionary;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
@@ -21,7 +23,6 @@ public class TramoSeatsDictionaries {
     // Decomposition
     public final String SEATS = SaDictionaries.DECOMPOSITION;
 
-
     // finals
     public final String FINAL = "";
      
@@ -35,6 +36,8 @@ public class TramoSeatsDictionaries {
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.COMBINEDSEASONALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICSEASONALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICTRADINGDAYS))
+            .dictionary(new PrefixedDictionary(SaDictionaries.QUALITY, SaDictionaries.SA_QUALITY))
+            .dictionary(new PrefixedDictionary(SaDictionaries.BENCHMARKING, SaDictionaries.SABENCHMARKING))
             .build();
 
      

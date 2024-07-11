@@ -1,36 +1,36 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package internal.sql.base.api;
 
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.AllSeriesCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.AllSeriesWithDataCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.ChildrenCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.SeriesCursor;
-import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.SeriesWithDataCursor;
+import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.sql.ResultSet;
 import java.util.Date;
 
 /**
- *
  * @author Philippe Charles
  */
 @lombok.experimental.UtilityClass
 public class SqlTableAsCubeUtil {
+
+    public SeriesCursor noLabelSeriesCursor() {
+        return new NoLabelSeriesCursor();
+    }
 
     public AllSeriesCursor allSeriesCursor(ResultSet rs, AutoCloseable closeable, ResultSetFunc<String[]> toDimValues, ResultSetFunc<String> toLabel) {
         return new ResultSetAllSeriesCursor(rs, closeable, toDimValues, toLabel);
@@ -53,6 +53,28 @@ public class SqlTableAsCubeUtil {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Implementation details">
+    private static final class NoLabelSeriesCursor implements SeriesCursor {
+
+        private boolean done = false;
+
+        @Override
+        public boolean nextRow() {
+            if (done) return false;
+            done = true;
+            return true;
+        }
+
+        @Override
+        public void close() {
+            done = true;
+        }
+
+        @Override
+        public @Nullable String getLabelOrNull() {
+            return null;
+        }
+    }
+
     @lombok.RequiredArgsConstructor
     private static final class ResultSetAllSeriesCursor implements AllSeriesCursor {
 

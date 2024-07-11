@@ -341,13 +341,17 @@ public final class SymmetricFilter implements IFiniteFilter {
     /**
      *
      * @param r
+     * @param simplify
      * @return
      */
-    public SymmetricFilter minus(final SymmetricFilter r) {
-        return new SymmetricFilter(polynomial.minus(r.polynomial));
+    public SymmetricFilter minus(final SymmetricFilter r, boolean simplify) {
+        return new SymmetricFilter(polynomial.minus(r.polynomial, simplify));
     }
 
-    /**
+     public SymmetricFilter minus(final SymmetricFilter r) {
+        return new SymmetricFilter(polynomial.minus(r.polynomial, polynomial.degree() == r.polynomial.degree()));
+    }
+   /**
      *
      * @return
      */

@@ -18,12 +18,13 @@ package jdplus.toolkit.desktop.plugin.core.ts.actions;
 
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
-import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.base.api.timeseries.TsDocument;
 import nbbrd.design.ClassNameConstant;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -69,9 +70,17 @@ public final class ExportSpecToWorkSpace extends ActiveViewAction<WorkspaceTsTop
         WorkspaceItem cur = ws.getDocument();
         TsDocument doc = (TsDocument) cur.getElement();
         ProcSpecification spec = doc.getSpecification();
-        WorkspaceItemManager wsMgr = WorkspaceFactory.getInstance().getManager(cur.getFamily());
-        WorkspaceItem ndoc = WorkspaceItem.newItem(wsMgr.getId(), wsMgr.getNextItemName(null), spec);
-        ndoc.setComments(cur.getComments());
-        WorkspaceFactory.getInstance().getActiveWorkspace().add(ndoc);
+        Class<? extends ProcSpecification> specClass = spec.getClass();
+        WorkspaceFactory.getInstance().getManagers().stream()
+                .filter(mgr -> mgr.getItemClass().equals(specClass))
+                .findFirst()
+                .ifPresentOrElse(wsMgr -> {
+                    WorkspaceItem ndoc = WorkspaceItem.newItem(wsMgr.getId(), wsMgr.getNextItemName(null), spec);
+                    ndoc.setComments(cur.getComments());
+                    WorkspaceFactory.getInstance().getActiveWorkspace().add(ndoc);
+                }, () -> {
+                    NotifyDescriptor nd = new NotifyDescriptor.Message("Could not copy specification to workspace (No manager found)");
+                    DialogDisplayer.getDefault().notify(nd);
+                });
     }
 }

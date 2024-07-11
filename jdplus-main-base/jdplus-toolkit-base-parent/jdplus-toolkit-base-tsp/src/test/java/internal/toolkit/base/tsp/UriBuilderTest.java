@@ -14,10 +14,8 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package jdplus.toolkit.base.api.util;
+package internal.toolkit.base.tsp;
 
-import jdplus.toolkit.base.tsp.fixme.UriBuilder;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -27,7 +25,8 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+
 
 /**
  * @author Philippe Charles
@@ -47,50 +46,44 @@ public class UriBuilderTest {
     final String rawScheme = "http";
     final String rawHost = "www.nbb.be";
     final String rawPath = "/dq%2Frd/demetra%2B";
-    final String rawQuery = "*=%5B1.2%2C+2.6%5D&email=contact%40nbb.be&file=C%3A%5CProgram+Files%5Cdata.xls";
+    final String rawQuery = "*=%5B1.2%2C%202.6%5D&email=contact%40nbb.be&file=C%3A%5CProgram%20Files%5Cdata.xls";
 
     @Test
     public void testBuildString() {
         UriBuilder builder = new UriBuilder(scheme, host).path(path).query(query);
-        assertEquals(rawScheme + "://" + rawHost + rawPath + "?" + rawQuery, builder.buildString());
+        assertThat(builder.buildString())
+                .isEqualTo(rawScheme + "://" + rawHost + rawPath + "?" + rawQuery);
     }
 
     @Test
     public void testUriVsString() {
         UriBuilder builder = new UriBuilder(scheme, host).path(path).query(query);
-        assertEquals(builder.buildString(), builder.build().toString());
+        assertThat(builder.build().toString())
+                .isEqualTo(builder.buildString());
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
     public void testScheme() {
-        URI uri = new UriBuilder(scheme, host).path(path).query(query).build();
-        assertEquals(scheme, uri.getScheme());
+        assertThat(new UriBuilder(scheme, host).path(path).query(query).build().getScheme()).isEqualTo(scheme);
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new UriBuilder("", host).build());
+
+        assertThatNullPointerException()
+                .isThrownBy(() -> new UriBuilder(null, host).build());
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
-    public void testSchemeEmpty() {
-        new UriBuilder("", host).build();
-    }
-
-    @org.junit.Test(expected = NullPointerException.class)
-    public void testSchemeNull() {
-        new UriBuilder(null, host).build();
-    }
-
+    @SuppressWarnings("DataFlowIssue")
     @Test
     public void testHost() {
-        URI uri = new UriBuilder(scheme, host).path(path).query(query).build();
-        assertEquals(host, uri.getHost());
-    }
+        assertThat(new UriBuilder(scheme, host).path(path).query(query).build().getHost()).isEqualTo(host);
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
-    public void testHostEmpty() {
-        new UriBuilder(scheme, "").build();
-    }
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new UriBuilder(scheme, "").build());
 
-    @org.junit.Test(expected = NullPointerException.class)
-    public void testHostNull() {
-        new UriBuilder("", null).build();
+        assertThatNullPointerException()
+                .isThrownBy(() -> new UriBuilder(scheme, null).build());
     }
 
     @Test
@@ -100,35 +93,35 @@ public class UriBuilderTest {
 //        assertEquals("", new UriBuilder(scheme, host).path((String)null).build().getRawPath());
 //        assertEquals("", new UriBuilder(scheme, host).path((String[])null).build().getRawPath());
 
-        Assertions.assertThat(new UriBuilder(scheme, host).build().getRawPath()).isEmpty();
-        Assertions.assertThat(new UriBuilder(scheme, host).path(path).build().getRawPath()).isEqualTo(rawPath);
+        assertThat(new UriBuilder(scheme, host).build().getRawPath()).isEmpty();
+        assertThat(new UriBuilder(scheme, host).path(path).build().getRawPath()).isEqualTo(rawPath);
     }
 
     @Test
     public void testQuery() {
         URI uri = new UriBuilder(scheme, host).path(path).query(query).build();
-        assertEquals(rawQuery, uri.getRawQuery());
+        assertThat(uri.getRawQuery()).isEqualTo(rawQuery);
         Map<String, String> tmp = UriBuilder.getQueryMap(uri);
-        assertNotNull(tmp);
-        assertEquals(query.size(), tmp.size());
+        assertThat(tmp).isNotNull();
+        assertThat(tmp.size()).isEqualTo(query.size());
         for (Entry<String, String> o : tmp.entrySet()) {
-            assertTrue(query.containsKey(o.getKey()));
-            assertEquals(o.getValue(), query.get(o.getKey()));
+            assertThat(query.containsKey(o.getKey())).isTrue();
+            assertThat(query.get(o.getKey())).isEqualTo(o.getValue());
         }
     }
 
     @Test
     public void testGetPathArray() {
-        Assertions.assertThat(new UriBuilder(scheme, host).build()).satisfies(o -> {
-            Assertions.assertThat(UriBuilder.getPathArray(o, 0)).isNull();
-            Assertions.assertThat(UriBuilder.getPathArray(o, 1)).isNull();
+        assertThat(new UriBuilder(scheme, host).build()).satisfies(o -> {
+            assertThat(UriBuilder.getPathArray(o, 0)).isNull();
+            assertThat(UriBuilder.getPathArray(o, 1)).isNull();
         });
 
-        Assertions.assertThat(new UriBuilder(scheme, host).path(path).build()).satisfies(o -> {
-            Assertions.assertThat(UriBuilder.getPathArray(o, 0)).isNull();
-            Assertions.assertThat(UriBuilder.getPathArray(o, 1)).isNull();
-            Assertions.assertThat(UriBuilder.getPathArray(o, 2)).containsExactly(path);
-            Assertions.assertThat(UriBuilder.getPathArray(o, 3)).isNull();
+        assertThat(new UriBuilder(scheme, host).path(path).build()).satisfies(o -> {
+            assertThat(UriBuilder.getPathArray(o, 0)).isNull();
+            assertThat(UriBuilder.getPathArray(o, 1)).isNull();
+            assertThat(UriBuilder.getPathArray(o, 2)).containsExactly(path);
+            assertThat(UriBuilder.getPathArray(o, 3)).isNull();
         });
     }
 }

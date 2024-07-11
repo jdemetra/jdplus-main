@@ -159,7 +159,7 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
             iend += period;
         }
         // the last block is too short...
-        if (cend) {
+        if (cend && ibeg >= period) {
             ibeg -= period;
             DoubleSeq cur = s.range(ibeg, n);
             e = calcSingleStdev(cur);

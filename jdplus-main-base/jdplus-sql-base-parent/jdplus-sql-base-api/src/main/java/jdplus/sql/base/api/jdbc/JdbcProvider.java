@@ -16,7 +16,10 @@
  */
 package jdplus.sql.base.api.jdbc;
 
+import internal.sql.base.api.DefaultConnectionSource;
 import internal.sql.base.api.jdbc.JdbcParam;
+import jdplus.sql.base.api.ConnectionManager;
+import jdplus.sql.base.api.ConnectionSource;
 import jdplus.sql.base.api.HasSqlProperties;
 import jdplus.sql.base.api.SqlTableAsCubeResource;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
@@ -62,7 +65,7 @@ public final class JdbcProvider implements DataSourceLoader<JdbcBean>, HasSqlPro
         ResourcePool<CubeConnection> pool = CubeSupport.newConnectionPool();
         JdbcParam param = new JdbcParam.V1();
 
-        this.properties = HasSqlProperties.of(SqlConnectionSupplier::ofJndi, pool::clear);
+        this.properties = HasSqlProperties.of(JdbcConnectionManager::new, pool::clear);
         this.mutableListSupport = HasDataSourceMutableList.of(NAME, pool::remove);
         this.monikerSupport = HasDataMoniker.usingUri(NAME);
         this.beanSupport = HasDataSourceBean.of(NAME, param, param.getVersion());
@@ -78,7 +81,15 @@ public final class JdbcProvider implements DataSourceLoader<JdbcBean>, HasSqlPro
     private static CubeConnection openConnection(DataSource key, HasSqlProperties properties, JdbcParam param) {
         JdbcBean bean = param.get(key);
 
-        SqlTableAsCubeResource sqlResource = SqlTableAsCubeResource.of(properties.getConnectionSupplier(), bean.getDatabase(), bean.getTable(), toRoot(bean), toDataParams(bean), bean.getCube().getGathering(), bean.getCube().getLabel());
+        SqlTableAsCubeResource sqlResource = SqlTableAsCubeResource
+                .builder()
+                .source(properties.getConnectionManager().getSource(bean.getDatabase()))
+                .table(bean.getTable())
+                .root(toRoot(bean))
+                .tdp(toDataParams(bean))
+                .gathering(bean.getCube().getGathering())
+                .labelColumn(bean.getCube().getLabel())
+                .build();
 
         CubeConnection result = TableAsCubeConnection.of(sqlResource);
         return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCachingLoader.get());
@@ -95,5 +106,20 @@ public final class JdbcProvider implements DataSourceLoader<JdbcBean>, HasSqlPro
                 .versionColumn(bean.getCube().getVersion())
                 .obsFormat(bean.getCube().getFormat())
                 .build();
+    }
+
+    private static final class JdbcConnectionManager implements ConnectionManager {
+
+        private final SqlConnectionSupplier supplier = SqlConnectionSupplier.ofJndi();
+
+        @Override
+        public @NonNull String getId() {
+            return "jndi";
+        }
+
+        @Override
+        public @NonNull ConnectionSource getSource(@NonNull String connectionString) {
+            return new DefaultConnectionSource(supplier, connectionString);
+        }
     }
 }

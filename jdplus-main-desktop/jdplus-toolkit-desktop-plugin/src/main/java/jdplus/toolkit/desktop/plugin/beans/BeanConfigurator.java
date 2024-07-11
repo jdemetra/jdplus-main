@@ -28,7 +28,7 @@ public final class BeanConfigurator<B, R> implements ConfigEditor {
     }
 
     @Override
-    public Config editConfig(Config config) throws IllegalArgumentException {
+    public @NonNull Config editConfig(@NonNull Config config) throws IllegalArgumentException {
         B bean = converter.doBackward(config);
         if (editor.editBean(bean, Exceptions::printStackTrace)) {
             return converter.doForward(bean);

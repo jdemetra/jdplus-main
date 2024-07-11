@@ -19,22 +19,21 @@ package jdplus.toolkit.base.tsp.cube;
 import jdplus.toolkit.base.tsp.util.ShortLivedCache;
 import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import lombok.AccessLevel;
+import lombok.NonNull;
 import nbbrd.io.IOIterator;
 import nbbrd.io.Resource;
-import nbbrd.io.function.IOFunction;
 import nbbrd.io.function.IORunnable;
 import org.checkerframework.checker.index.qual.NonNegative;
-import lombok.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static java.util.Objects.requireNonNull;
+import static internal.toolkit.base.tsp.cube.CubeRepository.checkLeaf;
+import static internal.toolkit.base.tsp.cube.CubeRepository.checkNode;
 
 /**
  * @author Philippe Charles
@@ -63,33 +62,63 @@ public final class BulkCubeConnection implements CubeConnection {
     }
 
     @Override
-    public @NonNull Stream<CubeSeriesWithData> getAllSeriesWithData(@NonNull CubeId ref) throws IOException {
-        if (!ref.isSeries()) {
-            int cacheLevel = getCacheLevel();
-            if (ref.getLevel() == cacheLevel) {
-                return getOrLoad(cache, ref, delegate::getAllSeriesWithData);
-            } else {
-                CubeId ancestor = ref.getAncestor(cacheLevel);
-                if (ancestor != null) {
-                    return getAllSeriesWithData(ancestor).filter(ts -> ref.isAncestorOf(ts.getId()));
-                }
-            }
+    public @NonNull Stream<CubeId> getChildren(@NonNull CubeId node) throws IOException {
+        checkNode(node);
+        List<CubeSeriesWithData> list = peekList(node);
+        if (list != null) {
+            return list
+                    .stream()
+                    .map(HasCubeId::getId)
+                    .filter(node::isAncestorOf)
+                    .map(node.getDepth() == 1 ? (item -> item) : item -> item.getAncestor(node.getLevel() + 1))
+                    .filter(Objects::nonNull)
+                    .distinct();
         }
-        return delegate.getAllSeriesWithData(ref);
+        return delegate.getChildren(node);
     }
 
     @Override
-    public @NonNull Optional<CubeSeriesWithData> getSeriesWithData(@NonNull CubeId ref) throws IOException {
-        if (ref.isSeries()) {
-            int cacheLevel = getCacheLevel();
-            CubeId ancestor = ref.getAncestor(cacheLevel);
-            if (ancestor != null) {
-                try (Stream<CubeSeriesWithData> stream = getAllSeriesWithData(ancestor)) {
-                    return stream.filter(ts -> ref.equals(ts.getId())).findFirst();
-                }
-            }
+    public @NonNull Optional<CubeSeries> getSeries(@NonNull CubeId leaf) throws IOException {
+        checkLeaf(leaf);
+        List<CubeSeriesWithData> list = peekList(leaf);
+        if (list != null) {
+            return list
+                    .stream()
+                    .filter(onIdEqualTo(leaf))
+                    .map(CubeSeriesWithData::withoutData)
+                    .findFirst();
         }
-        return delegate.getSeriesWithData(ref);
+        return delegate.getSeries(leaf);
+    }
+
+    @Override
+    public @NonNull Stream<CubeSeries> getAllSeries(@NonNull CubeId node) throws IOException {
+        checkNode(node);
+        List<CubeSeriesWithData> list = peekList(node);
+        if (list != null) {
+            return list
+                    .stream()
+                    .filter(onIdDescendantOf(node))
+                    .map(CubeSeriesWithData::withoutData);
+        }
+        return delegate.getAllSeries(node);
+    }
+
+    @Override
+    public @NonNull Optional<CubeSeriesWithData> getSeriesWithData(@NonNull CubeId leaf) throws IOException {
+        checkLeaf(leaf);
+        try (var stream = getCloseableStream(leaf)) {
+            return stream
+                    .filter(onIdEqualTo(leaf))
+                    .findFirst();
+        }
+    }
+
+    @Override
+    public @NonNull Stream<CubeSeriesWithData> getAllSeriesWithData(@NonNull CubeId node) throws IOException {
+        checkNode(node);
+        return getCloseableStream(node)
+                .filter(onIdDescendantOf(node));
     }
 
     @Override
@@ -100,21 +129,6 @@ public final class BulkCubeConnection implements CubeConnection {
     @Override
     public @NonNull CubeId getRoot() throws IOException {
         return delegate.getRoot();
-    }
-
-    @Override
-    public @NonNull Stream<CubeSeries> getAllSeries(@NonNull CubeId id) throws IOException {
-        return delegate.getAllSeries(id);
-    }
-
-    @Override
-    public @NonNull Optional<CubeSeries> getSeries(@NonNull CubeId id) throws IOException {
-        return delegate.getSeries(id);
-    }
-
-    @Override
-    public @NonNull Stream<CubeId> getChildren(@NonNull CubeId id) throws IOException {
-        return delegate.getChildren(id);
     }
 
     @Override
@@ -137,23 +151,54 @@ public final class BulkCubeConnection implements CubeConnection {
         delegate.close();
     }
 
-    @NonNull
-    private static Stream<CubeSeriesWithData> getOrLoad(
-            @NonNull ShortLivedCache<CubeId, List<CubeSeriesWithData>> cache,
-            @NonNull CubeId key,
-            @NonNull IOFunction<CubeId, Stream<CubeSeriesWithData>> loader) throws IOException {
+    private @Nullable List<CubeSeriesWithData> peekList(@NonNull CubeId nodeOrLeaf) throws IOException {
+        int cacheLevel = getCacheLevel();
+        if (nodeOrLeaf.getLevel() == cacheLevel) {
+            return cache.get(nodeOrLeaf);
+        } else {
+            CubeId ancestor = nodeOrLeaf.getAncestor(cacheLevel);
+            if (ancestor != null) {
+                return cache.get(ancestor);
+            }
+        }
+        return null;
+    }
 
-        requireNonNull(cache, "cache");
-        requireNonNull(key, "key");
-        requireNonNull(loader, "loader");
+    private @NonNull Stream<CubeSeriesWithData> getCloseableStream(@NonNull CubeId nodeOrLeaf) throws IOException {
+        int cacheLevel = getCacheLevel();
+        if (nodeOrLeaf.getLevel() == cacheLevel) {
+            return getOrLoad(nodeOrLeaf);
+        } else {
+            CubeId ancestor = nodeOrLeaf.getAncestor(cacheLevel);
+            if (ancestor != null) {
+                return getOrLoad(ancestor);
+            }
+        }
+        return load(nodeOrLeaf);
+    }
 
-        List<CubeSeriesWithData> result = cache.get(key);
+    private @NonNull Stream<CubeSeriesWithData> load(@NonNull CubeId nodeOrLeaf) throws IOException {
+        return nodeOrLeaf.isSeries()
+                ? delegate.getSeriesWithData(nodeOrLeaf).stream()
+                : delegate.getAllSeriesWithData(nodeOrLeaf);
+    }
+
+    private @NonNull Stream<CubeSeriesWithData> getOrLoad(@NonNull CubeId nodeOrLeaf) throws IOException {
+        List<CubeSeriesWithData> result = cache.get(nodeOrLeaf);
         if (result != null) {
             return result.stream();
         }
-        Stream<CubeSeriesWithData> delegate = loader.applyWithIO(key);
-        IOIterator<CubeSeriesWithData> iterator = IOIterator.checked(delegate.iterator());
-        return new CachingIterator(key, cache, iterator, delegate::close).asStream();
+        Stream<CubeSeriesWithData> closeableStream = load(nodeOrLeaf);
+        IOIterator<CubeSeriesWithData> iterator = IOIterator.checked(closeableStream.iterator());
+        return new CachingIterator(nodeOrLeaf, cache, iterator, closeableStream::close).asStream();
+    }
+
+    private static Predicate<HasCubeId> onIdEqualTo(CubeId leaf) {
+        return ts -> leaf.equals(ts.getId());
+    }
+
+    private static Predicate<HasCubeId> onIdDescendantOf(CubeId node) {
+        return ts -> node.isAncestorOf(ts.getId());
     }
 
     @lombok.RequiredArgsConstructor

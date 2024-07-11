@@ -1,32 +1,32 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package internal.sql.base.api;
 
+import lombok.NonNull;
 import nbbrd.design.BuilderPattern;
+import nbbrd.sql.jdbc.SqlIdentifierQuoter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import nbbrd.sql.jdbc.SqlIdentifierQuoter;
-import lombok.NonNull;
 
 /**
- *
  * @author Philippe Charles
  */
 @lombok.RequiredArgsConstructor(staticName = "from")
@@ -89,7 +89,7 @@ public final class SelectBuilder {
     private void appendWhere(StringBuilder result) {
         if (!filter.isEmpty()) {
             result.append(" WHERE ");
-            result.append(filter.stream().map(identifierQuoter::quote).collect(WHERE_JOINER));
+            result.append(filter.stream().map(identifierQuoter::quote).map(column -> column + "=?").collect(WHERE_JOINER));
         }
     }
 
@@ -102,7 +102,11 @@ public final class SelectBuilder {
         if (distinct) {
             result.append("DISTINCT ");
         }
-        result.append(select.stream().map(identifierQuoter::quote).collect(COMMA_JOINER));
+        if (select.isEmpty()) {
+            result.append("*");
+        } else {
+            result.append(select.stream().map(identifierQuoter::quote).collect(COMMA_JOINER));
+        }
     }
 
     @NonNull
@@ -116,5 +120,5 @@ public final class SelectBuilder {
     }
 
     private static final Collector<CharSequence, ?, String> COMMA_JOINER = Collectors.joining(",");
-    private static final Collector<CharSequence, ?, String> WHERE_JOINER = Collectors.joining(" AND ", "", "=?");
+    private static final Collector<CharSequence, ?, String> WHERE_JOINER = Collectors.joining(" AND ");
 }

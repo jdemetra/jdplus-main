@@ -1,17 +1,17 @@
 /*
  * Copyright 2013 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sql.desktop.plugin.jdbc;
@@ -19,8 +19,9 @@ package jdplus.sql.desktop.plugin.jdbc;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import ec.util.various.swing.FontAwesome;
+import internal.sql.base.api.DefaultConnectionSource;
 import internal.sql.desktop.plugin.DbIcon;
-import jdplus.sql.base.api.HasSqlProperties;
+import jdplus.sql.base.api.ConnectionSource;
 import jdplus.sql.base.api.jdbc.JdbcBean;
 import jdplus.sql.base.api.jdbc.JdbcProvider;
 import jdplus.sql.desktop.plugin.SqlColumnListCellRenderer;
@@ -33,12 +34,12 @@ import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import jdplus.toolkit.desktop.plugin.tsproviders.TsProviderProperties;
 import jdplus.toolkit.desktop.plugin.util.SimpleHtmlCellRenderer;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import nbbrd.service.ServiceProvider;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
-import lombok.NonNull;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
@@ -70,7 +71,6 @@ import static ec.util.chart.impl.TangoColorScheme.DARK_SCARLET_RED;
 import static ec.util.chart.swing.SwingColorSchemeSupport.rgbToColor;
 
 /**
- *
  * @author Philippe Charles
  */
 @DirectImpl
@@ -79,7 +79,7 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
 
     private static final String SOURCE = "JNDI-JDBC";
 
-    private final SqlConnectionSupplier supplier;
+    private final jdplus.sql.base.api.ConnectionManager manager;
     private final AutoCompletionSource dbSource;
     private final ListCellRenderer dbRenderer;
     private final ListCellRenderer tableRenderer;
@@ -88,7 +88,7 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     private final Image errorBadge;
 
     public JdbcProviderBuddy() {
-        this.supplier = new DbExplorerConnectionSupplier();
+        this.manager = new DbExplorerConnectionManager();
         this.dbSource = dbExplorerSource();
         this.dbRenderer = new SimpleHtmlCellRenderer<>((DatabaseConnection o) -> "<html><b>" + o.getDisplayName() + "</b> - <i>" + o.getName() + "</i>");
         this.tableRenderer = new SqlTableListCellRenderer();
@@ -105,9 +105,7 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     // this overrides default connection supplier since we don't have JNDI in JavaSE
     private void overrideDefaultConnectionSupplier() {
         getProvider()
-                .filter(HasSqlProperties.class::isInstance)
-                .map(HasSqlProperties.class::cast)
-                .ifPresent(o -> o.setConnectionSupplier(supplier));
+                .ifPresent(o -> o.setConnectionManager(manager));
     }
 
     @Override
@@ -170,12 +168,12 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.source.display=Source",
-        "bean.source.description=",
-        "bean.database.display=Data source name",
-        "bean.database.description=Data structure describing the connection to the database.",
-        "bean.table.display=Table name",
-        "bean.table.description=The name of the table (or view) that contains observations.",})
+            "bean.source.display=Source",
+            "bean.source.description=",
+            "bean.database.display=Data source name",
+            "bean.database.description=Data structure describing the connection to the database.",
+            "bean.table.display=Table name",
+            "bean.table.description=The name of the table (or view) that contains observations.",})
     private Sheet.Set createSource(NodePropertySetBuilder b, JdbcBean bean) {
         b.reset("source")
                 .display(Bundle.bean_source_display())
@@ -191,7 +189,7 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
 
         b.withAutoCompletion()
                 .select("table", bean::getTable, bean::setTable)
-                .source(SqlProviderBuddy.getTableSource(supplier, bean::getDatabase, bean::getTable))
+                .source(SqlProviderBuddy.getTableSource(manager, bean::getDatabase, bean::getTable))
                 .cellRenderer(tableRenderer)
                 .display(Bundle.bean_table_display())
                 .description(Bundle.bean_table_description())
@@ -201,15 +199,15 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.cube.display=Cube structure",
-        "bean.cube.description=",})
+            "bean.cube.display=Cube structure",
+            "bean.cube.description=",})
     private Sheet.Set createCube(NodePropertySetBuilder b, JdbcBean bean) {
         b.reset("cube")
                 .display(Bundle.bean_cube_display())
                 .description(Bundle.bean_cube_description());
 
         TsProviderProperties.addTableAsCubeStructure(b, bean::getCube, bean::setCube,
-                SqlProviderBuddy.getColumnSource(supplier, bean::getDatabase, bean::getTable),
+                SqlProviderBuddy.getColumnSource(manager, bean::getDatabase, bean::getTable),
                 columnRenderer
         );
 
@@ -217,8 +215,8 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.parsing.display=Parsing",
-        "bean.parsing.description=",})
+            "bean.parsing.display=Parsing",
+            "bean.parsing.description=",})
     private Sheet.Set createParsing(NodePropertySetBuilder b, JdbcBean bean) {
         b.reset("parsing")
                 .display(Bundle.bean_parsing_display())
@@ -230,8 +228,8 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @NbBundle.Messages({
-        "bean.cache.display=Cache",
-        "bean.cache.description=Mechanism used to improve performance.",})
+            "bean.cache.display=Cache",
+            "bean.cache.description=Mechanism used to improve performance.",})
     private Sheet.Set createCache(NodePropertySetBuilder b, JdbcBean bean) {
         b.reset("cache")
                 .display(Bundle.bean_cache_display())
@@ -288,16 +286,31 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
                 .collect(Collectors.toList());
     }
 
+    private static final class DbExplorerConnectionManager implements jdplus.sql.base.api.ConnectionManager {
+
+        private final SqlConnectionSupplier supplier = new DbExplorerConnectionSupplier();
+
+        @Override
+        public @NonNull String getId() {
+            return "dbexplorer";
+        }
+
+        @Override
+        public @NonNull ConnectionSource getSource(@NonNull String connectionString) {
+            return new DefaultConnectionSource(supplier, connectionString);
+        }
+    }
+
     @NbBundle.Messages({
-        "# {0} - dbName",
-        "dbexplorer.missingConnection=Cannot find connection named ''{0}''",
-        "# {0} - dbName",
-        "dbexplorer.noConnection=Not connected to the database ''{0}''",
-        "# {0} - dbName",
-        "dbexplorer.failedConnection=Failed to connect to the database ''{0}''",
-        "# {0} - dbName",
-        "dbexplorer.requestConnection=A process request a connection to the database ''{0}''.\nDo you want to open the connection dialog?",
-        "dbexplorer.skip=Don't ask again"
+            "# {0} - dbName",
+            "dbexplorer.missingConnection=Cannot find connection named ''{0}''",
+            "# {0} - dbName",
+            "dbexplorer.noConnection=Not connected to the database ''{0}''",
+            "# {0} - dbName",
+            "dbexplorer.failedConnection=Failed to connect to the database ''{0}''",
+            "# {0} - dbName",
+            "dbexplorer.requestConnection=A process request a connection to the database ''{0}''.\nDo you want to open the connection dialog?",
+            "dbexplorer.skip=Don't ask again"
     })
     private static final class DbExplorerConnectionSupplier implements SqlConnectionSupplier {
 

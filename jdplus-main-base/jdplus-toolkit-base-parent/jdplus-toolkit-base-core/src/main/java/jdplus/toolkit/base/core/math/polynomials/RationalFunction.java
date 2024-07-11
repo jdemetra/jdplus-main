@@ -315,7 +315,7 @@ import jdplus.toolkit.base.api.math.Constants;
     }
 
     /**
-     * The method computes the weights ofInternal the power series expansion
+     * The method computes the weights of the power series expansion
      *
      * @param degree
      */

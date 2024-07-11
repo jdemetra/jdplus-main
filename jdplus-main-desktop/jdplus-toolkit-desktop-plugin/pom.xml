@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main-desktop</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.3</version>
     </parent>
 
     <artifactId>jdplus-toolkit-desktop-plugin</artifactId>
@@ -17,7 +17,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java-desktop-util.version>2.3.1</java-desktop-util.version>
+        <java-desktop-util.version>2.4.0</java-desktop-util.version>
     </properties>
 
     <dependencies>
@@ -183,7 +183,7 @@
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
-            <version>11.3</version>
+            <version>11.4</version>
         </dependency>
         <dependency>
             <groupId>org.tros</groupId>

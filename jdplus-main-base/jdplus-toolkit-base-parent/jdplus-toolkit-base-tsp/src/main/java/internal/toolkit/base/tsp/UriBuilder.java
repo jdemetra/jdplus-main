@@ -1,35 +1,34 @@
 /*
-* Copyright 2013 National Bank of Belgium
-*
-* Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
-* by the European Commission - subsequent versions of the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
-* limitations under the Licence.
+ * Copyright 2013 National Bank of Belgium
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
-package jdplus.toolkit.base.tsp.fixme;
+package internal.toolkit.base.tsp;
 
+import jdplus.toolkit.base.tsp.fixme.Strings;
+import lombok.NonNull;
 import nbbrd.design.BuilderPattern;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.URI;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.SortedMap;
 import java.util.function.BiConsumer;
-import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * http://en.wikipedia.org/wiki/URI_scheme
@@ -92,13 +91,13 @@ public final class UriBuilder {
         result.append("://");
         result.append(host);
         if (path != null) {
-            appendArray(result.append('/'), path, '/');
+            appendPathElements(result.append('/'), path);
         }
         if (query != null) {
-            appendMap(result.append('?'), query, '&', '=');
+            appendKeyValuePairs(result.append('?'), query);
         }
         if (fragment != null) {
-            appendMap(result.append('#'), fragment, '&', '=');
+            appendKeyValuePairs(result.append('#'), fragment);
         }
         return result.toString();
     }
@@ -107,46 +106,38 @@ public final class UriBuilder {
         return URI.create(buildString());
     }
 
-    private static String decodeUrlUtf8(String o) {
-        return URLDecoder.decode(o, StandardCharsets.UTF_8);
+    private static String encode(String o) {
+        return URLEncoder.encode(o, UTF_8).replace("+", "%20");
     }
 
-    @NonNull
-    private static StringBuilder appendEntry(@NonNull StringBuilder sb, @NonNull Entry<String, String> o, char sep) {
-        URLEncoder2.encode(sb, o.getKey(), StandardCharsets.UTF_8);
-        sb.append(sep);
-        URLEncoder2.encode(sb, o.getValue(), StandardCharsets.UTF_8);
-        return sb;
+    private static String decode(String o) {
+        return URLDecoder.decode(o, UTF_8);
     }
 
-    @NonNull
-    private static StringBuilder appendMap(@NonNull StringBuilder sb, @NonNull Map<String, String> keyValues, char sep1, char sep2) {
+    private static void appendKeyValuePair(@NonNull StringBuilder sb, @NonNull Entry<String, String> o) {
+        sb.append(encode(o.getKey()));
+        sb.append('=');
+        sb.append(encode(o.getValue()));
+    }
+
+    private static void appendKeyValuePairs(@NonNull StringBuilder sb, @NonNull Map<String, String> keyValues) {
         if (!keyValues.isEmpty()) {
             Iterator<Entry<String, String>> iterator = keyValues.entrySet().iterator();
-            appendEntry(sb, iterator.next(), sep2);
+            appendKeyValuePair(sb, iterator.next());
             while (iterator.hasNext()) {
-                appendEntry(sb.append(sep1), iterator.next(), sep2);
+                appendKeyValuePair(sb.append('&'), iterator.next());
             }
         }
-        return sb;
     }
 
-    @NonNull
-    private static StringBuilder appendArray(@NonNull StringBuilder sb, @NonNull String[] array, char sep) {
+    private static void appendPathElements(@NonNull StringBuilder sb, @NonNull String[] array) {
         if (array.length > 0) {
             int i = 0;
-            URLEncoder2.encode(sb, array[i], StandardCharsets.UTF_8);
+            sb.append(encode(array[i]));
             while (++i < array.length) {
-                URLEncoder2.encode(sb.append(sep), array[i], StandardCharsets.UTF_8);
+                sb.append('/').append(encode(array[i]));
             }
         }
-        return sb;
-    }
-
-    @Nullable
-    public static String[] getPathArray(@NonNull URI uri) {
-        String path = uri.getRawPath();
-        return path != null && !path.isEmpty() ? splitToArray(path.subSequence(1, path.length())) : null;
     }
 
     @Nullable
@@ -168,11 +159,6 @@ public final class UriBuilder {
     }
 
     @Nullable
-    private static String[] splitToArray(@NonNull CharSequence input) {
-        return Strings.splitToStream('/', input).map(UriBuilder::decodeUrlUtf8).toArray(String[]::new);
-    }
-
-    @Nullable
     private static String[] splitToArray(@NonNull CharSequence input, int expectedSize) {
         Iterator<String> items = Strings.splitToIterator('/', input);
         if (expectedSize == 0 || !items.hasNext()) {
@@ -181,14 +167,14 @@ public final class UriBuilder {
         String[] result = new String[expectedSize];
         int index = 0;
         do {
-            result[index++] = decodeUrlUtf8(items.next());
+            result[index++] = decode(items.next());
         } while (index < expectedSize && items.hasNext());
         return !items.hasNext() && index == expectedSize ? result : null;
     }
 
     @Nullable
     private static Map<String, String> splitMap(@NonNull CharSequence input) {
-        if (input.length() == 0) {
+        if (input.isEmpty()) {
             return Collections.emptyMap();
         }
         Map<String, String> result = new HashMap<>();
@@ -196,9 +182,9 @@ public final class UriBuilder {
     }
 
     private static boolean splitMapTo(@NonNull CharSequence input, @NonNull BiConsumer<String, String> consumer) {
-        Iterator<String> iter = Strings.splitToIterator('&', input);
-        while (iter.hasNext()) {
-            String entry = iter.next();
+        Iterator<String> iterable = Strings.splitToIterator('&', input);
+        while (iterable.hasNext()) {
+            String entry = iterable.next();
             Iterator<String> entryFields = Strings.splitToIterator('=', entry);
             if (!entryFields.hasNext()) {
                 return false;
@@ -211,7 +197,7 @@ public final class UriBuilder {
             if (entryFields.hasNext()) {
                 return false;
             }
-            consumer.accept(decodeUrlUtf8(key), decodeUrlUtf8(value));
+            consumer.accept(decode(key), decode(value));
         }
         return true;
     }

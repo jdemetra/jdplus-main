@@ -38,7 +38,7 @@ public final class SaDictionaries {
      *
      */
     public final String PREPROCESSING = "preprocessing", DECOMPOSITION = "decomposition", FINAL = "final",
-            BENCHMARKING = "benchmarking", DIAGNOSTICS = "diagnostics";
+            DIAGNOSTICS = "diagnostics", QUALITY="quality", BENCHMARKING = "benchmarking";
     public final String VARIANCE = "variancedecomposition";
     /**
      * Default components: series, trend, seasonal, seasonally adjusted,
@@ -300,6 +300,13 @@ public final class SaDictionaries {
             .item(Item.builder().name(TD_SA_LAST).description("f test on default td for the sa (last years)").outputClass(StatisticalTest.class).build())
             .item(Item.builder().name(TD_I_ALL).description("f test on default td for the irregular").outputClass(StatisticalTest.class).build())
             .item(Item.builder().name(TD_I_LAST).description("f test on default td for the irregular (last years)").outputClass(StatisticalTest.class).build())
+            .build();
+
+    public final String QUALITY_SUMMARY="summary";
+    
+    public final Dictionary SA_QUALITY = AtomicDictionary.builder()
+            .name("quality")
+            .item(Item.builder().name(QUALITY_SUMMARY).description("Summary of the quality controls").outputClass(String.class).build())
             .build();
 
     public final String ORIGINAL = "original", TARGET = "target", BENCHMARKED = "result";

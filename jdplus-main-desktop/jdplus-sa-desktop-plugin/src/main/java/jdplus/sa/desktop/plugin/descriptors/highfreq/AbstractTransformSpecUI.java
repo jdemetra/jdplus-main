@@ -44,13 +44,33 @@ public abstract class AbstractTransformSpecUI implements IPropertyDescriptors{
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        EnhancedPropertyDescriptor desc = logDesc();
+        EnhancedPropertyDescriptor desc = fnDesc();
         if (desc != null) {
             descs.add(desc);
         }
         return descs;
     }
-    private static final int LOG_ID = 2;
+    private static final int FN_ID=1, LOG_ID = 2, AIC_ID=3;
+
+    public TransformationType getFunction() {
+        return spec().getFunction();
+
+    }
+
+    public void setFunction(TransformationType value) {
+         root().update(spec().toBuilder()
+                .function(value)
+                 .build());
+
+    }
+
+    public double getAic() {
+        return spec().getAicDiff();
+    }
+
+    public void setAic(double value) {
+        root().update(spec().toBuilder().aicDiff(value).build());
+    }
 
      public boolean isLog() {
         return spec().getFunction() == TransformationType.Log;
@@ -64,6 +84,23 @@ public abstract class AbstractTransformSpecUI implements IPropertyDescriptors{
         }
     }
 
+//    @Messages({
+//        "transformSpecUI.fnDesc.name=function",
+//        "transformSpecUI.fnDesc.desc=[lam] None=no transformation of data; Log=takes logs of data; Auto:the program tests for the log-level specification."
+//    })
+    private EnhancedPropertyDescriptor fnDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("function", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, FN_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName("log/level");
+            desc.setShortDescription("log/level");
+            edesc.setReadOnly(root().isRo());
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
     private EnhancedPropertyDescriptor logDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Log", this.getClass());
@@ -77,6 +114,19 @@ public abstract class AbstractTransformSpecUI implements IPropertyDescriptors{
         }
     }
 
+    private EnhancedPropertyDescriptor aicDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("aic", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, AIC_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            edesc.setReadOnly(root().isRo() || getFunction() != TransformationType.Auto);
+            desc.setShortDescription("AICC diff.");
+            desc.setDisplayName("AICC");
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
     @Override
     @NbBundle.Messages("transformSpecUI.getDisplayName=Series")
     public String getDisplayName() {

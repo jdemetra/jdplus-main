@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.base.tsp;
 
-import jdplus.toolkit.base.tsp.fixme.UriBuilder;
+import internal.toolkit.base.tsp.UriBuilder;
 import jdplus.toolkit.base.tsp.fixme.SortedMaps;
 import nbbrd.design.RepresentableAs;
 import nbbrd.design.RepresentableAsString;

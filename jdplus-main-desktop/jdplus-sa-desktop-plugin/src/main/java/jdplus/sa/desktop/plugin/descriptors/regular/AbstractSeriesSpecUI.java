@@ -100,7 +100,7 @@ public abstract class AbstractSeriesSpecUI implements IPropertyDescriptors {
 
     @Messages({
         "regular.seriesSpecUI.pcDesc.name=Preliminary Check",
-        "regular.seriesSpecUI.pcDesc.desc="
+        "regular.seriesSpecUI.pcDesc.desc=Checks that the series doesn't contain too many missing or identical values. In such a case, it is not processed"
     })
     private EnhancedPropertyDescriptor pcDesc() {
         try {

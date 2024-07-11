@@ -6,7 +6,7 @@
 
     <groupId>eu.europa.ec.joinup.sat</groupId>
     <artifactId>jdplus-main</artifactId>
-    <version>3.2.2</version>
+    <version>3.2.3</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -39,7 +39,7 @@
     <properties>
         <!-- Java 17 config -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2024-03-14T20:38:19Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2024-07-11T08:28:28Z</project.build.outputTimestamp>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.release>17</maven.compiler.release>
@@ -49,21 +49,21 @@
         <x.github.repo>${project.artifactId}</x.github.repo>
 
         <!-- annotations & processors -->
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.34</lombok.version>
         <java-service.version>1.9.0</java-service.version>
-        <java-design.version>1.5.0</java-design.version>
-        <checker-qual.version>3.42.0</checker-qual.version>
+        <java-design.version>1.5.1</java-design.version>
+        <checker-qual.version>3.45.0</checker-qual.version>
 
         <!-- test frameworks -->
-        <junit.version>5.10.2</junit.version>
-        <assertj-core.version>3.25.3</assertj-core.version>
+        <junit.version>5.10.3</junit.version>
+        <assertj-core.version>3.26.3</assertj-core.version>
 
         <!-- dependencies -->
         <jd2.version>2.2.4</jd2.version>
         <protobuf.version>3.25.3</protobuf.version>
-        <java-io-util.version>0.0.27</java-io-util.version>
-        <java-sql-util.version>1.0.4</java-sql-util.version>
-        <spreadsheet4j.version>2.5.8</spreadsheet4j.version>
+        <java-io-util.version>0.0.30</java-io-util.version>
+        <java-sql-util.version>1.0.6</java-sql-util.version>
+        <spreadsheet4j.version>2.5.9</spreadsheet4j.version>
     </properties>
 
     <modules>
@@ -128,27 +128,27 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.12.1</version>
+                    <version>3.13.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.1.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -163,12 +163,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.5</version>
+                    <version>3.3.1</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-junit-platform</artifactId>
-                            <version>3.2.5</version>
+                            <version>3.3.1</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -176,27 +176,27 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.gaul</groupId>
                     <artifactId>modernizer-maven-plugin</artifactId>
-                    <version>2.7.0</version>
+                    <version>2.9.0</version>
                 </plugin>
                 <plugin>
                     <groupId>de.thetaphi</groupId>
                     <artifactId>forbiddenapis</artifactId>
-                    <version>3.6</version>
+                    <version>3.7</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.nbbrd.heylogs</groupId>
                     <artifactId>heylogs-maven-plugin</artifactId>
-                    <version>0.7.2</version>
+                    <version>0.8.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.xolstice.maven.plugins</groupId>
@@ -211,12 +211,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.3</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.simplify4u.plugins</groupId>
@@ -226,22 +226,22 @@
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.13</version>
+                    <version>1.7.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jreleaser</groupId>
                     <artifactId>jreleaser-maven-plugin</artifactId>
-                    <version>1.11.0</version>
+                    <version>1.13.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jreleaser</groupId>
                     <artifactId>jdks-maven-plugin</artifactId>
-                    <version>1.11.0</version>
+                    <version>1.13.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.7.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -345,7 +345,7 @@
                     <dependency>
                         <groupId>org.kordamp.maven</groupId>
                         <artifactId>pomchecker-enforcer-rules</artifactId>
-                        <version>1.10.0</version>
+                        <version>1.11.0</version>
                     </dependency>
                 </dependencies>
                 <executions>

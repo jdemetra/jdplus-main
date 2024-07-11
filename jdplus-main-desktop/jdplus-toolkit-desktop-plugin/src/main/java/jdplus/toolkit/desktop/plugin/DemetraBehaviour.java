@@ -133,12 +133,12 @@ public final class DemetraBehaviour implements PropertyChangeSource.WithWeakList
     }
 
     @Override
-    public Config getConfig() {
+    public @NonNull Config getConfig() {
         return PERSISTENCE.loadConfig(this);
     }
 
     @Override
-    public void setConfig(Config config) {
+    public void setConfig(@NonNull Config config) {
         PERSISTENCE.storeConfig(this, config);
     }
 

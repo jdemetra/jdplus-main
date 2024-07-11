@@ -281,7 +281,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.TD_I_ALL, StatisticalTest.class, source -> {
             ResidualTradingDaysTests td = source.residualTradingDaysTests();
             if (td != null) {
-                return td.saTest(false);
+                return td.irrTest(false);
             }
             return null;
         });
@@ -289,7 +289,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.TD_I_LAST, StatisticalTest.class, source -> {
             ResidualTradingDaysTests td = source.residualTradingDaysTests();
             if (td != null) {
-                return td.saTest(true);
+                return td.irrTest(true);
             }
             return null;
         });
@@ -297,7 +297,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.TD_RES_ALL, StatisticalTest.class, source -> {
             ResidualTradingDaysTests td = source.residualTradingDaysTests();
             if (td != null) {
-                return td.saTest(false);
+                return td.residualsTest(false);
             }
             return null;
         });
@@ -305,7 +305,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         set(SaDictionaries.TD_RES_LAST, StatisticalTest.class, source -> {
             ResidualTradingDaysTests td = source.residualTradingDaysTests();
             if (td != null) {
-                return td.saTest(true);
+                return td.residualsTest(true);
             }
             return null;
         });

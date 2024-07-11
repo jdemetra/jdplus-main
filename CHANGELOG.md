@@ -7,6 +7,42 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.2.3] - 2024-07-11
+
+### Added
+
+- ![UI] Add link to online help documentation [#217](https://github.com/jdemetra/jdplus-main/issues/217)
+- ![UI] Add additional output in TramoSeats/X13 [#217](https://github.com/jdemetra/jdplus-main/issues/217)
+- ![UI] Add benchmarking results in TramoSeats/X13 output [#289](https://github.com/jdemetra/jdplus-main/issues/289)
+
+### Fixed
+
+- ![STAT] Fix ArrayOutOfBoundsException for edge case in extreme value correction [[#368](https://github.com/jdemetra/jdplus-main/issues/368)]
+- ![IO] Fix encoding of space characters in URI [#254](https://github.com/jdemetra/jdplus-main/issues/254)
+- ![IO] Fix parsing of .ods files [#309](https://github.com/jdemetra/jdplus-main/issues/309)
+- ![IO] Fix grid parsing when some headers are null [#328](https://github.com/jdemetra/jdplus-main/issues/328)
+- ![IO] Fix reading v2 legacy WS when some user defined calendars have fixed and non-fixed coefficients [#183](https://github.com/jdemetra/jdplus-main/issues/183)
+- ![IO] Fix SQL queries [#347](https://github.com/jdemetra/jdplus-main/issues/347)
+- ![UI] Fix default toolbar and menu [#311](https://github.com/jdemetra/jdplus-main/issues/311)
+- ![UI] Fix slow dialog box when opening a file [#313](https://github.com/jdemetra/jdplus-main/issues/313)
+- ![UI] Fix option show-provider-nodes cannot be reset between sessions [#292](https://github.com/jdemetra/jdplus-main/issues/292)
+- ![UI] Fix missing description field [#291](https://github.com/jdemetra/jdplus-main/issues/291)
+- ![UI] Fix "Copy spec. to workspace" button [#228](https://github.com/jdemetra/jdplus-main/issues/228)
+- ![UI] Fix NPE in SaBatchUI renderer [#326](https://github.com/jdemetra/jdplus-main/issues/326)
+- ![UI] Fix GUI Excel output [#303](https://github.com/jdemetra/jdplus-main/issues/303)
+- ![UI] Fix some problems in saving regression effects [#295](https://github.com/jdemetra/jdplus-main/issues/295)
+- ![UI] Fix typos in spec dialog boxes
+- ![UI] Fix handling of regression variables with lags [#323](https://github.com/jdemetra/jdplus-main/issues/323)
+- ![UI] Fix numerical issues in canonical decomposition [#301](https://github.com/jdemetra/jdplus-main/issues/301)
+- ![UI] Fix a bug in protobuf translation of TramoSeats results
+
+### Changed
+
+- ![UI] Replace splash screen with AI-generated image by [@jadoull](https://github.com/jadoull)
+- ![UI] Change the layout of SA summaries (TramoSeats/X13) [#262](https://github.com/jdemetra/jdplus-main/issues/262)
+- ![UI] Change the handling of the decomposition mode in X11 spec box
+
+
 ## [3.2.2] - 2024-03-14
 
 ### Added
@@ -132,7 +168,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.2.2...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.2.3...HEAD
+[3.2.3]: https://github.com/jdemetra/jd3-main/compare/v3.2.2...v3.2.3
 [3.2.2]: https://github.com/jdemetra/jd3-main/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/jdemetra/jd3-main/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/jdemetra/jd3-main/compare/v3.1.1...v3.2.0

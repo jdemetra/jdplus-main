@@ -5,6 +5,8 @@
  */
 package jdplus.tramoseats.base.core.tramoseats.extractors;
 
+import java.util.ArrayList;
+import java.util.List;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
@@ -13,11 +15,22 @@ import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.sa.base.api.SaDictionaries;
+import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
+import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.dictionaries.Dictionary;
+import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
+import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
+import jdplus.toolkit.base.api.processing.ProcDiagnostic;
+import jdplus.toolkit.base.api.processing.ProcQuality;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.util.IntList;
+import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDiagnostics;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsFactory;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import nbbrd.design.Development;
 import nbbrd.service.ServiceProvider;
@@ -31,6 +44,14 @@ import nbbrd.service.ServiceProvider;
 public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
 
     public static final String FINAL = "";
+
+    private String advancedItem(String key) {
+        return Dictionary.concatenate(RegArimaDictionaries.ADVANCED, key);
+    }
+
+    private String qualityItem(String key) {
+        return Dictionary.concatenate(SaDictionaries.QUALITY, key);
+    }
 
     public TramoSeatsExtractor() {
         set(SaDictionaries.MODE, DecompositionMode.class, source -> source.getFinals().getMode());
@@ -48,7 +69,7 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
         set(SaDictionaries.Y, TsData.class, source
                 -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Value));
         set(SaDictionaries.Y + SaDictionaries.BACKCAST, TsData.class, source
-                 -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Backcast));
+                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Backcast));
         set(SaDictionaries.Y + SaDictionaries.FORECAST, TsData.class, source
                 -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Forecast));
 
@@ -58,7 +79,6 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
                 -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
         set(ModellingDictionary.CAL + SaDictionaries.FORECAST, TsData.class, source
                 -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
-        
 
         set(SaDictionaries.T, TsData.class, source
                 -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.Value));
@@ -103,13 +123,35 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
                 -> source.getFinals().getSeries(ComponentType.Irregular, ComponentInformation.Backcast));
         set(SaDictionaries.I + SeriesInfo.EB_SUFFIX, TsData.class, source
                 -> source.getFinals().getSeries(ComponentType.Irregular, ComponentInformation.StdevBackcast));
-
+        set(advancedItem(RegressionDictionaries.REGTYPE), int[].class,
+                source -> {
+                    GeneralLinearModel.Description<SarimaSpec> desc = source.getPreprocessing().getDescription();
+                    Variable[] vars = desc.getVariables();
+                    IntList list = new IntList();
+                    for (int i = 0; i < vars.length; ++i) {
+                        int n = vars[i].freeCoefficientsCount();
+                        if (n > 0) {
+                            ComponentType regressionEffect = SaVariable.regressionEffect(vars[i]);
+                            for (int j = 0; j < n; ++j) {
+                                list.add(regressionEffect.toInt());
+                            }
+                        }
+                    }
+                    return list.toArray();
+                });
         delegate(SaDictionaries.DECOMPOSITION, SeatsResults.class, source -> source.getDecomposition());
 
         delegate(null, RegSarimaModel.class, source -> source.getPreprocessing());
 
         delegate(null, TramoSeatsDiagnostics.class, source -> source.getDiagnostics());
 
+        set(qualityItem(SaDictionaries.QUALITY_SUMMARY), String.class, source -> {
+            List<ProcDiagnostic> tests = new ArrayList<>();
+            TramoSeatsFactory.getInstance().fillDiagnostics(tests, source);
+            ProcQuality quality = ProcDiagnostic.summary(tests);
+            return quality.name();
+        });
+        
         delegate(SaDictionaries.BENCHMARKING, SaBenchmarkingResults.class, source -> source.getBenchmarking());
     }
 

@@ -160,7 +160,7 @@ public class TransformSpecUI extends BaseRegArimaSpecUI {
     private static final int FN_ID = 1, AIC_ID = 2, ADJUST_ID = 3, OUTLIERS_ID = 4;
 
     @Messages({
-        "transformSpecUI.fnDesc.name=function",
+        "transformSpecUI.fnDesc.name=Function",
         "transformSpecUI.fnDesc.desc=[lam] None=no transformation of data; Log=takes logs of data; Auto:the program tests for the log-level specification."
     })
     private EnhancedPropertyDescriptor fnDesc() {

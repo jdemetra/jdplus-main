@@ -16,8 +16,11 @@
  */
 package jdplus.sql.base.api.odbc;
 
+import internal.sql.base.api.DefaultConnectionSource;
 import internal.sql.base.api.odbc.OdbcParam;
 import internal.sql.base.api.odbc.legacy.LegacyOdbcMoniker;
+import jdplus.sql.base.api.ConnectionManager;
+import jdplus.sql.base.api.ConnectionSource;
 import jdplus.sql.base.api.HasSqlProperties;
 import jdplus.sql.base.api.SqlTableAsCubeResource;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
@@ -34,9 +37,15 @@ import nbbrd.service.ServiceProvider;
 import nbbrd.sql.jdbc.SqlConnectionSupplier;
 import nbbrd.sql.odbc.OdbcConnectionSupplier;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+
 /**
  * @author Philippe Charles
  */
+@lombok.extern.java.Log
 @DirectImpl
 @ServiceProvider(TsProvider.class)
 public final class OdbcProvider implements DataSourceLoader<OdbcBean>, HasSqlProperties {
@@ -65,7 +74,7 @@ public final class OdbcProvider implements DataSourceLoader<OdbcBean>, HasSqlPro
         ResourcePool<CubeConnection> pool = CubeSupport.newConnectionPool();
         OdbcParam param = new OdbcParam.V1();
 
-        this.properties = HasSqlProperties.of(OdbcProvider::lookupDefaultSupplier, pool::clear);
+        this.properties = HasSqlProperties.of(OdbcConnectionManager::new, pool::clear);
         this.mutableListSupport = HasDataSourceMutableList.of(NAME, pool::remove);
         this.monikerSupport = FallbackDataMoniker.of(HasDataMoniker.usingUri(NAME), LegacyOdbcMoniker.of(NAME, param));
         this.beanSupport = HasDataSourceBean.of(NAME, param, param.getVersion());
@@ -78,16 +87,18 @@ public final class OdbcProvider implements DataSourceLoader<OdbcBean>, HasSqlPro
         return "ODBC DSNs";
     }
 
-    private static SqlConnectionSupplier lookupDefaultSupplier() {
-        return OdbcConnectionSupplier.ofServiceLoader()
-                .map(SqlConnectionSupplier.class::cast)
-                .orElseGet(SqlConnectionSupplier::noOp);
-    }
-
     private static CubeConnection openConnection(DataSource key, HasSqlProperties properties, OdbcParam param) {
         OdbcBean bean = param.get(key);
 
-        SqlTableAsCubeResource sqlResource = SqlTableAsCubeResource.of(properties.getConnectionSupplier(), bean.getDsn(), bean.getTable(), toRoot(bean), toDataParams(bean), bean.getCube().getGathering(), bean.getCube().getLabel());
+        SqlTableAsCubeResource sqlResource = SqlTableAsCubeResource
+                .builder()
+                .source(properties.getConnectionManager().getSource(bean.getDsn()))
+                .table(bean.getTable())
+                .root(toRoot(bean))
+                .tdp(toDataParams(bean))
+                .gathering(bean.getCube().getGathering())
+                .labelColumn(bean.getCube().getLabel())
+                .build();
 
         CubeConnection result = TableAsCubeConnection.of(sqlResource);
         return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCachingLoader.get());
@@ -104,5 +115,62 @@ public final class OdbcProvider implements DataSourceLoader<OdbcBean>, HasSqlPro
                 .versionColumn(bean.getCube().getVersion())
                 .obsFormat(bean.getCube().getFormat())
                 .build();
+    }
+
+    private static final class OdbcConnectionManager implements ConnectionManager {
+
+        private final OdbcConnectionSupplier supplier = OdbcConnectionSupplier.ofServiceLoader().orElse(null);
+
+        @Override
+        public @NonNull String getId() {
+            return "odbc";
+        }
+
+        @Override
+        public @NonNull ConnectionSource getSource(@NonNull String connectionString) {
+            if (supplier != null) {
+                if (supplier.getName().equals("internal.sql.lhod.LhodDriver")) {
+                    return new LhodConnectionSource(connectionString, supplier, new ArrayBlockingQueue<>(2));
+                }
+                return new DefaultConnectionSource(supplier, connectionString);
+            }
+            return new DefaultConnectionSource(SqlConnectionSupplier.noOp(), connectionString);
+        }
+    }
+
+    @lombok.AllArgsConstructor
+    private static final class LhodConnectionSource implements ConnectionSource {
+
+        private final String id;
+        private final OdbcConnectionSupplier delegate;
+        private final ArrayBlockingQueue<ShortLivedConnection> cache;
+
+        @Override
+        public @NonNull String getId() {
+            return id;
+        }
+
+        @Override
+        public @NonNull Connection open() throws SQLException {
+            ShortLivedConnection result = cache.poll();
+            if (result != null) return result;
+//            log.info("Opening new connection to " + id + " (cacheSize=" + cache.size() + ")");
+            return new ShortLivedConnection(delegate.getConnection(id), cache);
+        }
+    }
+
+    @lombok.AllArgsConstructor
+    private static final class ShortLivedConnection implements Connection {
+
+        @lombok.experimental.Delegate
+        private final Connection delegate;
+        private final Queue<ShortLivedConnection> cache;
+
+        @Override
+        public void close() throws SQLException {
+            if (!cache.offer(this)) {
+                delegate.close();
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@ import jdplus.toolkit.base.protobuf.modelling.ModellingProtos;
 import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtosUtility;
 import jdplus.sa.base.core.diagnostics.GenericSaTests;
 import jdplus.sa.base.core.tests.CombinedSeasonality;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**
  *
@@ -116,7 +117,9 @@ public class SaProtosUtility {
         TsData es = decomp.getSeries(type, ComponentInformation.Stdev);
         TsData efs = decomp.getSeries(type, ComponentInformation.StdevForecast);
         TsData ebs = decomp.getSeries(type, ComponentInformation.StdevBackcast);
-
+        if (es == null && s != null){
+            es=TsData.of(s.getStart(), DoubleSeq.onMapping(s.length(), i->0));
+        }
         TsData S = TsData.concatenate(bs, s, fs);
         TsData ES = TsData.concatenate(ebs, es, efs);
 
