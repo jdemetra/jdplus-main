@@ -19,6 +19,7 @@ package jdplus.toolkit.base.r.modelling;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 import jdplus.toolkit.base.core.modelling.regular.tests.CanovaHansenForTradingDays;
 import jdplus.toolkit.base.core.modelling.regular.tests.TradingDaysTest;
 import jdplus.toolkit.base.core.regsarima.ami.SarimaTradingDaysTest;
@@ -31,15 +32,19 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 @lombok.experimental.UtilityClass
 public class TradingDaysTests {
 
-    public double[] chTest(TsData s, int[] diff) {
+    public double[] canovaHansen(TsData s, int[] diff, String kernel, int truncation) {
+        if (truncation<0)
+            truncation=(int)Math.floor(0.75*Math.sqrt(s.length()));
         CanovaHansenForTradingDays ch = CanovaHansenForTradingDays.test(s)
                 .differencingLags(diff)
+                .windowFunction(WindowFunction.valueOf(kernel))
+                .truncationLag(truncation)
                 .build();
-        double[] test = new double[7];
-        for (int i = 0; i < 6; ++i) {
+        double[] test = new double[8];
+        for (int i = 0; i < 7; ++i) {
             test[i] = ch.test(i);
         }
-        test[6] = ch.testAll();
+        test[7] = ch.testAll();
         return test;
     }
 

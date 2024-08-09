@@ -29,6 +29,7 @@ import jdplus.sa.base.core.tests.Friedman;
 import jdplus.sa.base.core.tests.KruskalWallis;
 import jdplus.sa.base.core.tests.PeriodogramTest;
 import jdplus.sa.base.core.tests.Qs;
+import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 
 /**
  *
@@ -58,7 +59,7 @@ public class SeasonalityTests {
 
     public StatisticalTest friedmanTest(double[] s, int period, int ny) {
         DoubleSeq y = DoubleSeq.of(s).cleanExtremities();
-       if (ny != 0) {
+        if (ny != 0) {
             y = y.drop(Math.max(0, y.length() - period * ny), 0);
         }
         return new Friedman(y, period)
@@ -67,7 +68,7 @@ public class SeasonalityTests {
 
     public StatisticalTest periodogramTest(double[] s, int period, int ny) {
         DoubleSeq y = DoubleSeq.of(s).cleanExtremities();
-       if (ny != 0) {
+        if (ny != 0) {
             y = y.drop(Math.max(0, y.length() - period * ny), 0);
         }
         return new PeriodogramTest(y, period).buildF();
@@ -81,24 +82,67 @@ public class SeasonalityTests {
                 .build();
     }
 
-    public double[] canovaHansenTest(double[] s, double start, double end, int n, boolean original) {
+    public double[] canovaHansenTrigs(double[] s, double[] periods, boolean lag1, String kernel, int truncation, boolean original) {
         DoubleSeq x = DoubleSeq.of(s).cleanExtremities();
-        double[] rslt = new double[n];
-        double step=(end-start)/(n-1);
-        for (int i = 0; i < n; ++i) {
-            double p=start+i*step;
+        if (truncation < 0) {
+            truncation = (int) Math.floor(0.75 * Math.sqrt(x.length()));
+        }
+        double[] rslt = new double[periods.length];
+        for (int i = 0; i < periods.length; ++i) {
+            double p = periods[i];
             if (original) {
                 rslt[i] = CanovaHansen.test(x)
                         .specific(p, 1)
+                        .lag1(lag1)
+                        .windowFunction(WindowFunction.valueOf(kernel))
+                        .truncationLag(truncation)
                         .build()
                         .testAll();
             } else {
                 rslt[i] = CanovaHansen2.of(x)
                         .periodicity(p)
+                        .lag1(lag1)
+                        .windowFunction(WindowFunction.valueOf(kernel))
+                        .truncationLag(truncation)
                         .compute();
             }
         }
         return rslt;
+    }
+
+    public double[] canovaHansen(double[] s, int period, boolean trig, boolean lag1, String kernel, int truncation, int start) {
+        DoubleSeq x = DoubleSeq.of(s).cleanExtremities();
+        if (truncation < 0) {
+            truncation = (int) Math.floor(0.75 * Math.sqrt(x.length()));
+        }
+        CanovaHansen.Builder builder = CanovaHansen.test(x)
+                .lag1(lag1)
+                .truncationLag(truncation)
+                .windowFunction(WindowFunction.valueOf(kernel))
+                .startPosition(start);
+        if (trig) {
+            CanovaHansen ch = builder.trigonometric(period).build();
+            double[] q = new double[1 + period / 2];
+            boolean even = period % 2 == 0;
+            int nq = even ? q.length - 2 : q.length - 1;
+            int icur = 0;
+            for (int i = 0; i < nq; ++i, ++icur) {
+                q[icur] = ch.test(i * 2, 2);
+            }
+            if (even) {
+                q[icur++] = ch.test(period - 2);
+            }
+            q[icur] = ch.testAll();
+            return q;
+        } else {
+            CanovaHansen ch = builder.dummies(period).build();
+            double[] q = new double[period + 1];
+            for (int i = 0; i < period; ++i) {
+                q[i] = ch.test(i);
+            }
+            q[period] = ch.testAll();
+            return q;
+        }
     }
 
     public StatisticalTest fTest(double[] s, int freq, String model, int ny) {

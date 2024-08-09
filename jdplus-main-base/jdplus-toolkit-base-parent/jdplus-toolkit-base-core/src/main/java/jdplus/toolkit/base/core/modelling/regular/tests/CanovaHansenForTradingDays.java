@@ -19,6 +19,7 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.calendars.GenericTradingDays;
 import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
+import jdplus.toolkit.base.core.modelling.regression.GenericTradingDaysFactory;
 import jdplus.toolkit.base.core.stats.linearmodel.LeastSquaresResults;
 
 /**
@@ -37,7 +38,7 @@ public class CanovaHansenForTradingDays {
         private final TsData s;
         private int[] differencingLags;
         private WindowFunction winFunction = WindowFunction.Bartlett;
-        private int truncationLag = 12;
+        private int truncationLag = 15;
 
         private Builder(TsData s) {
             this.s = s;
@@ -66,9 +67,10 @@ public class CanovaHansenForTradingDays {
 
         private FastMatrix sx() {
 
-            GenericTradingDays gtd = GenericTradingDays.contrasts(DayClustering.TD7);
-            GenericTradingDaysVariable td = new GenericTradingDaysVariable(gtd);
-            FastMatrix m = Regression.matrix(s.getDomain(), td);
+            GenericTradingDays gtd = GenericTradingDays.raw(DayClustering.TD7);
+            int n=s.length();
+            FastMatrix m = FastMatrix.make(n, 7);
+            GenericTradingDaysFactory.FACTORY.fill(gtd, s.getStart(), m);
             FastMatrix dm = m;
             if (differencingLags != null) {
                 for (int j = 0; j < differencingLags.length; ++j) {
@@ -103,7 +105,7 @@ public class CanovaHansenForTradingDays {
             return LinearModel.builder()
                     .y(y())
                     .addX(sx)
-                    .meanCorrection(true)
+                    .meanCorrection(false)
                     .build();
         }
     }
