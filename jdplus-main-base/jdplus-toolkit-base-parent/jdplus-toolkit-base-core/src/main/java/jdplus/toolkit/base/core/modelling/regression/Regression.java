@@ -133,8 +133,8 @@ public class Regression {
         FastMatrix M = FastMatrix.make(nobs, nvars);
 
         MatrixWindow wnd = M.left(0);
-        if (domain instanceof TsDomain) {
-            TsPeriod start = ((TsDomain) domain).getStartPeriod();
+        if (domain instanceof TsDomain tsDomain) {
+            TsPeriod start = tsDomain.getStartPeriod();
             for (int i = 0, j = 0; i < vars.length; ++i) {
                 ITsVariable v = vars[i];
                 RegressionVariableFactory factory = FACTORIES.get(v.getClass());

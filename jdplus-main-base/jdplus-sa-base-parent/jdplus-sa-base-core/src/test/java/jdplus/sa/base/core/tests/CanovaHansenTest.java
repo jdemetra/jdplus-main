@@ -68,7 +68,7 @@ public class CanovaHansenTest {
                 .truncationLag(12)
                 .startPosition(1)
                 .build();
- //       System.out.println(ch.robustTestCoefficients());
+        //       System.out.println(ch.robustTestCoefficients());
 //
 //        for (int i = 0; i < 12; ++i) {
 //            System.out.println(ch.test(i));
@@ -101,13 +101,13 @@ public class CanovaHansenTest {
         for (int i = 0; i < x.length; ++i) {
             x[i] = Math.log(WeeklyData.US_CLAIMS[i + 1]) - Math.log(WeeklyData.US_CLAIMS[i]);
         }
-         DoubleSeq y = DoubleSeq.of(x);
-           CanovaHansen ch = CanovaHansen.test(y)
-                    .lag1(false)
-                    .truncationLag(5)
-                    .startPosition(1)
-                    .trigonometric(53)
-                    .build();
+        DoubleSeq y = DoubleSeq.of(x);
+        CanovaHansen ch = CanovaHansen.test(y)
+                .lag1(false)
+                .truncationLag(5)
+                .startPosition(1)
+                .trigonometric(53)
+                .build();
         for (int i = 0; i < 25; ++i) {
 //            System.out.println(ch.test(1+2 * i, 2));
 //        }
@@ -115,17 +115,17 @@ public class CanovaHansenTest {
 //            System.out.println(ch.robustTestCoefficients(i*2, 2).getValue());
         }
     }
-    
-        @Test
+
+    @Test
     public void testW_trig2() {
         double[] x = new double[WeeklyData.US_CLAIMS.length - 1];
         for (int i = 0; i < x.length; ++i) {
             x[i] = Math.log(WeeklyData.US_CLAIMS[i + 1]) - Math.log(WeeklyData.US_CLAIMS[i]);
         }
 //        double[] x=WeeklyData.US_CLAIMS;
-DoubleSeq y = DoubleSeq.of(x);
-          for (int i = 2; i <= 553; ++i) {
-         CanovaHansen ch = CanovaHansen.test(y)
+        DoubleSeq y = DoubleSeq.of(x);
+        for (int i = 2; i <= 553; ++i) {
+            CanovaHansen ch = CanovaHansen.test(y)
                     .lag1(false)
                     .truncationLag(12)
                     .startPosition(1)
