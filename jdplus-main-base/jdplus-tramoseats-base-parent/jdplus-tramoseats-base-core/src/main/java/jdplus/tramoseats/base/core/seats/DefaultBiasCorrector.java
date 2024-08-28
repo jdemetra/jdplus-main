@@ -250,7 +250,7 @@ public class DefaultBiasCorrector implements IBiasCorrector {
                 decomp.add(correctStdevForLog(ie, i), ComponentType.Irregular, ComponentInformation.Stdev);
             }
         }
-        // correct T = Y /S * I) (-> *sbias*ibias)
+        // correct T = Y /(S * I) (-> *sbias*ibias)
         TsData t = ldecomp.getSeries(ComponentType.Trend, ComponentInformation.Value);
         if (t != null) {
             t = t.exp();
