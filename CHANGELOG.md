@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![UI] Remove unecessary parameters in xml (X11) [#399](https://github.com/jdemetra/jdplus-main/issues/399)
+
 ### Changed
 
 - ![STAT] Improve Canova-Hansen tests for trading days and for seasonality (add options and change R interface)

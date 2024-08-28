@@ -94,7 +94,9 @@ public class X11SpecMapping {
         if (verbose || spec.isExcludeForecast()) {
             info.add(EXCLUDEFCAST, spec.isExcludeForecast());
         }
-        if (verbose || spec.getBias() != BiasCorrection.Legacy) {
+        if (verbose
+                || (spec.getMode() == DecompositionMode.LogAdditive
+                && spec.getBias() != BiasCorrection.Legacy)) {
             info.add(BIAS, spec.getBias().name());
         }
         return info;

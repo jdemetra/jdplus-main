@@ -6,6 +6,7 @@ package jdplus.tramoseats.desktop.plugin.tramoseats.descriptors;
 
 import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
 import jdplus.tramoseats.base.api.seats.DecompositionSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 
 /**
  *
@@ -21,6 +22,8 @@ public abstract class BaseTramoSeatsSpecUI implements IPropertyDescriptors{
     
     DecompositionSpec seats(){return root.getSeats();}
     
+    TramoSpec tramo(){return root.getTramo().getCore();}
+
     boolean isRo(){return root.isRo();}
     
     void update(DecompositionSpec nseats){
