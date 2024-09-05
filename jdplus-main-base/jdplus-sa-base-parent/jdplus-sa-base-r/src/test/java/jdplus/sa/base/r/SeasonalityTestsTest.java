@@ -72,10 +72,10 @@ public class SeasonalityTestsTest {
     
     @Test
     public void testCH() {
-        DoubleSeq x=DoubleSeq.of(Data.ABS_RETAIL).log();
-        double[] q=SeasonalityTests.canovaHansen(x.toArray(), 12, false, true, "Bartlett", 15, 3);
-//        System.out.println(DoubleSeq.of(q));
-        q=SeasonalityTests.canovaHansen(x.toArray(), 12, true, true, "Bartlett", 15, 3);
-//        System.out.println(DoubleSeq.of(q));
+        DoubleSeq x=DoubleSeq.of(Data.RETAIL_BOOKSTORES).log().delta(1);
+        double[] q=SeasonalityTests.canovaHansen(x.toArray(), 12, false, false, "Bartlett", -1, 3);
+        System.out.println(DoubleSeq.of(q));
+        q=SeasonalityTests.canovaHansen(x.toArray(), 12, true, false, "Bartlett", -1, 3);
+        System.out.println(DoubleSeq.of(q));
     }
 }
