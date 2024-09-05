@@ -40,11 +40,14 @@ public class TradingDaysTests {
                 .windowFunction(WindowFunction.valueOf(kernel))
                 .truncationLag(truncation)
                 .build();
-        double[] test = new double[8];
+        double[] test = new double[10];
         for (int i = 0; i < 7; ++i) {
             test[i] = ch.test(i);
         }
         test[7] = ch.testAll();
+        StatisticalTest tdTest = ch.tdTest();
+        test[8] = tdTest.getValue();
+        test[9] = tdTest.getPvalue();
         return test;
     }
 

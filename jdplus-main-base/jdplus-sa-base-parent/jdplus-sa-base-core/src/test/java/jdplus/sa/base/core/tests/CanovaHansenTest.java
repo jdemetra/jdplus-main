@@ -39,6 +39,7 @@ public class CanovaHansenTest {
                 .dummies(4)
                 .truncationLag(4)
                 .build();
+//       System.out.println(ch.seasonalityTest());
 
 //        for (int i = 0; i < 4; ++i) {
 //            System.out.println(ch.test(i));
@@ -53,6 +54,7 @@ public class CanovaHansenTest {
                 .trigonometric(4)
                 .truncationLag(4)
                 .build();
+//        System.out.println(ch.seasonalityTest());
 //        System.out.println(ch.test(0, 2));
 //        System.out.println(ch.test(2));
 //        System.out.println(ch.testAll());
@@ -60,16 +62,16 @@ public class CanovaHansenTest {
 
     @Test
     public void testP_dummy() {
-        DoubleSeq y = delta(log(Data.TS_PROD), 1).getValues();
+        DoubleSeq y = log(Data.TS_PROD).getValues();
 //        System.out.println("dummies");
         CanovaHansen ch = CanovaHansen.test(y)
                 .dummies(12)
-                .lag1(false)
-                .truncationLag(12)
+                .lag1(true)
+                .truncationLag(15)
                 .startPosition(1)
                 .build();
-        //       System.out.println(ch.robustTestCoefficients());
-//
+//            System.out.println(ch.seasonalityTest());
+
 //        for (int i = 0; i < 12; ++i) {
 //            System.out.println(ch.test(i));
 //        }
@@ -93,7 +95,7 @@ public class CanovaHansenTest {
 //        }
         //  System.out.println(ch.robustTestCoefficients());
 //        System.out.println(all);
-    }
+     }
 
     @Test
     public void testW_trig() {
@@ -108,12 +110,12 @@ public class CanovaHansenTest {
                 .startPosition(1)
                 .trigonometric(53)
                 .build();
-        for (int i = 0; i < 25; ++i) {
+//        for (int i = 0; i < 25; ++i) {
 //            System.out.println(ch.test(1+2 * i, 2));
 //        }
 //        System.out.println(ch.testAll());
 //            System.out.println(ch.robustTestCoefficients(i*2, 2).getValue());
-        }
+//        }
     }
 
     @Test

@@ -45,7 +45,7 @@ public class RobustCovarianceComputer {
     public FastMatrix covariance(FastMatrix x, WindowFunction winFunction, int truncationLag) {
         DoubleUnaryOperator w = winFunction.window();
         int n = x.getRowsCount(), nx = x.getColumnsCount();
-        FastMatrix s = SymmetricMatrix.XtX(x);
+        FastMatrix s = SymmetricMatrix.XtX(x); //w(0)=1
         double q = 1+truncationLag;
         for (int l = 1; l <= truncationLag; ++l) {
             double wl = w.applyAsDouble(l / q);

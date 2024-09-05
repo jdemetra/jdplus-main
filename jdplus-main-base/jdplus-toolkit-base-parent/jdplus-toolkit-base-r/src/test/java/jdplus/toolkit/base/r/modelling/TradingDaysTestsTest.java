@@ -56,9 +56,9 @@ public class TradingDaysTestsTest {
     
     @Test
     public void testCH() {
-        TsData s = Data.TS_ABS_RETAIL.log();
-        double[] q=TradingDaysTests.canovaHansen(s,new int[]{1,12}, "Bartlett", -1);
-//        System.out.println(DoubleSeq.of(q));
+        TsData s = Data.TS_ABS_RETAIL2.log();
+        double[] q=TradingDaysTests.canovaHansen(s,new int[]{1, 12}, "Bartlett", -1);
+        System.out.println(DoubleSeq.of(q));
     }
     
 }

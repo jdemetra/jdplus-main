@@ -122,9 +122,10 @@ public class SeasonalityTests {
                 .startPosition(start);
         if (trig) {
             CanovaHansen ch = builder.trigonometric(period).build();
-            double[] q = new double[1 + period / 2];
             boolean even = period % 2 == 0;
-            int nq = even ? q.length - 2 : q.length - 1;
+            int p2=period/2;
+            int nq = even ? p2-1 : p2;
+            double[] q = new double[3 + p2];
             int icur = 0;
             for (int i = 0; i < nq; ++i, ++icur) {
                 q[icur] = ch.test(i * 2, 2);
@@ -132,16 +133,22 @@ public class SeasonalityTests {
             if (even) {
                 q[icur++] = ch.test(period - 2);
             }
-            q[icur] = ch.testAll();
+            q[icur++] = ch.testAll();
+            StatisticalTest seasonalityTest = ch.seasonalityTest();
+            q[icur++]=seasonalityTest.getValue();
+            q[icur]=seasonalityTest.getPvalue();
             return q;
         } else {
             CanovaHansen ch = builder.dummies(period).build();
-            double[] q = new double[period + 1];
+            double[] q = new double[period + 3];
             for (int i = 0; i < period; ++i) {
                 q[i] = ch.test(i);
             }
             q[period] = ch.testAll();
-            return q;
+           StatisticalTest seasonalityTest = ch.seasonalityTest();
+            q[period+1]=seasonalityTest.getValue();
+            q[period+2]=seasonalityTest.getPvalue();
+             return q;
         }
     }
 

@@ -28,7 +28,12 @@ import jdplus.toolkit.base.api.timeseries.regression.PeriodicDummies;
 import jdplus.toolkit.base.core.stats.RobustCovarianceComputer;
 import jdplus.toolkit.base.core.modelling.regression.PeriodicDummiesFactory;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.stats.TestType;
+import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.dstats.F;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.stats.tests.TestsUtility;
 
 /**
  *
@@ -103,7 +108,7 @@ public class CanovaHansen {
         public CanovaHansen build() {
             FastMatrix x = sx();
             LinearModel lm = buildModel(x);
-            return new CanovaHansen(x, lm, winFunction, truncationLag);
+            return new CanovaHansen(lm, x.getColumnsCount(), winFunction, truncationLag);
         }
 
         private FastMatrix sx() {
@@ -114,17 +119,18 @@ public class CanovaHansen {
                 --len;
             }
             switch (type) {
-                case Dummy: {
+                case Dummy -> {
                     PeriodicDummies vars = new PeriodicDummies((int) period);
                     return PeriodicDummiesFactory.matrix(vars, len, pos);
                 }
-                case Trigonometric: {
+                case Trigonometric -> {
                     TrigonometricSeries vars = TrigonometricSeries.regular((int) period);
                     return vars.matrix(len, pos);
                 }
-                default:
+                default -> {
                     TrigonometricSeries vars = TrigonometricSeries.all(period, nh);
                     return vars.matrix(len, pos);
+                }
             }
 
         }
@@ -139,14 +145,15 @@ public class CanovaHansen {
                 builder.y(s);
             }
             switch (type) {
-                case Dummy ->  {
+                case Dummy -> {
                     builder.addX(sx);
                 }
-                case Trigonometric ->  {
+                case Trigonometric -> {
                     builder.addX(sx)
                             .meanCorrection(true);
                 }
-                default -> builder.addX(sx)
+                default ->
+                    builder.addX(sx)
                             .meanCorrection(true);
             }
             return builder.build();
@@ -160,39 +167,57 @@ public class CanovaHansen {
         return u;
     }
 
-    private final FastMatrix x, xe, cxe, omega;
+    private final FastMatrix x, xe, cxe, phi;
     private final DoubleSeq c, u;
+    private final int nx, ns;
 
-    private CanovaHansen(final FastMatrix x, final LinearModel lm, final WindowFunction winFunction, int truncationLag) {
-        this.x = x;
+    private CanovaHansen(final LinearModel lm, int ns, final WindowFunction winFunction, int truncationLag) {
+        this.ns=ns;
+        x = lm.variables();
+        nx=x.getColumnsCount();
         LeastSquaresResults olsResults = Ols.compute(lm);
-        c=olsResults.getCoefficients();
+        c = olsResults.getCoefficients();
         u = lm.calcResiduals(c);
-        xe = x.deepClone();
         // multiply the columns of x by e
+        xe=x.deepClone();
         xe.applyByColumns(col -> col.apply(u, (a, b) -> a * b));
-        omega = RobustCovarianceComputer.covariance(xe, winFunction, truncationLag);
+        phi = RobustCovarianceComputer.covariance(xe, winFunction, truncationLag);
         cxe = xe.deepClone();
         cxe.applyByColumns(col -> col.cumul());
     }
 
     public double test(int var) {
-        return computeStat(omega.extract(var, 1, var, 1), cxe.extract(0, cxe.getRowsCount(), var, 1));
+        int dx=nx-ns, dvar=var+dx;
+        return computeStat(phi.extract(dvar, 1, dvar, 1), cxe.extract(0, cxe.getRowsCount(), dvar, 1));
     }
 
     public double test(int var, int nvars) {
-        return computeStat(omega.extract(var, nvars, var, nvars), cxe.extract(0, cxe.getRowsCount(), var, nvars));
+        int dx=nx-ns, dvar=var+dx;
+        return computeStat(phi.extract(dvar, nvars, dvar, nvars), cxe.extract(0, cxe.getRowsCount(), dvar, nvars));
     }
 
     public double testAll() {
-        return computeStat(omega, cxe);
+        return test(0, ns);
+    }
+
+    public StatisticalTest seasonalityTest() {
+        int dx=nx-ns;
+        FastMatrix rcov = robustCovarianceOfCoefficients().extract(dx, ns, dx, ns);
+        SymmetricMatrix.lcholesky(rcov);
+        LowerTriangularMatrix.toLower(rcov);
+        DataBlock b = DataBlock.of(c.extract(dx, ns));
+        LowerTriangularMatrix.solveLx(rcov, b);
+        double fval = b.ssq() / ns;
+        F f = new F(ns, x.getRowsCount() - c.length());
+        return TestsUtility.testOf(fval, f, TestType.Upper);
     }
 
     private double computeStat(FastMatrix O, FastMatrix cx) {
-        int n = cx.getRowsCount(), nx = cx.getColumnsCount();
+        int n = cx.getRowsCount(), ncx = cx.getColumnsCount();
         // compute tr( O^-1*xe'*xe)
         // cusum
-        FastMatrix FF = FastMatrix.square(nx);
+        // FF = X'X
+        FastMatrix FF = FastMatrix.square(ncx);
         for (int i = 0; i < n; ++i) {
             FF.addXaXt(1, cx.row(i));
         }
@@ -206,18 +231,19 @@ public class CanovaHansen {
         return tr / (n * n);
     }
 
-//    private FastMatrix robustCovarianceOfCoefficients() {
-//        FastMatrix Lo = omega.deepClone();
-//        SymmetricMatrix.lcholesky(Lo);
-//
-//        FastMatrix Lx = SymmetricMatrix.XtX(x);
-//        SymmetricMatrix.lcholesky(Lx);
-//        LowerTriangularMatrix.solveLX(Lx, Lo);
-//        LowerTriangularMatrix.solveLtX(Lx, Lo);
-//
-//        FastMatrix XXt = SymmetricMatrix.XXt(Lo);
-//        XXt.mul(xe.getRowsCount());
-//        return XXt;
-//    }
+    private FastMatrix robustCovarianceOfCoefficients() {
+        FastMatrix Lo = phi.deepClone();
+        SymmetricMatrix.lcholesky(Lo);
+        LowerTriangularMatrix.toLower(Lo);
+
+        FastMatrix Lx = SymmetricMatrix.XtX(x);
+        SymmetricMatrix.lcholesky(Lx);
+        LowerTriangularMatrix.solveLX(Lx, Lo);
+        LowerTriangularMatrix.solveLtX(Lx, Lo);
+
+        FastMatrix XXt = SymmetricMatrix.XXt(Lo);
+        XXt.mul(xe.getRowsCount());
+        return XXt;
+    }
 
 }
