@@ -77,7 +77,7 @@ public class RegArimaSpecMapping {
 
     public static final String BASIC = "basic", TRANSFORM = "transform",
             AUTOMDL = "automdl", ARIMA = "arima",
-            REGRESSION = "regression", OUTLIER = "outlier", ESTIMATE = "esimate";
+            REGRESSION = "regression", OUTLIER = "outlier", ESTIMATE = "estimate";
 
     public RegArimaSpec read(InformationSet info, TsDomain context) {
         if (info == null) {
