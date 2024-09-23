@@ -286,8 +286,6 @@ public class AsymmetricFiltersFactory {
         DataBlock wf = DataBlock.of(w, nv, w.length);
         FastMatrix Up = U.extract(0, nv, 0, ncolu);
         FastMatrix Uf = U.extract(nv, U.getRowsCount()-nv, 0, ncolu);
-        FastMatrix Zp = Z.extract(0, nv, 0, Z.getColumnsCount());
-        FastMatrix Zf = Z.extract(nv, Z.getRowsCount()-nv, 0, Z.getColumnsCount());
         FastMatrix Q = FastMatrix.square(nv + ncolu);
         FastMatrix D = Q.extract(0, nv, 0, nv);
         D.diagonal().set(1);
@@ -297,6 +295,8 @@ public class AsymmetricFiltersFactory {
         a.extract(nv, ncolu + 1).product(wf, Uf.columnsIterator());
         if (dz != null && dz.length > 0) {
             DataBlock d = DataBlock.of(dz);
+            FastMatrix Zp = Z.extract(0, nv, 0, Z.getColumnsCount());
+            FastMatrix Zf = Z.extract(nv, Z.getRowsCount()-nv, 0, Z.getColumnsCount());
             DataBlock Yp = DataBlock.make(nv);
             DataBlockIterator cols = Zp.columnsIterator();
             DoubleSeqCursor.OnMutable cursor = d.cursor();
