@@ -288,7 +288,13 @@ public class AsymmetricFiltersFactory {
         FastMatrix Uf = U.extract(nv, U.getRowsCount()-nv, 0, ncolu);
         FastMatrix Q = FastMatrix.square(nv + ncolu);
         FastMatrix D = Q.extract(0, nv, 0, nv);
-        D.diagonal().set(1);
+        if (k != null) {
+            for (int i = 0; i < nv; i++) {
+                D.diagonal().set(i, 1 / k.applyAsDouble(i-h));
+            } 
+        } else {
+            D.diagonal().set(1);
+        }
         Q.extract(nv, ncolu, 0, nv).copyTranspose(Up);
         Q.extract(0, nv, nv, ncolu).copy(Up);
         DataBlock a = DataBlock.make(Q.getRowsCount());
