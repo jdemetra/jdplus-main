@@ -77,7 +77,7 @@ public class RegArimaSpecMapping {
 
     public static final String BASIC = "basic", TRANSFORM = "transform",
             AUTOMDL = "automdl", ARIMA = "arima",
-            REGRESSION = "regression", OUTLIER = "outlier", ESTIMATE = "esimate";
+            REGRESSION = "regression", OUTLIER = "outlier", ESTIMATE_OLD = "esimate", ESTIMATE = "estimate";
 
     public RegArimaSpec read(InformationSet info, TsDomain context) {
         if (info == null) {
@@ -92,6 +92,9 @@ public class RegArimaSpecMapping {
     }
 
     public RegArimaSpec readV3(InformationSet info, TsDomain context) {
+        InformationSet estimate = info.getSubSet(ESTIMATE);
+        if (estimate == null)
+            estimate = info.getSubSet(ESTIMATE_OLD);
         return RegArimaSpec.builder()
                 .basic(BasicSpecMapping.read(info.getSubSet(BASIC)))
                 .transform(TransformSpecMapping.read(info.getSubSet(TRANSFORM)))
@@ -99,7 +102,7 @@ public class RegArimaSpecMapping {
                 .autoModel(AutoModelSpecMapping.read(info.getSubSet(AUTOMDL)))
                 .outliers(OutlierSpecMapping.read(info.getSubSet(OUTLIER)))
                 .regression(RegressionSpecMapping.read(info.getSubSet(REGRESSION)))
-                .estimate(EstimateSpecMapping.read(info.getSubSet(ESTIMATE)))
+                .estimate(EstimateSpecMapping.read(estimate))
                 .build();
     }
 
@@ -144,7 +147,9 @@ public class RegArimaSpecMapping {
         InformationSet oinfo = info.getSubSet(OUTLIER);
         InformationSet ainfo = info.getSubSet(ARIMA);
         InformationSet amiinfo = info.getSubSet(AUTOMDL);
-        InformationSet einfo = info.getSubSet(ESTIMATE);
+        InformationSet einfo = info.getSubSet(ESTIMATE_OLD);
+        if (einfo == null)
+            einfo = info.getSubSet(ESTIMATE);
         InformationSet rinfo = info.getSubSet(REGRESSION);
         if (binfo != null) {
             builder.basic(BasicSpecMapping.read(binfo));
@@ -204,7 +209,7 @@ public class RegArimaSpecMapping {
         }
         InformationSet estimateinfo = EstimateSpecMapping.write(spec.getEstimate(), verbose);
         if (estimateinfo != null) {
-            specInfo.set(ESTIMATE, estimateinfo);
+            specInfo.set(ESTIMATE_OLD, estimateinfo);
         }
         return specInfo;
     }
