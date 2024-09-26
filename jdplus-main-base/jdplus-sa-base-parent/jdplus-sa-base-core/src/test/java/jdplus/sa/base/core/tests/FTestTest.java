@@ -39,12 +39,12 @@ public class FTestTest {
         FTest test=new FTest(s.getValues(),12);
         StatisticalTest f = test.model(SarimaOrders.Prespecified.WN).build();
         assertFalse(f.isSignificant(0.01));
-        System.out.println(test.build());
+//        System.out.println(test.build());
         s=TsDataToolkit.delta(Data.TS_PROD, 1);
         test=new FTest(s.getValues(),12);
         f = test.model(SarimaOrders.Prespecified.WN).build();
         assertTrue(f.isSignificant(0.01));
-        System.out.println(test.build());
+//        System.out.println(test.build());
     }
     
     @Test
@@ -53,12 +53,12 @@ public class FTestTest {
         FTest test=new FTest(s.getValues(),12);
         StatisticalTest f = test.model(SarimaOrders.Prespecified.AR).build();
         assertFalse(f.isSignificant(0.01));
-        System.out.println(test.build());
+//        System.out.println(test.build());
         s=TsDataToolkit.delta(Data.TS_PROD, 1);
         test=new FTest(s.getValues(),12);
         f = test.model(SarimaOrders.Prespecified.AR).build();
         assertTrue(f.isSignificant(0.01));
-        System.out.println(test.build());
+//        System.out.println(test.build());
     }
     
     @Test
@@ -67,11 +67,11 @@ public class FTestTest {
         FTest test=new FTest(s.getValues(),12);
         StatisticalTest f = test.model(SarimaOrders.Prespecified.D1).build();
         assertFalse(f.isSignificant(0.01));
-        System.out.println(test.build());
+//        System.out.println(test.build());
         s=Data.TS_PROD;
         test=new FTest(s.getValues(),12);
         f = test.model(SarimaOrders.Prespecified.D1).build();
         assertTrue(f.isSignificant(0.01));
-        System.out.println(test.build());
+//        System.out.println(test.build());
     }
 }

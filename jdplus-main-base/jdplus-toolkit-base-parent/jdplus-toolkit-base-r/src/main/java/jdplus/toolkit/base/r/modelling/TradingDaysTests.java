@@ -41,9 +41,10 @@ public class TradingDaysTests {
                 .truncationLag(truncation)
                 .build();
         double[] test = new double[10];
-        for (int i = 0; i < 7; ++i) {
+        for (int i = 0; i < 6; ++i) {
             test[i] = ch.test(i);
         }
+        test[6]=ch.testDerived();
         test[7] = ch.testAll();
         StatisticalTest tdTest = ch.tdTest();
         test[8] = tdTest.getValue();

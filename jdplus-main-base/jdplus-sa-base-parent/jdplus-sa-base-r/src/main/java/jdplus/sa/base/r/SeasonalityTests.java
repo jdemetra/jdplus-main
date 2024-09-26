@@ -27,6 +27,7 @@ import jdplus.sa.base.core.tests.CombinedSeasonality;
 import jdplus.sa.base.core.tests.FTest;
 import jdplus.sa.base.core.tests.Friedman;
 import jdplus.sa.base.core.tests.KruskalWallis;
+import jdplus.sa.base.core.tests.ModifiedQs;
 import jdplus.sa.base.core.tests.PeriodogramTest;
 import jdplus.sa.base.core.tests.Qs;
 import jdplus.toolkit.base.core.data.analysis.WindowFunction;
@@ -39,13 +40,30 @@ import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 public class SeasonalityTests {
 
     public StatisticalTest qsTest(double[] s, int period, int ny) {
+        return qsTest(s, period, ny, 1);
+    }
+    
+    public double modifiedQsTest(double[] s, int period, int ny) {
         DoubleSeq y = DoubleSeq.of(s).cleanExtremities();
         if (ny != 0) {
             y = y.drop(Math.max(0, y.length() - period * ny), 0);
         }
-        return new Qs(y, period)
-                .autoCorrelationsCount(2)
-                .build();
+        return ModifiedQs.test(y, period);
+    }
+
+    public StatisticalTest qsTest(double[] s, int period, int ny, int type) {
+        DoubleSeq y = DoubleSeq.of(s).cleanExtremities();
+        if (ny != 0) {
+            y = y.drop(Math.max(0, y.length() - period * ny), 0);
+        }
+        Qs qs = new Qs(y, period)
+                .autoCorrelationsCount(2);
+        switch (type){
+            case 1 -> qs.usePositiveAutocorrelations();
+            case -1 -> qs.useNegativeAutocorrelations();
+            default -> qs.useAllAutocorrelations();
+        }
+        return qs.build();
     }
 
     public StatisticalTest kruskalWallisTest(double[] s, int period, int ny) {
