@@ -6,7 +6,7 @@ module jdplus.toolkit.base.protobuf {
     requires static org.checkerframework.checker.qual;
 
     requires jdplus.toolkit.base.core;
-    requires protobuf.java;
+    requires com.google.protobuf;
 
     exports jdplus.toolkit.base.protobuf.modelling;
     exports jdplus.toolkit.base.protobuf.regarima;
