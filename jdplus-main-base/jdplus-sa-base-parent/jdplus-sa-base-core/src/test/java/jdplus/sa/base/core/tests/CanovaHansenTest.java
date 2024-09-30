@@ -44,10 +44,26 @@ public class CanovaHansenTest {
                 .truncationLag(4)
                 .build();
 //       System.out.println(ch.seasonalityTest());
-
+//
 //        for (int i = 0; i < 4; ++i) {
 //            System.out.println(ch.test(i));
 //        }
+//        System.out.println(ch.testAll());
+    }
+
+    @Test
+    public void testUnempl_contrast() {
+//        System.out.println("contrasts");
+        CanovaHansen ch = CanovaHansen.test(DoubleSeq.of(Data.US_UNEMPL))
+                .contrasts(4)
+                .truncationLag(4)
+                .build();
+//       System.out.println(ch.seasonalityTest());
+//
+//        for (int i = 0; i < 3; ++i) {
+//            System.out.println(ch.test(i));
+//        }
+//        System.out.println(ch.testDerived());
 //        System.out.println(ch.testAll());
     }
 

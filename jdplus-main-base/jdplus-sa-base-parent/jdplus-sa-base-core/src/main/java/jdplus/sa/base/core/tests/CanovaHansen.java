@@ -30,9 +30,12 @@ import jdplus.toolkit.base.core.modelling.regression.PeriodicDummiesFactory;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.stats.TestType;
+import jdplus.toolkit.base.api.timeseries.regression.PeriodicContrasts;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.dstats.F;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
+import jdplus.toolkit.base.core.modelling.regression.PeriodicContrastsFactory;
 import jdplus.toolkit.base.core.stats.tests.TestsUtility;
 
 /**
@@ -43,7 +46,7 @@ public class CanovaHansen {
 
     public static enum Variables {
 
-        Dummy, Trigonometric, UserDefined
+        Dummy, Contrast, Trigonometric, UserDefined
     }
 
     public static Builder test(DoubleSeq s) {
@@ -68,6 +71,12 @@ public class CanovaHansen {
 
         public Builder dummies(int period) {
             this.type = Variables.Dummy;
+            this.period = period;
+            return this;
+        }
+
+        public Builder contrasts(int period) {
+            this.type = Variables.Contrast;
             this.period = period;
             return this;
         }
@@ -108,7 +117,7 @@ public class CanovaHansen {
         public CanovaHansen build() {
             FastMatrix x = sx();
             LinearModel lm = buildModel(x);
-            return new CanovaHansen(lm, x.getColumnsCount(), winFunction, truncationLag);
+            return new CanovaHansen(type, lm, x.getColumnsCount(), winFunction, truncationLag);
         }
 
         private FastMatrix sx() {
@@ -122,6 +131,10 @@ public class CanovaHansen {
                 case Dummy -> {
                     PeriodicDummies vars = new PeriodicDummies((int) period);
                     return PeriodicDummiesFactory.matrix(vars, len, pos);
+                }
+                case Contrast -> {
+                    PeriodicContrasts vars = new PeriodicContrasts((int) period);
+                    return PeriodicContrastsFactory.matrix(vars, len, pos);
                 }
                 case Trigonometric -> {
                     TrigonometricSeries vars = TrigonometricSeries.regular((int) period);
@@ -152,6 +165,10 @@ public class CanovaHansen {
                     builder.addX(sx)
                             .meanCorrection(true);
                 }
+                case Contrast -> {
+                    builder.addX(sx)
+                            .meanCorrection(true);
+                }
                 default ->
                     builder.addX(sx)
                             .meanCorrection(true);
@@ -167,19 +184,21 @@ public class CanovaHansen {
         return u;
     }
 
+    private final Variables type;
     private final FastMatrix x, xe, cxe, phi;
     private final DoubleSeq c, u;
     private final int nx, ns;
 
-    private CanovaHansen(final LinearModel lm, int ns, final WindowFunction winFunction, int truncationLag) {
-        this.ns=ns;
+    private CanovaHansen(final Variables type, final LinearModel lm, int ns, final WindowFunction winFunction, int truncationLag) {
+        this.ns = ns;
+        this.type=type;
         x = lm.variables();
-        nx=x.getColumnsCount();
+        nx = x.getColumnsCount();
         LeastSquaresResults olsResults = Ols.compute(lm);
         c = olsResults.getCoefficients();
         u = lm.calcResiduals(c);
         // multiply the columns of x by e
-        xe=x.deepClone();
+        xe = x.deepClone();
         xe.applyByColumns(col -> col.apply(u, (a, b) -> a * b));
         phi = RobustCovarianceComputer.covariance(xe, winFunction, truncationLag);
         cxe = xe.deepClone();
@@ -187,12 +206,12 @@ public class CanovaHansen {
     }
 
     public double test(int var) {
-        int dx=nx-ns, dvar=var+dx;
-        return computeStat(phi.extract(dvar, 1, dvar, 1), cxe.extract(0, cxe.getRowsCount(), dvar, 1));
+        int dx = nx - ns, dvar = var + dx;
+        return computeStat(phi.get(dvar, dvar), cxe.column(dvar));
     }
 
     public double test(int var, int nvars) {
-        int dx=nx-ns, dvar=var+dx;
+        int dx = nx - ns, dvar = var + dx;
         return computeStat(phi.extract(dvar, nvars, dvar, nvars), cxe.extract(0, cxe.getRowsCount(), dvar, nvars));
     }
 
@@ -200,8 +219,21 @@ public class CanovaHansen {
         return test(0, ns);
     }
 
+    public double testDerived() {
+        if (type != Variables.Contrast)
+            return Double.NaN;
+        int dx = nx - ns;
+        FastMatrix tphi = phi.extract(dx, ns, dx, ns);
+        DataBlock tc = DataBlock.of(c.extract(dx, ns));
+        double v = QuadraticForm.apply(tphi, tc);
+        FastMatrix ce = cxe.extract(0, cxe.getRowsCount(), dx, ns);
+        DataBlock E = DataBlock.make(ce.getRowsCount());
+        E.product(ce.rowsIterator(), tc);
+        return computeStat(v, E);
+    }
+    
     public StatisticalTest seasonalityTest() {
-        int dx=nx-ns;
+        int dx = nx - ns;
         FastMatrix rcov = robustCovarianceOfCoefficients().extract(dx, ns, dx, ns);
         SymmetricMatrix.lcholesky(rcov);
         LowerTriangularMatrix.toLower(rcov);
@@ -212,7 +244,7 @@ public class CanovaHansen {
         return TestsUtility.testOf(fval, f, TestType.Upper);
     }
 
-    private double computeStat(FastMatrix O, FastMatrix cx) {
+    private static double computeStat(FastMatrix O, FastMatrix cx) {
         int n = cx.getRowsCount(), ncx = cx.getColumnsCount();
         // compute tr( O^-1*xe'*xe)
         // cusum
@@ -228,6 +260,17 @@ public class CanovaHansen {
         // b=L'^-1*a <-> L'b=a 
         LowerTriangularMatrix.solveLtX(sig, FF);
         double tr = FF.diagonal().sum();
+        return tr / (n * n);
+    }
+
+    private static double computeStat(double O, DataBlock cx) {
+        int n = cx.length();
+        // compute tr( O^-1*xe'*xe)
+        // cusum
+        // F = X'X
+        double F = cx.ssq();
+        // LL'^-1 * xe2 = L'^-1* L^-1 xe2 = L'^-1*a <-> a=L^-1 xe2 <->La=xe2
+        double tr = F/O;
         return tr / (n * n);
     }
 
