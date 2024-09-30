@@ -56,7 +56,7 @@ public class CanovaHansenForTradingDaysTest {
         int M = 100000;
         int P = 12;
         RandomNumberGenerator rng = XorshiftRNG.fromSystemNanoTime();
-        for (int i = P * 5; i <= P * 50; i += P * 5) {
+        for (int i = P * 5; i <= P * 100; i += P * 5) {
             double[] a = new double[M];
             double[][] s = new double[7][];
             for (int j = 0; j < 7; ++j) {
