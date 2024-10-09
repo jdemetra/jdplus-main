@@ -21,6 +21,7 @@ import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.calendars.GenericTradingDays;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.dstats.F;
+import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
 import jdplus.toolkit.base.core.modelling.regression.GenericTradingDaysFactory;
 import jdplus.toolkit.base.core.stats.linearmodel.LeastSquaresResults;
 import jdplus.toolkit.base.core.stats.tests.TestsUtility;
@@ -70,9 +71,9 @@ public class CanovaHansenForTradingDays {
 
         private FastMatrix sx() {
 
-            GenericTradingDays gtd = GenericTradingDays.raw(DayClustering.TD7);
+            GenericTradingDays gtd = GenericTradingDays.contrasts(DayClustering.TD7);
             int n = s.length();
-            FastMatrix m = FastMatrix.make(n, 7);
+            FastMatrix m = FastMatrix.make(n, 6);
             GenericTradingDaysFactory.FACTORY.fill(gtd, s.getStart(), m);
             FastMatrix dm = m;
             if (differencingLags != null) {
@@ -125,14 +126,14 @@ public class CanovaHansenForTradingDays {
     private final int nx, ntd;
 
     private CanovaHansenForTradingDays(final LinearModel lm, int ntd, final WindowFunction winFunction, int truncationLag) {
-        this.ntd=ntd;
+        this.ntd = ntd;
         x = lm.variables();
-        nx=x.getColumnsCount();
+        nx = x.getColumnsCount();
         LeastSquaresResults olsResults = Ols.compute(lm);
         c = olsResults.getCoefficients();
         u = lm.calcResiduals(c);
         // multiply the columns of x by e
-        xe=x.deepClone();
+        xe = x.deepClone();
         xe.applyByColumns(col -> col.apply(u, (a, b) -> a * b));
         phi = RobustCovarianceComputer.covariance(xe, winFunction, truncationLag);
         cxe = xe.deepClone();
@@ -140,20 +141,33 @@ public class CanovaHansenForTradingDays {
     }
 
     public double test(int var) {
-        int dx=nx-ntd, dvar=var+dx;
+        int dx = nx - ntd, dvar = var + dx;
         return computeStat(phi.extract(dvar, 1, dvar, 1), cxe.extract(0, cxe.getRowsCount(), dvar, 1));
     }
 
     public double test(int var, int nvars) {
-        int dx=nx-ntd, dvar=var+dx;
+        int dx = nx - ntd, dvar = var + dx;
         return computeStat(phi.extract(dvar, nvars, dvar, nvars), cxe.extract(0, cxe.getRowsCount(), dvar, nvars));
+    }
+
+    public double testDerived() {
+        int dx = nx - ntd;
+        FastMatrix tphi = phi.extract(dx, ntd, dx, ntd);
+        DataBlock tc = DataBlock.of(c.extract(dx, ntd));
+        double v = QuadraticForm.apply(tphi, tc);
+        FastMatrix V = FastMatrix.square(1);
+        V.set(0, 0, v);
+        FastMatrix ce = cxe.extract(0, cxe.getRowsCount(), dx, ntd);
+        FastMatrix E = FastMatrix.make(ce.getRowsCount(), 1);
+        E.column(0).product(ce.rowsIterator(), tc);
+        return computeStat(V, E);
     }
 
     public double testAll() {
         return test(0, ntd);
-   }
+    }
 
-    private double computeStat(FastMatrix O, FastMatrix cx) {
+    private static double computeStat(FastMatrix O, FastMatrix cx) {
         int n = cx.getRowsCount(), ncx = cx.getColumnsCount();
         // compute tr( O^-1*xe'*xe)
         // cusum
@@ -187,7 +201,7 @@ public class CanovaHansenForTradingDays {
     }
 
     public StatisticalTest tdTest() {
-        int dx=nx-ntd;
+        int dx = nx - ntd;
         FastMatrix rcov = robustCovarianceOfCoefficients().extract(dx, ntd, dx, ntd);
         SymmetricMatrix.lcholesky(rcov);
         LowerTriangularMatrix.toLower(rcov);

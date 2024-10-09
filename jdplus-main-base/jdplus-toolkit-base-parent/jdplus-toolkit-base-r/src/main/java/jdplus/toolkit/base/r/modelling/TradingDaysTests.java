@@ -19,8 +19,10 @@ package jdplus.toolkit.base.r.modelling;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 import jdplus.toolkit.base.core.modelling.regular.tests.CanovaHansenForTradingDays;
+import jdplus.toolkit.base.core.modelling.regular.tests.TimeVaryingEstimator;
 import jdplus.toolkit.base.core.modelling.regular.tests.TradingDaysTest;
 import jdplus.toolkit.base.core.regsarima.ami.SarimaTradingDaysTest;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
@@ -41,9 +43,10 @@ public class TradingDaysTests {
                 .truncationLag(truncation)
                 .build();
         double[] test = new double[10];
-        for (int i = 0; i < 7; ++i) {
+        for (int i = 0; i < 6; ++i) {
             test[i] = ch.test(i);
         }
+        test[6]=ch.testDerived();
         test[7] = ch.testAll();
         StatisticalTest tdTest = ch.tdTest();
         test[8] = tdTest.getValue();
@@ -90,4 +93,9 @@ public class TradingDaysTests {
         }
     }
 
+    public StatisticalTest timeVaryingTradingDaysTest(TsData s, int[] td, boolean onContrasts) {
+        DayClustering dc= DayClustering.of(td);
+        TimeVaryingEstimator estimator=new TimeVaryingEstimator();
+        return estimator.process(s, dc, onContrasts);
+    }
 }

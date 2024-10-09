@@ -16,12 +16,16 @@
  */
 package jdplus.sa.base.core.tests;
 
+import java.util.Arrays;
 import tck.demetra.data.Data;
 import tck.demetra.data.WeeklyData;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.delta;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.log;
 import org.junit.jupiter.api.Test;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
+import jdplus.toolkit.base.core.dstats.Normal;
+import jdplus.toolkit.base.core.random.XorshiftRNG;
 
 /**
  *
@@ -40,10 +44,26 @@ public class CanovaHansenTest {
                 .truncationLag(4)
                 .build();
 //       System.out.println(ch.seasonalityTest());
-
+//
 //        for (int i = 0; i < 4; ++i) {
 //            System.out.println(ch.test(i));
 //        }
+//        System.out.println(ch.testAll());
+    }
+
+    @Test
+    public void testUnempl_contrast() {
+//        System.out.println("contrasts");
+        CanovaHansen ch = CanovaHansen.test(DoubleSeq.of(Data.US_UNEMPL))
+                .contrasts(4)
+                .truncationLag(4)
+                .build();
+//       System.out.println(ch.seasonalityTest());
+//
+//        for (int i = 0; i < 3; ++i) {
+//            System.out.println(ch.test(i));
+//        }
+//        System.out.println(ch.testDerived());
 //        System.out.println(ch.testAll());
     }
 
@@ -95,7 +115,7 @@ public class CanovaHansenTest {
 //        }
         //  System.out.println(ch.robustTestCoefficients());
 //        System.out.println(all);
-     }
+    }
 
     @Test
     public void testW_trig() {
@@ -141,4 +161,51 @@ public class CanovaHansenTest {
         }
     }
 
+    public static void main(String[] args) {
+        Normal N = new Normal();
+        int M = 100000;
+        int P = 6;
+        RandomNumberGenerator rng = XorshiftRNG.fromSystemNanoTime();
+        for (int i = P*5; i <= P*50; i += P*5) {
+            double[] a = new double[M];
+            double[][] s = new double[P][];
+            for (int j = 0; j < P; ++j) {
+                s[j] = new double[M];
+            }
+            for (int j = 0; j < M; ++j) {
+                double[] x = new double[i];
+                for (int k = 0; k < i; ++k) {
+                    x[k] = N.random(rng);
+                }
+                CanovaHansen ch = CanovaHansen.test(DoubleSeq.of(x))
+                        .lag1(false)
+                        .truncationLag(15)
+                        .dummies(P)
+                        .build();
+                a[j] = ch.testAll();
+                for (int k = 0; k < P; ++k) {
+                    s[k][j] = ch.test(k);
+                }
+            }
+            Arrays.sort(a);
+            for (int j = 0; j < 1; ++j) {
+                Arrays.sort(s[j]);
+                System.out.print(s[j][(int) (M * .9)]);
+                System.out.print('\t');
+                System.out.print(s[j][(int) (M * .95)]);
+                System.out.print('\t');
+                System.out.print(s[j][(int) (M * .99)]);
+                System.out.print('\t');
+                System.out.print(s[j][(int) (M * .999)]);
+                System.out.print('\t');
+            }
+            System.out.print(a[(int) (M * .9)]);
+            System.out.print('\t');
+            System.out.print(a[(int) (M * .95)]);
+            System.out.print('\t');
+            System.out.print(a[(int) (M * .99)]);
+            System.out.print('\t');
+            System.out.println(a[(int) (M * .999)]);
+        }
+    }
 }

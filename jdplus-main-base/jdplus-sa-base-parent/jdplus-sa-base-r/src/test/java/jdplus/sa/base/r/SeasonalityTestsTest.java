@@ -73,9 +73,11 @@ public class SeasonalityTestsTest {
     @Test
     public void testCH() {
         DoubleSeq x=DoubleSeq.of(Data.RETAIL_BOOKSTORES).log().delta(1);
-        double[] q=SeasonalityTests.canovaHansen(x.toArray(), 12, false, false, "Bartlett", -1, 3);
-        System.out.println(DoubleSeq.of(q));
-        q=SeasonalityTests.canovaHansen(x.toArray(), 12, true, false, "Bartlett", -1, 3);
-        System.out.println(DoubleSeq.of(q));
+        double[] q=SeasonalityTests.canovaHansen(x.toArray(), 12, "Trigonometric", false, "Bartlett", -1, 3);
+ //       System.out.println(DoubleSeq.of(q));
+        q=SeasonalityTests.canovaHansen(x.toArray(), 12, "Dummy", false, "Bartlett", -1, 3);
+//        System.out.println(DoubleSeq.of(q));
+        q=SeasonalityTests.canovaHansen(x.toArray(), 12, "Contrast", false, "Bartlett", -1, 3);
+//        System.out.println(DoubleSeq.of(q));
     }
 }

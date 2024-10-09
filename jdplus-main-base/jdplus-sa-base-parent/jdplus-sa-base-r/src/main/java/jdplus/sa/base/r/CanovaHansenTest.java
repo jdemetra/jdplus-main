@@ -42,6 +42,16 @@ public class CanovaHansenTest {
                 .build());
     }
     
+    public static CanovaHansenTest ofSeasonalContrasts(double[] data, int period, boolean lag1, String window, int truncation){
+        WindowFunction fn=WindowFunction.valueOf(window);
+        return new CanovaHansenTest(CanovaHansen.test(DoubleSeq.of(data))
+                .lag1(lag1)
+                .contrasts(period)
+                .windowFunction(fn)
+                .truncationLag(truncation)
+                .build());
+    }
+
     public static CanovaHansenTest ofTrigs(double[] data, int period, boolean lag1, String window, int truncation){
         WindowFunction fn=WindowFunction.valueOf(window);
         return new CanovaHansenTest(CanovaHansen.test(DoubleSeq.of(data))
