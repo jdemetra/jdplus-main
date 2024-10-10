@@ -280,6 +280,13 @@ public class AsymmetricFiltersFactory {
     public IFiniteFilter mmsreFilter(SymmetricFilter sw, int q, FastMatrix U, FastMatrix Z, double[] dz, IntToDoubleFunction k, double passBand, double tweight) {
         double[] w = sw.weightsToArray();
         int h = w.length / 2;
+        IFiniteFilter rf = FiniteFilter.ofInternal(w, -h);
+        return mmsreFilter(rf, q, U, Z, dz, k, passBand, tweight);   
+    }
+    
+    public IFiniteFilter mmsreFilter(IFiniteFilter rf, int q, FastMatrix U, FastMatrix Z, double[] dz, IntToDoubleFunction k, double passBand, double tweight) {
+        double[] w = rf.weightsToArray();
+        int h = Math.abs(rf.getLowerBound());
         int nv = h + q + 1;
         int ncolu = U.getColumnsCount();
         DataBlock wp = DataBlock.of(w, 0, nv);
