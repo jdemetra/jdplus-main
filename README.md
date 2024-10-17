@@ -5,9 +5,9 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/jdemetra/jdplus-main/total)
 ![GitHub Releases](https://img.shields.io/github/downloads/jdemetra/jdplus-main/latest/total)
 
-**JDemetra+ is a seasonal adjustment and time series analysis tool** developed by the National Bank of Belgium in collaboration with the Deutsche Bundesbank, Insee and Eurostat in accordance with the [Guidelines of the European Statistical System](https://ec.europa.eu/eurostat/documents/3859598/6830795/KS-GQ-15-001-EN-N.pdf) (ESS).
+**JDemetra+ is a seasonal adjustment and time series analysis tool** developed by the National Bank of Belgium in collaboration with the Deutsche Bundesbank, Insee and Eurostat in accordance with the [Guidelines of the European Statistical System](https://ec.europa.eu/eurostat/en/web/products-manuals-and-guidelines/w/ks-gq-24-012) (ESS).
 
-Since 2015, JDemetra+ has been [officially recommended](https://ec.europa.eu/eurostat/cros/system/files/Jdemetra_%20release.pdf) to the members of the ESS and the European System of Central Banks as the software for seasonal and calendar adjustment of official statistics.
+Since 2015, JDemetra+ has been [officially recommended](https://github.com/user-attachments/files/17409112/2015-01-21.Jdemetra%2B.release.pdf) to the members of the ESS and the European System of Central Banks as the software for seasonal and calendar adjustment of official statistics.
 
 JDemetra+ implements the concepts and algorithms used in the two leading SA methods: TRAMO/SEATS and X-12ARIMA. These methods have been re-engineered using an object-oriented approach, which makes them easier to use, extend and modify.
 
