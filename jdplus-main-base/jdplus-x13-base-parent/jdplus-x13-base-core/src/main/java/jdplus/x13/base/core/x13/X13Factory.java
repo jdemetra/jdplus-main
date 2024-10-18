@@ -35,12 +35,16 @@ import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFac
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnostics;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnostics;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutOfSampleDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.x13.base.core.x13.diagnostics.MDiagnosticsConfiguration;
@@ -77,11 +81,18 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
         SaOutliersDiagnosticsFactory<X13Results> outliers
                 = new SaOutliersDiagnosticsFactory<>(OutliersDiagnosticsConfiguration.getDefault(),
                         r -> r.getPreprocessing());
+        SpectralDiagnosticsFactory<X13Results> spectral
+                = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault());
         MDiagnosticsFactory mstats = new MDiagnosticsFactory(MDiagnosticsConfiguration.getDefault());
         AdvancedResidualSeasonalityDiagnosticsFactory<X13Results> advancedResidualSeasonality
                 = new AdvancedResidualSeasonalityDiagnosticsFactory<>(AdvancedResidualSeasonalityDiagnosticsConfiguration.getDefault(),
                         (X13Results r) -> r.getDiagnostics().getGenericDiagnostics()
                 );
+        CombinedSeasonalityDiagnosticsFactory<X13Results> combinedSeasonality
+                = new CombinedSeasonalityDiagnosticsFactory<>(CombinedSeasonalityDiagnosticsConfiguration.getDefault(),
+                        (X13Results r) -> r.getDiagnostics().getGenericDiagnostics()
+                );
+
         ResidualTradingDaysDiagnosticsFactory<X13Results> residualTradingDays
                 = new ResidualTradingDaysDiagnosticsFactory<>(ResidualTradingDaysDiagnosticsConfiguration.getDefault(),
                         (X13Results r) -> {
@@ -99,7 +110,9 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
         all.add(residuals);
         all.add(outofsample);
         all.add(outliers);
+        all.add(spectral);
         all.add(mstats);
+        all.add(combinedSeasonality);
         all.add(advancedResidualSeasonality);
         all.add(residualTradingDays);
         return all;

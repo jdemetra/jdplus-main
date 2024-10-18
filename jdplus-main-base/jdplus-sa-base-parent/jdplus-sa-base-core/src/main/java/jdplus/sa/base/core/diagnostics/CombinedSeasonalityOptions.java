@@ -30,8 +30,8 @@ public class CombinedSeasonalityOptions {
 
     private static final int DEF_LAST_YEARS = 3;
 
-    private static AtomicReference<CombinedSeasonalityOptions> DEFAULT
-            = new AtomicReference<CombinedSeasonalityOptions>(builder().build());
+    private static final AtomicReference<CombinedSeasonalityOptions> DEFAULT
+            = new AtomicReference<>(builder().build());
 
     public static void setDefault(CombinedSeasonalityOptions config) {
         DEFAULT.set(config);

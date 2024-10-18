@@ -14,6 +14,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - ![STAT] Add likelihood ratio test for time-varying trading days
+- ![STAT] Add combined seasonality tests
+- ![STAT] Add visual spectral tests
+- ![UI] Add option to specify the length of the combined seasonality tests on last years visual spectral tests
+
 
 ### Changed
 

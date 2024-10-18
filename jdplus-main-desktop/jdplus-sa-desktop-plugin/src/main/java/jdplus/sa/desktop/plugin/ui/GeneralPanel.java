@@ -72,6 +72,8 @@ final class GeneralPanel extends javax.swing.JPanel {
         seasonalityLength = new javax.swing.JSpinner();
         stabilityLabel = new javax.swing.JLabel();
         stabilityLength = new javax.swing.JSpinner();
+        combinedSeasonality = new javax.swing.JLabel();
+        combinedSeasonalityLast = new javax.swing.JSpinner();
         saPanel = new javax.swing.JPanel();
         defaultSpecLabel = new javax.swing.JLabel();
         specButton = DropDownButtonFactory.createDropDownButton(DemetraIcons.BLOG_16, specPopup);
@@ -99,6 +101,11 @@ final class GeneralPanel extends javax.swing.JPanel {
 
         stabilityLength.setModel(new javax.swing.SpinnerNumberModel(8, 4, null, 1));
 
+        org.openide.awt.Mnemonics.setLocalizedText(combinedSeasonality, org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.combinedSeasonality.text")); // NOI18N
+        combinedSeasonality.setToolTipText(org.openide.util.NbBundle.getMessage(GeneralPanel.class, "GeneralPanel.combinedSeasonality.toolTipText")); // NOI18N
+
+        combinedSeasonalityLast.setModel(new javax.swing.SpinnerNumberModel(3, 3, 6, 1));
+
         javax.swing.GroupLayout lastYearsPanelLayout = new javax.swing.GroupLayout(lastYearsPanel);
         lastYearsPanel.setLayout(lastYearsPanelLayout);
         lastYearsPanelLayout.setHorizontalGroup(
@@ -110,12 +117,14 @@ final class GeneralPanel extends javax.swing.JPanel {
                     .addGroup(lastYearsPanelLayout.createSequentialGroup()
                         .addComponent(stabilityLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(seasonalityLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(seasonalityLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(combinedSeasonality, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lastYearsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lastYearsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(stabilityLength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(seasonalityLength))
+                        .addComponent(seasonalityLength)
+                        .addComponent(combinedSeasonalityLast))
                     .addComponent(spectralLength, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(53, 53, 53))
         );
@@ -130,6 +139,10 @@ final class GeneralPanel extends javax.swing.JPanel {
                 .addGroup(lastYearsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(seasonalityLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(seasonalityLength))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(lastYearsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(combinedSeasonality, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(combinedSeasonalityLast))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(lastYearsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stabilityLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -212,12 +225,9 @@ final class GeneralPanel extends javax.swing.JPanel {
             .addGroup(outputsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(outputsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(outputsPanelLayout.createSequentialGroup()
-                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 74, Short.MAX_VALUE))
-                    .addGroup(outputsPanelLayout.createSequentialGroup()
-                        .addComponent(outputsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(outputsView, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -242,7 +252,7 @@ final class GeneralPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(revisionHistoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(outputsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(outputsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -274,7 +284,7 @@ final class GeneralPanel extends javax.swing.JPanel {
         seasonalityLength.setValue(saui.getSeasonalityLength());
 
         stabilityLength.setValue(saui.getStabilityLength());
-
+        combinedSeasonalityLast.setValue(saui.getCombinedSeasonalityLastYears());
         estimationPolicyComboBox.setModel(new DefaultComboBoxModel(types));
         estimationPolicyComboBox.setSelectedItem(saui.getEstimationPolicyType());
 
@@ -291,6 +301,7 @@ final class GeneralPanel extends javax.swing.JPanel {
         DemetraSaUI ui = DemetraSaUI.get();
         ui.setSpectralLastYears((Integer) spectralLength.getValue());
         ui.setSeasonalityLength((Integer) seasonalityLength.getValue());
+        ui.setCombinedSeasonalityLastYears((Integer) combinedSeasonalityLast.getValue());
 
         ui.setStabilityLength((Integer) stabilityLength.getValue());
 
@@ -306,6 +317,8 @@ final class GeneralPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel combinedSeasonality;
+    private javax.swing.JSpinner combinedSeasonalityLast;
     private javax.swing.JLabel defaultSpecLabel;
     private javax.swing.JButton editOutput;
     private javax.swing.JLabel estimationLabel;

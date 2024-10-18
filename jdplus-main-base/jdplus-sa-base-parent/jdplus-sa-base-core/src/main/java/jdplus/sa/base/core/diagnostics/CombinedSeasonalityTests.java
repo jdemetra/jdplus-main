@@ -65,7 +65,7 @@ public class CombinedSeasonalityTests {
     }
 
     @lombok.Getter(AccessLevel.PRIVATE)
-    private volatile CombinedSeasonality seasLinearized, seasSI, seasSa, seasI, seasRes, seasSI3, seasSa3, seasI3, seasRes3;
+    private volatile CombinedSeasonality seasLinearized, seasSI, seasSa, seasI, seasRes, seasSILast, seasSaLast, seasILast, seasResLast;
 
     public CombinedSeasonality linearizedTest() {
         CombinedSeasonality cs = seasLinearized;
@@ -85,13 +85,13 @@ public class CombinedSeasonalityTests {
 
     public CombinedSeasonality siTest(boolean last) {
         if (last) {
-            CombinedSeasonality cs = seasSI3;
+            CombinedSeasonality cs = seasSILast;
             if (cs == null) {
                 synchronized (this) {
-                    cs = seasSI3;
+                    cs = seasSILast;
                     if (cs == null) {
                         cs = SaDiagnosticsUtility.combinedSeasonalityTest(si, options.getLastYears(), mul ? 1 : 0, false);
-                        seasSI3 = cs;
+                        seasSILast = cs;
                     }
                 }
             }
@@ -113,13 +113,13 @@ public class CombinedSeasonalityTests {
 
     public CombinedSeasonality saTest(boolean last) {
         if (last) {
-            CombinedSeasonality cs = seasSa3;
+            CombinedSeasonality cs = seasSaLast;
             if (cs == null) {
                 synchronized (this) {
-                    cs = seasSa3;
+                    cs = seasSaLast;
                     if (cs == null) {
                         cs = SaDiagnosticsUtility.combinedSeasonalityTest(sa, options.getLastYears(), 0, true);
-                        seasSa3 = cs;
+                        seasSaLast = cs;
                     }
                 }
             }
@@ -144,13 +144,13 @@ public class CombinedSeasonalityTests {
             return null;
         }
         if (last) {
-            CombinedSeasonality cs = seasRes3;
+            CombinedSeasonality cs = seasResLast;
             if (cs == null) {
                 synchronized (this) {
-                    cs = seasRes3;
+                    cs = seasResLast;
                     if (cs == null) {
                         cs = SaDiagnosticsUtility.combinedSeasonalityTest(residuals, options.getLastYears(), 0, false);
-                        seasRes3 = cs;
+                        seasResLast = cs;
                     }
                 }
             }
@@ -172,13 +172,13 @@ public class CombinedSeasonalityTests {
 
     public CombinedSeasonality irrTest(boolean last) {
         if (last) {
-            CombinedSeasonality cs = seasI3;
+            CombinedSeasonality cs = seasILast;
             if (cs == null) {
                 synchronized (this) {
-                    cs = seasI3;
+                    cs = seasILast;
                     if (cs == null) {
                         cs = SaDiagnosticsUtility.combinedSeasonalityTest(irr, options.getLastYears(), mul ? 1 : 0, false);
-                        seasI3 = cs;
+                        seasILast = cs;
                     }
                 }
             }

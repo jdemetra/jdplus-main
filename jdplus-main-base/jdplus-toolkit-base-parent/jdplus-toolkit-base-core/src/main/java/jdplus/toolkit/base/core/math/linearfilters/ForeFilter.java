@@ -21,6 +21,7 @@ import nbbrd.design.Immutable;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import java.util.function.IntToDoubleFunction;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.polynomials.RootsSolver;
 import jdplus.toolkit.base.core.math.polynomials.PolynomialException;
 import jdplus.toolkit.base.core.math.polynomials.UnitRootsSolver;
@@ -91,6 +92,10 @@ public final class ForeFilter implements IFiniteFilter {
      */
     public ForeFilter(final Polynomial p) {
         polynomial = p;
+    }
+
+    public DoubleSeq coefficients() {
+        return polynomial.coefficients();
     }
 
     /**
