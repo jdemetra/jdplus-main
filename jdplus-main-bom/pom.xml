@@ -18,7 +18,9 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java.bundled.version>jdk-21.0.4+7</java.bundled.version>
+        <linux.java.bundled.version>jdk-21.0.5+11</linux.java.bundled.version>
+        <windows.java.bundled.version>jdk-21.0.4+7</windows.java.bundled.version>
+        <osx.java.bundled.version>jdk-21.0.5+11</osx.java.bundled.version>
     </properties>
 
     <dependencyManagement>
@@ -65,7 +67,11 @@
         <profile>
             <id>full-release</id>
             <properties>
-                <jdkname>${java.bundled.version}-jre</jdkname>
+                <!-- defines the root folder of a jre archive -->
+                <!-- should be automated since there is always one root folder -->
+                <linux.dir>${linux.java.bundled.version}-jre</linux.dir>
+                <windows.dir>${windows.java.bundled.version}-jre</windows.dir>
+                <osx.dir>${osx.java.bundled.version}-jre</osx.dir>
             </properties>
             <build>
                 <plugins>
@@ -134,7 +140,7 @@
                                             <name>jdk-windows-x86_64</name>
                                             <distribution>temurin</distribution>
                                             <platform>windows-x86_64</platform>
-                                            <version>${java.bundled.version}</version>
+                                            <version>${windows.java.bundled.version}</version>
                                             <packageType>jre</packageType>
                                             <archiveType>zip</archiveType>
                                         </pkg>
@@ -142,7 +148,7 @@
                                             <name>jdk-linux-x86_64</name>
                                             <distribution>temurin</distribution>
                                             <platform>linux-x86_64</platform>
-                                            <version>${java.bundled.version}</version>
+                                            <version>${linux.java.bundled.version}</version>
                                             <packageType>jre</packageType>
                                             <archiveType>tar.gz</archiveType>
                                         </pkg>
@@ -150,7 +156,7 @@
                                             <name>jdk-linux-aarch_64</name>
                                             <distribution>temurin</distribution>
                                             <platform>linux-aarch64</platform>
-                                            <version>${java.bundled.version}</version>
+                                            <version>${linux.java.bundled.version}</version>
                                             <packageType>jre</packageType>
                                             <archiveType>tar.gz</archiveType>
                                         </pkg>
@@ -158,7 +164,7 @@
                                             <name>jdk-osx-x86_64</name>
                                             <distribution>temurin</distribution>
                                             <platform>osx-x86_64</platform>
-                                            <version>${java.bundled.version}</version>
+                                            <version>${osx.java.bundled.version}</version>
                                             <packageType>jre</packageType>
                                             <archiveType>tar.gz</archiveType>
                                         </pkg>
@@ -166,7 +172,7 @@
                                             <name>jdk-osx-aarch_64</name>
                                             <distribution>temurin</distribution>
                                             <platform>osx-aarch64</platform>
-                                            <version>${java.bundled.version}</version>
+                                            <version>${osx.java.bundled.version}</version>
                                             <packageType>jre</packageType>
                                             <archiveType>tar.gz</archiveType>
                                         </pkg>
@@ -217,13 +223,13 @@
                                         </macrodef>
 
                                         <parallel threadsPerProcessor="1">
-                                            <bundle-cli platform="windows-x86_64" extension="zip" dir="${jdkname}"/>
-                                            <bundle-cli platform="linux-x86_64" extension="tar.gz" dir="${jdkname}"/>
-                                            <bundle-cli platform="linux-aarch_64" extension="tar.gz" dir="${jdkname}"/>
+                                            <bundle-cli platform="windows-x86_64" extension="zip" dir="${windows.dir}"/>
+                                            <bundle-cli platform="linux-x86_64" extension="tar.gz" dir="${linux.dir}"/>
+                                            <bundle-cli platform="linux-aarch_64" extension="tar.gz" dir="${linux.dir}"/>
                                             <bundle-cli platform="osx-x86_64" extension="tar.gz"
-                                                        dir="${jdkname}/Contents/Home"/>
+                                                        dir="${osx.dir}/Contents/Home"/>
                                             <bundle-cli platform="osx-aarch_64" extension="tar.gz"
-                                                        dir="${jdkname}/Contents/Home"/>
+                                                        dir="${osx.dir}/Contents/Home"/>
                                         </parallel>
                                     </target>
                                 </configuration>
@@ -261,15 +267,15 @@
                                         </macrodef>
 
                                         <parallel threadsPerProcessor="1">
-                                            <bundle-desktop platform="windows-x86_64" extension="zip" dir="${jdkname}"/>
+                                            <bundle-desktop platform="windows-x86_64" extension="zip" dir="${windows.dir}"/>
                                             <bundle-desktop platform="linux-x86_64" extension="tar.gz"
-                                                            dir="${jdkname}"/>
+                                                            dir="${linux.dir}"/>
                                             <bundle-desktop platform="linux-aarch_64" extension="tar.gz"
-                                                            dir="${jdkname}"/>
+                                                            dir="${linux.dir}"/>
                                             <bundle-desktop platform="osx-x86_64" extension="tar.gz"
-                                                            dir="${jdkname}/Contents/Home"/>
+                                                            dir="${osx.dir}/Contents/Home"/>
                                             <bundle-desktop platform="osx-aarch_64" extension="tar.gz"
-                                                            dir="${jdkname}/Contents/Home"/>
+                                                            dir="${osx.dir}/Contents/Home"/>
                                         </parallel>
                                     </target>
                                 </configuration>
