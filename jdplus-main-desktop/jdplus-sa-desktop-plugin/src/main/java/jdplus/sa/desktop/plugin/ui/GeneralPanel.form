@@ -310,7 +310,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="jToolBar1" min="-2" pref="58" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="78" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="79" max="32767" attributes="0"/>
                       </Group>
                       <Component id="outputsView" pref="0" max="32767" attributes="0"/>
                   </Group>

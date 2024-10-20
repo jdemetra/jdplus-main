@@ -227,7 +227,7 @@ final class GeneralPanel extends javax.swing.JPanel {
                 .addGroup(outputsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(outputsPanelLayout.createSequentialGroup()
                         .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 78, Short.MAX_VALUE))
+                        .addGap(0, 79, Short.MAX_VALUE))
                     .addComponent(outputsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
