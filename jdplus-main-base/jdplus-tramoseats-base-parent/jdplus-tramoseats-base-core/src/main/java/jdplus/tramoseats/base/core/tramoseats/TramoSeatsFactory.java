@@ -31,6 +31,8 @@ import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFac
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnostics;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.CoherenceDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnostics;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutliersDiagnosticsConfiguration;
@@ -40,6 +42,8 @@ import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutOfSampleDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.tramoseats.base.core.seats.diagnostics.SeatsDiagnosticsConfiguration;
@@ -79,12 +83,18 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
         SaOutliersDiagnosticsFactory<TramoSeatsResults> outliers
                 = new SaOutliersDiagnosticsFactory<>(OutliersDiagnosticsConfiguration.getDefault(),
                         r -> r.getPreprocessing());
+        SpectralDiagnosticsFactory<TramoSeatsResults> spectral
+                = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault());
         SeatsDiagnosticsFactory<TramoSeatsResults> seats
                 = new SeatsDiagnosticsFactory<>(SeatsDiagnosticsConfiguration.getDefault(),
                         r -> r.getDiagnostics().getSpecificDiagnostics());
 
         AdvancedResidualSeasonalityDiagnosticsFactory<TramoSeatsResults> advancedResidualSeasonality
                 = new AdvancedResidualSeasonalityDiagnosticsFactory<>(AdvancedResidualSeasonalityDiagnosticsConfiguration.getDefault(),
+                        (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+                );
+        CombinedSeasonalityDiagnosticsFactory<TramoSeatsResults> combinedSeasonality
+                = new CombinedSeasonalityDiagnosticsFactory<>(CombinedSeasonalityDiagnosticsConfiguration.getDefault(),
                         (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
                 );
 
@@ -106,7 +116,9 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
         all.add(residuals);
         all.add(outofsample);
         all.add(outliers);
+        all.add(spectral);
         all.add(seats);
+        all.add(combinedSeasonality);
         all.add(advancedResidualSeasonality);
         all.add(residualTradingDays);
         return all;

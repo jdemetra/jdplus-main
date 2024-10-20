@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityOptions;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.IntProperty;
 import nbbrd.io.text.Parser;
@@ -84,8 +85,24 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
 
     public void setSeasonalityLength(Integer lastYears) {
         Integer old = this.seasonalityLength;
-        seasonalityLength = lastYears != null ? lastYears : DEFAULT_SPECTRAL_LAST_YEARS;
+        seasonalityLength = lastYears != null ? lastYears : DEFAULT_SEASONALITY_LENGTH;
         broadcaster.firePropertyChange(SEASONALITY_LENGTH_PROPERTY, old, seasonalityLength);
+    }
+
+    @SwingProperty
+    public static final String COMBINEDSEASONALITY_LAST_PROPERTY = "combinedSeasonalityLastYears";
+    private static final int DEFAULT_COMBINEDSEASONALITY_LAST = 3;
+    private Integer combinedSeasonalityLastYears = DEFAULT_COMBINEDSEASONALITY_LAST;
+
+    public Integer getCombinedSeasonalityLastYears() {
+        return combinedSeasonalityLastYears;
+    }
+
+    public void setCombinedSeasonalityLastYears(Integer lastYears) {
+        Integer old = this.combinedSeasonalityLastYears;
+        combinedSeasonalityLastYears = lastYears != null ? lastYears : DEFAULT_COMBINEDSEASONALITY_LAST;
+        CombinedSeasonalityOptions.setDefault(CombinedSeasonalityOptions.builder().lastYears(combinedSeasonalityLastYears).build());
+        broadcaster.firePropertyChange(COMBINEDSEASONALITY_LAST_PROPERTY, old, combinedSeasonalityLastYears);
     }
 
     @SwingProperty
@@ -165,6 +182,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
     private static final IntProperty SPECTRAL_LAST_YEARS_CONFIG = IntProperty.of(SPECTRAL_LAST_YEARS_PROPERTY, DEFAULT_SPECTRAL_LAST_YEARS);
     private static final IntProperty SEASONALITY_LENGTH_CONFIG = IntProperty.of(SEASONALITY_LENGTH_PROPERTY, DEFAULT_SEASONALITY_LENGTH);
     private static final IntProperty STABILITY_LENGTH_CONFIG = IntProperty.of(STABILITY_LENGTH_PROPERTY, DEFAULT_STABILITY_LENGTH);
+    private static final IntProperty COMBINEDSEASONALITY_LAST_CONFIG = IntProperty.of(COMBINEDSEASONALITY_LAST_PROPERTY, DEFAULT_COMBINEDSEASONALITY_LAST);
     private static final Property<EstimationPolicyType> ESTIMATION_POLICY_TYPE_CONFIG = Property.of(ESTIMATION_POLICY_TYPE_PROPERTY, DEFAULT_ESTIMATION_POLICY, Parser.onEnum(EstimationPolicyType.class), Formatter.onEnum());
     private static final Property<String> DEFAULT_SA_SPEC_CONFIG = Property.of(DEFAULT_SA_SPEC_PROPERTY, "", Parser.onString(), Formatter.onString());
     private static final Property<String[]> SELECTED_DIAG_FIELDS_CONFIG = Property.of(SELECTED_DIAG_FIELDS_PROPERTY, DEFAULT_SELECTED_DIAG_FIELDS.stream().toArray(String[]::new), Parser.onStringArray(), Formatter.onStringArray());
@@ -177,6 +195,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         Config.Builder b = Config.builder(DOMAIN, NAME, VERSION);
         SPECTRAL_LAST_YEARS_CONFIG.set(b::parameter, getSpectralLastYears());
         SEASONALITY_LENGTH_CONFIG.set(b::parameter, getSeasonalityLength());
+        COMBINEDSEASONALITY_LAST_CONFIG.set(b::parameter, getCombinedSeasonalityLastYears());
         STABILITY_LENGTH_CONFIG.set(b::parameter, getStabilityLength());
         ESTIMATION_POLICY_TYPE_CONFIG.set(b::parameter, getEstimationPolicyType());
         DEFAULT_SA_SPEC_CONFIG.set(b::parameter, idOf(getDefaultSaSpec()));
@@ -190,6 +209,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
         Config.checkDomain(config, DOMAIN);
         setSpectralLastYears(SPECTRAL_LAST_YEARS_CONFIG.get(config::getParameter));
         setSeasonalityLength(SEASONALITY_LENGTH_CONFIG.get(config::getParameter));
+        setCombinedSeasonalityLastYears(COMBINEDSEASONALITY_LAST_CONFIG.get(config::getParameter));
         setStabilityLength(STABILITY_LENGTH_CONFIG.get(config::getParameter));
         setEstimationPolicyType(ESTIMATION_POLICY_TYPE_CONFIG.get(config::getParameter));
         SaSpecification saspec = specOf(DEFAULT_SA_SPEC_CONFIG.get(config::getParameter));

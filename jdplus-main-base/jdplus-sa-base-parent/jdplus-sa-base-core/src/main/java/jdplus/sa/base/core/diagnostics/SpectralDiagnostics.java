@@ -142,18 +142,18 @@ public class SpectralDiagnostics implements Diagnostics {
             if (!sirr && !ssa) {
                 return ProcQuality.Good;
             } else if (sirr && ssa) {
-                return ProcQuality.Severe;
-            } else {
                 return strict ? ProcQuality.Severe : ProcQuality.Bad;
+            } else {
+                return ProcQuality.Uncertain;
             }
         }
         if (test.equals(SpectralDiagnosticsFactory.TD)) {
             if (!tdirr && !tdsa) {
                 return ProcQuality.Good;
             } else if (tdirr && tdsa) {
-                return ProcQuality.Severe;
+                 return strict ? ProcQuality.Severe : ProcQuality.Bad;
             } else {
-                return strict ? ProcQuality.Severe : ProcQuality.Bad;
+                return ProcQuality.Uncertain;
             }
         }
         return ProcQuality.Undefined;
@@ -161,7 +161,7 @@ public class SpectralDiagnostics implements Diagnostics {
 
     @Override
     public double getValue(String test) {
-        return 0;
+        return Double.NaN;
     }
 
     @Override

@@ -25,46 +25,33 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @lombok.Value
 @lombok.Builder(toBuilder = true, builderClassName = "Builder")
-public class ResidualSeasonalityDiagnosticsConfiguration implements DiagnosticsConfiguration {
+public class CombinedSeasonalityDiagnosticsConfiguration implements DiagnosticsConfiguration {
 
-    private static final AtomicReference<ResidualSeasonalityDiagnosticsConfiguration> DEFAULT
+    private static final AtomicReference<CombinedSeasonalityDiagnosticsConfiguration> DEFAULT
             = new AtomicReference<>(builder().build());
 
-    public static void setDefault(ResidualSeasonalityDiagnosticsConfiguration config) {
+    public static void setDefault(CombinedSeasonalityDiagnosticsConfiguration config) {
         DEFAULT.set(config);
     }
 
-    public static ResidualSeasonalityDiagnosticsConfiguration getDefault() {
+    public static CombinedSeasonalityDiagnosticsConfiguration getDefault() {
         return DEFAULT.get();
     }
 
     public static final boolean ACTIVE = true;
     private boolean active;
-
-    public static final double SASEV = 0.01, SABAD = 0.05, SAUNC = 0.1, ISEV = 0.01, IBAD = 0.05, IUNC = 0.1, SA3SEV = 0.01, SA3BAD = 0.05, SA3UNC = 0.1;
-
-    private double severeThresholdForSa;
-    private double badThresholdForSa;
-    private double uncertainThresholdForSa;
-    private double severeThresholdForIrregular;
-    private double badThresholdForIrregular;
-    private double uncertainThresholdForIrregular;
-    private double severeThresholdForLastSa;
-    private double badThresholdForLastSa;
-    private double uncertainThresholdForLastSa;
+    
+    private boolean onSa, onI, onLastSa, onLastI, strict;
+ 
 
     public static Builder builder() {
         return new Builder()
                 .active(ACTIVE)
-                .severeThresholdForSa(SASEV)
-                .badThresholdForSa(SABAD)
-                .uncertainThresholdForSa(SAUNC)
-                .severeThresholdForIrregular(ISEV)
-                .badThresholdForIrregular(IBAD)
-                .uncertainThresholdForIrregular(IUNC)
-                .severeThresholdForLastSa(SA3SEV)
-                .badThresholdForLastSa(SA3BAD)
-                .uncertainThresholdForLastSa(SA3UNC);
+                .onI(true)
+                .onLastI(true)
+                .onSa(true)
+                .onLastSa(true)
+                .strict(true);
     }
 
     @Override

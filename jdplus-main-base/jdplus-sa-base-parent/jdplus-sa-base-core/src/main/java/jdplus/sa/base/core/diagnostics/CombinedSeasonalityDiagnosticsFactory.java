@@ -19,26 +19,31 @@ package jdplus.sa.base.core.diagnostics;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 import jdplus.sa.base.api.SaDiagnosticsFactory;
+import lombok.NonNull;
 
 /**
  *
  * @author Kristof Bayens
  * @param <R>
  */
-public class ResidualSeasonalityDiagnosticsFactory<R extends Explorable> implements SaDiagnosticsFactory<ResidualSeasonalityDiagnosticsConfiguration, R> {
+public class CombinedSeasonalityDiagnosticsFactory<R extends Explorable> implements SaDiagnosticsFactory<CombinedSeasonalityDiagnosticsConfiguration, R> {
 
     public static final String NAME = "Combined seasonality tests",
-            SA = NAME + " on sa", SA_LAST = NAME + " on sa (last 3 years)", IRR = NAME + " on irregular";
-    public static final List<String> ALL = Collections.unmodifiableList(Arrays.asList(SA, SA_LAST, IRR));
+            SA = NAME + " on sa", SA_LAST = NAME + " on sa (last years)", IRR = NAME + " on irregular", IRR_LAST = NAME + " on irregular (last years)";
+    public static final List<String> ALL = Collections.unmodifiableList(Arrays.asList(SA, SA_LAST, IRR, IRR_LAST));
 
-    private final ResidualSeasonalityDiagnosticsConfiguration config;
+    private final CombinedSeasonalityDiagnosticsConfiguration config;
+    private final Function<R, GenericSaTests> extractor;
 
-    public ResidualSeasonalityDiagnosticsFactory(ResidualSeasonalityDiagnosticsConfiguration config) {
+    public CombinedSeasonalityDiagnosticsFactory(@NonNull CombinedSeasonalityDiagnosticsConfiguration config,
+            @NonNull Function<R, GenericSaTests> extractor) {
         this.config = config;
+        this.extractor=extractor;
     }
 
     @Override
@@ -52,18 +57,18 @@ public class ResidualSeasonalityDiagnosticsFactory<R extends Explorable> impleme
     }
 
     @Override
-    public Diagnostics of(Explorable rslts) {
-        return ResidualSeasonalityDiagnostics.create(rslts, config);
+    public Diagnostics of(R rslts) {
+        return CombinedSeasonalityDiagnostics.of(config, extractor.apply(rslts));
     }
 
     @Override
-    public ResidualSeasonalityDiagnosticsConfiguration getConfiguration() {
+    public CombinedSeasonalityDiagnosticsConfiguration getConfiguration() {
         return config;
     }
 
     @Override
-    public ResidualSeasonalityDiagnosticsFactory with(ResidualSeasonalityDiagnosticsConfiguration newConfig) {
-        return new ResidualSeasonalityDiagnosticsFactory(newConfig);
+    public CombinedSeasonalityDiagnosticsFactory with(CombinedSeasonalityDiagnosticsConfiguration newConfig) {
+        return new CombinedSeasonalityDiagnosticsFactory(newConfig, extractor);
     }
 
      @Override

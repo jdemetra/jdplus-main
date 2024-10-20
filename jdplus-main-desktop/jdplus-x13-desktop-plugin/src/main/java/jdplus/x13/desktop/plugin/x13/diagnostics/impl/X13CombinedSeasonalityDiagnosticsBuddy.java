@@ -16,10 +16,10 @@
  */
 package jdplus.x13.desktop.plugin.x13.diagnostics.impl;
 
-import jdplus.sa.desktop.plugin.diagnostics.ResidualSeasonalityDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.CombinedSeasonalityDiagnosticsBuddy;
 import jdplus.x13.desktop.plugin.x13.diagnostics.X13DiagnosticsFactoryBuddy;
-import jdplus.sa.base.core.diagnostics.ResidualSeasonalityDiagnosticsConfiguration;
-import jdplus.sa.base.core.diagnostics.ResidualSeasonalityDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsFactory;
 import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -28,14 +28,15 @@ import org.openide.util.lookup.ServiceProvider;
  * @author palatej
  */
 @ServiceProvider(service = X13DiagnosticsFactoryBuddy.class, position = 1220)
-public final class X13ResidualSeasonalityDiagnosticsBuddy extends ResidualSeasonalityDiagnosticsBuddy implements X13DiagnosticsFactoryBuddy<ResidualSeasonalityDiagnosticsConfiguration> {
+public final class X13CombinedSeasonalityDiagnosticsBuddy extends CombinedSeasonalityDiagnosticsBuddy implements X13DiagnosticsFactoryBuddy<CombinedSeasonalityDiagnosticsConfiguration> {
 
-    public X13ResidualSeasonalityDiagnosticsBuddy(){
-        this.setActiveDiagnosticsConfiguration(ResidualSeasonalityDiagnosticsConfiguration.getDefault());
+    public X13CombinedSeasonalityDiagnosticsBuddy(){
+        this.setActiveDiagnosticsConfiguration(CombinedSeasonalityDiagnosticsConfiguration.getDefault());
     }
     
     @Override
-    public ResidualSeasonalityDiagnosticsFactory<X13Results> createFactory() {
-        return new ResidualSeasonalityDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration());
-    }
+    public CombinedSeasonalityDiagnosticsFactory<X13Results> createFactory() {
+        return new CombinedSeasonalityDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
+                (X13Results r) -> r.getDiagnostics().getGenericDiagnostics()
+        );    }
 }

@@ -33,7 +33,7 @@ public class SpectralDiagnosticsFactory<R extends Explorable> implements SaDiagn
     public static final String NAME = "Visual spectral analysis";
     public static final List<String> ALL = Collections.unmodifiableList(Arrays.asList(SEAS, TD));
     //public static final SpectralDiagnosticsFactory Default = new SpectralDiagnosticsFactory();
-    private SpectralDiagnosticsConfiguration config;
+    private final SpectralDiagnosticsConfiguration config;
 
     public SpectralDiagnosticsFactory(SpectralDiagnosticsConfiguration config) {
         this.config=config;
