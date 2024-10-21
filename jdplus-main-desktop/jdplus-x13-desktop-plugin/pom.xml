@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main-desktop</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>jdplus-x13-desktop-plugin</artifactId>
