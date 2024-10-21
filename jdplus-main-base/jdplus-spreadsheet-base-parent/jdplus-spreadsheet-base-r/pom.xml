@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-spreadsheet-base-parent</artifactId>
-        <version>3.2.5-SNAPSHOT</version>
+        <version>3.3.0</version>
     </parent>
 
     <artifactId>jdplus-spreadsheet-base-r</artifactId>
