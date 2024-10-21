@@ -29,12 +29,19 @@ jobs:
           cache: 'maven'
 
       - name: Pre-download dependencies with Maven
-        run: mvn -U -B -ntp dependency:go-offline
-
-      - name: Build and (headless) test with Maven
-        uses: smithki/xvfb-action@v1.1.2
+        uses: nick-fields/retry@v3
         with:
-          run: mvn -U -B -ntp verify
+          command: mvn -U -B -ntp dependency:go-offline
+          max_attempts: 3
+          timeout_minutes: 5
+
+      - name: Build and (headless) test with Maven (Linux)
+        if: ${{ runner.os == 'Linux' }}
+        run: xvfb-run mvn -U -B -ntp verify
+
+      - name: Build and (headless) test with Maven (Windows and macOS)
+        if: ${{ runner.os != 'Linux' }}
+        run: mvn -U -B -ntp verify
 
   auto-merge-job:
     needs: build-and-test-job
@@ -48,7 +55,11 @@ jobs:
 
     steps:
       - name: Merge PR
-        run: gh pr merge --auto --rebase "$PR_URL"
+        uses: nick-fields/retry@v3
+        with:
+          command: gh pr merge --auto --rebase "$PR_URL"
+          max_attempts: 3
+          timeout_minutes: 5
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

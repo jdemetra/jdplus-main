@@ -16,10 +16,10 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.impl;
 
-import jdplus.sa.desktop.plugin.diagnostics.ResidualSeasonalityDiagnosticsBuddy;
+import jdplus.sa.desktop.plugin.diagnostics.CombinedSeasonalityDiagnosticsBuddy;
 import jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
-import jdplus.sa.base.core.diagnostics.ResidualSeasonalityDiagnosticsConfiguration;
-import jdplus.sa.base.core.diagnostics.ResidualSeasonalityDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsConfiguration;
+import jdplus.sa.base.core.diagnostics.CombinedSeasonalityDiagnosticsFactory;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -28,15 +28,16 @@ import org.openide.util.lookup.ServiceProvider;
  * @author palatej
  */
 @ServiceProvider(service = TramoSeatsDiagnosticsFactoryBuddy.class, position = 1220)
-public final class TramoSeatsResidualSeasonalityDiagnosticsBuddy extends ResidualSeasonalityDiagnosticsBuddy implements TramoSeatsDiagnosticsFactoryBuddy<ResidualSeasonalityDiagnosticsConfiguration> {
+public final class TramoSeatsCombinedSeasonalityDiagnosticsBuddy extends CombinedSeasonalityDiagnosticsBuddy implements TramoSeatsDiagnosticsFactoryBuddy<CombinedSeasonalityDiagnosticsConfiguration> {
 
-    public TramoSeatsResidualSeasonalityDiagnosticsBuddy() {
-        this.setActiveDiagnosticsConfiguration(ResidualSeasonalityDiagnosticsConfiguration.getDefault());
+    public TramoSeatsCombinedSeasonalityDiagnosticsBuddy() {
+        this.setActiveDiagnosticsConfiguration(CombinedSeasonalityDiagnosticsConfiguration.getDefault());
     }
 
     @Override
-    public ResidualSeasonalityDiagnosticsFactory<TramoSeatsResults> createFactory() {
-        return new ResidualSeasonalityDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration());
-    }
+    public CombinedSeasonalityDiagnosticsFactory<TramoSeatsResults> createFactory() {
+        return new CombinedSeasonalityDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
+                (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+        );    }
 
 }

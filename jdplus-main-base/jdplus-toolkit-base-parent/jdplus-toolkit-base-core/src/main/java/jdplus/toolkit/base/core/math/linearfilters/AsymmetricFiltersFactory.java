@@ -254,6 +254,89 @@ public class AsymmetricFiltersFactory {
         wp.add(a.extract(0, nv));
         return FiniteFilter.ofInternal(wp.toArray(), -h);
     }
+    
+    /**
+     * Provides an asymmetric filter [-h, p] based on the given symmetric
+     * filter. The asymmetric filter minimizes the mean square revision error
+     * (mmsre) relative to the symmetric filter. The series follows the model
+     * y=U*du + Z*dz + e, std(e) = sigma/ki
+     *
+     * See Proietti, Luati, "Real time estimation in local polynomial regression
+     * with application to trend-cycle analysis".
+     *
+     * @param sw The symmetric filter
+     * @param q The horizon of the asymmetric filter (from 0 to deg(w)/2)
+     * @param U Matrix U
+     * @param Z Matrix Z
+     * @param dz Coefficients of the linear model. The number of the
+     * coefficients and the degree of the constraints define the type of the
+     * linear model.
+     * @param k The weighting factors (null for no weighting)
+     * @param tweight weight of the timeliness criterion
+     * @param passBand passband for the timeliness computation
+     * 
+     * @return
+     */
+    public IFiniteFilter mmsreFilter(SymmetricFilter sw, int q, FastMatrix U, FastMatrix Z, double[] dz, IntToDoubleFunction k, double passBand, double tweight) {
+        double[] w = sw.weightsToArray();
+        int h = w.length / 2;
+        IFiniteFilter rf = FiniteFilter.ofInternal(w, -h);
+        return mmsreFilter(rf, q, U, Z, dz, k, passBand, tweight);   
+    }
+    
+    public IFiniteFilter mmsreFilter(IFiniteFilter rf, int q, FastMatrix U, FastMatrix Z, double[] dz, IntToDoubleFunction k, double passBand, double tweight) {
+        double[] w = rf.weightsToArray();
+        int h = Math.abs(rf.getLowerBound());
+        int nv = h + q + 1;
+        int ncolu = U.getColumnsCount();
+        DataBlock wp = DataBlock.of(w, 0, nv);
+        DataBlock wf = DataBlock.of(w, nv, w.length);
+        FastMatrix Up = U.extract(0, nv, 0, ncolu);
+        FastMatrix Uf = U.extract(nv, U.getRowsCount()-nv, 0, ncolu);
+        FastMatrix Q = FastMatrix.square(nv + ncolu);
+        FastMatrix D = Q.extract(0, nv, 0, nv);
+        if (k != null) {
+            for (int i = 0; i < nv; i++) {
+                D.diagonal().set(i, 1 / k.applyAsDouble(i-h));
+            } 
+        } else {
+            D.diagonal().set(1);
+        }
+        Q.extract(nv, ncolu, 0, nv).copyTranspose(Up);
+        Q.extract(0, nv, nv, ncolu).copy(Up);
+        DataBlock a = DataBlock.make(Q.getRowsCount());
+        a.extract(nv, ncolu + 1).product(wf, Uf.columnsIterator());
+        if (dz != null && dz.length > 0) {
+            DataBlock d = DataBlock.of(dz);
+            FastMatrix Zp = Z.extract(0, nv, 0, Z.getColumnsCount());
+            FastMatrix Zf = Z.extract(nv, Z.getRowsCount()-nv, 0, Z.getColumnsCount());
+            DataBlock Yp = DataBlock.make(nv);
+            DataBlockIterator cols = Zp.columnsIterator();
+            DoubleSeqCursor.OnMutable cursor = d.cursor();
+            while (cols.hasNext()) {
+                Yp.addAY(cursor.getAndNext(), cols.next());
+            }
+            DataBlock Yf = DataBlock.make(wf.length());
+            cols = Zf.columnsIterator();
+            cursor.moveTo(0);
+            while (cols.hasNext()) {
+                Yf.addAY(cursor.getAndNext(), cols.next());
+            }
+            D.addXaXt(1, Yp);
+            a.extract(0, nv).setAY(Yf.dot(wf), Yp);
+        }
+        if (passBand > 0 && tweight > 0) {
+            FastMatrix W = buildMatrix(passBand, h, q);
+            D.addAY(tweight, W);
+            // we have to update a
+            DataBlock row = DataBlock.of(wp);
+            row.mul(-tweight);
+            a.addProduct(row, W.columnsIterator());
+        }
+        LinearSystemSolver.fastSolver().solve(Q, a);
+        wp.add(a.extract(0, nv));
+        return FiniteFilter.ofInternal(wp.toArray(), -h);
+    }
 
     private FastMatrix buildMatrix(double w, int nlags, int nleads) {
         int n = 2 * Math.max(nlags, nleads) + 1;

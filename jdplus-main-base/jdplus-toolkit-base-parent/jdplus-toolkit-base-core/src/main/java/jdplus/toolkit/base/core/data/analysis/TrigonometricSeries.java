@@ -53,7 +53,7 @@ public class TrigonometricSeries {
     /**
      * Creates trigonometric series for "non regular" series Example: For weekly
      * series, the periodicity is 365.25/7 = 52.1786 (52.1786 is the number of periods
-     * for 1 year, 52.1786 = 2*pi).
+     * for 1 year, 52.1786 == 2*pi).
      * If we are interested by monthly frequencies, we should consider the
      * frequencies k*2*pi/12 = k*pi/6. pi/6 corresponds to 52.1786/12 periods
      *

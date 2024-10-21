@@ -18,7 +18,6 @@ package jdplus.sa.base.r;
 
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.sa.base.api.diagnostics.CombinedSeasonalityTest.IdentifiableSeasonality;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.sa.base.core.tests.CombinedSeasonality;
 import org.junit.jupiter.api.Test;
@@ -62,7 +61,6 @@ public class SeasonalityTestsTest {
     public void testCombinedTest() {
         DoubleSeq x=DoubleSeq.of(Data.EXPORTS).delta(1).removeMean();
         CombinedSeasonality test = SeasonalityTests.combinedTest(x.toArray(), 12, 1, false);
-        IdentifiableSeasonality summary = test.getSummary();
 
         ec.satoolkit.diagnostics.CombinedSeasonalityTest otest = new ec.satoolkit.diagnostics.CombinedSeasonalityTest(
                 new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1967, 1,
@@ -70,5 +68,16 @@ public class SeasonalityTestsTest {
         ec.satoolkit.diagnostics.CombinedSeasonalityTest.IdentifiableSeasonality osummary = otest.getSummary();
         //        System.out.println(test);
         assertEquals(test.mvalue(), otest.mvalue(), 1e-9);
+    }
+    
+    @Test
+    public void testCH() {
+        DoubleSeq x=DoubleSeq.of(Data.RETAIL_BOOKSTORES).log().delta(1);
+        double[] q=SeasonalityTests.canovaHansen(x.toArray(), 12, "Trigonometric", false, "Bartlett", -1, 3);
+ //       System.out.println(DoubleSeq.of(q));
+        q=SeasonalityTests.canovaHansen(x.toArray(), 12, "Dummy", false, "Bartlett", -1, 3);
+//        System.out.println(DoubleSeq.of(q));
+        q=SeasonalityTests.canovaHansen(x.toArray(), 12, "Contrast", false, "Bartlett", -1, 3);
+//        System.out.println(DoubleSeq.of(q));
     }
 }

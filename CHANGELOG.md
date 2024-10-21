@@ -7,6 +7,23 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.3.0] - 2024-10-21
+
+### Fixed
+
+- ![UI] Remove unecessary parameters in xml (X11) [#399](https://github.com/jdemetra/jdplus-main/issues/399)
+
+### Added
+
+- ![STAT] Add likelihood ratio test for time-varying trading days
+- ![STAT] Add combined seasonality tests
+- ![STAT] Add visual spectral tests
+- ![UI] Add option to specify the length of the combined seasonality tests on last years visual spectral tests
+
+### Changed
+
+- ![STAT] Improve Canova-Hansen tests for trading days and for seasonality (add options and change R interface)
+
 ## [3.2.4] - 2024-07-11
 
 ### Fixed
@@ -47,7 +64,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Replace splash screen with AI-generated image by [@jadoull](https://github.com/jadoull)
 - ![UI] Change the layout of SA summaries (TramoSeats/X13) [#262](https://github.com/jdemetra/jdplus-main/issues/262)
 - ![UI] Change the handling of the decomposition mode in X11 spec box
-
 
 ## [3.2.2] - 2024-03-14
 
@@ -174,7 +190,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.2.4...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/jdemetra/jd3-main/compare/v3.2.4...v3.3.0
 [3.2.4]: https://github.com/jdemetra/jd3-main/compare/v3.2.3...v3.2.4
 [3.2.3]: https://github.com/jdemetra/jd3-main/compare/v3.2.2...v3.2.3
 [3.2.2]: https://github.com/jdemetra/jd3-main/compare/v3.2.1...v3.2.2
@@ -185,7 +202,6 @@ This is the **initial release** of JDemetra+ v3.0.0.
 [3.0.2]: https://github.com/jdemetra/jd3-main/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/jdemetra/jd3-main/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/jdemetra/jd3-main/releases/tag/v3.0.0
-
 [STAT]: https://img.shields.io/badge/-STAT-068C09
 [OTHER]: https://img.shields.io/badge/-OTHER-e4e669
 [IO]: https://img.shields.io/badge/-IO-F813F7

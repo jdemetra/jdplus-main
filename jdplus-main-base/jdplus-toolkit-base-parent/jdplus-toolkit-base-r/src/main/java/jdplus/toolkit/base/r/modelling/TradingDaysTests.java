@@ -19,7 +19,10 @@ package jdplus.toolkit.base.r.modelling;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
+import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 import jdplus.toolkit.base.core.modelling.regular.tests.CanovaHansenForTradingDays;
+import jdplus.toolkit.base.core.modelling.regular.tests.TimeVaryingEstimator;
 import jdplus.toolkit.base.core.modelling.regular.tests.TradingDaysTest;
 import jdplus.toolkit.base.core.regsarima.ami.SarimaTradingDaysTest;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
@@ -31,15 +34,23 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 @lombok.experimental.UtilityClass
 public class TradingDaysTests {
 
-    public double[] chTest(TsData s, int[] diff) {
+    public double[] canovaHansen(TsData s, int[] diff, String kernel, int truncation) {
+        if (truncation<0)
+            truncation=(int)Math.floor(0.75*Math.sqrt(s.length()));
         CanovaHansenForTradingDays ch = CanovaHansenForTradingDays.test(s)
                 .differencingLags(diff)
+                .windowFunction(WindowFunction.valueOf(kernel))
+                .truncationLag(truncation)
                 .build();
-        double[] test = new double[7];
+        double[] test = new double[10];
         for (int i = 0; i < 6; ++i) {
             test[i] = ch.test(i);
         }
-        test[6] = ch.testAll();
+        test[6]=ch.testDerived();
+        test[7] = ch.testAll();
+        StatisticalTest tdTest = ch.tdTest();
+        test[8] = tdTest.getValue();
+        test[9] = tdTest.getPvalue();
         return test;
     }
 
@@ -82,4 +93,9 @@ public class TradingDaysTests {
         }
     }
 
+    public StatisticalTest timeVaryingTradingDaysTest(TsData s, int[] td, boolean onContrasts) {
+        DayClustering dc= DayClustering.of(td);
+        TimeVaryingEstimator estimator=new TimeVaryingEstimator();
+        return estimator.process(s, dc, onContrasts);
+    }
 }

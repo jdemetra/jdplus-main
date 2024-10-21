@@ -43,12 +43,12 @@ import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
  */
 @Development(status = Development.Status.Alpha)
 @lombok.Getter
-@lombok.AllArgsConstructor(access=lombok.AccessLevel.PUBLIC)
-@lombok.Builder(builderClassName="Builder")
+@lombok.AllArgsConstructor(access = lombok.AccessLevel.PUBLIC)
+@lombok.Builder(builderClassName = "Builder")
 public final class RationalFilter implements IRationalFilter {
 
-    RationalBackFilter backFilter;
-    RationalForeFilter foreFilter;
+    final RationalBackFilter backFilter;
+    final RationalForeFilter foreFilter;
     IFiniteFilter numerator, denominator;
 
     /**
@@ -84,7 +84,7 @@ public final class RationalFilter implements IRationalFilter {
      * @param bdenom Backward factor of the denominator
      * @param fnum Forward factor of the numerator
      * @param fdenom Forward factor of the denominator
-     * @return 
+     * @return
      */
     public static RationalFilter of(final BackFilter bnum, final BackFilter bdenom,
             final ForeFilter fnum, final ForeFilter fdenom) {
@@ -96,26 +96,26 @@ public final class RationalFilter implements IRationalFilter {
                 .numerator(num)
                 .denominator(FiniteFilter.multiply(bdenom, fdenom))
                 .build();
-      }
-    
-    public static RationalFilter of(final RationalForeFilter rf){
+    }
+
+    public static RationalFilter of(final RationalForeFilter rf) {
         return RationalFilter.builder()
                 .backFilter(RationalBackFilter.ZERO)
                 .foreFilter(rf)
                 .numerator(new FiniteFilter(rf.getNumerator()))
                 .denominator(new FiniteFilter(rf.getDenominator()))
                 .build();
-        
+
     }
 
-    public static RationalFilter of(final RationalBackFilter rb){
+    public static RationalFilter of(final RationalBackFilter rb) {
         return RationalFilter.builder()
                 .backFilter(rb)
                 .foreFilter(RationalForeFilter.ZERO)
                 .numerator(new FiniteFilter(rb.getNumerator()))
                 .denominator(new FiniteFilter(rb.getDenominator()))
                 .build();
-        
+
     }
 
     /**
@@ -124,7 +124,7 @@ public final class RationalFilter implements IRationalFilter {
      * @param N The numerator
      * @param DB The back filter of the denominator
      * @param DF The forward filter of the denominator
-     * @return 
+     * @return
      */
     public static RationalFilter of(final IFiniteFilter N, final BackFilter DB,
             final ForeFilter DF) {
@@ -157,7 +157,8 @@ public final class RationalFilter implements IRationalFilter {
          * @param num
          * @param dbf
          * @param dff
-         * @return The decomposition contains backFilter=Nb/Db, foreFilter= Nf/Df 
+         * @return The decomposition contains backFilter=Nb/Db, foreFilter=
+         * Nf/Df
          */
         public static Decomposition of(final IFiniteFilter num, final BackFilter dbf,
                 final ForeFilter dff) {
@@ -241,9 +242,16 @@ public final class RationalFilter implements IRationalFilter {
      */
     @Override
     public Complex frequencyResponse(final double freq) {
-        Complex nb = backFilter.frequencyResponse(freq);
-        Complex nf = foreFilter.frequencyResponse(freq);
-        return nb.plus(nf);
+        if (numerator != null && denominator != null) {
+            // it's often a symmetric filter. So, we prefer this approach
+            Complex nb = numerator.frequencyResponse(freq);
+            Complex nf = denominator.frequencyResponse(freq);
+            return nb.div(nf);
+        } else {
+            Complex nb = backFilter.frequencyResponse(freq);
+            Complex nf = foreFilter.frequencyResponse(freq);
+            return nb.plus(nf);
+        }
     }
 
     /**
@@ -254,11 +262,18 @@ public final class RationalFilter implements IRationalFilter {
     @Override
     public IFiniteFilter getDenominator() {
         if (denominator == null) {
-            FiniteFilter b = new FiniteFilter(backFilter.getDenominator());
-            FiniteFilter f = new FiniteFilter(foreFilter.getDenominator());
-            FiniteFilter d = FiniteFilter.multiply(b, f);
-            //d.smooth();
-            denominator = d;
+            BackFilter bfilter = backFilter.getDenominator();
+            ForeFilter ffilter = foreFilter.getDenominator();
+            if (bfilter.asPolynomial().equals(ffilter.asPolynomial(), 0)) {
+                denominator=SymmetricFilter.convolutionOf(bfilter);
+            } else {
+                FiniteFilter b = new FiniteFilter(bfilter);
+                FiniteFilter f = new FiniteFilter(ffilter);
+                FiniteFilter d = FiniteFilter.multiply(b, f);
+
+                //d.smooth();
+                denominator = d;
+            }
         }
         return denominator;
     }

@@ -36,7 +36,7 @@ public enum WindowFunction {
 
     /**
      * Returns the normalized window function, defined on [-1, 1].
-     * We must have that f(-1)=f(1)=0
+     * We must have that f(-1)=f(1)=0, f(0)=1
      * The window function is even, so that f(-x)=f(x)
      * It should be noted that the functions don't check the validity of the input
      *
@@ -44,15 +44,19 @@ public enum WindowFunction {
      */
     public DoubleUnaryOperator window() {
         switch (this) {
-            case Welch:
+            case Welch -> {
                 return x -> 1.0 - x * x;
-            case Tukey:
+            }
+            case Tukey -> {
                 return x -> 0.5 * (1 + Math.cos(Math.PI * x));
-            case Bartlett:
+            }
+            case Bartlett -> {
                 return x -> x < 0 ? 1 + x : 1 - x;
-            case Hamming:
+            }
+            case Hamming -> {
                 return x -> 0.54 + 0.46 * Math.cos(Math.PI * x);
-            case Parzen:
+            }
+            case Parzen -> {
                 return x -> {
                     double x1 = x < 0 ? -x : x;
                     if (x <= .5) {
@@ -63,8 +67,10 @@ public enum WindowFunction {
                         return 2.0 * y * y * y;
                     }
                 };
-            case Square:
+            }
+            case Square -> {
                 return x -> 1;
+            }
         }
         return null;
     }

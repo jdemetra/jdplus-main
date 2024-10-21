@@ -68,7 +68,7 @@ public class TramoSeatsTest {
                 .build();
         
         TramoSeatsOutput nrslt = TramoSeats.fullProcess(Data.TS_PROD, nspec, null);
-//        System.out.println(rslt.getResult().getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value));
+        System.out.println(rslt.getResult().getDecomposition().getFinalComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Stdev));
 //        System.out.println(nrslt.getResult().getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value));
     }
     

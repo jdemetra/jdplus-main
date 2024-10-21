@@ -15,6 +15,7 @@
  */
 package jdplus.toolkit.base.r.modelling;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.modelling.regular.tests.TradingDaysTest;
@@ -52,4 +53,12 @@ public class TradingDaysTestsTest {
 //        System.out.println(maTest.getDescription());
         assertEquals(ft.getPvalue(), maTest.getPvalue(), 1e-9);
     }
+    
+    @Test
+    public void testCH() {
+        TsData s = Data.TS_ABS_RETAIL2.log();
+        double[] q=TradingDaysTests.canovaHansen(s,new int[]{1, 12}, "Bartlett", -1);
+//        System.out.println(DoubleSeq.of(q));
+    }
+    
 }
