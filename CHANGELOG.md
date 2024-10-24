@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![STAT] Correct the refreshing of models with Julian Easter [#465](https://github.com/jdemetra/jdplus-main/issues/465)
+
 ## [3.3.0] - 2024-10-21
 
 ### Fixed
