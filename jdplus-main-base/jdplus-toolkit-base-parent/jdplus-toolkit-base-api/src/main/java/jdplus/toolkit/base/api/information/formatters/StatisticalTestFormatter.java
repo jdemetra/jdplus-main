@@ -48,17 +48,11 @@ public final class StatisticalTestFormatter implements InformationFormatter {
         StatisticalTest test = (StatisticalTest)obj;
         if (item == 0)
             return newFormat6(locale).format(test.getValue());
-        if (test.getDescription() != null)
-            ++item;
-        switch (Math.abs(item)) {
-            case 1:
-                return test.getDescription();
-            case 2:
-                return newFormat6(locale).format(test.getValue());
-            case 3:
-                return newFormat4(locale).format(test.getPvalue());
-            default:
-                return null;
-        }
+        return switch (Math.abs(item)) {
+            case 1 -> newFormat6(locale).format(test.getValue());
+            case 2 -> newFormat4(locale).format(test.getPvalue());
+            case 3 -> test.getDescription();
+            default -> null;
+        };
     }
 }

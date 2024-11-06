@@ -107,7 +107,7 @@ public class X13ProtosUtility {
 
     public List<SeasonalFilter> convert(SeasonalFilterOption[] sf) {
         if (sf == null || sf.length == 0) {
-            return null;
+            return List.of();
         }
         SeasonalFilterOption sf0 = sf[0];
         boolean same = true;
