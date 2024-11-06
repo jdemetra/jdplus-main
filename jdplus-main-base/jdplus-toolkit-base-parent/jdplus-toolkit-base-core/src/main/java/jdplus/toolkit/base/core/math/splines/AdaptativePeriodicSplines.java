@@ -16,12 +16,16 @@
  */
 package jdplus.toolkit.base.core.math.splines;
 
+import java.util.Arrays;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
+import jdplus.toolkit.base.core.stats.linearmodel.LeastSquaresResults;
+import jdplus.toolkit.base.core.stats.linearmodel.LinearModel;
+import jdplus.toolkit.base.core.stats.linearmodel.Ols;
 
 /**
  *
@@ -33,12 +37,19 @@ public class AdaptativePeriodicSplines {
     @lombok.Builder(builderClassName = "Builder")
     public static class Specification {
 
+        // Points
         DoubleSeq x, y;
+        // Order of the B-Splines
         int splineOrder;
+        // Period of the splines
         double period;
+        // Knots on which the splines are built
         double[] knots;
+        // Fixed knots (can't be removed)
         int[] fixedKnots;
+
         double precision;
+        // Selection threshold 
         double selectionThreshold;
         int maxIter, minKnots;
 
@@ -69,11 +80,13 @@ public class AdaptativePeriodicSplines {
         double[] knots = spec.getKnots();
         double P = spec.getPeriod();
         BSplines.BSpline bs = BSplines.periodic(k, knots, P);
+        // B is the matrix of the regression variables corresponding to the splines
         B = BSplines.splines(bs, spec.getX());
         FastMatrix Bt = B.transpose();
         ElementaryTransformations.fastGivensTriangularize(Bt);
         int q = knots.length;
         DoubleSeq coeff = UnitRoots.D(1, k).coefficients();
+        // Differencing matrix
         D = FastMatrix.square(q);
         for (int i = 0; i < coeff.length(); ++i) {
             D.subDiagonal(-i).set(coeff.get(i));
@@ -118,8 +131,8 @@ public class AdaptativePeriodicSplines {
 
     public boolean process(double lambda) {
         int q = w.length;
-        int n = 0;
         int[] fixedKnots = spec.getFixedKnots();
+        int nfixed = fixedKnots == null ? 0 : fixedKnots.length;
         for (; niter < spec.getMaxIter(); ++niter) {
             FastMatrix LBp = B2.extract(0, q, 0, q);
             LBp.copy(LB);
@@ -133,47 +146,67 @@ public class AdaptativePeriodicSplines {
             LowerTriangularMatrix.solvexL(LBp, A);
             // New w
             for (int i = 0; i < q; ++i) {
-
-                double da = D.row(i).dot(A);
-                double wcur = 1 / (da * da + 1e-10);
-                w[i] = wcur;
-                z[i] = da * da * wcur;
+                if (w[i] != 0) {
+                    double da = D.row(i).dot(A);
+                    double wcur = 1 / (da * da + 1e-10);
+                    w[i] = wcur;
+                    // z[i] = 0 (if da = 0) or 1 (if da >> 1.e5)
+                    z[i] = da * da * wcur;
+                }
             }
-            // e=y-Xb
-            DataBlock e = DataBlock.of(spec.y);
-            e.addAProduct(-1, B.rowsIterator(), A);
-            res = e;
-            boolean stop = A.distance(a) < spec.getPrecision();
+            double da = A.distance(a);
             a = A;
-            if (fixedKnots != null) {
-                for (int i = 0; i < fixedKnots.length; ++i) {
-                    w[fixedKnots[i]] = 0;
-                    z[fixedKnots[i]] = 1;
-                }
-            }
-            double ll = -0.5 * e.ssq() / sigma2;
-            n = 0;
-            for (int i = 0; i < q; ++i) {
-                if (z[i] >= spec.getSelectionThreshold()) {
-                    ++n;
-                }
-            }
-            if (n < spec.minKnots || (fixedKnots!= null && n == fixedKnots.length)) {
-                break;
-            }
-            aic = -2 * (ll - n);
-            bic = -2 * ll + Math.log(B.getRowsCount()) * n;
+            boolean stop = da < spec.getPrecision();
             if (stop) {
                 break;
             }
         }
-        selectedKnots = new int[n];
+        int n = 0;
+        for (int i = 0; i < q; ++i) {
+            if (z[i] >= spec.getSelectionThreshold()) {
+                ++n;
+            }
+        }
+        selectedKnots = new int[n + nfixed];
         for (int i = 0, j = 0; i < q; ++i) {
             if (z[i] >= spec.getSelectionThreshold()) {
                 selectedKnots[j++] = i;
             }
         }
+        for (int i = 0; i < nfixed; ++i) {
+            selectedKnots[n + i] = fixedKnots[i];
+        }
+        n+=nfixed;
+        Arrays.sort(selectedKnots);
+        double[] ksel = new double[n];
+        double[] knots = spec.getKnots();
+        double P = spec.getPeriod();
+        for (int i = 0; i < ksel.length; ++i) {
+            ksel[i] = knots[selectedKnots[i]];
+        }
+        int k = spec.getSplineOrder();
+        BSplines.BSpline bs = BSplines.periodic(k, ksel, P);
+        FastMatrix Bnew = BSplines.splines(bs, spec.getX());
+        LinearModel lm = LinearModel.builder()
+                .y(spec.getY())
+                .addX(Bnew)
+                .build();
+        LeastSquaresResults rslt = Ols.compute(lm);
+        double ll = -0.5*rslt.getErrorSumOfSquares()/sigma2;
+        
+        aic = -2 * (ll - n);
+        bic = -2 * ll + Math.log(B.getRowsCount()) * n;
 
+//            if (n+nfixed < spec.minKnots || n == 0) {
+//                break;
+//            }
+//            double ll = -0.5 * e.ssq() / sigma2;
+//            // e=y-Xb
+//            DataBlock e = DataBlock.of(spec.y);
+//            e.addAProduct(-1, B.rowsIterator(), A);
+//            res = e;
+//           aic = -2 * (ll - n);
+//            bic = -2 * ll + Math.log(B.getRowsCount()) * n;
         return niter < spec.maxIter;
     }
 

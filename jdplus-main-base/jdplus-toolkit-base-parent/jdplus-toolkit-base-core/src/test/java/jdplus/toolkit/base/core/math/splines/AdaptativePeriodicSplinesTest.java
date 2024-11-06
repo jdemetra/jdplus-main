@@ -47,8 +47,8 @@ public class AdaptativePeriodicSplinesTest {
             knots[i] = i * c;
         }
 
-        int nyears = 20;
-        int ny = (int) (nyears * P);
+        int nyears = 5;
+        int ny = (int) (nyears * P + 1);
         int jump = 4;
         int nq = q / jump;
         int[] fixedKnots = new int[nq];
@@ -56,7 +56,7 @@ public class AdaptativePeriodicSplinesTest {
             fixedKnots[i] = i * jump;
         }
 
-        DoubleSeq m = DoubleSeq.onMapping(ny, i -> i * c - P * (int) ((i * c) / P));
+        DoubleSeq m = DoubleSeq.onMapping(ny, i -> i - P * (int) (i / P));
         SymmetricFilter sf = LocalPolynomialFilters.of(26, 1, DiscreteKernel.uniform(26));
         IFiniteFilter[] afilters = AsymmetricFiltersFactory.mmsreFilters(sf, 0, new double[]{1}, null);
         IFiniteFilter[] lfilters = afilters.clone();
@@ -76,8 +76,9 @@ public class AdaptativePeriodicSplinesTest {
                     .y(Y)
                     .period(P)
                     .knots(knots)
-                    .minKnots(15)
-                    .fixedKnots(fixedKnots)
+                    .minKnots(10)
+                    .splineOrder(4)
+                    //                    .fixedKnots(fixedKnots)
                     .build();
 
             AdaptativePeriodicSplines kernel = AdaptativePeriodicSplines.of(spec);

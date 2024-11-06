@@ -66,24 +66,29 @@ public final class RegressionItemFormatter implements InformationFormatter {
             ++item;
         }
         switch (Math.abs(item)) {
-            case 1:
+            case 1 -> {
                 return StringFormatter.cleanup(reg.getDescription());
-            case 2:
+            }
+            case 2 -> {
                 return newFormat6(locale).format(reg.getCoefficient());
-            case 3:
+            }
+            case 3 -> {
                 if (reg.getStdError() == 0) {
                     return null;
                 } else {
                     return newFormat4(locale).format(reg.getCoefficient() / reg.getStdError());
                 }
-            case 4:
+            }
+            case 4 -> {
                 return newFormat4(locale).format(reg.getPvalue());
+            }
+            default -> {
+                return null;
+            }
+        }
 //            case 5:
 //                return fmt.format(reg.getStdError());
-            default:
-                return null;
-        }
-    }
+            }
 
     private String format(RegressionItem reg, Locale locale) {
         StringBuilder builder = new StringBuilder();
