@@ -39,7 +39,7 @@ public class AdaptativePeriodicSplinesTest {
 
         double[] y = WeeklyData.US_CLAIMS;
 
-        int q = 50;
+        int q = 20;
         double[] knots = new double[q];
         double P = 365.25 / 7;
         double c = P / q;
@@ -67,6 +67,7 @@ public class AdaptativePeriodicSplinesTest {
 
         DataBlock Y = DataBlock.make(ny);
         Y.set(i -> Math.log(y[i]) - t.get(i));
+        Y.normalize();
 
         long l0 = System.currentTimeMillis();
         int min = 12;
@@ -78,6 +79,7 @@ public class AdaptativePeriodicSplinesTest {
                     .knots(knots)
                     .minKnots(10)
                     .splineOrder(4)
+                    .differencing(3)
                     //                    .fixedKnots(fixedKnots)
                     .build();
 

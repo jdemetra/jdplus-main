@@ -43,6 +43,8 @@ public class AdaptativePeriodicSplines {
         int splineOrder;
         // Period of the splines
         double period;
+        // differencing operator for the regularizing term
+        int differencing;
         // Knots on which the splines are built
         double[] knots;
         // Fixed knots (can't be removed)
@@ -56,6 +58,7 @@ public class AdaptativePeriodicSplines {
         public static Builder builder() {
             return new Builder()
                     .splineOrder(4)
+                    .differencing(3)
                     .precision(1e-6)
                     .selectionThreshold(.99)
                     .maxIter(20)
@@ -85,7 +88,7 @@ public class AdaptativePeriodicSplines {
         FastMatrix Bt = B.transpose();
         ElementaryTransformations.fastGivensTriangularize(Bt);
         int q = knots.length;
-        DoubleSeq coeff = UnitRoots.D(1, k).coefficients();
+        DoubleSeq coeff = UnitRoots.D(1, spec.differencing).coefficients();
         // Differencing matrix
         D = FastMatrix.square(q);
         for (int i = 0; i < coeff.length(); ++i) {

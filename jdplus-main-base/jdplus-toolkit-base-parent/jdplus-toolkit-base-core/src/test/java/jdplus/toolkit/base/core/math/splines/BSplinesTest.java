@@ -64,7 +64,7 @@ public class BSplinesTest {
     @Test
     public void testPeriodic() {
 
-        double[] knots = new double[]{0, 0.1, 0.2, 1.0, 1.1, 1.2, 2.0, 2.5, 3, 3.5, 4.0};
+        double[] knots = new double[]{0.31, 1.01, 2.01, 3.51, 4.01, 4.91};
         BSplines.BSpline bs = BSplines.periodic(4, knots, 5);
 
         FastMatrix M = FastMatrix.make(100, knots.length);
@@ -79,8 +79,19 @@ public class BSplinesTest {
             }
         }
         FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i -> i / 20.0));
-        assertTrue(M.minus(N).ssq() < 1e-9);
         System.out.println(N);
+        assertTrue(M.minus(N).ssq() < 1e-9);
+    }
+
+    @Test
+    public void testPeriodic2() {
+
+        double[] knots = new double[]{0, 1.0, 2.0, 3.5, 4.0};
+        BSplines.BSpline bs = BSplines.periodic(1, knots, 5);
+        double[] B0 = new double[bs.getOrder()];
+        int pos0 = bs.eval(0, B0);
+        double[] B1 = new double[bs.getOrder()];
+        int pos1 = bs.eval(1, B1);
     }
 
     public static void main(String[] arg) {
@@ -258,23 +269,24 @@ public class BSplinesTest {
 //            SymmetricMatrix.solve(C, A);
 //
             System.out.println(A);
-            double del=0;
+            double del = 0;
             // New w
             for (int i = 0; i < q; ++i) {
                 double da = D.row(i).dot(A);
                 double wcur = 1 / (da * da + 1e-10);
-                double zcur=z[i];
+                double zcur = z[i];
                 if (i % nq != 0) {
                     w[i] = wcur;
                     z[i] = da * da * wcur;
-                    del+=(z[i]-zcur)*(z[i]-zcur);
+                    del += (z[i] - zcur) * (z[i] - zcur);
                 } else {
                     z[i] = 1;
                     w[i] = 0;
                 }
             }
-            if (Math.sqrt(del/z.length)<1e-6)
+            if (Math.sqrt(del / z.length) < 1e-6) {
                 break;
+            }
             System.out.println(DoubleSeq.of(z));
         }
         System.out.println(DoubleSeq.of(z));
