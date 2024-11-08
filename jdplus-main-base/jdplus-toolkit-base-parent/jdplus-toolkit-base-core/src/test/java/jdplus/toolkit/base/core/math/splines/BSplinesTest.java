@@ -64,8 +64,8 @@ public class BSplinesTest {
     @Test
     public void testPeriodic() {
 
-        double[] knots = new double[]{0.31, 1.01, 2.01, 3.51, 4.01, 4.91};
-        BSplines.BSpline bs = BSplines.periodic(4, knots, 5);
+        double[] knots = new double[]{0, 1.01, 2.01, 3.51, 4.01, 4.90};
+        BSplines.BSpline bs = BSplines.periodic(1, knots, 5);
 
         FastMatrix M = FastMatrix.make(100, knots.length);
         for (int i = 0; i < 100; ++i) {
@@ -79,7 +79,6 @@ public class BSplinesTest {
             }
         }
         FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i -> i / 20.0));
-        System.out.println(N);
         assertTrue(M.minus(N).ssq() < 1e-9);
     }
 

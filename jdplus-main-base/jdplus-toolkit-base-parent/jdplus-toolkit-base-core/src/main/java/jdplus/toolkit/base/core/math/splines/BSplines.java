@@ -56,8 +56,9 @@ public class BSplines {
         DataBlockIterator rows = M.rowsIterator();
         while (rows.hasNext()) {
             int left = spline.eval(cursor.getAndNext(), B);
-            if (left<0)
-                left+=dim;
+            if (left < 0) {
+                left += dim;
+            }
             DataBlock row = rows.next();
             for (int i = 0; i < B.length; ++i) {
                 row.set((i + left) % dim, B[i]);
@@ -165,6 +166,9 @@ public class BSplines {
                     throw new DemetraException("Invalid knots in B-Spline");
                 }
                 if (ti <= x && x < tip1) {
+                    return i;
+                }
+                if (ti < x && x == tip1 && tip1 == knots[k + l - 1]) {
                     return i;
                 }
             }
