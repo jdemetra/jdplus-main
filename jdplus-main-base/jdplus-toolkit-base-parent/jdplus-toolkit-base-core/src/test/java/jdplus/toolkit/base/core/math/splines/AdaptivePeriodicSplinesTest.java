@@ -30,16 +30,16 @@ import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
  *
  * @author palatej
  */
-public class AdaptativePeriodicSplinesTest {
+public class AdaptivePeriodicSplinesTest {
 
-    public AdaptativePeriodicSplinesTest() {
+    public AdaptivePeriodicSplinesTest() {
     }
 
     public static void main(String[] arg) {
 
         double[] y = WeeklyData.US_CLAIMS;
 
-        int q = 20;
+        int q = 53;
         double[] knots = new double[q];
         double P = 365.25 / 7;
         double c = P / q;
@@ -47,7 +47,7 @@ public class AdaptativePeriodicSplinesTest {
             knots[i] = i * c;
         }
 
-        int nyears = 5;
+        int nyears = 10;
         int ny = (int) (nyears * P + 1);
         int jump = 4;
         int nq = q / jump;
@@ -56,51 +56,57 @@ public class AdaptativePeriodicSplinesTest {
             fixedKnots[i] = i * jump;
         }
 
-        DoubleSeq m = DoubleSeq.onMapping(ny, i -> i - P * (int) (i / P));
+        DoubleSeq m = DoubleSeq.onMapping(ny, i -> i - c / 2 + P * (int) (i / P));
         SymmetricFilter sf = LocalPolynomialFilters.of(26, 1, DiscreteKernel.uniform(26));
         IFiniteFilter[] afilters = AsymmetricFiltersFactory.mmsreFilters(sf, 0, new double[]{1}, null);
         IFiniteFilter[] lfilters = afilters.clone();
         for (int i = 0; i < lfilters.length; ++i) {
             lfilters[i] = lfilters[i].mirror();
         }
+//        DoubleSeq t = FilterUtility.filter(DoubleSeq.of(y), sf, lfilters, afilters);
         DoubleSeq t = FilterUtility.filter(DoubleSeq.of(y).log(), sf, lfilters, afilters);
 
         DataBlock Y = DataBlock.make(ny);
+//        Y.set(i -> y[i] - t.get(i));
         Y.set(i -> Math.log(y[i]) - t.get(i));
-        Y.normalize();
+//        Y.normalize();
 
         long l0 = System.currentTimeMillis();
         int min = 12;
-        for (double lambda = 0; lambda < 1; lambda += 0.0001) {
-            AdaptativePeriodicSplines.Specification spec = AdaptativePeriodicSplines.Specification.builder()
-                    .x(m)
-                    .y(Y)
-                    .period(P)
-                    .knots(knots)
-                    .minKnots(10)
-                    .splineOrder(4)
-                    .differencing(3)
-                    //                    .fixedKnots(fixedKnots)
-                    .build();
 
-            AdaptativePeriodicSplines kernel = AdaptativePeriodicSplines.of(spec);
-            kernel.process(lambda);
-            System.out.print(lambda);
-            System.out.print('\t');
-            System.out.print(kernel.aic());
-            System.out.print('\t');
-            System.out.print(kernel.bic());
-            System.out.print('\t');
-            System.out.print(kernel.selectedKnots().length);
-            System.out.print('\t');
-            System.out.println(kernel.z());
-            if (kernel.selectedKnots().length < min) {
-                break;
-            }
-        }
+        AdaptivePeriodicSpline.Specification spec = AdaptivePeriodicSpline.Specification.builder()
+                .x(m)
+                .y(Y)
+                .period(P)
+                .knots(knots)
+                .splineOrder(4)
+                .maxIter(10)
+                //                    .fixedKnots(fixedKnots)
+                .build();
 
+        AdaptivePeriodicSpline aspline = AdaptivePeriodicSpline.of(spec);
+        AdaptivePeriodicSplines.Specification dspec = AdaptivePeriodicSplines.Specification.builder()
+                .minKnots(min)
+                .lambda1(50)
+                .build();
+
+        AdaptivePeriodicSplines kernel = new AdaptivePeriodicSplines(dspec);
+        kernel.process(aspline);
+        System.out.println(kernel.best());
         long l1 = System.currentTimeMillis();
         System.out.println(l1 - l0);
+        int cur = 0;
+        for (AdaptivePeriodicSpline.Step result : kernel.allResults()) {
+            System.out.print(result.getLambda());
+            System.out.print('\t');
+            System.out.print(result.getAic());
+            System.out.print('\t');
+            System.out.print(result.getBic());
+            System.out.print('\t');
+            System.out.print(kernel.selectedKnotsCount(cur++));
+            System.out.print('\t');
+            System.out.println(DoubleSeq.of(result.getS()));
+        }
 
     }
 }

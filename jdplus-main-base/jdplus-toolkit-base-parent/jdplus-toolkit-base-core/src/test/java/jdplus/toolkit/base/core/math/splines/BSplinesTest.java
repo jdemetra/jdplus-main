@@ -44,42 +44,29 @@ public class BSplinesTest {
     @Test
     public void testAugmented() {
 
-        double[] knots = new double[]{5, 20, 35, 40, 50};
-        BSplines.BSpline bs = BSplines.augmented(4, knots);
-
-        FastMatrix M = FastMatrix.make(46, bs.dimension());
-        for (int i = 5; i <= 50; ++i) {
-            double[] B = new double[4];
-            int pos = bs.eval(i, B);
-            if (pos >= 0) {
-                for (int j = 0; j < B.length; ++j) {
-                    M.set(i - 5, pos + j, B[j]);
-                }
-            }
+        double[] knots = new double[]{0, 0.1, 0.2, 0.5, 0.6, 0.8, 0.9, 1};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.augmented(k, knots);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(101, i -> i / 100.0));
+            assertTrue(N.rowSums().stream().allMatch(z -> Math.abs(z - 1) < 1e-12));
         }
-        FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(46, i -> i + 5));
-        assertTrue(M.minus(N).ssq() < 1e-9);
     }
 
     @Test
     public void testPeriodic() {
 
-        double[] knots = new double[]{0, 1.01, 2.01, 3.51, 4.01, 4.90};
-        BSplines.BSpline bs = BSplines.periodic(1, knots, 5);
-
-        FastMatrix M = FastMatrix.make(100, knots.length);
-        for (int i = 0; i < 100; ++i) {
-            double[] B = new double[bs.getOrder()];
-            int pos = bs.eval(i / 20.0, B);
-            if (pos < 0) {
-                pos += knots.length;
-            }
-            for (int j = 0; j < bs.getOrder(); ++j) {
-                M.set(i, (pos + j) % knots.length, B[j]);
-            }
+        double[] knots = new double[]{0, 0.1, 0.2, 0.5, 0.6, 0.8, 0.9};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.periodic(k, knots, 1);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(101, i -> i / 100.0));
+            assertTrue(N.rowSums().stream().allMatch(z -> Math.abs(z - 1) < 1e-12));
         }
-        FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i -> i / 20.0));
-        assertTrue(M.minus(N).ssq() < 1e-9);
+        knots = new double[]{0.05, 0.1, 0.2, 0.5, 0.6, 0.8, 0.9};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.periodic(k, knots, 1);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(101, i -> i / 100.0));
+            assertTrue(N.rowSums().stream().allMatch(z -> Math.abs(z - 1) < 1e-12));
+        }
     }
 
     @Test
@@ -93,6 +80,17 @@ public class BSplinesTest {
         int pos1 = bs.eval(1, B1);
     }
 
+    @Test
+    public void testPeriodic3() {
+
+        double[] knots = new double[]{0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.periodic(k, knots, 1);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i->i*0.01));
+//            System.out.println(N);
+//            System.out.println();
+        }
+    }
     public static void main(String[] arg) {
 //        int q = 100;
 //        long l0 = System.currentTimeMillis();
