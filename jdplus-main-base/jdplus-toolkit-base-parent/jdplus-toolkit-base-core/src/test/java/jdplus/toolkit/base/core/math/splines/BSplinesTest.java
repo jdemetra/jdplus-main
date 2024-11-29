@@ -44,45 +44,53 @@ public class BSplinesTest {
     @Test
     public void testAugmented() {
 
-        double[] knots = new double[]{5, 20, 35, 40, 50};
-        BSplines.BSpline bs = BSplines.augmented(4, knots);
-
-        FastMatrix M = FastMatrix.make(46, bs.dimension());
-        for (int i = 5; i <= 50; ++i) {
-            double[] B = new double[4];
-            int pos = bs.eval(i, B);
-            if (pos >= 0) {
-                for (int j = 0; j < B.length; ++j) {
-                    M.set(i - 5, pos + j, B[j]);
-                }
-            }
+        double[] knots = new double[]{0, 0.1, 0.2, 0.5, 0.6, 0.8, 0.9, 1};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.augmented(k, knots);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(101, i -> i / 100.0));
+            assertTrue(N.rowSums().stream().allMatch(z -> Math.abs(z - 1) < 1e-12));
         }
-        FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(46, i -> i + 5));
-        assertTrue(M.minus(N).ssq() < 1e-9);
     }
 
     @Test
     public void testPeriodic() {
 
-        double[] knots = new double[]{0, 0.1, 0.2, 1.0, 1.1, 1.2, 2.0, 2.5, 3, 3.5, 4.0};
-        BSplines.BSpline bs = BSplines.periodic(4, knots, 5);
-
-        FastMatrix M = FastMatrix.make(100, knots.length);
-        for (int i = 0; i < 100; ++i) {
-            double[] B = new double[bs.getOrder()];
-            int pos = bs.eval(i / 20.0, B);
-            if (pos < 0) {
-                pos += knots.length;
-            }
-            for (int j = 0; j < bs.getOrder(); ++j) {
-                M.set(i, (pos + j) % knots.length, B[j]);
-            }
+        double[] knots = new double[]{0, 0.1, 0.2, 0.5, 0.6, 0.8, 0.9};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.periodic(k, knots, 1);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(101, i -> i / 100.0));
+            assertTrue(N.rowSums().stream().allMatch(z -> Math.abs(z - 1) < 1e-12));
         }
-        FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i -> i / 20.0));
-        assertTrue(M.minus(N).ssq() < 1e-9);
-        System.out.println(N);
+        knots = new double[]{0.05, 0.1, 0.2, 0.5, 0.6, 0.8, 0.9};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.periodic(k, knots, 1);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(101, i -> i / 100.0));
+            assertTrue(N.rowSums().stream().allMatch(z -> Math.abs(z - 1) < 1e-12));
+        }
     }
 
+    @Test
+    public void testPeriodic2() {
+
+        double[] knots = new double[]{0, 1.0, 2.0, 3.5, 4.0};
+        BSplines.BSpline bs = BSplines.periodic(1, knots, 5);
+        double[] B0 = new double[bs.getOrder()];
+        int pos0 = bs.eval(0, B0);
+        double[] B1 = new double[bs.getOrder()];
+        int pos1 = bs.eval(1, B1);
+    }
+
+    @Test
+    public void testPeriodic3() {
+
+        double[] knots = new double[]{0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
+        for (int k = 1; k <= 4; ++k) {
+            BSplines.BSpline bs = BSplines.periodic(k, knots, 1);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i->i*0.01));
+//            System.out.println(N);
+//            System.out.println();
+        }
+    }
     public static void main(String[] arg) {
 //        int q = 100;
 //        long l0 = System.currentTimeMillis();
@@ -258,23 +266,24 @@ public class BSplinesTest {
 //            SymmetricMatrix.solve(C, A);
 //
             System.out.println(A);
-            double del=0;
+            double del = 0;
             // New w
             for (int i = 0; i < q; ++i) {
                 double da = D.row(i).dot(A);
                 double wcur = 1 / (da * da + 1e-10);
-                double zcur=z[i];
+                double zcur = z[i];
                 if (i % nq != 0) {
                     w[i] = wcur;
                     z[i] = da * da * wcur;
-                    del+=(z[i]-zcur)*(z[i]-zcur);
+                    del += (z[i] - zcur) * (z[i] - zcur);
                 } else {
                     z[i] = 1;
                     w[i] = 0;
                 }
             }
-            if (Math.sqrt(del/z.length)<1e-6)
+            if (Math.sqrt(del / z.length) < 1e-6) {
                 break;
+            }
             System.out.println(DoubleSeq.of(z));
         }
         System.out.println(DoubleSeq.of(z));
