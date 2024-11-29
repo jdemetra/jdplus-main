@@ -7,7 +7,6 @@ package jdplus.toolkit.base.core.math.splines;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -19,7 +18,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 public class AdaptivePeriodicSplines {
 
     public static enum Criterion {
-        AIC, BIC
+        AIC, BIC, EBIC
     }
 
     @lombok.Value
@@ -82,6 +81,8 @@ public class AdaptivePeriodicSplines {
                         c = result.getAic();
                     case BIC ->
                         c = result.getBic();
+                    case EBIC ->
+                        c = result.getEbic();
                 }
                 if (min == 0 || c < min) {
                     min = c;
@@ -100,7 +101,7 @@ public class AdaptivePeriodicSplines {
     public int resultsSize() {
         return steps.size();
     }
-    
+
     public FastMatrix A() {
         FastMatrix A = FastMatrix.make(steps.size(), aspline.getSpecification().getKnots().length);
         DataBlockIterator rows = A.rowsIterator();

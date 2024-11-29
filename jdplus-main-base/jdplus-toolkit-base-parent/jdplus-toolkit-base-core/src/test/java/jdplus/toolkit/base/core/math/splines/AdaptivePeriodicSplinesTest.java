@@ -47,7 +47,7 @@ public class AdaptivePeriodicSplinesTest {
             knots[i] = i * c;
         }
 
-        int nyears = 10;
+        int nyears = 5;
         int ny = (int) (nyears * P + 1);
         int jump = 4;
         int nq = q / jump;
@@ -56,7 +56,7 @@ public class AdaptivePeriodicSplinesTest {
             fixedKnots[i] = i * jump;
         }
 
-        DoubleSeq m = DoubleSeq.onMapping(ny, i -> i - c / 2 + P * (int) (i / P));
+        DoubleSeq m = DoubleSeq.onMapping(ny, i -> i);
         SymmetricFilter sf = LocalPolynomialFilters.of(26, 1, DiscreteKernel.uniform(26));
         IFiniteFilter[] afilters = AsymmetricFiltersFactory.mmsreFilters(sf, 0, new double[]{1}, null);
         IFiniteFilter[] lfilters = afilters.clone();
@@ -87,6 +87,7 @@ public class AdaptivePeriodicSplinesTest {
         AdaptivePeriodicSpline aspline = AdaptivePeriodicSpline.of(spec);
         AdaptivePeriodicSplines.Specification dspec = AdaptivePeriodicSplines.Specification.builder()
                 .minKnots(min)
+                .criterion(AdaptivePeriodicSplines.Criterion.EBIC)
                 .lambda1(50)
                 .build();
 
@@ -103,7 +104,9 @@ public class AdaptivePeriodicSplinesTest {
             System.out.print('\t');
             System.out.print(result.getBic());
             System.out.print('\t');
-            System.out.print(kernel.selectedKnotsCount(cur++));
+             System.out.print(result.getEbic());
+            System.out.print('\t');
+           System.out.print(kernel.selectedKnotsCount(cur++));
             System.out.print('\t');
             System.out.println(DoubleSeq.of(result.getS()));
         }

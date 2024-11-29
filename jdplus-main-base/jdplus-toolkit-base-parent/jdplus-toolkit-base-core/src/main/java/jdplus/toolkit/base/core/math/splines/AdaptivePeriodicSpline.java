@@ -27,6 +27,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
+import jdplus.toolkit.base.core.stats.Combinatorics;
 import jdplus.toolkit.base.core.stats.linearmodel.LeastSquaresResults;
 import jdplus.toolkit.base.core.stats.linearmodel.LinearModel;
 import jdplus.toolkit.base.core.stats.linearmodel.Ols;
@@ -124,7 +125,7 @@ public class AdaptivePeriodicSpline {
          * norm0
          */
         double[] a, w, z, s;
-        double aic, bic, ll;
+        double aic, bic, ebic, ll;
 
     }
 
@@ -253,6 +254,7 @@ public class AdaptivePeriodicSpline {
                 .ll(ll)
                 .aic(2 * (-ll + nparams))
                 .bic(-2 * ll + Math.log(n) * nparams)
+                .ebic(-2 * ll + Math.log(n) * nparams + 2 * Combinatorics.logChoose(B.getColumnsCount(), nparams))
                 .build();
     }
 

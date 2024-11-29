@@ -24,19 +24,28 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author palatej
  */
 public class CombinatoricsTest {
-    
+
     public CombinatoricsTest() {
     }
 
     @Test
     public void testLFac() {
-        double s0=0;
-        for (int i=1; i<=200; ++i){
-            s0+=Math.log(i);
+        double s0 = 0;
+        for (int i = 1; i <= 200; ++i) {
+            s0 += Math.log(i);
         }
-        double s1=Combinatorics.logFactorial(200);
-        
+        double s1 = Combinatorics.logFactorial(200);
+
         assertEquals(s0, s1, 1e-9);
     }
-    
+
+    @Test
+    public void testLchoose() {
+        for (int i = 1; i < 100; ++i) {
+            assertEquals(Combinatorics.logChoose(i, 1), Math.log(i), 1e-9);
+        }
+        for (int i = 2; i < 100; ++i) {
+            assertEquals(Combinatorics.logChoose(i, 2), Math.log((i * (i - 1)) / 2), 1e-9);
+        }
+    }
 }
