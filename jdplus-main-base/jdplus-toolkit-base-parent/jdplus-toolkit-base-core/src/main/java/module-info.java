@@ -91,7 +91,6 @@ module jdplus.toolkit.base.core {
     exports jdplus.toolkit.base.core.ssf.likelihood;
     exports jdplus.toolkit.base.core.ssf.multivariate;
     exports jdplus.toolkit.base.core.ssf.sts;
-    exports jdplus.toolkit.base.core.ssf.sts.splines;
     exports jdplus.toolkit.base.core.ssf.univariate;
     exports jdplus.toolkit.base.core.ssf.utility;
     exports jdplus.toolkit.base.core.stats;
