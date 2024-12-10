@@ -16,8 +16,10 @@
  */
 package jdplus.toolkit.base.core.math.splines;
 
+import internal.toolkit.base.core.math.functions.gsl.interpolation.CubicSplines;
 import java.util.Arrays;
 import java.util.function.DoubleUnaryOperator;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**
  *
@@ -41,8 +43,12 @@ public class CubicSpline {
         FritschCarlson, Steffen, Stineman;
     }
 
-    public DoubleUnaryOperator monotonic(double[] xi, double[] fxi){//, MonotonicMethod method) {
+    public DoubleUnaryOperator monotonic(double[] xi, double[] fxi) {//, MonotonicMethod method) {
         return new MonotonicCubicSplineFunction(xi, fxi, MonotonicMethod.FritschCarlson);
+    }
+
+    public DoubleUnaryOperator periodic(double[] x, double[] y) {
+        return CubicSplines.periodic(DoubleSeq.of(x), DoubleSeq.of(y));
     }
 
     static class CubicSplineFunction implements DoubleUnaryOperator {
@@ -162,9 +168,9 @@ public class CubicSpline {
 
             // degree-2 and degree-3 coefficients
             for (int i = 0; i < n; ++i) {
-                double c1 = b[i], m = ms[i], invdx = 1 / dx[i], common = c1 + b[i + 1] - 2*m;
-                c[i]=(m - c1 - common) * invdx;
-                d[i]=common * invdx * invdx;
+                double c1 = b[i], m = ms[i], invdx = 1 / dx[i], common = c1 + b[i + 1] - 2 * m;
+                c[i] = (m - c1 - common) * invdx;
+                d[i] = common * invdx * invdx;
             }
         }
 

@@ -61,7 +61,7 @@ public class AdaptivePeriodicSpline {
         public static Builder builder() {
             return new Builder()
                     .splineOrder(4)
-                    .precision(1e-3)
+                    .precision(1e-6)
                     .selectionThreshold(.99)
                     .maxIter(20);
         }
@@ -201,14 +201,15 @@ public class AdaptivePeriodicSpline {
         ElementaryTransformations.fastGivensTriangularize(Bt);
         // LB*LB' = B'B
         LB = Bt.extract(0, q, 0, q).deepClone();
-        DoubleSeq coeff = UnitRoots.D(1, spec.splineOrder).coefficients();
+        DoubleSeq coeff = UnitRoots.D(1, k).coefficients(); //k+1 coefficients
         // Differencing matrix
         D = FastMatrix.square(q);
-        for (int i = 0; i <= k; ++i) {
-            D.subDiagonal(i).set(coeff.get(k - i));
+        for (int i = -1; i < k; ++i) {
+            D.subDiagonal(i).set(coeff.get(k - 1 - i));
         }
-        for (int i = 0; i < k; ++i) {
-            D.subDiagonal(i - q + 1).set(coeff.get(i));
+        D.set(0, q-1, coeff.get(k));
+        for (int i = 1; i < k; ++i) {
+            D.subDiagonal(i - q).set(coeff.get(i+1));
         }
         double[] w = new double[q];
         double[] z = new double[q];

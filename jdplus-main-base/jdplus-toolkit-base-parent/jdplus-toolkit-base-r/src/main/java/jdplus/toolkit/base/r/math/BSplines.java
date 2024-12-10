@@ -31,4 +31,8 @@ public class BSplines {
         return jdplus.toolkit.base.core.math.splines.BSplines.splines(bspline, DoubleSeq.of(pos));
     }
     
+    public Matrix of(int order, double[] breaks, double[] pos){
+        jdplus.toolkit.base.core.math.splines.BSplines.BSpline bspline= jdplus.toolkit.base.core.math.splines.BSplines.augmented(order, breaks);
+        return jdplus.toolkit.base.core.math.splines.BSplines.splines(bspline, DoubleSeq.of(pos));
+    }
 }

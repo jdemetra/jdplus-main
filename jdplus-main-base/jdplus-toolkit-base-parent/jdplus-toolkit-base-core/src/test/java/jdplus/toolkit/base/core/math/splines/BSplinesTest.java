@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.math.splines;
 
+import internal.toolkit.base.core.math.functions.gsl.interpolation.CubicSplines;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import tck.demetra.data.WeeklyData;
 import jdplus.toolkit.base.core.data.DataBlock;
@@ -25,7 +26,9 @@ import jdplus.toolkit.base.core.math.linearfilters.FilterUtility;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
@@ -70,6 +73,54 @@ public class BSplinesTest {
     }
 
     @Test
+    public void testPeriodicInterpolation() {
+
+        double[] knots = new double[]{0, 0.1, 0.12, 0.2, 0.3, 0.31, 0.41, 0.42, 0.5, 0.6, 0.61, 0.62, 0.63, 0.7, 0.75, 0.8, 0.9};
+        DoubleSeq x = DoubleSeq.onMapping(101, i -> i / 100.0);
+        int dim = knots.length;
+        FastMatrix M = null, Q = null;
+        long t0 = System.currentTimeMillis();
+        for (int s = 0; s < 10000; ++s) {
+            BSplines.BSpline bs = BSplines.periodic(4, knots, 1);
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.of(knots)).inv();
+            M = BSplines.splines(bs, x);
+            M=GeneralMatrix.AB(M, N);
+ //           LinearSystemSolver.fastSolver().solve(N, M);
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println(t1 - t0);
+//        System.out.println(M);
+        t0 = System.currentTimeMillis();
+        for (int s = 0; s < 10000; ++s) {
+            double[] xi = new double[dim + 1];
+            for (int i = 0; i < knots.length; ++i) {
+                xi[i] = knots[i];
+            }
+            double x0 = xi[0];
+            xi[dim] = x0 + 1;
+
+            Q = FastMatrix.make(x.length(), dim);
+            for (int i = 0; i < dim; ++i) {
+                double[] f = new double[dim + 1];
+                if (i == 0) {
+                    f[0] = 1;
+                    f[dim] = 1;
+                } else {
+                    f[i] = 1;
+                }
+                CubicSplines.Spline cs = CubicSplines.periodic(DoubleSeq.of(xi), DoubleSeq.of(f));
+                DataBlock column = Q.column(i);
+                for (int j = 0; j < Q.getRowsCount(); ++j) {
+                    column.set(j, cs.applyAsDouble(x.get(j)));
+                }
+            }
+        }
+        t1 = System.currentTimeMillis();
+        System.out.println(t1 - t0);
+        assertTrue(M.minus(Q).isZero(1e-9));
+    }
+
+    @Test
     public void testPeriodic2() {
 
         double[] knots = new double[]{0, 1.0, 2.0, 3.5, 4.0};
@@ -86,11 +137,12 @@ public class BSplinesTest {
         double[] knots = new double[]{0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9};
         for (int k = 1; k <= 4; ++k) {
             BSplines.BSpline bs = BSplines.periodic(k, knots, 1);
-            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i->i*0.01));
+            FastMatrix N = BSplines.splines(bs, DoubleSeq.onMapping(100, i -> i * 0.01));
 //            System.out.println(N);
 //            System.out.println();
         }
     }
+
     public static void main(String[] arg) {
 //        int q = 100;
 //        long l0 = System.currentTimeMillis();
