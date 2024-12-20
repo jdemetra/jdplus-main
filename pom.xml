@@ -56,7 +56,7 @@
 
         <!-- test frameworks -->
         <junit.version>5.11.4</junit.version>
-        <assertj-core.version>3.26.3</assertj-core.version>
+        <assertj-core.version>3.27.0</assertj-core.version>
 
         <!-- dependencies -->
         <jd2.version>2.2.5</jd2.version>
