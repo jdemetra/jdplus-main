@@ -52,7 +52,7 @@
         <lombok.version>1.18.36</lombok.version>
         <java-service.version>1.9.0</java-service.version>
         <java-design.version>1.5.1</java-design.version>
-        <checker-qual.version>3.48.3</checker-qual.version>
+        <checker-qual.version>3.48.4</checker-qual.version>
 
         <!-- test frameworks -->
         <junit.version>5.11.4</junit.version>
