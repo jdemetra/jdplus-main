@@ -72,8 +72,8 @@ import java.util.logging.Level;
  *
  * @author Mats Maggi
  */
-@ConvertAsProperties(dtd = "-//demetra.desktop.anomalydetection.ui/CheckLastList//EN",
-        autostore = false)
+//@ConvertAsProperties(dtd = "-//demetra.desktop.anomalydetection.ui/CheckLastList//EN",
+//        autostore = false)
 @TopComponent.Description(preferredID = "CheckLastTopComponent",
         persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
@@ -81,9 +81,9 @@ import java.util.logging.Level;
 @ActionReference(path = "Menu/Statistical methods/Anomaly Detection")
 @TopComponent.OpenActionRegistration(displayName = "#CTL_CheckLastTopComponentAction")
 @NbBundle.Messages({
-        "CTL_CheckLastTopComponentAction=Check Last",
-        "CTL_CheckLastTopComponent=Check Last Batch Window",
-        "HINT_CheckLastTopComponent=This is a Check Last Batch Window"
+    "CTL_CheckLastTopComponentAction=Check Last",
+    "CTL_CheckLastTopComponent=Check Last Batch Window",
+    "HINT_CheckLastTopComponent=This is a Check Last Batch Window"
 })
 @lombok.extern.java.Log
 public final class CheckLastTopComponent extends TopComponent implements ExplorerManager.Provider, MultiViewElement, ActiveView {
@@ -111,7 +111,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
     private ProgressHandle progressHandle;
     private SwingWorker<Void, AnomalyItem> worker;
     // Properties
-    private Node n;
+    private Node node;
     private final ExplorerManager mgr = new ExplorerManager();
 
     public CheckLastTopComponent() {
@@ -123,7 +123,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
         list.addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
                 case JTsCheckLastList.COLOR_VALUES_PROPERTY:
-                    refreshNode();
+                    onNbCheckLastChange();
                     break;
                 case JTsCheckLastList.COLLECTION_CHANGE_PROPERTY:
                     onCollectionChange();
@@ -158,15 +158,11 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
         add(toolBarRepresentation, BorderLayout.NORTH);
         add(visualRepresentation, BorderLayout.CENTER);
 
-        refreshNode();
+        node = ControlNode.onComponentOpened(mgr, list);
         associateLookup(ExplorerUtils.createLookup(mgr, getActionMap()));
-    }
-
-    private void refreshNode() {
-        n = ControlNode.onComponentOpened(mgr, list);
 
         try {
-            mgr.setSelectedNodes(new Node[]{n});
+            mgr.setSelectedNodes(new Node[]{node});
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -181,6 +177,9 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
         runButton = toolBar.add(new AbstractAction("", DemetraIcons.COMPILE_16) {
             @Override
             public void actionPerformed(ActionEvent e) {
+                summary.set(null, null);
+                chart.setTsCollection(TsCollection.EMPTY);
+                list.getTsSelectionModel().clearSelection();
                 start(false);
             }
         });
@@ -197,7 +196,7 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
         prefButton = toolBar.add(new AbstractAction("", DemetraIcons.PREFERENCES) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new PropertySheetDialogBuilder().title("Properties").editNode(n);
+                new PropertySheetDialogBuilder().title("Properties").editNode(node);
             }
         });
         prefButton.setToolTipText("Open the properties dialog");
@@ -219,7 +218,6 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
 //        reportButton.setHorizontalTextPosition(SwingConstants.RIGHT);
 //        reportButton.setToolTipText("Generate report of the check last processing");
 //        reportButton.setEnabled(false);
-
         return toolBar;
     }
     // </editor-fold>
@@ -250,7 +248,6 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
             addPopup.add(menuItem);
         }
         view.addPropertyChangeListener(JTsCheckLastList.SPEC_PROPERTY, evt -> {
-            refreshNode();
             for (Component o : addPopup.getComponents()) {
                 JCheckBoxMenuItem item = (JCheckBoxMenuItem) o;
                 item.setState(view.getSpec().display().equals(o.getName()));
@@ -258,6 +255,9 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
                 defSpecLabel.setText(view.getSpec().display());
 //                reportButton.setEnabled(false);
             }
+            summary.set(null, null);
+            chart.setTsCollection(TsCollection.EMPTY);
+            list.getTsSelectionModel().clearSelection();
         });
 
         JButton result = DropDownButtonFactory.createDropDownButton(DemetraIcons.BLOG_16, addPopup);
@@ -283,12 +283,14 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
             addPopup.add(menuItem);
         }
         view.addPropertyChangeListener(JTsCheckLastList.LAST_CHECKS_PROPERTY, evt -> {
-            refreshNode();
             for (Component o : addPopup.getComponents()) {
                 JCheckBoxMenuItem item = (JCheckBoxMenuItem) o;
                 item.setState(view.getLastChecks() == Integer.parseInt(item.getName()));
                 item.setEnabled(!item.isSelected());
             }
+            summary.set(null, null);
+            chart.setTsCollection(TsCollection.EMPTY);
+            list.getTsSelectionModel().clearSelection();
         });
 
         JButton result = DropDownButtonFactory.createDropDownButton(DemetraIcons.NB_CHECK_LAST_16, addPopup);
@@ -488,12 +490,11 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
 
     // <editor-fold defaultstate="collapsed" desc="Event Handlers">
     private void onSelectionChange() {
-        OptionalInt singleSelection = JLists.getSelectionIndexStream(list.getTsSelectionModel()).findFirst();
-        if (!singleSelection.isPresent()) {
+        Ts single = list.getSelectedItem();
+        if (single == null) {
             summary.set(null, null);
             chart.setTsCollection(TsCollection.EMPTY);
         } else {
-            Ts single = list.getTsCollection().get(singleSelection.getAsInt());
             AnomalyItem a = list.getMap().get(single.getMoniker());
             if (a.isInvalid() || a.isNotProcessable()) {
                 summary.set(null, null);
@@ -512,8 +513,8 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
     private void onCollectionChange() {
         int nbElements = list.getMap().size();
         itemsLabel.setText(nbElements == 0 ? "No items" : nbElements + (nbElements < 2 ? " item" : " items"));
-        summary.set(null, list.getCheckLast().getModel());
-        summary.repaint();
+        summary.set(null, null);
+        chart.setTsCollection(TsCollection.EMPTY);
 
         runButton.setEnabled(nbElements != 0);
 
@@ -521,21 +522,25 @@ public final class CheckLastTopComponent extends TopComponent implements Explore
     }
 
     private void onNbCheckLastChange() {
+        list.repaint();
+        summary.set(null, null);
+        chart.setTsCollection(TsCollection.EMPTY);
+        list.getTsSelectionModel().clearSelection();
 //        reportButton.setEnabled(false);
     }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Properties I/O">
-    void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        ToolsPersistence.writeTsCollection(list, p);
-    }
-
-    void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        ToolsPersistence.readTsCollection(list, p);
-    }
+//    void writeProperties(java.util.Properties p) {
+//        // better to version settings since initial version as advocated at
+//        // http://wiki.apidesign.org/wiki/PropertyFiles
+//        p.setProperty("version", "1.0");
+//        ToolsPersistence.writeTsCollection(list, p);
+//    }
+//
+//    void readProperties(java.util.Properties p) {
+//        String version = p.getProperty("version");
+//        ToolsPersistence.readTsCollection(list, p);
+//    }
     // </editor-fold>
 }

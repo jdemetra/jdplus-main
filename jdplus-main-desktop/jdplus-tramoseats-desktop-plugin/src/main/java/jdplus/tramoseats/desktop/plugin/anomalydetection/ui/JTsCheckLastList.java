@@ -16,39 +16,28 @@
  */
 package jdplus.tramoseats.desktop.plugin.anomalydetection.ui;
 
+import ec.util.list.swing.JLists;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollectionSupport;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.tramoseats.desktop.plugin.anomalydetection.AnomalyItem;
-import jdplus.toolkit.desktop.plugin.util.ActionMaps;
-import jdplus.toolkit.desktop.plugin.util.InputMaps;
 import jdplus.toolkit.desktop.plugin.components.JTsTable;
-import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
 import ec.util.table.swing.JTables;
 import ec.util.various.swing.JCommand;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.beans.Beans;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
@@ -63,8 +52,9 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.api.util.Table;
-import internal.ui.components.DemoTsBuilder;
 import java.util.LinkedHashMap;
+import java.util.OptionalInt;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 
 import jdplus.toolkit.base.core.regsarima.regular.CheckLast;
 import jdplus.tramoseats.base.core.tramo.TramoKernel;
@@ -77,8 +67,7 @@ import nbbrd.design.SkipProcessing;
  * @author Mats Maggi
  */
 @SwingComponent
-public final class JTsCheckLastList extends JComponent implements TimeSeriesComponent,
-        HasTsCollection {
+public final class JTsCheckLastList extends JComponent {
 
     @SkipProcessing(target = SwingProperty.class, reason = "to be refactored")
     @SwingProperty
@@ -110,7 +99,7 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
     private CheckLast checkLast;
 
     public JTsCheckLastList() {
-        this.table = new JTsTable();
+        this.table = new JTsTable(TsInformationType.Data);
         this.orangeCells = 4.0;
         this.redCells = 5.0;
         this.lastChecks = 1;
@@ -120,32 +109,27 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
 
         checkLast = new CheckLast(TramoKernel.of(spec, null), 12);
 
-        onComponentPopupMenuChange();
+//        onComponentPopupMenuChange();
         enableProperties();
 
         setLayout(new BorderLayout());
         add(table, BorderLayout.CENTER);
-
-        if (Beans.isDesignTime()) {
-            setTsCollection(DemoTsBuilder.randomTsCollection(3));
-            setTsUpdateMode(TsUpdateMode.None);
-            setPreferredSize(new Dimension(200, 150));
-        }
-
     }
 
     private void enableProperties() {
-        this.addPropertyChangeListener(evt -> {
+        table.addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
-                case TS_COLLECTION_PROPERTY:
+                case HasTsCollection.TS_COLLECTION_PROPERTY:
                     onCollectionChange();
                     break;
                 case TsSelectionBridge.TS_SELECTION_PROPERTY:
                     onSelectionChange();
                     break;
-                case "componentPopupMenu":
-                    onComponentPopupMenuChange();
-                    break;
+            }
+        });
+
+        addPropertyChangeListener(evt -> {
+            switch (evt.getPropertyName()) {
                 case COLOR_VALUES_PROPERTY:
                     onColorValuesChange();
                     break;
@@ -158,8 +142,9 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
             }
         });
     }
-
+    
     //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
+
     public double getOrangeCells() {
         return orangeCells;
     }
@@ -231,6 +216,11 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
         return map.values().toArray(all);
     }
 
+    public Ts getSelectedItem() {
+        OptionalInt singleSelection = JLists.getSelectionIndexStream(table.getTsSelectionModel()).findFirst();
+        return singleSelection.isPresent() ? table.getTsCollection().get(singleSelection.getAsInt()) : null;
+    }
+    
     public void fireTableStructureChanged() {
         List<JTsTable.Column> columns = new ArrayList<>();
         columns.add(seriesColumn);
@@ -263,33 +253,33 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
         table.repaint();
     }
 
-    private JPopupMenu buildPopupMenu() {
-        JPopupMenu result = HasTsCollectionSupport.newDefaultMenu(this).getPopupMenu();
-
-        int index = 11;
-        JMenuItem item;
-
-        result.insert(new JSeparator(), index++);
-
-        JMenu sub = new JMenu("Export results to");
-        sub.add(new CopyToClipoard().toAction(this)).setText("Clipboard");
-        result.insert(sub, index++);
-
-        item = new JMenuItem(new AbstractAction("Original Order") {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-//                table.getRowSorter().setSortKeys(null);
-            }
-        });
-        item.setEnabled(true);
-        result.insert(item, index++);
-
-        return result;
-    }
-
+//    private JPopupMenu buildPopupMenu() {
+//        JPopupMenu result = HasTsCollectionSupport.newDefaultMenu(this).getPopupMenu();
+//
+//        int index = 11;
+//        JMenuItem item;
+//
+//        result.insert(new JSeparator(), index++);
+//
+//        JMenu sub = new JMenu("Export results to");
+//        sub.add(new CopyToClipoard().toAction(this)).setText("Clipboard");
+//        result.insert(sub, index++);
+//
+//        item = new JMenuItem(new AbstractAction("Original Order") {
+//            @Override
+//            public void actionPerformed(ActionEvent arg0) {
+////                table.getRowSorter().setSortKeys(null);
+//            }
+//        });
+//        item.setEnabled(true);
+//        result.insert(item, index++);
+//
+//        return result;
+//    }
+//
     private void initTable() {
 //        table.setMultiSelection(false);
-        table.getTsSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//        table.getTsSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 //        result.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 //        ((JLabel) result.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -306,12 +296,10 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
             }
         });
 
-        ActionMaps.copyEntries(getActionMap(), false, table.getActionMap());
-        InputMaps.copyEntries(getInputMap(), false, table.getInputMap());
-
+//        ActionMaps.copyEntries(getActionMap(), false, table.getActionMap());
+//        InputMaps.copyEntries(getInputMap(), false, table.getInputMap());
         fireTableStructureChanged();
     }
-    
 
     private void onColorValuesChange() {
         fireTableDataChanged();
@@ -329,18 +317,22 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
 
     private void onCollectionChange() {
         TsCollection collection = getTsCollection();
+        LinkedHashMap<TsMoniker, AnomalyItem> omap=new LinkedHashMap<>(map);
+        map.clear();
         for (Ts s : collection) {
-            AnomalyItem item = map.get(s.getMoniker());
-            if (item == null || item.getData().isEmpty()) {
+            AnomalyItem item = omap.get(s.getMoniker());
+            if (item == null) {
                 String name = s.getName();
                 name = MultiLineNameUtil.join(name);
                 AnomalyItem a = new AnomalyItem(name, s.getData(), lastChecks);
                 map.put(s.getMoniker(), a);
             }
+            else
+                map.put(s.getMoniker(), item);
         }
+        table.getTsSelectionModel().clearSelection();
         fireTableDataChanged();
         firePropertyChange(COLLECTION_CHANGE_PROPERTY, null, collection);
-        onSelectionChange();
     }
 
     private void onSelectionChange() {
@@ -362,11 +354,11 @@ public final class JTsCheckLastList extends JComponent implements TimeSeriesComp
         return Optional.ofNullable(item);
     }
 
-    private void onComponentPopupMenuChange() {
-        JPopupMenu popupMenu = getComponentPopupMenu();
-        table.setComponentPopupMenu(popupMenu != null ? popupMenu : buildPopupMenu());
-    }
-
+//    private void onComponentPopupMenuChange() {
+//        JPopupMenu popupMenu = getComponentPopupMenu();
+//        table.setComponentPopupMenu(popupMenu != null ? popupMenu : buildPopupMenu());
+//    }
+//
     private final JTsTable.Column seriesColumn = JTsTable.Column.builder()
             .name("<html><center>&nbsp;<br>Series Name<br>&nbsp;")
             .type(Ts.class)
