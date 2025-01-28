@@ -19,6 +19,7 @@ package jdplus.text.base.r;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,7 @@ public class TxtFiles {
         Optional<String> m = set.<String>map(d -> {
             TxtBean bean = PROVIDER.decodeBean(d.getDataSource());
             if (ofile.isBlank() || bean.getFile().getName().equals(ofile)) {
-                bean.setFile(new File(nfile));
+                bean.setFile(Path.of(nfile).toFile());
                 DataSource src = PROVIDER.encodeBean(bean);
                 DataSet nd = d.toBuilder()
                         .dataSource(src)
@@ -69,7 +70,7 @@ public class TxtFiles {
 
     public DataSource source(String file, ObsFormat obsFormat, ObsGathering obsGathering, String cs, String delimiter, String txtqualifier, boolean headers, int skiplines) {
         TxtBean bean = new TxtBean();
-        bean.setFile(new File(file));
+        bean.setFile(Path.of(file).toFile());
         if (cs != null && cs.length() > 0) {
             bean.setCharset(Charset.forName(cs));
         }
@@ -153,7 +154,7 @@ public class TxtFiles {
         if (provider == null) {
             throw new Exception("TxtProvider is not available");
         }
-        File[] files = Arrays.stream(paths).map(p -> new File(p)).toArray(n -> new File[n]);
+        File[] files = Arrays.stream(paths).map(p -> Path.of(p).toFile()).toArray(File[]::new);
         provider.setPaths(files);
     }
 

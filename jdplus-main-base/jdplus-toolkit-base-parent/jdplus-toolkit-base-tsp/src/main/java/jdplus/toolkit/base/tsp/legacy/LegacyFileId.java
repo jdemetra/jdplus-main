@@ -19,6 +19,8 @@ package jdplus.toolkit.base.tsp.legacy;
 import jdplus.toolkit.base.api.design.DemetraPlusLegacy;
 import jdplus.toolkit.base.tsp.DataSource;
 import java.io.File;
+import java.nio.file.Path;
+
 import nbbrd.io.text.Parser;
 import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -45,7 +47,7 @@ public class LegacyFileId implements CharSequence {
     public static LegacyFileId parse(@NonNull String input) {
         if (!isDemetraUri(input)) {
             LegacyId id = LegacyId.parse(LegacyId.Handler.PLAIN, input);
-            if (id != null && id.getCount() == 1 && isValidPath(new File(id.get(0)))) {
+            if (id != null && id.getCount() == 1 && isValidPath(Path.of(id.get(0)).toFile())) {
                 return new LegacyFileId(id.get(0));
             }
         }

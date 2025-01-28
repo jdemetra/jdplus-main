@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.Random;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
@@ -57,7 +58,7 @@ public class DiscreteModelKernelTest {
  //   @Test
     public void logit() throws URISyntaxException, IOException {
         URI uri = Data.class.getResource("/smarket.txt").toURI();
-        Matrix smarket = MatrixSerializer.read(new File(uri));
+        Matrix smarket = MatrixSerializer.read(Path.of(uri).toFile());
         assertTrue(smarket != null);
         FastMatrix M = FastMatrix.make(smarket.getRowsCount(), 7);
         for (int i = 0; i < 6; ++i) {

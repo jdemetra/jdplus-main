@@ -32,6 +32,7 @@ import jdplus.toolkit.base.workspace.file.FileWorkspace;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,7 +67,7 @@ public class Ws {
     }
 
     public static Ws open(String fileName) throws IOException {
-        File file = new File(fileName);
+        File file = Path.of(fileName).toFile();
         FileWorkspace fws = FileWorkspace.open(file.toPath(), DemetraVersion.JD3);
         ModellingContext context = WorkspaceUtility.context(fws, false);
         Ws ws = new Ws(fileName, context);
@@ -96,7 +97,7 @@ public class Ws {
         if (v != null && v.equalsIgnoreCase("jd2")) {
             version = DemetraVersion.JD2;
         }
-        File file = new File(sfile);
+        File file = Path.of(sfile).toFile();
 
         boolean exist = file.exists();
         if (exist && failIfExists) {

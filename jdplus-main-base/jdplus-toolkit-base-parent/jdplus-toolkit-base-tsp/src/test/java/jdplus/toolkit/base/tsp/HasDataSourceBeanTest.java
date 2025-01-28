@@ -25,6 +25,7 @@ import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,7 +67,7 @@ public class HasDataSourceBeanTest {
 
     private final DataSource.Converter<CustomBean> param = new DataSource.Converter<CustomBean>() {
 
-        private final Property<File> fileParam = Property.of("f", new File("defaultFile"), Parser.onFile(), Formatter.onFile());
+        private final Property<File> fileParam = Property.of("f", Path.of("defaultFile").toFile(), Parser.onFile(), Formatter.onFile());
         private final Property<String> detailsParam = Property.of("d", "defaultValue", Parser.onString(), Formatter.onString());
 
         @Override
@@ -109,7 +110,7 @@ public class HasDataSourceBeanTest {
                 .isEqualTo(support.newBean());
         assertThat(support.newBean())
                 .extracting("file", "details")
-                .containsExactly(new File("defaultFile"), "defaultValue");
+                .containsExactly(Path.of("defaultFile").toFile(), "defaultValue");
     }
 
     @Test
@@ -119,7 +120,7 @@ public class HasDataSourceBeanTest {
         DataSource.Builder b = DataSource.builder(providerName, version);
         assertThat(support.encodeBean(support.newBean()))
                 .isEqualTo(b.clearParameters().build());
-        assertThat(support.encodeBean(CustomBean.of(new File("hello"), "world")))
+        assertThat(support.encodeBean(CustomBean.of(Path.of("hello").toFile(), "world")))
                 .isEqualTo(b.clearParameters().parameter("f", "hello").parameter("d", "world").build());
         assertThatThrownBy(() -> support.encodeBean(null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> support.encodeBean("string")).isInstanceOf(IllegalArgumentException.class);
@@ -133,7 +134,7 @@ public class HasDataSourceBeanTest {
         assertThat(support.decodeBean(b.clearParameters().build()))
                 .isEqualTo(support.newBean());
         assertThat(support.decodeBean(b.clearParameters().parameter("f", "hello").parameter("d", "world").build()))
-                .isEqualTo(CustomBean.of(new File("hello"), "world"));
+                .isEqualTo(CustomBean.of(Path.of("hello").toFile(), "world"));
         assertThatThrownBy(() -> support.decodeBean(null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> support.decodeBean(DataSource.builder("xxx", version).build())).isInstanceOf(IllegalArgumentException.class);
     }

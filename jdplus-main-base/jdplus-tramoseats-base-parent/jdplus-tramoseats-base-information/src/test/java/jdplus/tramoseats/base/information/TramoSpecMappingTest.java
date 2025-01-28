@@ -31,6 +31,7 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -109,14 +110,14 @@ public class TramoSpecMappingTest {
         Jaxb.Formatter
                 .of(XmlInformationSet.class)
                 .withFormatted(true)
-                .formatFile(xmlinfo, new File(tmp + "tramo.xml"));
+                .formatFile(xmlinfo, Path.of(tmp + "tramo.xml").toFile());
     }
 
     public static void testXmlDeserialization() throws JAXBException, FileNotFoundException, IOException {
         String tmp = Files.temporaryFolderPath();
         XmlInformationSet rslt = Jaxb.Parser
                 .of(XmlInformationSet.class)
-                .parseFile(new File(tmp + "tramo.xml"));
+                .parseFile(Path.of(tmp + "tramo.xml").toFile());
 
         InformationSet info = rslt.create();
         TramoSpec nspec = TramoSpecMapping.readLegacy(info, null);
