@@ -16,19 +16,19 @@
  */
 package jdplus.cruncher;
 
-import static jdplus.cruncher.ArgsDecoder2.decode;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import static org.assertj.core.api.Assertions.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import picocli.CommandLine;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.NoSuchFileException;
+
+import static jdplus.cruncher.ArgsDecoder2.decode;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  *
@@ -54,7 +54,7 @@ public class ArgsDecoderTest {
                 .isInstanceOf(CommandLine.ExecutionException.class)
                 .hasCauseInstanceOf(AccessDeniedException.class);
 
-        File configFile = new File(userDir, "config.xml");
+        File configFile = userDir.toPath().resolve("config.xml").toFile();
 
         assertThatThrownBy(() -> decode("workspace.xml", "-x", configFile.getAbsolutePath()))
                 .as("Missing file")
@@ -85,7 +85,7 @@ public class ArgsDecoderTest {
         WsaConfig config = new WsaConfig();
         WsaConfig.write(configFile, config);
 
-        File workspace = new File(userDir, "workspace.xml");
+        File workspace = userDir.toPath().resolve("workspace.xml").toFile();
 
         assertThat(decode("-x", configFile.getAbsolutePath(), workspace.getAbsolutePath()))
                 .as("Valid args")

@@ -7,13 +7,11 @@ package jdplus.toolkit.base.xml.legacy.regression;
 
 import jdplus.toolkit.base.api.data.Range;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.Month;
 import javax.xml.bind.JAXBContext;
@@ -50,8 +48,7 @@ public class XmlInterventionVariableTest {
                 .build();
         XmlInterventionVariable xvar = XmlInterventionVariable.getAdapter().marshal(ivar);
 
-        FileOutputStream ostream = new FileOutputStream(FILE);
-        try (OutputStreamWriter writer = new OutputStreamWriter(ostream, StandardCharsets.UTF_8)) {
+        try (Writer writer = Files.newBufferedWriter(Path.of(FILE), StandardCharsets.UTF_8)) {
             Marshaller marshaller = jaxb.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 //            marshaller.marshal(xvar, writer);
@@ -60,8 +57,7 @@ public class XmlInterventionVariableTest {
         }
 
         XmlInterventionVariable rslt = null;
-        FileInputStream istream = new FileInputStream(FILE);
-        try (InputStreamReader reader = new InputStreamReader(istream, StandardCharsets.UTF_8)) {
+        try (Reader reader = Files.newBufferedReader(Path.of(FILE), StandardCharsets.UTF_8)) {
             Source source = new StreamSource(reader);
             Unmarshaller unmarshaller = jaxb.createUnmarshaller();
 //            rslt = (XmlInterventionVariable) unmarshaller.unmarshal(reader);

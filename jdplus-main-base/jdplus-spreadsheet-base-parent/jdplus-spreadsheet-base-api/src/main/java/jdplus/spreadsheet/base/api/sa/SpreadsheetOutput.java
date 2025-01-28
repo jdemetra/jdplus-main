@@ -161,7 +161,7 @@ public final class SpreadsheetOutput implements Output<SaDocument> {
     }
 
     private File getOutputFile() {
-        return new File(folder, config.getFileName()).getAbsoluteFile();
+        return folder.toPath().resolve(config.getFileName()).toFile().getAbsoluteFile();
     }
 
     private String getDisplayName(Summary summary) {

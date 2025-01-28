@@ -20,13 +20,11 @@ import jdplus.toolkit.base.api.data.ParameterType;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
 import jdplus.toolkit.base.xml.legacy.core.XmlParameter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.time.LocalDate;
 import javax.xml.bind.JAXBContext;
@@ -87,8 +85,7 @@ public class XmlRegressionTest {
     public void testMarshal() throws FileNotFoundException, JAXBException, IOException {
 
         JAXBContext jaxb = XmlRegression.context();
-        FileOutputStream ostream = new FileOutputStream(FILE);
-        try (OutputStreamWriter writer = new OutputStreamWriter(ostream, StandardCharsets.UTF_8)) {
+        try (Writer writer = Files.newBufferedWriter(Path.of(FILE), StandardCharsets.UTF_8)) {
             Marshaller marshaller = jaxb.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(reg, writer);
@@ -96,8 +93,7 @@ public class XmlRegressionTest {
         }
 
         XmlRegression rslt = null;
-        FileInputStream istream = new FileInputStream(FILE);
-        try (InputStreamReader reader = new InputStreamReader(istream, StandardCharsets.UTF_8)) {
+        try (Reader reader = Files.newBufferedReader(Path.of(FILE), StandardCharsets.UTF_8)) {
             Unmarshaller unmarshaller = jaxb.createUnmarshaller();
             unmarshaller.setSchema(Schemas.Modelling);
             unmarshaller.setEventHandler(new TestValidationEventHandler());

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +43,7 @@ public class TxtLoaderTest {
 
     private File getFile(String resource) throws URISyntaxException {
         URI uri = TxtLoaderTest.class.getResource(resource).toURI();
-        return new File(uri);
+        return Path.of(uri).toFile();
     }
 
     @Test

@@ -45,6 +45,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 import java.beans.IntrospectionException;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,7 +135,7 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
     private static final class CsvOutputConverter implements Converter<CsvOutputConfiguration, Config> {
 
         private final Property<CsvLayout> presentationParam = Property.of("presentation", CsvLayout.List, Parser.onEnum(CsvLayout.class), Formatter.onEnum());
-        private final Property<File> folderParam = Property.of("folder", new File(""), Parser.onFile(), Formatter.onFile());
+        private final Property<File> folderParam = Property.of("folder", Path.of("").toFile(), Parser.onFile(), Formatter.onFile());
         private final Property<String> filePrefixParam = Property.of("filePrefix", "series", Parser.onString(), Formatter.onString());
         private final Property<String> seriesParam = Property.of("series", "y,t,sa,s,i,ycal", Parser.onString(), Formatter.onString());
         private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", true);

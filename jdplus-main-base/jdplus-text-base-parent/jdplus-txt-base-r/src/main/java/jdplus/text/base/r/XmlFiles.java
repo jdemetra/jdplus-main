@@ -19,6 +19,7 @@ package jdplus.text.base.r;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +53,7 @@ public class XmlFiles {
         Optional<String> m = set.<String>map(d -> {
             XmlBean bean = PROVIDER.decodeBean(d.getDataSource());
             if (ofile.isBlank() || bean.getFile().getName().equals(ofile)) {
-                bean.setFile(new File(nfile));
+                bean.setFile(Path.of(nfile).toFile());
                 DataSource src = PROVIDER.encodeBean(bean);
                 DataSet nd = d.toBuilder()
                         .dataSource(src)
@@ -67,7 +68,7 @@ public class XmlFiles {
 
     public DataSource source(String file, String cs) {
         XmlBean bean = new XmlBean();
-        bean.setFile(new File(file));
+        bean.setFile(Path.of(file).toFile());
         if (!cs.isEmpty()) {
             Charset charset = Charset.forName(cs);
             bean.setCharset(charset);
@@ -180,7 +181,7 @@ public class XmlFiles {
         if (provider == null) {
             throw new Exception("XmlProvider is not available");
         }
-        File[] files = Arrays.stream(paths).map(p -> new File(p)).toArray(n -> new File[n]);
+        File[] files = Arrays.stream(paths).map(p -> Path.of(p).toFile()).toArray(File[]::new);
         provider.setPaths(files);
     }
 

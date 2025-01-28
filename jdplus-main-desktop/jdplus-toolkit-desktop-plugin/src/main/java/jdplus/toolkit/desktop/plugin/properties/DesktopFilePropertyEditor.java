@@ -31,6 +31,7 @@ import javax.swing.*;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
@@ -99,7 +100,7 @@ public final class DesktopFilePropertyEditor extends ForwardingPropertyEditor im
 
         @Override
         public Object getValue() {
-            return new File(component.getText());
+            return Path.of(component.getText()).toFile();
         }
 
         @Override

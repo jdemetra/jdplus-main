@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class SpreadSheetConnectionTest {
 
     @Test
     public void testWithCache() throws IOException {
-        SheetGrid grid = SheetGrid.of(new File(""), DataForTest.FACTORY, GridReader.DEFAULT);
+        SheetGrid grid = SheetGrid.of(Path.of("").toFile(), DataForTest.FACTORY, GridReader.DEFAULT);
         SimpleMapCache<String, List<TsCollection>> cache = new SimpleMapCache<>(new HashMap<>());
         try (var conn = new CachedSpreadSheetConnection(grid, cache)) {
 

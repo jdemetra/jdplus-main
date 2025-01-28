@@ -18,6 +18,7 @@ package jdplus.spreadsheet.base.r;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class SpreadSheets {
         Optional<String> m = set.<String>map(d -> {
             SpreadSheetBean bean = PROVIDER.decodeBean(d.getDataSource());
             if (ofile.isEmpty() || bean.getFile().getName().equals(ofile)) {
-                bean.setFile(new File(nfile));
+                bean.setFile(Path.of(nfile).toFile());
                 DataSource src = PROVIDER.encodeBean(bean);
                 DataSet nd = d.toBuilder()
                         .dataSource(src)
@@ -68,7 +69,7 @@ public class SpreadSheets {
 
     public DataSource source(String file, ObsFormat obsFormat, ObsGathering obsGathering) {
         SpreadSheetBean bean = new SpreadSheetBean();
-        bean.setFile(new File(file));
+        bean.setFile(Path.of(file).toFile());
         if (obsFormat != null) {
             bean.setFormat(obsFormat);
         }
@@ -182,7 +183,7 @@ public class SpreadSheets {
         if (provider == null) {
             throw new RuntimeException("SpreadSheetProvider is not available");
         }
-        File[] files = Arrays.stream(paths).map(p -> new File(p)).toArray(n -> new File[n]);
+        File[] files = Arrays.stream(paths).map(p -> Path.of(p).toFile()).toArray(File[]::new);
         provider.setPaths(files);
     }
 

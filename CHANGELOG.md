@@ -12,6 +12,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![STAT] Correct the refreshing of models with Julian Easter [#465](https://github.com/jdemetra/jdplus-main/issues/465)
 - ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
 
+### Changed
+
+- Modernize use of NIO API
+
 ## [3.3.0] - 2024-10-21
 
 ### Fixed
