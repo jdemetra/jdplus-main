@@ -27,6 +27,7 @@ import jdplus.toolkit.base.tsp.util.DataSourcePreconditions;
 import lombok.NonNull;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -56,7 +57,7 @@ public final class XmlLegacyMoniker implements HasDataMoniker {
         DataSourcePreconditions.checkProvider(providerName, moniker);
 
         LegacyFileId id = LegacyFileId.parse(moniker.getId());
-        return id != null ? Optional.of(toDataSource(new File(id.getFile()))) : Optional.empty();
+        return id != null ? Optional.of(toDataSource(Path.of(id.getFile()).toFile())) : Optional.empty();
     }
 
     @Override
@@ -68,7 +69,7 @@ public final class XmlLegacyMoniker implements HasDataMoniker {
     }
 
     private DataSet toDataSet(XmlLegacyId id) {
-        DataSource source = toDataSource(new File(id.getFile()));
+        DataSource source = toDataSource(Path.of(id.getFile()).toFile());
         if (!id.isSeries()) {
             DataSet.Builder result = DataSet.builder(source, DataSet.Kind.COLLECTION);
             param.getCollectionParam().set(result, id.getCollectionIndex());

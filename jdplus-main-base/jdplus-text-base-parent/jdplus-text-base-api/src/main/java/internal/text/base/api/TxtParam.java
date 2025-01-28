@@ -13,6 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -29,7 +30,7 @@ public interface TxtParam extends DataSource.Converter<TxtBean> {
         private final DataSource.Converter<TxtBean> converter =
                 TxtBeanHandler
                         .builder()
-                        .file(PropertyHandler.onFile("file", new File("")))
+                        .file(PropertyHandler.onFile("file", Path.of("").toFile()))
                         .format(LegacyHandler.onObsFormat("locale", "datePattern", "numberPattern", ObsFormat.builder().locale(Locale.ENGLISH).dateTimePattern("yyyy-MM-dd").build()))
                         .charset(PropertyHandler.onCharset("charset", StandardCharsets.UTF_8))
                         .delimiter(PropertyHandler.onEnum("delimiter", TxtBean.Delimiter.TAB))

@@ -100,7 +100,7 @@ public final class FileBroker implements InterchangeSpi {
 
     private File enforceExtension(File input) {
         int index = input.getPath().toLowerCase(Locale.ROOT).indexOf(".cfgx");
-        return index != -1 ? input : new File(input.getPath() + ".cfgx");
+        return index != -1 ? input : Path.of(input.getPath() + ".cfgx").toFile();
     }
 
     @NonNull

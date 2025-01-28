@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.function.Predicate;
@@ -40,7 +41,7 @@ public class SheetGridTest {
 
     @Test
     public void test() throws IOException {
-        SheetGrid grid = SheetGrid.of(new File(""), DataForTest.FACTORY, GridReader.DEFAULT);
+        SheetGrid grid = SheetGrid.of(Path.of("").toFile(), DataForTest.FACTORY, GridReader.DEFAULT);
 
         assertThat(grid.getSheetByName("s1")).map(TsCollection::getName).contains("s1");
         assertThat(grid.getSheetByName("s2")).map(TsCollection::getName).contains("s2");
@@ -51,14 +52,14 @@ public class SheetGridTest {
 
     @Test
     public void testDataTypes() {
-        SheetGrid excel = SheetGrid.of(new File(""), new MockedFactory(Date.class::isAssignableFrom), GridReader.DEFAULT);
+        SheetGrid excel = SheetGrid.of(Path.of("").toFile(), new MockedFactory(Date.class::isAssignableFrom), GridReader.DEFAULT);
         assertThat(excel.isSupportedDataType(Date.class)).isTrue();
         assertThat(excel.isSupportedDataType(Number.class)).isFalse();
         assertThat(excel.isSupportedDataType(String.class)).isFalse();
         assertThat(excel.isSupportedDataType(LocalDateTime.class)).isTrue();
         assertThat(excel.isSupportedDataType(Object.class)).isFalse();
 
-        SheetGrid html = SheetGrid.of(new File(""), new MockedFactory(Number.class::isAssignableFrom), GridReader.DEFAULT);
+        SheetGrid html = SheetGrid.of(Path.of("").toFile(), new MockedFactory(Number.class::isAssignableFrom), GridReader.DEFAULT);
         assertThat(html.isSupportedDataType(Date.class)).isFalse();
         assertThat(html.isSupportedDataType(Number.class)).isTrue();
         assertThat(html.isSupportedDataType(String.class)).isFalse();

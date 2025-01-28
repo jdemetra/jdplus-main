@@ -9,6 +9,7 @@ import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public final class MockedFileLoader implements FileLoader<MockedFileBean> {
 
@@ -50,14 +51,14 @@ public final class MockedFileLoader implements FileLoader<MockedFileBean> {
         @Override
         public @NonNull MockedFileBean getDefaultValue() {
             MockedFileBean result = new MockedFileBean();
-            result.setFile(new File("abc"));
+            result.setFile(Path.of("abc").toFile());
             return result;
         }
 
         @Override
         public @NonNull MockedFileBean get(@NonNull DataSource config) {
             MockedFileBean result = new MockedFileBean();
-            result.setFile(new File("abc"));
+            result.setFile(Path.of("abc").toFile());
             return result;
         }
 

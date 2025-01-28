@@ -10,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -28,7 +29,7 @@ public interface XmlParam extends DataSource.Converter<XmlBean> {
         private final DataSource.Converter<XmlBean> converter =
                 XmlBeanHandler
                         .builder()
-                        .file(PropertyHandler.onFile("file", new File("")))
+                        .file(PropertyHandler.onFile("file", Path.of("").toFile()))
                         .charset(PropertyHandler.onCharset("charset", StandardCharsets.UTF_8))
                         .build()
                         .asDataSourceConverter();

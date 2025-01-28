@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.tsp.fixme;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class Files2 {
 
     public File fromPath(String parent, String... path) {
-        return new File(parent, Stream.of(path).collect(Collectors.joining(File.separator)));
+        return Path.of(parent, String.join(File.separator, path)).toFile();
     }
 
     @Nullable
@@ -43,7 +44,7 @@ public class Files2 {
             return file;
         }
         for (File parent : paths) {
-            File result = new File(parent, file.getPath());
+            File result = parent.toPath().resolve(file.getPath()).toFile();
             if (result.exists()) {
                 return result;
             }
@@ -61,7 +62,7 @@ public class Files2 {
         for (File parent : paths) {
             String parentPath = parent.getAbsolutePath() + File.separator;
             if (path.startsWith(parentPath)) {
-                return new File(path.substring(parentPath.length()));
+                return Path.of(path.substring(parentPath.length())).toFile();
             }
         }
         // absolute file outside paths
@@ -93,7 +94,7 @@ public class Files2 {
      */
     @Nullable
     public File extractFile(@NonNull String path) {
-        File file = new File(path);
+        File file = Path.of(path).toFile();
         if (file.isFile()) {
             return file;
         }

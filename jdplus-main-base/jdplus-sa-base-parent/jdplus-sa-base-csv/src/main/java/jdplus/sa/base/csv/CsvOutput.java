@@ -24,7 +24,9 @@ import jdplus.toolkit.base.api.util.Paths;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +67,7 @@ public class CsvOutput implements Output<SaDocument> {
                 String c = item.replaceAll("[?*.]", "_");
                 nfile += "_" + StringFormatter.cleanup(c);
                 nfile = Paths.changeExtension(nfile, "csv");
-                write(new File(Paths.folder(folder_), nfile), summary_.getNames(), series);
+                write(Paths.folder(folder_).toPath().resolve(nfile).toFile(), summary_.getNames(), series);
             }
         }
         summary_ = null;
@@ -82,13 +84,11 @@ public class CsvOutput implements Output<SaDocument> {
     }
 
     private void write(File file, List<String> names, List<TsData> s) throws Exception {
-        try ( FileOutputStream matrix = new FileOutputStream(file)) {
-            try ( OutputStreamWriter writer = new OutputStreamWriter(matrix, StandardCharsets.ISO_8859_1)) {
-                TsCollectionCsvFormatter fmt = new TsCollectionCsvFormatter();
-                fmt.setFullName(config_.isFullName());
-                fmt.setPresentation(config_.getPresentation());
-                fmt.write(s, names, writer);
-            }
+        try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.ISO_8859_1)) {
+            TsCollectionCsvFormatter fmt = new TsCollectionCsvFormatter();
+            fmt.setFullName(config_.isFullName());
+            fmt.setPresentation(config_.getPresentation());
+            fmt.write(s, names, writer);
         }
     }
 }

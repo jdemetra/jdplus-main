@@ -25,6 +25,7 @@ import org.assertj.core.util.Files;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author PALATEJ
@@ -78,14 +79,14 @@ public class XmlInformationSetTest {
         Jaxb.Formatter
                 .of(XmlInformationSet.class)
                 .withFormatted(true)
-                .formatFile(xmlinfo, new File(tmp + "test.xml"));
+                .formatFile(xmlinfo, Path.of(tmp + "test.xml").toFile());
     }
 
     public static void testXmlDeserialization() throws IOException {
         String tmp = Files.temporaryFolderPath();
         XmlInformationSet rslt = Jaxb.Parser
                 .of(XmlInformationSet.class)
-                .parseFile(new File(tmp + "test.xml"));
+                .parseFile(Path.of(tmp + "test.xml").toFile());
 
         InformationSet info = rslt.create();
         Matrix M = info.get("m", Matrix.class);

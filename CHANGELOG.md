@@ -13,6 +13,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
 - ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
 
+### Changed
+
+- Modernize use of NIO API
+
 ## [3.3.0] - 2024-10-21
 
 ### Fixed

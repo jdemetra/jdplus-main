@@ -65,7 +65,7 @@ public final class App {
     public static void main(String[] args) {
         try {
             if (args.length == 0) {
-                File userDir = new File(System.getProperty("user.dir"));
+                File userDir = Path.of(System.getProperty("user.dir")).toFile();
                 generateDefaultConfigFile(userDir);
             } else {
                 Args config = ArgsDecoder2.decode(args);
@@ -91,7 +91,7 @@ public final class App {
 
     static void generateDefaultConfigFile(@NonNull File userDir) throws IOException {
         WsaConfig config = WsaConfig.generateDefault();
-        File configFile = new File(userDir, WsaConfig.DEFAULT_FILE_NAME);
+        File configFile = userDir.toPath().resolve(WsaConfig.DEFAULT_FILE_NAME).toFile();
         WsaConfig.write(configFile, config);
     }
 
@@ -169,7 +169,7 @@ public final class App {
     private static void loadFileProperties() {
         String basedir = System.getProperty("basedir");
         if (basedir != null) {
-            Path file = java.nio.file.Paths.get(basedir, "etc", "system.properties");
+            Path file = java.nio.file.Path.of(basedir, "etc", "system.properties");
             try ( InputStream stream = Files.newInputStream(file)) {
                 Properties properties = new Properties();
                 properties.load(stream);
@@ -195,7 +195,7 @@ public final class App {
         if (config.Output == null) {
             config.Output = Paths.concatenate(rootFolder.toAbsolutePath().toString(), "Output");
         }
-        File output = new File(config.Output);
+        File output = Path.of(config.Output).toFile();
         if (!output.exists()) {
             output.mkdirs();
         }
@@ -204,13 +204,13 @@ public final class App {
 
     private static File[] getFilePaths(WsaConfig config) {
         return config.Paths != null
-                ? Stream.of(config.Paths).map(File::new).toArray(File[]::new)
+                ? Stream.of(config.Paths).map(pathname -> Path.of(pathname).toFile()).toArray(File[]::new)
                 : new File[0];
     }
 
     private static CsvOutputConfiguration getCsvOutputConfiguration(WsaConfig config) {
         CsvOutputConfiguration result = new CsvOutputConfiguration();
-        result.setFolder(new File(config.Output));
+        result.setFolder(Path.of(config.Output).toFile());
         result.setPresentation(config.getLayout());
         result.setSeries(Arrays.asList(config.TSMatrix));
         return result;
@@ -218,7 +218,7 @@ public final class App {
 
     private static CsvMatrixOutputConfiguration getCsvMatrixOutputConfiguration(WsaConfig config) {
         CsvMatrixOutputConfiguration result = new CsvMatrixOutputConfiguration();
-        result.setFolder(new File(config.Output));
+        result.setFolder(Path.of(config.Output).toFile());
         if (config.Matrix != null) {
             result.setItems(Arrays.asList(config.Matrix));
         }

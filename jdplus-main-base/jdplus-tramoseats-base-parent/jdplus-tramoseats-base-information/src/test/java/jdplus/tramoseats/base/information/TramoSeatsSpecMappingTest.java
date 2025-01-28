@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,14 +121,14 @@ public class TramoSeatsSpecMappingTest {
         Jaxb.Formatter
                 .of(XmlInformationSet.class)
                 .withFormatted(true)
-                .formatFile(xmlinfo, new File(tmp + "tramoseats.xml"));
+                .formatFile(xmlinfo, Path.of(tmp + "tramoseats.xml").toFile());
     }
 
     public static void testXmlDeserialization() throws IOException {
         String tmp = Files.temporaryFolderPath();
         XmlInformationSet rslt = Jaxb.Parser
                 .of(XmlInformationSet.class)
-                .parseFile(new File(tmp + "tramoseats.xml"));
+                .parseFile(Path.of(tmp + "tramoseats.xml").toFile());
 
         InformationSet info = rslt.create();
         TramoSeatsSpec nspec = TramoSeatsSpecMapping.readLegacy(info, null);
@@ -223,14 +224,14 @@ public class TramoSeatsSpecMappingTest {
         Jaxb.Formatter
                 .of(XmlInformationSet.class)
                 .withFormatted(true)
-                .formatFile(xmlinfo, new File(tmp + "processing.xml"));
+                .formatFile(xmlinfo, Path.of(tmp + "processing.xml").toFile());
     }
 
     public static void testXmlDeserialization2() throws IOException {
         String tmp = Files.temporaryFolderPath();
         XmlInformationSet rslt = Jaxb.Parser
                 .of(XmlInformationSet.class)
-                .parseFile(new File(tmp + "processing.xml"));
+                .parseFile(Path.of(tmp + "processing.xml").toFile());
 
         InformationSet info = rslt.create();
         SaItems nspec = SaItemsMapping.read(info);
@@ -243,7 +244,7 @@ public class TramoSeatsSpecMappingTest {
         try {
             XmlInformationSet rslt = Jaxb.Parser
                 .of(XmlInformationSet.class)
-                .parseFile(new File(tmp + "saprocessing-1.xml"));
+                .parseFile(Path.of(tmp + "saprocessing-1.xml").toFile());
 
             InformationSet info = rslt.create();
             SaItems nspec = SaItemsMapping.read(info);

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +55,7 @@ public class XmlProviderTest {
         String legacy = "Insee@0@0";
 
         XmlBean bean = new XmlBean();
-        bean.setFile(new File("Insee.xml"));
+        bean.setFile(Path.of("Insee.xml").toFile());
 
         DataSource source = DataSource.of("xml", "20111201", "file", "Insee.xml");
 
@@ -73,7 +74,7 @@ public class XmlProviderTest {
         String uri = "demetra://tsprovider/Xml/20111201/SERIES?file=Insee.xml#collectionIndex=0&seriesIndex=0";
 
         ec.tss.tsproviders.common.xml.XmlBean bean = new ec.tss.tsproviders.common.xml.XmlBean();
-        bean.setFile(new File("Insee.xml"));
+        bean.setFile(Path.of("Insee.xml").toFile());
 
         DataSource source = DataSource.builder("Xml", "20111201")
                 .parameter("file", "Insee.xml")

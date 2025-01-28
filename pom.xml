@@ -56,7 +56,7 @@
 
         <!-- test frameworks -->
         <junit.version>5.11.4</junit.version>
-        <assertj-core.version>3.27.2</assertj-core.version>
+        <assertj-core.version>3.27.3</assertj-core.version>
 
         <!-- dependencies -->
         <jd2.version>2.2.5</jd2.version>
@@ -186,7 +186,7 @@
                 <plugin>
                     <groupId>org.gaul</groupId>
                     <artifactId>modernizer-maven-plugin</artifactId>
-                    <version>2.9.0</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>de.thetaphi</groupId>
@@ -231,7 +231,7 @@
                 <plugin>
                     <groupId>org.jreleaser</groupId>
                     <artifactId>jreleaser-maven-plugin</artifactId>
-                    <version>1.15.0</version>
+                    <version>1.16.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jreleaser</groupId>
