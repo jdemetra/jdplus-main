@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![STAT] Correct the refreshing of models with Julian Easter [#465](https://github.com/jdemetra/jdplus-main/issues/465)
 - ![STAT] Correct a bug in the estimation of an ARIMA model using multiple starting points (X13 only, under very specific conditions)
+- ![IO] Use the same name for "SAProcessing" in java and R
 - ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
 - ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
 

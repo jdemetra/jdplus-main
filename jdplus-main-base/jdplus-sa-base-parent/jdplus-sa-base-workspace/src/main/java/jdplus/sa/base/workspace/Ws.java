@@ -120,7 +120,7 @@ public class Ws {
             for (MultiProcessing mp : multiProcessing) {
                 WorkspaceItemDescriptor cur
                         = new WorkspaceItemDescriptor(
-                                new WorkspaceItemDescriptor.Key(SaHandlers.SA_MULTI, "SaProcessing-" + (j++)),
+                                new WorkspaceItemDescriptor.Key(SaHandlers.SA_MULTI, "SAProcessing-" + (j++)),
                                 new WorkspaceItemDescriptor.Attributes(mp.getName(), false, null));
                 // build the multiProcessing
                 Map<String, String> meta = new HashMap<>(mp.getMetaData());
