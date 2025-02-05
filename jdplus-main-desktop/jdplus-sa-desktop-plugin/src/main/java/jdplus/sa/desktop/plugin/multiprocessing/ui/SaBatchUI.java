@@ -317,9 +317,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         }
         Ts[] all = coll.stream().filter(s -> s.getType().encompass(TsInformationType.Data)).toArray(n -> new Ts[n]);
         if (all.length > 0 && defaultSpecification == null) {
-            NotifyDescriptor nd = new NotifyDescriptor.Message(Bundle.undefinedspec_dialog_title(), NotifyDescriptor.INFORMATION_MESSAGE);
-            DialogDisplayer.getDefault().notify(nd);
-            return;
+            editDefaultSpecification();                   
         }
         getElement().add(defaultSpecification, all);
         controller.getDocument().setDirty();
@@ -505,6 +503,8 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     private boolean pasteTs(Transferable dataobj) {
+        if (defaultSpecification == null)
+            editDefaultSpecification();
         long count = DataTransferManager.get()
                 .toTsCollectionStream(dataobj)
                 .map(col -> col

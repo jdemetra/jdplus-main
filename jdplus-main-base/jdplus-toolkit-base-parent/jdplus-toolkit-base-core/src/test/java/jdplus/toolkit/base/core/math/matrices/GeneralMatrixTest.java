@@ -32,7 +32,7 @@ public class GeneralMatrixTest {
     }
 
     public static void main(String[] arg) {
-        int m = 10, n = 15, k = 5;
+        int m = 10, n = 15, k = 10;
         FastMatrix aa = FastMatrix.make(m, k);
         aa.set((int r, int c) -> (r + 1) + 100 * (c + 1));
         FastMatrix bb = FastMatrix.make(k, n);
@@ -40,42 +40,41 @@ public class GeneralMatrixTest {
         FastMatrix cc = FastMatrix.make(m, n);
         cc.set((int r, int c) -> (r + 1) + (c + 1));
         GeneralMatrix.addAB(aa, bb, cc);
-        FastMatrix A = FastMatrix.make(m, k);
-        FastMatrix B = FastMatrix.make(k, n);
-        FastMatrix C = FastMatrix.make(m, n);
         long t0 = System.currentTimeMillis();
         for (int i = 0; i < 1000000; ++i) {
+            FastMatrix A = FastMatrix.make(m, k);
+            FastMatrix B = FastMatrix.make(k, n);
+            FastMatrix C = FastMatrix.make(m, n);
             A.set((int r, int c) -> (r + 1) + 100 * (c + 1));
             B.set((int r, int c) -> 25 * (r + 1) - 25 * (c + 1));
             C.set((int r, int c) -> (r + 1) + (c + 1));
             GeneralMatrix.addAB(A, B, C);
 //            //        std::cout << C << std::endl;
-//            C = FastMatrix.make(m, n);
-//            C.set((int r, int c) -> (r + 1) + (c + 1));
-//            B = GeneralMatrix.transpose(B);
-//            GeneralMatrix.addABt(A, B, C);
-//            B = FastMatrix.make(k, n);
-//            B.set((int r, int c) -> 25 * (r + 1) - 25 * (c + 1));
-//            C = FastMatrix.make(m, n);
-//            C.set((int r, int c) -> (r + 1) + (c + 1));
-//            A = GeneralMatrix.transpose(A);
-//            GeneralMatrix.addAtB(A, B, C);
-//            //       std::cout << C << std::endl;
-//            A = FastMatrix.make(m, k);
-//            A.set((int r, int c) -> (r + 1) + 100 * (c + 1));
-//            B = FastMatrix.make(k, n);
-//            B.set((int r, int c) -> 25 * (r + 1) - 25 * (c + 1));
-//            C = FastMatrix.make(m, n);
-//            C.set((int r, int c) -> (r + 1) + (c + 1));
-//            B = GeneralMatrix.transpose(B);
-//            A = GeneralMatrix.transpose(A);
-//            GeneralMatrix.addAtBt(A, B, C);
+            C = FastMatrix.make(m, n);
+            C.set((int r, int c) -> (r + 1) + (c + 1));
+            B = GeneralMatrix.transpose(B);
+            GeneralMatrix.addABt(A, B, C);
+            B = FastMatrix.make(k, n);
+            B.set((int r, int c) -> 25 * (r + 1) - 25 * (c + 1));
+            C = FastMatrix.make(m, n);
+            C.set((int r, int c) -> (r + 1) + (c + 1));
+            A = GeneralMatrix.transpose(A);
+            GeneralMatrix.addAtB(A, B, C);
+            //       std::cout << C << std::endl;
+            A = FastMatrix.make(m, k);
+            A.set((int r, int c) -> (r + 1) + 100 * (c + 1));
+            B = FastMatrix.make(k, n);
+            B.set((int r, int c) -> 25 * (r + 1) - 25 * (c + 1));
+            C = FastMatrix.make(m, n);
+            C.set((int r, int c) -> (r + 1) + (c + 1));
+            B = GeneralMatrix.transpose(B);
+            A = GeneralMatrix.transpose(A);
+            GeneralMatrix.addAtBt(A, B, C);
 
         }
         java.lang.Runtime.getRuntime().gc();
         long t1 = System.currentTimeMillis();
         System.out.println(t1 - t0);
-        System.out.println(C);
     }
 
 }
