@@ -365,12 +365,12 @@ public final class JSIView extends JComponent implements TimeSeriesComponent, Ha
             return;
         }
         if (seas == null) {
-            double val= mode == DecompositionMode.Multiplicative ? 1 :0;
-            seas = TsData.of(irr.getStart(), DoubleSeq.onMapping(irr.length(), i->val));
+            double val = mode == DecompositionMode.Multiplicative ? 1 : 0;
+            seas = TsData.of(irr.getStart(), DoubleSeq.onMapping(irr.length(), i -> val));
         } else if (irr == null) {
-            double val= mode == DecompositionMode.Multiplicative ? 1 :0;
-            irr = TsData.of(seas.getStart(), DoubleSeq.onMapping(seas.length(), i->val));
-         }
+            double val = mode == DecompositionMode.Multiplicative ? 1 : 0;
+            irr = TsData.of(seas.getStart(), DoubleSeq.onMapping(seas.length(), i -> val));
+        }
         displayData(seas, irr, mode);
 
     }
@@ -386,39 +386,37 @@ public final class JSIView extends JComponent implements TimeSeriesComponent, Ha
 
     private void displayData(TsData seas, TsData irr, DecompositionMode mode) {
         int freq = seas.getAnnualFrequency();
-        if (freq <=0) {
+        if (freq <= 0) {
             return;
         }
 
         TsPeriod end = seas.getEnd().previous();
         TsPeriod start = seas.getStart();
-        int np = end.year() - start.year();
+        int np = 1 + end.year() - start.year();
 
         BasicXYDataset sDataset = new BasicXYDataset();
         BasicXYDataset siDataset = new BasicXYDataset();
         BasicXYDataset tDataset = new BasicXYDataset();
-        
-        int y0=start.year(), p0=start.annualPosition();
-       
+
+        int y0 = start.year(), p0 = start.annualPosition();
+
         double xstart = -0.4;
         double xend = 0.4;
         final double xstep = 0.8 / np;
         int il = 0;
-        for (int p=0; p<freq; ++p) {
-            int d0, startyear=y0, n=np;
-            if (p>=p0){
-                d0=p-p0;
-            }else{
-                d0=p-p0+freq;
+        for (int p = 0; p < freq; ++p) {
+            int d0, startyear = y0;
+            if (p >= p0) {
+                d0 = p - p0;
+            } else {
+                d0 = p - p0 + freq;
                 startyear++;
-                --n;
             }
-            if (d0+n*freq>seas.length())
-                --n;
-            
-            DoubleSeq src=seas.getValues().extract(d0, n, freq);
-            DoubleSeq isrc=irr.getValues().extract(d0, n, freq);
-            int endyear = startyear + src.length()-1;
+            int n=1+(seas.length()-d0-1)/freq;
+
+            DoubleSeq src = seas.getValues().extract(d0, n, freq);
+            DoubleSeq isrc = irr == null ? DoubleSeq.empty() : irr.getValues().extract(d0, n, freq);
+            int endyear = startyear + src.length() - 1;
 
             String key = "p" + il;
 
@@ -438,7 +436,7 @@ public final class JSIView extends JComponent implements TimeSeriesComponent, Ha
                     sX[i] = x;
                     sX2[i] = startyear;
                     sY[i] = src.get(i);
-                    if (irr != null) {
+                    if (! isrc.isEmpty()) {
                         switch (mode) {
                             case Multiplicative:
                                 siY[i] = sY[i] * isrc.get(i);

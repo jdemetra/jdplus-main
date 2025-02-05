@@ -66,7 +66,7 @@ public class FilterUtility {
      * @return
      */
     public boolean checkRoots(final DoubleSeq c, final double rmin) {
-        int nc = c.length();
+        int nc = 1+c.lastIndexOf(x->x!=0); // if all are zero, nc=0
         switch (nc) {
             case 0 -> {
                 return true;

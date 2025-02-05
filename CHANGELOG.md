@@ -10,11 +10,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - ![STAT] Correct the refreshing of models with Julian Easter [#465](https://github.com/jdemetra/jdplus-main/issues/465)
+- ![STAT] Correct a bug in the estimation of an ARIMA model using multiple starting points (X13 only, under very specific conditions)
 - ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
+- ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
 
 ### Changed
 
 - Modernize use of NIO API
+- ![UI] Display automatically the selection box of specifications in a multi-processing window when some series are added while the default specification is not defined.
 
 ## [3.3.0] - 2024-10-21
 
