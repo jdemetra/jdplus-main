@@ -18,9 +18,10 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <linux.java.bundled.version>jdk-21.0.5+11</linux.java.bundled.version>
-        <windows.java.bundled.version>jdk-21.0.4+7</windows.java.bundled.version>
-        <osx.java.bundled.version>jdk-21.0.5+11</osx.java.bundled.version>
+        <java.bundled.version>jdk-21.0.6+7</java.bundled.version>
+        <linux.java.bundled.version>${java.bundled.version}</linux.java.bundled.version>
+        <windows.java.bundled.version>${java.bundled.version}</windows.java.bundled.version>
+        <osx.java.bundled.version>${java.bundled.version}</osx.java.bundled.version>
     </properties>
 
     <dependencyManagement>
