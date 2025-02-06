@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.sa.base.workspace.SaHandlers;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
@@ -33,8 +34,6 @@ public class MultiProcessingManager extends AbstractWorkspaceItemManager<MultiPr
 //    public static final String DOCUMENTPATH = "sa.mdoc.document";
     public static final String CONTEXTPATH = "sa.mdoc.context";
     public static final String LOCALPATH = "sa.mdoc.local";
-    public static final String REPOSITORY = "SAProcessing";
-    public static final String PREFIX = "SAProcessing";
     public static SaSpecification defSpec;
 
     public static void setDefaultSpecification(final SaSpecification spec) {
@@ -71,7 +70,7 @@ public class MultiProcessingManager extends AbstractWorkspaceItemManager<MultiPr
 
     @Override
     protected String getItemPrefix() {
-        return REPOSITORY;
+        return SaHandlers.PREFIX;
     }
 
     @Override

@@ -342,7 +342,7 @@ public class LowerTriangularMatrixTest {
     }
 
     public static void stressTest() {
-        int m = 10, k = 30, q = 1000000;
+        int m = 10, k = 3, q = 100000000;
         FastMatrix A = FastMatrix.make(m, m);
         A.set((int r, int c) -> (r + 1) + 100 * (c + 1));
         FastMatrix B = FastMatrix.make(m, k);
@@ -351,13 +351,13 @@ public class LowerTriangularMatrixTest {
         long t0 = System.currentTimeMillis();
         for (int i = 0; i < q; ++i) {
             FastMatrix Bc = B.deepClone();
-            LowerTriangularMatrix.solveLX(A, Bc);
-            Bc = B.deepClone();
+//            LowerTriangularMatrix.solveLX(A, Bc);
+//            Bc = B.deepClone();
             LowerTriangularMatrix.solveLtX(A, Bc);
-            Bc = Bt.deepClone();
-            LowerTriangularMatrix.solveXL(A, Bc);
-            Bc = Bt.deepClone();
-            LowerTriangularMatrix.solveXLt(A, Bc);
+//            Bc = Bt.deepClone();
+//            LowerTriangularMatrix.solveXL(A, Bc);
+//            Bc = Bt.deepClone();
+//            LowerTriangularMatrix.solveXLt(A, Bc);
         }
         java.lang.Runtime.getRuntime().gc();
         long t1 = System.currentTimeMillis();

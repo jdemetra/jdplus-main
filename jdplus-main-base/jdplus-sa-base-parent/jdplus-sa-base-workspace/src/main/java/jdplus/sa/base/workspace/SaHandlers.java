@@ -31,18 +31,20 @@ import nbbrd.service.ServiceProvider;
 public final class SaHandlers {
 
     public final WorkspaceFamily SA_MULTI = parse("Seasonal adjustment@multi-documents");
+    public static final String REPOSITORY = "SAProcessing";
+    public static final String PREFIX = "SAProcessing";
 
     @ServiceProvider(FamilyHandler.class)
     public static final class SaMulti implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = informationSet(SA_MULTI, SaItemsMapping.SERIALIZER_V3, "SAProcessing");
+        private final FamilyHandler delegate = informationSet(SA_MULTI, SaItemsMapping.SERIALIZER_V3, REPOSITORY);
     }
 
     @ServiceProvider(FamilyHandler.class)
     public static final class SaMultiLegacy implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = informationSet(SA_MULTI, SaItemsMapping.SERIALIZER_LEGACY, "SAProcessing");
+        private final FamilyHandler delegate = informationSet(SA_MULTI, SaItemsMapping.SERIALIZER_LEGACY, REPOSITORY);
     }
 }

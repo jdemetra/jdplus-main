@@ -10,6 +10,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import jdplus.toolkit.base.api.util.Id;
 import jdplus.toolkit.base.api.util.LinearId;
+import jdplus.tramoseats.base.workspace.TramoSeatsHandlers;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -28,7 +29,7 @@ public class TramoDocumentManager extends AbstractWorkspaceTsItemManager<TramoSp
 
     @Override
     protected String getItemPrefix() {
-        return "TramoDoc";
+        return TramoSeatsHandlers.TRAMODOC_REPO;
     }
 
     @Override
