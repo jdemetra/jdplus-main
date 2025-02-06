@@ -142,7 +142,7 @@ public class RegArimaKernelTest {
         System.out.println(rslt.estimation.getLikelihood().getLogLikelihood());
     }
 
-//    @Test
+    @Test
     public void testProd() {
         RegArimaSpec spec = RegArimaSpec.RG5;
 //        OutlierSpec outlierSpec = spec.getOutliers().toBuilder()
@@ -156,6 +156,7 @@ public class RegArimaKernelTest {
         TsPeriod start = TsPeriod.monthly(1967, 1);
         TsData s = TsData.ofInternal(start, data);
         RegSarimaModel rslt = processor.process(s, null);
+        System.out.println(rslt.getData("residuals.df", Integer.class));
         RegArimaSpecification ospec = ec.tstoolkit.modelling.arima.x13.RegArimaSpecification.RG5.clone();
 //        ospec.getOutliers().setDefaultCriticalValue(3);
         IPreprocessor oprocessor = ospec.build();
