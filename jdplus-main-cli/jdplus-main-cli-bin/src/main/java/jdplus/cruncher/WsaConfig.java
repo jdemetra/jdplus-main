@@ -97,6 +97,9 @@ public class WsaConfig {
         } else if (policy.equalsIgnoreCase("fp")
                 || policy.equalsIgnoreCase("fixedparameters")) {
             return EstimationPolicyType.FixedParameters;
+        } else if (policy.equalsIgnoreCase("farp")
+                || policy.equalsIgnoreCase("fixedarparameters")) {
+            return EstimationPolicyType.FixedAutoRegressiveParameters;
         } else if (policy.equalsIgnoreCase("p")
                 || policy.equalsIgnoreCase("parameters")) {
             return EstimationPolicyType.FreeParameters;

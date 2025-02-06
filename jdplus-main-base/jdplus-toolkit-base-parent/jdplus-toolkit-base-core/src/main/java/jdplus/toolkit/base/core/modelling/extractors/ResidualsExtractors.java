@@ -41,16 +41,20 @@ public class ResidualsExtractors {
         public Specific() {
             set(ResidualsDictionaries.TYPE, String.class, source -> source.getType().name());
             set(ResidualsDictionaries.RES, double[].class, source -> source.getRes().toArray());
-            set(ResidualsDictionaries.TSRES, TsData.class, source
+            set(ResidualsDictionaries.TSRES, TsData.class, source -> source.getTsres());
+            set(ResidualsDictionaries.N, Integer.class, source -> source.getN());
+            set(ResidualsDictionaries.DF, Integer.class, source -> source.getDf());
+            set(ResidualsDictionaries.DFC, Integer.class, source -> source.getDfc());
+            set(ResidualsDictionaries.SER, Double.class, source
                     -> {
-                TsPeriod start = source.getStart();
-                if (start == null) {
-                    return null;
-                } else {
-                    return TsData.of(start, source.getRes());
-                }
+                int df = source.getDfc();
+                return df == 0 ? Double.NaN : Math.sqrt(source.getSsq() / df);
             });
-            set(ResidualsDictionaries.SER, Double.class, source->source.getSer());
+            set(ResidualsDictionaries.SER_ML, Double.class, source
+                    -> {
+                int df = source.getN();
+                return df == 0 ? Double.NaN : Math.sqrt(source.getSsq() / df);
+            });
             addTest(ResidualsDictionaries.MEAN);
             addTest(ResidualsDictionaries.DH);
             addTest(ResidualsDictionaries.SKEW);

@@ -5,10 +5,7 @@
  */
 package jdplus.toolkit.base.core.regarima.extractors;
 
-import java.util.Arrays;
-import java.util.stream.Stream;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
-import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.information.InformationDelegate;
 import jdplus.toolkit.base.api.information.InformationExtractor;
@@ -31,17 +28,11 @@ import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
 import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
 import jdplus.toolkit.base.api.dictionaries.UtilityDictionaries;
-import jdplus.toolkit.base.api.stats.ProbabilityType;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import jdplus.toolkit.base.api.util.IntList;
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.dstats.F;
 import jdplus.toolkit.base.core.dstats.T;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.toolkit.base.core.modelling.regression.RegressionDesc;
@@ -389,17 +380,23 @@ public class RegSarimaModelExtractors {
                 return cov;
             });
 
-            set(residualsItem(ResidualsDictionaries.SER), Double.class, (RegSarimaModel source) -> {
-                LikelihoodStatistics stats = source.getEstimation().getStatistics();
-                double ssqErr = stats.getSsqErr();
-                int ndf = stats.getEffectiveObservationsCount() - stats.getEstimatedParametersCount() - source.freeArimaParametersCount();
-                return Math.sqrt(ssqErr / ndf);
-            });
-            set(residualsItem(ResidualsDictionaries.RES), double[].class, (RegSarimaModel source) -> {
-                RegSarimaModel.Details details = source.getDetails();
-                return details.getIndependentResiduals().toArray();
-            });
-            set(residualsItem(ResidualsDictionaries.TSRES), TsData.class, (RegSarimaModel source) -> source.fullResiduals());
+//            set(residualsItem(ResidualsDictionaries.SER), Double.class, (RegSarimaModel source) -> {
+//                LikelihoodStatistics stats = source.getEstimation().getStatistics();
+//                double ssqErr = stats.getSsqErr();
+//                int ndf = stats.getEffectiveObservationsCount() - stats.getEstimatedParametersCount() - source.freeArimaParametersCount();
+//                return Math.sqrt(ssqErr / ndf);
+//            });
+//            set(residualsItem(ResidualsDictionaries.SER_ML), Double.class, (RegSarimaModel source) -> {
+//                LikelihoodStatistics stats = source.getEstimation().getStatistics();
+//                double ssqErr = stats.getSsqErr();
+//                int ndf = stats.getEffectiveObservationsCount();
+//                return Math.sqrt(ssqErr / ndf);
+//            });
+//            set(residualsItem(ResidualsDictionaries.RES), double[].class, (RegSarimaModel source) -> {
+//                RegSarimaModel.Details details = source.getDetails();
+//                return details.getIndependentResiduals().toArray();
+//            });
+//            set(residualsItem(ResidualsDictionaries.TSRES), TsData.class, (RegSarimaModel source) -> source.fullResiduals());
         }
 
         @Override
