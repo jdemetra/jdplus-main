@@ -10,6 +10,7 @@ import jdplus.toolkit.base.api.util.Id;
 import jdplus.toolkit.base.api.util.LinearId;
 import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.core.x13.X13Document;
+import jdplus.x13.base.workspace.X13Handlers;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -27,7 +28,7 @@ public class X13DocumentManager extends AbstractWorkspaceTsItemManager<X13Spec, 
 
     @Override
     protected String getItemPrefix() {
-        return "X13Doc";
+        return X13Handlers.X13DOC_PREFIX;
     }
 
     @Override

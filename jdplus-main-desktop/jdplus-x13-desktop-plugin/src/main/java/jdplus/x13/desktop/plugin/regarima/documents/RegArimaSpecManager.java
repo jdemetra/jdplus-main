@@ -32,6 +32,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.x13.base.workspace.X13Handlers;
 
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -52,7 +53,7 @@ public class RegArimaSpecManager extends AbstractWorkspaceItemManager<RegArimaSp
 
     @Override
     protected String getItemPrefix() {
-        return "RegarimaSpec";
+        return X13Handlers.REGARIMASPEC_PREFIX;
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.tramoseats.base.workspace.TramoSeatsHandlers;
 
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -38,7 +39,7 @@ public class TramoSeatsSpecManager extends AbstractWorkspaceItemManager<TramoSea
 
     @Override
     protected String getItemPrefix() {
-        return "TramoSeatsSpec";
+        return TramoSeatsHandlers.TRAMOSEATSSPEC_PREFIX;
     }
 
     @Override

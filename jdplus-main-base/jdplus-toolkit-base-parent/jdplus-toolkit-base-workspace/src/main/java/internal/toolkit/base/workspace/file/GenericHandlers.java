@@ -36,13 +36,13 @@ public final class GenericHandlers {
     public static final class UtilCal implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = xmlConverter(WorkspaceFamily.UTIL_CAL, XmlCalendars::new, "Calendars");
+        private final FamilyHandler delegate = xmlConverter(WorkspaceFamily.UTIL_CAL, XmlCalendars::new, FamilyHandler.CALENDAR_REPO);
     }
 
     @ServiceProvider(FamilyHandler.class)
     public static final class UtilVar implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = xmlConverter(WorkspaceFamily.UTIL_VAR, XmlTsVariables::new, "Variables");
+        private final FamilyHandler delegate = xmlConverter(WorkspaceFamily.UTIL_VAR, XmlTsVariables::new, FamilyHandler.VARS_REPO);
     }
 }

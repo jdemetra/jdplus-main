@@ -20,6 +20,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -43,7 +44,7 @@ public class VariablesDocumentManager extends AbstractWorkspaceItemManager<TsDat
 
     @Override
     protected String getItemPrefix() {
-        return "Vars";
+        return FamilyHandler.VARS_PREFIX;
     }
 
     @Override
