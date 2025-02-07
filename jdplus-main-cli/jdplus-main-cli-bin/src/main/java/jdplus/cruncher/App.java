@@ -222,6 +222,7 @@ public final class App {
         if (config.Matrix != null) {
             result.setItems(Arrays.asList(config.Matrix));
         }
+        result.setShortColumnName(config.shortColumnHeaders);
         return result;
     }
 

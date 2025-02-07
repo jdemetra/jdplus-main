@@ -31,6 +31,7 @@ public final class CsvMatrixOutputConfiguration implements Cloneable {
     private File folder;
     private String name = NAME;
     private boolean fullName;
+    private boolean shortColumnName;
 
     public CsvMatrixOutputConfiguration() {
         fullName = true;
@@ -67,6 +68,14 @@ public final class CsvMatrixOutputConfiguration implements Cloneable {
 
     public void setFullName(boolean fullName) {
         this.fullName = fullName;
+    }
+
+    public boolean isShortColumnName() {
+        return shortColumnName;
+    }
+
+    public void setShortColumnName(boolean shortColumnName) {
+        this.shortColumnName = shortColumnName;
     }
 
     @Override

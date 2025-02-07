@@ -17,6 +17,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
 - ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
 
+### Added
+- ![IO] Add option to CsvMatrixOutput to output the full column names instead of always outputting shortened ones [#394](https://github.com/jdemetra/jdplus-main/issues/394)
+
 ### Changed
 
 - Modernize use of NIO API

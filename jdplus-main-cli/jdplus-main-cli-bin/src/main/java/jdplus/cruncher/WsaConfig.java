@@ -77,6 +77,8 @@ public class WsaConfig {
     public Integer ndecs = 6;
     @XmlAttribute(name = "fullseriesname")
     public Boolean fullSeriesName = true;
+    @XmlAttribute(name = "shortcolumnheaders")
+    public Boolean shortColumnHeaders = true;
     @XmlAttribute(name = "rsltnamelevel")
     public Integer resultNameLevel = 2;
     @XmlAttribute(name = "format")
@@ -165,25 +167,25 @@ public class WsaConfig {
         loadAll();
         List<String> mlist = new ArrayList<>();
         List<String> tlist = new ArrayList<>();
-        
+
         Map<String, Class> dic = new LinkedHashMap<>();
         // for TramoSeats
         Dictionary tsdic = TramoSeatsDictionaries.TRAMOSEATSDICTIONARY;
-        tsdic.entries().forEachOrdered(entry->dic.put(entry.fullName(), entry.getOutputClass()));
+        tsdic.entries().forEachOrdered(entry -> dic.put(entry.fullName(), entry.getOutputClass()));
 //        // for X13
         Dictionary x13dic = X13Dictionaries.X13DICTIONARY;
-        x13dic.entries().forEachOrdered(entry->dic.put(entry.fullName(), entry.getOutputClass()));
+        x13dic.entries().forEachOrdered(entry -> dic.put(entry.fullName(), entry.getOutputClass()));
         // series
         Set<Type> types = CsvInformationFormatter.formattedTypes();
         dic.entrySet().forEach(entry -> {
-            if (entry.getValue() == TsData.class){
+            if (entry.getValue() == TsData.class) {
                 tlist.add(entry.getKey());
-            }else if (types.contains(entry.getValue())){
+            } else if (types.contains(entry.getValue())) {
                 mlist.add(entry.getKey());
             }
         });
-        result.TSMatrix=tlist.toArray(result.TSMatrix);
-        result.Matrix=mlist.toArray(result.Matrix);
+        result.TSMatrix = tlist.toArray(result.TSMatrix);
+        result.Matrix = mlist.toArray(result.Matrix);
         return result;
     }
 
@@ -192,7 +194,7 @@ public class WsaConfig {
         List<SaProcessingFactory> processors = SaManager.processors();
         processors.forEach(fac -> {
             List<SaDiagnosticsFactory> diagnostics = fac.diagnosticFactories();
-            List<SaDiagnosticsFactory> ndiagnostics=new ArrayList<>();
+            List<SaDiagnosticsFactory> ndiagnostics = new ArrayList<>();
             diagnostics.forEach(dfac -> {
                 ndiagnostics.add(dfac.activate(true));
             });

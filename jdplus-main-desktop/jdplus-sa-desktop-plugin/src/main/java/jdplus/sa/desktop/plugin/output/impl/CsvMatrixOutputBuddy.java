@@ -79,7 +79,8 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
     }
 
     @Override
-    public @NonNull Config getConfig() {
+    public @NonNull
+    Config getConfig() {
         return configurator.getConfig(this);
     }
 
@@ -89,7 +90,8 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
     }
 
     @Override
-    public @NonNull Config editConfig(@NonNull Config config) throws IllegalArgumentException {
+    public @NonNull
+    Config editConfig(@NonNull Config config) throws IllegalArgumentException {
         return configurator.editConfig(config);
     }
 
@@ -136,6 +138,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
         private final Property<String> fileNameParam = Property.of("fileName", "series", Parser.onString(), Formatter.onString());
         private final Property<String> seriesParam = Property.of("items", "y,t,sa,s,i,ycal", Parser.onString(), Formatter.onString());
         private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", true);
+        private final BooleanProperty shortNameParam = BooleanProperty.of("shortName", true);
 
         @Override
         public Config doForward(CsvMatrixOutputConfiguration a) {
@@ -144,6 +147,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
             fileNameParam.set(result::parameter, a.getFileName());
             seriesParam.set(result::parameter, a.getItems().stream().collect(Collectors.joining(",")));
             fullNameParam.set(result::parameter, a.isFullName());
+            shortNameParam.set(result::parameter, a.isShortColumnName());
             return result.build();
         }
 
@@ -154,6 +158,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
             result.setFileName(fileNameParam.get(b::getParameter));
             result.setItems(splitToStream(",", nullToEmpty(seriesParam.get(b::getParameter))).map(String::trim).toList());
             result.setFullName(fullNameParam.get(b::getParameter));
+            result.setShortColumnName(shortNameParam.get(b::getParameter));
             return result;
         }
     }
@@ -195,6 +200,9 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
             builder.withBoolean().select(config, "FullName").display("Full series name")
                     .description("If true, the fully qualified name of the series will be used. "
                             + "If false, only the name of the series will be displayed.").add();
+            builder.withBoolean().select(config, "ShortColumnName").display("Short column headers")
+                    .description("If false, full variable names will be displayed. "
+                            + "If true, only short variable names will be displayed.").add();
             sheet.put(builder.build());
 
             return sheet;

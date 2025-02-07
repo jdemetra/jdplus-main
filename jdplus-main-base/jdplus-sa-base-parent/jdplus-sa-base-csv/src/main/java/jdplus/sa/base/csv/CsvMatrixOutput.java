@@ -68,7 +68,7 @@ public class CsvMatrixOutput implements Output<SaDocument> {
         String file = Paths.concatenate(folder.getAbsolutePath(), config.getFileName());
         file = Paths.changeExtension(file, "csv");
         try (Writer writer = Files.newBufferedWriter(Path.of(file), StandardCharsets.ISO_8859_1)) {
-            CsvInformationFormatter.formatResults(writer, infos, config.getItems(), true, fullName);
+            CsvInformationFormatter.formatResults(writer, infos, config.getItems(), config.isShortColumnName(), fullName);
         }
         infos = null;
     }
