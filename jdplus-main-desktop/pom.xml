@@ -55,6 +55,8 @@
                 <configuration>
                     <!-- Force lookup of annotation processors in classpath by resetting paths -->
                     <annotationProcessorPaths combine.self="override"/>
+                    <!-- Explicit request to search for annotation processors in classpath (since JDK23) -->
+                    <proc>full</proc>
                 </configuration>
             </plugin>
             <plugin>
