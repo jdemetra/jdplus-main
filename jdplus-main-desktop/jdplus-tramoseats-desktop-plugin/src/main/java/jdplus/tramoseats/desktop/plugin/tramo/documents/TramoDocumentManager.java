@@ -29,7 +29,7 @@ public class TramoDocumentManager extends AbstractWorkspaceTsItemManager<TramoSp
 
     @Override
     protected String getItemPrefix() {
-        return TramoSeatsHandlers.TRAMODOC_REPO;
+        return TramoSeatsHandlers.TRAMODOC_PREFIX;
     }
 
     @Override
