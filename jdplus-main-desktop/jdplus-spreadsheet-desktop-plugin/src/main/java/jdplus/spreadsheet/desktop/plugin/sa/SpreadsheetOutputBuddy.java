@@ -43,6 +43,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 import java.beans.IntrospectionException;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -130,7 +131,7 @@ public final class SpreadsheetOutputBuddy implements OutputFactoryBuddy, Configu
         private final BooleanProperty saveModelParam = BooleanProperty.of("saveModel", false);
         private final BooleanProperty verticalOrientationParam = BooleanProperty.of("verticalOrientation", true);
         private final Property<SpreadsheetLayout> layoutParam = Property.of("layout", SpreadsheetLayout.BySeries, Parser.onEnum(SpreadsheetLayout.class), Formatter.onEnum());
-        private final Property<File> folderParam = Property.of("folder", new File(""), Parser.onFile(), Formatter.onFile());
+        private final Property<File> folderParam = Property.of("folder", Path.of("").toFile(), Parser.onFile(), Formatter.onFile());
         private final Property<String> fileNameParam = Property.of("fileName", "series", Parser.onString(), Formatter.onString());
         private final Property<String> seriesParam = Property.of("series", "y,t,sa,s,i,ycal", Parser.onString(), Formatter.onString());
         private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", true);

@@ -44,6 +44,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
 
 /**
  *
@@ -217,13 +218,23 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
                 .filter(v -> ModellingUtility.isEaster(v)).findFirst();
         if (fe.isPresent()) {
             Variable ev = fe.orElseThrow();
-            EasterVariable evar = (EasterVariable) ev.getCore();
+            if (ev.getCore() instanceof EasterVariable evar) {
             espec = espec.toBuilder()
                     .type(EasterSpec.Type.Easter)
                     .test(RegressionTestSpec.None)
                     .duration(evar.getDuration())
                     .coefficient(ev.getCoefficient(0))
                     .build();
+            } else if (ev.getCore() instanceof JulianEasterVariable evar) {
+                espec = espec.toBuilder()
+                     .type(EasterSpec.Type.Easter)
+                    .test(RegressionTestSpec.None)
+                    .duration(evar.getDuration())
+                    .coefficient(ev.getCoefficient(0))
+                    .build();
+            } else {
+                espec = EasterSpec.none();
+            }
         } else {
             espec = EasterSpec.none();
         }

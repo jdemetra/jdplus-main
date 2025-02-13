@@ -292,10 +292,14 @@ public class HasTsCollectionSupport {
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
+            if (c.getTsSelectionModel().getSelectionMode() != 1) {
+                return false;
+            }
             return c.getTsCollection().size() == 1 || JLists.isSingleSelectionIndex(c.getTsSelectionModel());
         }
 
-        protected final @NonNull Ts getSingle(@NonNull HasTsCollection c) {
+        protected final @NonNull
+        Ts getSingle(@NonNull HasTsCollection c) {
             return c.getTsCollection().size() == 1
                     ? c.getTsCollection().get(0)
                     : c.getTsCollection().get(c.getTsSelectionModel().getMinSelectionIndex());
@@ -315,7 +319,8 @@ public class HasTsCollectionSupport {
             return !c.getTsSelectionModel().isSelectionEmpty() || !c.getTsCollection().isEmpty();
         }
 
-        protected final @NonNull Stream<Ts> getAny(@NonNull HasTsCollection c) {
+        protected final @NonNull
+        Stream<Ts> getAny(@NonNull HasTsCollection c) {
             return !c.getTsSelectionModel().isSelectionEmpty()
                     ? c.getTsSelectionStream()
                     : c.getTsCollection().stream();
@@ -386,7 +391,8 @@ public class HasTsCollectionSupport {
     @lombok.AllArgsConstructor
     private static final class OpenWithCommand extends SingleSelectionCommand {
 
-        private final @Nullable String tsAction;
+        private final @Nullable
+        String tsAction;
 
         @Override
         public void execute(@NonNull HasTsCollection c) {
@@ -405,7 +411,8 @@ public class HasTsCollectionSupport {
     @lombok.AllArgsConstructor
     private static final class SaveCommand extends AnySelectionCommand {
 
-        private final @Nullable String tsSave;
+        private final @Nullable
+        String tsSave;
 
         @Override
         public void execute(@NonNull HasTsCollection c) {
@@ -441,7 +448,8 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public @NonNull ActionAdapter toAction(@NonNull HasTsCollection c) {
+        public @NonNull
+        ActionAdapter toAction(@NonNull HasTsCollection c) {
             final ActionAdapter result = super.toAction(c);
             if (c instanceof Component) {
                 result.withWeakPropertyChangeListener((Component) c, HasTsCollection.TS_UPDATE_MODE_PROPERTY);
@@ -507,12 +515,17 @@ public class HasTsCollectionSupport {
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
+            if (c.getTsSelectionModel().getSelectionMode() == 0) {
+                return false;
+            }
             return JLists.getSelectionIndexSize(c.getTsSelectionModel()) != c.getTsCollection().size();
         }
 
         @Override
         public void execute(HasTsCollection c) {
-            c.getTsSelectionModel().setSelectionInterval(0, c.getTsCollection().size());
+            if (c.getTsSelectionModel().getSelectionMode() != 0) {
+                c.getTsSelectionModel().setSelectionInterval(0, c.getTsCollection().size());
+            }
         }
     }
 

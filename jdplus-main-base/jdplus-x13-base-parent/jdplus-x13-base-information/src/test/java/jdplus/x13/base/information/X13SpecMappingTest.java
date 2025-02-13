@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 
 /**
@@ -135,7 +136,7 @@ public class X13SpecMappingTest {
         try {
             XmlInformationSet rslt = Jaxb.Parser
                     .of(XmlInformationSet.class)
-                    .parseFile(new File(tmp + "saprocessing-2.xml"));
+                    .parseFile(Path.of(tmp + "saprocessing-2.xml").toFile());
 
             InformationSet info = rslt.create();
             SaItems nspec = SaItemsMapping.read(info);

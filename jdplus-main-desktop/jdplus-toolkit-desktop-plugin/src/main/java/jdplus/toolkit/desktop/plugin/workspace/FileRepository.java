@@ -31,6 +31,7 @@ import ec.util.desktop.DesktopManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -85,7 +86,7 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
         if (source.getVersion().equals(VERSION)) {
             String file = source.getParameter(FILENAME);
             if (file != null) {
-                return new File(file);
+                return Path.of(file).toFile();
             }
         }
         return null;
@@ -264,7 +265,7 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
 
     private static File getDefaultWorkingDirectory(Desktop desktop, UnaryOperator<String> properties) {
         File documents = getDocumentsDirectory(desktop).orElseGet(() -> getUserHome(properties));
-        return new File(documents, "Demetra+");
+        return documents.toPath().resolve("Demetra+").toFile();
     }
 
     private static Optional<File> getDocumentsDirectory(Desktop desktop) {
@@ -279,6 +280,6 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
     }
 
     private static File getUserHome(UnaryOperator<String> properties) {
-        return new File(properties.apply(SystemProperties.USER_HOME));
+        return Path.of(properties.apply(SystemProperties.USER_HOME)).toFile();
     }
 }

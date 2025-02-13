@@ -7,6 +7,27 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.4.0] - 2025-02-13
+
+### Fixed
+
+- ![STAT] Correct the refreshing of models with Julian Easter [#465](https://github.com/jdemetra/jdplus-main/issues/465)
+- ![STAT] Correct a bug in the estimation of an ARIMA model using multiple starting points (X13 only, under very specific conditions)
+- ![STAT] Add a missing revision policy in the cruncher [#495](https://github.com/jdemetra/jdplus-main/issues/495)
+- ![IO] Use the same name for "SAProcessing" in java and R
+- ![IO] Add missing information in the exports of the residuals of REGARIMA models
+- ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
+- ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
+
+### Added
+
+- ![IO] Add option to CsvMatrixOutput to output the full column names instead of always outputting shortened ones [#394](https://github.com/jdemetra/jdplus-main/issues/394)
+
+### Changed
+
+- Modernize use of NIO API
+- ![UI] Display automatically the selection box of specifications in a multi-processing window when some series are added while the default specification is not defined.
+
 ## [3.3.0] - 2024-10-21
 
 ### Fixed
@@ -190,7 +211,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.3.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/jdemetra/jd3-main/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/jdemetra/jd3-main/compare/v3.2.4...v3.3.0
 [3.2.4]: https://github.com/jdemetra/jd3-main/compare/v3.2.3...v3.2.4
 [3.2.3]: https://github.com/jdemetra/jd3-main/compare/v3.2.2...v3.2.3

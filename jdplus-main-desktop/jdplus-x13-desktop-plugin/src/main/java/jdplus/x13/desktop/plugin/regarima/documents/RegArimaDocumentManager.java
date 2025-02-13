@@ -10,6 +10,7 @@ import jdplus.x13.base.api.regarima.RegArimaSpec;
 import jdplus.toolkit.base.api.util.Id;
 import jdplus.toolkit.base.api.util.LinearId;
 import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
+import jdplus.x13.base.workspace.X13Handlers;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -27,7 +28,7 @@ public class RegArimaDocumentManager extends AbstractWorkspaceTsItemManager<RegA
 
     @Override
     protected String getItemPrefix() {
-        return "RegArimaDoc";
+        return X13Handlers.REGARIMADOC_PREFIX;
     }
 
     @Override

@@ -19,6 +19,8 @@ import internal.toolkit.base.workspace.file.xml.util.XmlCalendars;
 import internal.toolkit.base.workspace.file.xml.util.XmlTsVariables;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarManager;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import nbbrd.io.xml.Xml;
@@ -49,22 +51,22 @@ public class Utility {
             });
 
     public CalendarManager readCalendars(String sfile) throws IOException {
-        File file = new File(sfile);
+        File file = Path.of(sfile).toFile();
         return CAL_R.parseFile(file);
     }
 
     public TsDataSuppliers readData(String sfile) throws IOException {
-        File file = new File(sfile);
+        File file = Path.of(sfile).toFile();
         return VARS_R.parseFile(file);
     }
 
     public void writeCalendars(CalendarManager cal, String sfile) throws IOException {
-        File file = new File(sfile);
+        File file = Path.of(sfile).toFile();
         CAL_W.formatFile(cal, file);
     }
 
     public void writeData(TsDataSuppliers data, String sfile) throws IOException {
-        File file = new File(sfile);
+        File file = Path.of(sfile).toFile();
         VARS_W.formatFile(data, file);
     }
 

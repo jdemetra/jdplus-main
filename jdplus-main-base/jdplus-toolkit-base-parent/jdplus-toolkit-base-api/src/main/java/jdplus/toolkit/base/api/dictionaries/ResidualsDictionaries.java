@@ -1,6 +1,17 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Copyright 2025 JDemetra+.
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ *      https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.dictionaries;
 
@@ -15,7 +26,7 @@ import jdplus.toolkit.base.api.dictionaries.AtomicDictionary.Item;
 @lombok.experimental.UtilityClass
 public class ResidualsDictionaries {
 
-    public final String RES = "res", TSRES = "tsres", SER = "ser", TYPE = "type";
+    public final String RES = "res", TSRES = "tsres", SER = "ser", SER_ML="ser_ml", TYPE = "type", N="n", DF="df", DFC="dfc";
     
     public final String MEAN = "mean", SKEW = "skewness", KURT = "kurtosis", DH = "doornikhansen", LB = "lb", LB2 = "lb2",
             SEASLB = "seaslb", BP = "bp", BP2 = "bp2", SEASBP = "seasbp", NRUNS= "nruns", LRUNS = "lruns",
@@ -25,7 +36,11 @@ public class ResidualsDictionaries {
             .name("residuals")
             .item(Item.builder().name(RES).description("residuals").outputClass(double[].class).build())
             .item(Item.builder().name(TSRES).description("timeseries residuals").outputClass(TsData.class).build())
-            .item(Item.builder().name(SER).description("standard error of the residuals").outputClass(Double.class).build())
+            .item(Item.builder().name(N).description("number of obs").outputClass(Integer.class).build())
+            .item(Item.builder().name(DF).description("degrees of freedom (number of independent residuals)").outputClass(Integer.class).build())
+            .item(Item.builder().name(DFC).description("degrees of freedom corrected by the number of hyper-parameters").outputClass(Integer.class).build())
+            .item(Item.builder().name(SER).description("standard error of the residuals, using degrres of freedom corrected by the number of hyper-parameters").outputClass(Double.class).build())
+            .item(Item.builder().name(SER_ML).description("standard error of the residuals").outputClass(Double.class).build())
             .item(Item.builder().name(TYPE).description("outputClass of residuals").outputClass(String.class).build())
             .build();
     

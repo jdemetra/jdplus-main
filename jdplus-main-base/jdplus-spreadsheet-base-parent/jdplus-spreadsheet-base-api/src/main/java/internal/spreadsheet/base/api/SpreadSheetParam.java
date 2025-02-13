@@ -27,6 +27,7 @@ import lombok.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -47,7 +48,7 @@ public interface SpreadSheetParam extends DataSource.Converter<SpreadSheetBean> 
         private final DataSource.Converter<SpreadSheetBean> converter =
                 SpreadSheetBeanHandler
                         .builder()
-                        .file(PropertyHandler.onFile("file", new File("")))
+                        .file(PropertyHandler.onFile("file", Path.of("").toFile()))
                         .format(LegacyHandler.onObsFormat("locale", "datePattern", "numberPattern", ObsFormat.getSystemDefault()))
                         .gathering(LegacyHandler.onObsGathering("frequency", "aggregationType", "cleanMissing", ObsGathering.DEFAULT))
                         .build()

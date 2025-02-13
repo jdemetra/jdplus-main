@@ -26,6 +26,7 @@ import nbbrd.io.text.Parser;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +58,7 @@ public class SpreadSheetParamTest {
 
     static SpreadSheetBean getBeanSample() {
         SpreadSheetBean result = new SpreadSheetBean();
-        result.setFile(new File("1234"));
+        result.setFile(Path.of("1234").toFile());
         result.setFormat(ObsFormat.builder().locale(Parser.onLocale().parse("fr_BE")).dateTimePattern("yyyy").numberPattern("#").build());
         result.setGathering(ObsGathering.builder().unit(TsUnit.YEAR).aggregationType(AggregationType.Average).includeMissingValues(true).build());
         return result;

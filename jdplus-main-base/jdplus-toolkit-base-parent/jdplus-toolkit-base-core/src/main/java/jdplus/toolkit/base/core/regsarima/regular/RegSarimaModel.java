@@ -235,11 +235,15 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                 .period(period)
                 .hyperParametersCount(free)
                 .build();
-
+        TsPeriod start=description.getEstimationDomain().getEndPeriod().plus(-fullRes.length());
         Residuals residuals = Residuals.builder()
-                .type(ResidualsType.FullResiduals)
-                .res(fullRes)
-                .start(description.getEstimationDomain().getEndPeriod().plus(-fullRes.length()))
+                .type(ResidualsType.QR_Transformed)
+                .res(ll.e())
+                .ssq(ll.ssq())
+                .n(ll.dim())
+                .df(ll.degreesOfFreedom())
+                .dfc(df)
+                .tsres(TsData.of(start, fullRes))
                 .test(ResidualsDictionaries.MEAN, niid.meanTest())
                 .test(ResidualsDictionaries.SKEW, niid.skewness())
                 .test(ResidualsDictionaries.KURT, niid.kurtosis())
@@ -262,7 +266,6 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                 .estimation(est)
                 .residuals(residuals)
                 .details(Details.builder()
-                        .independentResiduals(ll.e())
                         .regressionItems(regressionDesc)
                         .derivedTradingDay(tdderived)
                         .FTestonTradingDays(tdf)
@@ -279,7 +282,6 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
     @lombok.Builder
     public static class Details {
 
-        DoubleSeq independentResiduals;
         List<RegressionDesc> regressionItems;
 
         RegressionDesc derivedTradingDay;
@@ -322,9 +324,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
     }
 
     public TsData fullResiduals() {
-        DoubleSeq res = residuals.getRes();
-        TsPeriod start = residuals.getStart();
-        return TsData.of(start, res);
+        return residuals.getTsres();
     }
 
     public int freeArimaParametersCount() {

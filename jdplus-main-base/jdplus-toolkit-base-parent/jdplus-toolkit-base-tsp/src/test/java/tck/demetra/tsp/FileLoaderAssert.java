@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -452,7 +453,7 @@ public class FileLoaderAssert extends AbstractAssert<FileLoaderAssert, FileLoade
 
     public static File urlAsFile(URL url) {
         try {
-            return new File(url.toURI());
+            return Path.of(url.toURI()).toFile();
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
@@ -497,7 +498,7 @@ public class FileLoaderAssert extends AbstractAssert<FileLoaderAssert, FileLoade
 
     private static <P extends FileLoader> void checkPath(SoftAssertions s, Supplier<P> factory, Sampler<P> sampler) {
         try (P p = factory.get()) {
-            File[] files = new File[]{new File("hello"), new File("world")};
+            File[] files = new File[]{Path.of("hello").toFile(), Path.of("world").toFile()};
             p.setPaths(files);
             s.assertThat(p.getPaths()).containsExactly(files);
             p.setPaths(null);

@@ -43,6 +43,15 @@ public class X13Handlers {
     public final WorkspaceFamily MOD_DOC_REGARIMA = parse("Modelling@documents@regarima");
     public final WorkspaceFamily MOD_SPEC_REGARIMA = parse("Modelling@specifications@regarima");
 
+    public static final String REGARIMADOC_PREFIX="RegArimaDoc";
+    public static final String REGARIMADOC_REPO="RegArimaDoc";
+    public static final String X13DOC_PREFIX="X13Doc";
+    public static final String X13DOC_REPO="X13Doc";
+    public static final String REGARIMASPEC_PREFIX="RegArimaSpec";
+    public static final String REGARIMASPEC_REPO="RegArimaSpec";
+    public static final String X13SPEC_PREFIX="X13Spec";
+    public static final String X13SPEC_REPO="X13Spec";
+
     @ServiceProvider(FamilyHandler.class)
     public static final class SaDocX13 implements FamilyHandler {
 
@@ -66,7 +75,7 @@ public class X13Handlers {
             public boolean match(DemetraVersion version) {
                 return version == DemetraVersion.JD3;
             }
-        }, "X13Doc");
+        }, X13DOC_REPO);
 
     }
 
@@ -92,7 +101,7 @@ public class X13Handlers {
             public boolean match(DemetraVersion version) {
                 return version == DemetraVersion.JD3;
             }
-        }, "X13Doc");
+        }, X13DOC_REPO);
 
     }
 
@@ -100,14 +109,14 @@ public class X13Handlers {
     public static final class SaSpecX13 implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = informationSet(SA_SPEC_X13, X13SpecMapping.SERIALIZER_V3, "X13Spec");
+        private final FamilyHandler delegate = informationSet(SA_SPEC_X13, X13SpecMapping.SERIALIZER_V3, X13SPEC_REPO);
     }
 
     @ServiceProvider(FamilyHandler.class)
     public static final class SaSpecX13Legacy implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = informationSet(SA_SPEC_X13, X13SpecMapping.SERIALIZER_LEGACY, "X13Spec");
+        private final FamilyHandler delegate = informationSet(SA_SPEC_X13, X13SpecMapping.SERIALIZER_LEGACY, X13SPEC_REPO);
     }
 
     @ServiceProvider(FamilyHandler.class)
@@ -133,7 +142,7 @@ public class X13Handlers {
             public boolean match(DemetraVersion version) {
                 return version == DemetraVersion.JD3;
             }
-        }, "RegArimaDoc");
+        }, REGARIMADOC_REPO);
 
     }
 
@@ -160,7 +169,7 @@ public class X13Handlers {
             public boolean match(DemetraVersion version) {
                 return version == DemetraVersion.JD3;
             }
-        }, "RegArimaDoc");
+        }, REGARIMADOC_REPO);
 
     }
 
@@ -169,12 +178,12 @@ public class X13Handlers {
     public static final class ModSpecRegarima implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = informationSet(MOD_SPEC_REGARIMA, RegArimaSpecMapping.SERIALIZER_V3, "RegArimaSpec");
+        private final FamilyHandler delegate = informationSet(MOD_SPEC_REGARIMA, RegArimaSpecMapping.SERIALIZER_V3, REGARIMASPEC_REPO);
     }
 
     public static final class ModSpecRegarimaLegacy implements FamilyHandler {
 
         @lombok.experimental.Delegate
-        private final FamilyHandler delegate = informationSet(MOD_SPEC_REGARIMA, RegArimaSpecMapping.SERIALIZER_LEGACY, "RegArimaSpec");
+        private final FamilyHandler delegate = informationSet(MOD_SPEC_REGARIMA, RegArimaSpecMapping.SERIALIZER_LEGACY, REGARIMASPEC_REPO);
     }
 }

@@ -69,16 +69,38 @@ public class Combinatorics {
             throw new MathException(MathException.OVERFLOW);
         }
     }
-    
+
     public double logFactorial(long x) {
         if (x < d_fac.length) {
             return Math.log(d_fac[(int) x]);
         } else {
-            double s=LFAC_MAX;
-            for (long l=d_fac.length; l<=x; ++l)
-                s+=Math.log(l);
+            double s = LFAC_MAX;
+            for (long l = d_fac.length; l <= x; ++l) {
+                s += Math.log(l);
+            }
             return s;
         }
+    }
+
+    /**
+     * n!/(k!(n-k)!)
+     *
+     * @param n
+     * @param k
+     * @return
+     */
+    public double logChoose(long n, long k) {
+        if (n == k)
+            return 0;
+        if (k > n - k) {
+            return logChoose(n, n - k);
+        }
+        long m0 = n - k + 1;
+        double s = Math.log(m0);
+        for (long d = 2, m = m0 + 1; d <= k; ++d, ++m) {
+            s += Math.log(m) - Math.log(d);
+        }
+        return s;
     }
 
     private final long[] l_fac = new long[]{1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L, 479001600L,
@@ -234,7 +256,7 @@ public class Combinatorics {
         4.26906800900470527493925188890e304,
         7.25741561530799896739672821113e306
     };
-    
-    private final double LFAC_MAX=Math.log(7.25741561530799896739672821113e306);
+
+    private final double LFAC_MAX = Math.log(7.25741561530799896739672821113e306);
 
 }

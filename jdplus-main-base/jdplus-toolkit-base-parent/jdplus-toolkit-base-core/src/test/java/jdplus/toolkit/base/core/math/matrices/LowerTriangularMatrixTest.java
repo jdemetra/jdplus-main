@@ -231,13 +231,13 @@ public class LowerTriangularMatrixTest {
         for (int i = 0; i < m; i += 3) {
             M.row(i).set(0);
         }
-        FastMatrix X=M.deepClone();
+        FastMatrix X = M.deepClone();
         LowerTriangularMatrix.solveLtX(L, X, 1e-9);
-        
+
         FastMatrix M2 = GeneralMatrix.AtB(L, X);
         FastMatrix del = M.minus(M2);
         assertTrue(MatrixNorms.absNorm(del) < 1e-9);
-   }
+    }
 
     public static void testMul() {
         int K = 10000000;
@@ -341,8 +341,32 @@ public class LowerTriangularMatrixTest {
         System.out.println(t1 - t0);
     }
 
+    public static void stressTest() {
+        int m = 10, k = 3, q = 100000000;
+        FastMatrix A = FastMatrix.make(m, m);
+        A.set((int r, int c) -> (r + 1) + 100 * (c + 1));
+        FastMatrix B = FastMatrix.make(m, k);
+        B.set((int r, int c) -> 25 * (r + 1) - 25 * (c + 1));
+        FastMatrix Bt = B.transpose();
+        long t0 = System.currentTimeMillis();
+        for (int i = 0; i < q; ++i) {
+            FastMatrix Bc = B.deepClone();
+//            LowerTriangularMatrix.solveLX(A, Bc);
+//            Bc = B.deepClone();
+            LowerTriangularMatrix.solveLtX(A, Bc);
+//            Bc = Bt.deepClone();
+//            LowerTriangularMatrix.solveXL(A, Bc);
+//            Bc = Bt.deepClone();
+//            LowerTriangularMatrix.solveXLt(A, Bc);
+        }
+        java.lang.Runtime.getRuntime().gc();
+        long t1 = System.currentTimeMillis();
+        System.out.println(t1 - t0);
+    }
+
     public static void main(String[] arg) {
-        testMul();
-        testSolve();
+//        testMul();
+//        testSolve();
+        stressTest();
     }
 }

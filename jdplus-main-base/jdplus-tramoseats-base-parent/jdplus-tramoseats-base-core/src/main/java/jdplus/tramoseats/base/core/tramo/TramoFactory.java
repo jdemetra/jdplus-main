@@ -44,6 +44,7 @@ import jdplus.tramoseats.base.api.tramo.MeanSpec;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
 
 /**
  *
@@ -254,12 +255,22 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
                 .filter(v -> ModellingUtility.isEaster(v)).findFirst();
         if (fe.isPresent()) {
             Variable ev = fe.orElseThrow();
-            EasterVariable evar = (EasterVariable) ev.getCore();
-            espec = espec.toBuilder()
-                    .test(false)
-                    .duration(evar.getDuration())
-                    .coefficient(ev.getCoefficient(0))
-                    .build();
+            if (ev.getCore() instanceof EasterVariable evar) {
+                espec = espec.toBuilder()
+                        .test(false)
+                        .duration(evar.getDuration())
+                        .coefficient(ev.getCoefficient(0))
+                        .build();
+            } else if (ev.getCore() instanceof JulianEasterVariable evar) {
+                espec = espec.toBuilder()
+                        .test(false)
+                        .duration(evar.getDuration())
+                        .coefficient(ev.getCoefficient(0))
+                        .julian(true)
+                        .build();
+            } else {
+                espec = EasterSpec.none();
+            }
         } else {
             espec = EasterSpec.none();
         }
@@ -339,7 +350,7 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
         RegressionSpec.Builder rbuilder = reg.toBuilder();
         MeanSpec mean = reg.getMean();
         if (mean.hasFixedCoefficient()) {
-            if (! dreg.getMean().hasFixedCoefficient()){
+            if (!dreg.getMean().hasFixedCoefficient()) {
                 mean = MeanSpec.mean(Parameter.initial(mean.getCoefficient().getValue()));
             }
         }

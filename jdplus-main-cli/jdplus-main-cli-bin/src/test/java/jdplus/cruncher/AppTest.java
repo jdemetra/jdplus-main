@@ -43,7 +43,7 @@ public class AppTest {
 
         App.generateDefaultConfigFile(userDir);
 
-        assertThat(new File(userDir, WsaConfig.DEFAULT_FILE_NAME))
+        assertThat(userDir.toPath().resolve(WsaConfig.DEFAULT_FILE_NAME).toFile())
                 .hasContent(writeConfigToString(WsaConfig.generateDefault()));
     }
 

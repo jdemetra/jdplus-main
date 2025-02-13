@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,21 +57,21 @@ public class LegacyFileIdTest {
     public void testFromFile() {
         LegacyFileId sourceId = LegacyFileId.of(FILE);
         Assertions.assertNotNull(sourceId);
-        Assertions.assertEquals(FILE, new File(sourceId.getFile()));
+        Assertions.assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
     }
 
     @Test
     public void testParseString() {
         LegacyFileId sourceId = LegacyFileId.parse(FILE.getPath());
         Assertions.assertNotNull(sourceId);
-        Assertions.assertEquals(FILE, new File(sourceId.getFile()));
+        Assertions.assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
     }
 
     @Test
     public void testParseCharSequence() {
         LegacyFileId sourceId = LegacyFileId.parse((CharSequence) FILE.getPath());
         Assertions.assertNotNull(sourceId);
-        Assertions.assertEquals(FILE, new File(sourceId.getFile()));
+        Assertions.assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
     }
 
     @Test

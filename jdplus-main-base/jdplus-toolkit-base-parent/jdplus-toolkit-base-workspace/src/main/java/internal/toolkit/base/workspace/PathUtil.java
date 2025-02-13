@@ -40,7 +40,7 @@ public class PathUtil {
     @NonNull
     public Path get(URL url) {
         try {
-            return Paths.get(url.toURI());
+            return Path.of(url.toURI());
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }

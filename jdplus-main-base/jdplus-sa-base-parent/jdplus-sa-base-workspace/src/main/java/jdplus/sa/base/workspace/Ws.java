@@ -32,6 +32,7 @@ import jdplus.toolkit.base.workspace.file.FileWorkspace;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
 
 /**
  *
@@ -66,7 +68,7 @@ public class Ws {
     }
 
     public static Ws open(String fileName) throws IOException {
-        File file = new File(fileName);
+        File file = Path.of(fileName).toFile();
         FileWorkspace fws = FileWorkspace.open(file.toPath(), DemetraVersion.JD3);
         ModellingContext context = WorkspaceUtility.context(fws, false);
         Ws ws = new Ws(fileName, context);
@@ -96,7 +98,7 @@ public class Ws {
         if (v != null && v.equalsIgnoreCase("jd2")) {
             version = DemetraVersion.JD2;
         }
-        File file = new File(sfile);
+        File file = Path.of(sfile).toFile();
 
         boolean exist = file.exists();
         if (exist && failIfExists) {
@@ -108,18 +110,20 @@ public class Ws {
             // store variables
             String[] vars = context.getTsVariableManagers().getNames();
             for (int i = 0; i < vars.length; ++i) {
-                WorkspaceItemDescriptor cur
+                  StringBuilder name=new StringBuilder().append(FamilyHandler.VARS_PREFIX).append('-').append(i+1);
+              WorkspaceItemDescriptor cur
                         = new WorkspaceItemDescriptor(
-                                new WorkspaceItemDescriptor.Key(WorkspaceFamily.UTIL_VAR, "Vars-" + (i + 1)),
+                                new WorkspaceItemDescriptor.Key(WorkspaceFamily.UTIL_VAR, name.toString()),
                                 new WorkspaceItemDescriptor.Attributes(vars[i], false, null));
                 storage.store(cur, context.getTsVariables(vars[i]));
             }
             // store multi-processing
             int j = 1;
             for (MultiProcessing mp : multiProcessing) {
+                StringBuilder name=new StringBuilder().append(SaHandlers.PREFIX).append('-').append(j++);
                 WorkspaceItemDescriptor cur
                         = new WorkspaceItemDescriptor(
-                                new WorkspaceItemDescriptor.Key(SaHandlers.SA_MULTI, "SaProcessing-" + (j++)),
+                                new WorkspaceItemDescriptor.Key(SaHandlers.SA_MULTI, name.toString()),
                                 new WorkspaceItemDescriptor.Attributes(mp.getName(), false, null));
                 // build the multiProcessing
                 Map<String, String> meta = new HashMap<>(mp.getMetaData());
@@ -149,7 +153,7 @@ public class Ws {
 //    
     private static final WorkspaceItemDescriptor CAL_ID
             = new WorkspaceItemDescriptor(
-                    new WorkspaceItemDescriptor.Key(WorkspaceFamily.UTIL_CAL, "Calendars"),
+                    new WorkspaceItemDescriptor.Key(WorkspaceFamily.UTIL_CAL, FamilyHandler.CALENDAR_REPO),
                     new WorkspaceItemDescriptor.Attributes("Calendars", false, null));
 
     private static void storeCalendar(FileWorkspace storage, CalendarManager value) throws IOException {

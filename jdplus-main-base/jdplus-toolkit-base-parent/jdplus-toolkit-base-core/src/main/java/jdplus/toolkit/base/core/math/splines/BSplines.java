@@ -30,8 +30,6 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 @lombok.experimental.UtilityClass
 public class BSplines {
 
-    private static final double EPS = 1e-9;
-
     public BSpline augmented(int order, double[] breaks) {
         return BSpline.of(order, breaks);
     }
@@ -45,9 +43,9 @@ public class BSplines {
      * periodic b-spline
      *
      * @param spline The periodic b-spline
-     * @param pos considered positions. In the case of period splines (period=P,
-     * it should be in [0, P[. Otherwise, it should be between the first and
-     * last konts (included). Not checked
+     * @param pos considered positions. In the case of periodic splines
+     * (period=P), it should be in [0, P[. Otherwise, it should be between the
+     * first and last knots (included). Not checked
      * @return
      */
     public FastMatrix splines(BSpline spline, DoubleSeq pos) {
@@ -58,11 +56,12 @@ public class BSplines {
         DataBlockIterator rows = M.rowsIterator();
         while (rows.hasNext()) {
             int left = spline.eval(cursor.getAndNext(), B);
+            if (left < 0) {
+                left += dim;
+            }
             DataBlock row = rows.next();
-            if (left >= 0) {
-                for (int i = 0; i < B.length; ++i) {
-                    row.set((i + left) % dim, B[i]);
-                }
+            for (int i = 0; i < B.length; ++i) {
+                row.set((i + left) % dim, B[i]);
             }
         }
         return M;
@@ -75,17 +74,22 @@ public class BSplines {
          */
         private final int k;
         /**
-         * Number of internal polynomials
+         * Number of internal polynomials = number of breaks-1 in the case of
+         * ordinary splines or = number of breaks in the case of periodic
+         * splines
          */
-        private final int l;
+        private final int n;
+        /**
+         * Number of knots added to the beginning of the breaks
+         */
         private final double[] knots;
         private final double period;
 
         private final double[] deltar, deltal;
 
-        private BSpline(int k, int l, double[] knots, double period) {
+        private BSpline(int k, int n, double[] knots, double period) {
             this.k = k;
-            this.l = l;
+            this.n = n;
             this.knots = knots;
             this.deltal = new double[k];
             this.deltar = new double[k];
@@ -105,15 +109,22 @@ public class BSplines {
         }
 
         public DoubleSeq knots() {
-            return DoubleSeq.of(knots);
+            return DoubleSeq.of(knots, k-1, n);
         }
 
         public int dimension() {
-            return period == 0 ? l + k - 1 : l + 1;
+            return n;
         }
 
         public int eval(double x, double[] B) {
-            int end = find(x);
+            if (x < knots[k - 1]) {
+                if (!isPeriodic()) {
+                    return -1;
+                } else {
+                    x += period;
+                }
+            }
+            int end = isPeriodic() ? pfindInterval(x) : findInterval(x);
             if (end < k - 1) {
                 return -1;
             }
@@ -122,8 +133,7 @@ public class BSplines {
             return end - k + 1; // first non null index
         }
 
-        void pppack_bsplvb(final double x,
-                int left, double[] biatx) {
+        void pppack_bsplvb(final double x, int left, double[] biatx) {
             double saved;
             biatx[0] = 1.0;
 
@@ -143,30 +153,33 @@ public class BSplines {
         }
 
         /**
-         * Position of x in the knots.
-         * Its position in the breaks is find(x)-k+1 (start ?)
+         * Position of x in the knots (extended breaks). Find knot interval such
+         * that knots_i <= x < knots_{i + 1} Its position in the breaks is
+         * find(x)-(k-1)
+         *
+         *
          * @param x
-         * @return 
+         * @return
          */
-        private int find(final double x) {
-            if (x < knots[0] - EPS) {
-                return -1;
-            }
-            int imax = knots.length - 1;
-            if (Math.abs(x - knots[imax]) < EPS) {
-                return l + k - 2;
-            }
-            if (x > knots[imax--]) {
-                return -knots.length;
-            }
+        private int pfindInterval(double x) {
+            int imax = k + n - 1;
             for (int i = k - 1; i < imax; i++) {
                 double ti = knots[i], tip1 = knots[i + 1];
-
-                if (tip1 < ti) {
-                    throw new DemetraException("Invalid knots in B-Spline");
+                if (ti <= x && x < tip1) {
+                    return i;
                 }
+            }
+            return imax;
+        }
 
-                if (ti - EPS <= x && x < tip1 + EPS) {
+        private int findInterval(double x) {
+            int imax = k + n - 1;
+            for (int i = k - 1; i < imax; i++) {
+                double ti = knots[i], tip1 = knots[i + 1];
+                if (ti <= x && x < tip1) {
+                    return i;
+                }
+                if (ti < x && x == tip1 && tip1 == knots[k + n - 2]) {
                     return i;
                 }
             }
@@ -175,12 +188,13 @@ public class BSplines {
 
         /* bspline_find_interval() */
         static BSpline of(int order, double[] breaks) {
+            checkBreaks(breaks, 0);
 
             // Fill with k-1 * break[0] at the beginning
             // and k-i * break[l] at the end
             int k = order;
             int km1 = k - 1;
-            int l = breaks.length - 1;
+            int l = breaks.length;
             int n = breaks.length + km1;
             double[] knots = new double[n + km1];
             for (int i = 0; i < km1; ++i) {
@@ -190,43 +204,48 @@ public class BSplines {
                 knots[j] = breaks[i];
             }
             for (int i = n; i < knots.length; i++) {
-                knots[i] = breaks[l];
+                knots[i] = breaks[l - 1];
             }
             return new BSpline(k, l, knots, 0);
         }
 
         static BSpline ofPeriodic(int order, double[] breaks, double P) {
             // Fill the beginning/end with the corresponding end/beginning of the breakpoints
-            // The result should be defined for [0,P[
+            checkBreaks(breaks, P);
             int k = order;
             int km1 = k - 1;
-            int l = breaks.length - 1;
-            int start;
-            if (Math.abs(breaks[0]) > EPS) {
-                start = km1 + 1;
-            } else {
-                start = km1;
-            }
-            int n = breaks.length + km1;
-            double[] knots = new double[n + start];
+            int n = breaks.length;
+            double[] knots = new double[n + 2 * km1 + 1];
             // internal points
-            for (int i = 0, j = start; i < breaks.length; ++i, ++j) {
+            for (int i = 0, j = km1; i < breaks.length; ++i, ++j) {
                 knots[j] = breaks[i];
             }
             // beginning
-            for (int i = 0, j = breaks.length - start; i < start; ++i, ++j) {
+            for (int i = 0, j = n - km1; i < km1; ++i, ++j) {
                 knots[i] = breaks[j] - P;
             }
             // end
-            for (int i = breaks.length + start, j = 0; i < knots.length; ++i, ++j) {
+            for (int i = n + km1, j = 0; i < knots.length; ++i, ++j) {
                 knots[i] = breaks[j] + P;
             }
-            return new BSpline(k, l, knots, P);
+            return new BSpline(k, n, knots, P);
 
         }
 
-        private int n() {
-            return k + knots.length;
+        private static void checkBreaks(double[] breaks, double P) {
+            if (P > 0) {
+                for (int i = 0; i < breaks.length; ++i) {
+                    if (breaks[i] < 0 || breaks[i] >= P) {
+                        throw new IllegalArgumentException("Knots should be in [0, P[");
+                    }
+                }
+            }
+            for (int i = 0; i < breaks.length - 1; ++i) {
+                if (breaks[i + 1] < breaks[i]) {
+                    throw new DemetraException("Invalid knots in B-Spline");
+                }
+            }
+
         }
     }
 }

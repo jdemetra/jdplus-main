@@ -18,6 +18,7 @@ package jdplus.toolkit.base.api.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  *
@@ -27,7 +28,7 @@ import java.io.IOException;
 public final class Paths {
 
     public final String DEMETRA = "Demetra+", DEF_FILE = "demetra";
-    public final String DEF_FOLDER = new File(getDefaultHome(), DEMETRA).getPath();
+    public final String DEF_FOLDER = Path.of(getDefaultHome(), DEMETRA).toString();
 
     /**
      *
@@ -110,7 +111,7 @@ public final class Paths {
 
     public String getFullPath(String file) {
         try {
-            File tmp = new File(file);
+            File tmp = Path.of(file).toFile();
             return splitFile(tmp.getCanonicalPath())[0];
         } catch (IOException ex) {
             return null;
@@ -185,7 +186,7 @@ public final class Paths {
                 nfolder = concatenate(nfolder, parent.get(i));
             }
         }
-        File Folder = new File(nfolder);
+        File Folder = Path.of(nfolder).toFile();
         if (!Folder.exists()) {
             Folder.mkdirs();
         }
@@ -197,7 +198,7 @@ public final class Paths {
         if (context != null && context instanceof Id) {
             Id parent = (Id) context;
             for (int i = 0; i < parent.getCount(); ++i) {
-                nfolder = new File(nfolder, parent.get(i));
+                nfolder = nfolder.toPath().resolve(parent.get(i)).toFile();
             }
         }
         if (!nfolder.exists()) {
@@ -216,7 +217,7 @@ public final class Paths {
 
     public File folder(File folder) {
         if (folder == null || !folder.isDirectory()) {
-            return new File(DEF_FOLDER);
+            return Path.of(DEF_FOLDER).toFile();
         } else {
             return folder;
         }

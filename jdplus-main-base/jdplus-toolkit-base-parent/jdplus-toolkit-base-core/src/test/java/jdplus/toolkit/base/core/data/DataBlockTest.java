@@ -5,6 +5,7 @@
  */
 package jdplus.toolkit.base.core.data;
 
+import java.util.Random;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -3863,5 +3864,20 @@ public class DataBlockTest {
             result[i] = i + 1;
         }
         return result;
+    }
+
+    public static void main(String[] args) {
+        DataBlock w = DataBlock.make(5000);
+        DataBlock z = DataBlock.make(5000);
+        Random rnd = new Random();
+        w.set(i -> rnd.nextDouble());
+        z.set(i -> rnd.nextDouble());
+
+        long t0 = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; ++i) {
+            w.addAY(1.01, z);
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println(t1 - t0);
     }
 }

@@ -24,7 +24,10 @@ import jdplus.toolkit.base.api.util.Paths;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,9 +67,9 @@ public class CsvMatrixOutput implements Output<SaDocument> {
     public void end(Object context) throws Exception {
         String file = Paths.concatenate(folder.getAbsolutePath(), config.getFileName());
         file = Paths.changeExtension(file, "csv");
-        FileOutputStream matrix = new FileOutputStream(file);
-        OutputStreamWriter writer = new OutputStreamWriter(matrix, StandardCharsets.ISO_8859_1);
-        CsvInformationFormatter.formatResults(writer, infos, config.getItems(), true, fullName);
+        try (Writer writer = Files.newBufferedWriter(Path.of(file), StandardCharsets.ISO_8859_1)) {
+            CsvInformationFormatter.formatResults(writer, infos, config.getItems(), config.isShortColumnName(), fullName);
+        }
         infos = null;
     }
 
