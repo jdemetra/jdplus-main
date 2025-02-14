@@ -59,7 +59,7 @@
         <assertj-core.version>3.27.3</assertj-core.version>
 
         <!-- dependencies -->
-        <jd2.version>2.2.5</jd2.version>
+        <jd2.version>2.2.6</jd2.version>
         <protobuf.version>3.25.5</protobuf.version>
         <java-io-util.version>0.0.32</java-io-util.version>
         <java-sql-util.version>1.0.6</java-sql-util.version>
