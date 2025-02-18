@@ -115,59 +115,54 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
     }
 
     protected double[] calcStdev(DoubleSeq s) {
-
         if (excludeFcast) {
             s = s.drop(0, forecastHorizon);
         }
 
         int n = s.length();
+        int ny = 1 + (start + n - 1) / period;
         //number of full years, if first and last year sum up to a complete year this ist not a whole year
-        int nfy = (n - start) / period;
-        if (start == 0 && (n - start) % period == 0) {
-            nfy = nfy - 1;
+        int nfy = ny;
+        int nbeg = period - start;
+        if (nbeg == period) {
+            nbeg = 0;
+        } else {
+            --nfy;
         }
-
-        int nbeg = (period - start) % period;
-
+        int nend = (start + n ) % period;
+        if (nend != 0) {
+            --nfy;
+        }
         if (nfy < NPERIODS) {
             return new double[]{calcSingleStdev(s)};
         }
 
-        int ny = nfy;
-        int ie = NPERIODS / 2;
-        if (start > 0) {
-            ++ny;
-            ++ie;
+        int ibeg = NPERIODS / 2;
+        if (nbeg > 0) {
+            ++ibeg;
         }
-        boolean cend = false;
-        if ((n - nbeg) % period != 0) {
-            ++ny;
-            cend = true;
-        }
+        int iend = ibeg + nfy - NPERIODS;
         double[] stdev = new double[ny];
         // first years
         double e = calcSingleStdev(s.range(0, nbeg + NPERIODS * period));
-        for (int i = 0; i < ie; ++i) {
+        for (int i = 0; i < ibeg; ++i) {
             stdev[i] = e;
         }
-        int ibeg = nbeg, iend = ibeg + NPERIODS * period;
-        while (iend <= n) {
-            DoubleSeq cur = s.range(ibeg, iend);
-            e = calcSingleStdev(cur);
-            stdev[ie++] = e;
-            ibeg += period;
-            iend += period;
+        int pos = nbeg;
+        while (ibeg <= iend) {
+            DoubleSeq cur = s.range(pos, pos + NPERIODS * period);
+            stdev[ibeg++] = calcSingleStdev(cur);
+            pos += period;
         }
         // the last block is too short...
-        if (cend && ibeg >= period) {
-            ibeg -= period;
-            DoubleSeq cur = s.range(ibeg, n);
+        if (nend > 0) {
+            pos -= period;
+            DoubleSeq cur = s.range(pos, n);
             e = calcSingleStdev(cur);
         } else {
-            e = stdev[ie - 1];
+            e = stdev[ibeg - 1];
         }
-
-        for (int i = ie; i < stdev.length; ++i) {
+        for (int i = ibeg; i < stdev.length; ++i) {
             stdev[i] = e;
         }
         return stdev;

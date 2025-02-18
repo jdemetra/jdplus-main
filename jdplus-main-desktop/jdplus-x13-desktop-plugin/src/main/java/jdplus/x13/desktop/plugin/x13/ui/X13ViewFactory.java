@@ -74,10 +74,12 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.tests.SeasonalityTests;
 import jdplus.sa.desktop.plugin.processing.SiRatioUI;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
+import jdplus.x13.base.api.regarima.BasicSpec;
 import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Document;
 import jdplus.x13.base.core.x13.X13Factory;
@@ -1254,9 +1256,19 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 return null;
             }
             TsData input = source.getInput().getData();
-            TsDomain domain = input.getDomain();
+            TimeSelector span = source.getSpecification().getRegArima().getBasic().getSpan();
+            TsDomain domain = input.getDomain().select(span);
             X13Spec pspec = X13Factory.getInstance().generateSpec(source.getSpecification(), result);
             X13Spec nspec = X13Factory.getInstance().refreshSpec(pspec, source.getSpecification(), DemetraSaUI.get().getEstimationPolicyType(), domain);
+            if (! span.isAll()){
+                BasicSpec nbasic = nspec.getRegArima().getBasic().toBuilder()
+                        .span(TimeSelector.all())
+                        .build();
+                RegArimaSpec reg = nspec.getRegArima().toBuilder()
+                        .basic(nbasic)
+                        .build();
+                nspec=nspec.toBuilder().regArima(reg).build();
+            }
             X13Kernel kernel = X13Kernel.of(nspec, source.getContext());
             RevisionHistory<Explorable> rh = new RevisionHistory<>(domain, d -> kernel.process(TsData.fitToDomain(input, d), null));
             return new RevisionHistoryUI.Information(info, diag, rh);

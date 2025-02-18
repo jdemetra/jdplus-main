@@ -60,7 +60,8 @@ public class MsrFilterSelection {
         useDefault = false;
         iter = 0;
         msr = 0;
-        do {
+        
+        while (series.length() / context.getPeriod() >= 6) {
             ++iter;
             // 1. calc Components
             calcComponents(series, context);
@@ -76,7 +77,7 @@ public class MsrFilterSelection {
             // 5. cut year
             series = series.drop(0, context.getPeriod());
 //          As we have shortend the series, we must adapt the test on the length (5 instead of 6)
-        } while (series.length() / context.getPeriod() >= 5);
+        } 
         if (seasFilter == null) {
             useDefault = true;
             seasFilter = SeasonalFilterOption.S3X5;
