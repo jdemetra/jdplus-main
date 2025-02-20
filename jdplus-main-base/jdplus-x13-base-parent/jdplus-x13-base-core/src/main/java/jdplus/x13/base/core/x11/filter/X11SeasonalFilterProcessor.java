@@ -47,8 +47,8 @@ public class X11SeasonalFilterProcessor {
 
             // conditions for short time series
             int nf = 0;
-            if (filters[index] instanceof X11SeasonalFiltersFactory.DefaultFilter) {
-                nf = ((X11SeasonalFiltersFactory.DefaultFilter) filters[index]).getSfilter().getUpperBound();
+            if (filters[index] instanceof X11SeasonalFiltersFactory.DefaultFilter defaultFilter) {
+                nf = defaultFilter.getSfilter().getUpperBound();
             }
             DataBlock ccout;
             if (ny_all >= 5 && (nf < 8 || nyr_all >= 20)) { // (nf < 8 || nyr_all >= 20) for S3x15

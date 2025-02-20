@@ -84,10 +84,10 @@ public enum DiagnosticInfo {
     public TsDataFunction asTsDataFunction() {
         return switch (this) {
             case AbsoluteDifference, RelativeDifference -> (s, pos) -> s.getValue(pos);
-            case PeriodToPeriodGrowthDifference -> (s, pos) -> 100*(s.getValue(pos) / s.getValue(pos - 1) - 1);
-            case PeriodToPeriodDifference -> (s, pos) -> (s.getValue(pos) - s.getValue(pos - 1));
-            case AnnualGrowthDifference -> (s, pos) -> 100*(s.getValue(pos) / s.getValue(pos - s.getAnnualFrequency()) - 1);
-            case AnnualDifference -> (s, pos) -> s.getValue(pos) - s.getValue(pos - s.getAnnualFrequency());
+            case PeriodToPeriodGrowthDifference -> (s, pos) -> pos > 0 ? 100*(s.getValue(pos) / s.getValue(pos - 1) - 1) : Double.NaN;
+            case PeriodToPeriodDifference -> (s, pos) -> pos > 0 ? (s.getValue(pos) - s.getValue(pos - 1)): Double.NaN;
+            case AnnualGrowthDifference -> (s, pos) -> pos >= s.getAnnualFrequency() ? 100*(s.getValue(pos) / s.getValue(pos - s.getAnnualFrequency()) - 1) : Double.NaN;
+            case AnnualDifference -> (s, pos) -> pos >= s.getAnnualFrequency() ? s.getValue(pos) - s.getValue(pos - s.getAnnualFrequency()): Double.NaN;
             default -> (s, pos) -> Double.NaN;
         };
 

@@ -57,11 +57,10 @@ public class MsrFilterSelection {
 
         // 0. complete year
         series = completeYear(series, context);
-        useDefault = false;
+        useDefault = true;
         iter = 0;
         msr = 0;
-        
-        while (series.length() / context.getPeriod() >= 6) {
+        while (series.length() / context.getPeriod() >= 5) {
             ++iter;
             // 1. calc Components
             calcComponents(series, context);
@@ -77,18 +76,22 @@ public class MsrFilterSelection {
             // 5. cut year
             series = series.drop(0, context.getPeriod());
 //          As we have shortend the series, we must adapt the test on the length (5 instead of 6)
-        } 
+        }
         if (seasFilter == null) {
-            useDefault = true;
             seasFilter = SeasonalFilterOption.S3X5;
+        } else {
+            useDefault = false;
         }
         return seasFilter;
     }
 
     private DoubleSeq completeYear(DoubleSeq series, X11Context context) {
         //check incomplete year
-        int cut = (series.length() + context.getFirstPeriod()) % context.getPeriod();
-        return series.drop(context.getFirstPeriod(), cut);
+        int start = context.getFirstPeriod(), period = context.getPeriod();
+        int ecut = (series.length() + start) % period;
+//        int bcut= start == 0 ? 0 : period-start;
+        int bcut = 0; // following the Ladiray's paper and the original fortran code !
+        return series.drop(bcut, ecut);
     }
 
     private void calcComponents(DoubleSeq series, X11Context context) {
