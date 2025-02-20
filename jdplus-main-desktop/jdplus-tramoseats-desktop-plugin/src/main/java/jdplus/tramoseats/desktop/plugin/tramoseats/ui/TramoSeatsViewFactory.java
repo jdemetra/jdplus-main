@@ -81,6 +81,7 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.diagnostics.SignificantSeasonalityTest;
 import jdplus.sa.base.core.tests.SeasonalityTests;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
@@ -98,6 +99,7 @@ import jdplus.toolkit.base.core.ucarima.WienerKolmogorovDiagnostics;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
 import jdplus.toolkit.desktop.plugin.ui.processing.ContextualIds;
 import jdplus.toolkit.desktop.plugin.ui.processing.ContextualTableUI;
+import jdplus.tramoseats.base.api.tramo.TransformSpec;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -1315,9 +1317,19 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 return null;
             }
             TsData input = source.getInput().getData();
-            TsDomain domain = input.getDomain();
+            TimeSelector span = source.getSpecification().getTramo().getTransform().getSpan();
+            TsDomain domain = input.getDomain().select(span);
             TramoSeatsSpec pspec = TramoSeatsFactory.getInstance().generateSpec(source.getSpecification(), result);
             TramoSeatsSpec nspec = TramoSeatsFactory.getInstance().refreshSpec(pspec, source.getSpecification(), DemetraSaUI.get().getEstimationPolicyType(), domain);
+            if (! span.isAll()){
+                TransformSpec ntr = nspec.getTramo().getTransform().toBuilder()
+                        .span(TimeSelector.all())
+                        .build();
+                TramoSpec reg = nspec.getTramo().toBuilder()
+                        .transform(ntr)
+                        .build();
+                nspec=nspec.toBuilder().tramo(reg).build();
+            }
             TramoSeatsKernel kernel = TramoSeatsKernel.of(nspec, source.getContext());
             RevisionHistory<Explorable> rh = new RevisionHistory<>(domain, d -> kernel.process(TsData.fitToDomain(input, d), null));
             return new RevisionHistoryUI.Information(info, diag, rh);
