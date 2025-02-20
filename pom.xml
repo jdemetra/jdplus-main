@@ -6,7 +6,7 @@
 
     <groupId>eu.europa.ec.joinup.sat</groupId>
     <artifactId>jdplus-main</artifactId>
-    <version>3.3.1-SNAPSHOT</version>
+    <version>3.4.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -39,7 +39,7 @@
     <properties>
         <!-- Java 17 config -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2024-10-21T09:22:24Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-02-13T09:12:17Z</project.build.outputTimestamp>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.release>17</maven.compiler.release>
@@ -59,7 +59,7 @@
         <assertj-core.version>3.27.3</assertj-core.version>
 
         <!-- dependencies -->
-        <jd2.version>2.2.5</jd2.version>
+        <jd2.version>2.2.6</jd2.version>
         <protobuf.version>3.25.5</protobuf.version>
         <java-io-util.version>0.0.32</java-io-util.version>
         <java-sql-util.version>1.0.6</java-sql-util.version>
@@ -128,7 +128,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.4.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

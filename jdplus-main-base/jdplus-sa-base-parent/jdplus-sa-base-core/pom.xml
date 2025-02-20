@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-sa-base-parent</artifactId>
-        <version>3.3.1-SNAPSHOT</version>
+        <version>3.4.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>jdplus-sa-base-core</artifactId>
