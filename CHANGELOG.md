@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![STAT] Correct the handling of short series in X11
+- ![UI] Correct the revision analysis panel for short series
+
 ## [3.4.0] - 2025-02-13
 
 ### Fixed
