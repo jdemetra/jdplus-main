@@ -40,4 +40,9 @@ public class X13Results implements GenericExplorable , HasLog, HasRegSarimaPrepr
     private SaBenchmarkingResults benchmarking;
     private X13Diagnostics diagnostics;
     private ProcessingLog log;
+    
+    @Override
+    public boolean isValid(){
+        return finals != null;
+    }
 }

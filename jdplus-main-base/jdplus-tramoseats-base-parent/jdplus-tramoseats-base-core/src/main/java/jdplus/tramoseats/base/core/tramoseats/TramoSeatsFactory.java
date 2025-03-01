@@ -71,7 +71,7 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
         CoherenceDiagnosticsFactory<TramoSeatsResults> coherence
                 = new CoherenceDiagnosticsFactory<>(CoherenceDiagnosticsConfiguration.getDefault(),
                         (TramoSeatsResults r) -> {
-                            return new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
+                            return r.getFinals()== null ? null : new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
                         }
                 );
         SaOutOfSampleDiagnosticsFactory<TramoSeatsResults> outofsample
@@ -87,15 +87,15 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
                 = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault());
         SeatsDiagnosticsFactory<TramoSeatsResults> seats
                 = new SeatsDiagnosticsFactory<>(SeatsDiagnosticsConfiguration.getDefault(),
-                        r -> r.getDiagnostics().getSpecificDiagnostics());
+                        r -> r.getDiagnostics() == null ? null : r.getDiagnostics().getSpecificDiagnostics());
 
         AdvancedResidualSeasonalityDiagnosticsFactory<TramoSeatsResults> advancedResidualSeasonality
                 = new AdvancedResidualSeasonalityDiagnosticsFactory<>(AdvancedResidualSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+                        (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
                 );
         CombinedSeasonalityDiagnosticsFactory<TramoSeatsResults> combinedSeasonality
                 = new CombinedSeasonalityDiagnosticsFactory<>(CombinedSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+                        (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
                 );
 
         ResidualTradingDaysDiagnosticsFactory<TramoSeatsResults> residualTradingDays

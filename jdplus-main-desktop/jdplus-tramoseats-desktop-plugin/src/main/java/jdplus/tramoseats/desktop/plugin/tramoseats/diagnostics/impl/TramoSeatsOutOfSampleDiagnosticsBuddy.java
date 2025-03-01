@@ -37,7 +37,7 @@ public final class TramoSeatsOutOfSampleDiagnosticsBuddy extends SaOutOfSampleDi
     @Override
     public SaOutOfSampleDiagnosticsFactory<TramoSeatsResults> createFactory() {
         return new SaOutOfSampleDiagnosticsFactory<>(getActiveDiagnosticsConfiguration(),
-                (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics().forecastingTest());
+                (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics().forecastingTest());
     }
 
 }

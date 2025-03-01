@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private final ProcessingLog infos_;
-    private boolean err = true, wrn = true, info = false, verbose = true;
+    private boolean err = true, wrn = true, rem=true, info = false, verbose = true;
 
     public HtmlProcessingLog(final ProcessingLog infos) {
         infos_ = infos;
@@ -44,6 +44,10 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
 
     public void displayWarnings(boolean e) {
         wrn = e;
+    }
+
+    public void displayRemarks(boolean e) {
+        rem = e;
     }
 
     public void displayInfos(boolean e) {
@@ -66,21 +70,21 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
         }
         if (err) {
             List<String> errs = all.stream()
-                    .filter(info -> info.getType() == ProcessingLog.InformationType.Error)
-                    .map(info -> info.getMsg())
+                    .filter(log -> log.getType() == ProcessingLog.InformationType.Error)
+                    .map(log -> log.getMsg())
                     .collect(Collectors.toList());
             if (!errs.isEmpty()) {
                 stream.write(HtmlTag.HEADER2, "Errors").newLine();
-                for (String err : errs) {
-                    stream.write(HtmlTag.IMPORTANT_TEXT, err, Bootstrap4.TEXT_DANGER).newLine();
+                for (String er : errs) {
+                    stream.write(HtmlTag.IMPORTANT_TEXT, er, Bootstrap4.TEXT_DANGER).newLine();
                 }
                 stream.newLine();
             }
         }
         if (wrn) {
             List<String> msg = all.stream()
-                    .filter(info -> info.getType() == ProcessingLog.InformationType.Warning)
-                    .map(info -> info.getMsg())
+                    .filter(log -> log.getType() == ProcessingLog.InformationType.Warning)
+                    .map(log -> log.getMsg())
                     .collect(Collectors.toList());
             if (!msg.isEmpty()) {
                 stream.write(HtmlTag.HEADER2, "Warnings").newLine();
@@ -90,10 +94,23 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                 stream.newLine();
             }
         }
+        if (rem) {
+            List<String> msg = all.stream()
+                    .filter(log -> log.getType() == ProcessingLog.InformationType.Warning)
+                    .map(log -> log.getMsg())
+                    .collect(Collectors.toList());
+            if (!msg.isEmpty()) {
+                stream.write(HtmlTag.HEADER2, "Remarks").newLine();
+                for (String m : msg) {
+                    stream.write(m, Bootstrap4.TEXT_INFO).newLine();
+                }
+                stream.newLine();
+            }
+        }
         if (info) {
             List<String> msg = all.stream()
-                    .filter(info -> info.getType() == ProcessingLog.InformationType.Info)
-                    .map(info -> info.getMsg())
+                    .filter(log -> log.getType() == ProcessingLog.InformationType.Info)
+                    .map(log -> log.getMsg())
                     .collect(Collectors.toList());
             if (!msg.isEmpty()) {
                 stream.write(HtmlTag.HEADER2, "Log").newLine();

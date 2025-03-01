@@ -40,5 +40,10 @@ public class TramoSeatsResults implements GenericExplorable, HasLog, HasRegSarim
     private SaBenchmarkingResults benchmarking;
     private TramoSeatsDiagnostics diagnostics;
     private ProcessingLog log;
+    
+    @Override
+    public boolean isValid(){
+        return finals != null;
+    }
 
 }

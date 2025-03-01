@@ -36,6 +36,9 @@ public class AdvancedResidualSeasonalityDiagnostics implements Diagnostics {
     private double sev, bad, unc;
 
     public static AdvancedResidualSeasonalityDiagnostics of(AdvancedResidualSeasonalityDiagnosticsConfiguration config, GenericSaTests data) {
+        if (data == null) {
+            return null;
+        }
         try {
             AdvancedResidualSeasonalityDiagnostics test = new AdvancedResidualSeasonalityDiagnostics();
             ResidualSeasonalityTests rsa = data.residualSeasonalityTestsOnSa();

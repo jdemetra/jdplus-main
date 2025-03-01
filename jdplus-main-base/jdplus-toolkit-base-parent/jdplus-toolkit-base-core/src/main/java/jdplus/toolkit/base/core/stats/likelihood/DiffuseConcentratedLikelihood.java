@@ -114,7 +114,7 @@ public interface DiffuseConcentratedLikelihood extends ConcentratedLikelihood {
     double diffuseCorrection();
 
     /**
-     * Adjust the likelihood if the toArray have been pre-multiplied by a given
+     * Adjust the likelihood if the array has been pre-multiplied by a given
      * scaling factor
      *
      * @param yfactor

@@ -40,10 +40,12 @@ public class TramoSeatsKernel {
     private static PreliminaryChecks.Tool of(TramoSeatsSpec spec) {
 
         TransformSpec transform = spec.getTramo().getTransform();
-        return (s, logs) -> {
+        return (TsData s, ProcessingLog logs) -> {
             TsData sc = s.select(transform.getSpan());
             if (transform.isPreliminaryCheck()) {
-                PreliminaryChecks.testSeries(sc);
+                if (!PreliminaryChecks.testSeries(sc, logs)) {
+                    return null;
+                }
             }
             return s;
         };
@@ -65,9 +67,15 @@ public class TramoSeatsKernel {
         if (log == null) {
             log = ProcessingLog.dummy();
         }
+        
         try {
             // Step 0. Preliminary checks
             TsData sc = preliminary.check(s, log);
+            if (sc == null) {
+                return TramoSeatsResults.builder()
+                        .log(log)
+                        .build();
+            }
             // Step 1. Tramo
             RegSarimaModel preprocessing = tramo.process(sc, log);
             // Step 2. Link between tramo and seats
@@ -77,9 +85,9 @@ public class TramoSeatsKernel {
             // Step 4. Final decomposition
             SeriesDecomposition finals = TwoStepsDecomposition.merge(preprocessing, srslts.getFinalComponents());
             // Step 5. Benchmarking
-            SaBenchmarkingResults bench=null;
-            if (cholette != null){
-                bench=cholette.process(s, TsData.concatenate(finals.getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value), 
+            SaBenchmarkingResults bench = null;
+            if (cholette != null) {
+                bench = cholette.process(s, TsData.concatenate(finals.getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value),
                         finals.getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast)), preprocessing);
             }
             // Step 6. Diagnostics
@@ -95,7 +103,9 @@ public class TramoSeatsKernel {
                     .build();
         } catch (Exception err) {
             log.error(err);
-            return null;
+            return TramoSeatsResults.builder()
+                    .log(log)
+                    .build();
         }
     }
 

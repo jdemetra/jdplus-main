@@ -48,7 +48,7 @@ public class X13Document extends AbstractTsDocument<X13Spec, X13Results> impleme
         this.context = context;
     }
 
-    public ModellingContext getContext(){
+    public ModellingContext getContext() {
         return context;
     }
 
@@ -59,14 +59,18 @@ public class X13Document extends AbstractTsDocument<X13Spec, X13Results> impleme
 
     @Override
     public SaEstimation getEstimation() {
-        if (getStatus() != ProcessingStatus.Valid) {
+        if (getStatus() == ProcessingStatus.Unprocessed) {
             return null;
         }
         List<ProcDiagnostic> tests = new ArrayList<>();
         X13Results result = getResult();
-        X13Factory.getInstance().fillDiagnostics(tests, result);
-        SaSpecification pspec = X13Factory.getInstance().generateSpec(getSpecification(), result);
-        ProcQuality quality = ProcDiagnostic.summary(tests);
+        SaSpecification pspec = null;
+        ProcQuality quality = ProcQuality.Error;
+        if (getStatus() == ProcessingStatus.Valid) {
+            pspec = X13Factory.getInstance().generateSpec(getSpecification(), result);
+            quality = ProcDiagnostic.summary(tests);
+            X13Factory.getInstance().fillDiagnostics(tests, result);
+        }
         return SaEstimation.builder()
                 .results(result)
                 .log(result.getLog())

@@ -17,17 +17,9 @@
 package jdplus.sa.base.core.diagnostics;
 
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.sa.base.api.SaDictionaries;
-import jdplus.toolkit.base.api.stats.StatisticalTest;
-import jdplus.toolkit.base.api.timeseries.TimeSelector;
-import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.Collections;
 import java.util.List;
-import jdplus.sa.base.api.diagnostics.CombinedSeasonalityTest;
 import jdplus.sa.base.core.tests.CombinedSeasonality;
-import jdplus.sa.base.core.tests.StableSeasonality;
-import jdplus.toolkit.base.core.stats.tests.TestsUtility;
-import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 
 /**
@@ -40,11 +32,11 @@ public class CombinedSeasonalityDiagnostics implements Diagnostics {
     private boolean strict;
 
     public static CombinedSeasonalityDiagnostics of(CombinedSeasonalityDiagnosticsConfiguration config, GenericSaTests data) {
+        if (data == null) {
+            return null;
+        }
         try {
             CombinedSeasonalityDiagnostics diag = new CombinedSeasonalityDiagnostics();
-            if (data == null) {
-                return null;
-            }
             CombinedSeasonalityTests cs = data.combinedSeasonalityTests();
             if (cs == null) {
                 return null;

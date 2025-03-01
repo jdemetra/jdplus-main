@@ -29,6 +29,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.processing.DefaultProcessingLog;
 
 /**
  *
@@ -47,26 +48,30 @@ public class TramoSeatsDocument extends AbstractTsDocument<TramoSeatsSpec, Tramo
         super(TramoSeatsSpec.RSAfull);
         this.context = context;
     }
-    
-    public ModellingContext getContext(){
+
+    public ModellingContext getContext() {
         return context;
     }
 
     @Override
     protected TramoSeatsResults internalProcess(TramoSeatsSpec spec, TsData data) {
-        return TramoSeatsKernel.of(spec, context).process(data, ProcessingLog.dummy());
+        return TramoSeatsKernel.of(spec, context).process(data, new DefaultProcessingLog());
     }
 
     @Override
     public SaEstimation getEstimation() {
-        if (getStatus() != ProcessingStatus.Valid) {
+        if (getStatus() == ProcessingStatus.Unprocessed) {
             return null;
         }
         List<ProcDiagnostic> tests = new ArrayList<>();
         TramoSeatsResults result = getResult();
-        TramoSeatsFactory.getInstance().fillDiagnostics(tests, result);
-        SaSpecification pspec = TramoSeatsFactory.getInstance().generateSpec(getSpecification(), result);
-        ProcQuality quality = ProcDiagnostic.summary(tests);
+        SaSpecification pspec = null;
+        ProcQuality quality = ProcQuality.Error;
+        if (getStatus() == ProcessingStatus.Valid) {
+            TramoSeatsFactory.getInstance().fillDiagnostics(tests, result);
+            pspec = TramoSeatsFactory.getInstance().generateSpec(getSpecification(), result);
+            quality = ProcDiagnostic.summary(tests);
+        }
         return SaEstimation.builder()
                 .results(result)
                 .log(result.getLog())

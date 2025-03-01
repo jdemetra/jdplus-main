@@ -37,7 +37,7 @@ public final class TramoSeatsCombinedSeasonalityDiagnosticsBuddy extends Combine
     @Override
     public CombinedSeasonalityDiagnosticsFactory<TramoSeatsResults> createFactory() {
         return new CombinedSeasonalityDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
-                (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+                (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
         );    }
 
 }
