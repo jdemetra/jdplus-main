@@ -19,8 +19,6 @@ package jdplus.sa.base.api;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +38,10 @@ public class SaEstimation {
      */
     Explorable results;
 
-    /**
-     * ProcessingLog. Could be null
-     */
-    @Nullable ProcessingLog log;
+//    /**
+//     * ProcessingLog. Could be null
+//     */
+//    @Nullable ProcessingLog log;
 
     @lombok.Singular
     List<ProcDiagnostic> diagnostics;

@@ -69,14 +69,12 @@ public class SaManager {
                     ProcQuality quality = ProcDiagnostic.summary(tests);
                     return SaEstimation.builder()
                             .results(rslt)
-                            .log(verbose ? log : ProcessingLog.dummy())
                             .diagnostics(tests)
                             .quality(quality)
                             .pointSpec(pspec)
                             .build();
                 } else {
                     return SaEstimation.builder()
-                            .log(verbose ? log : ProcessingLog.dummy())
                             .quality(ProcQuality.Undefined)
                             .build();
                 }

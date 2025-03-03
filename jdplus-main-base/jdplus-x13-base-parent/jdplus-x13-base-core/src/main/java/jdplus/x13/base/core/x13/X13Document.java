@@ -18,7 +18,6 @@ package jdplus.x13.base.core.x13;
 
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.processing.ProcessingStatus;
 import jdplus.sa.base.api.HasSaEstimation;
 import jdplus.sa.base.api.SaEstimation;
@@ -29,6 +28,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.x13.base.api.x13.X13Spec;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.processing.DefaultProcessingLog;
 
 /**
  *
@@ -54,7 +54,7 @@ public class X13Document extends AbstractTsDocument<X13Spec, X13Results> impleme
 
     @Override
     protected X13Results internalProcess(X13Spec spec, TsData data) {
-        return X13Kernel.of(spec, context).process(data, ProcessingLog.dummy());
+        return X13Kernel.of(spec, context).process(data, new DefaultProcessingLog());
     }
 
     @Override
@@ -67,13 +67,12 @@ public class X13Document extends AbstractTsDocument<X13Spec, X13Results> impleme
         SaSpecification pspec = null;
         ProcQuality quality = ProcQuality.Error;
         if (getStatus() == ProcessingStatus.Valid) {
+            X13Factory.getInstance().fillDiagnostics(tests, result);
             pspec = X13Factory.getInstance().generateSpec(getSpecification(), result);
             quality = ProcDiagnostic.summary(tests);
-            X13Factory.getInstance().fillDiagnostics(tests, result);
         }
         return SaEstimation.builder()
                 .results(result)
-                .log(result.getLog())
                 .diagnostics(tests)
                 .quality(quality)
                 .pointSpec(pspec)

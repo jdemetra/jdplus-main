@@ -30,17 +30,17 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = X13DiagnosticsFactoryBuddy.class, position = 1000)
 public final class X13CoherenceDiagnosticsBuddy extends CoherenceDiagnosticsBuddy implements X13DiagnosticsFactoryBuddy<CoherenceDiagnosticsConfiguration> {
-    
+
     public X13CoherenceDiagnosticsBuddy() {
         this.setActiveDiagnosticsConfiguration(CoherenceDiagnosticsConfiguration.getDefault());
     }
-    
+
     @Override
     public CoherenceDiagnosticsFactory<X13Results> createFactory() {
         return new CoherenceDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
                 (X13Results r) -> {
-                    return new CoherenceDiagnostics.Input(r.getDecomposition().getMode(), r);
+                    return r.getDecomposition() == null ? null : new CoherenceDiagnostics.Input(r.getDecomposition().getMode(), r);
                 });
     }
-    
+
 }

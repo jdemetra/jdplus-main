@@ -71,12 +71,12 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
         CoherenceDiagnosticsFactory<TramoSeatsResults> coherence
                 = new CoherenceDiagnosticsFactory<>(CoherenceDiagnosticsConfiguration.getDefault(),
                         (TramoSeatsResults r) -> {
-                            return r.getFinals()== null ? null : new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
+                            return r.getFinals() == null ? null : new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
                         }
                 );
         SaOutOfSampleDiagnosticsFactory<TramoSeatsResults> outofsample
                 = new SaOutOfSampleDiagnosticsFactory<>(OutOfSampleDiagnosticsConfiguration.getDefault(),
-                        r -> r.getDiagnostics().getGenericDiagnostics().forecastingTest());
+                        r -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics().forecastingTest());
         SaResidualsDiagnosticsFactory<TramoSeatsResults> residuals
                 = new SaResidualsDiagnosticsFactory<>(ResidualsDiagnosticsConfiguration.getDefault(),
                         r -> r.getPreprocessing());
@@ -106,7 +106,7 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
                             if (preprocessing != null) {
                                 td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
                             }
-                            return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                            return r.getDiagnostics() == null ? null :new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
                         }
                 );
 

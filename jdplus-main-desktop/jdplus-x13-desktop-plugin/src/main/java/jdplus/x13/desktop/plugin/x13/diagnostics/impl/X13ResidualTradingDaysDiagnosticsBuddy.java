@@ -46,8 +46,8 @@ public final class X13ResidualTradingDaysDiagnosticsBuddy extends ResidualTradin
                     boolean td = false;
                     if (preprocessing != null) {
                         td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
-                    }
-                    return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                    } 
+                    return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
                 });
     }
 }

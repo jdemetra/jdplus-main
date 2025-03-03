@@ -87,6 +87,11 @@ public class X13Kernel {
         try {
             // Step 0. Preliminary checks
             TsData sc = preliminary.check(s, log);
+            if (sc == null) {
+                return X13Results.builder()
+                        .log(log)
+                        .build();
+            }
             // Step 1. Preprocessing
             RegSarimaModel preprocessing;
             X13Preadjustment preadjustment;
@@ -130,7 +135,9 @@ public class X13Kernel {
                     .build();
         } catch (Exception err) {
             log.error(err);
-            return null;
+            return X13Results.builder()
+                    .log(log)
+                    .build();
         }
     }
 
@@ -180,7 +187,7 @@ public class X13Kernel {
 //                mean = mu.orElseThrow().getCoefficient(0).getValue();
 //            }
             ExactArimaForecasts fcasts = new ExactArimaForecasts();
-            boolean mean=model.isMeanCorrection();
+            boolean mean = model.isMeanCorrection();
             fcasts.prepare(arima, mean);
 
             if (nb > 0) {
@@ -262,7 +269,7 @@ public class X13Kernel {
      * @return A new time series is returned
      */
     private TsData invOp(DecompositionMode mode, TsData l, TsData r) {
-        if (! mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
+        if (!mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
             return TsData.add(l, r);
         } else {
             return TsData.multiply(l, r);
@@ -270,7 +277,7 @@ public class X13Kernel {
     }
 
     private double mean(DecompositionMode mode) {
-        if (! mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
+        if (!mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
             return 0;
         } else {
             return 1;

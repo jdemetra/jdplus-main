@@ -54,7 +54,7 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
         return Dictionary.concatenate(SaDictionaries.QUALITY, key);
     }
     
-    private <Q> TsData finalSeries(TramoSeatsResults source, ComponentType type, ComponentInformation info){
+    private TsData finalSeries(TramoSeatsResults source, ComponentType type, ComponentInformation info){
         SeriesDecomposition finals = source.getFinals();
         if (finals == null)
             return null;

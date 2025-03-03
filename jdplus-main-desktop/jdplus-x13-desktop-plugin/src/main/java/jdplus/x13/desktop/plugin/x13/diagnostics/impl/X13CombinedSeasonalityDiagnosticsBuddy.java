@@ -37,6 +37,6 @@ public final class X13CombinedSeasonalityDiagnosticsBuddy extends CombinedSeason
     @Override
     public CombinedSeasonalityDiagnosticsFactory<X13Results> createFactory() {
         return new CombinedSeasonalityDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
-                (X13Results r) -> r.getDiagnostics().getGenericDiagnostics()
+                (X13Results r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
         );    }
 }

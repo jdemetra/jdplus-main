@@ -18,7 +18,6 @@ package jdplus.tramoseats.base.core.tramoseats;
 
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.processing.ProcessingStatus;
 import jdplus.sa.base.api.HasSaEstimation;
 import jdplus.sa.base.api.SaEstimation;
@@ -74,7 +73,6 @@ public class TramoSeatsDocument extends AbstractTsDocument<TramoSeatsSpec, Tramo
         }
         return SaEstimation.builder()
                 .results(result)
-                .log(result.getLog())
                 .diagnostics(tests)
                 .quality(quality)
                 .pointSpec(pspec)

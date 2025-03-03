@@ -848,7 +848,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                 .estimation(estimation)
                 .build();
 
-        node.setOutput(nitem);
+        node.update(nitem);
         master.repaint();
 //        model.fireTableDataChanged();
 
@@ -1162,17 +1162,11 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             if (!item.isProcessed() || item.results() == null) {
                 return label;
             }
-            ProcessingLog processingLog = item.results().getLog();
-            String[] warnings = processingLog != null
-                    ? processingLog.all()
-                    .stream()
-                    .filter(log -> log.getType() == InformationType.Warning)
-                    .map(ProcessingLog.Information::getMsg).toArray(String[]::new)
-                    : new String[0];
-            if (warnings.length == 0) {
+            List<String> warnings = item.results().warnings();
+            if (warnings.isEmpty()) {
                 return label;
             }
-            char[] tmp = new char[warnings.length];
+            char[] tmp = new char[warnings.size()];
             Arrays.fill(tmp, '!');
             label.setText(String.valueOf(tmp));
             label.setToolTipText(String.join(". ", warnings));

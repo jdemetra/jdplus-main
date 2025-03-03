@@ -38,7 +38,7 @@ public final class X13AdvancedResidualSeasonalityDiagnosticsBuddy extends Advanc
     @Override
     public AdvancedResidualSeasonalityDiagnosticsFactory<X13Results> createFactory() {
         return new AdvancedResidualSeasonalityDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
-                (X13Results r) -> r.getDiagnostics().getGenericDiagnostics()
+                (X13Results r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
         );
     }
 

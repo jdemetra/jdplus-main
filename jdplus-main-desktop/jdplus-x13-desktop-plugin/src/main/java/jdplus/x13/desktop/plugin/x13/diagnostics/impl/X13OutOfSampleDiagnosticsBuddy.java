@@ -37,7 +37,7 @@ public final class X13OutOfSampleDiagnosticsBuddy extends SaOutOfSampleDiagnosti
     @Override
     public SaOutOfSampleDiagnosticsFactory<X13Results> createFactory() {
         return new SaOutOfSampleDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration(),
-                (X13Results r) -> r.getDiagnostics().getGenericDiagnostics().forecastingTest());
+                (X13Results r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics().forecastingTest());
     }
 
 }

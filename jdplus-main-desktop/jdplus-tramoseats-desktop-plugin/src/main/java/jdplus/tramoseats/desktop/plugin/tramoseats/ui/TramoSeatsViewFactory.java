@@ -1301,7 +1301,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public DiagnosticsSlidingSeasFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SEAS,
                     ssExtractor("Seasonal", false,
-                            rslt -> rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value)),
+                            rslt -> rslt.getFinals() == null ? null :rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value)),
                     new SlidingSpansUI<>());
         }
 

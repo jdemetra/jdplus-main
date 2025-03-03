@@ -68,13 +68,13 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
         CoherenceDiagnosticsFactory<X13Results> coherence
                 = new CoherenceDiagnosticsFactory<>(CoherenceDiagnosticsConfiguration.getDefault(),
                         (X13Results r) -> {
-                            return new CoherenceDiagnostics.Input(r.getDecomposition().getMode(), r);
+                            return r.getDecomposition() == null ? null : new CoherenceDiagnostics.Input(r.getDecomposition().getMode(), r);
                         }
                 );
 
         SaOutOfSampleDiagnosticsFactory<X13Results> outofsample
                 = new SaOutOfSampleDiagnosticsFactory<>(OutOfSampleDiagnosticsConfiguration.getDefault(),
-                        r -> r.getDiagnostics().getGenericDiagnostics().forecastingTest());
+                        r -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics().forecastingTest());
         SaResidualsDiagnosticsFactory<X13Results> residuals
                 = new SaResidualsDiagnosticsFactory<>(ResidualsDiagnosticsConfiguration.getDefault(),
                         r -> r.getPreprocessing());
@@ -86,11 +86,11 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
         MDiagnosticsFactory mstats = new MDiagnosticsFactory(MDiagnosticsConfiguration.getDefault());
         AdvancedResidualSeasonalityDiagnosticsFactory<X13Results> advancedResidualSeasonality
                 = new AdvancedResidualSeasonalityDiagnosticsFactory<>(AdvancedResidualSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (X13Results r) -> r.getDiagnostics().getGenericDiagnostics()
+                        (X13Results r) -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics()
                 );
         CombinedSeasonalityDiagnosticsFactory<X13Results> combinedSeasonality
                 = new CombinedSeasonalityDiagnosticsFactory<>(CombinedSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (X13Results r) -> r.getDiagnostics().getGenericDiagnostics()
+                        (X13Results r) -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics()
                 );
 
         ResidualTradingDaysDiagnosticsFactory<X13Results> residualTradingDays
@@ -101,7 +101,7 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
                             if (preprocessing != null) {
                                 td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
                             }
-                            return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                            return r.getDiagnostics() == null ? null :new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
                         }
                 );
 
