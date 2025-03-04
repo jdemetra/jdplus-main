@@ -86,10 +86,10 @@ public interface SaProcessingFactory<I extends SaSpecification, R extends Explor
 
     void resetDiagnosticFactories(List<SaDiagnosticsFactory<?, R>> factories);
 
-    default void fillDiagnostics(List<ProcDiagnostic> tests, R sa) {
+    default void fillDiagnostics(List<ProcDiagnostic> tests, List<String> warnings, R sa) {
         for (SaDiagnosticsFactory diag : diagnosticFactories()) {
             if (diag.isActive()) {
-                diag.fill(tests, sa, diag.getName());
+                diag.fill(tests, warnings, sa, diag.getName());
             }
         }
     }

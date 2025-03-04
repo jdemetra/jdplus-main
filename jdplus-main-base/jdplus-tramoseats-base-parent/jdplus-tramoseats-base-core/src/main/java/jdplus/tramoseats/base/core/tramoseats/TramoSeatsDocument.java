@@ -35,28 +35,28 @@ import jdplus.toolkit.base.api.processing.DefaultProcessingLog;
  * @author PALATEJ
  */
 public class TramoSeatsDocument extends AbstractTsDocument<TramoSeatsSpec, TramoSeatsResults> implements HasSaEstimation {
-
+    
     private final ModellingContext context;
-
+    
     public TramoSeatsDocument() {
         super(TramoSeatsSpec.RSAfull);
         context = ModellingContext.getActiveContext();
     }
-
+    
     public TramoSeatsDocument(ModellingContext context) {
         super(TramoSeatsSpec.RSAfull);
         this.context = context;
     }
-
+    
     public ModellingContext getContext() {
         return context;
     }
-
+    
     @Override
     protected TramoSeatsResults internalProcess(TramoSeatsSpec spec, TsData data) {
         return TramoSeatsKernel.of(spec, context).process(data, new DefaultProcessingLog());
     }
-
+    
     @Override
     public SaEstimation getEstimation() {
         if (getStatus() == ProcessingStatus.Unprocessed) {
@@ -66,8 +66,9 @@ public class TramoSeatsDocument extends AbstractTsDocument<TramoSeatsSpec, Tramo
         TramoSeatsResults result = getResult();
         SaSpecification pspec = null;
         ProcQuality quality = ProcQuality.Error;
+        List<String> warnings = new ArrayList<>();
         if (getStatus() == ProcessingStatus.Valid) {
-            TramoSeatsFactory.getInstance().fillDiagnostics(tests, result);
+            TramoSeatsFactory.getInstance().fillDiagnostics(tests, warnings, result);
             pspec = TramoSeatsFactory.getInstance().generateSpec(getSpecification(), result);
             quality = ProcDiagnostic.summary(tests);
         }
@@ -76,6 +77,7 @@ public class TramoSeatsDocument extends AbstractTsDocument<TramoSeatsSpec, Tramo
                 .diagnostics(tests)
                 .quality(quality)
                 .pointSpec(pspec)
+                .warnings(warnings)
                 .build();
     }
 }

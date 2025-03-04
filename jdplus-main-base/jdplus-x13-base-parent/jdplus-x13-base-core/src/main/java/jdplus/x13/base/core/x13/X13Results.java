@@ -21,7 +21,6 @@ import jdplus.sa.base.core.modelling.HasRegSarimaPreprocessing;
 import jdplus.x13.base.core.x11.HasX11Decomposition;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.api.information.GenericExplorable;
-import jdplus.toolkit.base.api.processing.HasLog;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 
@@ -31,7 +30,7 @@ import jdplus.sa.base.core.SaBenchmarkingResults;
  */
 @lombok.Value
 @lombok.Builder
-public class X13Results implements GenericExplorable , HasLog, HasRegSarimaPreprocessing, HasX11Decomposition{
+public class X13Results implements GenericExplorable, HasRegSarimaPreprocessing, HasX11Decomposition{
 
     private RegSarimaModel preprocessing;
     private X13Preadjustment preadjustment;
@@ -45,4 +44,5 @@ public class X13Results implements GenericExplorable , HasLog, HasRegSarimaPrepr
     public boolean isValid(){
         return finals != null;
     }
+
 }

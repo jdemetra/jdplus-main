@@ -26,6 +26,7 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.information.GenericExplorable;
 
 /**
  *
@@ -61,16 +62,18 @@ public class SaManager {
             if (dspec != null) {
                 ProcessingLog log = verbose ? new DefaultProcessingLog() : ProcessingLog.dummy();
                 SaProcessor processor = fac.processor(dspec);
-                Explorable rslt = processor.process(def.getTs().getData(), context, log);
+                GenericExplorable rslt = processor.process(def.getTs().getData(), context, log);
                 if (rslt != null) {
+                    List<String> warnings = new ArrayList<>();
                     List<ProcDiagnostic> tests = new ArrayList<>();
-                    fac.fillDiagnostics(tests, rslt);
+                    fac.fillDiagnostics(tests, warnings, rslt);
                     SaSpecification pspec = fac.generateSpec(spec, rslt);
                     ProcQuality quality = ProcDiagnostic.summary(tests);
                     return SaEstimation.builder()
                             .results(rslt)
                             .diagnostics(tests)
                             .quality(quality)
+                            .warnings(warnings)
                             .pointSpec(pspec)
                             .build();
                 } else {
@@ -93,11 +96,13 @@ public class SaManager {
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
-                SaProcessor processor = fac.processor(dspec);
+                List<String> warnings = new ArrayList<>();
                 List<ProcDiagnostic> tests = new ArrayList<>();
-                fac.fillDiagnostics(tests, rslt);
-                SaSpecification pspec = fac.generateSpec(spec, rslt);
-                return estimation.withQuality(ProcDiagnostic.summary(tests));
+                fac.fillDiagnostics(tests, warnings, rslt);
+                return estimation.toBuilder()
+                        .quality(ProcDiagnostic.summary(tests))
+                        .warnings(warnings)
+                        .build();
             }
         }
         return estimation.withQuality(ProcQuality.Undefined);

@@ -195,8 +195,8 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             return 1000;
         }
     }
-    
-        @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
+
+    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
     public static class LogFactory extends ProcDocumentItemFactory<X13Document, HtmlElement> {
 
         public LogFactory() {
@@ -219,9 +219,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         }
     }
 
-
 //</editor-fold>
-
     private static String generateId(String name, String id) {
         return TsDynamicProvider.CompositeTs.builder()
                 .name(name)
@@ -802,7 +800,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 }
                 SaProcessingFactory factory = SaManager.factoryFor(doc.getSpecification());
                 List<ProcDiagnostic> diags = new ArrayList<>();
-                factory.fillDiagnostics(diags, rslt);
+                factory.fillDiagnostics(diags, null, rslt);
                 return new HtmlDiagnosticsSummary(diags);
             }, new HtmlItemUI());
         }
@@ -822,8 +820,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null) {
                     return null;
                 }
-                if (rslt.getPreadjustment()== null)
+                if (rslt.getPreadjustment() == null) {
                     return null;
+                }
                 TsData s;
 
                 if (rslt.getPreprocessing() == null) {
@@ -905,7 +904,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public DiagnosticsSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null || ! rslt.isValid()) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -929,7 +928,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public SaSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SASEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null || ! rslt.isValid()) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -955,7 +954,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public IrrSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_ISEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null || ! rslt.isValid()) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -1012,7 +1011,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public LastSaSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_LASTSASEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null || ! rslt.isValid()) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -1044,7 +1043,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public LastIrrSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_LASTISEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null || ! rslt.isValid()) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -1302,7 +1301,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     private static Function<X13Document, RevisionHistoryUI.Information> revisionExtractor(String info, DiagnosticInfo diag) {
         return (X13Document source) -> {
             X13Results result = source.getResult();
-            if (result == null || ! result.isValid()) {
+            if (result == null || !result.isValid()) {
                 return null;
             }
             TsData input = source.getInput().getData();

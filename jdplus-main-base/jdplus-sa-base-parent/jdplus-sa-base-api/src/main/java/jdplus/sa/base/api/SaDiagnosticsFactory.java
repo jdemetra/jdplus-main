@@ -82,7 +82,7 @@ public interface SaDiagnosticsFactory<C extends DiagnosticsConfiguration, R> ext
             }
         }
     }
-    
+
     @Override
     default SaDiagnosticsFactory<C, R> activate(boolean active) {
         if (isActive() == active) {
@@ -91,11 +91,11 @@ public interface SaDiagnosticsFactory<C extends DiagnosticsConfiguration, R> ext
             return with((C) getConfiguration().activate(active));
         }
     }
-    
+
     @Override
     SaDiagnosticsFactory<C, R> with(C newConfig);
-    
-    default void fill(List<ProcDiagnostic> tests, R sa, String category) {
+
+    default void fill(List<ProcDiagnostic> tests, List<String> warnings, R sa, String category) {
         if (sa == null) {
             return;
         }
@@ -109,10 +109,12 @@ public interface SaDiagnosticsFactory<C extends DiagnosticsConfiguration, R> ext
                     .category(category)
                     .quality(diags.getDiagnostic(test))
                     .value(diags.getValue(test))
-                    .warnings(diags.getWarnings())
                     .build();
             tests.add(item);
         }
-     }
+        if (warnings != null) {
+            warnings.addAll(diags.getWarnings());
+        }
+    }
 
 }

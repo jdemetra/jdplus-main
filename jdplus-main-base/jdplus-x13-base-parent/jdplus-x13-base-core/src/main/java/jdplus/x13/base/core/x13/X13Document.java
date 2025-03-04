@@ -66,8 +66,9 @@ public class X13Document extends AbstractTsDocument<X13Spec, X13Results> impleme
         X13Results result = getResult();
         SaSpecification pspec = null;
         ProcQuality quality = ProcQuality.Error;
+        List<String> warnings=new ArrayList<>();
         if (getStatus() == ProcessingStatus.Valid) {
-            X13Factory.getInstance().fillDiagnostics(tests, result);
+            X13Factory.getInstance().fillDiagnostics(tests, warnings, result);
             pspec = X13Factory.getInstance().generateSpec(getSpecification(), result);
             quality = ProcDiagnostic.summary(tests);
         }
@@ -75,6 +76,7 @@ public class X13Document extends AbstractTsDocument<X13Spec, X13Results> impleme
                 .results(result)
                 .diagnostics(tests)
                 .quality(quality)
+                .warnings(warnings)
                 .pointSpec(pspec)
                 .build();
     }

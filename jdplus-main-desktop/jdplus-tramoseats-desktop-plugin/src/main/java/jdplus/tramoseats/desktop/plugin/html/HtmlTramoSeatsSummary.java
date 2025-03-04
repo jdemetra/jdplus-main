@@ -58,7 +58,7 @@ public class HtmlTramoSeatsSummary extends AbstractHtmlElement implements HtmlEl
         decomposition_ = results.getDecomposition();
         names_ = names;
         list_ = list;
-        TramoSeatsFactory.getInstance().fillDiagnostics(diags_, results);
+        TramoSeatsFactory.getInstance().fillDiagnostics(diags_, null, results);
         infos_=results.getLog();
     }
 

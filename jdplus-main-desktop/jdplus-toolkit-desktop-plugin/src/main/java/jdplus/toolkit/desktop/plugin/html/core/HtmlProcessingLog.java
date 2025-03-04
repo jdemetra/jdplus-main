@@ -96,7 +96,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
         }
         if (rem) {
             List<String> msg = all.stream()
-                    .filter(log -> log.getType() == ProcessingLog.InformationType.Warning)
+                    .filter(log -> log.getType() == ProcessingLog.InformationType.Remark)
                     .map(log -> log.getMsg())
                     .collect(Collectors.toList());
             if (!msg.isEmpty()) {

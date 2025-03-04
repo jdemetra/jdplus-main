@@ -34,8 +34,6 @@ public class ProcDiagnostic {
     String diagnostic;
     @lombok.NonNull
     String category;
-    @lombok.Singular
-    List<String> warnings;
     Object details;
 
     public static ProcQuality summary(@lombok.NonNull List<ProcDiagnostic> diagnostics) {

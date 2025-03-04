@@ -856,8 +856,9 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public StationaryVarianceDecompositionFactory() {
             super(TramoSeatsDocument.class, DECOMPOSITION_VAR, DIAGSEXTRACTOR.andThen(
                     (TramoSeatsDiagnostics diags) -> {
-                        if (diags == null)
+                        if (diags == null) {
                             return null;
+                        }
                         StationaryVarianceDecomposition decomp = diags.getVarianceDecomposition();
                         if (decomp == null) {
                             return null;
@@ -913,7 +914,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 }
                 SaProcessingFactory factory = SaManager.factoryFor(doc.getSpecification());
                 List<ProcDiagnostic> diags = new ArrayList<>();
-                factory.fillDiagnostics(diags, rslt);
+                factory.fillDiagnostics(diags, null, rslt);
                 return new HtmlDiagnosticsSummary(diags);
             }, new HtmlItemUI());
         }
@@ -1301,7 +1302,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public DiagnosticsSlidingSeasFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SEAS,
                     ssExtractor("Seasonal", false,
-                            rslt -> rslt.getFinals() == null ? null :rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value)),
+                            rslt -> rslt.getFinals() == null ? null : rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value)),
                     new SlidingSpansUI<>());
         }
 

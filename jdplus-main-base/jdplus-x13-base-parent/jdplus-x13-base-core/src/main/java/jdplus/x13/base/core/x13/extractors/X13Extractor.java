@@ -284,7 +284,7 @@ public class X13Extractor extends InformationMapping<X13Results> {
 
         set(qualityItem(SaDictionaries.QUALITY_SUMMARY), String.class, source -> {
             List<ProcDiagnostic> tests = new ArrayList<>();
-            X13Factory.getInstance().fillDiagnostics(tests, source);
+            X13Factory.getInstance().fillDiagnostics(tests, null, source);
             ProcQuality quality = ProcDiagnostic.summary(tests);
             return quality.name();
         });

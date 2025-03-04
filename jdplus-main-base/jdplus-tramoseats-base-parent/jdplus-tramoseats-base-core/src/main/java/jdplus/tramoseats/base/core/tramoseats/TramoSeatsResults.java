@@ -20,7 +20,6 @@ import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.sa.base.api.SeriesDecomposition;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.api.information.GenericExplorable;
-import jdplus.toolkit.base.api.processing.HasLog;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.modelling.HasRegSarimaPreprocessing;
@@ -32,7 +31,7 @@ import jdplus.tramoseats.base.core.seats.HasCanonicalDecomposition;
  */
 @lombok.Value
 @lombok.Builder
-public class TramoSeatsResults implements GenericExplorable, HasLog, HasRegSarimaPreprocessing, HasCanonicalDecomposition {
+public class TramoSeatsResults implements GenericExplorable, HasRegSarimaPreprocessing, HasCanonicalDecomposition {
 
     private RegSarimaModel preprocessing;
     private SeatsResults decomposition;

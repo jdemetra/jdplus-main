@@ -158,7 +158,8 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
 
         set(qualityItem(SaDictionaries.QUALITY_SUMMARY), String.class, source -> {
             List<ProcDiagnostic> tests = new ArrayList<>();
-            TramoSeatsFactory.getInstance().fillDiagnostics(tests, source);
+             List<String> warnings=new ArrayList<>();
+           TramoSeatsFactory.getInstance().fillDiagnostics(tests, warnings, source);
             ProcQuality quality = ProcDiagnostic.summary(tests);
             return quality.name();
         });
