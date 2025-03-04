@@ -56,6 +56,9 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 @Development(status = Development.Status.Preliminary)
 public class TramoKernel implements RegSarimaProcessor {
 
+    private static final String LAST_CHANCE = "last chance model",
+            OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection";
+
     private static final String TRAMO = "tramo";
 
     @lombok.Value
@@ -167,7 +170,7 @@ public class TramoKernel implements RegSarimaProcessor {
         ILengthOfPeriodVariable lp = preadjusted ? null : TramoModelBuilder.leapYear(tdspec);
         if (tdspec.isAutomatic()) {
             switch (tdspec.getAutomaticMethod()) {
-                case FTEST:
+                case FTEST -> {
                     return AutomaticFRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -178,7 +181,8 @@ public class TramoKernel implements RegSarimaProcessor {
                             .fPValue(tdspec.getProbabilityForFTest())
                             .estimationPrecision(options.intermediatePrecision)
                             .build();
-                case AIC: {
+                }
+                case AIC -> {
                     return AutomaticRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -189,7 +193,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .aic()
                             .build();
                 }
-                case BIC: {
+                case BIC -> {
                     return AutomaticRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -200,7 +204,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .bic()
                             .build();
                 }
-                default:
+                default -> {
                     return AutomaticWaldRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -211,6 +215,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .pmodel(tdspec.getProbabilityForFTest())
                             .adjust(tdspec.isAutoAdjust())
                             .build();
+                }
             }
         } else {
             return DefaultRegressionTest.builder()
@@ -663,6 +668,7 @@ public class TramoKernel implements RegSarimaProcessor {
 
         if (pass == 1 && isOutliersDetection()) {
             reduceVa();
+            context.getLog().warning(OUTLIERS_VA_REDUCED);
         }
 
         ++round;
@@ -672,6 +678,7 @@ public class TramoKernel implements RegSarimaProcessor {
             needAutoModelling = !same;
             needOutliers = isOutliersDetection();
         } else {
+            context.getLog().warning(LAST_CHANCE);
             lastSolution(context);
             needAutoModelling = false;
         }

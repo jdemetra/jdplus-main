@@ -22,6 +22,8 @@ import jdplus.sa.base.api.SaDiagnosticsFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import lombok.NonNull;
 
 /**
  *
@@ -35,10 +37,13 @@ public class SpectralDiagnosticsFactory<R extends Explorable> implements SaDiagn
     //public static final SpectralDiagnosticsFactory Default = new SpectralDiagnosticsFactory();
     private final SpectralDiagnosticsConfiguration config;
 
-    public SpectralDiagnosticsFactory(SpectralDiagnosticsConfiguration config) {
-        this.config=config;
-    }
+    private final Function<R, SpectralDiagnostics.Input> extractor;
 
+    public SpectralDiagnosticsFactory(@NonNull SpectralDiagnosticsConfiguration config,
+            @NonNull final Function<R, SpectralDiagnostics.Input> extractor) {
+        this.config = config;
+        this.extractor = extractor;
+    }
 
     @Override
     public SpectralDiagnosticsConfiguration getConfiguration() {
@@ -46,8 +51,8 @@ public class SpectralDiagnosticsFactory<R extends Explorable> implements SaDiagn
     }
 
     @Override
-    public SpectralDiagnosticsFactory<R> with(SpectralDiagnosticsConfiguration config){
-        return new SpectralDiagnosticsFactory(config);
+    public SpectralDiagnosticsFactory<R> with(SpectralDiagnosticsConfiguration config) {
+        return new SpectralDiagnosticsFactory(config, extractor);
     }
 
     @Override
@@ -62,7 +67,7 @@ public class SpectralDiagnosticsFactory<R extends Explorable> implements SaDiagn
 
     @Override
     public Diagnostics of(R rslts) {
-        return SpectralDiagnostics.of(config, rslts);
+        return SpectralDiagnostics.of(config, extractor.apply(rslts));
     }
 
     @Override
