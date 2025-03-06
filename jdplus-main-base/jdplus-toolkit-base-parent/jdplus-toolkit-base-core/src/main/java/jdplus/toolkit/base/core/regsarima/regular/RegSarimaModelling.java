@@ -23,6 +23,7 @@ import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regsarima.RegSarimaComputer;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
+import lombok.NonNull;
 
 /**
  *
@@ -33,8 +34,11 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 @lombok.AllArgsConstructor(access=lombok.AccessLevel.PRIVATE)
 public class RegSarimaModelling {
 
+    @NonNull
     private ModelDescription description;
     private RegArimaEstimation<SarimaModel> estimation;
+
+    @NonNull
     private final ProcessingLog log;
     
     public static RegSarimaModelling of(ModelDescription desc){

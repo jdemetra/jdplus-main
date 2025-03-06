@@ -206,7 +206,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                         if (result == null) {
                             return null;
                         } else {
-                            return new HtmlProcessingLog(result.getLog());
+                            HtmlProcessingLog html = new HtmlProcessingLog(result.getLog());
+                            html.displayInfos(true);
+                            return html;
                         }
                     },
                     new HtmlItemUI()

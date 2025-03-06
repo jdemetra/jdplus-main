@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private final ProcessingLog infos_;
-    private boolean err = true, wrn = true, rem=true, info = false, verbose = true;
+    private boolean err = true, wrn = true, rem = true, info = false, verbose = true;
 
     public HtmlProcessingLog(final ProcessingLog infos) {
         infos_ = infos;
@@ -69,55 +69,83 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
             return;
         }
         if (err) {
-            List<String> errs = all.stream()
-                    .filter(log -> log.getType() == ProcessingLog.InformationType.Error)
-                    .map(log -> log.getMsg())
-                    .collect(Collectors.toList());
-            if (!errs.isEmpty()) {
+            List<ProcessingLog.Information> list = all.stream().filter(log -> log.getType() == ProcessingLog.InformationType.Error).toList();
+            if (!list.isEmpty()) {
                 stream.write(HtmlTag.HEADER2, "Errors").newLine();
-                for (String er : errs) {
-                    stream.write(HtmlTag.IMPORTANT_TEXT, er, Bootstrap4.TEXT_DANGER).newLine();
-                }
-                stream.newLine();
+                list.forEach(msg -> {
+                    try {
+                        stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
+                        if (verbose) {
+                            stream.newLine();
+                            Object details = msg.getDetails();
+                            if (details != null) {
+                                HtmlLogFormatters.write(stream, details, verbose);
+                                stream.newLine();
+                            }
+                        }
+                    } catch (IOException ex) {
+                    }
+                });
             }
         }
         if (wrn) {
-            List<String> msg = all.stream()
-                    .filter(log -> log.getType() == ProcessingLog.InformationType.Warning)
-                    .map(log -> log.getMsg())
-                    .collect(Collectors.toList());
-            if (!msg.isEmpty()) {
+            List<ProcessingLog.Information> list = all.stream().filter(log -> log.getType() == ProcessingLog.InformationType.Warning).toList();
+            if (!list.isEmpty()) {
                 stream.write(HtmlTag.HEADER2, "Warnings").newLine();
-                for (String m : msg) {
-                    stream.write(m, Bootstrap4.TEXT_INFO).newLine();
-                }
-                stream.newLine();
+                list.forEach(msg -> {
+                    try {
+                        stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
+                        if (verbose) {
+                            stream.newLine();
+                            Object details = msg.getDetails();
+                            if (details != null) {
+                                HtmlLogFormatters.write(stream, details, verbose);
+                                stream.newLine();
+                            }
+                        }
+                    } catch (IOException ex) {
+                    }
+                });
             }
         }
         if (rem) {
-            List<String> msg = all.stream()
-                    .filter(log -> log.getType() == ProcessingLog.InformationType.Remark)
-                    .map(log -> log.getMsg())
-                    .collect(Collectors.toList());
-            if (!msg.isEmpty()) {
+            List<ProcessingLog.Information> list = all.stream().filter(log -> log.getType() == ProcessingLog.InformationType.Remark).toList();
+            if (!list.isEmpty()) {
                 stream.write(HtmlTag.HEADER2, "Remarks").newLine();
-                for (String m : msg) {
-                    stream.write(m, Bootstrap4.TEXT_INFO).newLine();
-                }
-                stream.newLine();
+                list.forEach(msg -> {
+                    try {
+                        stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
+                        if (verbose) {
+                            stream.newLine();
+                            Object details = msg.getDetails();
+                            if (details != null) {
+                                HtmlLogFormatters.write(stream, details, verbose);
+                                stream.newLine();
+                            }
+                        }
+                    } catch (IOException ex) {
+                    }
+                });
             }
         }
         if (info) {
-            List<String> msg = all.stream()
-                    .filter(log -> log.getType() == ProcessingLog.InformationType.Info)
-                    .map(log -> log.getMsg())
-                    .collect(Collectors.toList());
-            if (!msg.isEmpty()) {
-                stream.write(HtmlTag.HEADER2, "Log").newLine();
-                for (String m : msg) {
-                    stream.write(m).newLine();
-                }
-                stream.newLine();
+            List<ProcessingLog.Information> list = all.stream().filter(log -> log.getType() == ProcessingLog.InformationType.Info).toList();
+            if (!list.isEmpty()) {
+                stream.write(HtmlTag.HEADER2, "Infos").newLine();
+                list.forEach(msg -> {
+                    try {
+                        stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
+                        if (verbose) {
+                            stream.newLine();
+                            Object details = msg.getDetails();
+                            if (details != null) {
+                                HtmlLogFormatters.write(stream, details, verbose);
+                                stream.newLine();
+                            }
+                        }
+                    } catch (IOException ex) {
+                    }
+                });
             }
         }
     }

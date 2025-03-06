@@ -16,6 +16,8 @@
  */
 package jdplus.sa.base.core.regarima;
 
+import java.util.Formatter;
+import java.util.Locale;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.TsData;
@@ -47,7 +49,27 @@ import nbbrd.design.Development;
 @Development(status = Development.Status.Preliminary)
 public class LogLevelModule implements ILogLevelModule {
 
-    public static final String LL = "log-level test";
+    private static final String LL = "log-level test";
+    private static final String NEG = "negative values, levels are chosen",
+            FAILED = "log/level failed", LOGS = "logs are chosen", LEVELS = "levels are chosen";
+
+    @lombok.Getter
+    @lombok.AllArgsConstructor
+    public static class Info {
+
+        private final double logs;
+        private final double levels;
+        private final double logpreference;
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("AICC on logs=").append(new Formatter(Locale.ROOT).format("%6g", logs)).append("; ")
+                    .append("AICC on levels=").append(new Formatter(Locale.ROOT).format("%6g", levels)).append("; ")
+                    .append("(AICC-preference)=").append(new Formatter(Locale.ROOT).format("%6g", logpreference)).append(')');
+            return builder.toString();
+        }
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -156,11 +178,12 @@ public class LogLevelModule implements ILogLevelModule {
     public ProcessingResult process(RegSarimaModelling modelling) {
         clear();
         ProcessingLog logs = modelling.getLog();
+        logs.push(LL);
         boolean toClean = false;
         try {
-            logs.push(LL);
             ModelDescription model = modelling.getDescription();
             if (model.getSeries().getValues().anyMatch(z -> z <= 0)) {
+                logs.remark(NEG);
                 return ProcessingResult.Unchanged;
             }
             if (outliersCorrection) {
@@ -177,20 +200,22 @@ public class LogLevelModule implements ILogLevelModule {
             log = logmodel.estimate(processor);
             if (level != null) {
                 aiccLevel = level.statistics().getAICC();
-                logs.info("level", level.statistics());
             }
             if (log != null) {
                 aiccLog = log.statistics().getAICC();
-                logs.info("Log", log.statistics());
             }
             if (level == null && log == null) {
+                logs.warning(FAILED);
                 return ProcessingResult.Failed;
             }
 
+            Info info = new Info(aiccLog, aiccLevel, aiccDiff);
             if (isChoosingLog()) {
                 modelling.set(logmodel, log);
+                logs.info(LOGS, info);
                 return ProcessingResult.Changed;
             } else {
+                logs.info(LEVELS, info);
                 return ProcessingResult.Unchanged;
             }
         } finally {

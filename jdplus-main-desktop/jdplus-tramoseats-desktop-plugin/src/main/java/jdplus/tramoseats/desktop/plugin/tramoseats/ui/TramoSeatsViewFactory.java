@@ -250,7 +250,9 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                         if (result == null) {
                             return null;
                         } else {
-                            return new HtmlProcessingLog(result.getLog());
+                            HtmlProcessingLog html = new HtmlProcessingLog(result.getLog());
+                            html.displayInfos(true);
+                            return html;
                         }
                     },
                     new HtmlItemUI()
