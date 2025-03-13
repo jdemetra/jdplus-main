@@ -17,7 +17,6 @@
 package jdplus.toolkit.desktop.plugin.html.core;
 
 import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
-import jdplus.toolkit.desktop.plugin.html.Bootstrap4;
 import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
@@ -80,17 +79,10 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     list.forEach(msg -> {
                         try {
                             stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
-                            if (verbose) {
-                                stream.newLine();
-                                Object details = msg.getDetails();
-                                if (details != null) {
-                                    HtmlLogFormatters.write(stream, details, verbose);
-                                    stream.newLine();
-                                }
-                            }
                         } catch (IOException ex) {
                         }
                     });
+                    stream.newLine();
                 }
             }
             if (wrn) {
@@ -99,18 +91,11 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(HtmlTag.HEADER2, "Warnings").newLine();
                     list.forEach(msg -> {
                         try {
-                            stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
-                            if (verbose) {
-                                stream.newLine();
-                                Object details = msg.getDetails();
-                                if (details != null) {
-                                    HtmlLogFormatters.write(stream, details, verbose);
-                                    stream.newLine();
-                                }
-                            }
+                            stream.write(msg.getMsg()).newLine();
                         } catch (IOException ex) {
                         }
                     });
+                    stream.newLine();
                 }
             }
             if (rem) {
@@ -119,18 +104,11 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(HtmlTag.HEADER2, "Remarks").newLine();
                     list.forEach(msg -> {
                         try {
-                            stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
-                            if (verbose) {
-                                stream.newLine();
-                                Object details = msg.getDetails();
-                                if (details != null) {
-                                    HtmlLogFormatters.write(stream, details, verbose);
-                                    stream.newLine();
-                                }
-                            }
+                            stream.write(msg.getMsg()).newLine();
                         } catch (IOException ex) {
                         }
                     });
+                    stream.newLine();
                 }
             }
             if (info) {
@@ -149,6 +127,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                         } catch (IOException ex) {
                         }
                     });
+                    stream.newLine();
                 }
             }
         }

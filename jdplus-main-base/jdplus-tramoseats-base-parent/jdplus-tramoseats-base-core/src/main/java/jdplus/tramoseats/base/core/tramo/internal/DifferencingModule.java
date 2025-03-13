@@ -52,8 +52,7 @@ public class DifferencingModule {
             SELECTION = "differencing selection", DEFAULT = "default model selected (not enough obs.)",
             FAILED = "differencing selection failed";
     
-    @lombok.Getter
-    @lombok.AllArgsConstructor
+    @lombok.Value
     public static class Info{
         
         private final int d, bd;

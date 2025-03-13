@@ -63,10 +63,8 @@ public class SeatsKernel {
     }
 
     private SeatsModel buildModel(SeatsModelSpec modelSpec, ProcessingLog log) {
-        log.push(MODEL);
         SeatsModel model = SeatsModel.of(modelSpec);
         model.setCurrentModel(model.getOriginalModel());
-        log.pop();
         return model;
     }
 

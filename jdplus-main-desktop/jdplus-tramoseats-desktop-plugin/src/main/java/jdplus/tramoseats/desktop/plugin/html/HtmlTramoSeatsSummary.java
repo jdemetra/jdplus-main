@@ -80,7 +80,9 @@ public class HtmlTramoSeatsSummary extends AbstractHtmlElement implements HtmlEl
     }
 
     private void writeInformation(HtmlStream stream) throws IOException {
-        stream.write(new HtmlProcessingLog(infos_));
+        HtmlProcessingLog log = new HtmlProcessingLog(infos_);
+        log.setVerbose(false);
+        stream.write(log);
     }
 
     private void writePreprocessing(HtmlStream stream) throws IOException {

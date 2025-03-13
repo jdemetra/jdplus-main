@@ -39,8 +39,7 @@ public class ArmaModule implements IArmaModule {
             MODELS = "selected models", DEFAULT = "default model selected (not enough obs.)",
             FAILED = "arma selection failed";
 
-    @lombok.Getter
-    @lombok.AllArgsConstructor
+    @lombok.Value
     public static class Info {
 
         private final ArmaModelSelector.FastBIC[] models;

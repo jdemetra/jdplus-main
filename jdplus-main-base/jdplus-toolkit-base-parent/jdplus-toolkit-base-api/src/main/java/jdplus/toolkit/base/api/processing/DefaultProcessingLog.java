@@ -48,12 +48,12 @@ public class DefaultProcessingLog implements ProcessingLog{
     
     @Override
     public void push(String routine){
-        context.push(routine);
+        context.addLast(routine);
     }
     
     @Override
     public void pop(){
-        context.pop();
+        context.removeLast();
     }
     
     @Override
