@@ -233,13 +233,6 @@ public final class TsTableUI implements InternalUI<JTsTable> {
         result.add(HasTsCollectionSupport.newSelectAllMenu(target));
         result.add(HasTsCollectionSupport.newClearMenu(target));
 
-        result.add(new AbstractAction("DEBUG") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(target.getTsCollection());
-            }
-        });
-
         return result.getPopupMenu();
     }
 
