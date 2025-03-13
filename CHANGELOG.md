@@ -11,6 +11,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![STAT] Correct the handling of short series in X11
 - ![UI] Correct the revision analysis panel for short series
+- ![UI] Fix missing split into yearly components feature [#550](https://github.com/jdemetra/jdplus-main/issues/550)
+- ![UI] Remove DEBUG option in contextual menu [#535](https://github.com/jdemetra/jdplus-main/issues/535)
 
 ## [3.4.0] - 2025-02-13
 
