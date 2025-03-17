@@ -324,11 +324,11 @@ public final class Mstatistics {
              */ gP, gTD, gOmod, gCImod, gImod, gMCD;
     private boolean[] valid;
     private double[] gOc, gCc, gIc, gCIc, gSc;
-    private double[] m = new double[11];
+    private final double[] m = new double[11];
     private boolean s3x5, bShort;
-    private DecompositionMode mode;
-    private static double[] wtFull = {10, 11, 10, 8, 11, 10, 18, 7, 7, 4, 4};
-    private static double[] wtShort = {14, 15, 10, 8, 11, 10, 32};
+    private final DecompositionMode mode;
+    private static final double[] wtFull = {10, 11, 10, 8, 11, 10, 18, 7, 7, 4, 4};
+    private static final double[] wtShort = {14, 15, 10, 8, 11, 10, 32};
 
     private MsrTable rms;
 

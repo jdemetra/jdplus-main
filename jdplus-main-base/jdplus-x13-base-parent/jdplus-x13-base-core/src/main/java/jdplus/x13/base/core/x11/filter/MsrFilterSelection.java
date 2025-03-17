@@ -65,7 +65,7 @@ public class MsrFilterSelection {
             // 1. calc Components
             calcComponents(series, context);
             // 2. calc periodic variations
-            msrTable = MsrTable.of(seas, irr, context.getPeriod(), context.getFirstPeriod(), context.getMode() == DecompositionMode.Multiplicative);
+            msrTable = MsrTable.of(seas, irr, context.getPeriod(), context.getPosition(nb), context.getMode() == DecompositionMode.Multiplicative);
             // 3. calc gmsr
             msr = msrTable.getGlobalMsr();
             // 4. decision
@@ -87,9 +87,9 @@ public class MsrFilterSelection {
 
     private DoubleSeq completeYear(DoubleSeq series, X11Context context) {
         //check incomplete year
-        int start = context.getFirstPeriod(), period = context.getPeriod();
+        int start = context.getPosition(context.getBackcastHorizon()), period = context.getPeriod();
         int ecut = (series.length() + start) % period;
-//        int bcut= start == 0 ? 0 : period-start;
+        //        int bcut = start == 0 ? 0 : period - start;
         int bcut = 0; // following the Ladiray's paper and the original fortran code !
         return series.drop(bcut, ecut);
     }

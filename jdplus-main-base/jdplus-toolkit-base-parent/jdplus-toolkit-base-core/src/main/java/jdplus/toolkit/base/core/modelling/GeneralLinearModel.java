@@ -254,7 +254,6 @@ public interface GeneralLinearModel<M> extends Explorable {
             return interp;
         }
         TsData det = deterministicEffect(interp.getDomain(), v->true);
-
         return TsData.subtract(interp, det);
     }
 

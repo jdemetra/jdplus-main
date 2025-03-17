@@ -74,9 +74,11 @@ public class RegressionDictionaries {
             Y_EF = "y_ef",
             Y_B = "y_b",
             Y_EB = "y_eb",
-//            Y_LIN = "y_lin", // linearized series (transformed series without pre-adjustment and regression effects). Untransformed
-//            Y_LIN_F = "y_lin_f",
-//            Y_LIN_B = "y_lin_b",
+            YC_F = "yc_f",
+            YC_B = "yc_b",
+            YLIN = "ylin", // linearized series (transformed series without pre-adjustment and regression effects). Untransformed
+            YLIN_F = "ylin_f",
+            YLIN_B = "ylin_b",
             CAL = "cal", // all calendar effects (including pre-adjustments). cal=tde+*mhe. Untransformed       
             CAL_F = "cal_f",
             CAL_B = "cal_b",
@@ -107,11 +109,12 @@ public class RegressionDictionaries {
             REG = "reg", // All other regression effects (outside outliers and calendars). Untransformed
             REG_F = "reg_f",
             REG_B = "reg_b",
-            L = "l" // linearized series (series without pre-adjustment and regression effects). l=yc-/det. Transformed
-//            L_F = "l_f",
-//            L_EF = "l_ef",
-//            L_B = "l_b",
-//            L_EB = "l_eb"
+            L = "l", // linearized series (series without pre-adjustment and regression effects). l=yc-/det. Transformed
+            L_F = "l_f",
+            L_EF = "l_ef",
+            L_B = "l_b",
+            L_EB = "l_eb",
+            FULL_RES="full_res" // full residuals. L^-1*([log]yc-[log]det)
             ;
 
     public final Dictionary REGRESSION_EFFECTS = AtomicDictionary.builder()
@@ -122,9 +125,11 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(Y_B).description("backcasts of the original series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(Y_EB).description("backcasts errors of the original series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(YC).description("interpolated series. Untransformed").outputClass(TsData.class).build())
-//            .item(Item.builder().name(Y_LIN).description("linearized series (series without pre-adjustment and regression effects). l=yc-/det. Untransformed").outputClass(TsData.class).build())
-//            .item(Item.builder().name(Y_LIN_F).description("forcasts of the linearized series. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(Y_LIN_B).description("backcasts of the linearized series. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YC_F).description("forecasts of the interpolated series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YC_B).description("backcasts of the interpolated series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YLIN).description("linearized series (series without pre-adjustment and regression effects). l=yc-/det. Untransformed").outputClass(TsData.class).build())
+//            .item(AtomicDictionary.Item.builder().name(YLIN_F).description("forcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(YLIN_B).description("backcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(DET).description("all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).build())
             .item(AtomicDictionary.Item.builder().name(DET_F).description("forcasts of all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(DET_B).description("backcasts of all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
@@ -153,10 +158,11 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(REG_F).description("forecasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(REG_B).description("backcasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(L).description("linearized series (transformed series without pre-adjustment and regression effects). Transformed)").outputClass(TsData.class).build())
-//            .item(Item.builder().name(L_F).description("forecasts of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(L_B).description("backcasts of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(L_EF).description("forecast errors of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(L_EB).description("backcast errors of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_F).description("forecasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_B).description("backcasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_EF).description("forecast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_EB).description("backcast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(FULL_RES).description("full residuals").outputClass(TsData.class).build())
             .build();
 
     public final String COEFFDESC = "description", REGTYPE = "type", COEFF = "coefficients", COVAR = "covar", COVAR_ML = "covar-ml";

@@ -23,7 +23,6 @@ import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.processing.ProcQuality;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
@@ -214,12 +213,12 @@ public class X13Extractor extends InformationMapping<X13Results> {
         set(SaDictionaries.Y + SaDictionaries.FORECAST, TsData.class, source
                 -> source.getPreadjustment() == null ? null : source.getPreadjustment().getA1a());
 
-        set(ModellingDictionary.CAL, TsData.class, source
-                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getActualDomain()));
-        set(ModellingDictionary.CAL + SaDictionaries.BACKCAST, TsData.class, source
-                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
-        set(ModellingDictionary.CAL + SaDictionaries.FORECAST, TsData.class, source
-                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
+//        set(RegressionDictionaries.CAL, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getActualDomain()));
+//        set(RegressionDictionaries.CAL_B, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
+//        set(RegressionDictionaries.CAL_F, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
 
         set(finalItem(X13Dictionaries.D11), TsData.class, source
                 -> source.getFinals() == null ? null : source.getFinals().getD11final());

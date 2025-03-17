@@ -38,6 +38,7 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
      * Returns the averages by period
      *
      * @param s The analyzed time series
+     * @param period
      *
      * @return An array of doubles (length = annual frequency), with the
      * averages for each period (months/quarters) of the year.
@@ -64,8 +65,8 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
     protected int start; // position of the first "complete"/considered period
     protected double lsigma = 1.5, usigma = 2.5;
     protected DoubleSeq scur, sweights;
-    private static final int NPERIODS = 5;// window of 5 years
-    protected int forecastHorizon;
+    private static final int NCYCLES = 5;// window of 5 years
+    protected int forecastHorizon, backcastHorizon;
     protected boolean excludeFcast;
 
     /**
@@ -83,6 +84,7 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
         period = context.getPeriod();
         mul = context.isMultiplicative();
         forecastHorizon = context.getForecastHorizon();
+        backcastHorizon = context.getBackcastHorizon();
         excludeFcast = context.isExcludefcast();
         // compute standard deviations
         double[] stdev = calcStdev(scur);
@@ -115,54 +117,71 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
     }
 
     protected double[] calcStdev(DoubleSeq s) {
+        int nstart=start;
         if (excludeFcast) {
-            s = s.drop(0, forecastHorizon);
+            s = s.drop(backcastHorizon, forecastHorizon);
+            nstart=(start+backcastHorizon)%period;
         }
 
         int n = s.length();
-        int ny = 1 + (start + n - 1) / period;
-        //number of full years, if first and last year sum up to a complete year this ist not a whole year
+        int ny = 1 + (nstart + n - 1) / period;
+        //number of full years
         int nfy = ny;
-        int nbeg = period - start;
-        if (nbeg == period) {
-            nbeg = 0;
-        } else {
+        // number of additional data for the computation of the first
+        // stdev (we use 5 (=NCYCLES) complete years (cycles) + nbeg data ) 
+        int nbeg; 
+        if (nstart == 0){
+            // full year
+            nbeg=0;
+        }else{
+            nbeg=period-nstart;
             --nfy;
         }
-        int nend = (start + n ) % period;
+        // number of observations in an incomplete year at the end of the series
+        int nend = (nstart + n ) % period;
         if (nend != 0) {
             --nfy;
         }
-        if (nfy < NPERIODS) {
+        if (nfy < NCYCLES) {
             return new double[]{calcSingleStdev(s)};
         }
 
-        int ibeg = NPERIODS / 2;
+        // position of the year corresponding to the first stdev computed exactly on NCYCLES;
+        // it is centred (=NCYCLES/2) and increased by 1 if the first cycle is incomplete.
+        // the previous stdev are computed on NCYCLES + the incomplete year. 
+        int ibeg = NCYCLES / 2;
         if (nbeg > 0) {
             ++ibeg;
         }
-        int iend = ibeg + nfy - NPERIODS;
+        
+        // position of the last stdev computed exactly on NCYCLES
+        // the next stdev are computed on NCYCLES + the incomplete year. 
+        int iend = ibeg + nfy - NCYCLES;
         double[] stdev = new double[ny];
-        // first years
-        double e = calcSingleStdev(s.range(0, nbeg + NPERIODS * period));
+        int pos = nbeg, icur=ibeg;
+        while (icur <= iend) {
+            DoubleSeq cur = s.range(pos, pos + NCYCLES * period);
+            stdev[icur++] = calcSingleStdev(cur);
+            pos += period;
+        }
+        double e;
+        // the first cycle is incomplete
+        if (nbeg>0)
+            e= calcSingleStdev(s.range(0, nbeg + NCYCLES * period));
+        else
+            e = stdev[ibeg];
         for (int i = 0; i < ibeg; ++i) {
             stdev[i] = e;
         }
-        int pos = nbeg;
-        while (ibeg <= iend) {
-            DoubleSeq cur = s.range(pos, pos + NPERIODS * period);
-            stdev[ibeg++] = calcSingleStdev(cur);
-            pos += period;
-        }
-        // the last block is too short...
+        // the last cycle is incomplete...
         if (nend > 0) {
             pos -= period;
             DoubleSeq cur = s.range(pos, n);
             e = calcSingleStdev(cur);
         } else {
-            e = stdev[ibeg - 1];
+            e = stdev[iend];
         }
-        for (int i = ibeg; i < stdev.length; ++i) {
+        for (int i = icur; i < stdev.length; ++i) {
             stdev[i] = e;
         }
         return stdev;

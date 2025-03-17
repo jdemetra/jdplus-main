@@ -26,7 +26,6 @@ import jdplus.toolkit.base.api.dictionaries.ArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
-import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
 import jdplus.toolkit.base.api.dictionaries.UtilityDictionaries;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
@@ -52,7 +51,7 @@ import nbbrd.service.ServiceProvider;
 @lombok.experimental.UtilityClass
 public class RegSarimaModelExtractors {
 
-    public final int NFCAST = -2, NBCAST = 0;
+    public final int NFCAST = -1, NBCAST = 0;
 
     @ServiceProvider(InformationExtractor.class)
     public static class Specific extends InformationMapping<RegSarimaModel> {
@@ -65,10 +64,10 @@ public class RegSarimaModelExtractors {
             return Dictionary.concatenate(RegArimaDictionaries.REGRESSION, key);
         }
 
-        private String residualsItem(String key) {
-            return Dictionary.concatenate(RegArimaDictionaries.RESIDUALS, key);
-        }
-
+//        private String residualsItem(String key) {
+//            return Dictionary.concatenate(RegArimaDictionaries.RESIDUALS, key);
+//        }
+//
         private String advancedItem(String key) {
             return Dictionary.concatenate(RegArimaDictionaries.ADVANCED, key);
         }
@@ -218,19 +217,25 @@ public class RegSarimaModelExtractors {
             setArray(RegressionDictionaries.Y_EB, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getForecastsStdev());
 
             set(RegressionDictionaries.YC, TsData.class, source -> source.interpolatedSeries(false));
+            setArray(RegressionDictionaries.YC_F, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getForecasts());
+            setArray(RegressionDictionaries.YC_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getForecasts());
 
             set(RegressionDictionaries.L, TsData.class, source -> source.linearizedSeries());
-//            set(RegressionDictionaries.Y_LIN, TsData.class, source -> {
-//                TsData lin = source.linearizedSeries();
-//                return source.backTransform(lin, false);
-//            });
+            set(RegressionDictionaries.YLIN, TsData.class, source -> {
+                TsData lin = source.linearizedSeries();
+                return source.backTransform(lin, false);
+            });
+
 
             //********************
 //        MAPPING.set(ModellingDictionary.YC + SeriesInfo.F_SUFFIX, source -> source.forecast(source.getForecastCount(), false));
 //        MAPPING.set(ModellingDictionary.YC + SeriesInfo.EF_SUFFIX, source -> source.getForecastError());
-//        MAPPING.set(RegressionDictionaries.Y_LIN + SeriesInfo.F_SUFFIX, source -> source.linearizedForecast(source.domain(true).getLength(), true));
-//        MAPPING.set(RegressionDictionaries.L + SeriesInfo.F_SUFFIX, source -> source.linearizedForecast(source.getForecastCount()));
-//        MAPPING.set(RegressionDictionaries.L + SeriesInfo.B_SUFFIX, source -> source.linearizedBackcast(source.description.getFrequency()));
+//            setArray(RegressionDictionaries.Y_LIN_F, NFCAST, TsData.class, (source, i) -> source.backTransform(source.forecasts(i).getRawForecasts(), false));
+//            setArray(RegressionDictionaries.Y_LIN_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecasts());
+//            setArray(RegressionDictionaries.L_F, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getForecastsStdev());
+//            setArray(RegressionDictionaries.L_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getForecastsStdev());
+//            setArray(RegressionDictionaries.L_EF, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getForecastsStdev());
+//            setArray(RegressionDictionaries.L_EB, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getForecastsStdev());
             set(RegressionDictionaries.YCAL, TsData.class, source -> {
                 TsData y = source.getDescription().getSeries();
                 TsData cal = source.getCalendarEffect(y.getDomain());
@@ -327,6 +332,8 @@ public class RegSarimaModelExtractors {
                         MissingValueEstimation[] missing = source.getEstimation().getMissing();
                         return i <= 0 || i > missing.length ? null : missing[i - 1];
                     });
+
+            set(RegressionDictionaries.FULL_RES, TsData.class, source -> source.fullResiduals());
 
             set(RegressionDictionaries.REG, TsData.class, (RegSarimaModel source) -> {
                 TsData reg = source.deterministicEffect(null,

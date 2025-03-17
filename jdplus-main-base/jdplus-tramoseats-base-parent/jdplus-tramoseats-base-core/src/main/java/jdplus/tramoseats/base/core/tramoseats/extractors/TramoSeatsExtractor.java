@@ -10,7 +10,6 @@ import java.util.List;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.DecompositionMode;
@@ -82,12 +81,12 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
         set(SaDictionaries.Y + SaDictionaries.FORECAST, TsData.class, source
                 -> finalSeries(source, ComponentType.Series, ComponentInformation.Forecast));
 
-        set(ModellingDictionary.CAL, TsData.class, source
-                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getActualDomain()));
-        set(ModellingDictionary.CAL + SaDictionaries.BACKCAST, TsData.class, source
-                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
-        set(ModellingDictionary.CAL + SaDictionaries.FORECAST, TsData.class, source
-                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
+//        set(RegressionDictionaries.CAL, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getActualDomain()));
+//        set(RegressionDictionaries.CAL_B, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
+//        set(RegressionDictionaries.CAL_F, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
 
         set(SaDictionaries.T, TsData.class, source
                 -> finalSeries(source, ComponentType.Trend, ComponentInformation.Value));

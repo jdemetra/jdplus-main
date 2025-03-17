@@ -64,7 +64,7 @@ public class X11BStep {
     private void b4Step(X11Context context) {
         if (context.isSeasonal()) {
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
-            b4a = processor.process(b3, (context.getFirstPeriod() + b2drop) % context.getPeriod());
+            b4a = processor.process(b3, context.getPosition(b2drop));
             b4anorm = DefaultSeasonalNormalizer.normalize(b4a, 0, context, b2drop);
         } else {
             b4a = DummyFilter.filter(context.isMultiplicative(), b3);
@@ -72,7 +72,7 @@ public class X11BStep {
         }
         b4d = b4d(context);
         IExtremeValuesCorrector ecorr = context.selectExtremeValuesCorrector(b4d);
-        int j = (b2drop + context.getFirstPeriod()) % context.getPeriod();
+        int j = context.getPosition(b2drop);
         ecorr.setStart(j);
         ecorr.analyse(b4d, context);
 
@@ -87,7 +87,7 @@ public class X11BStep {
     private void b5Step(X11Context context) {
         if (context.isSeasonal()) {
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
-            DoubleSeq b5a = processor.process(b4g, (context.getFirstPeriod() + b2drop) % context.getPeriod());
+            DoubleSeq b5a = processor.process(b4g, context.getPosition(b2drop));
             b5 = DefaultSeasonalNormalizer.normalize(b5a, b2drop, context);
         } else {
             b5 = DummyFilter.filter(context.isMultiplicative(), b4g);
@@ -141,14 +141,14 @@ public class X11BStep {
         DoubleSeq b9c;
         if (context.isSeasonal()) {
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
-            DoubleSeq b9a = processor.process(b8, context.getFirstPeriod());
+            DoubleSeq b9a = processor.process(b8, context.getPosition(0));
             b9c = DefaultSeasonalNormalizer.normalize(b9a, 0, context);
         } else {
             b9c = DummyFilter.filter(context.isMultiplicative(), b8);
         }
         DoubleSeq b9d = b9d(context, b9c);
         IExtremeValuesCorrector ecorr = context.getExtremeValuesCorrector();
-        ecorr.setStart(context.getFirstPeriod());
+        ecorr.setStart(context.getPosition(0));
         ecorr.analyse(b9d, context);
 
         b9 = ecorr.computeCorrections(b8);
@@ -162,7 +162,7 @@ public class X11BStep {
     private void bFinalStep(X11Context context) {
         if (context.isSeasonal()) {
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
-            DoubleSeq b10a = processor.process(b9g, context.getFirstPeriod());
+            DoubleSeq b10a = processor.process(b9g, context.getPosition(0));
             b10 = DefaultSeasonalNormalizer.normalize(b10a, 0, context);
         } else {
             b10 = DummyFilter.filter(context.isMultiplicative(), b9g);
@@ -171,7 +171,7 @@ public class X11BStep {
         b13 = context.remove(b11, b7);
 
         IExtremeValuesCorrector ecorr = context.selectExtremeValuesCorrector(b13);
-        ecorr.setStart(context.getFirstPeriod());
+        ecorr.setStart(context.getPosition(0));
         ecorr.analyse(b13, context);
         b17 = ecorr.getObservationWeights();
         b20 = ecorr.getCorrectionFactors();

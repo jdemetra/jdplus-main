@@ -21,7 +21,6 @@ import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
 import jdplus.toolkit.base.core.modelling.Residuals;
 import nbbrd.design.Development;

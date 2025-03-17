@@ -41,7 +41,6 @@ import jdplus.toolkit.desktop.plugin.html.core.HtmlDiagnosticsSummary;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.sa.base.api.ComponentDescriptor;
@@ -81,7 +80,6 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.diagnostics.SignificantSeasonalityTest;
 import jdplus.sa.base.core.tests.SeasonalityTests;
-import jdplus.toolkit.base.api.processing.ProcessingStatus;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
@@ -99,6 +97,7 @@ import jdplus.toolkit.base.core.ucarima.UcarimaModel;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovDiagnostics;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlProcessingLog;
+import jdplus.toolkit.desktop.plugin.ui.processing.ContextualChartUI;
 import jdplus.toolkit.desktop.plugin.ui.processing.ContextualIds;
 import jdplus.toolkit.desktop.plugin.ui.processing.ContextualTableUI;
 import jdplus.tramoseats.base.api.tramo.TransformSpec;
@@ -279,6 +278,10 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 //</editor-fold>
 
+    private static String generateId(String id) {
+        return generateId(id, id);
+    }
+
     private static String generateId(String name, String id) {
         return TsDynamicProvider.CompositeTs.builder()
                 .name(name)
@@ -286,6 +289,24 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 .now(id)
                 .fore(id + SeriesInfo.F_SUFFIX)
                 .build().toString();
+    }
+
+    private static String nsuffix(String suffix, int n) {
+        StringBuilder builder = new StringBuilder();
+        return builder.append(suffix).append('(').append(n).append(')').toString();
+    }
+
+    private static String generateId(String name, String id, int nb, int nf) {
+        TsDynamicProvider.CompositeTs.Builder builder = TsDynamicProvider.CompositeTs.builder()
+                .name(name);
+        if (nb != 0) {
+            builder.back(id + nsuffix(SeriesInfo.B_SUFFIX, nb));
+        }
+        builder.now(id);
+        if (nf != 0) {
+            builder.fore(id + nsuffix(SeriesInfo.F_SUFFIX, nf));
+        }
+        return builder.build().toString();
     }
 
     private static String generateStdErrorId(String name, String id) {
@@ -305,10 +326,10 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         };
     }
 
-    public static String[] highSeries() {
+    public static String[] highSeries(int nb, int nf) {
         return new String[]{
             generateId("Seasonal (component)", Dictionary.concatenate(SaDictionaries.DECOMPOSITION, SaDictionaries.S_CMP)),
-            generateId("Calendar effects", ModellingDictionary.CAL),
+            generateId("Calendar effects", RegressionDictionaries.CAL, nb, nf),
             generateId("Irregular", SaDictionaries.I)
         };
     }
@@ -352,10 +373,25 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 2200)
-    public static class MainHighChart extends ProcDocumentItemFactory<TramoSeatsDocument, TramoSeatsDocument> {
+    public static class MainHighChart extends ProcDocumentItemFactory<TramoSeatsDocument, ContextualIds<TramoSeatsDocument>>  {
 
         public MainHighChart() {
-            super(TramoSeatsDocument.class, SaViews.MAIN_CHARTS_HIGH, VALIDEXTRACTOR, new GenericChartUI(false, highSeries()));
+            
+            super(TramoSeatsDocument.class, SaViews.MAIN_CHARTS_HIGH, s -> {
+                if (s.getResult() == null) {
+                    return null;
+                }
+                     int p = s.getInput().getData().getAnnualFrequency();
+              int nf = s.getSpecification().getSeats().getForecastCount();
+                if (nf < 0) {
+                     nf = -nf * p;
+                }
+               int nb = s.getSpecification().getSeats().getBackcastCount();
+                if (nb < 0) {
+                    nb = -nb * p;
+                }
+                return new ContextualIds<>(highSeries(nb, nf), s);
+            }, new ContextualChartUI(true));
         }
 
         @Override
@@ -508,14 +544,23 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
 
         public PreprocessingDetFactory() {
             super(TramoSeatsDocument.class, SaViews.PREPROCESSING_DET, source -> source.getResult().isValid() ? source : null, new GenericTableUI(false,
-                    ModellingDictionary.YCAL,
-                    ModellingDictionary.Y_LIN,
-                    ModellingDictionary.DET,
-                    ModellingDictionary.CAL,
-                    ModellingDictionary.TDE,
-                    ModellingDictionary.EE,
-                    ModellingDictionary.OUT,
-                    ModellingDictionary.FULL_RES));
+                    generateId(RegressionDictionaries.YC),
+                    generateId(RegressionDictionaries.YLIN),
+                    generateId(RegressionDictionaries.YCAL),
+                    generateId(RegressionDictionaries.DET),
+                    generateId(RegressionDictionaries.CAL),
+                    generateId(RegressionDictionaries.TDE),
+                    generateId(RegressionDictionaries.EE),
+                    generateId(SaDictionaries.OUT_T),
+                    generateId(SaDictionaries.OUT_S),
+                    generateId(SaDictionaries.OUT_I),
+                    generateId(RegressionDictionaries.OUT),
+                    generateId(SaDictionaries.REG_Y),
+                    generateId(SaDictionaries.REG_SA),
+                    generateId(SaDictionaries.REG_T),
+                    generateId(SaDictionaries.REG_S),
+                    generateId(SaDictionaries.REG_I),
+                    generateId(RegressionDictionaries.REG)));
         }
 
         @Override

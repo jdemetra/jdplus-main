@@ -47,7 +47,7 @@ public class TramoSeatsKernel {
                     return null;
                 }
             }
-            return s;
+            return sc;
         };
     }
 
@@ -70,6 +70,8 @@ public class TramoSeatsKernel {
         
         try {
             // Step 0. Preliminary checks
+            // sc is the series corresponding to the series span, after some verifications
+            // null in case of problems
             TsData sc = preliminary.check(s, log);
             if (sc == null) {
                 return TramoSeatsResults.builder()
@@ -77,7 +79,8 @@ public class TramoSeatsKernel {
                         .build();
             }
             // Step 1. Tramo
-            RegSarimaModel preprocessing = tramo.process(sc, log);
+            // We reuse the full series because selection is integrated in the preprocessing step
+            RegSarimaModel preprocessing = tramo.process(s, log);
             // Step 2. Link between tramo and seats
             SeatsModelSpec smodel = of(preprocessing);
             // Step 3. Seats

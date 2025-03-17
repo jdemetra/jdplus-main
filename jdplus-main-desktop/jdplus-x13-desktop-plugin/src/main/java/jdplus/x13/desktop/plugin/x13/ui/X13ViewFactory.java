@@ -40,7 +40,6 @@ import jdplus.toolkit.desktop.plugin.html.core.HtmlDiagnosticsSummary;
 import jdplus.toolkit.base.api.information.BasicInformationExtractor;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlInformationSet;
 import jdplus.toolkit.desktop.plugin.html.modelling.HtmlRegSarima;
@@ -74,6 +73,7 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.tests.SeasonalityTests;
 import jdplus.sa.desktop.plugin.processing.SiRatioUI;
+import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
@@ -222,6 +222,10 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
 //</editor-fold>
+    private static String generateId(String id) {
+        return generateId(id, id);
+    }
+
     private static String generateId(String name, String id) {
         return TsDynamicProvider.CompositeTs.builder()
                 .name(name)
@@ -236,6 +240,24 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 .name(name)
                 .now(id)
                 .build().toString();
+    }
+
+    private static String nsuffix(String suffix, int n) {
+        StringBuilder builder = new StringBuilder();
+        return builder.append(suffix).append('(').append(n).append(')').toString();
+    }
+
+    private static String generateId(String name, String id, int nb, int nf) {
+        TsDynamicProvider.CompositeTs.Builder builder = TsDynamicProvider.CompositeTs.builder()
+                .name(name);
+        if (nb != 0) {
+            builder.back(id + nsuffix(SeriesInfo.B_SUFFIX, nb));
+        }
+        builder.now(id);
+        if (nf != 0) {
+            builder.fore(id + nsuffix(SeriesInfo.F_SUFFIX, nf));
+        }
+        return builder.build().toString();
     }
 
     public static String[] lowSeries(boolean x11) {
@@ -254,7 +276,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         }
     }
 
-    public static String[] highSeries(boolean x11) {
+    public static String[] highSeries(boolean x11, int nb, int nf) {
 
         if (x11) {
             return new String[]{
@@ -264,7 +286,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         } else {
             return new String[]{
                 generateId("Seasonal (component)", BasicInformationExtractor.concatenate(SaDictionaries.DECOMPOSITION, SaDictionaries.S_CMP)),
-                generateId("Calendar effects", ModellingDictionary.CAL),
+                generateId("Calendar effects", RegressionDictionaries.CAL, nb, nf),
                 generateId("Irregular", SaDictionaries.I)
             };
         }
@@ -324,15 +346,25 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 2200)
-    public static class MainHighChart extends ProcDocumentItemFactory<X13Document, ContextualIds<TsDocument>> {
+    public static class MainHighChart extends ProcDocumentItemFactory<X13Document, ContextualIds<X13Document>> {
 
         public MainHighChart() {
+
             super(X13Document.class, SaViews.MAIN_CHARTS_HIGH, s -> {
-                if (s.getResult() == null || !s.getResult().isValid()) {
+                if (s.getResult() == null) {
                     return null;
                 }
+                int p = s.getInput().getData().getAnnualFrequency();
+                int nf = s.getSpecification().getX11().getForecastHorizon();
+                if (nf < 0) {
+                    nf = -nf * p;
+                }
+                int nb = s.getSpecification().getX11().getBackcastHorizon();
+                if (nb < 0) {
+                    nb = -nb * p;
+                }
                 boolean x11 = s.getResult().getPreprocessing() == null;
-                return new ContextualIds<>(highSeries(x11), s);
+                return new ContextualIds<>(highSeries(x11, nb, nf), s);
             }, new ContextualChartUI(true));
         }
 
@@ -498,14 +530,23 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             super(X13Document.class, SaViews.PREPROCESSING_DET, source
                     -> source.getResult().getPreprocessing() == null ? null : source,
                     new GenericTableUI(false,
-                            ModellingDictionary.YCAL,
-                            ModellingDictionary.Y_LIN,
-                            ModellingDictionary.DET,
-                            ModellingDictionary.CAL,
-                            ModellingDictionary.TDE,
-                            ModellingDictionary.EE,
-                            ModellingDictionary.OUT,
-                            ModellingDictionary.FULL_RES));
+                            generateId(RegressionDictionaries.YC),
+                            generateId(RegressionDictionaries.YLIN),
+                            generateId(RegressionDictionaries.YCAL),
+                            generateId(RegressionDictionaries.DET),
+                            generateId(RegressionDictionaries.CAL),
+                            generateId(RegressionDictionaries.TDE),
+                            generateId(RegressionDictionaries.EE),
+                            generateId(SaDictionaries.OUT_T),
+                            generateId(SaDictionaries.OUT_S),
+                            generateId(SaDictionaries.OUT_I),
+                            generateId(RegressionDictionaries.OUT),
+                            generateId(SaDictionaries.REG_Y),
+                            generateId(SaDictionaries.REG_SA),
+                            generateId(SaDictionaries.REG_T),
+                            generateId(SaDictionaries.REG_S),
+                            generateId(SaDictionaries.REG_I),
+                            generateId(RegressionDictionaries.REG)));
         }
 
         @Override
