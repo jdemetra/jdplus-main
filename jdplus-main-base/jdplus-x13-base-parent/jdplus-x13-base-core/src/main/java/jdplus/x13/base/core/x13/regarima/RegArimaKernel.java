@@ -48,6 +48,9 @@ import lombok.NonNull;
 @Development(status = Development.Status.Alpha)
 public class RegArimaKernel implements RegSarimaProcessor {
 
+    private static final String LAST_CHANCE = "last chance model",
+            OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection";
+
     @lombok.Value
     @lombok.Builder(builderClassName = "AmiBuilder")
     public static class AmiOptions {
@@ -440,12 +443,14 @@ public class RegArimaKernel implements RegSarimaProcessor {
             if (curva > MINCV) {
                 curva = Math.max(MINCV, curva * (1 - options.reduceVa));
                 ncv = true;
+            context.getLog().warning(OUTLIERS_VA_REDUCED);
             }
             needOutliers = true;
         }
         needAutoModelling = !defModel;
 
         if (loop > 2 || !ncv) {
+            context.getLog().warning(LAST_CHANCE);
             lastSolution(context);
             if (loop == 2) {
                 loop = 3;

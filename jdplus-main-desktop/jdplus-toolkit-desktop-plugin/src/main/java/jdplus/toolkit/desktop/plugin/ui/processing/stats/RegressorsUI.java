@@ -36,31 +36,33 @@ public class RegressorsUI implements ItemUI<RegSarimaModel> {
 
     private TsCollection createRegressors(RegSarimaModel information) {
         List<Ts> collection = new ArrayList<>();
-        TsDomain domain = information.getDescription().getSeries().getDomain();
-        TsPeriod start = domain.getStartPeriod();
-        Variable[] vars = information.getDescription().getVariables();
-        if (vars != null) {
-            for (Variable cur : vars) {
-                ITsVariable core = cur.getCore();
-                int dim = cur.dim();
-                if (dim > 1) {
-                    FastMatrix matrix = Regression.matrix(domain, core);
-                    for (int j = 0; j < dim; ++j) {
+        if (information != null) {
+            TsDomain domain = information.getDescription().getSeries().getDomain();
+            TsPeriod start = domain.getStartPeriod();
+            Variable[] vars = information.getDescription().getVariables();
+            if (vars != null) {
+                for (Variable cur : vars) {
+                    ITsVariable core = cur.getCore();
+                    int dim = cur.dim();
+                    if (dim > 1) {
+                        FastMatrix matrix = Regression.matrix(domain, core);
+                        for (int j = 0; j < dim; ++j) {
+                            collection.add(Ts
+                                    .builder()
+                                    .moniker(TsMoniker.of())
+                                    .name(core.description(j, domain))
+                                    .data(TsData.of(start, matrix.column(j)))
+                                    .build());
+                        }
+                    } else {
+                        DataBlock x = Regression.x(domain, core);
                         collection.add(Ts
                                 .builder()
                                 .moniker(TsMoniker.of())
-                                .name(core.description(j, domain))
-                                .data(TsData.of(start, matrix.column(j)))
+                                .name(cur.getName())
+                                .data(TsData.ofInternal(start, x.getStorage()))
                                 .build());
                     }
-                } else {
-                    DataBlock x = Regression.x(domain, core);
-                    collection.add(Ts
-                            .builder()
-                            .moniker(TsMoniker.of())
-                            .name(cur.getName())
-                            .data(TsData.ofInternal(start, x.getStorage()))
-                            .build());
                 }
             }
         }

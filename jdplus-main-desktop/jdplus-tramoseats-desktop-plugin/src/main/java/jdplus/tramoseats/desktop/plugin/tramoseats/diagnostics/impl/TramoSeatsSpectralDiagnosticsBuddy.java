@@ -16,10 +16,14 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.impl;
 
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnostics;
 import jdplus.sa.desktop.plugin.diagnostics.SpectralDiagnosticsBuddy;
 import jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
+import jdplus.toolkit.base.api.modelling.ComponentInformation;
+import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -36,7 +40,17 @@ public final class TramoSeatsSpectralDiagnosticsBuddy extends SpectralDiagnostic
     
     @Override
     public SpectralDiagnosticsFactory<TramoSeatsResults> createFactory() {
-        return new SpectralDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration());
-    }
+         SpectralDiagnosticsFactory<TramoSeatsResults> spectral
+                = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault(),
+                        (TramoSeatsResults r) -> {
+            SeatsResults sd = r.getDecomposition();
+            if (sd == null)
+                return null;
+            return new SpectralDiagnostics.Input(r.getDecomposition().getFinalComponents().getMode(), 
+                    sd.getFinalComponents().getSeries(ComponentType.Series, ComponentInformation.Value),
+                    sd.getFinalComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value));
+                        });
+         return spectral;
+   }
 
 }

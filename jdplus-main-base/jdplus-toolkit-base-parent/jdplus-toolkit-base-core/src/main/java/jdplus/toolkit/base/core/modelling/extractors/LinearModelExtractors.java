@@ -36,6 +36,7 @@ import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
 import jdplus.toolkit.base.api.dictionaries.UtilityDictionaries;
 import java.util.Optional;
+import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 
@@ -153,7 +154,7 @@ public class LinearModelExtractors {
                     -> mul(source.getEstimation().getParameters().getCovariance(), mlcorrection(source.getEstimation().getStatistics())));
             set(mlItem(UtilityDictionaries.SCORE), double[].class, source -> source.getEstimation().getParameters().getScores().toArray());
             delegate(RegArimaDictionaries.LIKELIHOOD, LikelihoodStatistics.class, source -> source.getEstimation().getStatistics());
-            delegate(RegArimaDictionaries.RESIDUALS, Residuals.class, source -> source.getResiduals());
+            delegate(RegArimaDictionaries.RESIDUALS, TsResiduals.class, source -> source.getResiduals());
         }
 
         private double mlcorrection(LikelihoodStatistics ll) {

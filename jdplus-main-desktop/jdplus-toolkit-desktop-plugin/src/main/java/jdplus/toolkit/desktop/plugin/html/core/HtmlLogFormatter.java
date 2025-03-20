@@ -13,32 +13,23 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package jdplus.toolkit.base.api.dictionaries;
+package jdplus.toolkit.desktop.plugin.html.core;
 
-import java.util.List;
-import java.util.stream.Stream;
+import java.io.IOException;
+import jdplus.toolkit.desktop.plugin.html.HtmlStream;
+import nbbrd.design.Development;
+import nbbrd.service.Quantifier;
+import nbbrd.service.ServiceDefinition;
 
 /**
  *
- * @author PALATEJ
+ * @author Jean Palate
+ * @param <S>
  */
-@lombok.Builder
-@lombok.Getter
-@lombok.AllArgsConstructor(access=lombok.AccessLevel.PRIVATE)
-public class ComplexDictionary implements Dictionary{
-    
-    @lombok.Singular("dictionary") 
-    List<PrefixedDictionary> dictionaries;
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE)
+@Development(status = Development.Status.Release)
+public interface HtmlLogFormatter<S> {
 
-    @Override
-    public Stream<? extends Entry> entries() {
-        
-        Stream<? extends Entry> stream=Stream.empty();
-        for (PrefixedDictionary dic : dictionaries)
-            stream=Stream.concat(stream, dic.entries());
-        
-        return stream;
-    }
-    
-    
+    Class<S> getSourceClass();
+    void write(HtmlStream stream, S details, boolean verbose) throws IOException;
 }

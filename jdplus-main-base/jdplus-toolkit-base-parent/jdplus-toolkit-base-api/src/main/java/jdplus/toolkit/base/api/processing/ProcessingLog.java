@@ -34,11 +34,16 @@ public interface ProcessingLog {
          */
         Error,
         /**
-         * Warning for the user (usually, options automatically changed by the
-         * software
+         * Attention point to understand/analyse the results (for example, non decomposable
+         * models in Seats or last chance model in Regarima)
          */
         Warning,
         /**
+         * Remark for the user (for example, options automatically changed by the
+         * software or minor warning, like automatic cut off of some parameters). 
+         */
+       Remark,
+         /**
          * Step in a complex processing. a given step should not have any "child
          * information"
          */
@@ -52,10 +57,22 @@ public interface ProcessingLog {
     @lombok.Value
     public static class Information {
 
+        /**
+         * Generic name of the log item
+         */
         private String name;
+        /**
+         * Part of the algorithm where the log was generated. null in most cases
+         */
         private String origin;
+        /**
+         * Actual message that should be displayed. It should gi
+         */
         private String msg;
         private InformationType type;
+        /**
+         * Additional details, which depends on the actual message
+         */
         private Object details;
 
         @Override
@@ -112,6 +129,21 @@ public interface ProcessingLog {
     }
 
     default void warning(String origin, String msg, Object details) {
+    }
+
+    default void remark(String msg) {
+        remark(null, msg, null);
+    }
+
+    default void remark(String msg, Object details) {
+        remark(null, msg, details);
+    }
+
+    default void remark(String origin, String msg) {
+        remark(origin, msg, null);
+    }
+
+    default void remark(String origin, String msg, Object details) {
     }
 
     default void info(String msg) {

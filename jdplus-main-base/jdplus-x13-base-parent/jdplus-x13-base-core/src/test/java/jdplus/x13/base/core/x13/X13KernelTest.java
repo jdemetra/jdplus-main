@@ -55,7 +55,7 @@ public class X13KernelTest {
         all.removeIf(s->s == null);
         TsDataTable table=TsDataTable.of(all);
         
-        System.out.println(table);
+//        System.out.println(table);
    }
     
 }

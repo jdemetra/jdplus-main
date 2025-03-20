@@ -41,7 +41,6 @@ import jdplus.toolkit.desktop.plugin.html.core.HtmlDiagnosticsSummary;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.sa.base.api.ComponentDescriptor;
@@ -97,6 +96,8 @@ import jdplus.tramoseats.base.core.tramoseats.TramoSeatsKernel;
 import jdplus.toolkit.base.core.ucarima.UcarimaModel;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovDiagnostics;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovEstimators;
+import jdplus.toolkit.desktop.plugin.html.core.HtmlProcessingLog;
+import jdplus.toolkit.desktop.plugin.ui.processing.ContextualChartUI;
 import jdplus.toolkit.desktop.plugin.ui.processing.ContextualIds;
 import jdplus.toolkit.desktop.plugin.ui.processing.ContextualTableUI;
 import jdplus.tramoseats.base.api.tramo.TransformSpec;
@@ -146,6 +147,14 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         return tr == null ? null : tr.getPreprocessing();
     };
 
+    private final static Function<TramoSeatsDocument, TramoSeatsDocument> VALIDEXTRACTOR = source -> {
+        TramoSeatsResults tr = source.getResult();
+        if (tr == null) {
+            return null;
+        }
+        return tr.isValid() ? source : null;
+    };
+
     private final static Function<TramoSeatsDocument, SeatsResults> DECOMPOSITIONEXTRACTOR = source -> {
         TramoSeatsResults tr = source.getResult();
         return tr == null ? null : tr.getDecomposition();
@@ -157,7 +166,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     };
 
     private final static Function<TramoSeatsDocument, TsData> RESEXTRACTOR = MODELEXTRACTOR
-            .andThen(regarima -> regarima.fullResiduals());
+            .andThen(regarima -> regarima == null ? null : regarima.fullResiduals());
 
     private static Function<SeatsResults, EstimationUI.Information> cmpExtractor(ComponentType type) {
 
@@ -230,6 +239,31 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         }
     }
 
+    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
+    public static class LogFactory extends ProcDocumentItemFactory<TramoSeatsDocument, HtmlElement> {
+
+        public LogFactory() {
+            super(TramoSeatsDocument.class, SaViews.MAIN_LOG,
+                    (TramoSeatsDocument doc) -> {
+                        TramoSeatsResults result = doc.getResult();
+                        if (result == null) {
+                            return null;
+                        } else {
+                            HtmlProcessingLog html = new HtmlProcessingLog(result.getLog());
+                            html.displayInfos(true);
+                            return html;
+                        }
+                    },
+                    new HtmlItemUI()
+            );
+        }
+
+        @Override
+        public int getPosition() {
+            return 1020;
+        }
+    }
+
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1000)
     public static class Input extends InputFactory<TramoSeatsDocument> {
 
@@ -244,6 +278,10 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 //</editor-fold>
 
+    private static String generateId(String id) {
+        return generateId(id, id);
+    }
+
     private static String generateId(String name, String id) {
         return TsDynamicProvider.CompositeTs.builder()
                 .name(name)
@@ -251,6 +289,24 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 .now(id)
                 .fore(id + SeriesInfo.F_SUFFIX)
                 .build().toString();
+    }
+
+    private static String nsuffix(String suffix, int n) {
+        StringBuilder builder = new StringBuilder();
+        return builder.append(suffix).append('(').append(n).append(')').toString();
+    }
+
+    private static String generateId(String name, String id, int nb, int nf) {
+        TsDynamicProvider.CompositeTs.Builder builder = TsDynamicProvider.CompositeTs.builder()
+                .name(name);
+        if (nb != 0) {
+            builder.back(id + nsuffix(SeriesInfo.B_SUFFIX, nb));
+        }
+        builder.now(id);
+        if (nf != 0) {
+            builder.fore(id + nsuffix(SeriesInfo.F_SUFFIX, nf));
+        }
+        return builder.build().toString();
     }
 
     private static String generateStdErrorId(String name, String id) {
@@ -270,10 +326,10 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         };
     }
 
-    public static String[] highSeries() {
+    public static String[] highSeries(int nb, int nf) {
         return new String[]{
             generateId("Seasonal (component)", Dictionary.concatenate(SaDictionaries.DECOMPOSITION, SaDictionaries.S_CMP)),
-            generateId("Calendar effects", ModellingDictionary.CAL),
+            generateId("Calendar effects", RegressionDictionaries.CAL, nb, nf),
             generateId("Irregular", SaDictionaries.I)
         };
     }
@@ -294,7 +350,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     public static class MainSummaryFactory extends ProcDocumentItemFactory<TramoSeatsDocument, TramoSeatsDocument> {
 
         public MainSummaryFactory() {
-            super(TramoSeatsDocument.class, SaViews.MAIN_SUMMARY, s -> s, new TramoSeatsSummary());
+            super(TramoSeatsDocument.class, SaViews.MAIN_SUMMARY, VALIDEXTRACTOR, new TramoSeatsSummary());
         }
 
         @Override
@@ -304,10 +360,10 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 2100)
-    public static class MainLowChart extends ProcDocumentItemFactory<TramoSeatsDocument, TsDocument> {
+    public static class MainLowChart extends ProcDocumentItemFactory<TramoSeatsDocument, TramoSeatsDocument> {
 
         public MainLowChart() {
-            super(TramoSeatsDocument.class, SaViews.MAIN_CHARTS_LOW, s -> s, new GenericChartUI(false, lowSeries()));
+            super(TramoSeatsDocument.class, SaViews.MAIN_CHARTS_LOW, VALIDEXTRACTOR, new GenericChartUI(false, lowSeries()));
         }
 
         @Override
@@ -317,10 +373,25 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 2200)
-    public static class MainHighChart extends ProcDocumentItemFactory<TramoSeatsDocument, TsDocument> {
+    public static class MainHighChart extends ProcDocumentItemFactory<TramoSeatsDocument, ContextualIds<TramoSeatsDocument>>  {
 
         public MainHighChart() {
-            super(TramoSeatsDocument.class, SaViews.MAIN_CHARTS_HIGH, s -> s, new GenericChartUI(false, highSeries()));
+            
+            super(TramoSeatsDocument.class, SaViews.MAIN_CHARTS_HIGH, s -> {
+                if (s.getResult() == null) {
+                    return null;
+                }
+                     int p = s.getInput().getData().getAnnualFrequency();
+              int nf = s.getSpecification().getSeats().getForecastCount();
+                if (nf < 0) {
+                     nf = -nf * p;
+                }
+               int nb = s.getSpecification().getSeats().getBackcastCount();
+                if (nb < 0) {
+                    nb = -nb * p;
+                }
+                return new ContextualIds<>(highSeries(nb, nf), s);
+            }, new ContextualChartUI(true));
         }
 
         @Override
@@ -330,10 +401,10 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 2300)
-    public static class MainTable extends ProcDocumentItemFactory<TramoSeatsDocument, TsDocument> {
+    public static class MainTable extends ProcDocumentItemFactory<TramoSeatsDocument, TramoSeatsDocument> {
 
         public MainTable() {
-            super(TramoSeatsDocument.class, SaViews.MAIN_TABLE, s -> s, new GenericTableUI(false, finalSeries()));
+            super(TramoSeatsDocument.class, SaViews.MAIN_TABLE, VALIDEXTRACTOR, new GenericTableUI(false, finalSeries()));
         }
 
         @Override
@@ -349,7 +420,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public MainSiFactory() {
             super(TramoSeatsDocument.class, SaViews.MAIN_SI, (TramoSeatsDocument source) -> {
                 TramoSeatsResults result = source.getResult();
-                if (result == null) {
+                if (result == null || !result.isValid()) {
                     return null;
                 }
                 return result.getDecomposition().getFinalComponents();
@@ -472,15 +543,24 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     public static class PreprocessingDetFactory extends ProcDocumentItemFactory<TramoSeatsDocument, TsDocument> {
 
         public PreprocessingDetFactory() {
-            super(TramoSeatsDocument.class, SaViews.PREPROCESSING_DET, source -> source, new GenericTableUI(false,
-                    ModellingDictionary.YCAL,
-                    ModellingDictionary.Y_LIN,
-                    ModellingDictionary.DET,
-                    ModellingDictionary.CAL,
-                    ModellingDictionary.TDE,
-                    ModellingDictionary.EE,
-                    ModellingDictionary.OUT,
-                    ModellingDictionary.FULL_RES));
+            super(TramoSeatsDocument.class, SaViews.PREPROCESSING_DET, source -> source.getResult().isValid() ? source : null, new GenericTableUI(false,
+                    generateId(RegressionDictionaries.YC),
+                    generateId(RegressionDictionaries.YLIN),
+                    generateId(RegressionDictionaries.YCAL),
+                    generateId(RegressionDictionaries.DET),
+                    generateId(RegressionDictionaries.CAL),
+                    generateId(RegressionDictionaries.TDE),
+                    generateId(RegressionDictionaries.EE),
+                    generateId(SaDictionaries.OUT_T),
+                    generateId(SaDictionaries.OUT_S),
+                    generateId(SaDictionaries.OUT_I),
+                    generateId(RegressionDictionaries.OUT),
+                    generateId(SaDictionaries.REG_Y),
+                    generateId(SaDictionaries.REG_SA),
+                    generateId(SaDictionaries.REG_T),
+                    generateId(SaDictionaries.REG_S),
+                    generateId(SaDictionaries.REG_I),
+                    generateId(RegressionDictionaries.REG)));
         }
 
         @Override
@@ -596,7 +676,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     public static class LinearizedSeriesFactory extends ProcDocumentItemFactory<TramoSeatsDocument, TsDocument> {
 
         public LinearizedSeriesFactory() {
-            super(TramoSeatsDocument.class, DECOMPOSITION_SERIES, s -> s, new GenericTableUI(true, linSeries()));
+            super(TramoSeatsDocument.class, DECOMPOSITION_SERIES, s -> s.getResult().isValid() ? s : null, new GenericTableUI(true, linSeries()));
         }
 
         @Override
@@ -823,6 +903,9 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public StationaryVarianceDecompositionFactory() {
             super(TramoSeatsDocument.class, DECOMPOSITION_VAR, DIAGSEXTRACTOR.andThen(
                     (TramoSeatsDiagnostics diags) -> {
+                        if (diags == null) {
+                            return null;
+                        }
                         StationaryVarianceDecomposition decomp = diags.getVarianceDecomposition();
                         if (decomp == null) {
                             return null;
@@ -878,7 +961,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 }
                 SaProcessingFactory factory = SaManager.factoryFor(doc.getSpecification());
                 List<ProcDiagnostic> diags = new ArrayList<>();
-                factory.fillDiagnostics(diags, rslt);
+                factory.fillDiagnostics(diags, null, rslt);
                 return new HtmlDiagnosticsSummary(diags);
             }, new HtmlItemUI());
         }
@@ -895,7 +978,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public OriginalSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_OSEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getPreprocessing().transformedSeries();
@@ -920,7 +1003,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public LinSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_LSEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getPreprocessing().linearizedSeries();
@@ -945,7 +1028,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public ResSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_RSEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getPreprocessing().fullResiduals();
@@ -970,7 +1053,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public SaSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SASEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getDecomposition().getInitialComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value);
@@ -995,7 +1078,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public IrrSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_ISEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getDecomposition().getInitialComponents().getSeries(ComponentType.Irregular, ComponentInformation.Value);
@@ -1020,7 +1103,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public LastResSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_LASTRSEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getPreprocessing().fullResiduals();
@@ -1051,7 +1134,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public LastSaSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_LASTSASEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getDecomposition().getInitialComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value);
@@ -1082,7 +1165,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public LastIrrSeasonalityFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_LASTISEASONALITY, (TramoSeatsDocument doc) -> {
                 TramoSeatsResults rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 TsData s = rslt.getDecomposition().getInitialComponents().getSeries(ComponentType.Irregular, ComponentInformation.Value);
@@ -1198,7 +1281,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public DiagnosticsSlidingSummaryFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SUMMARY, (TramoSeatsDocument source) -> {
                 TramoSeatsResults result = source.getResult();
-                if (result == null) {
+                if (result == null || !result.isValid()) {
                     return null;
                 }
                 TsData input = source.getInput().getData();
@@ -1234,7 +1317,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
     private static Function<TramoSeatsDocument, SlidingSpansUI.Information<TramoSeatsResults>> ssExtractor(String name, boolean changes, Function<TramoSeatsResults, TsData> fn) {
         return (TramoSeatsDocument source) -> {
             TramoSeatsResults result = source.getResult();
-            if (result == null) {
+            if (result == null || !result.isValid()) {
                 return null;
             }
             TsData input = source.getInput().getData();
@@ -1266,8 +1349,8 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         public DiagnosticsSlidingSeasFactory() {
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SEAS,
                     ssExtractor("Seasonal", false,
-                            rslt -> rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value)),
-                     new SlidingSpansUI<TramoSeatsResults>());
+                            rslt -> rslt.getFinals() == null ? null : rslt.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value)),
+                    new SlidingSpansUI<>());
         }
 
         @Override
@@ -1283,7 +1366,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_TD,
                     ssExtractor("Trading days", false,
                             rslt -> rslt.getPreprocessing().getTradingDaysEffect(null)),
-                     new SlidingSpansUI<TramoSeatsResults>());
+                    new SlidingSpansUI<>());
         }
 
         @Override
@@ -1299,7 +1382,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
             super(TramoSeatsDocument.class, SaViews.DIAGNOSTICS_SLIDING_SA,
                     ssExtractor("Seasonally adjusted", true,
                             rslt -> rslt.getDecomposition().getFinalComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value)),
-                     new SlidingSpansUI<TramoSeatsResults>());
+                    new SlidingSpansUI<>());
         }
 
         @Override
@@ -1316,19 +1399,22 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
             if (result == null) {
                 return null;
             }
+            if (result.getPreprocessing() == null) {
+                return null;
+            }
             TsData input = source.getInput().getData();
             TimeSelector span = source.getSpecification().getTramo().getTransform().getSpan();
             TsDomain domain = input.getDomain().select(span);
             TramoSeatsSpec pspec = TramoSeatsFactory.getInstance().generateSpec(source.getSpecification(), result);
             TramoSeatsSpec nspec = TramoSeatsFactory.getInstance().refreshSpec(pspec, source.getSpecification(), DemetraSaUI.get().getEstimationPolicyType(), domain);
-            if (! span.isAll()){
+            if (!span.isAll()) {
                 TransformSpec ntr = nspec.getTramo().getTransform().toBuilder()
                         .span(TimeSelector.all())
                         .build();
                 TramoSpec reg = nspec.getTramo().toBuilder()
                         .transform(ntr)
                         .build();
-                nspec=nspec.toBuilder().tramo(reg).build();
+                nspec = nspec.toBuilder().tramo(reg).build();
             }
             TramoSeatsKernel kernel = TramoSeatsKernel.of(nspec, source.getContext());
             RevisionHistory<Explorable> rh = new RevisionHistory<>(domain, d -> kernel.process(TsData.fitToDomain(input, d), null));
@@ -1395,6 +1481,9 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         return (TramoSeatsDocument source) -> {
             TramoSeatsResults result = source.getResult();
             if (result == null) {
+                return null;
+            }
+            if (result.getPreprocessing() == null) {
                 return null;
             }
             TsData input = source.getInput().getData();

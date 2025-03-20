@@ -21,9 +21,8 @@ import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
-import jdplus.toolkit.base.core.modelling.Residuals;
+import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import nbbrd.design.Development;
 import nbbrd.service.ServiceProvider;
 
@@ -33,24 +32,28 @@ import nbbrd.service.ServiceProvider;
  */
 @Development(status = Development.Status.Release)
 @lombok.experimental.UtilityClass
-public class ResidualsExtractors {
+public class TsResidualsExtractors {
 
     @ServiceProvider(InformationExtractor.class)
-    public static class Specific extends InformationMapping<Residuals> {
+    public static class Specific extends InformationMapping<TsResiduals> {
 
         public Specific() {
             set(ResidualsDictionaries.TYPE, String.class, source -> source.getType().name());
             set(ResidualsDictionaries.RES, double[].class, source -> source.getRes().toArray());
-            set(ResidualsDictionaries.TSRES, TsData.class, source
+            set(ResidualsDictionaries.TSRES, TsData.class, source -> source.getTsres());
+            set(ResidualsDictionaries.N, Integer.class, source -> source.getN());
+            set(ResidualsDictionaries.DF, Integer.class, source -> source.getDf());
+            set(ResidualsDictionaries.DFC, Integer.class, source -> source.getDfc());
+            set(ResidualsDictionaries.SER, Double.class, source
                     -> {
-                TsPeriod start = source.getStart();
-                if (start == null) {
-                    return null;
-                } else {
-                    return TsData.of(start, source.getRes());
-                }
+                int df = source.getDfc();
+                return df == 0 ? Double.NaN : Math.sqrt(source.getSsq() / df);
             });
-            set(ResidualsDictionaries.SER, Double.class, source->source.getSer());
+            set(ResidualsDictionaries.SER_ML, Double.class, source
+                    -> {
+                int df = source.getN();
+                return df == 0 ? Double.NaN : Math.sqrt(source.getSsq() / df);
+            });
             addTest(ResidualsDictionaries.MEAN);
             addTest(ResidualsDictionaries.DH);
             addTest(ResidualsDictionaries.SKEW);
@@ -72,8 +75,8 @@ public class ResidualsExtractors {
         }
 
         @Override
-        public Class<Residuals> getSourceClass() {
-            return Residuals.class;
+        public Class<TsResiduals> getSourceClass() {
+            return TsResiduals.class;
         }
 
         @Override
@@ -83,15 +86,15 @@ public class ResidualsExtractors {
     }
 
     @ServiceProvider(InformationExtractor.class)
-    public static class Dynamic extends DynamicMapping<Residuals, StatisticalTest> {
+    public static class Dynamic extends DynamicMapping<TsResiduals, StatisticalTest> {
 
         public Dynamic() {
             super(null, v -> v.getTests());
         }
 
         @Override
-        public Class<Residuals> getSourceClass() {
-            return Residuals.class;
+        public Class<TsResiduals> getSourceClass() {
+            return TsResiduals.class;
         }
 
         @Override

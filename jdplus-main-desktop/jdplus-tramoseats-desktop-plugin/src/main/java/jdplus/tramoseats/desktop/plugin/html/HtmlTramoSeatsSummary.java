@@ -58,7 +58,7 @@ public class HtmlTramoSeatsSummary extends AbstractHtmlElement implements HtmlEl
         decomposition_ = results.getDecomposition();
         names_ = names;
         list_ = list;
-        TramoSeatsFactory.getInstance().fillDiagnostics(diags_, results);
+        TramoSeatsFactory.getInstance().fillDiagnostics(diags_, null, results);
         infos_=results.getLog();
     }
 
@@ -80,7 +80,9 @@ public class HtmlTramoSeatsSummary extends AbstractHtmlElement implements HtmlEl
     }
 
     private void writeInformation(HtmlStream stream) throws IOException {
-        stream.write(new HtmlProcessingLog(infos_));
+        HtmlProcessingLog log = new HtmlProcessingLog(infos_);
+        log.setVerbose(false);
+        stream.write(log);
     }
 
     private void writePreprocessing(HtmlStream stream) throws IOException {

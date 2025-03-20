@@ -23,22 +23,27 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 
 /**
  *
  * @author Jean Palate
  */
 class SeasonalUnderDifferencingTest extends ModelController {
+    
+    private static final String SEAS_UNDERDIFF="Seasonal under-differencing has been fixed";
 
     private static final double DEF_SBOUND = .91;
 
     @Override
     ProcessingResult process(RegSarimaModelling modelling, TramoContext context) {
+        ProcessingLog log = modelling.getLog();
         int period = modelling.getDescription().getAnnualFrequency();
         if (period == 1) {
             return ProcessingResult.Unprocessed;
         }
         if (fixSeasonalRoots(modelling)) {
+            log.remark(SEAS_UNDERDIFF);
             return ProcessingResult.Changed;
         }
         // check seasonal quasi-unit roots
@@ -51,6 +56,7 @@ class SeasonalUnderDifferencingTest extends ModelController {
         if (cmp.compare(scontext, modelling) < 0) {
 //            setReferenceModel(smodel);
             transferInformation(scontext, modelling);
+            log.remark(SEAS_UNDERDIFF);
             return ProcessingResult.Changed;
         } else {
             return ProcessingResult.Unchanged;

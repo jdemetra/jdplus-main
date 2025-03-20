@@ -9,7 +9,6 @@ import jdplus.toolkit.base.api.information.InformationExtractor;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.SaDictionaries;
@@ -28,11 +27,11 @@ import nbbrd.service.ServiceProvider;
 public class SeatsExtractor extends InformationMapping<SeatsResults>{
 
     public SeatsExtractor(){
-        set(ModellingDictionary.Y_LIN, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.Value));
-        set(ModellingDictionary.Y_LIN + SeriesInfo.F_SUFFIX, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.Forecast));
-        set(ModellingDictionary.Y_LIN + SeriesInfo.EF_SUFFIX, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.StdevForecast));
-        set(ModellingDictionary.Y_LIN + SeriesInfo.B_SUFFIX, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.Backcast));
-        set(ModellingDictionary.Y_LIN + SeriesInfo.EB_SUFFIX, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.StdevBackcast));
+        set(SaDictionaries.Y_LIN, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.Value));
+        set(SaDictionaries.Y_LIN_F, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.Forecast));
+        set(SaDictionaries.Y_LIN_EF, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.StdevForecast));
+        set(SaDictionaries.Y_LIN_B, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.Backcast));
+        set(SaDictionaries.Y_LIN_EB, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Series, ComponentInformation.StdevBackcast));
 
         set(SaDictionaries.T_LIN, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Trend, ComponentInformation.Value));
         set(SaDictionaries.T_LIN_E, TsData.class, source -> source.getInitialComponents().getSeries(ComponentType.Trend, ComponentInformation.Stdev));

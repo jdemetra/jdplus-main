@@ -19,12 +19,15 @@ package jdplus.toolkit.base.api.information;
 import jdplus.toolkit.base.api.util.WildCards;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.processing.HasLog;
 
 /**
  *
  * @author PALATEJ
  */
-public interface GenericExplorable extends Explorable{
+public interface GenericExplorable extends Explorable, HasLog{
+    
+    
     /**
      * Indicates that the provider can provide information on the mentioned item
      *

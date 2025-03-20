@@ -40,7 +40,7 @@ public final class TramoSeatsAdvancedResidualSeasonalityDiagnosticsBuddy extends
     @Override
     public AdvancedResidualSeasonalityDiagnosticsFactory<TramoSeatsResults> createFactory() {
         return new AdvancedResidualSeasonalityDiagnosticsFactory<>(getActiveDiagnosticsConfiguration(),
-                (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+                (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
         );
     }
 

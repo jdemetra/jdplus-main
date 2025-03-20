@@ -39,29 +39,34 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 public interface IExtremeValuesCorrector {
 
     /**
-     * Detects the extremes values of a given series
+     * Prepare the computation/correction of extreme values
      *
-     * @param s The considered series
+     * @param s The reference series that will be used to compute the stdev
+     * @param start 0-based position of the first data of s in a cycle
      * @param context
      */
-    void analyse(DoubleSeq s, X11Context context);
+    void analyse(DoubleSeq s, int start, X11Context context);
 
     /**
      * Computes the corrections for a given series (tables B4, B9)
      *
-     * @param s The series being corrected
+     * @param s The series being corrected. It must have the same length as the 
+     * series used in "analyse"
+     * @param excludeFcast Exclude backcast/forecasts from corrections (correction = NaN) 
      *
      * @return A new time series is always returned. It will contain missing
      * values for the periods that should not be corrected and the actual
      * corrections for the other periods
      */
-    DoubleSeq computeCorrections(DoubleSeq s);
+    DoubleSeq computeCorrections(DoubleSeq s, boolean excludeFcast);
 
     /**
      * Apply the corrections computed with the computeCorrections method (tables
      * B4g, B9g)
      *
-     * @param s The series that must be corrected
+     * @param s The series that must be corrected. It must have the same length as the 
+     * series used in "analyse"
+     * 
      * @param corrections
      *
      * @return The corrected series
@@ -91,11 +96,5 @@ public interface IExtremeValuesCorrector {
      * @param usig The high sigma value
      */
     void setSigma(double lsig, double usig);
-
-    /**
-     *
-     * @param start period of the start value
-     */
-    void setStart(int start);
 
 }

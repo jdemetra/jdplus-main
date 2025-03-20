@@ -51,8 +51,9 @@ public class X11Context {
     int forecastHorizon;
     int backcastHorizon;
     /**
-     * Actual first period of the series, not taking into account backcasts
+     * First period of the series (including backcasts)
      */
+    @lombok.Getter(lombok.AccessLevel.PRIVATE)
     int firstPeriod;
     /**
      * Excludefcast is true if the forecasts/backcasts should be excluded for
@@ -108,7 +109,7 @@ public class X11Context {
                 .seasonal(spec.isSeasonal())
                 .trendFilterLength(spec.getHendersonFilterLength())
                 .period(p)
-                .firstPeriod(data.getStart().annualPosition())
+                .firstPeriod(data.getStart().annualPosition()) 
                 .lowerSigma(spec.getLowerSigma())
                 .upperSigma(spec.getUpperSigma())
                 .calendarSigma(spec.getCalendarSigma())
@@ -138,6 +139,14 @@ public class X11Context {
         return mode == DecompositionMode.PseudoAdditive;
     }
 
+    /**
+     * position in the period of the idx-th data
+     * @param idx
+     * @return 
+     */
+    public int getPosition(int idx){
+        return idx == 0 ? firstPeriod : (firstPeriod+idx)%period;
+    }
     public DoubleSeq remove(DoubleSeq l, DoubleSeq r) {
         if (isMultiplicative()) {
             return DoubleSeq.onMapping(l.length(), i -> l.get(i) / r.get(i));

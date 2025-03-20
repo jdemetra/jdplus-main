@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.api.SeriesDecomposition;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;
@@ -42,10 +44,13 @@ import jdplus.sa.base.core.diagnostics.ResidualTradingDaysDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutOfSampleDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaOutliersDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
+import jdplus.sa.base.core.diagnostics.SpectralDiagnostics;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
+import jdplus.toolkit.base.api.modelling.ComponentInformation;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.tramoseats.base.core.seats.diagnostics.SeatsDiagnosticsConfiguration;
 import jdplus.tramoseats.base.core.seats.diagnostics.SeatsDiagnosticsFactory;
 import jdplus.tramoseats.base.core.tramo.TramoFactory;
@@ -71,12 +76,12 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
         CoherenceDiagnosticsFactory<TramoSeatsResults> coherence
                 = new CoherenceDiagnosticsFactory<>(CoherenceDiagnosticsConfiguration.getDefault(),
                         (TramoSeatsResults r) -> {
-                            return new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
+                            return r.getFinals() == null ? null : new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
                         }
                 );
         SaOutOfSampleDiagnosticsFactory<TramoSeatsResults> outofsample
                 = new SaOutOfSampleDiagnosticsFactory<>(OutOfSampleDiagnosticsConfiguration.getDefault(),
-                        r -> r.getDiagnostics().getGenericDiagnostics().forecastingTest());
+                        r -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics().forecastingTest());
         SaResidualsDiagnosticsFactory<TramoSeatsResults> residuals
                 = new SaResidualsDiagnosticsFactory<>(ResidualsDiagnosticsConfiguration.getDefault(),
                         r -> r.getPreprocessing());
@@ -84,18 +89,26 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
                 = new SaOutliersDiagnosticsFactory<>(OutliersDiagnosticsConfiguration.getDefault(),
                         r -> r.getPreprocessing());
         SpectralDiagnosticsFactory<TramoSeatsResults> spectral
-                = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault());
+                = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault(),
+                        (TramoSeatsResults r) -> {
+            SeatsResults sd = r.getDecomposition();
+            if (sd == null)
+                return null;
+            return new SpectralDiagnostics.Input(r.getDecomposition().getFinalComponents().getMode(), 
+                    sd.getFinalComponents().getSeries(ComponentType.Series, ComponentInformation.Value),
+                    sd.getFinalComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value));
+                        });
         SeatsDiagnosticsFactory<TramoSeatsResults> seats
                 = new SeatsDiagnosticsFactory<>(SeatsDiagnosticsConfiguration.getDefault(),
-                        r -> r.getDiagnostics().getSpecificDiagnostics());
+                        r -> r.getDiagnostics() == null ? null : r.getDiagnostics().getSpecificDiagnostics());
 
         AdvancedResidualSeasonalityDiagnosticsFactory<TramoSeatsResults> advancedResidualSeasonality
                 = new AdvancedResidualSeasonalityDiagnosticsFactory<>(AdvancedResidualSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+                        (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
                 );
         CombinedSeasonalityDiagnosticsFactory<TramoSeatsResults> combinedSeasonality
                 = new CombinedSeasonalityDiagnosticsFactory<>(CombinedSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (TramoSeatsResults r) -> r.getDiagnostics().getGenericDiagnostics()
+                        (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
                 );
 
         ResidualTradingDaysDiagnosticsFactory<TramoSeatsResults> residualTradingDays
@@ -106,7 +119,7 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
                             if (preprocessing != null) {
                                 td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
                             }
-                            return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                            return r.getDiagnostics() == null ? null :new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
                         }
                 );
 

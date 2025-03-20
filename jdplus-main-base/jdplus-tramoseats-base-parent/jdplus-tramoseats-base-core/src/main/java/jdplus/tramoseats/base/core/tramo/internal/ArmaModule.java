@@ -27,12 +27,24 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 
 /**
  *
  * @author Jean Palate
  */
 public class ArmaModule implements IArmaModule {
+
+    public static final String ARMA = "arma selection",
+            MODELS = "selected models", DEFAULT = "default model selected (not enough obs.)",
+            FAILED = "arma selection failed";
+
+    @lombok.Value
+    public static class Info {
+
+        private final ArmaModelSelector.FastBIC[] models;
+        private final SarmaOrders selection;
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -90,36 +102,36 @@ public class ArmaModule implements IArmaModule {
             spec.setBd(bd);
         }
         switch (inic) {
-            case 1:
+            case 1 -> {
                 spec.setP(1);
                 spec.setQ(1);
                 if (seas) {
                     spec.setBp(1);
                     spec.setBq(1);
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 spec.setP(2);
                 spec.setQ(2);
                 if (seas) {
                     spec.setBp(1);
                     spec.setBq(1);
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 spec.setP(3);
                 spec.setQ(3);
                 if (seas) {
                     spec.setBp(1);
                     spec.setBq(1);
                 }
-                break;
-            case 4:
+            }
+            case 4 -> {
                 spec.setP(3);
                 spec.setQ(3);
                 spec.setBp(2);
                 spec.setBq(2);
-                break;
+            }
         }
 //        if (inic <= 3 && bd == 1) {
 //            spec.setBp(0);
@@ -128,14 +140,14 @@ public class ArmaModule implements IArmaModule {
     }
 
     static int maxInic(int period) {
-        switch (period) {
-            case 2:
-                return 1;
-            case 3:
-                return 2;
-            default:
-                return 3;
-        }
+        return switch (period) {
+            case 2 ->
+                1;
+            case 3 ->
+                2;
+            default ->
+                3;
+        };
     }
 
     static SarimaOrders checkmaxspec(final int freq, final int inic, final int d,
@@ -146,7 +158,7 @@ public class ArmaModule implements IArmaModule {
             spec.setBd(bd);
         }
         switch (inic) {
-            case 1:
+            case 1 -> {
                 spec.setP(1);
                 spec.setQ(1);
                 if (seas) {
@@ -155,8 +167,8 @@ public class ArmaModule implements IArmaModule {
                     }
                     spec.setBq(1);
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 spec.setP(2);
                 spec.setQ(2);
                 if (seas) {
@@ -165,8 +177,8 @@ public class ArmaModule implements IArmaModule {
                     }
                     spec.setBq(1);
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 spec.setP(3);
                 spec.setQ(3);
                 if (seas) {
@@ -175,15 +187,15 @@ public class ArmaModule implements IArmaModule {
                     }
                     spec.setBq(1);
                 }
-                break;
-            case 4:
+            }
+            case 4 -> {
                 spec.setP(3);
                 spec.setQ(3);
                 if (seas) {
                     spec.setBp(2);
                     spec.setBq(2);
                 }
-                break;
+            }
         }
 //        if (inic <= 3 && bd == 1) {
 //            spec.setBp(0);
@@ -211,12 +223,15 @@ public class ArmaModule implements IArmaModule {
 
     @Override
     public ProcessingResult process(RegSarimaModelling context) {
+        ProcessingLog log = context.getLog();
+        log.push(ARMA);
         try {
             ModelDescription desc = context.getDescription();
             SarimaOrders curspec = desc.specification();
             int inic = comespa(curspec.getPeriod(), desc.regarima().getObservationsCount(),
                     maxInic(curspec.getPeriod()), curspec.getD(), curspec.getBd(), seasonal);
             if (inic == 0) {
+                log.remark(DEFAULT);
                 if (!curspec.isAirline(seasonal)) {
                     curspec.setDefault(seasonal);
                     desc.setSpecification(curspec);
@@ -230,14 +245,20 @@ public class ArmaModule implements IArmaModule {
             DoubleSeq res = RegArimaUtility.olsResiduals(desc.regarima());
             ArmaModelSelector impl = createModule(maxspec);
             SarmaOrders nspec = impl.process(res, desc.getAnnualFrequency(), maxspec.getD(), maxspec.getBd(), seasonal);
+            ArmaModelSelector.FastBIC[] models = impl.gePreferredModels();
+            log.info(MODELS, new Info(models, nspec));
             if (nspec.equals(curspec.doStationary())) {
                 return ProcessingResult.Unchanged;
             }
             curspec = SarimaOrders.of(nspec, curspec.getD(), curspec.getBd());
             desc.setSpecification(curspec);
+
             return ProcessingResult.Changed;
         } catch (RuntimeException ex) {
+            log.remark(FAILED);
             return ProcessingResult.Failed;
+        } finally {
+            log.pop();
         }
     }
 

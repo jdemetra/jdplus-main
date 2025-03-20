@@ -41,6 +41,8 @@ public class ResidualTradingDaysDiagnostics implements Diagnostics {
     private boolean td;
 
     public static ResidualTradingDaysDiagnostics of(ResidualTradingDaysDiagnosticsConfiguration config, Input input) {
+        if (input.getTests() == null)
+            return null;
         try {
             ResidualTradingDaysTests tests = input.getTests();
             ResidualTradingDaysDiagnostics test = new ResidualTradingDaysDiagnostics();

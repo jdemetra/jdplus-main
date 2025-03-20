@@ -30,6 +30,15 @@ import nbbrd.design.Development;
 @lombok.experimental.UtilityClass
 @Development(status = Development.Status.Beta)
 public final class SaDictionaries {
+    
+    /**
+     * Logs
+     */
+    public final String PRELIMINARY_CHECKS = "preliminary checks",
+            NO_DATA = "no data", NOT_ENOUGH_DATA = "not enough data",
+            TOO_MANY_IDENTICAL = "too many identical data",
+            TOO_MANY_MISSING = "too many missing data";
+
 
     /**
      * Subdivision of a SA processing Pre-processing of the series (usually

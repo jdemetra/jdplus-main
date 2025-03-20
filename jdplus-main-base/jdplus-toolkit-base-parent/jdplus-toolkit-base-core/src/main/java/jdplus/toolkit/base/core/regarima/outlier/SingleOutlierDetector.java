@@ -136,7 +136,7 @@ public abstract class SingleOutlierDetector<T extends IArimaModel> {
      */
     public void exclude(int pos, int ioutlier) {
         // avoid outliers outside the current range
-        if (pos >= 0 && pos < allowedTable.getRowsCount()) {
+        if (pos >= 0 && pos < allowedTable.getRowsCount() && ioutlier >= 0) {
             allowedTable.set(pos, ioutlier, false);
             T.set(pos, ioutlier, 0);
         }
@@ -149,7 +149,7 @@ public abstract class SingleOutlierDetector<T extends IArimaModel> {
      */
     public void allow(int pos, int ioutlier) {
         // avoid outliers outside the current range
-        if (pos >= 0 && pos < allowedTable.getRowsCount()) {
+        if (pos >= 0 && pos < allowedTable.getRowsCount() && ioutlier >= 0) {
             allowedTable.set(pos, ioutlier, true);
             T.set(pos, ioutlier, 0);
         }

@@ -82,7 +82,11 @@ public class SaNode {
             return Status.Unprocessed;
         }
         if (estimation.getResults() != null) {
-            return Status.Valid;
+            if (estimation.getResults().isValid()) {
+                return Status.Valid;
+            } else {
+                return Status.Invalid;
+            }
         }
         return Status.Unprocessed; // Invalid should be captured elsewhere
     }
@@ -101,6 +105,15 @@ public class SaNode {
             output = SaItem.of(ts, spec);
             status = Status.Unprocessed;
         }
+    }
+    
+    public void update(SaItem noutput){
+        output=noutput;
+        if (noutput == null || noutput.getEstimation() == null || noutput.getEstimation().getResults() == null)
+            status=Status.Unprocessed;
+        else
+            status=output.getEstimation().getResults().isValid() ? Status.Valid : Status.Invalid;
+        
     }
 
     public void process(ModellingContext context, boolean verbose) {

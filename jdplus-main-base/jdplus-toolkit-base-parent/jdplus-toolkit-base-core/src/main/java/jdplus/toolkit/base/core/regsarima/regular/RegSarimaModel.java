@@ -49,10 +49,12 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
 import jdplus.toolkit.base.api.timeseries.regression.HolidaysCorrectedTradingDays;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.core.arima.estimation.IArimaMapping;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
@@ -79,6 +81,7 @@ import jdplus.toolkit.base.core.regarima.estimation.RegArmaFunction;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaFixedMapping;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
+import jdplus.toolkit.base.core.ssf.arima.ExactArimaForecasts;
 import jdplus.toolkit.base.core.stats.likelihood.DefaultLikelihoodEvaluation;
 import jdplus.toolkit.base.core.stats.tests.NiidTests;
 
@@ -236,7 +239,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                 .hyperParametersCount(free)
                 .build();
         TsPeriod start=description.getEstimationDomain().getEndPeriod().plus(-fullRes.length());
-        Residuals residuals = Residuals.builder()
+        TsResiduals residuals = TsResiduals.builder()
                 .type(ResidualsType.QR_Transformed)
                 .res(ll.e())
                 .ssq(ll.ssq())
@@ -290,7 +293,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
 
     Description<SarimaSpec> description;
     Estimation estimation;
-    Residuals residuals;
+    TsResiduals residuals;
     Details details;
 
     public int getAnnualFrequency() {
@@ -393,6 +396,28 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
             cache.put(key, bcasts);
         }
         return bcasts;
+    }
+    
+    public TsData linearizedForecasts(int n){
+        if (n < 0)
+            n=-n*getAnnualFrequency();
+        TsData lin = linearizedSeries();
+        // FastArimaForecasts fcast = new FastArimaForecasts(model, false);
+        ExactArimaForecasts fcast = new ExactArimaForecasts();
+        fcast.prepare(arima(), isMeanCorrection());
+        DoubleSeq f = fcast.forecasts(lin.getValues(), n);
+        return TsData.of(lin.getEnd(), f);
+    }
+
+    public TsData linearizedBackcasts(int n){
+        if (n < 0)
+            n=-n*getAnnualFrequency();
+        TsData lin = linearizedSeries();
+        // FastArimaForecasts fcast = new FastArimaForecasts(model, false);
+        ExactArimaForecasts fcast = new ExactArimaForecasts();
+        fcast.prepare(arima(), isMeanCorrection());
+        DoubleSeq f = fcast.backcasts(lin.getValues(), n);
+        return TsData.of(lin.getStart().plus(-n), f);
     }
 
     private TsData regY() {

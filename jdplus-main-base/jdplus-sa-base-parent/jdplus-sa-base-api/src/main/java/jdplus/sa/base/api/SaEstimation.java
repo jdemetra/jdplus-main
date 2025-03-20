@@ -16,14 +16,13 @@
  */
 package jdplus.sa.base.api;
 
-import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import jdplus.toolkit.base.api.information.GenericExplorable;
 
 /**
  *
@@ -38,16 +37,14 @@ public class SaEstimation {
     /**
      * Results of the estimation
      */
-    Explorable results;
-
-    /**
-     * ProcessingLog. Could be null
-     */
-    @Nullable ProcessingLog log;
+    GenericExplorable results;
 
     @lombok.Singular
     List<ProcDiagnostic> diagnostics;
     
+    @lombok.Singular
+    List<String> warnings;
+
     @lombok.With
     ProcQuality quality;
 
@@ -62,11 +59,7 @@ public class SaEstimation {
      * @return
      */
     public List<String> warnings() {
-        List<String> warnings = new ArrayList<>();
-        for (ProcDiagnostic diag : diagnostics) {
-            warnings.addAll(diag.getWarnings());
-        }
-        return warnings;
+        return Collections.unmodifiableList(warnings);
     }
 
     SaEstimation flush() {

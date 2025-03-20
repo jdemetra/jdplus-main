@@ -31,6 +31,15 @@ import java.util.Map;
  */
 @Development(status = Development.Status.Release)
 public interface Explorable {
+    
+    
+    /**
+     * Chck that this object is valid
+     * @return 
+     */
+    default boolean isValid(){
+        return true;
+    }
 
     /**
      * Indicates that the provider can provide information on the mentioned item

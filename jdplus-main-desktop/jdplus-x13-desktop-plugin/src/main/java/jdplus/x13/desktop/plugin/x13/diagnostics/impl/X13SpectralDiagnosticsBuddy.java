@@ -16,10 +16,12 @@
  */
 package jdplus.x13.desktop.plugin.x13.diagnostics.impl;
 
+import jdplus.sa.base.core.diagnostics.SpectralDiagnostics;
 import jdplus.sa.desktop.plugin.diagnostics.SpectralDiagnosticsBuddy;
 import jdplus.x13.desktop.plugin.x13.diagnostics.X13DiagnosticsFactoryBuddy;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
+import jdplus.x13.base.core.x11.X11Results;
 import jdplus.x13.base.core.x13.X13Results;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -36,7 +38,17 @@ public final class X13SpectralDiagnosticsBuddy extends SpectralDiagnosticsBuddy 
     
     @Override
     public SpectralDiagnosticsFactory<X13Results> createFactory() {
-        return new SpectralDiagnosticsFactory<>(this.getActiveDiagnosticsConfiguration());
+        SpectralDiagnosticsFactory<X13Results> spectral
+                = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault(),
+                        (X13Results r) -> {
+            X11Results x11 = r.getDecomposition();
+            if (x11 == null)
+                return null;
+            return new SpectralDiagnostics.Input(x11.getMode(), 
+                    x11.getB1(),
+                    x11.getD11());
+                        });
+        return spectral;
     }
 
 }
