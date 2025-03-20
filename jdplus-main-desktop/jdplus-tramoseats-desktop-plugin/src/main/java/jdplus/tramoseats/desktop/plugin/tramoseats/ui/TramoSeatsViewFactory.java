@@ -239,7 +239,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
         }
     }
 
-    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
+//    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
     public static class LogFactory extends ProcDocumentItemFactory<TramoSeatsDocument, HtmlElement> {
 
         public LogFactory() {

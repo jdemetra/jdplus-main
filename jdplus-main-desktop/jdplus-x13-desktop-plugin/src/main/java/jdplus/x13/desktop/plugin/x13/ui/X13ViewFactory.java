@@ -196,7 +196,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         }
     }
 
-    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
+//    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
     public static class LogFactory extends ProcDocumentItemFactory<X13Document, HtmlElement> {
 
         public LogFactory() {
