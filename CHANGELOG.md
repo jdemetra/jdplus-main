@@ -10,10 +10,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - ![STAT] Correct the handling of short series in X11
+- ![STAT] Correct the handling of backcasting in X11
+- ![STAT] Correct the detection of outliers with pre-specified seasonal outliers [#561](https://github.com/jdemetra/jdplus-main/issues/561)
 - ![UI] Correct the revision analysis panel for short series
 - ![UI] Fix missing split into yearly components feature [#550](https://github.com/jdemetra/jdplus-main/issues/550)
 - ![UI] Remove DEBUG option in contextual menu [#535](https://github.com/jdemetra/jdplus-main/issues/535)
 - ![UI] Fix startup crash on Java 21 [#551](https://github.com/jdemetra/jdplus-main/issues/551)
+- ![UI] Fix incompatibilty with plug-ins of Incubator
 
 ## [3.4.0] - 2025-02-13
 

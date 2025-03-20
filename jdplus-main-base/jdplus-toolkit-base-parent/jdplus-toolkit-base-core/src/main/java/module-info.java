@@ -128,6 +128,8 @@ module jdplus.toolkit.base.core {
             jdplus.toolkit.base.core.modelling.extractors.LinearModelExtractors.Default,
             jdplus.toolkit.base.core.modelling.extractors.ResidualsExtractors.Dynamic,
             jdplus.toolkit.base.core.modelling.extractors.ResidualsExtractors.Specific,
+            jdplus.toolkit.base.core.modelling.extractors.TsResidualsExtractors.Dynamic,
+            jdplus.toolkit.base.core.modelling.extractors.TsResidualsExtractors.Specific,
             jdplus.toolkit.base.core.modelling.extractors.SarimaExtractor,
             jdplus.toolkit.base.core.modelling.extractors.SarimaSpecExtractor,
             jdplus.toolkit.base.core.modelling.extractors.UcarimaExtractor,

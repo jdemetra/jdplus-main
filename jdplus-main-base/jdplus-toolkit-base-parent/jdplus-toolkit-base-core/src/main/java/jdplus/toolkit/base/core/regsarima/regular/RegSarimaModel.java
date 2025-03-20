@@ -49,6 +49,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
 import jdplus.toolkit.base.api.timeseries.regression.HolidaysCorrectedTradingDays;
@@ -238,7 +239,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
                 .hyperParametersCount(free)
                 .build();
         TsPeriod start=description.getEstimationDomain().getEndPeriod().plus(-fullRes.length());
-        Residuals residuals = Residuals.builder()
+        TsResiduals residuals = TsResiduals.builder()
                 .type(ResidualsType.QR_Transformed)
                 .res(ll.e())
                 .ssq(ll.ssq())
@@ -292,7 +293,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
 
     Description<SarimaSpec> description;
     Estimation estimation;
-    Residuals residuals;
+    TsResiduals residuals;
     Details details;
 
     public int getAnnualFrequency() {
