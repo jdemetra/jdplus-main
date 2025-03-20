@@ -73,10 +73,8 @@ public class X11BStep {
         b4d = b4d(context);
         IExtremeValuesCorrector ecorr = context.selectExtremeValuesCorrector(b4d);
         int j = context.getPosition(b2drop);
-        ecorr.setStart(j);
-        ecorr.analyse(b4d, context);
-
-        b4 = ecorr.computeCorrections(b3);
+        ecorr.analyse(b4d, j, context);
+        b4 = ecorr.computeCorrections(b3, false);
         b4g = ecorr.applyCorrections(b3, b4);
     }
 
@@ -148,10 +146,8 @@ public class X11BStep {
         }
         DoubleSeq b9d = b9d(context, b9c);
         IExtremeValuesCorrector ecorr = context.getExtremeValuesCorrector();
-        ecorr.setStart(context.getPosition(0));
-        ecorr.analyse(b9d, context);
-
-        b9 = ecorr.computeCorrections(b8);
+        ecorr.analyse(b9d, context.getPosition(0), context);
+       b9 = ecorr.computeCorrections(b8, false);
         b9g = ecorr.applyCorrections(b8, b9);
     }
 
@@ -171,8 +167,7 @@ public class X11BStep {
         b13 = context.remove(b11, b7);
 
         IExtremeValuesCorrector ecorr = context.selectExtremeValuesCorrector(b13);
-        ecorr.setStart(context.getPosition(0));
-        ecorr.analyse(b13, context);
+        ecorr.analyse(b13, context.getPosition(0), context);
         b17 = ecorr.getObservationWeights();
         b20 = ecorr.getCorrectionFactors();
     }

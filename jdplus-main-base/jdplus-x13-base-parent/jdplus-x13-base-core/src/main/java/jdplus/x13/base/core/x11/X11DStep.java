@@ -136,8 +136,7 @@ public class X11DStep {
         IExtremeValuesCorrector ecorr = context.getExtremeValuesCorrector();
         if (ecorr instanceof PeriodSpecificExtremeValuesCorrector && context.getCalendarSigma() != CalendarSigmaOption.Signif) {
             //compute corrections without backcast/forecast but keep the length
-            d9 = ecorr.computeCorrections(d8.drop(context.getBackcastHorizon(), context.getForecastHorizon()))
-                    .extend(context.getBackcastHorizon(), context.getForecastHorizon());
+            d9 = ecorr.computeCorrections(d8, true);
             d9g = ecorr.applyCorrections(d8, d9);
             d9_g_bis = d9g;
         } else {

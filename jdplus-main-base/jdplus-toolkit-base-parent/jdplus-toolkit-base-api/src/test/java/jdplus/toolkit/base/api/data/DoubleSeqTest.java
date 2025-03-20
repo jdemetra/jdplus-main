@@ -130,4 +130,21 @@ public class DoubleSeqTest {
         assertThat(C.cleanExtremities().length()).isEqualTo(0);
     }
 
+    @Test
+    public void testExtract() {
+        double[] a=new double[10];
+        DoubleSeq A=DoubleSeq.of(a);
+        assertThat(A.extract(0, -1, 3).length()).isEqualTo(4);
+        assertThat(A.extract(1, -1, 3).length()).isEqualTo(3);
+        assertThat(A.extract(0, -1, 2).length()).isEqualTo(5);
+        assertThat(A.extract(1, -1, 2).length()).isEqualTo(5);
+        assertThat(A.extract(0, -1, 9).length()).isEqualTo(2);
+        assertThat(A.extract(1, -1, 9).length()).isEqualTo(1);
+        assertThat(A.extract(9, -1, -3).length()).isEqualTo(4);
+        assertThat(A.extract(8, -1, -3).length()).isEqualTo(3);
+        assertThat(A.extract(9, -1, -2).length()).isEqualTo(5);
+        assertThat(A.extract(8, -1, -2).length()).isEqualTo(5);
+        assertThat(A.extract(9, -1, -9).length()).isEqualTo(2);
+        assertThat(A.extract(8, -1, -9).length()).isEqualTo(1);
+    }
 }

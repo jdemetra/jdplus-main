@@ -128,8 +128,7 @@ public class X11CStep {
         c13 = context.remove(c11, c7);
 
         IExtremeValuesCorrector ecorr = context.getExtremeValuesCorrector();
-        ecorr.setStart(context.getPosition(0));
-        ecorr.analyse(c13, context);
+        ecorr.analyse(c13, context.getPosition(0), context);
         c17 = ecorr.getObservationWeights();
         c20 = ecorr.getCorrectionFactors();
     }
