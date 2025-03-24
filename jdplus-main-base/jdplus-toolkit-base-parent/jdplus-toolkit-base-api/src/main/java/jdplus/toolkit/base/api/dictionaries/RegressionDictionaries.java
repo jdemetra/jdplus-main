@@ -94,8 +94,8 @@ public class RegressionDictionaries {
             CAL_F = "cal_f",
             CAL_B = "cal_b",
             YCAL = "ycal", // series corrected for calendar effects: y_cal = yc-/cal. Untransformed
-//            YCAL_F = "ycal_f",
-//            YCAL_B = "ycal_b",
+            YCAL_F = "ycal_f",
+            YCAL_B = "ycal_b",
             DET = "det", // all deterministic effects (including pre-adjustment). Untransformed
             DET_F = "det_f",
             DET_B = "det_b",
@@ -139,8 +139,8 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(YC_F).description("forecasts of the interpolated series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(YC_B).description("backcasts of the interpolated series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(YLIN).description("linearized series (series without pre-adjustment and regression effects). l=yc-/det. Untransformed").outputClass(TsData.class).build())
-//            .item(AtomicDictionary.Item.builder().name(YLIN_F).description("forcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
-//            .item(AtomicDictionary.Item.builder().name(YLIN_B).description("backcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YLIN_F).description("forcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YLIN_B).description("backcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(DET).description("all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).build())
             .item(AtomicDictionary.Item.builder().name(DET_F).description("forcasts of all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(DET_B).description("backcasts of all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
@@ -148,8 +148,8 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(CAL_F).description("forecasts of all calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(CAL_B).description("backcasts of all calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(YCAL).description("series corrected for calendar effects: y_cal = yc-/cal. Untransformed").outputClass(TsData.class).build())
-//            .item(Item.builder().name(YCAL_F).description("forecasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(YCAL_B).description("backcasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YCAL_F).description("forecasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YCAL_B).description("backcasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(TDE).description("trading days effects (including leap year/length of period, including pre-adjustments). Untransformed").outputClass(TsData.class).build())
             .item(AtomicDictionary.Item.builder().name(TDE_F).description("forecasts of the trading days effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(TDE_B).description("backcasts of the trading days effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
@@ -169,10 +169,10 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(REG_F).description("forecasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(REG_B).description("backcasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(L).description("linearized series (transformed series without pre-adjustment and regression effects). Transformed)").outputClass(TsData.class).build())
-//            .item(AtomicDictionary.Item.builder().name(L_F).description("forecasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
-//            .item(AtomicDictionary.Item.builder().name(L_B).description("backcasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
-//            .item(AtomicDictionary.Item.builder().name(L_EF).description("forecast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
-//            .item(AtomicDictionary.Item.builder().name(L_EB).description("backcast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_F).description("forecasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_B).description("backcasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_EF).description("forecast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_EB).description("backcast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(FULL_RES).description("full residuals").outputClass(TsData.class).build())
             .build();
 
