@@ -311,6 +311,12 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
         specPanel.validate();
     }
 
+    public void resetDocument() {
+        originalSpec=getDocument().getSpecification();
+        refreshAll();
+        TsDynamicProvider.onDocumentChanged(getDocument());
+    }
+
     /**
      * Called when the content of the document has changed
      */

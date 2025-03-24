@@ -19,7 +19,6 @@ package jdplus.sa.base.api;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.processing.ProcQuality;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import jdplus.toolkit.base.api.information.GenericExplorable;

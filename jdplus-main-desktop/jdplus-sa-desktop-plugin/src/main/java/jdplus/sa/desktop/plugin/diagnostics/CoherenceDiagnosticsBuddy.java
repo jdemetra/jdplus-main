@@ -37,7 +37,7 @@ public class CoherenceDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBuddy
 
         private boolean active;
         private double tolerance;
-        private double errorThreshold;
+//        private double errorThreshold;
         private double severeThreshold;
         private double badThreshold;
         private double uncertainThreshold;
@@ -46,7 +46,7 @@ public class CoherenceDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBuddy
         public static Bean of(CoherenceDiagnosticsConfiguration config) {
             Bean bean = new Bean();
             bean.active = config.isActive();
-            bean.errorThreshold = config.getErrorThreshold();
+//            bean.errorThreshold = config.getErrorThreshold();
             bean.severeThreshold = config.getSevereThreshold();
             bean.badThreshold = config.getBadThreshold();
             bean.uncertainThreshold = config.getUncertainThreshold();
@@ -58,7 +58,7 @@ public class CoherenceDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBuddy
         public CoherenceDiagnosticsConfiguration asCore() {
             return CoherenceDiagnosticsConfiguration.builder()
                     .active(active)
-                    .errorThreshold(errorThreshold)
+//                    .errorThreshold(errorThreshold)
                     .severeThreshold(severeThreshold)
                     .badThreshold(badThreshold)
                     .uncertainThreshold(uncertainThreshold)
@@ -118,7 +118,7 @@ public class CoherenceDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBuddy
             Config.Builder result = Config.builder("diagnostics", "coherence", "3.0");
             activeParam.set(result::parameter, a.isActive());
             tolParam.set(result::parameter, a.getTolerance());
-            errorParam.set(result::parameter, a.getErrorThreshold());
+//            errorParam.set(result::parameter, a.getErrorThreshold());
             severeParam.set(result::parameter, a.getSevereThreshold());
             badParam.set(result::parameter, a.getBadThreshold());
             uncertainParam.set(result::parameter, a.getUncertainThreshold());
@@ -130,7 +130,7 @@ public class CoherenceDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBuddy
         public CoherenceDiagnosticsConfiguration doBackward(Config b) {
             return CoherenceDiagnosticsConfiguration.builder()
                     .active(activeParam.get(b::getParameter))
-                    .errorThreshold(errorParam.get(b::getParameter))
+//                    .errorThreshold(errorParam.get(b::getParameter))
                     .severeThreshold(severeParam.get(b::getParameter))
                     .badThreshold(badParam.get(b::getParameter))
                     .uncertainThreshold(uncertainParam.get(b::getParameter))
@@ -159,10 +159,10 @@ public class CoherenceDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBuddy
             sheet.put(builder.build());
 
             builder.reset("Thresholds");
-            builder.withDouble()
-                    .select(bean, "errorThreshold")
-                    .display("Error")
-                    .add();
+//            builder.withDouble()
+//                    .select(bean, "errorThreshold")
+//                    .display("Error")
+//                    .add();
             builder.withDouble()
                     .select(bean, "severeThreshold")
                     .display("Severe")

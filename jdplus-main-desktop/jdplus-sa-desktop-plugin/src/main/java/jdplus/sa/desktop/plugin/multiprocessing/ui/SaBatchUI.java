@@ -354,22 +354,20 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     protected void onSaProcessingStateChange() {
         super.onSaProcessingStateChange();
         switch (controller.getSaProcessingState()) {
-            case DONE:
+            case DONE -> {
                 runButton.setEnabled(true);
                 makeBusy(false);
 
                 if (progressHandle != null) {
                     progressHandle.finish();
                 }
-                break;
-            case PENDING:
-                runButton.setEnabled(true);
-                break;
-            case STARTED:
+            }
+            case PENDING -> runButton.setEnabled(true);
+            case STARTED -> {
                 runButton.setEnabled(false);
                 progressHandle = ProgressHandle.createHandle(controller.getDocument().getDisplayName(), () -> worker.cancel(true));
                 progressHandle.start(getElement().getCurrent().size());
-                break;
+            }
         }
     }
 
@@ -428,18 +426,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         worker = new SwingWorkerImpl(all);
         worker.addPropertyChangeListener(evt -> {
             switch (worker.getState()) {
-                case DONE:
+                case DONE -> {
                     if (progressHandle != null) {
                         progressHandle.finish();
                     }
                     controller.setSaProcessingState(MultiProcessingController.SaProcessingState.DONE);
-                    break;
-                case PENDING:
-                    controller.setSaProcessingState(MultiProcessingController.SaProcessingState.PENDING);
-                    break;
-                case STARTED:
-                    controller.setSaProcessingState(MultiProcessingController.SaProcessingState.STARTED);
-                    break;
+                }
+                case PENDING -> controller.setSaProcessingState(MultiProcessingController.SaProcessingState.PENDING);
+                case STARTED -> controller.setSaProcessingState(MultiProcessingController.SaProcessingState.STARTED);
             }
         });
         worker.execute();
@@ -757,7 +751,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             TsDocument doc = (TsDocument) detail.getDocument();
             if (doc != null) {
                 doc.set((Ts) null);
-                detail.onDocumentChanged();
+                detail.resetDocument();
                 updateUserInterfaceContext(null);
             }
         } else {
@@ -768,7 +762,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             if (doc != null && cspec.getClass().isInstance(doc.getSpecification())) {
                 // same document. To be updated
                 doc.setAll(cspec, ts, output.getEstimation().getResults());
-                detail.onDocumentChanged();
+                detail.resetDocument();
             } else {
                 DocumentUIServices uis = DocumentUIServices.forSpec(cspec.getClass());
                 if (uis == null) {

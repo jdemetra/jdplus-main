@@ -77,7 +77,7 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
 
         SaOutOfSampleDiagnosticsFactory<X13Results> outofsample
                 = new SaOutOfSampleDiagnosticsFactory<>(OutOfSampleDiagnosticsConfiguration.getDefault(),
-                        r -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics().forecastingTest());
+                        r -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics().forecastingTest());
         SaResidualsDiagnosticsFactory<X13Results> residuals
                 = new SaResidualsDiagnosticsFactory<>(ResidualsDiagnosticsConfiguration.getDefault(),
                         r -> r.getPreprocessing());
@@ -87,21 +87,22 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
         SpectralDiagnosticsFactory<X13Results> spectral
                 = new SpectralDiagnosticsFactory<>(SpectralDiagnosticsConfiguration.getDefault(),
                         (X13Results r) -> {
-            X11Results x11 = r.getDecomposition();
-            if (x11 == null)
-                return null;
-            return new SpectralDiagnostics.Input(x11.getMode(), 
-                    x11.getB1(),
-                    x11.getD11());
+                            X11Results x11 = r.getDecomposition();
+                            if (x11 == null) {
+                                return null;
+                            }
+                            return new SpectralDiagnostics.Input(x11.getMode(),
+                                    x11.getB1(),
+                                    x11.getD11());
                         });
         MDiagnosticsFactory mstats = new MDiagnosticsFactory(MDiagnosticsConfiguration.getDefault());
         AdvancedResidualSeasonalityDiagnosticsFactory<X13Results> advancedResidualSeasonality
                 = new AdvancedResidualSeasonalityDiagnosticsFactory<>(AdvancedResidualSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (X13Results r) -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics()
+                        (X13Results r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
                 );
         CombinedSeasonalityDiagnosticsFactory<X13Results> combinedSeasonality
                 = new CombinedSeasonalityDiagnosticsFactory<>(CombinedSeasonalityDiagnosticsConfiguration.getDefault(),
-                        (X13Results r) -> r.getDiagnostics() == null ? null :r.getDiagnostics().getGenericDiagnostics()
+                        (X13Results r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics()
                 );
 
         ResidualTradingDaysDiagnosticsFactory<X13Results> residualTradingDays
@@ -112,7 +113,7 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
                             if (preprocessing != null) {
                                 td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
                             }
-                            return r.getDiagnostics() == null ? null :new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                            return r.getDiagnostics() == null ? null : new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
                         }
                 );
 
@@ -140,12 +141,14 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
 
     @Override
     public X13Spec generateSpec(X13Spec spec, X13Results estimation) {
+        if (! estimation.isValid()) {
+            return null;
+        }
         X11Spec nxspec = update(spec.getX11(), estimation.getDecomposition());
         X13Spec.Builder builder = spec.toBuilder().x11(nxspec);
-        if (estimation.getPreprocessing() != null) {
-            RegArimaSpec nrspec = RegArimaFactory.getInstance().generateSpec(spec.getRegArima(), estimation.getPreprocessing().getDescription());
-            builder.regArima(nrspec);
-        }
+        RegArimaSpec nrspec = RegArimaFactory.getInstance().generateSpec(spec.getRegArima(), estimation.getPreprocessing().getDescription());
+        builder.regArima(nrspec);
+
         return builder.build();
     }
 

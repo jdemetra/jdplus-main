@@ -65,6 +65,8 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
         set(SaDictionaries.MODE, DecompositionMode.class, source -> source.getFinals() == null ? null : source.getFinals().getMode());
 
         set(SaDictionaries.SEASONAL, Integer.class, source -> {
+            if (source.getDecomposition() == null)
+                return null;
             TsData s = source.getDecomposition().getInitialComponents()
                     .getSeries(ComponentType.Seasonal, ComponentInformation.Value);
             if (s == null) {
