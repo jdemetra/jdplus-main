@@ -197,7 +197,7 @@ public final class SaItem {
                 processed = true;
             }
         }
-        return estimation != null && estimation.getResults().isValid();
+        return estimation.getResults() != null && estimation .getResults().isValid();
     }
 
     public boolean compute(ModellingContext context, boolean verbose) {

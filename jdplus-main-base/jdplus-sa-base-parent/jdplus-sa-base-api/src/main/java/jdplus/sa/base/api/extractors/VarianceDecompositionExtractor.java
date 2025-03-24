@@ -16,6 +16,7 @@
  */
 package jdplus.sa.base.api.extractors;
 
+import jdplus.sa.base.api.SaDictionaries;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.sa.base.api.StationaryVarianceDecomposition;
@@ -28,15 +29,13 @@ import nbbrd.service.ServiceProvider;
 @ServiceProvider(InformationExtractor.class)
 public class VarianceDecompositionExtractor extends InformationMapping<StationaryVarianceDecomposition> {
 
-    public static final String CYCLE = "cycle", SEASONAL = "seasonality", IRREGULAR = "irregular", TD = "tdh", OTHERS = "others", TOTAL = "total";
-
     public VarianceDecompositionExtractor() {
-        set(CYCLE, Double.class, source -> source.getC());
-        set(SEASONAL, Double.class, source -> source.getS());
-        set(IRREGULAR, Double.class, source -> source.getI());
-        set(TD, Double.class, source -> source.getCalendar());
-        set(OTHERS, Double.class, source -> source.getP());
-        set(TOTAL, Double.class, source -> source.total());
+        set(SaDictionaries.VAR_CYCLE, Double.class, source -> source.getC());
+        set(SaDictionaries.VAR_SEASONAL, Double.class, source -> source.getS());
+        set(SaDictionaries.VAR_IRREGULAR, Double.class, source -> source.getI());
+        set(SaDictionaries.VAR_TDH, Double.class, source -> source.getCalendar());
+        set(SaDictionaries.VAR_OTHERS, Double.class, source -> source.getP());
+        set(SaDictionaries.VAR_TOTAL, Double.class, source -> source.total());
     }
 
     @Override

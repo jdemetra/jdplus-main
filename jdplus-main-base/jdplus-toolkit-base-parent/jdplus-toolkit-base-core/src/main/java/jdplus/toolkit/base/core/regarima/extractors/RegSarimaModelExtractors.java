@@ -220,31 +220,44 @@ public class RegSarimaModelExtractors {
             setArray(RegressionDictionaries.YC_F, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getForecasts());
             setArray(RegressionDictionaries.YC_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getForecasts());
 
-            set(RegressionDictionaries.L, TsData.class, source -> source.linearizedSeries());
             set(RegressionDictionaries.YLIN, TsData.class, source -> {
                 TsData lin = source.linearizedSeries();
                 return source.backTransform(lin, false);
             });
-
-
+            setArray(RegressionDictionaries.YLIN_B, NBCAST, TsData.class, (source, i) -> {
+                TsData lin = source.linearizedBackcasts(i);
+                return source.backTransform(lin, false);
+            });
+            setArray(RegressionDictionaries.YLIN_F, NFCAST, TsData.class, (source, i) -> {
+                TsData lin = source.linearizedForecasts(i);
+                return source.backTransform(lin, false);
+            });
             //********************
 //        MAPPING.set(ModellingDictionary.YC + SeriesInfo.F_SUFFIX, source -> source.forecast(source.getForecastCount(), false));
 //        MAPPING.set(ModellingDictionary.YC + SeriesInfo.EF_SUFFIX, source -> source.getForecastError());
 //            setArray(RegressionDictionaries.Y_LIN_F, NFCAST, TsData.class, (source, i) -> source.backTransform(source.forecasts(i).getRawForecasts(), false));
 //            setArray(RegressionDictionaries.Y_LIN_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecasts());
-//            setArray(RegressionDictionaries.L_F, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getForecastsStdev());
-//            setArray(RegressionDictionaries.L_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getForecastsStdev());
-//            setArray(RegressionDictionaries.L_EF, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getForecastsStdev());
-//            setArray(RegressionDictionaries.L_EB, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getForecastsStdev());
+            set(RegressionDictionaries.L, TsData.class, source -> source.linearizedSeries());
+            setArray(RegressionDictionaries.L_F, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getRawForecastsStdev());
+            setArray(RegressionDictionaries.L_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecastsStdev());
+            setArray(RegressionDictionaries.L_EF, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getRawForecastsStdev());
+            setArray(RegressionDictionaries.L_EB, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecastsStdev());
             set(RegressionDictionaries.YCAL, TsData.class, source -> {
                 TsData y = source.getDescription().getSeries();
                 TsData cal = source.getCalendarEffect(y.getDomain());
                 return source.inv_op(y, cal);
             });
-            setArray(RegressionDictionaries.YCAL + SeriesInfo.F_SUFFIX, NFCAST, TsData.class,
+            setArray(RegressionDictionaries.YCAL_F, NFCAST, TsData.class,
                     (source, i) -> {
                         TsDomain fdom = source.forecastDomain(i);
                         TsData yf = source.forecasts(i).getForecasts();
+                        TsData calf = source.getCalendarEffect(fdom);
+                        return source.inv_op(yf, calf);
+                    });
+            setArray(RegressionDictionaries.YCAL_B, NBCAST, TsData.class,
+                    (source, i) -> {
+                        TsDomain fdom = source.backcastDomain(i);
+                        TsData yf = source.backcasts(i).getForecasts();
                         TsData calf = source.getCalendarEffect(fdom);
                         return source.inv_op(yf, calf);
                     });

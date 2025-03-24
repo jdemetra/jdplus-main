@@ -63,7 +63,7 @@ public class SaManager {
                 ProcessingLog log = verbose ? new DefaultProcessingLog() : ProcessingLog.dummy();
                 SaProcessor processor = fac.processor(dspec);
                 GenericExplorable rslt = processor.process(def.getTs().getData(), context, log);
-                if (rslt != null) {
+                if (rslt.isValid()) {
                     List<String> warnings = new ArrayList<>();
                     List<ProcDiagnostic> tests = new ArrayList<>();
                     fac.fillDiagnostics(tests, warnings, rslt);
@@ -78,6 +78,7 @@ public class SaManager {
                             .build();
                 } else {
                     return SaEstimation.builder()
+                            .results(rslt)
                             .quality(ProcQuality.Undefined)
                             .build();
                 }

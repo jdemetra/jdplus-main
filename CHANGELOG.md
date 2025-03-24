@@ -17,6 +17,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Remove DEBUG option in contextual menu [#535](https://github.com/jdemetra/jdplus-main/issues/535)
 - ![UI] Fix startup crash on Java 21 [#551](https://github.com/jdemetra/jdplus-main/issues/551)
 - ![UI] Fix incompatibilty with plug-ins of Incubator
+- ![UI] Fix a bug in the restore of specifications in multi-saprocessing [#565](https://github.com/jdemetra/jdplus-main/issues/565)
+
+### Changed
+
+- ![UI] Change "error" message for large differences between sa and raw annual totals to "severe" [#567](https://github.com/jdemetra/jdplus-main/issues/567)
+- ![UI] Display more series in the details of the pre-processing panel (REGARIMA models) [#561](https://github.com/jdemetra/jdplus-main/issues/561)
+
+### Added
+
+- ![IO] Add missing items in the dictionaries (partim) [#564](https://github.com/jdemetra/jdplus-main/issues/564)
 
 ## [3.4.0] - 2025-02-13
 
