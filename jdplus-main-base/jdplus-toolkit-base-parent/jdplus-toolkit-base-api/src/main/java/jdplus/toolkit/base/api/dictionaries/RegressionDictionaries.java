@@ -169,10 +169,10 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(REG_F).description("forecasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(REG_B).description("backcasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(L).description("linearized series (transformed series without pre-adjustment and regression effects). Transformed)").outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(L_F).description("forecasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
-            .item(AtomicDictionary.Item.builder().name(L_B).description("backcasts of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
-            .item(AtomicDictionary.Item.builder().name(L_EF).description("forecast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
-            .item(AtomicDictionary.Item.builder().name(L_EB).description("backcast errors of the linearized. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_F).description("forecasts of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_B).description("backcasts of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_EF).description("forecast errors of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_EB).description("backcast errors of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(FULL_RES).description("full residuals").outputClass(TsData.class).build())
             .build();
 

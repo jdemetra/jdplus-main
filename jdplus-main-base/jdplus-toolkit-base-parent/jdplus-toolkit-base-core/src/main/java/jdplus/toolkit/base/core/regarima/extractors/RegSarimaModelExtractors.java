@@ -232,16 +232,11 @@ public class RegSarimaModelExtractors {
                 TsData lin = source.linearizedForecasts(i);
                 return source.backTransform(lin, false);
             });
-            //********************
-//        MAPPING.set(ModellingDictionary.YC + SeriesInfo.F_SUFFIX, source -> source.forecast(source.getForecastCount(), false));
-//        MAPPING.set(ModellingDictionary.YC + SeriesInfo.EF_SUFFIX, source -> source.getForecastError());
-//            setArray(RegressionDictionaries.Y_LIN_F, NFCAST, TsData.class, (source, i) -> source.backTransform(source.forecasts(i).getRawForecasts(), false));
-//            setArray(RegressionDictionaries.Y_LIN_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecasts());
             set(RegressionDictionaries.L, TsData.class, source -> source.linearizedSeries());
-            setArray(RegressionDictionaries.L_F, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getRawForecastsStdev());
-            setArray(RegressionDictionaries.L_B, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecastsStdev());
-            setArray(RegressionDictionaries.L_EF, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getRawForecastsStdev());
-            setArray(RegressionDictionaries.L_EB, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecastsStdev());
+            setArray(RegressionDictionaries.L_B, NFCAST, TsData.class, (source, i) -> source.linearizedBackcasts(i));
+            setArray(RegressionDictionaries.L_F, NBCAST, TsData.class, (source, i) -> source.linearizedForecasts(i));
+//            setArray(RegressionDictionaries.L_EF, NFCAST, TsData.class, (source, i) -> source.forecasts(i).getRawForecastsStdev());
+//            setArray(RegressionDictionaries.L_EB, NBCAST, TsData.class, (source, i) -> source.backcasts(i).getRawForecastsStdev());
             set(RegressionDictionaries.YCAL, TsData.class, source -> {
                 TsData y = source.getDescription().getSeries();
                 TsData cal = source.getCalendarEffect(y.getDomain());
@@ -266,7 +261,6 @@ public class RegSarimaModelExtractors {
                 TsData cal = source.getCalendarEffect(y.getDomain());
                 return source.inv_op(y, cal);
             });
-//        MAPPING.set(RegressionDictionaries.YCAL + SeriesInfo.F_SUFFIX, source -> source.getYcal(true));
 
 // All deterministic effects
             set(RegressionDictionaries.DET, TsData.class, (RegSarimaModel source) -> {
