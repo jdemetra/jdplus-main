@@ -14,21 +14,21 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing", id = Reset.ID)
-@ActionRegistration(displayName = "#CTL_Reset", lazy = false)
+@ActionID(category = "SaProcessing", id = Restore.ID)
+@ActionRegistration(displayName = "#CTL_Restore", lazy = false)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1250)
 })
-@Messages("CTL_Reset=Reset")
-public final class Reset extends ActiveViewAction<SaBatchUI> {
+@Messages("CTL_Restore=Restore")
+public final class Restore extends ActiveViewAction<SaBatchUI> {
 
     @ClassNameConstant
-    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.Reset";
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.Restore";
 
-    public Reset() {
+    public Restore() {
         super(SaBatchUI.class);
         refreshAction();
-        putValue(NAME, Bundle.CTL_Reset());
+        putValue(NAME, Bundle.CTL_Restore());
     }
 
     @Override
@@ -39,6 +39,6 @@ public final class Reset extends ActiveViewAction<SaBatchUI> {
 
     @Override
     protected void process(SaBatchUI cur) {
-        cur.reset(true);
+        cur.restore(true);
     }
 }

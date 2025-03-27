@@ -246,7 +246,7 @@ public class MultiProcessingDocument implements Documented {
         current.clear();
     }
 
-    public void reset() {
+    public void restore() {
         this.current.clear();
         this.curId = 0;
         current.addAll(of(initial.getItems()));

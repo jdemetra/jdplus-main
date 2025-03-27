@@ -14,31 +14,32 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing", id = DeleteAllItems.ID)
-@ActionRegistration(displayName = "#CTL_DeleteAllItems", lazy=false)
+@ActionID(category = "SaProcessing", id = ResetProcessing.ID)
+@ActionRegistration(displayName = "#CTL_ResetProcessing", lazy=false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1600)
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1390, separatorBefore = 1389)
 })
-@Messages("CTL_DeleteAllItems=Delete all")
-public final class DeleteAllItems extends ActiveViewAction<SaBatchUI> {
+@Messages("CTL_ResetProcessing=Reset processing")
+public final class ResetProcessing extends ActiveViewAction<SaBatchUI> {
 
     @ClassNameConstant
-    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.DeleteAllItems";
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.ResetProcessing";
 
-    public DeleteAllItems() {
+
+    public ResetProcessing() {
         super(SaBatchUI.class);
         refreshAction();
-        putValue(NAME, Bundle.CTL_DeleteAllItems());
+        putValue(NAME, Bundle.CTL_ResetProcessing());
     }
 
     @Override
     protected void refreshAction() {
         SaBatchUI ui = context();
-        enabled = ui != null && !ui.getElement().getCurrent().isEmpty();
+        enabled = ui != null && ui.getSelectionCount() > 0;
     }
 
     @Override
     protected void process(SaBatchUI cur) {
-        cur.clear(true);
+        cur.resetProcessing();
     }
 }

@@ -90,7 +90,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     private static final String REFRESH_LOCAL_MESSAGE = "Are you sure you want to refresh the selected items?";
     private static final String DELETE_LOCAL_MESSAGE = "Are you sure you want to delete the selected items?";
     private static final String DELETE_ALL_MESSAGE = "Are you sure you want to delete all items?";
-    private static final String RESET_MESSAGE = "Are you sure you want to reset this document?";
+    private static final String RESET_MESSAGE = "Are you sure you want to restore this document to the last saved situation?";
     private static final String PASTE_FAILED_MESSAGE = "Unable to paste data?";
 
     // MultiViewElement >
@@ -560,6 +560,19 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         setSelection(null);
     }
 
+    public void resetProcessing() {
+        SaNode[] items = selection;
+        if (items == null) {
+            return;
+        }
+
+        for (SaNode item : items) {
+            item.resetProcessing();
+        }
+        redrawAll();
+        setSelection(null);
+    }
+
     public void clear(boolean interactive) {
         if (interactive) {
             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(DELETE_ALL_MESSAGE, NotifyDescriptor.OK_CANCEL_OPTION);
@@ -574,14 +587,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         setSelection(null);
     }
 
-    public void reset(boolean interactive) {
+    public void restore(boolean interactive) {
         if (interactive) {
             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(RESET_MESSAGE, NotifyDescriptor.OK_CANCEL_OPTION);
             if (DialogDisplayer.getDefault().notify(nd) != NotifyDescriptor.OK_OPTION) {
                 return;
             }
         }
-        controller.getDocument().getElement().reset();
+        controller.getDocument().getElement().restore();
         redrawAll();
         controller.setSaProcessingState(MultiProcessingController.SaProcessingState.READY);
         controller.getDocument().setDirty();
