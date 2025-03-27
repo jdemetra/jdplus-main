@@ -27,6 +27,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - ![IO] Add missing items in the dictionaries (partim) [#564](https://github.com/jdemetra/jdplus-main/issues/564)
+- ![IO] Add (partial) reset of SA-Processing [#572](https://github.com/jdemetra/jdplus-main/issues/572)
 
 ## [3.4.0] - 2025-02-13
 
