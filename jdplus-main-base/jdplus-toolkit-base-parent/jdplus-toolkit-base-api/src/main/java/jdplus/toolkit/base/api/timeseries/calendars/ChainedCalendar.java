@@ -24,7 +24,8 @@ import java.time.LocalDate;
  * @author PALATEJ
  */
 @Development(status = Development.Status.Release)
-@lombok.Value
+@lombok.Getter
+@lombok.AllArgsConstructor
 public class ChainedCalendar implements CalendarDefinition {
 
     private String first, second;

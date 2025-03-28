@@ -41,7 +41,7 @@ public interface FamilyHandler {
     public static final String VARS_REPO="Variables";
     public static final String VARS_PREFIX="Vars";
     public static final String CALENDAR_REPO="Calendars";
-    public static final String CALENDAR_PREFIX="Calendar";
+    public static final String CALENDAR_PREFIX="Calendars";
     
 
     @NonNull

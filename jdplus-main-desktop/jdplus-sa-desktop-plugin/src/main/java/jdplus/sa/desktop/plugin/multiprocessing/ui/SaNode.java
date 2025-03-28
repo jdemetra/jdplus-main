@@ -134,10 +134,13 @@ public class SaNode {
     }
 
     /**
-     * Remove current processing. Keep any other information
+     * Remove current processing.Keep any other information
+     * @return False if the item was unprocessed, true otherwise
      */
-    public void resetProcessing() {
+    public boolean resetProcessing() {
         synchronized (moniker) {
+            if (status == Status.Unprocessed)
+                return false;
             status = Status.Unprocessed;
             if (output != null){
                 output=output.toBuilder()
@@ -145,6 +148,7 @@ public class SaNode {
                         .processed(false)
                         .build();
             }
+            return true;
         }
     }
 

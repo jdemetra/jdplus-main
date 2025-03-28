@@ -4,6 +4,8 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.variables;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTopComponent;
@@ -83,6 +85,12 @@ public final class VariablesTopComponent extends WorkspaceTopComponent<TsDataSup
         setLayout(new java.awt.BorderLayout());
         list=new JTsVariableList(getElement());
         add(list);
+        list.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            switch (evt.getPropertyName()){
+                case JTsVariableList.VARIABLES_CHANGED -> getDocument().setDirty();
+            }
+        });
+        
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

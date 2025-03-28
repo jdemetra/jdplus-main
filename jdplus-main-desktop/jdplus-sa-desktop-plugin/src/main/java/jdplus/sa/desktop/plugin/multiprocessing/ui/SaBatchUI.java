@@ -566,10 +566,16 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             return;
         }
 
+        boolean changed=false;
         for (SaNode item : items) {
-            item.resetProcessing();
+            if (item.resetProcessing())
+                changed=true;
         }
+        if (! changed)
+            return;
         redrawAll();
+        controller.changed();
+        controller.getDocument().setDirty();
         setSelection(null);
     }
 

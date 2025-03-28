@@ -217,6 +217,7 @@ public class FileRepository extends AbstractWorkspaceRepository implements Looku
 
     private static void storeCalendar(FileWorkspace storage, CalendarManager value) throws IOException {
         storage.store(CAL_ID, value);
+        value.resetDirty();
     }
 
     private static void loadCalendars(FileWorkspace storage, Workspace ws) throws IOException {
