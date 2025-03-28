@@ -83,6 +83,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
     @SwingAction
     public static final String OPEN_ACTION = "open";
 
+    public static final String VARIABLES_CHANGED = "variables_changed";
+
     private final XTable table;
     private final TsDataSuppliers variables;
 
@@ -101,6 +103,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
 
         setLayout(new BorderLayout());
         add(NbComponents.newJScrollPane(table), BorderLayout.CENTER);
+
     }
 
     private JPopupMenu buildPopupMenu() {
@@ -197,12 +200,17 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
 
         @Override
         public boolean importData(TransferHandler.TransferSupport support) {
-            return DataTransferManager.get()
+            if (DataTransferManager.get()
                     .toTsCollectionStream(support.getTransferable())
                     .map(col -> col.load(TsInformationType.All, TsManager.get()))
                     .filter(col -> !col.isEmpty())
                     .peek(JTsVariableList.this::appendTsVariables)
-                    .count() > 0;
+                    .count() > 0) {
+                firePropertyChange(VARIABLES_CHANGED, false, true);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -216,6 +224,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
                 var = new DynamicTsDataSupplier(s.getMoniker(), s.getData());
             }
             variables.set(name, var);
+
         }
         ((CustomTableModel) table.getModel()).fireTableStructureChanged();
     }
@@ -288,13 +297,20 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
             String name = names[rowIndex];
 
             return switch (columnIndex) {
-                case 0 -> name;
-                case 1 -> variables.get(name) instanceof DynamicTsDataSupplier supplier ? supplier.getMoniker() : null;
-                case 2 -> variables.get(name) instanceof DynamicTsDataSupplier ? "Dynamic" : "Static";
-                case 3 -> variables.get(name).get().getStart();
-                case 4 -> variables.get(name).get().getEnd().previous();
-                case 5 -> variables.get(name).get();
-                default -> null;
+                case 0 ->
+                    name;
+                case 1 ->
+                    variables.get(name) instanceof DynamicTsDataSupplier supplier ? supplier.getMoniker() : null;
+                case 2 ->
+                    variables.get(name) instanceof DynamicTsDataSupplier ? "Dynamic" : "Static";
+                case 3 ->
+                    variables.get(name).get().getStart();
+                case 4 ->
+                    variables.get(name).get().getEnd().previous();
+                case 5 ->
+                    variables.get(name).get();
+                default ->
+                    null;
             };
         }
 
@@ -306,11 +322,16 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         @Override
         public Class<?> getColumnClass(int columnIndex) {
             return switch (columnIndex) {
-                case 0, 2 -> String.class;
-                case 1 -> TsMoniker.class;
-                case 3, 4 -> TsPeriod.class;
-                case 5 -> TsData.class;
-                default -> super.getColumnClass(columnIndex);
+                case 0, 2 ->
+                    String.class;
+                case 1 ->
+                    TsMoniker.class;
+                case 3, 4 ->
+                    TsPeriod.class;
+                case 5 ->
+                    TsData.class;
+                default ->
+                    super.getColumnClass(columnIndex);
             };
         }
     }
@@ -410,7 +431,9 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
 
     private static Ts toTs(TsDataSuppliers vars, String name) {
         TsDataSupplier variable = vars.get(name);
-        if (variable == null) return null;
+        if (variable == null) {
+            return null;
+        }
         return variable instanceof DynamicTsDataSupplier dynamicSupplier
                 ? TsFactory.getDefault().makeTs(dynamicSupplier.getMoniker(), TsInformationType.None)
                 : Ts.of(name, variable.get());
@@ -429,7 +452,9 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
             String selectedVariable = getSelectedVariable(c);
             if (selectedVariable != null) {
                 Ts ts = toTs(c.variables, selectedVariable);
-                if (ts != null) TsActionManager.get().openWith(ts, actionName);
+                if (ts != null) {
+                    TsActionManager.get().openWith(ts, actionName);
+                }
             }
         }
 
@@ -439,7 +464,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
+        public @NonNull
+        ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
@@ -459,7 +485,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
+        public @NonNull
+        ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
@@ -472,7 +499,9 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         @Override
         public void execute(JTsVariableList c) {
             Ts ts = toTs(c.variables, getSelectedVariable(c));
-            if (ts != null) TsActionManager.get().openWith(ts, tsAction.getName());
+            if (ts != null) {
+                TsActionManager.get().openWith(ts, tsAction.getName());
+            }
         }
     }
 
@@ -492,6 +521,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
                 return;
             }
             c.variables.rename(oldName, newName);
+            c.firePropertyChange(VARIABLES_CHANGED, false, true);
             ((CustomTableModel) c.table.getModel()).fireTableStructureChanged();
         }
 
@@ -501,7 +531,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
+        public @NonNull
+        ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
@@ -519,6 +550,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
                 if (supplier instanceof DynamicTsDataSupplier dynamic) {
                     String description = getDescription(dynamic.getMoniker());
                     c.variables.rename(oldName, nameFixer.apply(description));
+                    c.firePropertyChange(VARIABLES_CHANGED, false, true);
                 }
             }
 
@@ -540,8 +572,9 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         private static UnaryOperator<String> getNameFixer(INameValidator validator, char fallbackChar) {
             if (validator instanceof DefaultNameValidator defaultNameValidator) {
                 char[] invalidChars = defaultNameValidator.getInvalidChars();
-                if (isReplaceable(invalidChars, fallbackChar))
+                if (isReplaceable(invalidChars, fallbackChar)) {
                     return name -> replaceChars(name, invalidChars, fallbackChar);
+                }
             }
             return UnaryOperator.identity();
         }
@@ -552,7 +585,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
+        public @NonNull
+        ActionAdapter toAction(@NonNull JTsVariableList c) {
             return new ActionAdapter(c) {
                 @Override
                 public void handleException(ActionEvent event, Exception ex) {
@@ -576,6 +610,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
             for (String s : c.names(c.table.getSelectedRows())) {
                 c.variables.remove(s);
             }
+            c.firePropertyChange(VARIABLES_CHANGED, false, true);
             ((CustomTableModel) c.table.getModel()).fireTableStructureChanged();
         }
 
@@ -585,7 +620,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public @NonNull ActionAdapter toAction(@NonNull JTsVariableList c) {
+        public @NonNull
+        ActionAdapter toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
         }
     }
@@ -602,6 +638,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
             }
 
             c.variables.clear();
+            c.firePropertyChange(VARIABLES_CHANGED, false, true);
             ((CustomTableModel) c.table.getModel()).fireTableStructureChanged();
         }
 
@@ -611,7 +648,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         }
 
         @Override
-        public @NonNull ActionAdapter2 toAction(@NonNull JTsVariableList c) {
+        public @NonNull
+        ActionAdapter2 toAction(@NonNull JTsVariableList c) {
             return super.toAction(c).withWeakTableModelListener(c.table.getModel());
         }
     }
@@ -620,7 +658,8 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
     private static abstract class JCommand2<T> extends JCommand<T> {
 
         @Override
-        public @NonNull ActionAdapter2 toAction(@NonNull T component) {
+        public @NonNull
+        ActionAdapter2 toAction(@NonNull T component) {
             return new ActionAdapter2(component);
         }
 
@@ -631,6 +670,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
             }
 
             @NonNull
+            @Override
             public ActionAdapter2 withWeakTableModelListener(@NonNull TableModel source) {
                 TableModelListener realListener = evt -> refreshActionState();
                 putValue("TableModelListener", realListener);

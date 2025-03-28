@@ -17,19 +17,20 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
 
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = WorkspaceItemManager.class, position = 9900)
 public class CalendarDocumentManager extends AbstractWorkspaceItemManager<CalendarDefinition> {
 
-    public static final LinearId ID = new LinearId("Utilities", "Calendars");
-    public static final String PATH = "Calendars";
+    public static final LinearId ID = new LinearId("Utilities", FamilyHandler.CALENDAR_REPO);
+    public static final String PATH = FamilyHandler.CALENDAR_REPO;
     public static final String ITEMPATH = "Calendars.item";
 
     @Override
     protected String getItemPrefix() {
-        return "Calendars";
+        return FamilyHandler.CALENDAR_PREFIX;
     }
 
     @Override

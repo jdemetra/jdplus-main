@@ -77,7 +77,7 @@ public final class CloneCalendarAction extends SingleNodeAction<ItemWsNode> {
         DialogDescriptor dd = panel.createDialogDescriptor(Bundle.cloneNationalCalendar_dialog_title());
         if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
             List<Holiday> holidays = panel.getHolidays();
-            Calendar newObject = new Calendar(holidays.toArray(new Holiday[holidays.size()]));
+            Calendar newObject = new Calendar(holidays.toArray(Holiday[]::new));
             AddCalendarAction.add(manager, panel.getCalendarName(), newObject);
         }
     }
@@ -109,7 +109,7 @@ public final class CloneCalendarAction extends SingleNodeAction<ItemWsNode> {
         if (DialogDisplayer.getDefault().notify(dd) == NotifyDescriptor.OK_OPTION) {
             String name = panel.getCalendarName();
             List<WeightedItem<String>> weightedItems = panel.getWeightedItems();
-            CompositeCalendar newObj = new CompositeCalendar(weightedItems.toArray(new WeightedItem[weightedItems.size()]));
+            CompositeCalendar newObj = new CompositeCalendar(weightedItems.toArray(WeightedItem[]::new));
             AddCalendarAction.add(manager, name, newObj);
         }
     }

@@ -100,6 +100,7 @@ public abstract class AbstractWorkspaceRepository implements WorkspaceRepository
         }
         List<WorkspaceItemRepository> repos = getRepositories(item);
         if (repos == null) {
+            item.resetDirty();
             return true;
         }
         return repos.stream().anyMatch(o -> o.save(item, version));
