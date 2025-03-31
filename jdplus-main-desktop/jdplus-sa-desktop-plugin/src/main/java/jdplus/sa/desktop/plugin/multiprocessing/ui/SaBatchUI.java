@@ -349,6 +349,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
 
     protected void onProcessingChange() {
         model.fireTableDataChanged();
+        controller.getDocument().setDirty();
 //        String ts = getCurrentProcessing().getMeta().get(TsMeta.TIMESTAMP.getKey());
 //        statusLabel.setText(ts != null ? ("Saved:" + ts) : "New processing");
     }
@@ -360,10 +361,10 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             case DONE -> {
                 runButton.setEnabled(true);
                 makeBusy(false);
-
                 if (progressHandle != null) {
                     progressHandle.finish();
                 }
+                controller.getDocument().setDirty();
             }
             case PENDING ->
                 runButton.setEnabled(true);
@@ -488,10 +489,11 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         if (dataobj.getTransferDataFlavors().length > 0) {
             if (pasteTs(dataobj)) {
                 redrawAll();
-
+                controller.getDocument().setDirty();
                 return;
             }
             if (pasteSaProcessing(dataobj)) {
+                controller.getDocument().setDirty();
                 redrawAll();
                 return;
             }

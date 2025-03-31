@@ -34,17 +34,17 @@ import jdplus.toolkit.base.api.information.GenericExplorable;
  */
 @lombok.experimental.UtilityClass
 public class SaManager {
-
-    public List<SaProcessingFactory> processors() {
+    
+    public synchronized List<SaProcessingFactory> processors() {
         return SaProcessingFactoryLoader.get();
     }
 
-    public List<SaOutputFactory> outputFactories() {
+    public synchronized List<SaOutputFactory> outputFactories() {
         return SaOutputFactoryLoader.get();
     }
 
     public Explorable process(TsData series, SaSpecification spec, ModellingContext context, ProcessingLog log) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
@@ -55,7 +55,7 @@ public class SaManager {
     }
 
     public SaEstimation process(SaDefinition def, ModellingContext context, boolean verbose) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         SaSpecification spec = def.activeSpecification();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
@@ -92,7 +92,7 @@ public class SaManager {
         if (rslt == null) {
             return estimation.withQuality(ProcQuality.Undefined);
         }
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         SaSpecification spec = estimation.getPointSpec();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
@@ -110,12 +110,12 @@ public class SaManager {
     }
 
     public <I extends SaSpecification> SaProcessingFactory factoryFor(SaSpecification spec) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         return all.stream().filter(p -> p.canHandle(spec)).findFirst().orElseThrow();
     }
 
     public <I extends SaSpecification> SaProcessingFactory factoryFor(AlgorithmDescriptor desc) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         return all.stream().filter(p -> p.descriptor().isCompatible(desc)).findFirst().orElseThrow();
     }
 }
