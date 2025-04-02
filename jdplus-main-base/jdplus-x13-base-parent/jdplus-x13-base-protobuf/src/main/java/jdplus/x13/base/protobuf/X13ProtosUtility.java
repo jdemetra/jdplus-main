@@ -255,7 +255,7 @@ public class X13ProtosUtility {
                 = X13Output.newBuilder()
                         .setEstimationSpec(SpecProto.convert(output.getEstimationSpec()));
         X13Results result = output.getResult();
-        if (result != null) {
+        if (result != null && result.isValid()) {
             builder.setResult(X13ResultsProto.convert(result))
                     .setResultSpec(SpecProto.convert(output.getResultSpec()));
         }

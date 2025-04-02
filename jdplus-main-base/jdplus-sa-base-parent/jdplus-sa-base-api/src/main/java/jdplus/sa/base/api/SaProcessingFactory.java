@@ -34,7 +34,7 @@ import jdplus.toolkit.base.api.dictionaries.Dictionary;
  * @param <R> Output
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.CONCURRENT, singleton = true)
 public interface SaProcessingFactory<I extends SaSpecification, R extends Explorable> {
 
     AlgorithmDescriptor descriptor();
