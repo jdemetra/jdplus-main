@@ -35,12 +35,17 @@ import jdplus.toolkit.base.api.information.GenericExplorable;
 @lombok.experimental.UtilityClass
 public class SaManager {
     
-    public synchronized List<SaProcessingFactory> processors() {
+    public List<SaProcessingFactory> processors() {
         return SaProcessingFactoryLoader.get();
     }
 
-    public synchronized List<SaOutputFactory> outputFactories() {
+    public List<SaOutputFactory> outputFactories() {
         return SaOutputFactoryLoader.get();
+    }
+    
+    public void reload(){
+        SaProcessingFactoryLoader.reload();
+        SaOutputFactoryLoader.reload();
     }
 
     public Explorable process(TsData series, SaSpecification spec, ModellingContext context, ProcessingLog log) {

@@ -26,14 +26,15 @@ import jdplus.sa.base.protobuf.SaProtosUtility;
 @lombok.experimental.UtilityClass
 public class TramoSeatsResultsProto {
 
-
     public TramoSeatsResults convert(jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults rslts) {
         TramoSeatsResults.Builder builder = TramoSeatsResults.newBuilder();
-        builder.setPreprocessing(RegArimaEstimationProto.convert(rslts.getPreprocessing()))
-                .setDecomposition(SeatsResultsProto.convert(rslts.getDecomposition()))
-                .setFinal(SaProtosUtility.convert(rslts.getFinals()))
-                .setDiagnosticsSa(SaProtosUtility.of(rslts.getDiagnostics().getGenericDiagnostics(), rslts.getDiagnostics().getVarianceDecomposition()));
+        if (rslts.isValid()) {
+            builder.setPreprocessing(RegArimaEstimationProto.convert(rslts.getPreprocessing()))
+                    .setDecomposition(SeatsResultsProto.convert(rslts.getDecomposition()))
+                    .setFinal(SaProtosUtility.convert(rslts.getFinals()))
+                    .setDiagnosticsSa(SaProtosUtility.of(rslts.getDiagnostics().getGenericDiagnostics(), rslts.getDiagnostics().getVarianceDecomposition()));
+        }
         return builder.build();
     }
 
- }
+}

@@ -63,6 +63,7 @@ public class X13ResultsProto {
 
     public X13Results convert(jdplus.x13.base.core.x13.X13Results rslts) {
         X13Results.Builder builder = X13Results.newBuilder();
+        if (rslts.isValid()){
         X13Diagnostics diags=rslts.getDiagnostics();
         builder.setPreprocessing(RegArimaEstimationProto.convert(rslts.getPreprocessing()))
                 .setPreadjustment(convert(rslts.getPreadjustment()))
@@ -73,6 +74,7 @@ public class X13ResultsProto {
                         .build())
                 .setDiagnosticsSa(SaProtosUtility.of(diags.getGenericDiagnostics(), 
                         diags.getVarianceDecomposition()));
+        }
         return builder.build();
     }
     
