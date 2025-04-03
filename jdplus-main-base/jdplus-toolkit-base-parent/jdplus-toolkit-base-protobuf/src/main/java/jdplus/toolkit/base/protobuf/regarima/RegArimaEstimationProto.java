@@ -49,6 +49,8 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
+import jdplus.toolkit.base.protobuf.modelling.ModellingProtosUtility;
+import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos;
 
 /**
  *
@@ -80,6 +82,7 @@ public class RegArimaEstimationProto {
         }
 
         return builder.setSeries(ToolkitProtosUtility.convert(description.getSeries()))
+                .setPreadjustment(ModellingProtosUtility.convert(description.getLengthOfPeriodTransformation()))
                 .setLog(description.isLogTransformation())
                 .setArima(RegArimaProtosUtility.convert(description.getStochasticComponent()))
                 .build();
@@ -136,8 +139,9 @@ public class RegArimaEstimationProto {
     }
 
     public RegArimaProtos.RegArimaModel convert(RegSarimaModel model) {
-        if (model == null)
+        if (model == null) {
             return RegArimaProtos.RegArimaModel.newBuilder().build();
+        }
         DoubleSeq res = model.fullResiduals().getValues();
         return RegArimaProtos.RegArimaModel.newBuilder()
                 .setDescription(convert(model.getDescription()))
@@ -161,7 +165,11 @@ public class RegArimaEstimationProto {
         model.getResiduals().getTests().forEach((k, v)
                 -> {
             if (v instanceof StatisticalTest) {
-                builder.putResidualsTests(k, ToolkitProtosUtility.convert((StatisticalTest) v));
+                StatisticalTest st = (StatisticalTest) v;
+                if (st.isValid()) {
+                    ToolkitProtos.StatisticalTest test = ToolkitProtosUtility.convert(st);
+                    builder.putResidualsTests(k, test);
+                }
             }
         });
         return builder.build();
