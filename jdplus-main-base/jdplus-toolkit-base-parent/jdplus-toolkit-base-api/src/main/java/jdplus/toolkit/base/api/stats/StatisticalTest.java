@@ -33,4 +33,8 @@ public class StatisticalTest {
     public boolean isSignificant(double threshold){
         return pvalue <threshold;
     }
+    
+    public boolean isValid(){
+        return Double.isFinite(value) && Double.isFinite(pvalue);
+    }
 }

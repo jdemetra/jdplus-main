@@ -42,85 +42,59 @@ import jdplus.toolkit.base.core.arima.IArimaModel;
 public class ModellingProtosUtility {
 
     public LengthOfPeriodType convert(ModellingProtos.LengthOfPeriod lp) {
-        switch (lp) {
-            case LP_LEAPYEAR:
-                return LengthOfPeriodType.LeapYear;
-            case LP_LENGTHOFPERIOD:
-                return LengthOfPeriodType.LengthOfPeriod;
-            default:
-                return LengthOfPeriodType.None;
-        }
+        return switch (lp) {
+            case LP_LEAPYEAR -> LengthOfPeriodType.LeapYear;
+            case LP_LENGTHOFPERIOD -> LengthOfPeriodType.LengthOfPeriod;
+            default -> LengthOfPeriodType.None;
+        };
     }
 
     public ModellingProtos.LengthOfPeriod convert(LengthOfPeriodType lp) {
-        switch (lp) {
-            case LeapYear:
-                return ModellingProtos.LengthOfPeriod.LP_LEAPYEAR;
-            case LengthOfPeriod:
-                return ModellingProtos.LengthOfPeriod.LP_LENGTHOFPERIOD;
-            default:
-                return ModellingProtos.LengthOfPeriod.LP_NONE;
-        }
+        return switch (lp) {
+            case LeapYear -> ModellingProtos.LengthOfPeriod.LP_LEAPYEAR;
+            case LengthOfPeriod -> ModellingProtos.LengthOfPeriod.LP_LENGTHOFPERIOD;
+            default -> ModellingProtos.LengthOfPeriod.LP_NONE;
+        };
     }
 
     public ModellingProtos.TradingDays convert(TradingDaysType td) {
-        switch (td) {
-            case TD7:
-                return ModellingProtos.TradingDays.TD7;
-            case TD4:
-                return ModellingProtos.TradingDays.TD4;
-            case TD3c:
-                return ModellingProtos.TradingDays.TD3C;
-            case TD3:
-                return ModellingProtos.TradingDays.TD3;
-            case TD2c:
-                return ModellingProtos.TradingDays.TD2C;
-            case TD2:
-                return ModellingProtos.TradingDays.TD2;
-            default:
-                return ModellingProtos.TradingDays.TD_NONE;
-        }
+        return switch (td) {
+            case TD7 -> ModellingProtos.TradingDays.TD7;
+            case TD4 -> ModellingProtos.TradingDays.TD4;
+            case TD3c -> ModellingProtos.TradingDays.TD3C;
+            case TD3 -> ModellingProtos.TradingDays.TD3;
+            case TD2c -> ModellingProtos.TradingDays.TD2C;
+            case TD2 -> ModellingProtos.TradingDays.TD2;
+            default -> ModellingProtos.TradingDays.TD_NONE;
+        };
     }
 
     public TradingDaysType convert(ModellingProtos.TradingDays td) {
-        switch (td) {
-            case TD7:
-                return TradingDaysType.TD7;
-            case TD4:
-                return TradingDaysType.TD4;
-            case TD3:
-                return TradingDaysType.TD3;
-            case TD3C:
-                return TradingDaysType.TD3c;
-            case TD2C:
-                return TradingDaysType.TD2c;
-            case TD2:
-                return TradingDaysType.TD2;
-            default:
-                return TradingDaysType.NONE;
-        }
+        return switch (td) {
+            case TD7 -> TradingDaysType.TD7;
+            case TD4 -> TradingDaysType.TD4;
+            case TD3 -> TradingDaysType.TD3;
+            case TD3C -> TradingDaysType.TD3c;
+            case TD2C -> TradingDaysType.TD2c;
+            case TD2 -> TradingDaysType.TD2;
+            default -> TradingDaysType.NONE;
+        };
     }
 
     public ModellingProtos.Transformation convert(TransformationType fn) {
-        switch (fn) {
-            case Log:
-                return ModellingProtos.Transformation.FN_LOG;
-            case Auto:
-                return ModellingProtos.Transformation.FN_AUTO;
-            default:
-                return ModellingProtos.Transformation.FN_LEVEL;
-        }
+        return switch (fn) {
+            case Log -> ModellingProtos.Transformation.FN_LOG;
+            case Auto -> ModellingProtos.Transformation.FN_AUTO;
+            default -> ModellingProtos.Transformation.FN_LEVEL;
+        };
     }
 
     public TransformationType convert(ModellingProtos.Transformation fn) {
-        switch (fn) {
-            case FN_LOG:
-                return TransformationType.Log;
-            case FN_AUTO:
-                return TransformationType.Auto;
-            default:
-                return TransformationType.None;
-        }
+        return switch (fn) {
+            case FN_LOG -> TransformationType.Log;
+            case FN_AUTO -> TransformationType.Auto;
+            default -> TransformationType.None;
+        };
     }
 
     public ModellingProtos.TsVariable convertTsContextVariable(Variable<TsContextVariable> v) {

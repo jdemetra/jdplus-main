@@ -53,7 +53,7 @@ public class TramoTest {
         assertTrue(desc != null);
         StatisticalTest data = rslt.getData("residuals.doornikhansen", StatisticalTest.class);
         System.out.println(data.getPvalue());
-   }
+    }
 
     @Test
     public void testFull() {
@@ -62,6 +62,30 @@ public class TramoTest {
         assertTrue(bytes != null);
 
         TramoOutput rslt2 = Tramo.fullProcess(Data.TS_PROD, rslt.getResultSpec(), null);
+        byte[] bytes2 = Tramo.toBuffer(rslt2);
+        assertTrue(bytes2 != null);
+
+        byte[] sbytes = Tramo.toBuffer(rslt.getEstimationSpec());
+        TramoSpec spec = Tramo.specOf(sbytes);
+
+        assertTrue(spec != null);
+    }
+
+    @Test
+    public void testShort() {
+        double[] x = new double[]{
+            2340456, 8944420, 7576600, 12100288,
+            9460370, 9460370, 7790305, 11447244,
+            7856177, 7641116, 7044036, 10595520,
+            8574256, 7933196, 7658433, 10893388,
+            8288369, 7885537, 4828187, 10993388
+        };
+        TsData X = TsData.ofInternal(TsPeriod.quarterly(2015, 1), x);
+        TramoOutput rslt = Tramo.fullProcess(X, "TRfull");
+        byte[] bytes = Tramo.toBuffer(rslt);
+        assertTrue(bytes != null);
+
+        TramoOutput rslt2 = Tramo.fullProcess(X, rslt.getResultSpec(), null);
         byte[] bytes2 = Tramo.toBuffer(rslt2);
         assertTrue(bytes2 != null);
 

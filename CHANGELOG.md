@@ -23,6 +23,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![UI] Change "error" message for large differences between sa and raw annual totals to "severe" [#567](https://github.com/jdemetra/jdplus-main/issues/567)
 - ![UI] Display more series in the details of the pre-processing panel (REGARIMA models) [#561](https://github.com/jdemetra/jdplus-main/issues/561)
+- ![OTHER] Upgrade to last protobuf libraries
 
 ### Added
 
@@ -40,6 +41,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![IO] Add missing information in the exports of the residuals of REGARIMA models
 - ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
 - ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
+- ![OTHER] Fix Protobuf transfer of invalid statistical tests 
 
 ### Added
 
