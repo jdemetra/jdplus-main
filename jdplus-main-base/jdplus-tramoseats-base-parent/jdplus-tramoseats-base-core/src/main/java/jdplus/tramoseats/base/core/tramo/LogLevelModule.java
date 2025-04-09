@@ -16,6 +16,8 @@
  */
 package jdplus.tramoseats.base.core.tramo;
 
+import java.util.Formatter;
+import java.util.Locale;
 import jdplus.tramoseats.base.core.tramo.internal.TramoUtility;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
@@ -40,7 +42,27 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 @Development(status = Development.Status.Preliminary)
 public class LogLevelModule implements ILogLevelModule {
 
-    public static final String LL = "log-level test";
+    private static final String LL = "log-level test";
+    private static final String NEG = "negative values, levels are chosen",
+            FAILED = "log/level failed", LOGS = "logs are chosen", LEVELS = "levels are chosen";
+
+    @lombok.Getter
+    @lombok.AllArgsConstructor
+    public static class Info {
+
+        private final double logs;
+        private final double levels;
+        private final double logpreference;
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("-LogLikelihood on logs=").append(new Formatter(Locale.ROOT).format("%6g", logs)).append("; ")
+                    .append("-LogLikelihood on levels=").append(new Formatter(Locale.ROOT).format("%6g", levels)).append("; ")
+                    .append("(log-preference)=").append(new Formatter(Locale.ROOT).format("%6g", logpreference)).append(')');
+            return builder.toString();
+        }
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -217,38 +239,34 @@ public class LogLevelModule implements ILogLevelModule {
 
     @Override
     public ProcessingResult process(RegSarimaModelling context) {
+        ProcessingLog logs = context.getLog();
+        logs.push(LL);
         try {
             ModelDescription desc = context.getDescription();
             DoubleSeq data = desc.getTransformedSeries().getValues();
             if (data.anyMatch(x -> x <= 0)) {
+                logs.remark(NEG);
                 return ProcessingResult.Unchanged;
-            }
-            ProcessingLog logs = context.getLog();
-            if (logs != null) {
-                logs.push(LL);
             }
             FastMatrix variables = desc.regarima().variables();
             if (!process(data, desc.getAnnualFrequency(), variables, seasonal, logs)) {
-                if (logs != null) {
-                    logs.warning("failed");
-                    logs.pop();
-                }
+                logs.warning(FAILED);
                 return ProcessingResult.Failed;
             }
-            if (logs != null) {
-                logs.step("level", this.level);
-                logs.step("log", this.log);
-                logs.pop();
-            }
+            Info info = new Info(log, level, logpreference);
             if (isChoosingLog()) {
                 desc.setLogTransformation(true);
                 context.clearEstimation();
+                logs.info(LOGS, info);
                 return ProcessingResult.Changed;
             } else {
+                logs.info(LEVELS, info);
                 return ProcessingResult.Unchanged;
             }
         } catch (RuntimeException err) {
             return ProcessingResult.Failed;
+        } finally {
+            logs.pop();
         }
     }
 

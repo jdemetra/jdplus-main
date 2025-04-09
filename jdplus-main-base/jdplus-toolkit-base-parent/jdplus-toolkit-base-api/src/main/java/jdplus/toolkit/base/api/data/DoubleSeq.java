@@ -49,7 +49,7 @@ public interface DoubleSeq extends BaseSeq {
          * Sets <code>double</code> value at the specified index.
          *
          * @param index the index of the <code>double</code> value to be
-         *              modified
+         * modified
          * @param value the specified <code>double</code> value
          */
         void set(@NonNegative int index, double value) throws IndexOutOfBoundsException;
@@ -261,12 +261,13 @@ public interface DoubleSeq extends BaseSeq {
      * @param index the index of the <code>double</code> value to be returned
      * @return the specified <code>double</code> value
      * @throws IndexOutOfBoundsException if the <tt>index</tt> argument is
-     *                                   negative or not less than <tt>length()</tt>
+     * negative or not less than <tt>length()</tt>
      */
     double get(@NonNegative int index) throws IndexOutOfBoundsException;
 
     @Override
-    default @NonNull DoubleSeqCursor cursor() {
+    default @NonNull
+    DoubleSeqCursor cursor() {
         return new InternalDoubleSeqCursor.DefaultDoubleSeqCursor<>(this);
     }
 
@@ -275,9 +276,9 @@ public interface DoubleSeq extends BaseSeq {
      *
      * @param buffer The buffer that will receive the data.
      * @param offset The start position in the buffer for the copy. The data
-     *               will be copied in the buffer at the indexes [start, start+getLength()[.
-     *               The length of the buffer is not checked (it could be larger than this
-     *               array.
+     * will be copied in the buffer at the indexes [start, start+getLength()[.
+     * The length of the buffer is not checked (it could be larger than this
+     * array.
      */
     default void copyTo(double @NonNull [] buffer, @NonNegative int offset) {
         InternalDoubleSeq.copyToByCursor(this, buffer, offset);
@@ -368,20 +369,45 @@ public interface DoubleSeq extends BaseSeq {
     /**
      * Makes an extract of this data block.
      *
-     * @param start  The position of the first extracted item.
+     * @param start The position of the first extracted item.
      * @param length The number of extracted items. The size of the result could
-     *               be smaller than length, if the data block doesn't contain enough items.
-     *               Cannot be null.
-     * @return A new (read only) toArray block. Cannot be null (but the length
-     * of the result could be 0.
+     * be smaller than length, if the data block doesn't contain enough items.
+     * if length is -1, the max number of items is computed
+     * @return A new (read only) array block. Cannot be null (but the length of
+     * the result could be 0.
      */
     @NonNull
-    default DoubleSeq extract(@NonNegative int start, @NonNegative int length) {
+    default DoubleSeq extract(@NonNegative int start, int length) {
+        if (length == -1) {
+            length = length() - start;
+        }
         return map(length, i -> start + i);
     }
 
+    /**
+     * Makes an extract of this data block.
+     *
+     * @param start The position of the first extracted item.
+     * @param length The number of extracted items. The size of the result could
+     * be smaller than length, if the data block doesn't contain enough items.
+     * if length is -1, the max number of items is computed
+     * @param increment
+     * @return A new (read only) array block. Cannot be null (but the length of
+     * the result could be 0.
+     */
     @NonNull
-    default DoubleSeq extract(@NonNegative int start, @NonNegative int length, int increment) {
+    default DoubleSeq extract(@NonNegative int start, int length, int increment) {
+        if (length == -1) {
+            if (increment > 0) {
+                length = 1 + (length() - start - 1) / increment;
+            } else {
+                if (start == 0) {
+                    length = 1;
+                } else {
+                    length = 1 - start / increment;
+                }
+            }
+        }
         return map(length, i -> start + i * increment);
     }
 
@@ -495,7 +521,7 @@ public interface DoubleSeq extends BaseSeq {
      * Computes y(t)=fn(x(t-lag), x(t))
      *
      * @param lag The lag
-     * @param fn  The applied function
+     * @param fn The applied function
      * @return A n-lag sequence of doubles, where n is the length of the initial
      * array.
      */
@@ -878,9 +904,9 @@ public interface DoubleSeq extends BaseSeq {
     }
 
     /**
-     * @param data  Storage
+     * @param data Storage
      * @param start Position of the first item (non negative)
-     * @param len   Number of items (non negative)
+     * @param len Number of items (non negative)
      * @return
      */
     @StaticFactoryMethod
@@ -892,10 +918,10 @@ public interface DoubleSeq extends BaseSeq {
     /**
      * Makes a sequence of regularly spaced doubles
      *
-     * @param data  Storage
+     * @param data Storage
      * @param start Position of the first item (non negative)
-     * @param len   Number of items (non negative)
-     * @param inc   Increment in the underlying storage of two succesive items
+     * @param len Number of items (non negative)
+     * @param inc Increment in the underlying storage of two succesive items
      * @return
      */
     @StaticFactoryMethod

@@ -63,10 +63,8 @@ public class SeatsKernel {
     }
 
     private SeatsModel buildModel(SeatsModelSpec modelSpec, ProcessingLog log) {
-        log.push(MODEL);
         SeatsModel model = SeatsModel.of(modelSpec);
         model.setCurrentModel(model.getOriginalModel());
-        log.pop();
         return model;
     }
 
@@ -76,7 +74,7 @@ public class SeatsKernel {
         if (!validator.validate(model.getCurrentModel())) {
             model.setCurrentModel(validator.getNewModel());
             model.setParametersCutOff(true);
-            log.warning(CUT_OFF);
+            log.remark(CUT_OFF);
         }
         log.pop();
     }

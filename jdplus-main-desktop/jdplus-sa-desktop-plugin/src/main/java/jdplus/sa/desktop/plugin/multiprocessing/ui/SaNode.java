@@ -82,7 +82,11 @@ public class SaNode {
             return Status.Unprocessed;
         }
         if (estimation.getResults() != null) {
-            return Status.Valid;
+            if (estimation.getResults().isValid()) {
+                return Status.Valid;
+            } else {
+                return Status.Invalid;
+            }
         }
         return Status.Unprocessed; // Invalid should be captured elsewhere
     }
@@ -96,10 +100,23 @@ public class SaNode {
     }
 
     void prepare() {
-        if (output == null) {
-            Ts ts = TsFactory.getDefault().makeTs(moniker, TsInformationType.Data);
-            output = SaItem.of(ts, spec);
-            status = Status.Unprocessed;
+        synchronized (moniker) {
+            if (output == null) {
+                Ts ts = TsFactory.getDefault().makeTs(moniker, TsInformationType.Data);
+                output = SaItem.of(ts, spec);
+                status = Status.Unprocessed;
+            }
+        }
+    }
+
+    public void update(SaItem noutput) {
+        synchronized (moniker) {
+            output = noutput;
+            if (noutput == null || noutput.getEstimation() == null || noutput.getEstimation().getResults() == null) {
+                status = Status.Unprocessed;
+            } else {
+                status = output.getEstimation().getResults().isValid() ? Status.Valid : Status.Invalid;
+            }
         }
     }
 
@@ -107,73 +124,106 @@ public class SaNode {
         if (status.isProcessed()) {
             return;
         }
-        if (output == null) {
-            Ts ts = TsFactory.getDefault().makeTs(moniker, TsInformationType.Data);
-            output = SaItem.of(ts, spec);
+        synchronized (moniker) {
+            if (output == null) {
+                Ts ts = TsFactory.getDefault().makeTs(moniker, TsInformationType.Data);
+                output = SaItem.of(ts, spec);
+            }
+            status = output.process(context, verbose) ? Status.Valid : Status.Invalid;
         }
-        status = output.process(context, verbose) ? Status.Valid : Status.Invalid;
+    }
+
+    /**
+     * Remove current processing.Keep any other information
+     * @return False if the item was unprocessed, true otherwise
+     */
+    public boolean resetProcessing() {
+        synchronized (moniker) {
+            if (status == Status.Unprocessed)
+                return false;
+            status = Status.Unprocessed;
+            if (output != null){
+                output=output.toBuilder()
+                        .estimation(null)
+                        .processed(false)
+                        .build();
+            }
+            return true;
+        }
     }
 
     public SaNode withDomainSpecification(SaSpecification nspec) {
-        SaItem item = output;
-        if (item == null) {
-            SaNode node = new SaNode(id, moniker, nspec);
-            return node;
-        } else {
-            SaDefinition definition = item.getDefinition();
-            SaDefinition ndefinition = definition.toBuilder()
-                    .domainSpec(nspec)
-                    .estimationSpec(null)
-                    .policy(EstimationPolicyType.Complete)
-                    .build();
-            SaItem nitem = SaItem.builder()
-                    .definition(ndefinition)
-                    .name(item.getName())
-                    .meta(item.getMeta())
-                    .priority(item.getPriority())
-                    .build();
-            return SaNode.of(id, nitem);
+        synchronized (moniker) {
+            SaItem item = output;
+            if (item == null) {
+                SaNode node = new SaNode(id, moniker, nspec);
+                return node;
+            } else {
+                SaDefinition definition = item.getDefinition();
+                SaDefinition ndefinition = definition.toBuilder()
+                        .domainSpec(nspec)
+                        .estimationSpec(null)
+                        .policy(EstimationPolicyType.Complete)
+                        .build();
+                SaItem nitem = SaItem.builder()
+                        .definition(ndefinition)
+                        .name(item.getName())
+                        .meta(item.getMeta())
+                        .priority(item.getPriority())
+                        .build();
+                return SaNode.of(id, nitem);
+            }
         }
     }
 
     public SaNode withEstimationSpecification(SaSpecification nspec) {
-        SaItem item = output;
-        if (item == null) {
-            SaNode node = new SaNode(id, moniker, nspec);
-            return node;
-        } else {
-            SaDefinition definition = item.getDefinition();
-            SaDefinition ndefinition = definition.toBuilder()
-                    .domainSpec(definition.getDomainSpec())
-                    .estimationSpec(nspec)
-                    .policy(EstimationPolicyType.Interactive)
-                    .build();
-            SaItem nitem = SaItem.builder()
-                    .definition(ndefinition)
-                    .name(item.getName())
-                    .meta(item.getMeta())
-                    .priority(item.getPriority())
-                    .build();
-            return SaNode.of(id, nitem);
+        synchronized (moniker) {
+            SaItem item = output;
+            if (item == null) {
+                SaNode node = new SaNode(id, moniker, nspec);
+                return node;
+            } else {
+                SaDefinition definition = item.getDefinition();
+                SaDefinition ndefinition = definition.toBuilder()
+                        .domainSpec(definition.getDomainSpec())
+                        .estimationSpec(nspec)
+                        .policy(EstimationPolicyType.Interactive)
+                        .build();
+                SaItem nitem = SaItem.builder()
+                        .definition(ndefinition)
+                        .name(item.getName())
+                        .meta(item.getMeta())
+                        .priority(item.getPriority())
+                        .build();
+                return SaNode.of(id, nitem);
+            }
         }
     }
 
     public SaEstimation results() {
-        return output == null ? null : output.getEstimation();
+        synchronized (moniker) {
+            return output == null ? null : output.getEstimation();
+        }
     }
 
     public String getName() {
-        return output != null ? output.getName() : "series-" + id;
+        synchronized (moniker) {
+            return output != null ? output.getName() : "series-" + id;
+        }
     }
 
     public void setName(String nname) {
-        if (output != null) {
-            output = output.withName(nname);
+        synchronized (moniker) {
+            if (output != null) {
+                output = output.withName(nname);
+            }
         }
     }
 
     public boolean isProcessed() {
-        return status.isProcessed();
+        synchronized (moniker) {
+            return status.isProcessed();
+        }
     }
 
     public boolean isFrozen() {

@@ -81,21 +81,11 @@ public class HtmlDiagnosticsSummary extends AbstractHtmlElement {
                 stream.write("   " + test + ": ");
             }
             switch (q) {
-                case Error:
-                    stream.write(HtmlTag.IMPORTANT_TEXT, "Error" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_INFO);
-                    break;
-                case Severe:
-                    stream.write(HtmlTag.IMPORTANT_TEXT, "Severe" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_DANGER);
-                    break;
-                case Bad:
-                    stream.write("Bad" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_DANGER);
-                    break;
-                case Uncertain:
-                    stream.write("Uncertain" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_WARNING);
-                    break;
-                case Good:
-                    stream.write("Good" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_SUCCESS);
-                    break;
+                case Error -> stream.write(HtmlTag.IMPORTANT_TEXT, "Error" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_INFO);
+                case Severe -> stream.write(HtmlTag.IMPORTANT_TEXT, "Severe" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_DANGER);
+                case Bad -> stream.write("Bad" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_DANGER);
+                case Uncertain -> stream.write("Uncertain" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_WARNING);
+                case Good -> stream.write("Good" + (!Double.isNaN(val) ? " (" + df3.format(val) + ")" : ""), Bootstrap4.TEXT_SUCCESS);
             }
         }
     }

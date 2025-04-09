@@ -34,7 +34,6 @@ public class TramoSeatsDiagnostics {
         boolean mul = preprocessing.getDescription().isLogTransformation();
         TsData sa = srslts.getFinalComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value);
         TsData i = srslts.getFinalComponents().getSeries(ComponentType.Irregular, ComponentInformation.Value);
-        TsData t = srslts.getFinalComponents().getSeries(ComponentType.Trend, ComponentInformation.Value);
         TsData s = srslts.getFinalComponents().getSeries(ComponentType.Seasonal, ComponentInformation.Value);
         TsData si = mul ? TsData.multiply(s, i) : TsData.add(s, i);
         TsData lsa = srslts.getInitialComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value);

@@ -143,6 +143,7 @@ public class X13Dictionaries {
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICSEASONALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICTRADINGDAYS))
             .dictionary(new PrefixedDictionary(MSTATISTICS, MSTATS))
+            .dictionary(new PrefixedDictionary(SaDictionaries.VARIANCE, SaDictionaries.VAR_DECOMPOSITION))
             .dictionary(new PrefixedDictionary(SaDictionaries.QUALITY, SaDictionaries.SA_QUALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.BENCHMARKING, SaDictionaries.SABENCHMARKING))
             .build();

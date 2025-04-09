@@ -29,7 +29,7 @@ import nbbrd.service.ServiceDefinition;
  * @param <R> Output
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.CONCURRENT, singleton = true)
 public interface SaOutputFactory<R extends Explorable> extends OutputFactory<R> {
 
     Object getConfiguration();

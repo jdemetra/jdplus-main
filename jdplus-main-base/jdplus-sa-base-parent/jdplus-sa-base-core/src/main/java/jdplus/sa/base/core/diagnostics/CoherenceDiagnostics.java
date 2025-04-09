@@ -233,7 +233,7 @@ public final class CoherenceDiagnostics implements Diagnostics {
             }
             return maxDefinitionDifference < config.getTolerance() ? ProcQuality.Good : ProcQuality.Error;
         } else {
-            if (Double.isNaN(maxAnnualDifference) || maxAnnualDifference > config.getErrorThreshold()) {
+            if (Double.isNaN(maxAnnualDifference)) {
                 return ProcQuality.Error;
             } else if (maxAnnualDifference > config.getSevereThreshold()) {
                 return ProcQuality.Severe;
@@ -268,18 +268,13 @@ public final class CoherenceDiagnostics implements Diagnostics {
     }
 
     public double getLowerBound(ProcQuality quality) {
-        switch (quality) {
-            case Error:
-                return config.getErrorThreshold();
-            case Severe:
-                return config.getSevereThreshold();
-            case Bad:
-                return config.getBadThreshold();
-            case Uncertain:
-                return config.getUncertainThreshold();
-            default:
-                return 0;
-        }
+        return switch (quality) {
+//            case Error -> config.getErrorThreshold();
+            case Severe -> config.getSevereThreshold();
+            case Bad -> config.getBadThreshold();
+            case Uncertain -> config.getUncertainThreshold();
+            default -> 0;
+        };
     }
 
     private void check(TsData d) {

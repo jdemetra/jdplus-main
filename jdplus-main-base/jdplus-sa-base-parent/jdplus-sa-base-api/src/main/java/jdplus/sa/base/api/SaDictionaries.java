@@ -30,6 +30,15 @@ import nbbrd.design.Development;
 @lombok.experimental.UtilityClass
 @Development(status = Development.Status.Beta)
 public final class SaDictionaries {
+    
+    /**
+     * Logs
+     */
+    public final String PRELIMINARY_CHECKS = "preliminary checks",
+            NO_DATA = "no data", NOT_ENOUGH_DATA = "not enough data",
+            TOO_MANY_IDENTICAL = "too many identical data",
+            TOO_MANY_MISSING = "too many missing data";
+
 
     /**
      * Subdivision of a SA processing Pre-processing of the series (usually
@@ -300,6 +309,19 @@ public final class SaDictionaries {
             .item(Item.builder().name(TD_SA_LAST).description("f test on default td for the sa (last years)").outputClass(StatisticalTest.class).build())
             .item(Item.builder().name(TD_I_ALL).description("f test on default td for the irregular").outputClass(StatisticalTest.class).build())
             .item(Item.builder().name(TD_I_LAST).description("f test on default td for the irregular (last years)").outputClass(StatisticalTest.class).build())
+            .build();
+    
+    // Varince decomposition
+    public static final String VAR_CYCLE = "cycle", VAR_SEASONAL = "seasonality", VAR_IRREGULAR = "irregular", VAR_TDH = "tdh", VAR_OTHERS = "others", VAR_TOTAL = "total";
+
+    public final Dictionary VAR_DECOMPOSITION = AtomicDictionary.builder()
+            .name("variance decomposition")
+            .item(Item.builder().name(VAR_CYCLE).description("part of the cycle in the variance of the de-trende series").outputClass(Double.class).build())
+            .item(Item.builder().name(VAR_SEASONAL).description("part of the seasonality in the variance of the de-trende series").outputClass(Double.class).build())
+            .item(Item.builder().name(VAR_IRREGULAR).description("part of the irregular in the variance of the de-trende series").outputClass(Double.class).build())
+            .item(Item.builder().name(VAR_TDH).description("part of the calendar effects in the variance of the de-trende series").outputClass(Double.class).build())
+            .item(Item.builder().name(VAR_OTHERS).description("part of the other components in the variance of the de-trende series").outputClass(Double.class).build())
+            .item(Item.builder().name(VAR_TOTAL).description("total of the variance decomposition").outputClass(Double.class).build())
             .build();
 
     public final String QUALITY_SUMMARY="summary";

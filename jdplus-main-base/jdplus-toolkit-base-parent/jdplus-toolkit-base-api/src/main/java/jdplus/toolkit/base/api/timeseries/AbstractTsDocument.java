@@ -184,7 +184,7 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
         if (check()) {
             try {
                 result = internalProcess(specification, input.getData());
-                status = result == null ? ProcessingStatus.Invalid : ProcessingStatus.Valid;
+                status = result.isValid() ? ProcessingStatus.Valid : ProcessingStatus.Invalid;
             } catch (Exception err) {
                 Map<String, String> md = new HashMap<>(metadata);
                 md.put(ERROR, err.getLocalizedMessage());

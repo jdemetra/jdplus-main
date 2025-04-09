@@ -26,7 +26,6 @@ import jdplus.toolkit.desktop.plugin.ui.processing.stats.ResidualsUI;
 import jdplus.toolkit.desktop.plugin.ui.processing.stats.SpectrumUI;
 import jdplus.toolkit.desktop.plugin.html.HtmlElement;
 import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDocument;
@@ -34,6 +33,8 @@ import jdplus.tramoseats.base.information.TramoSpecMapping;
 import jdplus.toolkit.base.api.util.Id;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
+import jdplus.toolkit.base.api.dictionaries.ResidualsDictionaries;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -139,7 +140,7 @@ public class TramoViewFactory extends ProcDocumentViewFactory<TramoDocument> {
         }
 
         private static String[] generateItems() {
-            return new String[]{ModellingDictionary.Y + SeriesInfo.F_SUFFIX, ModellingDictionary.Y + SeriesInfo.EF_SUFFIX};
+            return new String[]{RegressionDictionaries.Y_F, RegressionDictionaries.Y_EF};
         }
     }
 
@@ -204,9 +205,9 @@ public class TramoViewFactory extends ProcDocumentViewFactory<TramoDocument> {
         public PreprocessingDetFactory() {
             super(TramoDocument.class, RegSarimaViews.MODEL_DET,
                     source -> source, new GenericTableUI(false,
-                            ModellingDictionary.Y_LIN, ModellingDictionary.DET,
-                            ModellingDictionary.CAL, ModellingDictionary.TDE, ModellingDictionary.EE,
-                            ModellingDictionary.OUT, ModellingDictionary.FULL_RES));
+                            RegressionDictionaries.YLIN, RegressionDictionaries.DET,
+                            RegressionDictionaries.CAL, RegressionDictionaries.TDE, RegressionDictionaries.EE,
+                            RegressionDictionaries.OUT, RegressionDictionaries.FULL_RES));
         }
 
         @Override

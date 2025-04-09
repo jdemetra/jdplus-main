@@ -15,7 +15,7 @@ import org.openide.awt.ActionID;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(category = "SaProcessing", id = InitialOrder.ID)
-@ActionRegistration(displayName = "#CTL_InitialOrder", lazy=true)
+@ActionRegistration(displayName = "#CTL_InitialOrder", lazy = true)
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1610),
     @ActionReference(path = "Shortcuts", name = "I")
@@ -28,21 +28,22 @@ public final class InitialOrder extends ActiveViewAction<SaBatchUI> {
 
     public InitialOrder() {
         super(SaBatchUI.class);
-        putValue(NAME, Bundle.CTL_InitialOrder());
         refreshAction();
+        putValue(NAME, Bundle.CTL_InitialOrder());
     }
 
     @Override
     protected void refreshAction() {
-        SaBatchUI ui=context();
+        SaBatchUI ui = context();
         enabled = ui != null && !ui.getElement().getCurrent().isEmpty();
     }
 
     @Override
     protected void process(SaBatchUI cur) {
-        SaBatchUI ui=context();
-        if (ui != null)
+        SaBatchUI ui = context();
+        if (ui != null) {
             ui.setInitialOrder();
+        }
     }
 
- }
+}

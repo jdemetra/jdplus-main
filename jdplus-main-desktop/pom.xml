@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.4.0</version>
+        <version>3.5.0</version>
     </parent>
 
     <artifactId>jdplus-main-desktop</artifactId>
@@ -21,7 +21,7 @@
         <brandingToken>nbdemetra</brandingToken>
 
         <!-- dependencies -->
-        <netbeans.version>RELEASE240</netbeans.version>
+        <netbeans.version>RELEASE250</netbeans.version>
     </properties>
 
     <modules>

@@ -1,6 +1,17 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Copyright 2025 JDemetra+.
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ *      https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.dictionaries;
 
@@ -74,15 +85,17 @@ public class RegressionDictionaries {
             Y_EF = "y_ef",
             Y_B = "y_b",
             Y_EB = "y_eb",
-//            Y_LIN = "y_lin", // linearized series (transformed series without pre-adjustment and regression effects). Untransformed
-//            Y_LIN_F = "y_lin_f",
-//            Y_LIN_B = "y_lin_b",
+            YC_F = "yc_f",
+            YC_B = "yc_b",
+            YLIN = "ylin", // linearized series (transformed series without pre-adjustment and regression effects). Untransformed
+            YLIN_F = "ylin_f",
+            YLIN_B = "ylin_b",
             CAL = "cal", // all calendar effects (including pre-adjustments). cal=tde+*mhe. Untransformed       
             CAL_F = "cal_f",
             CAL_B = "cal_b",
             YCAL = "ycal", // series corrected for calendar effects: y_cal = yc-/cal. Untransformed
-//            YCAL_F = "ycal_f",
-//            YCAL_B = "ycal_b",
+            YCAL_F = "ycal_f",
+            YCAL_B = "ycal_b",
             DET = "det", // all deterministic effects (including pre-adjustment). Untransformed
             DET_F = "det_f",
             DET_B = "det_b",
@@ -107,11 +120,12 @@ public class RegressionDictionaries {
             REG = "reg", // All other regression effects (outside outliers and calendars). Untransformed
             REG_F = "reg_f",
             REG_B = "reg_b",
-            L = "l" // linearized series (series without pre-adjustment and regression effects). l=yc-/det. Transformed
-//            L_F = "l_f",
-//            L_EF = "l_ef",
-//            L_B = "l_b",
-//            L_EB = "l_eb"
+            L = "l", // linearized series (series without pre-adjustment and regression effects). l=yc-/det. Transformed
+            L_F = "l_f",
+            L_EF = "l_ef",
+            L_B = "l_b",
+            L_EB = "l_eb",
+            FULL_RES="full_res" // full residuals. L^-1*([log]yc-[log]det)
             ;
 
     public final Dictionary REGRESSION_EFFECTS = AtomicDictionary.builder()
@@ -122,9 +136,11 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(Y_B).description("backcasts of the original series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(Y_EB).description("backcasts errors of the original series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(YC).description("interpolated series. Untransformed").outputClass(TsData.class).build())
-//            .item(Item.builder().name(Y_LIN).description("linearized series (series without pre-adjustment and regression effects). l=yc-/det. Untransformed").outputClass(TsData.class).build())
-//            .item(Item.builder().name(Y_LIN_F).description("forcasts of the linearized series. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(Y_LIN_B).description("backcasts of the linearized series. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YC_F).description("forecasts of the interpolated series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YC_B).description("backcasts of the interpolated series").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YLIN).description("linearized series (series without pre-adjustment and regression effects). l=yc-/det. Untransformed").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(YLIN_F).description("forcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YLIN_B).description("backcasts of the linearized series. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(DET).description("all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).build())
             .item(AtomicDictionary.Item.builder().name(DET_F).description("forcasts of all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(DET_B).description("backcasts of all deterministic effects (including pre-adjustment). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
@@ -132,8 +148,8 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(CAL_F).description("forecasts of all calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(CAL_B).description("backcasts of all calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(YCAL).description("series corrected for calendar effects: y_cal = yc-/cal. Untransformed").outputClass(TsData.class).build())
-//            .item(Item.builder().name(YCAL_F).description("forecasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(YCAL_B).description("backcasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YCAL_F).description("forecasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(YCAL_B).description("backcasts of the series corrected for calendar effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(TDE).description("trading days effects (including leap year/length of period, including pre-adjustments). Untransformed").outputClass(TsData.class).build())
             .item(AtomicDictionary.Item.builder().name(TDE_F).description("forecasts of the trading days effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(TDE_B).description("backcasts of the trading days effects. Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
@@ -153,10 +169,11 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(REG_F).description("forecasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(REG_B).description("backcasts of all other regression effects (outside outliers and calendars). Untransformed").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
             .item(AtomicDictionary.Item.builder().name(L).description("linearized series (transformed series without pre-adjustment and regression effects). Transformed)").outputClass(TsData.class).build())
-//            .item(Item.builder().name(L_F).description("forecasts of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(L_B).description("backcasts of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(L_EF).description("forecast errors of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
-//            .item(Item.builder().name(L_EB).description("backcast errors of the linearized. Transformed)").outputClass(TsData.class).type(EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_F).description("forecasts of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(L_B).description("backcasts of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_EF).description("forecast errors of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+//            .item(AtomicDictionary.Item.builder().name(L_EB).description("backcast errors of the linearized series. Transformed)").outputClass(TsData.class).type(Dictionary.EntryType.Parametric).build())
+            .item(AtomicDictionary.Item.builder().name(FULL_RES).description("full residuals").outputClass(TsData.class).build())
             .build();
 
     public final String COEFFDESC = "description", REGTYPE = "type", COEFF = "coefficients", COVAR = "covar", COVAR_ML = "covar-ml";

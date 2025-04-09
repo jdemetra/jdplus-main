@@ -10,12 +10,12 @@ import java.util.List;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.sa.base.api.SaDictionaries;
 import jdplus.sa.base.api.SaVariable;
+import jdplus.sa.base.api.SeriesDecomposition;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
@@ -52,11 +52,21 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
     private String qualityItem(String key) {
         return Dictionary.concatenate(SaDictionaries.QUALITY, key);
     }
+    
+    private TsData finalSeries(TramoSeatsResults source, ComponentType type, ComponentInformation info){
+        SeriesDecomposition finals = source.getFinals();
+        if (finals == null)
+            return null;
+        else
+            return finals.getSeries(type, info);
+    }
 
     public TramoSeatsExtractor() {
-        set(SaDictionaries.MODE, DecompositionMode.class, source -> source.getFinals().getMode());
+        set(SaDictionaries.MODE, DecompositionMode.class, source -> source.getFinals() == null ? null : source.getFinals().getMode());
 
         set(SaDictionaries.SEASONAL, Integer.class, source -> {
+            if (source.getDecomposition() == null)
+                return null;
             TsData s = source.getDecomposition().getInitialComponents()
                     .getSeries(ComponentType.Seasonal, ComponentInformation.Value);
             if (s == null) {
@@ -67,64 +77,66 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
         }
         );
         set(SaDictionaries.Y, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Value));
+                -> finalSeries(source, ComponentType.Series, ComponentInformation.Value));
         set(SaDictionaries.Y + SaDictionaries.BACKCAST, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Backcast));
+                -> finalSeries(source, ComponentType.Series, ComponentInformation.Backcast));
         set(SaDictionaries.Y + SaDictionaries.FORECAST, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Series, ComponentInformation.Forecast));
+                -> finalSeries(source, ComponentType.Series, ComponentInformation.Forecast));
 
-        set(ModellingDictionary.CAL, TsData.class, source
-                -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getActualDomain()));
-        set(ModellingDictionary.CAL + SaDictionaries.BACKCAST, TsData.class, source
-                -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
-        set(ModellingDictionary.CAL + SaDictionaries.FORECAST, TsData.class, source
-                -> source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
+//        set(RegressionDictionaries.CAL, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getActualDomain()));
+//        set(RegressionDictionaries.CAL_B, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getBackcastDomain()));
+//        set(RegressionDictionaries.CAL_F, TsData.class, source
+//                -> source.getPreprocessing() == null ? null : source.getPreprocessing().getCalendarEffect(source.getDecomposition().getForecastDomain()));
 
         set(SaDictionaries.T, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.Value));
+                -> finalSeries(source, ComponentType.Trend, ComponentInformation.Value));
         set(SaDictionaries.T + SeriesInfo.F_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.Forecast));
+                -> finalSeries(source, ComponentType.Trend, ComponentInformation.Forecast));
         set(SaDictionaries.T + SeriesInfo.EF_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.StdevForecast));
+                -> finalSeries(source, ComponentType.Trend, ComponentInformation.StdevForecast));
         set(SaDictionaries.T + SeriesInfo.B_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.Backcast));
+                -> finalSeries(source, ComponentType.Trend, ComponentInformation.Backcast));
         set(SaDictionaries.T + SeriesInfo.EB_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Trend, ComponentInformation.StdevBackcast));
+                -> finalSeries(source, ComponentType.Trend, ComponentInformation.StdevBackcast));
 
         set(SaDictionaries.SA, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value));
+                -> finalSeries(source, ComponentType.SeasonallyAdjusted, ComponentInformation.Value));
         set(SaDictionaries.SA + SeriesInfo.F_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast));
+                -> finalSeries(source, ComponentType.SeasonallyAdjusted, ComponentInformation.Forecast));
         set(SaDictionaries.SA + SeriesInfo.EF_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.StdevForecast));
+                -> finalSeries(source, ComponentType.SeasonallyAdjusted, ComponentInformation.StdevForecast));
         set(SaDictionaries.SA + SeriesInfo.B_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Backcast));
+                -> finalSeries(source, ComponentType.SeasonallyAdjusted, ComponentInformation.Backcast));
         set(SaDictionaries.SA + SeriesInfo.EB_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.StdevBackcast));
+                -> finalSeries(source, ComponentType.SeasonallyAdjusted, ComponentInformation.StdevBackcast));
 
         set(SaDictionaries.S, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Value));
+                -> finalSeries(source, ComponentType.Seasonal, ComponentInformation.Value));
         set(SaDictionaries.S + SeriesInfo.F_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Forecast));
+                -> finalSeries(source, ComponentType.Seasonal, ComponentInformation.Forecast));
         set(SaDictionaries.S + SeriesInfo.EF_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.StdevForecast));
+                -> finalSeries(source, ComponentType.Seasonal, ComponentInformation.StdevForecast));
         set(SaDictionaries.S + SeriesInfo.B_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.Backcast));
+                -> finalSeries(source, ComponentType.Seasonal, ComponentInformation.Backcast));
         set(SaDictionaries.S + SeriesInfo.EB_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Seasonal, ComponentInformation.StdevBackcast));
+                -> finalSeries(source, ComponentType.Seasonal, ComponentInformation.StdevBackcast));
 
         set(SaDictionaries.I, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Irregular, ComponentInformation.Value));
+                -> finalSeries(source, ComponentType.Irregular, ComponentInformation.Value));
         set(SaDictionaries.I + SeriesInfo.F_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Irregular, ComponentInformation.Forecast));
+                -> finalSeries(source, ComponentType.Irregular, ComponentInformation.Forecast));
         set(SaDictionaries.I + SeriesInfo.EF_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Irregular, ComponentInformation.StdevForecast));
+                -> finalSeries(source, ComponentType.Irregular, ComponentInformation.StdevForecast));
         set(SaDictionaries.I + SeriesInfo.B_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Irregular, ComponentInformation.Backcast));
+                -> finalSeries(source, ComponentType.Irregular, ComponentInformation.Backcast));
         set(SaDictionaries.I + SeriesInfo.EB_SUFFIX, TsData.class, source
-                -> source.getFinals().getSeries(ComponentType.Irregular, ComponentInformation.StdevBackcast));
+                -> finalSeries(source, ComponentType.Irregular, ComponentInformation.StdevBackcast));
         set(advancedItem(RegressionDictionaries.REGTYPE), int[].class,
                 source -> {
+                    if (source.getPreprocessing() == null)
+                        return null; 
                     GeneralLinearModel.Description<SarimaSpec> desc = source.getPreprocessing().getDescription();
                     Variable[] vars = desc.getVariables();
                     IntList list = new IntList();
@@ -147,7 +159,8 @@ public class TramoSeatsExtractor extends InformationMapping<TramoSeatsResults> {
 
         set(qualityItem(SaDictionaries.QUALITY_SUMMARY), String.class, source -> {
             List<ProcDiagnostic> tests = new ArrayList<>();
-            TramoSeatsFactory.getInstance().fillDiagnostics(tests, source);
+             List<String> warnings=new ArrayList<>();
+           TramoSeatsFactory.getInstance().fillDiagnostics(tests, warnings, source);
             ProcQuality quality = ProcDiagnostic.summary(tests);
             return quality.name();
         });

@@ -34,6 +34,7 @@ import jdplus.toolkit.base.api.arima.SarimaOrders;
 
 import java.util.Optional;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.arima.estimation.FastKalmanFilter;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.core.sarima.estimation.HannanRissanen;
@@ -45,7 +46,18 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Preliminary)
-public class DifferencingModule  {
+public class DifferencingModule {
+
+    public static final String DIFF = "differencing selection",
+            SELECTION = "differencing selection", DEFAULT = "default model selected (not enough obs.)",
+            FAILED = "differencing selection failed";
+    
+    @lombok.Value
+    public static class Info{
+        
+        private final int d, bd;
+        private final boolean mean;        
+    }
 
     public static final int MAXD = 2, MAXBD = 1;
 
@@ -70,8 +82,8 @@ public class DifferencingModule  {
         private double ub1 = 0.97;
         private double ub2 = 0.88;
         private double cancel = 0.1;
-        private boolean seasonal=true;
-        private boolean initial=true;
+        private boolean seasonal = true;
+        private boolean initial = true;
 
         private Builder() {
         }
@@ -107,15 +119,15 @@ public class DifferencingModule  {
         }
 
         public Builder seasonal(boolean seasonal) {
-            this.seasonal=seasonal;
+            this.seasonal = seasonal;
             return this;
         }
 
         public Builder initial(boolean initial) {
-            this.initial=initial;
+            this.initial = initial;
             return this;
         }
-        
+
         public DifferencingModule build() {
             return new DifferencingModule(maxd, maxbd, ub1, ub2, cancel, eps, seasonal, initial);
         }
@@ -158,8 +170,8 @@ public class DifferencingModule  {
         this.ub2 = ub2;
         this.cancel = cancel;
         this.eps = eps;
-        this.seasonal=seasonal;
-        this.initial=initial;
+        this.seasonal = seasonal;
+        this.initial = initial;
     }
 
     private boolean calc() {
@@ -237,13 +249,13 @@ public class DifferencingModule  {
                     spec.setBd(spec.getBd() + 1);
                 }
             } else // use the values stored in the first step
-             if (rmax > rsmax) {
-                    if (rmax > 0) {
-                        spec.setD(spec.getD() + 1);
-                    }
-                } else if (rsmax > 0) {
-                    spec.setBd(spec.getBd() + 1);
+            if (rmax > rsmax) {
+                if (rmax > 0) {
+                    spec.setD(spec.getD() + 1);
                 }
+            } else if (rsmax > 0) {
+                spec.setBd(spec.getBd() + 1);
+            }
         }
 
         if (spec.getD() > maxd) {
@@ -275,12 +287,12 @@ public class DifferencingModule  {
         }
         return Math.abs(tmean) > vct;
     }
-    
-    public int getD(){
+
+    public int getD() {
         return spec.getD();
     }
-    
-    public int getBd(){
+
+    public int getBd() {
         return spec.getBd();
     }
 
@@ -326,7 +338,7 @@ public class DifferencingModule  {
                         || (spec.getBp() == 1 && Math.abs(lastModel.bphi(1)) > 1.02)) {
                     usedefault = true;
                 } else {
-                    lastModel=SarimaMapping.stabilize(lastModel);
+                    lastModel = SarimaMapping.stabilize(lastModel);
                 }
             }
         }
@@ -336,7 +348,7 @@ public class DifferencingModule  {
         }
 
         if (usedefault || ml || useml) {
-            lastModel=SarimaMapping.stabilize(lastModel);
+            lastModel = SarimaMapping.stabilize(lastModel);
             IRegArimaComputer processor = TramoUtility.processor(true, eps);
             SarimaModel arima = SarimaModel.builder(spec)
                     .parameters(lastModel.parameters())
@@ -432,7 +444,7 @@ public class DifferencingModule  {
      * @param d
      * @param bd
      * @param seasonal
-     * @return 
+     * @return
      */
     public boolean process(DoubleSeq data, int period, int d, int bd, boolean seasonal) {
         clear();
@@ -496,7 +508,7 @@ public class DifferencingModule  {
                 throw new TramoException(TramoException.IDDIF_E);
             }
 
-            lastModel=SarimaMapping.stabilize(lastModel);
+            lastModel = SarimaMapping.stabilize(lastModel);
             FastKalmanFilter kf = new FastKalmanFilter(lastModel);
             BackFilter D = RegArimaUtility.differencingFilter(spec.getPeriod(), spec.getD(), spec.getBd());
             res = DataBlock.make(y.length() - D.getDegree());
@@ -510,13 +522,17 @@ public class DifferencingModule  {
 
     public ProcessingResult process(RegSarimaModelling context) {
         ModelDescription desc = context.getDescription();
-        if (context.needEstimation())
+        if (context.needEstimation()) {
             context.estimate(eps);
+        }
         RegArimaEstimation<SarimaModel> estimation = context.getEstimation();
 
         int freq = desc.getAnnualFrequency();
+        ProcessingLog log = context.getLog();
+        log.push(DIFF);
         try {
             if (!DifferencingModule.comespd(freq, desc.regarima().getObservationsCount(), seasonal)) {
+                log.remark(DEFAULT);
                 return airline(context);
             }
 
@@ -531,6 +547,7 @@ public class DifferencingModule  {
             SarimaOrders curspec = desc.specification();
             // get residuals
             if (!process(res, freq, initial ? 0 : curspec.getD(), initial ? 0 : curspec.getBd(), seasonal)) {
+                log.remark(FAILED);
                 return airline(context);
             }
             boolean nmean = isMeanCorrection();
@@ -545,9 +562,13 @@ public class DifferencingModule  {
                 desc.setMean(nmean);
                 context.clearEstimation();
             }
+            log.info(SELECTION, new Info(spec.getD(), spec.getBd(), nmean));
             return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
         } catch (RuntimeException err) {
+            log.remark(FAILED);
             return airline(context);
+        } finally {
+            log.pop();
         }
 
     }

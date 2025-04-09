@@ -56,6 +56,10 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 @Development(status = Development.Status.Preliminary)
 public class TramoKernel implements RegSarimaProcessor {
 
+    private static final String LAST_CHANCE = "last chance model",
+            OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection",
+            AMI = "automatic model identification: round ";
+
     private static final String TRAMO = "tramo";
 
     @lombok.Value
@@ -91,11 +95,14 @@ public class TramoKernel implements RegSarimaProcessor {
     private final SeasonalityController scontroller;
     private final List<ModelController> controllers = new ArrayList<>();
 
-    private RegSarimaModelling refAirline, refAuto;
+    private RegSarimaModelling refAuto;
     private ModelStatistics refStats;
 
     private int pass = 0, round = 0;
     private double curva = 0, pcr = 0;
+    /**
+     * Control complete re-estimation (addition of a seasonal part)
+     */
     private boolean pass3;
     private boolean needOutliers;
     private boolean needAutoModelling;
@@ -167,7 +174,7 @@ public class TramoKernel implements RegSarimaProcessor {
         ILengthOfPeriodVariable lp = preadjusted ? null : TramoModelBuilder.leapYear(tdspec);
         if (tdspec.isAutomatic()) {
             switch (tdspec.getAutomaticMethod()) {
-                case FTEST:
+                case FTEST -> {
                     return AutomaticFRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -178,7 +185,8 @@ public class TramoKernel implements RegSarimaProcessor {
                             .fPValue(tdspec.getProbabilityForFTest())
                             .estimationPrecision(options.intermediatePrecision)
                             .build();
-                case AIC: {
+                }
+                case AIC -> {
                     return AutomaticRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -189,7 +197,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .aic()
                             .build();
                 }
-                case BIC: {
+                case BIC -> {
                     return AutomaticRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -200,7 +208,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .bic()
                             .build();
                 }
-                default:
+                default -> {
                     return AutomaticWaldRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
@@ -211,6 +219,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .pmodel(tdspec.getProbabilityForFTest())
                             .adjust(tdspec.isAutoAdjust())
                             .build();
+                }
             }
         } else {
             return DefaultRegressionTest.builder()
@@ -276,7 +285,7 @@ public class TramoKernel implements RegSarimaProcessor {
             throw new TramoException("Initialization failed");
         }
         RegSarimaModelling modelling = RegSarimaModelling.of(desc, log);
-        RegSarimaModel rslt = ami(modelling, log);
+        RegSarimaModel rslt = ami(modelling);
         log.pop();
 
         return rslt;
@@ -299,7 +308,7 @@ public class TramoKernel implements RegSarimaProcessor {
 
     }
 
-    private RegSarimaModel ami(RegSarimaModelling modelling, ProcessingLog log) {
+    private RegSarimaModel ami(RegSarimaModelling modelling) {
 
         if (isFullySpecified()) {
             modelling.estimate(options.precision);
@@ -326,10 +335,10 @@ public class TramoKernel implements RegSarimaProcessor {
 
     private void initProcessing(int n) {
         round = 0;
-        needOutliers = isOutliersDetection();
-        needAutoModelling = false;
         pass = 0;
         pass3 = false;
+        needOutliers = isOutliersDetection();
+        needAutoModelling = false;
         // initialize some internal variables
         if (this.isOutliersDetection()) {
             curva = options.getVa();
@@ -340,7 +349,6 @@ public class TramoKernel implements RegSarimaProcessor {
         pcr = options.ljungBoxLimit;
         refAuto = null;
         refStats = null;
-        refAirline = null;
         if (scontroller != null) {
             scontroller.setReferenceModel(null);
         }
@@ -407,7 +415,7 @@ public class TramoKernel implements RegSarimaProcessor {
             needAutoModelling = isAutoModelling();
             ++round;
             ++pass;
-            refAirline = RegSarimaModelling.copyOf(modelling);
+            RegSarimaModelling.copyOf(modelling);
             refAuto = RegSarimaModelling.copyOf(modelling);
             refStats = ModelStatistics.of(refAuto.getDescription(), refAuto.getEstimation().getConcentratedLikelihood());
             double lb = refStats.getLjungBoxPvalue();
@@ -642,6 +650,9 @@ public class TramoKernel implements RegSarimaProcessor {
             if (!useprev) {
                 refAuto = RegSarimaModelling.copyOf(context);
                 refStats = stats;
+                if (pass == 3) {
+                    context.getLog().warning(LAST_CHANCE);
+                }
             } else {
                 restore(context);
                 plbox = plbox0;
@@ -663,6 +674,7 @@ public class TramoKernel implements RegSarimaProcessor {
 
         if (pass == 1 && isOutliersDetection()) {
             reduceVa();
+            context.getLog().remark(OUTLIERS_VA_REDUCED);
         }
 
         ++round;
@@ -717,7 +729,7 @@ public class TramoKernel implements RegSarimaProcessor {
 //    }
 //
 
-    private static final String SEAS = "seasonality test";
+    private static final String SEAS = "seasonality test", NO_SEAS = "No identifiable seasonality";
 
     private void testSeasonality(RegSarimaModelling modelling) {
         ModelDescription model = modelling.getDescription();
@@ -728,21 +740,21 @@ public class TramoKernel implements RegSarimaProcessor {
 
         int period = model.getAnnualFrequency();
         if (period > 1) {
+            ProcessingLog log = modelling.getLog();
 
+            log.push(SEAS);
             TramoSeasonalityDetector seas = new TramoSeasonalityDetector();
             SeasonalityDetector.Seasonality s = seas.hasSeasonality(model.getTransformedSeries().getValues(), period);
             context.originalSeasonalityTest = s.toInt();
             if (context.originalSeasonalityTest < 2) {
+                log.warning(NO_SEAS); //, seas.getTests());
                 SarimaOrders nspec = SarimaOrders.m011(period);
                 model.setSpecification(nspec);
                 context.seasonal = false;
             } else {
                 context.seasonal = true;
             }
-            ProcessingLog log = modelling.getLog();
-            if (log != null) {
-                log.step(SEAS, context.originalSeasonalityTest);
-            }
+            log.pop();
         } else {
             context.seasonal = false;
         }

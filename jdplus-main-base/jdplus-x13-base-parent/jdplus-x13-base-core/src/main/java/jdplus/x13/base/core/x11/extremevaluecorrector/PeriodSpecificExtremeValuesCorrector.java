@@ -39,17 +39,18 @@ public class PeriodSpecificExtremeValuesCorrector extends DefaultExtremeValuesCo
 
         double[] stdev;
 
+        int nstart=start;
         if (excludeFcast) {
-            s = s.drop(0, forecastHorizon);
+            s = s.drop(backcastHorizon, forecastHorizon);
+            nstart=(start+backcastHorizon)%period;
         }
-        DataBlock db = DataBlock.of(s);
 //      one value for each period
         stdev = new double[period];
         for (int i = 0; i < period; i++) {
             //   int j = i + start > period - 1 ? i + start - period : i + start;
-            int j = ((period - start) % period + i) % period;
-            DataBlock dbPeriod = db.extract(j, -1, period);
-            stdev[i] = calcSingleStdev(dbPeriod);
+            int j = ((period - nstart) % period + i) % period;
+            DoubleSeq sPeriod = s.extract(j, -1, period);
+            stdev[i] = calcSingleStdev(sPeriod);
         }
         return stdev;
     }

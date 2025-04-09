@@ -197,7 +197,7 @@ public final class SaItem {
                 processed = true;
             }
         }
-        return estimation != null && estimation.getQuality() != ProcQuality.Undefined;
+        return estimation.getResults() != null && estimation .getResults().isValid();
     }
 
     public boolean compute(ModellingContext context, boolean verbose) {
@@ -287,16 +287,15 @@ public final class SaItem {
                     TsDomain frozenSpan = policy.getFrozenSpan();
                     if (frozenSpan == null) {
                         switch (policy.getPolicy()) {
-                            case LastOutliers:
-                                frozenSpan = oldData.getDomain().select(TimeSelector.excluding(0, oldData.getAnnualFrequency()));
-                                break;
-                            case Current:
+                            case LastOutliers -> frozenSpan = oldData.getDomain().select(TimeSelector.excluding(0, oldData.getAnnualFrequency()));
+                            case Current -> {
                                 TsPeriod end = oldData.getEnd();
                                 TsPeriod nend = nts.getData().getEnd();
                                 int n = end.until(nend);
                                 if (n > 0) {
                                     frozenSpan = TsDomain.of(end, n);
                                 }
+                            }
                         }
                     }
                     espec = fac.refreshSpec(pspec, dspec, policy.getPolicy(), frozenSpan);

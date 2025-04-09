@@ -292,9 +292,6 @@ public class HasTsCollectionSupport {
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
-            if (c.getTsSelectionModel().getSelectionMode() != 1) {
-                return false;
-            }
             return c.getTsCollection().size() == 1 || JLists.isSingleSelectionIndex(c.getTsSelectionModel());
         }
 

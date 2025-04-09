@@ -106,7 +106,7 @@ public class TramoSeatsProtosUtility {
                 = TramoSeatsOutput.newBuilder()
                         .setEstimationSpec(SpecProto.convert(output.getEstimationSpec()));
         TramoSeatsResults result = output.getResult();
-        if (result != null) {
+        if (result != null && result.isValid()) {
             builder.setResult(TramoSeatsResultsProto.convert(result))
                     .setResultSpec(SpecProto.convert(output.getResultSpec()));
         }

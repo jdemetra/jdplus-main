@@ -47,7 +47,7 @@ public class CoherenceDiagnosticsConfiguration implements DiagnosticsConfigurati
     public static final int SHORT = 7;
 
     private double tolerance;
-    private double errorThreshold;
+//    private double errorThreshold;
     private double severeThreshold;
     private double badThreshold;
     private double uncertainThreshold;
@@ -57,7 +57,7 @@ public class CoherenceDiagnosticsConfiguration implements DiagnosticsConfigurati
         return new Builder()
                 .active(ACTIVE)
                 .tolerance(TOL)
-                .errorThreshold(ERR)
+//                .errorThreshold(ERR)
                 .severeThreshold(SEV)
                 .badThreshold(BAD)
                 .uncertainThreshold(UNC)
@@ -65,7 +65,7 @@ public class CoherenceDiagnosticsConfiguration implements DiagnosticsConfigurati
     }
 
     public void check() {
-        if (errorThreshold < severeThreshold || severeThreshold < badThreshold || badThreshold < uncertainThreshold || uncertainThreshold < 0) {
+        if (/*errorThreshold < severeThreshold ||*/ severeThreshold < badThreshold || badThreshold < uncertainThreshold || uncertainThreshold < 0) {
             throw new IllegalArgumentException("Invalid settings in Annual totals diagnostics");
         }
     }

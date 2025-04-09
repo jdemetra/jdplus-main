@@ -48,7 +48,7 @@ public class HtmlX13Summary extends AbstractHtmlElement {
         title_ = title;
         preprocessing_ = results.getPreprocessing();
         decomposition_ = results.getDecomposition();
-        X13Factory.getInstance().fillDiagnostics(diags_, results);
+        X13Factory.getInstance().fillDiagnostics(diags_, null, results);
         infos_ = results.getLog();
     }
 
@@ -70,7 +70,7 @@ public class HtmlX13Summary extends AbstractHtmlElement {
     }
 
     private void writeInformation(HtmlStream stream) throws IOException {
-        stream.write(new HtmlProcessingLog(infos_));
+//        stream.write(new HtmlProcessingLog(infos_));
     }
 
     private void writePreprocessing(HtmlStream stream) throws IOException {

@@ -50,6 +50,8 @@ public interface TsDocument<S extends ProcSpecification, R extends Explorable> e
 
     @Override
     R getResult();
+    
+    
 
     default ProcessingLog getLog() {
         if (getStatus() != ProcessingStatus.Valid || !(getResult() instanceof HasLog)) {

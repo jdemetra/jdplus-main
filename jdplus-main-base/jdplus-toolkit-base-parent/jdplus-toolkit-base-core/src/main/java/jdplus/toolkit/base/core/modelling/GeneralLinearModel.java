@@ -34,6 +34,7 @@ import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -52,7 +53,7 @@ public interface GeneralLinearModel<M> extends Explorable {
 
     Estimation getEstimation();
 
-    Residuals getResiduals();
+    TsResiduals getResiduals();
 
     interface Description<M> {
 
@@ -254,7 +255,6 @@ public interface GeneralLinearModel<M> extends Explorable {
             return interp;
         }
         TsData det = deterministicEffect(interp.getDomain(), v->true);
-
         return TsData.subtract(interp, det);
     }
 

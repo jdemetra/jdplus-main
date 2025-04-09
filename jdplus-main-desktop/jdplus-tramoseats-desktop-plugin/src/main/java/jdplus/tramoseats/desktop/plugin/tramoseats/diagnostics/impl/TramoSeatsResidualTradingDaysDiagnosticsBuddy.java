@@ -47,7 +47,7 @@ public final class TramoSeatsResidualTradingDaysDiagnosticsBuddy extends Residua
                     if (preprocessing != null) {
                         td = Arrays.stream(preprocessing.getDescription().getVariables()).anyMatch(v -> v.getCore() instanceof ITradingDaysVariable);
                     }
-                    return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
+                    return new ResidualTradingDaysDiagnostics.Input(r.getDiagnostics() == null ? null : r.getDiagnostics().getGenericDiagnostics().residualTradingDaysTests(), td);
                 });
     }
 

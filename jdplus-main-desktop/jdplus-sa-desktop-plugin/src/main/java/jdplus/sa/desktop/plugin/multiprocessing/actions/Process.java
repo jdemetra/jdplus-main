@@ -44,18 +44,14 @@ public final class Process extends ActiveViewAction<SaBatchUI> {
         if (cur != null && !cur.getElement().isProcessed()) {
             MultiProcessingController.SaProcessingState state = cur.getState();
             switch (state) {
-                case PENDING:
-                    enabled = true;
-                    break;
-                case STARTED:
+                case PENDING -> enabled = true;
+                case STARTED -> {
                     start = false;
                     enabled = true;
-                    break;
-                case DONE: // not finished
+                }
+                case DONE -> // not finished
                     enabled = true;
-                    break;
-                case READY:
-                    enabled = true;
+                case READY -> enabled = true;
             }
         }
         if (start) {

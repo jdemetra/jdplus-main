@@ -40,7 +40,6 @@ import jdplus.toolkit.desktop.plugin.html.core.HtmlDiagnosticsSummary;
 import jdplus.toolkit.base.api.information.BasicInformationExtractor;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlInformationSet;
 import jdplus.toolkit.desktop.plugin.html.modelling.HtmlRegSarima;
@@ -74,11 +73,16 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.tests.SeasonalityTests;
 import jdplus.sa.desktop.plugin.processing.SiRatioUI;
+import jdplus.toolkit.base.api.modelling.SeriesInfo;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
+import jdplus.toolkit.desktop.plugin.html.core.HtmlProcessingLog;
+import jdplus.x13.base.api.regarima.BasicSpec;
 import jdplus.x13.base.core.x11.X11Results;
+import jdplus.x13.base.core.x13.X13Diagnostics;
 import jdplus.x13.base.core.x13.X13Document;
 import jdplus.x13.base.core.x13.X13Factory;
 import jdplus.x13.base.core.x13.X13Kernel;
@@ -116,6 +120,14 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         return tr == null ? null : tr.getPreprocessing();
     };
 
+    private final static Function<X13Document, X13Document> VALIDEXTRACTOR = source -> {
+        X13Results tr = source.getResult();
+        if (tr == null) {
+            return null;
+        }
+        return tr.isValid() ? source : null;
+    };
+
     private final static Function<X13Document, TsData> RESEXTRACTOR = MODELEXTRACTOR
             .andThen(regarima -> regarima == null ? null : regarima.fullResiduals());
 
@@ -131,6 +143,11 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     private final static Function<X13Document, X11Results> DECOMPOSITIONEXTRACTOR = source -> {
         X13Results tr = source.getResult();
         return tr == null ? null : tr.getDecomposition();
+    };
+
+    private final static Function<X13Document, X13Diagnostics> DIAGSEXTRACTOR = source -> {
+        X13Results tr = source.getResult();
+        return tr == null ? null : tr.getDiagnostics();
     };
 
     public static void setDefault(IProcDocumentViewFactory<X13Document> factory) {
@@ -178,7 +195,36 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             return 1000;
         }
     }
+
+//    @ServiceProvider(service = IProcDocumentItemFactory.class, position = 1020)
+    public static class LogFactory extends ProcDocumentItemFactory<X13Document, HtmlElement> {
+
+        public LogFactory() {
+            super(X13Document.class, SaViews.MAIN_LOG,
+                    (X13Document doc) -> {
+                        X13Results result = doc.getResult();
+                        if (result == null) {
+                            return null;
+                        } else {
+                            HtmlProcessingLog html = new HtmlProcessingLog(result.getLog());
+                            html.displayInfos(true);
+                            return html;
+                        }
+                    },
+                    new HtmlItemUI()
+            );
+        }
+
+        @Override
+        public int getPosition() {
+            return 1020;
+        }
+    }
+
 //</editor-fold>
+    private static String generateId(String id) {
+        return generateId(id, id);
+    }
 
     private static String generateId(String name, String id) {
         return TsDynamicProvider.CompositeTs.builder()
@@ -194,6 +240,24 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 .name(name)
                 .now(id)
                 .build().toString();
+    }
+
+    private static String nsuffix(String suffix, int n) {
+        StringBuilder builder = new StringBuilder();
+        return builder.append(suffix).append('(').append(n).append(')').toString();
+    }
+
+    private static String generateId(String name, String id, int nb, int nf) {
+        TsDynamicProvider.CompositeTs.Builder builder = TsDynamicProvider.CompositeTs.builder()
+                .name(name);
+        if (nb != 0) {
+            builder.back(id + nsuffix(SeriesInfo.B_SUFFIX, nb));
+        }
+        builder.now(id);
+        if (nf != 0) {
+            builder.fore(id + nsuffix(SeriesInfo.F_SUFFIX, nf));
+        }
+        return builder.build().toString();
     }
 
     public static String[] lowSeries(boolean x11) {
@@ -212,7 +276,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         }
     }
 
-    public static String[] highSeries(boolean x11) {
+    public static String[] highSeries(boolean x11, int nb, int nf) {
 
         if (x11) {
             return new String[]{
@@ -222,7 +286,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         } else {
             return new String[]{
                 generateId("Seasonal (component)", BasicInformationExtractor.concatenate(SaDictionaries.DECOMPOSITION, SaDictionaries.S_CMP)),
-                generateId("Calendar effects", ModellingDictionary.CAL),
+                generateId("Calendar effects", RegressionDictionaries.CAL, nb, nf),
                 generateId("Irregular", SaDictionaries.I)
             };
         }
@@ -253,7 +317,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     public static class MainSummaryFactory extends ProcDocumentItemFactory<X13Document, X13Document> {
 
         public MainSummaryFactory() {
-            super(X13Document.class, SaViews.MAIN_SUMMARY, s -> s, new X13Summary());
+            super(X13Document.class, SaViews.MAIN_SUMMARY, VALIDEXTRACTOR, new X13Summary());
         }
 
         @Override
@@ -267,7 +331,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
 
         public MainLowChart() {
             super(X13Document.class, SaViews.MAIN_CHARTS_LOW, s -> {
-                if (s.getResult() == null) {
+                if (s.getResult() == null || !s.getResult().isValid()) {
                     return null;
                 }
                 boolean x11 = s.getResult().getPreprocessing() == null;
@@ -282,15 +346,25 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 2200)
-    public static class MainHighChart extends ProcDocumentItemFactory<X13Document, ContextualIds<TsDocument>> {
+    public static class MainHighChart extends ProcDocumentItemFactory<X13Document, ContextualIds<X13Document>> {
 
         public MainHighChart() {
+
             super(X13Document.class, SaViews.MAIN_CHARTS_HIGH, s -> {
                 if (s.getResult() == null) {
                     return null;
                 }
+                int p = s.getInput().getData().getAnnualFrequency();
+                int nf = s.getSpecification().getX11().getForecastHorizon();
+                if (nf < 0) {
+                    nf = -nf * p;
+                }
+                int nb = s.getSpecification().getX11().getBackcastHorizon();
+                if (nb < 0) {
+                    nb = -nb * p;
+                }
                 boolean x11 = s.getResult().getPreprocessing() == null;
-                return new ContextualIds<>(highSeries(x11), s);
+                return new ContextualIds<>(highSeries(x11, nb, nf), s);
             }, new ContextualChartUI(true));
         }
 
@@ -305,7 +379,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
 
         public MainTable() {
             super(X13Document.class, SaViews.MAIN_TABLE, s -> {
-                if (s.getResult() == null) {
+                if (s.getResult() == null || !s.getResult().isValid()) {
                     return null;
                 }
                 boolean x11 = s.getResult().getPreprocessing() == null;
@@ -325,7 +399,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public MainSiFactory() {
             super(X13Document.class, SaViews.MAIN_SI, (X13Document source) -> {
                 X13Results result = source.getResult();
-                if (result == null) {
+                if (result == null || !result.isValid()) {
                     return null;
                 }
                 X11Results x11 = result.getDecomposition();
@@ -334,7 +408,6 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                     TsData.fitToDomain(x11.getD10(), dom),
                     TsData.fitToDomain(x11.getD8(), dom)
                 };
-
             }, new SiRatioUI());
         }
 
@@ -457,14 +530,23 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             super(X13Document.class, SaViews.PREPROCESSING_DET, source
                     -> source.getResult().getPreprocessing() == null ? null : source,
                     new GenericTableUI(false,
-                            ModellingDictionary.YCAL,
-                            ModellingDictionary.Y_LIN,
-                            ModellingDictionary.DET,
-                            ModellingDictionary.CAL,
-                            ModellingDictionary.TDE,
-                            ModellingDictionary.EE,
-                            ModellingDictionary.OUT,
-                            ModellingDictionary.FULL_RES));
+                            generateId(RegressionDictionaries.YC),
+                            generateId(RegressionDictionaries.YLIN),
+                            generateId(RegressionDictionaries.YCAL),
+                            generateId(RegressionDictionaries.DET),
+                            generateId(RegressionDictionaries.CAL),
+                            generateId(RegressionDictionaries.TDE),
+                            generateId(RegressionDictionaries.EE),
+                            generateId(SaDictionaries.OUT_T),
+                            generateId(SaDictionaries.OUT_S),
+                            generateId(SaDictionaries.OUT_I),
+                            generateId(RegressionDictionaries.OUT),
+                            generateId(SaDictionaries.REG_Y),
+                            generateId(SaDictionaries.REG_SA),
+                            generateId(SaDictionaries.REG_T),
+                            generateId(SaDictionaries.REG_S),
+                            generateId(SaDictionaries.REG_I),
+                            generateId(RegressionDictionaries.REG)));
         }
 
         @Override
@@ -607,7 +689,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 4050)
-    public static class DFinalTablesFactory extends ProcDocumentItemFactory<X13Document, TsDocument> {
+    public static class DFinalTablesFactory extends ProcDocumentItemFactory<X13Document, X13Document> {
 
         static final String[] items = new String[]{
             Dictionary.concatenate(X13Dictionaries.FINAL, X13Dictionaries.D11),
@@ -626,7 +708,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         };
 
         public DFinalTablesFactory() {
-            super(X13Document.class, D_FINAL_TABLES, source -> source, new GenericTableUI(false, items));
+            super(X13Document.class, D_FINAL_TABLES, VALIDEXTRACTOR, new GenericTableUI(false, items));
         }
 
         @Override
@@ -636,10 +718,10 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     }
 
     @ServiceProvider(service = IProcDocumentItemFactory.class, position = 4060)
-    public static class ETablesFactory extends ProcDocumentItemFactory<X13Document, TsDocument> {
+    public static class ETablesFactory extends ProcDocumentItemFactory<X13Document, X13Document> {
 
         public ETablesFactory() {
-            super(X13Document.class, E_TABLES, source -> source, new GenericTableUI(false,
+            super(X13Document.class, E_TABLES, VALIDEXTRACTOR, new GenericTableUI(false,
                     BasicInformationExtractor.prefix(X13Dictionaries.E_TABLE, X13Dictionaries.FINAL)));
         }
 
@@ -666,6 +748,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             super(X13Document.class, X11_FILTERS, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
                 if (rslt == null) {
+                    return null;
+                }
+                if (rslt.getDecomposition() == null) {
                     return null;
                 }
                 return new AbstractHtmlElement() {
@@ -710,6 +795,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null) {
                     return null;
                 }
+                if (rslt.getDiagnostics() == null) {
+                    return null;
+                }
                 return new HtmlMstatistics(rslt.getDiagnostics().getMstatistics());
             }, new HtmlItemUI());
         }
@@ -727,6 +815,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             super(X13Document.class, M_STATISTICS_DETAILS, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
                 if (rslt == null) {
+                    return null;
+                }
+                if (rslt.getDiagnostics() == null) {
                     return null;
                 }
                 return new HtmlX11Diagnostics(rslt.getDiagnostics().getMstatistics());
@@ -752,7 +843,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 }
                 SaProcessingFactory factory = SaManager.factoryFor(doc.getSpecification());
                 List<ProcDiagnostic> diags = new ArrayList<>();
-                factory.fillDiagnostics(diags, rslt);
+                factory.fillDiagnostics(diags, null, rslt);
                 return new HtmlDiagnosticsSummary(diags);
             }, new HtmlItemUI());
         }
@@ -770,6 +861,9 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
             super(X13Document.class, SaViews.DIAGNOSTICS_OSEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
                 if (rslt == null) {
+                    return null;
+                }
+                if (rslt.getPreadjustment() == null) {
                     return null;
                 }
                 TsData s;
@@ -853,7 +947,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public DiagnosticsSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -877,7 +971,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public SaSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SASEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -903,7 +997,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public IrrSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_ISEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -960,7 +1054,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public LastSaSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_LASTSASEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -992,7 +1086,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public LastIrrSeasonalityFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_LASTISEASONALITY, (X13Document doc) -> {
                 X13Results rslt = doc.getResult();
-                if (rslt == null) {
+                if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
                 X11Results x11 = rslt.getDecomposition();
@@ -1137,7 +1231,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public DiagnosticsSlidingSummaryFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SLIDING_SUMMARY, (X13Document source) -> {
                 X13Results result = source.getResult();
-                if (result == null) {
+                if (result == null || !result.isValid()) {
                     return null;
                 }
                 TsData input = source.getInput().getData();
@@ -1171,7 +1265,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     private static Function<X13Document, SlidingSpansUI.Information<X13Results>> ssExtractor(String name, boolean changes, Function<X13Results, TsData> fn) {
         return (X13Document source) -> {
             X13Results result = source.getResult();
-            if (result == null) {
+            if (result == null || !result.isValid()) {
                 return null;
             }
             TsData input = source.getInput().getData();
@@ -1203,7 +1297,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
         public DiagnosticsSlidingSeasFactory() {
             super(X13Document.class, SaViews.DIAGNOSTICS_SLIDING_SEAS,
                     ssExtractor("Seasonal", false,
-                            rslt -> rslt.getDecomposition().getD10()),
+                            rslt -> rslt.getDecomposition() == null ? null : rslt.getDecomposition().getD10()),
                     new SlidingSpansUI<X13Results>());
         }
 
@@ -1250,13 +1344,23 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
     private static Function<X13Document, RevisionHistoryUI.Information> revisionExtractor(String info, DiagnosticInfo diag) {
         return (X13Document source) -> {
             X13Results result = source.getResult();
-            if (result == null) {
+            if (result == null || !result.isValid()) {
                 return null;
             }
             TsData input = source.getInput().getData();
-            TsDomain domain = input.getDomain();
+            TimeSelector span = source.getSpecification().getRegArima().getBasic().getSpan();
+            TsDomain domain = input.getDomain().select(span);
             X13Spec pspec = X13Factory.getInstance().generateSpec(source.getSpecification(), result);
             X13Spec nspec = X13Factory.getInstance().refreshSpec(pspec, source.getSpecification(), DemetraSaUI.get().getEstimationPolicyType(), domain);
+            if (!span.isAll()) {
+                BasicSpec nbasic = nspec.getRegArima().getBasic().toBuilder()
+                        .span(TimeSelector.all())
+                        .build();
+                RegArimaSpec reg = nspec.getRegArima().toBuilder()
+                        .basic(nbasic)
+                        .build();
+                nspec = nspec.toBuilder().regArima(reg).build();
+            }
             X13Kernel kernel = X13Kernel.of(nspec, source.getContext());
             RevisionHistory<Explorable> rh = new RevisionHistory<>(domain, d -> kernel.process(TsData.fitToDomain(input, d), null));
             return new RevisionHistoryUI.Information(info, diag, rh);

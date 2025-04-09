@@ -19,7 +19,7 @@ import org.openide.util.NbBundle.Messages;
 @ActionReferences({
     @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1600)
 })
-@Messages("CTL_DeleteAllItems=Clear")
+@Messages("CTL_DeleteAllItems=Delete all")
 public final class DeleteAllItems extends ActiveViewAction<SaBatchUI> {
 
     @ClassNameConstant

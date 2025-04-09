@@ -5,6 +5,7 @@
  */
 package jdplus.sa.base.core;
 
+import jdplus.sa.base.api.SaDictionaries;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.sa.base.api.SaException;
@@ -17,6 +18,7 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 @lombok.experimental.UtilityClass
 public class PreliminaryChecks {
 
+
     @FunctionalInterface
     public static interface Tool {
 
@@ -27,21 +29,34 @@ public class PreliminaryChecks {
 
     public static void testSeries(final TsData y) {
         if (y == null) {
-            throw new SaException("Missing series");
+            throw new SaException(SaDictionaries.NO_DATA);
         }
         int nz = y.length();
         int period = y.getAnnualFrequency();
         if (nz < Math.max(8, 3 * period)) {
-            throw new SaException("Not enough data");
+            throw new SaException(SaDictionaries.NOT_ENOUGH_DATA);
         }
         DoubleSeq values = y.getValues();
         int nrepeat = repeatCount(values);
         if (nrepeat > MAX_REPEAT_COUNT * nz / 100) {
-            throw new SaException("Too many identical values");
+            throw new SaException(SaDictionaries.TOO_MANY_IDENTICAL);
         }
         int nm = values.count(z -> !Double.isFinite(z));
         if (nm > MAX_MISSING_COUNT * nz / 100) {
-            throw new SaException("Too many missing values");
+            throw new SaException(SaDictionaries.TOO_MANY_MISSING);
+        }
+    }
+
+    public static boolean testSeries(final TsData y, ProcessingLog log) {
+        log.push(SaDictionaries.PRELIMINARY_CHECKS);
+        try {
+            testSeries(y);
+            return true;
+        } catch (SaException err) {
+            log.error(err.getMessage());
+            return false;
+        }finally{
+            log.pop();
         }
     }
 

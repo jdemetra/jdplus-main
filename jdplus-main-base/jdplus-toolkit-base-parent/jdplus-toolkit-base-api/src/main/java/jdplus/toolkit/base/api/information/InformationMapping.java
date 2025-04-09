@@ -31,6 +31,7 @@ import lombok.NonNull;
 
 /**
  * Basic information extractor for a given type
+ *
  * @param <S>
  * @since 2.2.0
  * @author Jean Palate
@@ -55,7 +56,7 @@ public abstract class InformationMapping<S> implements InformationExtractor<S> {
 //        } else {
 //            map.put(name, BasicInformationExtractor.delegate(name, target, fn));
 //        }
-            list.add(BasicInformationExtractor.delegate(name, target, fn));
+        list.add(BasicInformationExtractor.delegate(name, target, fn));
     }
 
     public <Q> void delegateArray(@NonNull final String name, final int start, final int end,
@@ -124,28 +125,28 @@ public abstract class InformationMapping<S> implements InformationExtractor<S> {
     @Override
     public <T> T getData(S source, String id, Class<T> tclass) {
         synchronized (this) {
-            // Atomic extractors...
-            BasicInformationExtractor<S> extractor = map.get(id);
-            if (extractor != null) {
-                return extractor.getData(source, id, tclass);
-            } else {
-                // Complex extractors...
-                for (Map.Entry<String, BasicInformationExtractor<S>> entry : map.entrySet()) {
-                    T data = entry.getValue().getData(source, id, tclass);
-                    if (data != null) {
-                        return data;
+                // Atomic extractors...
+                BasicInformationExtractor<S> extractor = map.get(id);
+                if (extractor != null) {
+                    return extractor.getData(source, id, tclass);
+                } else {
+                    // Complex extractors...
+                    for (Map.Entry<String, BasicInformationExtractor<S>> entry : map.entrySet()) {
+                        T data = entry.getValue().getData(source, id, tclass);
+                        if (data != null) {
+                            return data;
+                        }
+                    }
+                    for (BasicInformationExtractor<S> entry : list) {
+                        T data = entry.getData(source, id, tclass);
+                        if (data != null) {
+                            return data;
+                        }
                     }
                 }
-                for (BasicInformationExtractor<S> entry : list) {
-                    T data = entry.getData(source, id, tclass);
-                    if (data != null) {
-                        return data;
-                    }
-                }
+                return null;
             }
-            return null;
         }
-    }
 
     @Override
     public <T> void searchAll(S source, WildCards wc, Class<T> tclass, Map<String, T> smap) {
@@ -158,8 +159,8 @@ public abstract class InformationMapping<S> implements InformationExtractor<S> {
             if (swc.startsWith(key)) {
                 LinkedHashMap<String, T> tmap = new LinkedHashMap<>();
                 entry.getValue().searchAll(source, wc, tclass, tmap);
-                if (! tmap.isEmpty()){
-                    for (Map.Entry<String,T> tentry: tmap.entrySet()){
+                if (!tmap.isEmpty()) {
+                    for (Map.Entry<String, T> tentry : tmap.entrySet()) {
                         smap.put(tentry.getKey(), tentry.getValue());
                     }
                 }

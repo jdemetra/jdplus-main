@@ -83,7 +83,7 @@ public class X11DStep {
     private void d5Step(X11Context context) {
         if (context.isSeasonal()) {
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
-            DoubleSeq d5a = processor.process(d4, (context.getFirstPeriod() + d2drop) % context.getPeriod());
+            DoubleSeq d5a = processor.process(d4, context.getPosition(d2drop));
             d5 = DefaultSeasonalNormalizer.normalize(d5a, d2drop, context);
         } else {
             d5 = DummyFilter.filter(context.isMultiplicative(), d4);
@@ -136,8 +136,7 @@ public class X11DStep {
         IExtremeValuesCorrector ecorr = context.getExtremeValuesCorrector();
         if (ecorr instanceof PeriodSpecificExtremeValuesCorrector && context.getCalendarSigma() != CalendarSigmaOption.Signif) {
             //compute corrections without backcast/forecast but keep the length
-            d9 = ecorr.computeCorrections(d8.drop(context.getBackcastHorizon(), context.getForecastHorizon()))
-                    .extend(context.getBackcastHorizon(), context.getForecastHorizon());
+            d9 = ecorr.computeCorrections(d8, true);
             d9g = ecorr.applyCorrections(d8, d9);
             d9_g_bis = d9g;
         } else {
@@ -158,9 +157,9 @@ public class X11DStep {
                 d9filter = msrFilter;
                 Arrays.fill(seasFilter, msrFilter);
             }
-            d9msr = X11Utility.defaultMsrTable(d9_g_bis.drop(context.getBackcastHorizon(), context.getForecastHorizon()), context.getPeriod(), context.getFirstPeriod(), context.getMode());
+            d9msr = X11Utility.defaultMsrTable(d9_g_bis.drop(context.getBackcastHorizon(), context.getForecastHorizon()), context.getPeriod(), context.getPosition(context.getBackcastHorizon()), context.getMode());
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), seasFilter);
-            d10bis = processor.process(d9_g_bis, context.getFirstPeriod());
+            d10bis = processor.process(d9_g_bis, context.getPosition(0));
             d10 = DefaultSeasonalNormalizer.normalize(d10bis, 0, context);
         } else {
             d10bis = DummyFilter.filter(context.isMultiplicative(), d9_g_bis);

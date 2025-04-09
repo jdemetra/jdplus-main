@@ -34,7 +34,6 @@ import jdplus.sa.base.core.PreliminaryChecks;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.modelling.RegArimaDecomposer;
 import jdplus.sa.base.core.modelling.SaVariablesMapping;
-import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.ssf.arima.ExactArimaForecasts;
 import jdplus.x13.base.core.x11.X11Kernel;
@@ -56,7 +55,7 @@ public class X13Kernel {
             if (basic.isPreliminaryCheck()) {
                 PreliminaryChecks.testSeries(sc);
             }
-            return s;
+            return sc;
         };
     }
 
@@ -86,13 +85,21 @@ public class X13Kernel {
         }
         try {
             // Step 0. Preliminary checks
+            // sc is the series corresponding to the series span, after some verifications
+            // null in case of problems
             TsData sc = preliminary.check(s, log);
+            if (sc == null) {
+                return X13Results.builder()
+                        .log(log)
+                        .build();
+            }
             // Step 1. Preprocessing
             RegSarimaModel preprocessing;
             X13Preadjustment preadjustment;
             TsData alin;
             if (regarima != null) {
-                preprocessing = regarima.process(sc, log);
+            // We reuse the full series because selection is integrated in the preprocessing step
+                preprocessing = regarima.process(s, log);
                 // Step 2. Link between regarima and x11
                 int nb = spec.getBackcastHorizon();
                 if (nb < 0) {
@@ -106,6 +113,7 @@ public class X13Kernel {
                 alin = initialStep(preprocessing, nb, nf, builder);
                 preadjustment = builder.build();
             } else {
+                // we use here the series corresponding to the span
                 preprocessing = null;
                 preadjustment = X13Preadjustment.builder().a1(sc).build();
                 alin = sc;
@@ -130,14 +138,15 @@ public class X13Kernel {
                     .build();
         } catch (Exception err) {
             log.error(err);
-            return null;
+            return X13Results.builder()
+                    .log(log)
+                    .build();
         }
     }
 
     private TsData initialStep(RegSarimaModel model, int nb, int nf, X13Preadjustment.Builder astep) {
         boolean mul = model.getDescription().isLogTransformation();
         TsData series = model.interpolatedSeries(false);
-        int n = series.length();
         TsDomain sdomain = series.getDomain();
         TsDomain domain = sdomain.extend(nb, nf);
         // start of the backcasts/forecasts
@@ -180,7 +189,7 @@ public class X13Kernel {
 //                mean = mu.orElseThrow().getCoefficient(0).getValue();
 //            }
             ExactArimaForecasts fcasts = new ExactArimaForecasts();
-            boolean mean=model.isMeanCorrection();
+            boolean mean = model.isMeanCorrection();
             fcasts.prepare(arima, mean);
 
             if (nb > 0) {
@@ -262,7 +271,7 @@ public class X13Kernel {
      * @return A new time series is returned
      */
     private TsData invOp(DecompositionMode mode, TsData l, TsData r) {
-        if (! mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
+        if (!mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
             return TsData.add(l, r);
         } else {
             return TsData.multiply(l, r);
@@ -270,7 +279,7 @@ public class X13Kernel {
     }
 
     private double mean(DecompositionMode mode) {
-        if (! mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
+        if (!mode.isMultiplicative() && mode != DecompositionMode.PseudoAdditive) {
             return 0;
         } else {
             return 1;

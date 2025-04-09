@@ -26,6 +26,7 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.information.GenericExplorable;
 
 /**
  *
@@ -33,7 +34,7 @@ import java.util.List;
  */
 @lombok.experimental.UtilityClass
 public class SaManager {
-
+    
     public List<SaProcessingFactory> processors() {
         return SaProcessingFactoryLoader.get();
     }
@@ -41,9 +42,14 @@ public class SaManager {
     public List<SaOutputFactory> outputFactories() {
         return SaOutputFactoryLoader.get();
     }
+    
+    public void reload(){
+        SaProcessingFactoryLoader.reload();
+        SaOutputFactoryLoader.reload();
+    }
 
     public Explorable process(TsData series, SaSpecification spec, ModellingContext context, ProcessingLog log) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
@@ -54,29 +60,30 @@ public class SaManager {
     }
 
     public SaEstimation process(SaDefinition def, ModellingContext context, boolean verbose) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         SaSpecification spec = def.activeSpecification();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
                 ProcessingLog log = verbose ? new DefaultProcessingLog() : ProcessingLog.dummy();
                 SaProcessor processor = fac.processor(dspec);
-                Explorable rslt = processor.process(def.getTs().getData(), context, log);
-                if (rslt != null) {
+                GenericExplorable rslt = processor.process(def.getTs().getData(), context, log);
+                if (rslt.isValid()) {
+                    List<String> warnings = new ArrayList<>();
                     List<ProcDiagnostic> tests = new ArrayList<>();
-                    fac.fillDiagnostics(tests, rslt);
+                    fac.fillDiagnostics(tests, warnings, rslt);
                     SaSpecification pspec = fac.generateSpec(spec, rslt);
                     ProcQuality quality = ProcDiagnostic.summary(tests);
                     return SaEstimation.builder()
                             .results(rslt)
-                            .log(verbose ? log : ProcessingLog.dummy())
                             .diagnostics(tests)
                             .quality(quality)
+                            .warnings(warnings)
                             .pointSpec(pspec)
                             .build();
                 } else {
                     return SaEstimation.builder()
-                            .log(verbose ? log : ProcessingLog.dummy())
+                            .results(rslt)
                             .quality(ProcQuality.Undefined)
                             .build();
                 }
@@ -90,28 +97,30 @@ public class SaManager {
         if (rslt == null) {
             return estimation.withQuality(ProcQuality.Undefined);
         }
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         SaSpecification spec = estimation.getPointSpec();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
-                SaProcessor processor = fac.processor(dspec);
+                List<String> warnings = new ArrayList<>();
                 List<ProcDiagnostic> tests = new ArrayList<>();
-                fac.fillDiagnostics(tests, rslt);
-                SaSpecification pspec = fac.generateSpec(spec, rslt);
-                return estimation.withQuality(ProcDiagnostic.summary(tests));
+                fac.fillDiagnostics(tests, warnings, rslt);
+                return estimation.toBuilder()
+                        .quality(ProcDiagnostic.summary(tests))
+                        .warnings(warnings)
+                        .build();
             }
         }
         return estimation.withQuality(ProcQuality.Undefined);
     }
 
     public <I extends SaSpecification> SaProcessingFactory factoryFor(SaSpecification spec) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         return all.stream().filter(p -> p.canHandle(spec)).findFirst().orElseThrow();
     }
 
     public <I extends SaSpecification> SaProcessingFactory factoryFor(AlgorithmDescriptor desc) {
-        List<SaProcessingFactory> all = SaProcessingFactoryLoader.get();
+        List<SaProcessingFactory> all = processors();
         return all.stream().filter(p -> p.descriptor().isCompatible(desc)).findFirst().orElseThrow();
     }
 }

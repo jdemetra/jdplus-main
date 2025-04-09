@@ -48,12 +48,12 @@ public class DefaultProcessingLog implements ProcessingLog{
     
     @Override
     public void push(String routine){
-        context.push(routine);
+        context.addLast(routine);
     }
     
     @Override
     public void pop(){
-        context.pop();
+        context.removeLast();
     }
     
     @Override
@@ -77,6 +77,10 @@ public class DefaultProcessingLog implements ProcessingLog{
         return getMessages(InformationType.Warning);
     }
 
+    public String[] getRemarkMessages() {
+        return getMessages(InformationType.Remark);
+    }
+
     public boolean hasInformation(InformationType type) {
         return logs.stream().anyMatch(log->log.getType()==type);
     }
@@ -89,6 +93,10 @@ public class DefaultProcessingLog implements ProcessingLog{
         return hasInformation(InformationType.Warning);
     }
 
+    public boolean hasRemarks() {
+        return hasInformation(InformationType.Remark);
+    }
+
     @Override
     public void error(Exception err) {
         logs.add(new Information(context(), null, err != null ? err.getMessage() : "Unexpected error", InformationType.Error, err));
@@ -97,11 +105,6 @@ public class DefaultProcessingLog implements ProcessingLog{
     @Override
     public void error(String msg, Object err) {
         logs.add(new Information(context(), null, msg, InformationType.Error, err));
-    }
-
-    @Override
-    public void warning(String msg, Object info) {
-        logs.add(new Information(context(), null, msg, InformationType.Warning, info));
     }
 
     @Override
@@ -120,6 +123,11 @@ public class DefaultProcessingLog implements ProcessingLog{
     }
 
     @Override
+    public void warning(String msg, Object info) {
+        logs.add(new Information(context(), null, msg, InformationType.Warning, info));
+    }
+
+    @Override
     public void warning(String msg) {
         logs.add(new Information(context(), null, msg, InformationType.Warning, null));
     }
@@ -132,6 +140,26 @@ public class DefaultProcessingLog implements ProcessingLog{
     @Override
     public void warning(String origin, String msg) {
         logs.add(new Information(context(), origin, msg, InformationType.Warning, null));
+    }
+
+    @Override
+    public void remark(String msg, Object info) {
+        logs.add(new Information(context(), null, msg, InformationType.Remark, info));
+    }
+
+    @Override
+    public void remark(String msg) {
+        logs.add(new Information(context(), null, msg, InformationType.Remark, null));
+    }
+
+    @Override
+    public void remark(String origin, String msg, Object info) {
+        logs.add(new Information(context(), origin, msg, InformationType.Remark, info));
+    }
+
+    @Override
+    public void remark(String origin, String msg) {
+        logs.add(new Information(context(), origin, msg, InformationType.Remark, null));
     }
 
     /**

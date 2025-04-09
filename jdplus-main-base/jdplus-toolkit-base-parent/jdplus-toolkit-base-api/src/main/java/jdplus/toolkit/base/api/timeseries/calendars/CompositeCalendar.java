@@ -24,7 +24,8 @@ import jdplus.toolkit.base.api.util.WeightedItem;
  * @author PALATEJ
  */
 @Development(status = Development.Status.Release)
-@lombok.Value
+@lombok.Getter
+@lombok.AllArgsConstructor
 public class CompositeCalendar implements CalendarDefinition{
     private WeightedItem<String>[] calendars;    
 }

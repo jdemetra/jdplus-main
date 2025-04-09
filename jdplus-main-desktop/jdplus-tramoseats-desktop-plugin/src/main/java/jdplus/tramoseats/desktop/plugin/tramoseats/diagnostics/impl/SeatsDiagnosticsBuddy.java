@@ -71,7 +71,7 @@ public final class SeatsDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBud
 
     @Override
     public SeatsDiagnosticsFactory<TramoSeatsResults> createFactory() {
-        return new SeatsDiagnosticsFactory<>(core(), (TramoSeatsResults r) -> r.getDiagnostics().getSpecificDiagnostics());
+        return new SeatsDiagnosticsFactory<>(core(), (TramoSeatsResults r) -> r.getDiagnostics() == null ? null : r.getDiagnostics().getSpecificDiagnostics());
     }
 
     @Override

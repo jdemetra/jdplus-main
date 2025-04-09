@@ -21,6 +21,7 @@ import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.information.GenericExplorable;
 
 /**
  * Generic seasonal adjustment processor
@@ -31,5 +32,5 @@ import jdplus.toolkit.base.api.information.Explorable;
 @Algorithm
 @FunctionalInterface
 public interface SaProcessor<R extends Explorable> {
-    Explorable process(TsData series, ModellingContext context, ProcessingLog log);
+    GenericExplorable process(TsData series, ModellingContext context, ProcessingLog log);
 }

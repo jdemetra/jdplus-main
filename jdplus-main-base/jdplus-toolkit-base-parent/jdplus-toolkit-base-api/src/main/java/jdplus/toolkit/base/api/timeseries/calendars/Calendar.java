@@ -23,7 +23,7 @@ import nbbrd.design.Development;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Release)
-@lombok.Value
+@lombok.Getter
 @lombok.AllArgsConstructor
 public class Calendar implements CalendarDefinition {
 

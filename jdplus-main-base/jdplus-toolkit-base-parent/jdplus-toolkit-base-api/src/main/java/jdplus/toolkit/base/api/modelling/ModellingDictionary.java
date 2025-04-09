@@ -23,12 +23,13 @@ import nbbrd.design.Development;
  * @author palatej
  */
 @Development(status = Development.Status.Preliminary)
+@Deprecated
 public class ModellingDictionary {
     public static final String
             Y="y",      // original series
             YC="yc",    // interpolated series. Untransformed
             L="l", // linearized series (series without pre-adjustment and regression effects). l=yc-/det. Untransformed
-            Y_LIN="y_lin", // linearized series (transformed series without pre-adjustment and regression effects). Transformed
+            Y_LIN="ylin", // linearized series (transformed series without pre-adjustment and regression effects). Transformed
             CAL="cal",     // all calendar effects (including pre-adjustments). cal=tde+*mhe. Untransformed       
             YCAL="ycal",  // series corrected for calendar effects: y_cal = yc-/cal. Untransformed
             DET="det",   // all deterministic effects (including pre-adjustment). Untransformed

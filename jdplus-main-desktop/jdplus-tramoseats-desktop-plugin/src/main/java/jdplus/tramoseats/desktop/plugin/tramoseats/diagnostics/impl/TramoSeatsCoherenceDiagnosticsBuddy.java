@@ -39,7 +39,11 @@ public final class TramoSeatsCoherenceDiagnosticsBuddy extends CoherenceDiagnost
     public CoherenceDiagnosticsFactory<TramoSeatsResults> createFactory() {
         return new CoherenceDiagnosticsFactory<>(getActiveDiagnosticsConfiguration(),
                 (TramoSeatsResults r) -> {
-                    return new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
+                    if (r.getFinals() == null) {
+                        return null;
+                    } else {
+                        return new CoherenceDiagnostics.Input(r.getFinals().getMode(), r);
+                    }
                 });
     }
 

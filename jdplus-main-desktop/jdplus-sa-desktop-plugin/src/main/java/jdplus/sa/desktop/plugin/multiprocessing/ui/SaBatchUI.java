@@ -90,7 +90,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     private static final String REFRESH_LOCAL_MESSAGE = "Are you sure you want to refresh the selected items?";
     private static final String DELETE_LOCAL_MESSAGE = "Are you sure you want to delete the selected items?";
     private static final String DELETE_ALL_MESSAGE = "Are you sure you want to delete all items?";
-    private static final String RESET_MESSAGE = "Are you sure you want to reset this document?";
+    private static final String RESET_MESSAGE = "Are you sure you want to restore this document to the last saved situation?";
     private static final String PASTE_FAILED_MESSAGE = "Unable to paste data?";
 
     // MultiViewElement >
@@ -289,10 +289,13 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
                 case HasTsCollection.DROP_CONTENT_PROPERTY, HasTsCollection.FREEZE_ON_IMPORT_PROPERTY, HasTsCollection.TS_COLLECTION_PROPERTY, HasTsCollection.TS_SELECTION_MODEL_PROPERTY, HasTsCollection.TS_UPDATE_MODE_PROPERTY ->
-                        onCollectionChange();
-                case DEFAULT_SPECIFICATION_PROPERTY -> onDefaultSpecificationChange();
-                case PROCESSING_PROPERTY -> onProcessingChange();
-                case SELECTION_PROPERTY -> onSelectionChange();
+                    onCollectionChange();
+                case DEFAULT_SPECIFICATION_PROPERTY ->
+                    onDefaultSpecificationChange();
+                case PROCESSING_PROPERTY ->
+                    onProcessingChange();
+                case SELECTION_PROPERTY ->
+                    onSelectionChange();
             }
         });
         master.addMouseListener(new DynamicPopup(MultiProcessingManager.LOCALPATH));
@@ -308,7 +311,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     @NbBundle.Messages({
-            "undefinedspec.dialog.title=Undefined specification"
+        "undefinedspec.dialog.title=Undefined specification"
     })
     private void onCollectionChange() {
         TsCollection coll = getTsCollection();
@@ -317,7 +320,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         }
         Ts[] all = coll.stream().filter(s -> s.getType().encompass(TsInformationType.Data)).toArray(n -> new Ts[n]);
         if (all.length > 0 && defaultSpecification == null) {
-            editDefaultSpecification();                   
+            editDefaultSpecification();
         }
         getElement().add(defaultSpecification, all);
         controller.getDocument().setDirty();
@@ -346,6 +349,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
 
     protected void onProcessingChange() {
         model.fireTableDataChanged();
+        controller.getDocument().setDirty();
 //        String ts = getCurrentProcessing().getMeta().get(TsMeta.TIMESTAMP.getKey());
 //        statusLabel.setText(ts != null ? ("Saved:" + ts) : "New processing");
     }
@@ -354,22 +358,21 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     protected void onSaProcessingStateChange() {
         super.onSaProcessingStateChange();
         switch (controller.getSaProcessingState()) {
-            case DONE:
+            case DONE -> {
                 runButton.setEnabled(true);
                 makeBusy(false);
-
                 if (progressHandle != null) {
                     progressHandle.finish();
                 }
-                break;
-            case PENDING:
+                controller.getDocument().setDirty();
+            }
+            case PENDING ->
                 runButton.setEnabled(true);
-                break;
-            case STARTED:
+            case STARTED -> {
                 runButton.setEnabled(false);
                 progressHandle = ProgressHandle.createHandle(controller.getDocument().getDisplayName(), () -> worker.cancel(true));
                 progressHandle.start(getElement().getCurrent().size());
-                break;
+            }
         }
     }
 
@@ -428,18 +431,16 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         worker = new SwingWorkerImpl(all);
         worker.addPropertyChangeListener(evt -> {
             switch (worker.getState()) {
-                case DONE:
+                case DONE -> {
                     if (progressHandle != null) {
                         progressHandle.finish();
                     }
                     controller.setSaProcessingState(MultiProcessingController.SaProcessingState.DONE);
-                    break;
-                case PENDING:
+                }
+                case PENDING ->
                     controller.setSaProcessingState(MultiProcessingController.SaProcessingState.PENDING);
-                    break;
-                case STARTED:
+                case STARTED ->
                     controller.setSaProcessingState(MultiProcessingController.SaProcessingState.STARTED);
-                    break;
             }
         });
         worker.execute();
@@ -488,10 +489,11 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         if (dataobj.getTransferDataFlavors().length > 0) {
             if (pasteTs(dataobj)) {
                 redrawAll();
-
+                controller.getDocument().setDirty();
                 return;
             }
             if (pasteSaProcessing(dataobj)) {
+                controller.getDocument().setDirty();
                 redrawAll();
                 return;
             }
@@ -503,15 +505,16 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     private boolean pasteTs(Transferable dataobj) {
-        if (defaultSpecification == null)
+        if (defaultSpecification == null) {
             editDefaultSpecification();
+        }
         long count = DataTransferManager.get()
                 .toTsCollectionStream(dataobj)
                 .map(col -> col
-                        .load(TsInformationType.All, TsManager.get())
-                        .stream()
-                        .map(Ts::freeze)
-                        .collect(TsCollection.toTsCollection())
+                .load(TsInformationType.All, TsManager.get())
+                .stream()
+                .map(Ts::freeze)
+                .collect(TsCollection.toTsCollection())
                 )
                 .peek(col -> getElement().add(defaultSpecification, col.toArray(n -> new Ts[n])))
                 .count();
@@ -566,6 +569,38 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         setSelection(null);
     }
 
+    public void resetProcessing(boolean all) {
+        boolean changed = false;
+        if (all) {
+            List<SaNode> current = controller.getDocument().getElement().getCurrent();
+            if (current.isEmpty()) {
+                return;
+            }
+            for (SaNode item : current) {
+                if (item.resetProcessing()) {
+                    changed = true;
+                }
+            }
+        } else {
+            SaNode[] items = this.selection;
+            if (items == null || items.length == 0) {
+                return;
+            }
+            for (SaNode item : items) {
+                if (item.resetProcessing()) {
+                    changed = true;
+                }
+            }
+        }
+        if (!changed) {
+            return;
+        }
+        redrawAll();
+        controller.changed();
+        controller.getDocument().setDirty();
+        setSelection(null);
+    }
+
     public void clear(boolean interactive) {
         if (interactive) {
             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(DELETE_ALL_MESSAGE, NotifyDescriptor.OK_CANCEL_OPTION);
@@ -580,14 +615,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         setSelection(null);
     }
 
-    public void reset(boolean interactive) {
+    public void restore(boolean interactive) {
         if (interactive) {
             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(RESET_MESSAGE, NotifyDescriptor.OK_CANCEL_OPTION);
             if (DialogDisplayer.getDefault().notify(nd) != NotifyDescriptor.OK_OPTION) {
                 return;
             }
         }
-        controller.getDocument().getElement().reset();
+        controller.getDocument().getElement().restore();
         redrawAll();
         controller.setSaProcessingState(MultiProcessingController.SaProcessingState.READY);
         controller.getDocument().setDirty();
@@ -757,7 +792,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             TsDocument doc = (TsDocument) detail.getDocument();
             if (doc != null) {
                 doc.set((Ts) null);
-                detail.onDocumentChanged();
+                detail.resetDocument();
                 updateUserInterfaceContext(null);
             }
         } else {
@@ -768,7 +803,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             if (doc != null && cspec.getClass().isInstance(doc.getSpecification())) {
                 // same document. To be updated
                 doc.setAll(cspec, ts, output.getEstimation().getResults());
-                detail.onDocumentChanged();
+                detail.resetDocument();
             } else {
                 DocumentUIServices uis = DocumentUIServices.forSpec(cspec.getClass());
                 if (uis == null) {
@@ -848,7 +883,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                 .estimation(estimation)
                 .build();
 
-        node.setOutput(nitem);
+        node.update(nitem);
         master.repaint();
 //        model.fireTableDataChanged();
 
@@ -1069,14 +1104,22 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             }
             EstimationPolicyType policy = item.getOutput().getDefinition().getPolicy();
             return switch (policy) {
-                case Fixed -> "Fixed model";
-                case FixedParameters -> "Reg. coefficients";
-                case FreeParameters -> "Arima parameters";
-                case LastOutliers -> "Last outliers";
-                case Outliers_StochasticComponent -> "Arima model";
-                case Complete -> "Concurrent";
-                case None -> "New";
-                default -> policy.name();
+                case Fixed ->
+                    "Fixed model";
+                case FixedParameters ->
+                    "Reg. coefficients";
+                case FreeParameters ->
+                    "Arima parameters";
+                case LastOutliers ->
+                    "Last outliers";
+                case Outliers_StochasticComponent ->
+                    "Arima model";
+                case Complete ->
+                    "Concurrent";
+                case None ->
+                    "New";
+                default ->
+                    policy.name();
             };
         }
     }
@@ -1091,10 +1134,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         @Override
         protected Color getColor(SaNode item) {
             return switch (item.getStatus()) {
-                case Unprocessed -> Color.GRAY;
-                case Pending -> Color.ORANGE;
-                case Valid -> null;
-                default -> Color.RED;
+                case Unprocessed ->
+                    Color.GRAY;
+                case Pending ->
+                    Color.ORANGE;
+                case Valid ->
+                    null;
+                default ->
+                    Color.RED;
             };
         }
     }
@@ -1162,17 +1209,11 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             if (!item.isProcessed() || item.results() == null) {
                 return label;
             }
-            ProcessingLog processingLog = item.results().getLog();
-            String[] warnings = processingLog != null
-                    ? processingLog.all()
-                    .stream()
-                    .filter(log -> log.getType() == InformationType.Warning)
-                    .map(ProcessingLog.Information::getMsg).toArray(String[]::new)
-                    : new String[0];
-            if (warnings.length == 0) {
+            List<String> warnings = item.results().warnings();
+            if (warnings.isEmpty()) {
                 return label;
             }
-            char[] tmp = new char[warnings.length];
+            char[] tmp = new char[warnings.size()];
             Arrays.fill(tmp, '!');
             label.setText(String.valueOf(tmp));
             label.setToolTipText(String.join(". ", warnings));

@@ -25,6 +25,7 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import java.util.Collections;
 import java.util.List;
+import jdplus.sa.base.api.DecompositionMode;
 import jdplus.toolkit.base.core.modelling.regular.tests.SpectralAnalysis;
 
 /**
@@ -36,13 +37,23 @@ public class SpectralDiagnostics implements Diagnostics {
     private boolean tdsa, tdirr;
     private boolean strict;
 
-    protected static SpectralDiagnostics of(SpectralDiagnosticsConfiguration config, Explorable rslts) {
+    @lombok.Value
+    public static class Input {
+
+        /**
+         *
+         */
+        DecompositionMode mode;
+        TsData y, sa;
+    }
+
+    protected static SpectralDiagnostics of(SpectralDiagnosticsConfiguration config, Input input) {
         try {
-            if (rslts == null) {
+            if (input == null) {
                 return null;
             }
             SpectralDiagnostics diags = new SpectralDiagnostics();
-            if (diags.test(rslts, config.getSensibility(), config.getLength(), config.isStrict())) {
+            if (diags.test(input, config.getSensibility(), config.getLength(), config.isStrict())) {
                 return diags;
             } else {
                 return null;
@@ -53,71 +64,66 @@ public class SpectralDiagnostics implements Diagnostics {
         }
     }
 
-    private String decompositionItem(String key) {
-        return Dictionary.concatenate(SaDictionaries.DECOMPOSITION, key);
-    }
-
-    private boolean test(Explorable rslts, double sens, int len, boolean strict) {
+    private boolean test(Input input, double sens, int len, boolean strict) {
         this.strict = strict;
         try {
             boolean r = false;
-            TsData s = rslts.getData(decompositionItem(SaDictionaries.Y_LIN), TsData.class);
-            if (s != null) {
-                int sfreq = s.getAnnualFrequency();
-                s = s.delta(1);
-                if (len != 0) {
-                    TimeSelector sel = TimeSelector.last(len * sfreq);
-                    s = s.select(sel);
-                }
-                SpectralAnalysis diag = SpectralAnalysis.test(s)
-                        .sensibility(sens)
-                        .arLength(sfreq == 12 ? 30 : 3 * sfreq)
-                        .build();
+            TsData s = input.getY();
+            int sfreq = s.getAnnualFrequency();
+            if (input.mode.isMultiplicative()) {
+                s = s.log();
+            }
+            s = s.delta(1);
+            if (len != 0) {
+                TimeSelector sel = TimeSelector.last(len * sfreq);
+                s = s.select(sel);
+            }
+            SpectralAnalysis diag = SpectralAnalysis.test(s)
+                    .sensibility(sens)
+                    .arLength(sfreq == 12 ? 30 : 3 * sfreq)
+                    .build();
 
-                if (diag != null) {
-                    sorig = diag.hasSeasonalPeaks();
-                    r = true;
+            if (diag != null) {
+                sorig = diag.hasSeasonalPeaks();
+                r = true;
+            }
+
+            s = input.getSa();
+            if (input.mode.isMultiplicative()) {
+                s = s.log();
+            }
+            int del = Math.max(1, sfreq / 4);
+            s = s.delta(del);
+            if (len != 0) {
+                TimeSelector sel = TimeSelector.last(len * sfreq);
+                s = s.select(sel);
+            }
+            diag = SpectralAnalysis.test(s)
+                    .sensibility(sens)
+                    .arLength(sfreq == 12 ? 30 : 3 * sfreq)
+                    .build();
+            if (diag != null) {
+                r = true;
+                ssa = diag.hasSeasonalPeaks();
+                if (sfreq == 12) {
+                    tdsa = diag.hasTradingDayPeaks();
                 }
             }
-            s = rslts.getData(SaDictionaries.SA, TsData.class);
-            if (s != null) {
-                int sfreq = s.getAnnualFrequency();
-                int del = Math.max(1, sfreq / 4);
-                s = s.delta(del);
-                if (len != 0) {
-                    TimeSelector sel = TimeSelector.last(len * sfreq);
-                    s = s.select(sel);
-                }
-                SpectralAnalysis diag = SpectralAnalysis.test(s)
-                        .sensibility(sens)
-                        .arLength(sfreq == 12 ? 30 : 3 * sfreq)
-                        .build();
-                if (diag != null) {
-                    r = true;
-                    ssa = diag.hasSeasonalPeaks();
-                    if (sfreq == 12) {
-                        tdsa = diag.hasTradingDayPeaks();
-                    }
-                }
+
+            if (len != 0) {
+                r = true;
+                TimeSelector sel = TimeSelector.last(len * sfreq);
+                s = s.select(sel);
             }
-            s = rslts.getData(SaDictionaries.SA, TsData.class);
-            if (s != null) {
-                int sfreq = s.getAnnualFrequency();
-                if (len != 0) {
-                    r = true;
-                    TimeSelector sel = TimeSelector.last(len * sfreq);
-                    s = s.select(sel);
-                }
-                SpectralAnalysis diag = SpectralAnalysis.test(s)
-                        .sensibility(sens)
-                        .arLength(sfreq == 12 ? 30 : 3 * sfreq)
-                        .build();
-                if (diag != null) {
-                    r = true;
-                    sirr = diag.hasSeasonalPeaks();
-                    if (sfreq == 12) {
-                        tdirr = diag.hasTradingDayPeaks();
-                    }
+            diag = SpectralAnalysis.test(s)
+                    .sensibility(sens)
+                    .arLength(sfreq == 12 ? 30 : 3 * sfreq)
+                    .build();
+            if (diag != null) {
+                r = true;
+                sirr = diag.hasSeasonalPeaks();
+                if (sfreq == 12) {
+                    tdirr = diag.hasTradingDayPeaks();
                 }
             }
             return r;
@@ -151,7 +157,7 @@ public class SpectralDiagnostics implements Diagnostics {
             if (!tdirr && !tdsa) {
                 return ProcQuality.Good;
             } else if (tdirr && tdsa) {
-                 return strict ? ProcQuality.Severe : ProcQuality.Bad;
+                return strict ? ProcQuality.Severe : ProcQuality.Bad;
             } else {
                 return ProcQuality.Uncertain;
             }

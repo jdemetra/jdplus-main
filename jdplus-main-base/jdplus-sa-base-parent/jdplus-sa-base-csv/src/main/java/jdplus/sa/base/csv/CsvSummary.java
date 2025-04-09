@@ -17,13 +17,13 @@
 package jdplus.sa.base.csv;
 
 import jdplus.toolkit.base.api.information.Explorable;
-import jdplus.toolkit.base.api.modelling.ModellingDictionary;
 import jdplus.sa.base.api.SaDictionaries;
 import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
 
 /**
  *
@@ -47,11 +47,11 @@ public class CsvSummary {
     private void fillDictionary(String[] items, Explorable results) {
         for (String item : items) {
             if (item.equalsIgnoreCase("y")) {
-                series_.put("y", results.getData(ModellingDictionary.Y, TsData.class));
+                series_.put("y", results.getData(RegressionDictionaries.Y, TsData.class));
             } else if (item.equalsIgnoreCase("yc")) {
-                series_.put("yc", results.getData(ModellingDictionary.YC, TsData.class));
+                series_.put("yc", results.getData(RegressionDictionaries.YC, TsData.class));
             } else if (item.equalsIgnoreCase("yl")) {
-                series_.put("yl", results.getData(ModellingDictionary.L, TsData.class));
+                series_.put("yl", results.getData(RegressionDictionaries.L, TsData.class));
             } else if (item.equalsIgnoreCase("t")) {
                 series_.put("t", results.getData(SaDictionaries.T, TsData.class));
             } else if (item.equalsIgnoreCase("sa")) {
@@ -77,7 +77,7 @@ public class CsvSummary {
             } else if (item.equalsIgnoreCase("il")) {
                 series_.put("ic", results.getData(SaDictionaries.I_LIN, TsData.class));
             } else if (item.equalsIgnoreCase("ycal")) {
-                series_.put("ycal", results.getData(ModellingDictionary.YCAL, TsData.class));
+                series_.put("ycal", results.getData(RegressionDictionaries.YCAL, TsData.class));
             }
 //            else {
 //                TsDomain fullDomain = domain_.union(fdomain_);
