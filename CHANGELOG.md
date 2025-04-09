@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.5.0] - 2025-04-09
+
 ### Fixed
 
 - ![STAT] Correct the handling of short series in X11
@@ -16,7 +18,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix missing split into yearly components feature [#550](https://github.com/jdemetra/jdplus-main/issues/550)
 - ![UI] Remove DEBUG option in contextual menu [#535](https://github.com/jdemetra/jdplus-main/issues/535)
 - ![UI] Fix startup crash on Java 21 [#551](https://github.com/jdemetra/jdplus-main/issues/551)
-- ![UI] Fix incompatibilty with plug-ins of Incubator
+- ![UI] Fix incompatibility with plug-ins of Incubator
 - ![UI] Fix a bug in the restore of specifications in multi-saprocessing [#565](https://github.com/jdemetra/jdplus-main/issues/565)
 
 ### Changed
@@ -41,7 +43,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![IO] Add missing information in the exports of the residuals of REGARIMA models
 - ![UI] Correct the "Check Last" user interface [#511](https://github.com/jdemetra/jdplus-main/issues/511)
 - ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
-- ![OTHER] Fix Protobuf transfer of invalid statistical tests 
+- ![OTHER] Fix Protobuf transfer of invalid statistical tests
 
 ### Added
 
@@ -235,7 +237,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...HEAD
+[3.5.0]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/jdemetra/jd3-main/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/jdemetra/jd3-main/compare/v3.2.4...v3.3.0
 [3.2.4]: https://github.com/jdemetra/jd3-main/compare/v3.2.3...v3.2.4
