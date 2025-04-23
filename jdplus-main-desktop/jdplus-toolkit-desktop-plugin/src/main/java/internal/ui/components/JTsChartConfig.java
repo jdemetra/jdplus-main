@@ -101,7 +101,7 @@ public final class JTsChartConfig {
             b.reset("Chart display");
             b.withBoolean().selectField(bean, "legendVisible").display("Show legend").description("Whether the legend should be shown or not").add();
             b.withBoolean().selectField(bean, "titleVisible").display("Show title").description("Whether the title should be shown or not").add();
-            b.withBoolean().selectField(bean, "axisVisible").display("Show axis").description("Whether the axis should be shown or not").add();
+            b.withBoolean().selectField(bean, "axisVisible").display("Show axes").description("Whether both axes should be shown or not").add();
             b.with(String.class).selectField(bean, "title").display("Title").description("Title of the chart").add();
             sheet.put(b.build());
             b.reset("Series display");
