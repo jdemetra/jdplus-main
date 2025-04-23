@@ -346,6 +346,11 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             setDefaultSpecification((SaSpecification) c.getSpecification());
         }
     }
+    
+    @Override
+    protected void onSaProcessingSaved(){
+        setSelection(null);
+    }
 
     protected void onProcessingChange() {
         model.fireTableDataChanged();
