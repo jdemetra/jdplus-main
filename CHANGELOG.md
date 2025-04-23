@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![UI] Fix missing handling of workspace events (save/saveas)
+
 ## [3.5.0] - 2025-04-09
 
 ### Fixed

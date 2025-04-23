@@ -143,11 +143,11 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
 
     }
 
-    @Override
-    protected void onSaProcessingSaved(){
-        updateData(new SaItem[0]);
-    }
-    
+//    @Override
+//    protected void onSaProcessingSaved(){
+//        updateData(new SaItem[0]);
+//    }
+//    
     private static JGrid createMatrix() {
         final JGrid result = new JGrid();
         result.setDefaultRenderer(Object.class, new TableCellRenderer() {
