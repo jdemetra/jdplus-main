@@ -174,7 +174,7 @@ public class X13Kernel {
 
         // linearized series. detlin are deterministic effects removed before the decomposition,
         // detall are all the deterministic effects
-        TsData detlin = TsData.add(td, mh, p, uu), detall = TsData.add(detlin, u);
+        TsData detlin = TsData.add(td, mh, p, u), detall = TsData.add(detlin, uu);
         // forecasts, backcasts
         TsData nbcasts = null, nfcasts = null;
         TsData s = model.interpolatedSeries(true);
@@ -217,6 +217,7 @@ public class X13Kernel {
                 .a8s(model.backTransform(ps, false))
                 .a8i(model.backTransform(pi, false))
                 .a9(model.backTransform(u, false))
+                .a9u(model.backTransform(uu, false))
                 .a9sa(model.backTransform(usa, false))
                 .a9ser(model.backTransform(user, false));
 
