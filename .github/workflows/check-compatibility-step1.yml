@@ -1,0 +1,36 @@
+name: Check compatibility step 1
+
+on:
+  pull_request:
+
+env:
+  MAVEN_ARGS: "-B -ntp"
+
+jobs:
+  checking-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚙️ Checkout and Setup Maven
+        uses: s4u/setup-maven-action@v1.18.0
+        with:
+          checkout-submodules: true
+          checkout-fetch-depth: 0
+
+      - name: ❓ Check if profile exists
+        run: mvn help:all-profiles | grep -q check-compatibility && touch continue
+
+      - if: ${{ hashFiles('continue') != '' }}
+        name: ☕ Check compatibility on PR
+        run: mvn -U verify -D skipTests -P check-compatibility -D compatibility.reportFile=$PWD/report.md
+
+      - if: ${{ hashFiles('continue') != '' }}
+        name: ⚙️ Store PR number
+        run: echo ${{ github.event.number }} > pr_number.txt
+
+      - if: ${{ hashFiles('continue') != '' }}
+        name: ⬆️ Upload compatibility report and PR number
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            report.md
+            pr_number.txt

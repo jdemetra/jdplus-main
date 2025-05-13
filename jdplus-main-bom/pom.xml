@@ -402,5 +402,39 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>check-compatibility</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                        <artifactId>compatibility-maven-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check-downstream</goal>
+                                </goals>
+                                <configuration>
+                                    <source>${project.baseUri}/../</source>
+                                    <sourceBinding>eu.europa.ec.joinup.sat:jdplus*</sourceBinding>
+                                    <targets>
+                                        <target>https://github.com/jdemetra/jdplus-benchmarking</target>
+                                        <target>https://github.com/jdemetra/jdplus-incubator</target>
+                                        <target>https://github.com/jdemetra/jdplus-experimental</target>
+                                        <target>https://github.com/jdemetra/jdplus-revisions</target>
+                                        <target>https://github.com/jdemetra/jdplus-nowcasting</target>
+                                        <target>https://github.com/nbbrd/jdplus-sdmx</target>
+                                    </targets>
+                                    <targetLimits>1,1,1,1,1,1</targetLimits>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
