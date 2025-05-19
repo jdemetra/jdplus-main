@@ -15,6 +15,9 @@
  */
 package jdplus.toolkit.base.api.dictionaries;
 
+import jdplus.toolkit.base.api.dictionaries.AtomicDictionary.Item;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
+
 /**
  *
  * @author PALATEJ
@@ -40,5 +43,14 @@ public class RegArimaDictionaries {
             .dictionary(new PrefixedDictionary(null, RegressionDictionaries.REGRESSION_EFFECTS))
             .build();
     
-
+     public static final String FCAST_INSAMPLE_MEAN = "fcast-insample-mean",
+            FCAST_OUTSAMPLE_MEAN = "fcast-outsample-mean",
+            FCAST_OUTSAMPLE_VARIANCE = "fcast-outsample-variance";
+    
+    public final Dictionary REGSARIMA_DIAGNOSTICS = AtomicDictionary.builder()
+            .name("regarima diagnostics")
+            .item(Item.builder().name(FCAST_INSAMPLE_MEAN).description("in sample forecast mean test").outputClass(StatisticalTest.class).build())
+            .item(Item.builder().name(FCAST_OUTSAMPLE_MEAN).description("out of sample forecast mean test").outputClass(StatisticalTest.class).build())
+            .item(Item.builder().name(FCAST_OUTSAMPLE_VARIANCE).description("out of sample forecast variance test").outputClass(StatisticalTest.class).build())
+            .build();
 }
