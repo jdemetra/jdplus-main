@@ -24,7 +24,6 @@ import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import jdplus.toolkit.base.core.modelling.Residuals;
 import java.util.Arrays;
 import java.util.function.Predicate;
 import nbbrd.service.ServiceProvider;
@@ -183,20 +182,14 @@ public class LinearModelExtractors {
             if (var instanceof IEasterVariable) {
                 return IEASTER;
             }
-            if (var instanceof IOutlier) {
-                switch (((IOutlier) var).getCode()) {
-                    case AdditiveOutlier.CODE:
-                        return AO;
-                    case LevelShift.CODE:
-                        return LS;
-                    case TransitoryChange.CODE:
-                        return TC;
-                    case PeriodicOutlier.CODE:
-                    case PeriodicOutlier.PO:
-                        return SO;
-                    default:
-                        return IOUTLIER;
-                }
+            if (var instanceof IOutlier iOutlier) {
+                return switch (iOutlier.getCode()) {
+                    case AdditiveOutlier.CODE -> AO;
+                    case LevelShift.CODE -> LS;
+                    case TransitoryChange.CODE -> TC;
+                    case PeriodicOutlier.CODE, PeriodicOutlier.PO -> SO;
+                    default -> IOUTLIER;
+                };
             }
             if (var instanceof InterventionVariable) {
                 return IIV;
