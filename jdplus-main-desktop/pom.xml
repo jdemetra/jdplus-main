@@ -21,7 +21,7 @@
         <brandingToken>nbdemetra</brandingToken>
 
         <!-- dependencies -->
-        <netbeans.version>RELEASE250</netbeans.version>
+        <netbeans.version>RELEASE260</netbeans.version>
     </properties>
 
     <modules>
