@@ -1,7 +1,17 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2025 JDemetra+.
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ *      https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.x13.base.core.x13;
 
@@ -47,7 +57,6 @@ import jdplus.sa.base.core.diagnostics.SaResidualsDiagnosticsFactory;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnostics;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.SpectralDiagnosticsFactory;
-import jdplus.toolkit.base.api.modelling.ComponentInformation;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.x13.base.core.x13.diagnostics.MDiagnosticsConfiguration;

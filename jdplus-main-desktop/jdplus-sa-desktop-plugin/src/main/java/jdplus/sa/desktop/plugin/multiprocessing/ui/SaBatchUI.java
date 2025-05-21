@@ -346,9 +346,9 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             setDefaultSpecification((SaSpecification) c.getSpecification());
         }
     }
-    
+
     @Override
-    protected void onSaProcessingSaved(){
+    protected void onSaProcessingSaved() {
         setSelection(null);
     }
 
@@ -896,11 +896,11 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
 //        setSelection(new SaNode[]{node});
     }
 
-    public void clearPriority(List<SaItem> items) {
+    public void clearPriority(List<SaNode> items) {
         setPriority(items, 0);
     }
 
-    public void setPriority(List<SaItem> items, SaItemPriorityDefinition def) {
+    public void setPriority(List<SaNode> items, SaItemPriorityDefinition def) {
         if (def == SaItemPriorityDefinition.Level) {
             setLevelPriority(items);
         } else {
@@ -908,83 +908,104 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         }
     }
 
-    public void setLevelPriority(List<SaItem> items) {
-//        int n = items.size();
-//        if (n == 0) {
-//            return;
-//        }
-//        double maxavg = 0;
-//        double[] avg = new double[n];
-//
-//        int i = 0;
-//        for (SaItem item : items) {
-//            if (item.getTsData() != null) {
-//                DescriptiveStatistics stats = new DescriptiveStatistics(item.getTsData().getValues());
-//                double cur = stats.getAverage();
-//                if (cur > maxavg) {
-//                    maxavg = cur;
-//
-//                }
-//                avg[i] = cur;
-//            }
-//            ++i;
-//        }
-//
-//        i = 0;
-//        for (SaItem item : items) {
-//            item.setPriority((int) Math.floor(avg[i++] / maxavg * 10));
-//        }
-//        redrawAll();
+    public void setLevelPriority() {
+        List<SaNode> current = controller.getDocument().getElement().getCurrent();
+        setLevelPriority(current);
     }
 
-    public void setLogPriority(List<SaItem> items) {
-//        int n = items.size();
-//        if (n == 0) {
-//            return;
-//        }
-//        double maxavg = 0;
-//        double[] avg = new double[n];
-//
-//        int i = 0;
-//        for (SaItem item : items) {
-//            if (item.getTsData() != null) {
-//                DescriptiveStatistics stats = new DescriptiveStatistics(item.getTsData().getValues());
-//                double cur = stats.getAverage();
-//                if (cur > 0) {
-//                    cur = Math.log10(cur);
-//
-//                }
-//                if (cur < 0) {
-//                    cur = 0;
-//
-//                }
-//                if (cur > maxavg) {
-//                    maxavg = cur;
-//
-//                }
-//                avg[i] = cur;
-//            }
-//            ++i;
-//        }
-//        if (maxavg == 0) {
-//            return;
-//
-//        }
-//        i = 0;
-//        for (SaItem item : items) {
-//            item.setPriority((int) (avg[i++] / maxavg * 10));
-//        }
-//        redrawAll();
-    }
-
-    public void setPriority(List<SaItem> items, int p) {
-        if (items.isEmpty()) {
+    public void setLevelPriority(List<SaNode> nodes) {
+        int n = nodes.size();
+        if (n == 0) {
             return;
         }
-        MultiProcessingDocument element = getElement();
-        Set<SaItem> all = new HashSet(items);
-//        element.replace(item-> all.contains(item), item->item.withPriority(p));
+        double maxavg = 0;
+        double[] avg = new double[n];
+
+        int i = 0;
+        for (SaNode node : nodes) {
+            TsData data = node.getOutput().getDefinition().getTs().getData();
+            if (!data.isEmpty()) {
+                double cur = Math.abs(data.getValues().average());
+                if (cur > maxavg) {
+                    maxavg = cur;
+
+                }
+                avg[i] = cur;
+            }
+            ++i;
+        }
+        if (maxavg == 0) {
+            return;
+
+        }
+        i = 0;
+        for (SaNode node : nodes) {
+            SaItem output = node.getOutput();
+            output = output.withPriority((int) (avg[i++] / maxavg * 10));
+            node.setOutput(output);
+        }
         redrawAll();
+        controller.getDocument().setDirty();
+    }
+
+    public void setLogPriority() {
+        List<SaNode> current = controller.getDocument().getElement().getCurrent();
+        setLogPriority(current);
+    }
+
+    public void setLogPriority(List<SaNode> nodes) {
+        int n = nodes.size();
+        if (n == 0) {
+            return;
+        }
+        double maxavg = 0;
+        double[] avg = new double[n];
+
+        int i = 0;
+        for (SaNode node : nodes) {
+            TsData data = node.getOutput().getDefinition().getTs().getData();
+            if (!data.isEmpty()) {
+                double cur = data.getValues().average();
+                if (cur > 0) {
+                    cur = Math.log10(cur);
+
+                }
+                if (cur < 0) {
+                    cur = 0;
+
+                }
+                if (cur > maxavg) {
+                    maxavg = cur;
+
+                }
+                avg[i] = cur;
+            }
+            ++i;
+        }
+        if (maxavg == 0) {
+            return;
+
+        }
+        i = 0;
+        for (SaNode node : nodes) {
+            SaItem output = node.getOutput();
+            output = output.withPriority((int) (avg[i++] / maxavg * 10));
+            node.setOutput(output);
+        }
+        redrawAll();
+    }
+
+    public void setPriority(List<SaNode> nodes, int p) {
+        if (nodes.isEmpty()) {
+            return;
+        }
+        for (SaNode node : nodes) {
+            SaItem output = node.getOutput();
+            output = output.withPriority(p);
+            node.setOutput(output);
+        }
+        redrawAll();
+        controller.getDocument().setDirty();
     }
 
     private class ListTableSelectionListener implements ListSelectionListener {
