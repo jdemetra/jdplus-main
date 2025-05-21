@@ -17,7 +17,7 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(category = "SaProcessing", id = InitialOrder.ID)
 @ActionRegistration(displayName = "#CTL_InitialOrder", lazy = true)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1610),
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1800),
     @ActionReference(path = "Shortcuts", name = "I")
 })
 @Messages("CTL_InitialOrder=InitialOrder")

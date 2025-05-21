@@ -11,6 +11,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![UI] Fix missing handling of workspace events (save/saveas)
 
+### Added
+
+- ![IO] Add missing items in the dictionaries (partim) [#570](https://github.com/jdemetra/jdplus-main/issues/570)
+- ![UI] Add handling of priorities in multi-processing [#611](https://github.com/jdemetra/jdplus-main/issues/611)
+
+
 ## [3.5.0] - 2025-04-09
 
 ### Fixed
