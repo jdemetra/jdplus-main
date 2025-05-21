@@ -15,10 +15,8 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
-import java.util.Arrays;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
-import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
@@ -30,7 +28,7 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(category = "SaProcessing", id = LevelPriority.ID)
 @ActionRegistration(displayName = "#CTL_LevelPriority", lazy = false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Priority.PATH, position = 1510),
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Priority.PATH, position = 1710),
     @ActionReference(path = "Shortcuts", name = "L")
 })
 @Messages("CTL_LevelPriority=Level-based")

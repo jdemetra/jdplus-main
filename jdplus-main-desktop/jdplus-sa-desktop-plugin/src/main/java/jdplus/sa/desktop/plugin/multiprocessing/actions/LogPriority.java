@@ -15,11 +15,8 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
-import java.util.Arrays;
-import jdplus.sa.base.api.SaItem;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
-import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
@@ -31,7 +28,7 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(category = "SaProcessing", id = LogPriority.ID)
 @ActionRegistration(displayName = "#CTL_LogPriority", lazy = false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Priority.PATH, position = 1520),
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Priority.PATH, position = 1720),
     @ActionReference(path = "Shortcuts", name = "G")
 })
 @Messages("CTL_LogPriority=Log-based")

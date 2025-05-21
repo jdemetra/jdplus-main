@@ -36,7 +36,7 @@ import org.openide.util.actions.Presenter;
 @ActionID(category = "SaProcessing", id = Priority.ID)
 @ActionRegistration(displayName = "#CTL_Priority", lazy=false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1500),
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH, position = 1700, separatorBefore = 1699 ),
     @ActionReference(path = "Shortcuts", name = "p")
 })
 @NbBundle.Messages("CTL_Priority=Priority")
