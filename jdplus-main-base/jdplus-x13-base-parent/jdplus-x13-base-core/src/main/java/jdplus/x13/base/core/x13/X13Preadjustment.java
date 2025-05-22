@@ -15,5 +15,5 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 @lombok.Builder
 public class X13Preadjustment {
     
-    TsData a1, a1a, a1b, a6, a7, a8, a8t, a8s, a8i, a9, a9u, a9sa, a9ser;
+    TsData a1, a1a, a1b, a6, a7, a8, a8t, a8s, a8i, a9, a9cal, a9sa, a9ser, a9u;
 }
