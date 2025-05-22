@@ -98,7 +98,7 @@ public class X13Kernel {
             X13Preadjustment preadjustment;
             TsData alin;
             if (regarima != null) {
-            // We reuse the full series because selection is integrated in the preprocessing step
+                // We reuse the full series because selection is integrated in the preprocessing step
                 preprocessing = regarima.process(s, log);
                 // Step 2. Link between regarima and x11
                 int nb = spec.getBackcastHorizon();
@@ -165,12 +165,13 @@ public class X13Kernel {
         TsData usa = RegArimaDecomposer.deterministicEffect(model, domain, ComponentType.SeasonallyAdjusted, true, v -> ModellingUtility.isUser(v));
         TsData user = RegArimaDecomposer.deterministicEffect(model, domain, ComponentType.Series, true, v -> ModellingUtility.isUser(v));
         TsData uu = RegArimaDecomposer.deterministicEffect(model, domain, ComponentType.Undefined, true, v -> ModellingUtility.isUser(v));
+        TsData ucal = RegArimaDecomposer.deterministicEffect(model, domain, ComponentType.CalendarEffect, true, v -> ModellingUtility.isUser(v));
         pt = TsData.add(pt, ut);
         ps = TsData.add(ps, us);
         pi = TsData.add(pi, ui);
         TsData p = TsData.add(pt, ps, pi);
         TsData pall = TsData.add(pt, ps, pi);
-        TsData u = TsData.add(usa, user);
+        TsData u = TsData.add(ucal, usa, user);
 
         // linearized series. detlin are deterministic effects removed before the decomposition,
         // detall are all the deterministic effects
@@ -218,6 +219,7 @@ public class X13Kernel {
                 .a8i(model.backTransform(pi, false))
                 .a9(model.backTransform(u, false))
                 .a9u(model.backTransform(uu, false))
+                .a9cal(model.backTransform(ucal, false))
                 .a9sa(model.backTransform(usa, false))
                 .a9ser(model.backTransform(user, false));
 
@@ -341,7 +343,9 @@ public class X13Kernel {
         // add ps to d10
 //
         TsData a6 = astep.getA6(), a7 = astep.getA7();
+        TsData a9cal = astep.getA9cal();
         TsData d18 = invOp(mode, a6, a7);
+        d18 = invOp(mode, d18, a9cal);
         TsData d10c = invOp(mode, d10, a8s);
         TsData d16 = invOp(mode, d10c, d18);
         // add pt, pi to d11

@@ -35,7 +35,7 @@ import jdplus.x13.base.core.x11.X11Results;
 /**
  * This class computes the M-Statistics
  *
- *
+ *X13
  * @author Frank Osaer, Jean Palate
  */
 public final class Mstatistics {
