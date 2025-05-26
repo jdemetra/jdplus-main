@@ -89,6 +89,7 @@
                                 </goals>
                                 <configuration>
                                     <inputFile>${project.parent.basedir}/CHANGELOG.md</inputFile>
+                                    <outputFile>${project.build.directory}/CHANGELOG.md</outputFile>
                                 </configuration>
                             </execution>
                         </executions>
