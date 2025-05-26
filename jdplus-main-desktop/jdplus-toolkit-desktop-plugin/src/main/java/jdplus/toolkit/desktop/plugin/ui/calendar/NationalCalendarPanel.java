@@ -243,7 +243,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         for (Node o : em.getSelectedNodes()) {
-            childFactory.beans.remove(o.getLookup().lookup(AbstractEventBean.class));
+            childFactory.beans.remove(o.getLookup().lookup(HasHoliday.class));
         }
         childFactory.refreshData();
     }//GEN-LAST:event_removeButtonActionPerformed
