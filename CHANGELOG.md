@@ -18,6 +18,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![IO] Add missing items in the dictionaries (partim) [#570](https://github.com/jdemetra/jdplus-main/issues/570)
 - ![UI] Add handling of priorities in multi-processing [#611](https://github.com/jdemetra/jdplus-main/issues/611)
 
+### Changed
+
+- ![OTHER] Migrate OSSRH to Central Portal
 
 ## [3.5.0] - 2025-04-09
 
