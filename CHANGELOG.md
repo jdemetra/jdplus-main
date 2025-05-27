@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix missing handling of workspace events (save/saveas)
 - ![UI] Fix flaky clipboard on Windows [#632](https://github.com/jdemetra/jdplus-main/issues/632)
 - ![UI] Fix removal of single dates from calendars [#624](https://github.com/jdemetra/jdplus-main/issues/624)
+- ![UI] Fix handling of SA specifications [#639](https://github.com/jdemetra/jdplus-main/issues/639)
 
 ### Added
 

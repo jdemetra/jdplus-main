@@ -863,15 +863,15 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         }
         SaNode node = selection[0];
         SaItem item = node.getOutput();
-        SaSpecification dspec;
-        MultiProcessingDocument mdoc = getElement();
+        SaSpecification dspec=item.getDefinition().getDomainSpec();
+//        MultiProcessingDocument mdoc = getElement();
         SaSpecification spec = (SaSpecification) doc.getSpecification();
-        // new item. The reference spec is the spec of the document
-        if (mdoc.isNew(node)) {
-            dspec = spec;
-        } else {
-            dspec = item.getDefinition().getDomainSpec();
-        }
+        // new item. The reference spec is the spec of the document. Old behaviour
+//        if (mdoc.isNew(node)) {
+//            dspec = spec;
+//        } else {
+//            dspec = item.getDefinition().getDomainSpec();
+//        }
         SaDefinition def = SaDefinition.builder()
                 .domainSpec(dspec)
                 .estimationSpec(spec)
