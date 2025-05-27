@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @lombok.Value
 @lombok.Builder(builderClassName = "Builder", toBuilder = true)
-@lombok.AllArgsConstructor(access=lombok.AccessLevel.PUBLIC)
+@lombok.AllArgsConstructor(access = lombok.AccessLevel.PUBLIC)
 public final class SaItem {
 
     public static final String COMMENT = "comment";
@@ -112,7 +112,13 @@ public final class SaItem {
     }
 
     public SaItem withDomainSpecification(SaSpecification dspec) {
-        return of(definition.getTs(), dspec);
+        SaDefinition ndef = SaDefinition.builder()
+                .ts(definition.getTs())
+                .domainSpec(dspec)
+                .estimationSpec(definition.activeSpecification())
+                .policy(EstimationPolicyType.None)
+                .build();
+        return new SaItem(name, ndef, meta, priority, estimation, processed);
     }
 
     /**
@@ -122,16 +128,14 @@ public final class SaItem {
      * @return
      */
     public SaItem withSpecification(SaSpecification espec) {
-        return SaItem.builder()
-                .name(name)
-                .definition(SaDefinition.builder()
-                        .ts(definition.getTs())
-                        .domainSpec(definition.getDomainSpec())
-                        .estimationSpec(espec)
-                        .policy(EstimationPolicyType.None)
-                        .build())
+        SaDefinition ndef = SaDefinition.builder()
+                .ts(definition.getTs())
+                .domainSpec(definition.getDomainSpec())
+                .estimationSpec(espec)
+                .policy(EstimationPolicyType.None)
                 .build();
-    }
+        return new SaItem(name, ndef, meta, priority, null, false);
+     }
 
     /**
      * Keep the domain and the estimation specifications and put a new time
@@ -197,7 +201,7 @@ public final class SaItem {
                 processed = true;
             }
         }
-        return estimation.getResults() != null && estimation .getResults().isValid();
+        return estimation.getResults() != null && estimation.getResults().isValid();
     }
 
     public boolean compute(ModellingContext context, boolean verbose) {
@@ -266,10 +270,16 @@ public final class SaItem {
     }
 
     public SaItem refresh(EstimationPolicy policy, TsInformationType type) {
+        return refresh(policy, null, type);
+    }
+
+    public SaItem refresh(EstimationPolicy policy, SaSpecification dspec, TsInformationType type) {
         TsData oldData = definition.getTs().getData();
         Ts nts = type != TsInformationType.None ? definition.getTs().unfreeze(TsFactory.getDefault(), type) : definition.getTs();
+        if (dspec == null) {
+            dspec = definition.getDomainSpec();
+        }
         if (estimation == null) {
-            SaSpecification dspec = definition.getDomainSpec();
             SaDefinition ndef = SaDefinition.builder()
                     .ts(nts)
                     .domainSpec(dspec)
@@ -278,7 +288,6 @@ public final class SaItem {
                     .build();
             return new SaItem(name, ndef, meta, priority, null, false);
         } else {
-            SaSpecification dspec = definition.getDomainSpec();
             SaSpecification pspec = estimation.getPointSpec();
             SaProcessingFactory fac = SaManager.factoryFor(dspec);
             SaSpecification espec = definition.activeSpecification();
@@ -287,7 +296,8 @@ public final class SaItem {
                     TsDomain frozenSpan = policy.getFrozenSpan();
                     if (frozenSpan == null) {
                         switch (policy.getPolicy()) {
-                            case LastOutliers -> frozenSpan = oldData.getDomain().select(TimeSelector.excluding(0, oldData.getAnnualFrequency()));
+                            case LastOutliers ->
+                                frozenSpan = oldData.getDomain().select(TimeSelector.excluding(0, oldData.getAnnualFrequency()));
                             case Current -> {
                                 TsPeriod end = oldData.getEnd();
                                 TsPeriod nend = nts.getData().getEnd();

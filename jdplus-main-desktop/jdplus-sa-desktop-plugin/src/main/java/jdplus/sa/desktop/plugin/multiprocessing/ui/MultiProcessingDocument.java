@@ -171,7 +171,7 @@ public class MultiProcessingDocument implements Documented {
                         }
                         domain = domain.drop(0, nback);
                     }
-                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), TsInformationType.Data));
+                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), cur.domainSpec(), TsInformationType.Data));
                     current.set(i, n);
                 }
             }
