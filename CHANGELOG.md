@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
-- ![UI] Fix missing handling of workspace events (save/saveas)
+- ![UI] Fix missing handling of workspace events (save/saveas) [#602](https://github.com/jdemetra/jdplus-main/issues/602)
 - ![UI] Fix flaky clipboard on Windows [#632](https://github.com/jdemetra/jdplus-main/issues/632)
 - ![UI] Fix removal of single dates from calendars [#624](https://github.com/jdemetra/jdplus-main/issues/624)
 - ![UI] Fix handling of SA specifications [#639](https://github.com/jdemetra/jdplus-main/issues/639)
@@ -21,8 +21,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- ![OTHER] Migrate OSSRH to Central Portal
-- ![OTHER] Migrate protobuf-maven-plugin from org.xolstice.maven.plugins to io.github.ascopes
+- ![OTHER] Migrate OSSRH to Central Portal [#641](https://github.com/jdemetra/jdplus-main/issues/641)
+- ![OTHER] Migrate protobuf-maven-plugin from org.xolstice.maven.plugins to io.github.ascopes [#658](https://github.com/jdemetra/jdplus-main/issues/658)
 
 ## [3.5.0] - 2025-04-09
 
