@@ -85,7 +85,11 @@ public class SummaryView extends AbstractSaProcessingTopComponent implements Mul
         }
     }
 
-    // MultiViewElement >
+//    @Override
+//    protected void onSaProcessingSaved(){
+//        setData(Collections.emptyMap());
+//    }
+//    
     @Override
     public JComponent getVisualRepresentation() {
         return visualRepresentation;

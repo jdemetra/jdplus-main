@@ -128,7 +128,8 @@ public class X13Extractor extends InformationMapping<X13Results> {
                 -> source.getPreadjustment() == null ? null : source.getPreadjustment().getA9u());
         set(preadjustItem(X13Dictionaries.A9SER), TsData.class, source
                 -> source.getPreadjustment() == null ? null : source.getPreadjustment().getA9ser());
-
+        set(preadjustItem(X13Dictionaries.A9CAL), TsData.class, source
+                -> source.getPreadjustment() == null ? null : source.getPreadjustment().getA9cal());
         set(SaDictionaries.S, TsData.class, source
                 -> source.getFinals() == null ? null : source.getFinals().getD16());
         set(SaDictionaries.S + SeriesInfo.F_SUFFIX, TsData.class, source

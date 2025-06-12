@@ -5,8 +5,10 @@
  */
 package jdplus.sa.base.core.extractors;
 
+import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 import jdplus.toolkit.base.api.information.InformationMapping;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
 import nbbrd.service.ServiceProvider;
 
@@ -17,21 +19,18 @@ import nbbrd.service.ServiceProvider;
 @ServiceProvider(InformationExtractor.class)
 public class OneStepAheadForecastingTestExtractor extends InformationMapping<OneStepAheadForecastingTest> {
 
-    public static final String FCAST_INSAMPLE_MEAN = "fcast-insample-mean",
-            FCAST_OUTSAMPLE_MEAN = "fcast-outsample-mean",
-            FCAST_OUTSAMPLE_VARIANCE = "fcast-outsample-variance";
 
     public OneStepAheadForecastingTestExtractor() {
-        set(FCAST_INSAMPLE_MEAN, Double.class, source -> {
-            return source.inSampleMeanTest().getPvalue();
+        set(RegArimaDictionaries.FCAST_INSAMPLE_MEAN, StatisticalTest.class, source -> {
+            return source.inSampleMeanTest();
         });
 
-        set(FCAST_OUTSAMPLE_MEAN, Double.class, source -> {
-            return source.outOfSampleMeanTest().getPvalue();
+        set(RegArimaDictionaries.FCAST_OUTSAMPLE_MEAN, StatisticalTest.class, source -> {
+            return source.outOfSampleMeanTest();
         });
 
-        set(FCAST_OUTSAMPLE_VARIANCE, Double.class, source -> {
-            return source.sameVarianceTest().getPvalue();
+        set(RegArimaDictionaries.FCAST_OUTSAMPLE_VARIANCE, StatisticalTest.class, source -> {
+            return source.sameVarianceTest();
         });
     }
 

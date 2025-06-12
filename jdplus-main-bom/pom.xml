@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
     </parent>
 
     <artifactId>jdplus-main-bom</artifactId>
@@ -18,7 +18,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java.bundled.version>jdk-21.0.6+7</java.bundled.version>
+        <java.bundled.version>jdk-21.0.7+6</java.bundled.version>
         <linux.java.bundled.version>${java.bundled.version}</linux.java.bundled.version>
         <windows.java.bundled.version>${java.bundled.version}</windows.java.bundled.version>
         <osx.java.bundled.version>${java.bundled.version}</osx.java.bundled.version>
@@ -89,6 +89,7 @@
                                 </goals>
                                 <configuration>
                                     <inputFile>${project.parent.basedir}/CHANGELOG.md</inputFile>
+                                    <outputFile>${project.build.directory}/CHANGELOG.md</outputFile>
                                 </configuration>
                             </execution>
                         </executions>
@@ -395,6 +396,40 @@
                                             </jdemetra>
                                         </distributions>
                                     </jreleaser>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>check-compatibility</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                        <artifactId>compatibility-maven-plugin</artifactId>
+                        <version>1.0.3</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check-downstream</goal>
+                                </goals>
+                                <configuration>
+                                    <source>${project.baseUri}/../</source>
+                                    <sourceBinding>eu.europa.ec.joinup.sat:jdplus*</sourceBinding>
+                                    <targets>
+                                        <target>https://github.com/jdemetra/jdplus-benchmarking</target>
+                                        <target>https://github.com/jdemetra/jdplus-incubator</target>
+                                        <target>https://github.com/jdemetra/jdplus-experimental</target>
+                                        <target>https://github.com/jdemetra/jdplus-revisions</target>
+                                        <target>https://github.com/jdemetra/jdplus-nowcasting</target>
+                                        <target>https://github.com/nbbrd/jdplus-sdmx</target>
+                                    </targets>
+                                    <targetLimits>1,1,1,1,1,1</targetLimits>
                                 </configuration>
                             </execution>
                         </executions>

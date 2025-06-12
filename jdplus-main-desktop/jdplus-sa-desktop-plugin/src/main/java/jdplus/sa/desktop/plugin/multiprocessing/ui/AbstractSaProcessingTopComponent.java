@@ -16,25 +16,32 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
+import java.util.Collection;
 import jdplus.toolkit.desktop.plugin.ui.ActiveView;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewManager;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.sa.base.api.SaItem;
 import jdplus.sa.base.api.SaItems;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 
 /**
  *
  * @author Jean Palate
  */
-public abstract class AbstractSaProcessingTopComponent extends TopComponent implements  ActiveView, MultiViewElement, MultiViewDescription  {
+public abstract class AbstractSaProcessingTopComponent extends TopComponent implements ActiveView, MultiViewElement, MultiViewDescription, LookupListener {
 
     protected MultiProcessingController controller;
+    private final Lookup.Result<WorkspaceFactory.Event> wsevent;
 
     public AbstractSaProcessingTopComponent() {
         this(new MultiProcessingController(null));
@@ -50,6 +57,7 @@ public abstract class AbstractSaProcessingTopComponent extends TopComponent impl
             firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
             onSaProcessingStateChange();
         });
+        this.wsevent = WorkspaceFactory.getInstance().getLookup().lookupResult(WorkspaceFactory.Event.class);
     }
 
     public MultiProcessingController getController() {
@@ -65,7 +73,7 @@ public abstract class AbstractSaProcessingTopComponent extends TopComponent impl
     }
 
     public MultiProcessingController.SaProcessingState getState() {
-        return controller != null ? controller.getSaProcessingState(): MultiProcessingController.SaProcessingState.DONE;
+        return controller != null ? controller.getSaProcessingState() : MultiProcessingController.SaProcessingState.DONE;
     }
 
     protected void onSaProcessingStateChange() {
@@ -73,18 +81,21 @@ public abstract class AbstractSaProcessingTopComponent extends TopComponent impl
         this.getVisualRepresentation().updateUI();
     }
 
+    protected void onSaProcessingSaved() {
+    }
+
     //<editor-fold defaultstate="collapsed" desc="MultiViewElement">
     @Override
     public void componentOpened() {
         super.componentOpened();
-        // TODO add custom code on component opening
+        wsevent.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
         super.componentClosed();
+        wsevent.removeLookupListener(this);
         controller = null;
-        // TODO add custom code on component closing
     }
 
     @Override
@@ -122,7 +133,19 @@ public abstract class AbstractSaProcessingTopComponent extends TopComponent impl
     public void componentShowing() {
         super.componentShowing();
     }
+
     //</editor-fold>
+    @Override
+    public void resultChanged(LookupEvent le) {
+        Collection<? extends WorkspaceFactory.Event> all = wsevent.allInstances();
+        for (WorkspaceFactory.Event ev : all) {
+            switch (ev.info) {
+                case WorkspaceFactory.Event.SAVE, WorkspaceFactory.Event.SAVEAS -> //if (ev.source != this) {
+                    SwingUtilities.invokeLater(this::onSaProcessingSaved);
+                //}
+                }
+        }
+    }
 
     //<editor-fold defaultstate="collapsed" desc="MultiViewDescription">
     @Override

@@ -159,18 +159,7 @@ public class SaNode {
                 SaNode node = new SaNode(id, moniker, nspec);
                 return node;
             } else {
-                SaDefinition definition = item.getDefinition();
-                SaDefinition ndefinition = definition.toBuilder()
-                        .domainSpec(nspec)
-                        .estimationSpec(null)
-                        .policy(EstimationPolicyType.Complete)
-                        .build();
-                SaItem nitem = SaItem.builder()
-                        .definition(ndefinition)
-                        .name(item.getName())
-                        .meta(item.getMeta())
-                        .priority(item.getPriority())
-                        .build();
+                SaItem nitem=item.withDomainSpecification(nspec);
                 return SaNode.of(id, nitem);
             }
         }
@@ -183,18 +172,7 @@ public class SaNode {
                 SaNode node = new SaNode(id, moniker, nspec);
                 return node;
             } else {
-                SaDefinition definition = item.getDefinition();
-                SaDefinition ndefinition = definition.toBuilder()
-                        .domainSpec(definition.getDomainSpec())
-                        .estimationSpec(nspec)
-                        .policy(EstimationPolicyType.Interactive)
-                        .build();
-                SaItem nitem = SaItem.builder()
-                        .definition(ndefinition)
-                        .name(item.getName())
-                        .meta(item.getMeta())
-                        .priority(item.getPriority())
-                        .build();
+                SaItem nitem=item.withSpecification(nspec);
                 return SaNode.of(id, nitem);
             }
         }

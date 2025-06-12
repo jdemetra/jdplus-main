@@ -37,7 +37,7 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(category = "SaProcessing", id = CommentSaItem.ID)
 @ActionRegistration(displayName = "#CTL_CommentSaItem", lazy = false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1600)
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1800, separatorBefore = 1799)
 })
 @Messages("CTL_CommentSaItem=Comments...")
 public final class CommentSaItem extends ActiveViewAction<SaBatchUI> {

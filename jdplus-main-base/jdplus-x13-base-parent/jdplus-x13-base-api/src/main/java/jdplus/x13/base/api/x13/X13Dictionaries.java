@@ -45,9 +45,9 @@ public class X13Dictionaries {
     
     public final String A1="a1", A1A="a1a", A1B="a1b", A6="a6", 
             A7="a7", A8="a8", A8T="a8t", A8S="a8s", A8I="a8i",
-            A9="a9", A9U="a9u", A9SA="a9sa", A9SER="a9ser";
+            A9="a9", A9CAL="a9cal", A9U="a9u", A9SA="a9sa", A9SER="a9ser";
     public final String[] A_TABLE = new String[]{A1, A1A, A1B, 
-        A6, A7, A8, A8T, A8S, A8I, A9, A9U, A9SA, A9SER};
+        A6, A7, A8, A8T, A8S, A8I, A9, A9CAL, A9U, A9SA, A9SER};
 
     public final Dictionary ATABLES = AtomicDictionary.builder()
             .name(A_TABLES)
@@ -62,6 +62,7 @@ public class X13Dictionaries {
             .item(Item.builder().name(A8S).description("outliers associated to the seasonal").outputClass(TsData.class).build())
             .item(Item.builder().name(A9).description("other regression effects").outputClass(TsData.class).build())
             .item(Item.builder().name(A9).description("other regression effects").outputClass(TsData.class).build())
+            .item(Item.builder().name(A9CAL).description("other regression effects, associated to the calendar component").outputClass(TsData.class).build())
             .item(Item.builder().name(A9U).description("other regression effects, split in the different components").outputClass(TsData.class).build())
             .item(Item.builder().name(A9SA).description("other regression effects, associated to the SA series").outputClass(TsData.class).build())
             .item(Item.builder().name(A9SER).description("other regression effects, removed of the series and not integrated in the components").outputClass(TsData.class).build())
@@ -142,6 +143,7 @@ public class X13Dictionaries {
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.COMBINEDSEASONALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICSEASONALITY))
             .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, SaDictionaries.GENERICTRADINGDAYS))
+            .dictionary(new PrefixedDictionary(SaDictionaries.DIAGNOSTICS, RegArimaDictionaries.REGSARIMA_DIAGNOSTICS))
             .dictionary(new PrefixedDictionary(MSTATISTICS, MSTATS))
             .dictionary(new PrefixedDictionary(SaDictionaries.VARIANCE, SaDictionaries.VAR_DECOMPOSITION))
             .dictionary(new PrefixedDictionary(SaDictionaries.QUALITY, SaDictionaries.SA_QUALITY))

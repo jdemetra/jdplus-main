@@ -7,6 +7,25 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.5.1] - 2025-06-12
+
+### Fixed
+
+- ![UI] Fix missing handling of workspace events (save/saveas) [#602](https://github.com/jdemetra/jdplus-main/issues/602)
+- ![UI] Fix flaky clipboard on Windows [#632](https://github.com/jdemetra/jdplus-main/issues/632)
+- ![UI] Fix removal of single dates from calendars [#624](https://github.com/jdemetra/jdplus-main/issues/624)
+- ![UI] Fix handling of SA specifications [#639](https://github.com/jdemetra/jdplus-main/issues/639)
+
+### Added
+
+- ![IO] Add missing items in the dictionaries (partim) [#570](https://github.com/jdemetra/jdplus-main/issues/570)
+- ![UI] Add handling of priorities in multi-processing [#611](https://github.com/jdemetra/jdplus-main/issues/611)
+
+### Changed
+
+- ![OTHER] Migrate OSSRH to Central Portal [#641](https://github.com/jdemetra/jdplus-main/issues/641)
+- ![OTHER] Migrate protobuf-maven-plugin from org.xolstice.maven.plugins to io.github.ascopes [#658](https://github.com/jdemetra/jdplus-main/issues/658)
+
 ## [3.5.0] - 2025-04-09
 
 ### Fixed
@@ -237,7 +256,8 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...HEAD
+[3.5.1]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/jdemetra/jd3-main/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/jdemetra/jd3-main/compare/v3.2.4...v3.3.0
