@@ -531,14 +531,6 @@
                     </plugin>
                 </plugins>
             </build>
-            <distributionManagement>
-                <repository>
-                    <id>central</id>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </distributionManagement>
         </profile>
 
         <!-- Deploy RELEASES to Central Portal -->
