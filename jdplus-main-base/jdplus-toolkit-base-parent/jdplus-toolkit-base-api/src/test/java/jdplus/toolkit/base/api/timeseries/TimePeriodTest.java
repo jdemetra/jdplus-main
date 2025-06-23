@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
-import jdplus.toolkit.base.api.timeseries.TimePeriod;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

@@ -28,6 +28,8 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 
+import static jdplus.toolkit.base.api.time.IsoDateTimeFormatter.EXTENDED_CALENDAR;
+
 /**
  * @author Jean Palate
  */
@@ -61,13 +63,13 @@ public class Day implements TimeSeriesInterval<Period> {
 
     @Override
     public String toString() {
-        return TimeIntervalFormatter.StartDuration.ISO_LOCAL_DATE.format(this);
+        return ISO_8601.format(this);
     }
 
     @StaticFactoryMethod
     @NonNull
     public static Day parse(@NonNull CharSequence text) throws DateTimeParseException {
-        return TimeIntervalFormatter.StartDuration.ISO_LOCAL_DATE.parse(text, Day::from);
+        return ISO_8601.parse(text, Day::from);
     }
 
     @StaticFactoryMethod
@@ -75,4 +77,6 @@ public class Day implements TimeSeriesInterval<Period> {
     public static Day from(@NonNull TimeIntervalAccessor timeInterval) {
         return of(LocalDate.from(timeInterval.start()));
     }
+
+    private static final TimeIntervalFormatter.StartDuration ISO_8601 = TimeIntervalFormatter.StartDuration.of(EXTENDED_CALENDAR, LocalDate::from, Period::parse);
 }

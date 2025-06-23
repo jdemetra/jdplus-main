@@ -28,6 +28,8 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 
+import static jdplus.toolkit.base.api.time.IsoDateTimeFormatter.EXTENDED_CALENDAR_TIME;
+
 /**
  * Period defined by a starting date (included) and an ending date (excluded)
  *
@@ -77,13 +79,13 @@ public class CalendarPeriod implements TimeSeriesInterval<Period>, Comparable<Ca
 
     @Override
     public String toString() {
-        return TimeIntervalFormatter.StartEnd.ISO_LOCAL_DATE_TIME.format(this);
+        return ISO_8601.format(this);
     }
 
     @StaticFactoryMethod
     @NonNull
     public static CalendarPeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
-        return TimeIntervalFormatter.StartEnd.ISO_LOCAL_DATE_TIME.parse(text, CalendarPeriod::from);
+        return ISO_8601.parse(text, CalendarPeriod::from);
     }
 
     @StaticFactoryMethod
@@ -91,4 +93,6 @@ public class CalendarPeriod implements TimeSeriesInterval<Period>, Comparable<Ca
     public static CalendarPeriod from(@NonNull TimeIntervalAccessor timeInterval) {
         return of(LocalDate.from(timeInterval.start()), LocalDate.from(timeInterval.end()));
     }
+
+    private static final TimeIntervalFormatter.StartEnd ISO_8601 = TimeIntervalFormatter.StartEnd.of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, false);
 }

@@ -19,15 +19,16 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+
+import static jdplus.toolkit.base.api.time.IsoDateTimeFormatter.EXTENDED_CALENDAR_TIME;
 
 /**
  * @author Philippe Charles
@@ -220,7 +221,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a quarterly period
      *
-     * @param year Year of the period
+     * @param year    Year of the period
      * @param quarter Quarter of the period (in 1-4)
      * @return
      */
@@ -231,7 +232,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a monthly period
      *
-     * @param year Year of the period
+     * @param year  Year of the period
      * @param month Month of the period (in 1-12)
      * @return
      */
@@ -242,8 +243,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a period of one day
      *
-     * @param year Year of the day
-     * @param month Month of the day (in 1-12)
+     * @param year       Year of the day
+     * @param month      Month of the day (in 1-12)
      * @param dayOfMonth Day of month of the day (1-31)
      * @return
      */
@@ -254,8 +255,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Creates a period of seven days
      *
-     * @param year Year of the first day
-     * @param month Month of the first day (in 1-12)
+     * @param year       Year of the first day
+     * @param month      Month of the first day (in 1-12)
      * @param dayOfMonth Day of month of the first day (1-31)
      * @return
      */
@@ -287,7 +288,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     }
 
     static final TimeIntervalFormatter ISO_8601
-            = TimeIntervalFormatter.StartDuration.of(DateTimeFormatter.ISO_LOCAL_DATE_TIME, LocalDateTime::from, TsUnit::parse);
+            = TimeIntervalFormatter.StartDuration.of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, TsUnit::parse);
 
     private static TsPeriod make(LocalDateTime epoch, TsUnit unit, LocalDate date) {
         return new TsPeriod(epoch, unit, idAt(epoch, unit, date.atStartOfDay()));
