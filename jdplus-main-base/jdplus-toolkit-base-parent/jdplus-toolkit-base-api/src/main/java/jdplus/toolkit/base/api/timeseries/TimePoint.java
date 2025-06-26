@@ -27,7 +27,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
-import static jdplus.toolkit.base.api.time.IsoDateTimeFormatter.EXTENDED_CALENDAR_TIME;
+import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR_TIME;
 
 /**
  * @author Jean Palate

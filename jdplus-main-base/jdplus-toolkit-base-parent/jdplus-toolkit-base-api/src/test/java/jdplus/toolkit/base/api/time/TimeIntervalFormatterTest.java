@@ -16,17 +16,22 @@
  */
 package jdplus.toolkit.base.api.time;
 
+import jdplus.toolkit.base.api.timeseries.TsUnit;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableTypeAssert;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 
-import static jdplus.toolkit.base.api.time.IsoDateTimeFormatter.*;
+import static jdplus.toolkit.base.api.time.TemporalFormatter.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author Philippe Charles
@@ -229,6 +234,20 @@ public class TimeIntervalFormatterTest {
             assertThat(b.parse("20100215/P2M", query)).isEqualTo(months);
             assertThat(o.parse("2010-046/P2M", query)).isEqualTo(months);
             assertThat(w.parse("2010-W07-1/P2M", query)).isEqualTo(months);
+        }
+
+        @ParameterizedTest
+        @CsvFileSource(resources = "StartDurationExamples.csv", useHeadersInDisplayName = true)
+        public void testRepresentableAsString(String input, String output, String reduced) {
+            var formatter = TimeIntervalFormatter.StartDuration.of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, TsUnit::parse);
+            if (output.equals("!")) {
+                assertThatExceptionOfType(DateTimeParseException.class)
+                        .isThrownBy(() -> formatter.parse(input, LocalDateTimeInterval::from));
+            } else {
+                assertThat(formatter.parse(input, LocalDateTimeInterval::from))
+                        .returns(output, formatter::format)
+                        .returns(reduced, timeInterval -> formatter.format(timeInterval, timeInterval.getDuration().getChronoUnit()));
+            }
         }
     }
 

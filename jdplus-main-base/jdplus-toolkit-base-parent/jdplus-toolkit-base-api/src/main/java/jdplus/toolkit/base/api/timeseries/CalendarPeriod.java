@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 
-import static jdplus.toolkit.base.api.time.IsoDateTimeFormatter.EXTENDED_CALENDAR_TIME;
+import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR_TIME;
 
 /**
  * Period defined by a starting date (included) and an ending date (excluded)

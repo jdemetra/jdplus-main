@@ -19,16 +19,16 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 
-import static jdplus.toolkit.base.api.time.IsoDateTimeFormatter.EXTENDED_CALENDAR;
+import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR;
 
 /**
  * @author Jean Palate
