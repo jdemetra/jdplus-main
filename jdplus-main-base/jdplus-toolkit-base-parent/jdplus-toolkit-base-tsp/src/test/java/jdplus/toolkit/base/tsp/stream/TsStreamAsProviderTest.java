@@ -71,8 +71,8 @@ public class TsStreamAsProviderTest {
         leaf2 = monikers.toMoniker(DataSet.of(ds, SERIES, "id", "node.leaf2"));
         leaf3 = monikers.toMoniker(DataSet.of(ds, SERIES, "id", "leaf3"));
         s1 = Ts.builder().moniker(leaf1).type(All).name("node.leaf1").data(TsData.empty("No data available")).build();
-        s2 = Ts.builder().moniker(leaf2).type(All).name("node.leaf2").data(TsData.random(TsUnit.MONTH, 2)).build();
-        s3 = Ts.builder().moniker(leaf3).type(All).name("leaf3").data(TsData.random(TsUnit.MONTH, 3)).meta(customMeta).build();
+        s2 = Ts.builder().moniker(leaf2).type(All).name("node.leaf2").data(TsData.random(TsUnit.P1M, 2)).build();
+        s3 = Ts.builder().moniker(leaf3).type(All).name("leaf3").data(TsData.random(TsUnit.P1M, 3)).meta(customMeta).build();
         goodCursor = new HasTsStream() {
             @Override
             public @NonNull Stream<DataSetTs> getData(@NonNull DataSource dataSource, @NonNull TsInformationType type) throws IllegalArgumentException, IOException {

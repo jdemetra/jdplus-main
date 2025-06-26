@@ -583,7 +583,7 @@ public class HasTsCollectionSupport {
         }
 
         private static TsDomain yearsOf(TsDomain domain) {
-            return domain.aggregate(TsUnit.YEAR, false);
+            return domain.aggregate(TsUnit.P1Y, false);
         }
 
         private static Ts dataOf(Range<LocalDateTime> year, TsData data) {

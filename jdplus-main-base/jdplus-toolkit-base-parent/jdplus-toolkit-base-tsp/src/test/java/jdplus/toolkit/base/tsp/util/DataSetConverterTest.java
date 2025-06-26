@@ -77,7 +77,7 @@ public class DataSetConverterTest {
     @SuppressWarnings("null")
     public void testOnObsGathering() {
         ObsGathering defaultValue = ObsGathering.DEFAULT;
-        ObsGathering newValue = ObsGathering.builder().unit(TsUnit.YEAR).aggregationType(AggregationType.Average).includeMissingValues(true).build();
+        ObsGathering newValue = ObsGathering.builder().unit(TsUnit.P1Y).aggregationType(AggregationType.Average).includeMissingValues(true).build();
         assertBehavior(LegacyHandler.onObsGathering("f", "a", "s", defaultValue).asDataSourceConverter(), defaultValue, newValue, Map.of("f", "Yearly", "a", "Average", "s", "false"));
         assertThatThrownBy(() -> LegacyHandler.onObsGathering("f", "a", "s", null).asDataSourceConverter()).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> LegacyHandler.onObsGathering(null, "a", "s", defaultValue).asDataSourceConverter()).isInstanceOf(NullPointerException.class);

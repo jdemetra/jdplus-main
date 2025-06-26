@@ -35,7 +35,7 @@ public enum DataCleaning {
 
     public static DataCleaning of(TsData data) {
         TsPeriod start = data.getStart();
-        if (!start.getUnit().equals(TsUnit.DAY)) {
+        if (!start.getUnit().equals(TsUnit.P1D)) {
             return DataCleaning.NONE;
 //            throw new java.lang.UnsupportedOperationException();
         }
@@ -92,7 +92,7 @@ public enum DataCleaning {
     public static TsData withMissingSundays(TsDomain domain, DoubleSeq data) {
         double[] tmp = new double[domain.length()];
         TsPeriod start = domain.getStartPeriod();
-        if (!start.getUnit().equals(TsUnit.DAY)) {
+        if (!start.getUnit().equals(TsUnit.P1D)) {
             throw new java.lang.UnsupportedOperationException();
         }
         int pos = start.start().getDayOfWeek().getValue();
@@ -119,7 +119,7 @@ public enum DataCleaning {
     public static TsData withMissingWeekEnds(TsDomain domain, DoubleSeq data) {
         double[] tmp = new double[domain.length()];
         TsPeriod start = domain.getStartPeriod();
-        if (!start.getUnit().equals(TsUnit.DAY)) {
+        if (!start.getUnit().equals(TsUnit.P1D)) {
             throw new java.lang.UnsupportedOperationException();
         }
         int pos = start.start().getDayOfWeek().getValue();
@@ -162,7 +162,7 @@ public enum DataCleaning {
 
     public static int cleanSundays(TsData data, DoubleSeq.Mutable out) {
         TsPeriod start = data.getStart();
-        if (!start.getUnit().equals(TsUnit.DAY)) {
+        if (!start.getUnit().equals(TsUnit.P1D)) {
             throw new java.lang.UnsupportedOperationException();
         }
         int pos = start.start().getDayOfWeek().getValue();
@@ -195,7 +195,7 @@ public enum DataCleaning {
 
     public static int cleanWeekEnds(TsData data, DoubleSeq.Mutable out) {
         TsPeriod start = data.getStart();
-        if (!start.getUnit().equals(TsUnit.DAY)) {
+        if (!start.getUnit().equals(TsUnit.P1D)) {
             throw new java.lang.UnsupportedOperationException();
         }
         int pos = start.start().getDayOfWeek().getValue(), i = 0;

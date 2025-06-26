@@ -59,7 +59,7 @@ public class TsTest {
 
     private final Ts empty = Ts.builder().build();
     private final Ts sample = Ts.builder()
-            .data(TsData.random(TsUnit.WEEK, 0))
+            .data(TsData.random(TsUnit.P7D, 0))
             .meta("hello", "world")
             .moniker(TsMoniker.of("provider", "id"))
             .name("abc")

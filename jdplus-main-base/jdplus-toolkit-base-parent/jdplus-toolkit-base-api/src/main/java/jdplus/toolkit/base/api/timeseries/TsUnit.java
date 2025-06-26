@@ -104,6 +104,7 @@ public class TsUnit implements TemporalAmount {
         return switch (chronoUnit) {
             case FOREVER -> "";
             case HOURS, MINUTES, SECONDS -> Duration.of(amount, chronoUnit).toString();
+            case WEEKS -> "P" + amount + "W";
             default -> Period.from(this).toString();
         };
     }
@@ -134,33 +135,45 @@ public class TsUnit implements TemporalAmount {
     public static final int NO_RATIO = -1;
     public static final int NO_STRICT_RATIO = 0;
 
-    private static final TsUnit P100Y = new TsUnit(100, YEARS);
-    private static final TsUnit P10Y = new TsUnit(10, YEARS);
-    private static final TsUnit P1Y = new TsUnit(1, YEARS);
-    private static final TsUnit P6M = new TsUnit(6, MONTHS);
-    private static final TsUnit P4M = new TsUnit(4, MONTHS);
-    private static final TsUnit P3M = new TsUnit(3, MONTHS);
-    private static final TsUnit P2M = new TsUnit(2, MONTHS);
-    private static final TsUnit P1M = new TsUnit(1, MONTHS);
-    private static final TsUnit P1W = new TsUnit(1, WEEKS);
-    private static final TsUnit P7D = new TsUnit(7, DAYS);
-    private static final TsUnit P1D = new TsUnit(1, DAYS);
-    private static final TsUnit PT1H = new TsUnit(1, HOURS);
-    private static final TsUnit PT1M = new TsUnit(1, MINUTES);
-    private static final TsUnit PT1S = new TsUnit(1, SECONDS);
-
     public static final TsUnit UNDEFINED = new TsUnit(1, FOREVER);
 
+    public static final TsUnit P1Y = new TsUnit(1, YEARS);
+    public static final TsUnit P6M = new TsUnit(6, MONTHS);
+    public static final TsUnit P4M = new TsUnit(4, MONTHS);
+    public static final TsUnit P3M = new TsUnit(3, MONTHS);
+    public static final TsUnit P2M = new TsUnit(2, MONTHS);
+    public static final TsUnit P1M = new TsUnit(1, MONTHS);
+    public static final TsUnit P1W = new TsUnit(1, WEEKS);
+    public static final TsUnit P7D = new TsUnit(7, DAYS);
+    public static final TsUnit P1D = new TsUnit(1, DAYS);
+    public static final TsUnit PT1H = new TsUnit(1, HOURS);
+    public static final TsUnit PT1M = new TsUnit(1, MINUTES);
+    public static final TsUnit PT1S = new TsUnit(1, SECONDS);
+
+    private static final TsUnit P100Y = new TsUnit(100, YEARS);
+    private static final TsUnit P10Y = new TsUnit(10, YEARS);
+
+    @Deprecated
     public static final TsUnit CENTURY = P100Y;
+    @Deprecated
     public static final TsUnit DECADE = P10Y;
+    @Deprecated
     public static final TsUnit YEAR = P1Y;
+    @Deprecated
     public static final TsUnit HALF_YEAR = P6M;
+    @Deprecated
     public static final TsUnit QUARTER = P3M;
+    @Deprecated
     public static final TsUnit MONTH = P1M;
-    public static final TsUnit WEEK = P7D; // FIXME: P7D or P1W?
+    @Deprecated
+    public static final TsUnit WEEK = P7D;
+    @Deprecated
     public static final TsUnit DAY = P1D;
+    @Deprecated
     public static final TsUnit HOUR = PT1H;
+    @Deprecated
     public static final TsUnit MINUTE = PT1M;
+    @Deprecated
     public static final TsUnit SECOND = PT1S;
 
     @SuppressWarnings({"ConstantValue", "DuplicateBranchesInSwitch"})
@@ -182,8 +195,8 @@ public class TsUnit implements TemporalAmount {
             case MONTHS ->
                     amount == 1 ? P1M : amount == 2 ? P2M : amount == 3 ? P3M : amount == 4 ? P4M : amount == 6 ? P6M
                             : new TsUnit(amount, MONTHS);
-            case WEEKS -> amount == 1 ? WEEK
-                    : new TsUnit(7 * amount, DAYS);
+            case WEEKS -> amount == 1 ? P1W
+                    : new TsUnit(amount, WEEKS);
             case DAYS -> amount == 1 ? P1D : amount == 7 ? P7D
                     : new TsUnit(amount, DAYS);
             case HALF_DAYS -> new TsUnit(amount, ChronoUnit.HALF_DAYS);

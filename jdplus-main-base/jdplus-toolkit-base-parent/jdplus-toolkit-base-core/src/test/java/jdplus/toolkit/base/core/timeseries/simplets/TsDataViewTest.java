@@ -40,7 +40,7 @@ public class TsDataViewTest {
 
     @Test
     public void testFullYears() {
-        TsPeriod p = TsPeriod.of(TsUnit.MONTH, LocalDate.now(Clock.systemDefaultZone()));
+        TsPeriod p = TsPeriod.of(TsUnit.P1M, LocalDate.now(Clock.systemDefaultZone()));
         for (int i = 0; i < 12; ++i) {
             for (int j = 0; j < 12; ++j) {
                 DataBlock d = DataBlock.make(i + j + 36);

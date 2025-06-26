@@ -26,8 +26,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import jdplus.toolkit.base.api.timeseries.TsException;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -39,52 +37,52 @@ public class TsPeriodTest {
     @Test
     public void testFactories() {
         assertThatThrownBy(() -> of(null, d2011_02_01_0000)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> of(MONTH, (LocalDate) null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> of(P1M, (LocalDate) null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> of(null, d2011_02_01)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> of(MONTH, (LocalDateTime) null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> of(P1M, (LocalDateTime) null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> of(null, 0)).isInstanceOf(NullPointerException.class);
 
         assertThat(monthly(2011, 2))
                 .extracting("epoch", "unit", "id")
-                .containsExactly(DEFAULT_EPOCH, MONTH, 493L);
+                .containsExactly(DEFAULT_EPOCH, P1M, 493L);
 
         assertThat(quarterly(2011, 2))
                 .extracting("epoch", "unit", "id")
-                .containsExactly(DEFAULT_EPOCH, QUARTER, 165L);
+                .containsExactly(DEFAULT_EPOCH, P3M, 165L);
     }
 
     @Test
     public void testBuilder() {
         assertThat(builder().build()).isNotNull();
 
-        assertThat(builder().unit(MONTH).build())
-                .isEqualTo(new TsPeriod(DEFAULT_EPOCH, MONTH, 0))
+        assertThat(builder().unit(P1M).build())
+                .isEqualTo(new TsPeriod(DEFAULT_EPOCH, P1M, 0))
                 .extracting("epoch", "unit", "id")
-                .containsExactly(DEFAULT_EPOCH, MONTH, 0L);
+                .containsExactly(DEFAULT_EPOCH, P1M, 0L);
 
-        assertThat(builder().unit(MONTH).epoch(someReference).build())
-                .isEqualTo(new TsPeriod(someReference, MONTH, -135L))
+        assertThat(builder().unit(P1M).epoch(someReference).build())
+                .isEqualTo(new TsPeriod(someReference, P1M, -135L))
                 .extracting("epoch", "unit", "id")
-                .containsExactly(someReference, MONTH, -135L);
+                .containsExactly(someReference, P1M, -135L);
         assertThat(builder().unit(of(2, ChronoUnit.DECADES)).epoch(someReference).plus(2).build())
                 .isEqualTo(new TsPeriod(someReference, of(2, ChronoUnit.DECADES), 1))
                 .extracting("epoch", "unit", "id")
                 .containsExactly(someReference, of(2, ChronoUnit.DECADES), 1L);
 
-        assertThat(TsPeriod.builder().unit(DAY).epoch(someReference).id(2).build())
-                .isEqualTo(TsPeriod.monthly(1970, 1).withUnit(DAY).withEpoch(someReference).withId(2))
-                .isNotEqualTo(TsPeriod.builder().unit(DAY).id(2).epoch(someReference).build());
+        assertThat(TsPeriod.builder().unit(P1D).epoch(someReference).id(2).build())
+                .isEqualTo(TsPeriod.monthly(1970, 1).withUnit(P1D).withEpoch(someReference).withId(2))
+                .isNotEqualTo(TsPeriod.builder().unit(P1D).id(2).epoch(someReference).build());
     }
 
     @Test
     public void testEquals() {
-        assertThat(of(YEAR, d2011_02_01))
-                .isEqualTo(of(YEAR, d2011_02_01))
-                .isNotEqualTo(of(YEAR, d2011_02_01).next())
-                .isNotEqualTo(of(YEAR, d2011_02_01).withEpoch(someReference))
-                .isNotEqualTo(of(YEAR, d2011_02_01).withUnit(HOUR))
-                .isNotEqualTo(of(YEAR, d2011_02_01).withDate(d2011_02_01.plusYears(1).atStartOfDay()))
-                .isEqualTo(of(YEAR, d2011_02_01).withDate(d2011_02_01_1337));
+        assertThat(of(P1Y, d2011_02_01))
+                .isEqualTo(of(P1Y, d2011_02_01))
+                .isNotEqualTo(of(P1Y, d2011_02_01).next())
+                .isNotEqualTo(of(P1Y, d2011_02_01).withEpoch(someReference))
+                .isNotEqualTo(of(P1Y, d2011_02_01).withUnit(PT1H))
+                .isNotEqualTo(of(P1Y, d2011_02_01).withDate(d2011_02_01.plusYears(1).atStartOfDay()))
+                .isEqualTo(of(P1Y, d2011_02_01).withDate(d2011_02_01_1337));
     }
 
     @Test
@@ -155,39 +153,39 @@ public class TsPeriodTest {
 
     @Test
     public void testNext() {
-        assertThat(of(YEAR, d2011_02_01).next()).isEqualTo(of(YEAR, d2011_02_01.plusYears(1)));
+        assertThat(of(P1Y, d2011_02_01).next()).isEqualTo(of(P1Y, d2011_02_01.plusYears(1)));
     }
 
     @Test
     public void testPlus() {
-        assertThat(of(YEAR, d2011_02_01).plus(1)).isEqualTo(of(YEAR, d2011_02_01).next());
-        assertThat(of(YEAR, d2011_02_01).plus(2)).isEqualTo(of(YEAR, d2011_02_01.plusYears(2)));
-        assertThat(of(YEAR, d2011_02_01).plus(-1)).isEqualTo(of(YEAR, d2011_02_01.plusYears(-1)));
-        assertThat(of(HOUR, d2011_02_01).plus(11)).isEqualTo(of(HOUR, d2011_02_01_0000.plus(11, ChronoUnit.HOURS)));
+        assertThat(of(P1Y, d2011_02_01).plus(1)).isEqualTo(of(P1Y, d2011_02_01).next());
+        assertThat(of(P1Y, d2011_02_01).plus(2)).isEqualTo(of(P1Y, d2011_02_01.plusYears(2)));
+        assertThat(of(P1Y, d2011_02_01).plus(-1)).isEqualTo(of(P1Y, d2011_02_01.plusYears(-1)));
+        assertThat(of(PT1H, d2011_02_01).plus(11)).isEqualTo(of(PT1H, d2011_02_01_0000.plus(11, ChronoUnit.HOURS)));
     }
 
     @Test
     public void testWithFreq() {
-        assertThatThrownBy(() -> of(YEAR, d2011_02_01).withUnit(null)).isInstanceOf(NullPointerException.class);
-        assertThat(of(YEAR, d2011_02_01).withUnit(MONTH)).isEqualTo(of(MONTH, LocalDate.of(2011, 1, 1)));
-        assertThat(of(MONTH, d2011_02_01).withUnit(YEAR)).isEqualTo(of(YEAR, d2011_02_01));
+        assertThatThrownBy(() -> of(P1Y, d2011_02_01).withUnit(null)).isInstanceOf(NullPointerException.class);
+        assertThat(of(P1Y, d2011_02_01).withUnit(P1M)).isEqualTo(of(P1M, LocalDate.of(2011, 1, 1)));
+        assertThat(of(P1M, d2011_02_01).withUnit(P1Y)).isEqualTo(of(P1Y, d2011_02_01));
     }
 
     @Test
     public void testWithReference() {
-        assertThat(of(DAY, d2011_02_01).withEpoch(someReference)).isEqualTo(new TsPeriod(someReference, DAY, 10898));
-        assertThat(of(DAY, d2011_02_01.plusDays(1)).withEpoch(someReference)).isEqualTo(new TsPeriod(someReference, DAY, 10899));
+        assertThat(of(P1D, d2011_02_01).withEpoch(someReference)).isEqualTo(new TsPeriod(someReference, P1D, 10898));
+        assertThat(of(P1D, d2011_02_01.plusDays(1)).withEpoch(someReference)).isEqualTo(new TsPeriod(someReference, P1D, 10899));
     }
 
     @Test
     public void testWithDate() {
-        assertThatThrownBy(() -> of(YEAR, d2011_02_01).withDate((LocalDateTime) null)).isInstanceOf(NullPointerException.class);
-        assertThat(of(DAY, d2011_02_01).withDate(d2011_02_01.plusDays(3).atStartOfDay())).isEqualTo(of(DAY, d2011_02_01.plusDays(3)));
+        assertThatThrownBy(() -> of(P1Y, d2011_02_01).withDate((LocalDateTime) null)).isInstanceOf(NullPointerException.class);
+        assertThat(of(P1D, d2011_02_01).withDate(d2011_02_01.plusDays(3).atStartOfDay())).isEqualTo(of(P1D, d2011_02_01.plusDays(3)));
     }
 
     @Test
     public void testToBuilder() {
-        assertThat(of(DAY, d2011_02_01).toBuilder().build()).isEqualTo(of(DAY, d2011_02_01));
+        assertThat(of(P1D, d2011_02_01).toBuilder().build()).isEqualTo(of(P1D, d2011_02_01));
     }
 
     @Test
@@ -204,13 +202,13 @@ public class TsPeriodTest {
         assertThat(minutely(2011, 2, 15, 10, 7).toString())
                 .isEqualTo("2011-02-15T10:07:00/PT1M");
 
-        assertThat(of(YEAR, d2011_02_01).toString())
+        assertThat(of(P1Y, d2011_02_01).toString())
                 .isEqualTo("2011-01-01T00:00:00/P1Y");
 
-        assertThat(of(YEAR, d2011_02_01).withEpoch(someReference).next().toString())
+        assertThat(of(P1Y, d2011_02_01).withEpoch(someReference).next().toString())
                 .isEqualTo("2011-04-01T00:00:00/P1Y");
 
-        assertThat(of(DAY, d2011_02_01).toString())
+        assertThat(of(P1D, d2011_02_01).toString())
                 .isEqualTo("2011-02-01T00:00:00/P1D");
     }
 
@@ -272,36 +270,36 @@ public class TsPeriodTest {
 
     @Test
     public void testIdAt() {
-        assertThat(idAt(DEFAULT_EPOCH, MONTH, DEFAULT_EPOCH)).isEqualTo(0);
-        assertThat(idAt(DEFAULT_EPOCH, MONTH, DEFAULT_EPOCH.plusNanos(1))).isEqualTo(0);
-        assertThat(idAt(DEFAULT_EPOCH, MONTH, DEFAULT_EPOCH.plusMonths(1))).isEqualTo(1);
-        assertThat(idAt(DEFAULT_EPOCH, MONTH, DEFAULT_EPOCH.minusNanos(1))).isEqualTo(-1);
-        assertThat(idAt(DEFAULT_EPOCH, MONTH, DEFAULT_EPOCH.minusMonths(1))).isEqualTo(-1);
+        assertThat(idAt(DEFAULT_EPOCH, P1M, DEFAULT_EPOCH)).isEqualTo(0);
+        assertThat(idAt(DEFAULT_EPOCH, P1M, DEFAULT_EPOCH.plusNanos(1))).isEqualTo(0);
+        assertThat(idAt(DEFAULT_EPOCH, P1M, DEFAULT_EPOCH.plusMonths(1))).isEqualTo(1);
+        assertThat(idAt(DEFAULT_EPOCH, P1M, DEFAULT_EPOCH.minusNanos(1))).isEqualTo(-1);
+        assertThat(idAt(DEFAULT_EPOCH, P1M, DEFAULT_EPOCH.minusMonths(1))).isEqualTo(-1);
 
-        assertThat(idAt(DEFAULT_EPOCH, YEAR, DEFAULT_EPOCH)).isEqualTo(0);
-        assertThat(idAt(DEFAULT_EPOCH, YEAR, DEFAULT_EPOCH.plusNanos(1))).isEqualTo(0);
-        assertThat(idAt(DEFAULT_EPOCH, YEAR, DEFAULT_EPOCH.plusYears(1))).isEqualTo(1);
-        assertThat(idAt(DEFAULT_EPOCH, YEAR, DEFAULT_EPOCH.minusNanos(1))).isEqualTo(-1);
-        assertThat(idAt(DEFAULT_EPOCH, YEAR, DEFAULT_EPOCH.minusYears(1))).isEqualTo(-1);
+        assertThat(idAt(DEFAULT_EPOCH, P1Y, DEFAULT_EPOCH)).isEqualTo(0);
+        assertThat(idAt(DEFAULT_EPOCH, P1Y, DEFAULT_EPOCH.plusNanos(1))).isEqualTo(0);
+        assertThat(idAt(DEFAULT_EPOCH, P1Y, DEFAULT_EPOCH.plusYears(1))).isEqualTo(1);
+        assertThat(idAt(DEFAULT_EPOCH, P1Y, DEFAULT_EPOCH.minusNanos(1))).isEqualTo(-1);
+        assertThat(idAt(DEFAULT_EPOCH, P1Y, DEFAULT_EPOCH.minusYears(1))).isEqualTo(-1);
 
-        assertThat(idAt(DEFAULT_EPOCH, DAY, DEFAULT_EPOCH)).isEqualTo(0);
-        assertThat(idAt(DEFAULT_EPOCH.plusDays(4), DAY, DEFAULT_EPOCH.plusDays(4))).isEqualTo(0);
-        assertThat(idAt(DEFAULT_EPOCH.plusDays(4), DAY, DEFAULT_EPOCH.plusDays(5))).isEqualTo(1);
+        assertThat(idAt(DEFAULT_EPOCH, P1D, DEFAULT_EPOCH)).isEqualTo(0);
+        assertThat(idAt(DEFAULT_EPOCH.plusDays(4), P1D, DEFAULT_EPOCH.plusDays(4))).isEqualTo(0);
+        assertThat(idAt(DEFAULT_EPOCH.plusDays(4), P1D, DEFAULT_EPOCH.plusDays(5))).isEqualTo(1);
     }
 
     @Test
     public void testDateAt() {
-        assertThat(dateAt(DEFAULT_EPOCH, MONTH, 0)).isEqualTo(DEFAULT_EPOCH);
-        assertThat(dateAt(DEFAULT_EPOCH, MONTH, 1)).isEqualTo(DEFAULT_EPOCH.plusMonths(1));
-        assertThat(dateAt(DEFAULT_EPOCH, MONTH, -1)).isEqualTo(DEFAULT_EPOCH.minusMonths(1));
+        assertThat(dateAt(DEFAULT_EPOCH, P1M, 0)).isEqualTo(DEFAULT_EPOCH);
+        assertThat(dateAt(DEFAULT_EPOCH, P1M, 1)).isEqualTo(DEFAULT_EPOCH.plusMonths(1));
+        assertThat(dateAt(DEFAULT_EPOCH, P1M, -1)).isEqualTo(DEFAULT_EPOCH.minusMonths(1));
 
-        assertThat(dateAt(DEFAULT_EPOCH, YEAR, 0)).isEqualTo(DEFAULT_EPOCH);
-        assertThat(dateAt(DEFAULT_EPOCH, YEAR, 1)).isEqualTo(DEFAULT_EPOCH.plusYears(1));
-        assertThat(dateAt(DEFAULT_EPOCH, YEAR, -1)).isEqualTo(DEFAULT_EPOCH.minusYears(1));
+        assertThat(dateAt(DEFAULT_EPOCH, P1Y, 0)).isEqualTo(DEFAULT_EPOCH);
+        assertThat(dateAt(DEFAULT_EPOCH, P1Y, 1)).isEqualTo(DEFAULT_EPOCH.plusYears(1));
+        assertThat(dateAt(DEFAULT_EPOCH, P1Y, -1)).isEqualTo(DEFAULT_EPOCH.minusYears(1));
 
-        assertThat(dateAt(DEFAULT_EPOCH, DAY, 0)).isEqualTo(DEFAULT_EPOCH);
-        assertThat(dateAt(DEFAULT_EPOCH.plusDays(4), DAY, 0)).isEqualTo(DEFAULT_EPOCH.plusDays(4));
-        assertThat(dateAt(DEFAULT_EPOCH.plusDays(4), DAY, 1)).isEqualTo(DEFAULT_EPOCH.plusDays(5));
+        assertThat(dateAt(DEFAULT_EPOCH, P1D, 0)).isEqualTo(DEFAULT_EPOCH);
+        assertThat(dateAt(DEFAULT_EPOCH.plusDays(4), P1D, 0)).isEqualTo(DEFAULT_EPOCH.plusDays(4));
+        assertThat(dateAt(DEFAULT_EPOCH.plusDays(4), P1D, 1)).isEqualTo(DEFAULT_EPOCH.plusDays(5));
     }
 
 //    @Test

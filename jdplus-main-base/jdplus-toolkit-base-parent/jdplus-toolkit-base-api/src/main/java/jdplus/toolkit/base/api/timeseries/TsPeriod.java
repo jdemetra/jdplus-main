@@ -88,7 +88,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @return
      */
     public int annualPosition() {
-        TsPeriod p = withUnit(TsUnit.YEAR);
+        TsPeriod p = withUnit(TsUnit.P1Y);
         return TsDomain.splitOf(p, unit, true).indexOf(this);
     }
 
@@ -215,7 +215,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     }
 
     public static TsPeriod yearly(int year) {
-        return make(DEFAULT_EPOCH, TsUnit.YEAR, LocalDate.of(year, 1, 1));
+        return make(DEFAULT_EPOCH, TsUnit.P1Y, LocalDate.of(year, 1, 1));
     }
 
     /**
@@ -226,7 +226,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @return
      */
     public static TsPeriod quarterly(int year, int quarter) {
-        return make(DEFAULT_EPOCH, TsUnit.QUARTER, LocalDate.of(year, ((quarter - 1) * 3) + 1, 1));
+        return make(DEFAULT_EPOCH, TsUnit.P3M, LocalDate.of(year, ((quarter - 1) * 3) + 1, 1));
     }
 
     /**
@@ -237,7 +237,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @return
      */
     public static TsPeriod monthly(int year, int month) {
-        return make(DEFAULT_EPOCH, TsUnit.MONTH, LocalDate.of(year, month, 1));
+        return make(DEFAULT_EPOCH, TsUnit.P1M, LocalDate.of(year, month, 1));
     }
 
     /**
@@ -249,7 +249,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @return
      */
     public static TsPeriod daily(int year, int month, int dayOfMonth) {
-        return make(DEFAULT_EPOCH, TsUnit.DAY, LocalDate.of(year, month, dayOfMonth));
+        return make(DEFAULT_EPOCH, TsUnit.P1D, LocalDate.of(year, month, dayOfMonth));
     }
 
     /**
@@ -264,15 +264,15 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
         LocalDate start = LocalDate.of(year, month, dayOfMonth);
         int dw_start = start.getDayOfWeek().getValue();
         int dw_epoch = DEFAULT_EPOCH.getDayOfWeek().getValue();
-        return make(DEFAULT_EPOCH.plusDays(dw_start - dw_epoch), TsUnit.WEEK, start);
+        return make(DEFAULT_EPOCH.plusDays(dw_start - dw_epoch), TsUnit.P7D, start);
     }
 
     public static TsPeriod hourly(int year, int month, int dayOfMonth, int hour) {
-        return make(DEFAULT_EPOCH, TsUnit.HOUR, LocalDateTime.of(year, month, dayOfMonth, hour, 0));
+        return make(DEFAULT_EPOCH, TsUnit.PT1H, LocalDateTime.of(year, month, dayOfMonth, hour, 0));
     }
 
     public static TsPeriod minutely(int year, int month, int dayOfMonth, int hour, int minute) {
-        return make(DEFAULT_EPOCH, TsUnit.MINUTE, LocalDateTime.of(year, month, dayOfMonth, hour, minute));
+        return make(DEFAULT_EPOCH, TsUnit.PT1M, LocalDateTime.of(year, month, dayOfMonth, hour, minute));
     }
 
     @StaticFactoryMethod
@@ -348,7 +348,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     public static final class Builder implements TimeSeriesInterval<TsUnit> {
 
         private LocalDateTime epoch = DEFAULT_EPOCH;
-        private TsUnit unit = TsUnit.MONTH;
+        private TsUnit unit = TsUnit.P1M;
         private long id;
 
         private void refreshId(LocalDateTime oldref, TsUnit oldUnit, LocalDateTime newref, TsUnit newUnit) {

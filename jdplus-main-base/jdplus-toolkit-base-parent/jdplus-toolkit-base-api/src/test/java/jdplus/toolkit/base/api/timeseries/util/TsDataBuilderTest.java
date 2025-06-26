@@ -16,19 +16,17 @@
  */
 package jdplus.toolkit.base.api.timeseries.util;
 
-import internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil;
+import internal.toolkit.base.api.timeseries.util.GuessingUnit;
 import jdplus.toolkit.base.api.data.AggregationType;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
-import internal.toolkit.base.api.timeseries.util.GuessingUnit;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -37,12 +35,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil.*;
-import static jdplus.toolkit.base.api.data.AggregationType.*;
-import static jdplus.toolkit.base.api.timeseries.TsPeriod.DEFAULT_EPOCH;
-import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
 import static java.lang.Double.NaN;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
+import static jdplus.toolkit.base.api.data.AggregationType.*;
+import static jdplus.toolkit.base.api.timeseries.TsPeriod.DEFAULT_EPOCH;
+import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -129,22 +127,22 @@ public class TsDataBuilderTest {
         Function<Object[], T> dateFunc = o -> (T) o[0];
         Function<Object[], Number> valueFunc = o -> (Number) o[1];
 
-        TsDataBuilder<T> b = x.builder(ObsGathering.DEFAULT.toBuilder().unit(MONTH).includeMissingValues(true).build());
+        TsDataBuilder<T> b = x.builder(ObsGathering.DEFAULT.toBuilder().unit(P1M).includeMissingValues(true).build());
 
         assertThat(b.clear().add(null, null).build()).isEqualTo(NO_DATA);
         assertThat(b.clear().add(null, v1).build()).isEqualTo(NO_DATA);
-        assertThat(b.clear().add((T) example[0][0], null).build()).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, NaN));
-        assertThat(b.clear().add((T) example[0][0], v1).build()).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, v1));
+        assertThat(b.clear().add((T) example[0][0], null).build()).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, NaN));
+        assertThat(b.clear().add((T) example[0][0], v1).build()).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v1));
 
         assertThat(b.clear().add(example[0], o -> null, o -> null).build()).isEqualTo(NO_DATA);
         assertThat(b.clear().add(example[0], o -> null, valueFunc).build()).isEqualTo(NO_DATA);
-        assertThat(b.clear().add(example[0], dateFunc, o -> null).build()).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, NaN));
-        assertThat(b.clear().add(example[0], dateFunc, valueFunc).build()).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, v1));
+        assertThat(b.clear().add(example[0], dateFunc, o -> null).build()).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, NaN));
+        assertThat(b.clear().add(example[0], dateFunc, valueFunc).build()).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v1));
 
         assertThat(b.clear().addAll(Stream.of(example), o -> null, o -> null).build()).isEqualTo(NO_DATA);
         assertThat(b.clear().addAll(Stream.of(example), o -> null, valueFunc).build()).isEqualTo(NO_DATA);
-        assertThat(b.clear().addAll(Stream.of(example), dateFunc, o -> null).build()).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, NaN, NaN));
-        assertThat(b.clear().addAll(Stream.of(example), dateFunc, valueFunc).build()).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, v1, v2));
+        assertThat(b.clear().addAll(Stream.of(example), dateFunc, o -> null).build()).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, NaN, NaN));
+        assertThat(b.clear().addAll(Stream.of(example), dateFunc, valueFunc).build()).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v1, v2));
     }
 
     @SuppressWarnings("null")
@@ -280,7 +278,7 @@ public class TsDataBuilderTest {
         double v5 = 20;
 
         Function<AggregationType, TsData> b7 = a -> {
-            return x.builder(ObsGathering.builder().unit(MONTH).aggregationType(a).build())
+            return x.builder(ObsGathering.builder().unit(P1M).aggregationType(a).build())
                     .add(x.date(LocalDate.of(2010, 2, 1).atStartOfDay()), v5)
                     .add(x.date(LocalDate.of(2010, 1, 3).atStartOfDay()), v3)
                     .add(x.date(LocalDate.of(2010, 1, 4).atStartOfDay()), v4)
@@ -289,12 +287,12 @@ public class TsDataBuilderTest {
                     .build();
         };
 
-        assertThat(b7.apply(First)).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, v1, v5));
-        assertThat(b7.apply(Last)).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, v4, v5));
-        assertThat(b7.apply(Min)).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, v3, v5));
-        assertThat(b7.apply(Max)).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, v2, v5));
-        assertThat(b7.apply(Average)).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, (v1 + v2 + v3 + v4) / 4, v5));
-        assertThat(b7.apply(Sum)).isEqualTo(data(MONTH, DEFAULT_EPOCH, 2010, (v1 + v2 + v3 + v4), v5));
+        assertThat(b7.apply(First)).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v1, v5));
+        assertThat(b7.apply(Last)).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v4, v5));
+        assertThat(b7.apply(Min)).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v3, v5));
+        assertThat(b7.apply(Max)).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v2, v5));
+        assertThat(b7.apply(Average)).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, (v1 + v2 + v3 + v4) / 4, v5));
+        assertThat(b7.apply(Sum)).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, (v1 + v2 + v3 + v4), v5));
     }
 
     private static <T> void testNoData(CustomFactory<T> o) {
@@ -388,6 +386,6 @@ public class TsDataBuilderTest {
     }
 
     private static final LocalDateTime START = LocalDateTime.of(2010, 1, 1, 0, 0);
-    private static final List<TsUnit> DEFINED_UNITS = Arrays.asList(YEAR, HALF_YEAR, TsUnit.of(4, ChronoUnit.MONTHS), QUARTER, TsUnit.of(2, ChronoUnit.MONTHS), MONTH, WEEK, DAY, HOUR, MINUTE);
+    private static final List<TsUnit> DEFINED_UNITS = Arrays.asList(P1Y, P6M, P4M, P3M, P2M, P1M, P7D, P1D, PT1H, PT1M);
     private static final List<TsUnit> ALL_UNITS = Stream.concat(Stream.of(UNDEFINED), DEFINED_UNITS.stream()).collect(Collectors.toList());
 }

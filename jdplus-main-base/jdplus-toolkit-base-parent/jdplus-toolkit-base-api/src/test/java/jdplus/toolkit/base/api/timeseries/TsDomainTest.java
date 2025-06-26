@@ -20,9 +20,8 @@ import static jdplus.toolkit.base.api.timeseries.TsDomain.of;
 import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
-import jdplus.toolkit.base.api.timeseries.*;
 import org.junit.jupiter.api.Test;
-import static jdplus.toolkit.base.api.timeseries.TsUnit.HOUR;
+
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -40,9 +39,9 @@ public class TsDomainTest {
 
     @Test
     public void testSplit() {
-        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.MONTH, true).getLength()).isEqualTo(12);
-        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.DAY, true).getLength()).isEqualTo(366);
-        assertThatThrownBy(() -> TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.WEEK, true)).isInstanceOf(TsException.class);
+        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.P1M, true).getLength()).isEqualTo(12);
+        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.P1D, true).getLength()).isEqualTo(366);
+        assertThatThrownBy(() -> TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.P7D, true)).isInstanceOf(TsException.class);
     }
 
     @Test
@@ -112,7 +111,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 1).contains(x.plus(-1))).isFalse();
         assertThat(of(feb2010, 2).contains(x.plus(1))).isTrue();
 
-        assertThatThrownBy(() -> of(feb2010, 1).contains(x.withUnit(HOUR)))
+        assertThatThrownBy(() -> of(feb2010, 1).contains(x.withUnit(TsUnit.PT1H)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 
@@ -141,7 +140,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 1).indexOf(x.plus(-1))).isEqualTo(-1);
         assertThat(of(feb2010, 2).indexOf(x.plus(1))).isEqualTo(1);
 
-        assertThatThrownBy(() -> of(feb2010, 1).indexOf(x.withUnit(HOUR)))
+        assertThatThrownBy(() -> of(feb2010, 1).indexOf(x.withUnit(TsUnit.PT1H)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 
@@ -179,7 +178,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 2).intersection(x.move(-1))).isEqualTo(of(feb2010, 1));
         assertThat(of(feb2010, 2).intersection(x.move(-2))).isEqualTo(of(feb2010, 0));
 
-        assertThatThrownBy(() -> of(feb2010, 2).intersection(of(feb2010.withUnit(HOUR), 2)))
+        assertThatThrownBy(() -> of(feb2010, 2).intersection(of(feb2010.withUnit(TsUnit.PT1H), 2)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 
@@ -196,7 +195,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 2).union(x.move(-1))).isEqualTo(of(feb2010.plus(-1), 3));
         assertThat(of(feb2010, 2).union(x.move(-2))).isEqualTo(of(feb2010.plus(-2), 4));
 
-        assertThatThrownBy(() -> of(feb2010, 2).union(of(feb2010.withUnit(HOUR), 2)))
+        assertThatThrownBy(() -> of(feb2010, 2).union(of(feb2010.withUnit(TsUnit.PT1H), 2)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 

@@ -43,7 +43,7 @@ public class TsUnitTest {
         assertThat(of(1, DECADES)).returns(10L, TsUnit::getAmount).returns(YEARS, TsUnit::getChronoUnit);
         assertThat(of(1, YEARS)).returns(1L, TsUnit::getAmount).returns(YEARS, TsUnit::getChronoUnit);
         assertThat(of(1, MONTHS)).returns(1L, TsUnit::getAmount).returns(MONTHS, TsUnit::getChronoUnit);
-        assertThat(of(1, WEEKS)).returns(7L, TsUnit::getAmount).returns(DAYS, TsUnit::getChronoUnit);
+        assertThat(of(1, WEEKS)).returns(1L, TsUnit::getAmount).returns(WEEKS, TsUnit::getChronoUnit);
         assertThat(of(1, DAYS)).returns(1L, TsUnit::getAmount).returns(DAYS, TsUnit::getChronoUnit);
         assertThat(of(1, HALF_DAYS)).returns(1L, TsUnit::getAmount).returns(HALF_DAYS, TsUnit::getChronoUnit);
         assertThat(of(1, HOURS)).returns(1L, TsUnit::getAmount).returns(HOURS, TsUnit::getChronoUnit);
@@ -78,25 +78,24 @@ public class TsUnitTest {
     @SuppressWarnings("DataFlowIssue")
     @Test
     public void testRatioOf() {
-        assertThatNullPointerException().isThrownBy(() -> YEAR.ratioOf(null));
+        assertThatNullPointerException().isThrownBy(() -> P1Y.ratioOf(null));
 
         // easy ratio
-        assertThat(YEAR.ratioOf(CENTURY)).isEqualTo(100);
-        assertThat(YEAR.ratioOf(DECADE)).isEqualTo(10);
-        assertThat(YEAR.ratioOf(YEAR)).isEqualTo(1);
-        assertThat(HALF_YEAR.ratioOf(YEAR)).isEqualTo(2);
-        assertThat(QUARTER.ratioOf(YEAR)).isEqualTo(4);
-        assertThat(MONTH.ratioOf(YEAR)).isEqualTo(12);
-        assertThat(MONTH.ratioOf(QUARTER)).isEqualTo(3);
+        assertThat(P1Y.ratioOf(parse("P10Y"))).isEqualTo(10);
+        assertThat(P1Y.ratioOf(P1Y)).isEqualTo(1);
+        assertThat(P6M.ratioOf(P1Y)).isEqualTo(2);
+        assertThat(P3M.ratioOf(P1Y)).isEqualTo(4);
+        assertThat(P1M.ratioOf(P1Y)).isEqualTo(12);
+        assertThat(P1M.ratioOf(P3M)).isEqualTo(3);
 
         // no ratio
-        assertThat(YEAR.ratioOf(MONTH)).isEqualTo(NO_RATIO);
-        assertThat(YEAR.ratioOf(QUARTER)).isEqualTo(NO_RATIO);
-        assertThat(HALF_YEAR.ratioOf(QUARTER)).isEqualTo(NO_RATIO);
+        assertThat(P1Y.ratioOf(P1M)).isEqualTo(NO_RATIO);
+        assertThat(P1Y.ratioOf(P3M)).isEqualTo(NO_RATIO);
+        assertThat(P6M.ratioOf(P3M)).isEqualTo(NO_RATIO);
 
         // difficult ratio
-        assertThat(MINUTE.ratioOf(YEAR)).isEqualTo(NO_STRICT_RATIO);
-        assertThat(DAY.ratioOf(YEAR)).isEqualTo(NO_STRICT_RATIO);
+        assertThat(PT1M.ratioOf(P1Y)).isEqualTo(NO_STRICT_RATIO);
+        assertThat(P1D.ratioOf(P1Y)).isEqualTo(NO_STRICT_RATIO);
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -118,6 +117,23 @@ public class TsUnitTest {
     @Test
     public void testConstants() {
         assertThat(UNDEFINED).hasToString("").isSameAs(of(1, FOREVER));
+        assertThat(P1Y).hasToString("P1Y").isSameAs(of(1, YEARS));
+        assertThat(P6M).hasToString("P6M").isSameAs(of(6, MONTHS));
+        assertThat(P4M).hasToString("P4M").isSameAs(of(4, MONTHS));
+        assertThat(P3M).hasToString("P3M").isSameAs(of(3, MONTHS));
+        assertThat(P2M).hasToString("P2M").isSameAs(of(2, MONTHS));
+        assertThat(P1M).hasToString("P1M").isSameAs(of(1, MONTHS));
+        assertThat(P1W).hasToString("P1W").isSameAs(of(1, WEEKS));
+        assertThat(P7D).hasToString("P7D").isSameAs(of(7, DAYS));
+        assertThat(P1D).hasToString("P1D").isSameAs(of(1, DAYS));
+        assertThat(PT1H).hasToString("PT1H").isSameAs(of(1, HOURS));
+        assertThat(PT1M).hasToString("PT1M").isSameAs(of(1, MINUTES));
+        assertThat(PT1S).hasToString("PT1S").isSameAs(of(1, SECONDS));
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testDeprecatedConstants() {
         assertThat(CENTURY).hasToString("P100Y").isSameAs(of(100, YEARS));
         assertThat(DECADE).hasToString("P10Y").isSameAs(of(10, YEARS));
         assertThat(YEAR).hasToString("P1Y").isSameAs(of(1, YEARS));
@@ -174,7 +190,6 @@ public class TsUnitTest {
     private static final TsUnit P7M = parse("P7M");
     private static final TsUnit P12M = parse("P12M");
     private static final TsUnit P2Y = parse("P2Y");
-    private static final TsUnit P2M = parse("P2M");
     private static final TsUnit P26M = parse("P26M");
     private static final TsUnit P2D = parse("P2D");
     private static final TsUnit P10D = parse("P10D");

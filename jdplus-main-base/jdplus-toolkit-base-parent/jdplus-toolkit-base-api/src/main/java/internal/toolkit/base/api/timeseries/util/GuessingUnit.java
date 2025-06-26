@@ -29,16 +29,16 @@ import java.time.temporal.ChronoUnit;
 @lombok.Getter
 public enum GuessingUnit {
 
-    YEAR(TsUnit.YEAR, TsPeriod.DEFAULT_EPOCH, 2),
-    HALF_YEAR(TsUnit.HALF_YEAR, TsPeriod.DEFAULT_EPOCH, 6),
-    QUADRI_MONTH(TsUnit.of(4, ChronoUnit.MONTHS), TsPeriod.DEFAULT_EPOCH, 4),
-    QUARTER(TsUnit.QUARTER, TsPeriod.DEFAULT_EPOCH, 2),
-    MONTH(TsUnit.MONTH, TsPeriod.DEFAULT_EPOCH, 2),
-    WEEK_MONDAY(TsUnit.WEEK, TsPeriod.DEFAULT_EPOCH.plusDays(4), 3),
-    DAY(TsUnit.DAY, TsPeriod.DEFAULT_EPOCH, 2),
-    HOUR(TsUnit.HOUR, TsPeriod.DEFAULT_EPOCH, 2),
-    MINUTE(TsUnit.MINUTE, TsPeriod.DEFAULT_EPOCH, 2),
-    SECOND(TsUnit.SECOND, TsPeriod.DEFAULT_EPOCH, 2);
+    YEAR(TsUnit.P1Y, TsPeriod.DEFAULT_EPOCH, 2),
+    HALF_YEAR(TsUnit.P6M, TsPeriod.DEFAULT_EPOCH, 6),
+    QUADRI_MONTH(TsUnit.P4M, TsPeriod.DEFAULT_EPOCH, 4),
+    QUARTER(TsUnit.P3M, TsPeriod.DEFAULT_EPOCH, 2),
+    MONTH(TsUnit.P1M, TsPeriod.DEFAULT_EPOCH, 2),
+    WEEK_MONDAY(TsUnit.P7D, TsPeriod.DEFAULT_EPOCH.plusDays(4), 3),
+    DAY(TsUnit.P1D, TsPeriod.DEFAULT_EPOCH, 2),
+    HOUR(TsUnit.PT1H, TsPeriod.DEFAULT_EPOCH, 2),
+    MINUTE(TsUnit.PT1M, TsPeriod.DEFAULT_EPOCH, 2),
+    SECOND(TsUnit.PT1S, TsPeriod.DEFAULT_EPOCH, 2);
 
     private final TsUnit tsUnit;
     private final LocalDateTime reference;

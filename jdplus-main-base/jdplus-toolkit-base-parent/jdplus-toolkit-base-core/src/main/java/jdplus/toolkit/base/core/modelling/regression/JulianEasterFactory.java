@@ -108,7 +108,7 @@ class JulianEasterFactory implements RegressionVariableFactory<JulianEasterVaria
                 }
             }
             march=march.plus(12);
-            if (march.isAfter(TsPeriod.of(TsUnit.MONTH, end))) {
+            if (march.isAfter(TsPeriod.of(TsUnit.P1M, end))) {
                 break;
             }
             april=april.plus(12);

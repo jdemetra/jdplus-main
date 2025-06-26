@@ -67,7 +67,7 @@ class LengthOfPeriodTransformation implements TsDataTransformation {
      */
     @Override
     public TsData transform(TsData data, LogJacobian ljacobian) {
-        int ratio = data.getTsUnit().ratioOf(TsUnit.YEAR);
+        int ratio = data.getTsUnit().ratioOf(TsUnit.P1Y);
 //        if (ratio < 2) {
 //            throw new TsException(TsException.INCOMPATIBLE_DOMAIN);
 //        }

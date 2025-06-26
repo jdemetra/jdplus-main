@@ -58,7 +58,7 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
         }
     }
 
-    public static final TsDomain DEFAULT_EMPTY = of(TsPeriod.of(TsUnit.YEAR, 0), 0);
+    public static final TsDomain DEFAULT_EMPTY = of(TsPeriod.of(TsUnit.P1Y, 0), 0);
 
     @lombok.NonNull
     TsPeriod startPeriod;
