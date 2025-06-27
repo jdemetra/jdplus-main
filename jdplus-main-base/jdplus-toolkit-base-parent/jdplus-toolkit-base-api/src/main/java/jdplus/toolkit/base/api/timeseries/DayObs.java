@@ -16,22 +16,43 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import lombok.NonNull;
+import nbbrd.design.RepresentableAsString;
+import nbbrd.design.StaticFactoryMethod;
+
 import java.time.LocalDate;
 
 /**
- *
  * @author Philippe Charles
  */
+@RepresentableAsString
 @lombok.Value(staticConstructor = "of")
 public class DayObs implements TimeSeriesObs<Day> {
 
     @lombok.NonNull
     LocalDate date;
-    
+
+    double value;
+
     @Override
-    public Day getPeriod(){
+    public @NonNull Day getPeriod() {
         return Day.of(date);
     }
 
-    double value;
+    @StaticFactoryMethod
+    public static @NonNull DayObs parse(@NonNull CharSequence text) {
+        int index = text.toString().indexOf("=");
+        if (index < 0) {
+            throw new IllegalArgumentException("Invalid DayObs text: " + text);
+        }
+        return of(
+                Day.parse(text.subSequence(0, index)).getDay(),
+                Double.parseDouble(text.subSequence(index + 1, text.length()).toString())
+        );
+    }
+
+    @Override
+    public String toString() {
+        return getPeriod() + "=" + value;
+    }
 }

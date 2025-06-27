@@ -23,7 +23,7 @@ import lombok.NonNull;
  * @author Philippe Charles
  * @param <P> period type
  */
-public interface TimeSeriesObs<P extends TimeSeriesInterval> {
+public interface TimeSeriesObs<P extends TimeSeriesInterval<?>> {
 
     @NonNull
     P getPeriod();

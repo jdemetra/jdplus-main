@@ -16,25 +16,54 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
+import lombok.NonNull;
+import nbbrd.design.RepresentableAsString;
+import nbbrd.design.StaticFactoryMethod;
+
 import java.time.LocalDate;
 
 /**
- *
  * @author Jean Palate
  */
+@RepresentableAsString
 @lombok.Value(staticConstructor = "of")
-public class CalendarPeriodObs implements TimeSeriesObs<CalendarPeriod> {
+public class CalendarPeriodObs implements TimeSeriesObs<CalendarPeriod>, HasShortStringRepresentation {
 
     @lombok.NonNull
     LocalDate start, end;
+
     double value;
-    
-    public static CalendarPeriodObs of(CalendarPeriod period, double value){
+
+    @StaticFactoryMethod
+    public static @NonNull CalendarPeriodObs of(@NonNull CalendarPeriod period, double value) {
         return new CalendarPeriodObs(period.getStart(), period.getEnd(), value);
     }
-    
+
+    @StaticFactoryMethod
+    public static @NonNull CalendarPeriodObs parse(@NonNull CharSequence text) {
+        int index = text.toString().indexOf("=");
+        if (index < 0) {
+            throw new IllegalArgumentException("Invalid CalendarPeriodObs text: " + text);
+        }
+        return of(
+                CalendarPeriod.parse(text.subSequence(0, index)),
+                Double.parseDouble(text.subSequence(index + 1, text.length()).toString())
+        );
+    }
+
     @Override
-    public CalendarPeriod getPeriod(){
+    public @NonNull CalendarPeriod getPeriod() {
         return CalendarPeriod.of(start, end);
+    }
+
+    @Override
+    public String toString() {
+        return getPeriod() + "=" + value;
+    }
+
+    @Override
+    public @NonNull String toShortString() {
+        return getPeriod().toShortString() + "=" + value;
     }
 }

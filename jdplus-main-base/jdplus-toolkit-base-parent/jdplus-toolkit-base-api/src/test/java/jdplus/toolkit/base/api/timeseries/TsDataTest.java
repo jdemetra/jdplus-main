@@ -38,32 +38,33 @@ public class TsDataTest {
         TsData ts = TsData.ofInternal(TsPeriod.yearly(2001), new double[]{3.14, 7});
 
         System.out.println("\n[Tests ...]");
-        System.out.println(ts.toString());
-        System.out.println(ts.getDomain());
+        System.out.println(ts);
+        System.out.println(ts.getDomain().toShortString());
         System.out.println(ts.getValues());
 
-        System.out.println("\n[Test for]");
+        System.out.println("\n[Test for loop]");
         for (int i = 0; i < ts.length(); i++) {
-            System.out.println(ts.get(i));
+            System.out.println(ts.get(i).toShortString());
         }
 
-        System.out.println("\n[Test forEach]");
-        ts.forEach(System.out::println);
+        System.out.println("\n[Test #forEach()]");
+        ts.forEach(x -> System.out.println(x.toShortString()));
 
-        System.out.println("\n[Test iterator]");
+        System.out.println("\n[Test #iterator()]");
         for (TsObs o : ts) {
-            System.out.println(o);
+            System.out.println(o.toShortString());
         }
 
-        System.out.println("\n[Test stream]");
+        System.out.println("\n[Test #stream()]");
         ts.stream()
                 .filter(o -> o.getPeriod().start().isAfter(LocalDate.of(2001, 1, 1).atStartOfDay()))
+                .map(TsObs::toShortString)
                 .forEach(System.out::println);
 
-        System.out.println("\n[Test forEach(k, v)]");
-        ts.forEach((k, v) -> System.out.println(k.toShortString() + ":" + v + " "));
+        System.out.println("\n[Test #forEach(k, v)]");
+        ts.forEach((k, v) -> System.out.println(k.toShortString() + " -> " + v + " "));
 
-        System.out.println("\n[Test getPeriod / getValue]");
+        System.out.println("\n[Test #getPeriod() + #getValue()]");
         for (int i = 0; i < ts.length(); i++) {
             System.out.println(ts.getPeriod(i).toShortString() + " -> " + ts.getValue(i));
         }
