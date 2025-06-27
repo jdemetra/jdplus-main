@@ -1,39 +1,42 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries;
 
-import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
-import static jdplus.toolkit.base.api.timeseries.TsPeriod.*;
+import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+
+import static jdplus.toolkit.base.api.timeseries.TsPeriod.*;
+import static jdplus.toolkit.base.api.timeseries.TsPeriod.of;
+import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
+import static jdplus.toolkit.base.api.timeseries.TsUnit.of;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import org.junit.jupiter.api.Test;
-
 /**
- *
  * @author Philippe Charles
  */
 public class TsPeriodTest {
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
     public void testFactories() {
         assertThatThrownBy(() -> of(null, d2011_02_01_0000)).isInstanceOf(NullPointerException.class);
@@ -161,7 +164,7 @@ public class TsPeriodTest {
         assertThat(of(P1Y, d2011_02_01).plus(1)).isEqualTo(of(P1Y, d2011_02_01).next());
         assertThat(of(P1Y, d2011_02_01).plus(2)).isEqualTo(of(P1Y, d2011_02_01.plusYears(2)));
         assertThat(of(P1Y, d2011_02_01).plus(-1)).isEqualTo(of(P1Y, d2011_02_01.plusYears(-1)));
-        assertThat(of(PT1H, d2011_02_01).plus(11)).isEqualTo(of(PT1H, d2011_02_01_0000.plus(11, ChronoUnit.HOURS)));
+        assertThat(of(PT1H, d2011_02_01).plus(11)).isEqualTo(of(PT1H, d2011_02_01_0000.plusHours(11)));
     }
 
     @Test
@@ -188,47 +191,9 @@ public class TsPeriodTest {
         assertThat(of(P1D, d2011_02_01).toBuilder().build()).isEqualTo(of(P1D, d2011_02_01));
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
-    public void testToISOString() {
-        assertThat(monthly(2011, 2).toString())
-                .isEqualTo("2011-02-01T00:00:00/P1M");
-
-        assertThat(weekly(2020, 4, 30).toString())
-                .isEqualTo("2020-04-30T00:00:00/P7D");
-
-        assertThat(quarterly(2011, 2).toString())
-                .isEqualTo("2011-04-01T00:00:00/P3M");
-
-        assertThat(minutely(2011, 2, 15, 10, 7).toString())
-                .isEqualTo("2011-02-15T10:07:00/PT1M");
-
-        assertThat(of(P1Y, d2011_02_01).toString())
-                .isEqualTo("2011-01-01T00:00:00/P1Y");
-
-        assertThat(of(P1Y, d2011_02_01).withEpoch(someReference).next().toString())
-                .isEqualTo("2011-04-01T00:00:00/P1Y");
-
-        assertThat(of(P1D, d2011_02_01).toString())
-                .isEqualTo("2011-02-01T00:00:00/P1D");
-    }
-
-    @Test
-    public void testString() {
-        assertThat(monthly(2011, 2).toString())
-                .isEqualTo(monthly(2011, 2).toString());
-
-        assertThat(weekly(2020, 4, 30).toString())
-                .isEqualTo(weekly(2020, 4, 30).toString());
-
-        assertThat(quarterly(2011, 2).toString())
-                .isEqualTo(quarterly(2011, 2).toString());
-
-        assertThat(minutely(2011, 2, 15, 10, 7).toString())
-                .isEqualTo(minutely(2011, 2, 15, 10, 7).toString());
-    }
-
-    @Test
-    public void testParse() {
+    public void testRepresentableAsString() {
         assertThatNullPointerException()
                 .isThrownBy(() -> TsPeriod.parse(null));
 
@@ -236,16 +201,29 @@ public class TsPeriodTest {
                 .isInstanceOf(DateTimeParseException.class);
 
         assertThat(TsPeriod.parse("2011-02-01T00:00/P1M"))
+                .hasToString("2011-02-01T00:00:00/P1M")
                 .isEqualTo(monthly(2011, 2));
 
         assertThat(TsPeriod.parse("2020-04-30T00:00/P7D"))
+                .hasToString("2020-04-30T00:00:00/P7D")
                 .isEqualTo(weekly(2020, 4, 30));
 
         assertThat(TsPeriod.parse("2011-04-01T00:00/P3M"))
+                .hasToString("2011-04-01T00:00:00/P3M")
                 .isEqualTo(quarterly(2011, 2));
 
         assertThat(TsPeriod.parse("2011-02-15T10:07/PT1M"))
+                .hasToString("2011-02-15T10:07:00/PT1M")
                 .isEqualTo(minutely(2011, 2, 15, 10, 7));
+
+        assertThat(of(P1Y, d2011_02_01))
+                .hasToString("2011-01-01T00:00:00/P1Y");
+
+        assertThat(of(P1Y, d2011_02_01).withEpoch(someReference).next())
+                .hasToString("2011-04-01T00:00:00/P1Y");
+
+        assertThat(of(P1D, d2011_02_01).toString())
+                .hasToString("2011-02-01T00:00:00/P1D");
 
 //        assertThat(TsPeriod.parse("P1M#2"))
 //                .isEqualTo(TsPeriod.builder().unit(MONTH).id(2).build());
@@ -302,7 +280,7 @@ public class TsPeriodTest {
         assertThat(dateAt(DEFAULT_EPOCH.plusDays(4), P1D, 1)).isEqualTo(DEFAULT_EPOCH.plusDays(5));
     }
 
-//    @Test
+    //    @Test
 //    public void testGetPosition() {
 //
 //        assertThat(monthly(2010, 1).getPosition(YEAR)).isEqualTo(position(monthly(2010, 1), YEAR));
@@ -348,9 +326,9 @@ public class TsPeriodTest {
 //    }
     @Test
     public void testPoint() {
-        LocalDateTime x = d2011_02_01_0000.plus(0, ChronoUnit.SECONDS);
+        LocalDateTime x = d2011_02_01_0000.plusSeconds(0);
         assertEquals(x, d2011_02_01_0000);
-        LocalDate y = d2011_02_01.plus(0, ChronoUnit.DAYS);
+        LocalDate y = d2011_02_01.plusDays(0);
         assertEquals(y, d2011_02_01);
     }
 

@@ -41,22 +41,22 @@ public class TimePoint implements TimeSeriesInterval<Duration> {
     LocalDateTime point;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return point;
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return point;
     }
 
     @Override
-    public boolean contains(LocalDateTime element) {
+    public boolean contains(@NonNull LocalDateTime element) {
         return point.equals(element);
     }
 
     @Override
-    public Duration getDuration() {
+    public @NonNull Duration getDuration() {
         return Duration.ZERO;
     }
 
@@ -66,14 +66,12 @@ public class TimePoint implements TimeSeriesInterval<Duration> {
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePoint parse(@NonNull CharSequence text) throws DateTimeParseException {
+    public static @NonNull TimePoint parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, TimePoint::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePoint from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull TimePoint from(@NonNull TimeIntervalAccessor timeInterval) {
         return TimePoint.of(LocalDateTime.from(timeInterval.start()));
     }
 

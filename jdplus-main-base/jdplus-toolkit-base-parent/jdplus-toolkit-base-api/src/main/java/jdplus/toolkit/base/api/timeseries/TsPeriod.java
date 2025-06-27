@@ -48,27 +48,27 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     long id;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return dateAt(epoch, unit, id);
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return dateAt(epoch, unit, id + 1);
     }
 
     @Override
-    public boolean contains(LocalDateTime date) {
+    public boolean contains(@NonNull LocalDateTime date) {
         return idAt(epoch, unit, date) == id;
     }
 
     @Override
-    public TsUnit getDuration() {
+    public @NonNull TsUnit getDuration() {
         return unit;
     }
 
     @Override
-    public int compareTo(TsPeriod period) {
+    public int compareTo(@NonNull TsPeriod period) {
         checkCompatibility(period);
         return Long.compare(id, getRebasedId(period));
     }
@@ -184,7 +184,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
         return epoch.equals(DEFAULT_EPOCH);
     }
 
-    private boolean hasSameEpoch(TsPeriod period) {
+    private boolean hasSameEpoch(@NonNull TsPeriod period) {
         return epoch.equals(period.epoch);
     }
 
@@ -202,19 +202,23 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
 
     public static final LocalDateTime DEFAULT_EPOCH = LocalDate.ofEpochDay(0).atStartOfDay();
 
-    public static TsPeriod of(TsUnit unit, LocalDateTime date) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod of(@NonNull TsUnit unit, @NonNull LocalDateTime date) {
         return make(DEFAULT_EPOCH, unit, date);
     }
 
-    public static TsPeriod of(TsUnit unit, LocalDate date) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod of(@NonNull TsUnit unit, @NonNull LocalDate date) {
         return make(DEFAULT_EPOCH, unit, date);
     }
 
-    public static TsPeriod of(TsUnit unit, long id) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod of(@NonNull TsUnit unit, long id) {
         return make(DEFAULT_EPOCH, unit, id);
     }
 
-    public static TsPeriod yearly(int year) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod yearly(int year) {
         return make(DEFAULT_EPOCH, TsUnit.P1Y, LocalDate.of(year, 1, 1));
     }
 
@@ -225,7 +229,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @param quarter Quarter of the period (in 1-4)
      * @return
      */
-    public static TsPeriod quarterly(int year, int quarter) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod quarterly(int year, int quarter) {
         return make(DEFAULT_EPOCH, TsUnit.P3M, LocalDate.of(year, ((quarter - 1) * 3) + 1, 1));
     }
 
@@ -236,7 +241,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @param month Month of the period (in 1-12)
      * @return
      */
-    public static TsPeriod monthly(int year, int month) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod monthly(int year, int month) {
         return make(DEFAULT_EPOCH, TsUnit.P1M, LocalDate.of(year, month, 1));
     }
 
@@ -248,7 +254,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @param dayOfMonth Day of month of the day (1-31)
      * @return
      */
-    public static TsPeriod daily(int year, int month, int dayOfMonth) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod daily(int year, int month, int dayOfMonth) {
         return make(DEFAULT_EPOCH, TsUnit.P1D, LocalDate.of(year, month, dayOfMonth));
     }
 
@@ -260,30 +267,31 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @param dayOfMonth Day of month of the first day (1-31)
      * @return
      */
-    public static TsPeriod weekly(int year, int month, int dayOfMonth) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod weekly(int year, int month, int dayOfMonth) {
         LocalDate start = LocalDate.of(year, month, dayOfMonth);
         int dw_start = start.getDayOfWeek().getValue();
         int dw_epoch = DEFAULT_EPOCH.getDayOfWeek().getValue();
         return make(DEFAULT_EPOCH.plusDays(dw_start - dw_epoch), TsUnit.P7D, start);
     }
 
-    public static TsPeriod hourly(int year, int month, int dayOfMonth, int hour) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod hourly(int year, int month, int dayOfMonth, int hour) {
         return make(DEFAULT_EPOCH, TsUnit.PT1H, LocalDateTime.of(year, month, dayOfMonth, hour, 0));
     }
 
-    public static TsPeriod minutely(int year, int month, int dayOfMonth, int hour, int minute) {
+    @StaticFactoryMethod
+    public static @NonNull TsPeriod minutely(int year, int month, int dayOfMonth, int hour, int minute) {
         return make(DEFAULT_EPOCH, TsUnit.PT1M, LocalDateTime.of(year, month, dayOfMonth, hour, minute));
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TsPeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
+    public static @NonNull TsPeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, TsPeriod::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TsPeriod from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull TsPeriod from(@NonNull TimeIntervalAccessor timeInterval) {
         return TsPeriod.of((TsUnit) timeInterval.getDuration(), LocalDateTime.from(timeInterval.start()));
     }
 
@@ -344,7 +352,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
         }
     }
 
-    @jdplus.toolkit.base.api.time.ISO_8601
+    @ISO_8601
     public static final class Builder implements TimeSeriesInterval<TsUnit> {
 
         private LocalDateTime epoch = DEFAULT_EPOCH;
@@ -384,22 +392,22 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
 //        }
 //
         @Override
-        public LocalDateTime start() {
+        public @NonNull LocalDateTime start() {
             return TsPeriod.dateAt(epoch, unit, id);
         }
 
         @Override
-        public LocalDateTime end() {
+        public @NonNull LocalDateTime end() {
             return TsPeriod.dateAt(epoch, unit, id + 1);
         }
 
         @Override
-        public TsUnit getDuration() {
+        public @NonNull TsUnit getDuration() {
             return unit;
         }
 
         @Override
-        public boolean contains(LocalDateTime date) {
+        public boolean contains(@NonNull LocalDateTime date) {
             return TsPeriod.idAt(epoch, unit, date) == id;
         }
 

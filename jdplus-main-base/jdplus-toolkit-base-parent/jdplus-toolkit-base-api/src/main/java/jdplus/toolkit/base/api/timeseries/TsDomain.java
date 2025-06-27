@@ -72,7 +72,7 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
     }
 
     @Override
-    public TsPeriod getInterval() {
+    public @NonNull TsPeriod getInterval() {
         return startPeriod;
     }
 
@@ -100,18 +100,18 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
     }
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return startPeriod.start();
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         checkNonEmpty();
         return startPeriod.dateAt(startPeriod.getId() + length);
     }
 
     @Override
-    public boolean contains(LocalDateTime date) {
+    public boolean contains(@NonNull LocalDateTime date) {
         return contains(startPeriod.idAt(date));
     }
 
@@ -362,14 +362,12 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TsDomain parse(@NonNull CharSequence text) throws DateTimeParseException {
+    public static @NonNull TsDomain parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, TsDomain::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TsDomain from(@NonNull TimeRecurrenceAccessor timeRecurrence) {
+    public static @NonNull TsDomain from(@NonNull TimeRecurrenceAccessor timeRecurrence) {
         return of(TsPeriod.from(timeRecurrence.getInterval()), timeRecurrence.length());
     }
 

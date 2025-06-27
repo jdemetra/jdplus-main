@@ -94,17 +94,33 @@ public abstract sealed class TimeIntervalFormatter
             int intervalDesignatorIdx = getIntervalDesignatorIndex(text);
             CharSequence left = text.subSequence(0, intervalDesignatorIdx);
             CharSequence right = text.subSequence(intervalDesignatorIdx + 1, text.length());
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public Temporal start() {
-                    return startEndFormatter.parse(left, startEndQuery);
-                }
+            I result = query.queryFrom(new StartEndAccessor(left, right));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
 
-                @Override
-                public Temporal end() {
-                    return startEndFormatter.parse(concise ? expand(left, right) : right, startEndQuery);
-                }
-            });
+        @lombok.AllArgsConstructor
+        private final class StartEndAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence left;
+            private final CharSequence right;
+
+            @Override
+            public @NonNull Temporal start() {
+                return startEndFormatter.parse(left, startEndQuery);
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                return startEndFormatter.parse(concise ? expand(left, right) : right, startEndQuery);
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
         }
     }
 
@@ -145,17 +161,33 @@ public abstract sealed class TimeIntervalFormatter
             int intervalDesignatorIdx = getIntervalDesignatorIndex(text);
             CharSequence left = text.subSequence(0, intervalDesignatorIdx);
             CharSequence right = text.subSequence(intervalDesignatorIdx + 1, text.length());
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public Temporal start() {
-                    return startFormatter.parse(left, startQuery);
-                }
+            I result = query.queryFrom(new StartDurationAccessor(left, right));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
 
-                @Override
-                public TemporalAmount getDuration() {
-                    return duration.apply(right);
-                }
-            });
+        @lombok.AllArgsConstructor
+        private final class StartDurationAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence left;
+            private final CharSequence right;
+
+            @Override
+            public @NonNull Temporal start() {
+                return startFormatter.parse(left, startQuery);
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                return duration.apply(right);
+            }
         }
     }
 
@@ -196,17 +228,33 @@ public abstract sealed class TimeIntervalFormatter
             int intervalDesignatorIdx = getIntervalDesignatorIndex(text);
             CharSequence left = text.subSequence(0, intervalDesignatorIdx);
             CharSequence right = text.subSequence(intervalDesignatorIdx + 1, text.length());
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public Temporal end() {
-                    return endFormatter.parse(right, endQuery);
-                }
+            I result = query.queryFrom(new DurationEndAccessor(right, left));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
 
-                @Override
-                public TemporalAmount getDuration() {
-                    return duration.apply(left);
-                }
-            });
+        @lombok.AllArgsConstructor
+        private final class DurationEndAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence right;
+            private final CharSequence left;
+
+            @Override
+            public @NonNull Temporal start() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                return endFormatter.parse(right, endQuery);
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                return duration.apply(left);
+            }
         }
     }
 
@@ -223,12 +271,32 @@ public abstract sealed class TimeIntervalFormatter
 
         @Override
         public <I extends TimeInterval<?, ?>> @NonNull I parse(@NonNull CharSequence text, @NonNull TimeIntervalQuery<I> query) {
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public TemporalAmount getDuration() {
-                    return duration.apply(text);
-                }
-            });
+            I result = query.queryFrom(new DurationAccessor(text));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
+
+        @lombok.AllArgsConstructor
+        private final class DurationAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence text;
+
+            @Override
+            public @NonNull Temporal start() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                return duration.apply(text);
+            }
         }
     }
 
@@ -282,22 +350,5 @@ public abstract sealed class TimeIntervalFormatter
 
     private static void formatDurationTo(TemporalAmount duration, Appendable appendable) {
         appendTo(duration.toString(), appendable);
-    }
-
-    private static abstract class AbstractTimeIntervalAccessor implements TimeIntervalAccessor {
-        @Override
-        public Temporal start() {
-            throw new RuntimeException();
-        }
-
-        @Override
-        public Temporal end() {
-            throw new RuntimeException();
-        }
-
-        @Override
-        public TemporalAmount getDuration() {
-            throw new RuntimeException();
-        }
     }
 }

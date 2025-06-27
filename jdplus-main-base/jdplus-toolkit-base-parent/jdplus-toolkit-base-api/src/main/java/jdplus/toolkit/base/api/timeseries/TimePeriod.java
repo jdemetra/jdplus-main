@@ -19,9 +19,9 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import lombok.NonNull;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -41,12 +41,12 @@ public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<Time
     LocalDateTime start, end;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return start;
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return end;
     }
 
@@ -56,7 +56,7 @@ public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<Time
     }
 
     @Override
-    public Duration getDuration() {
+    public @NonNull Duration getDuration() {
         return Duration.between(start, end);
     }
 
@@ -80,14 +80,12 @@ public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<Time
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
+    public static @NonNull TimePeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, TimePeriod::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePeriod from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull TimePeriod from(@NonNull TimeIntervalAccessor timeInterval) {
         return TimePeriod.of(LocalDateTime.from(timeInterval.start()), LocalDateTime.from(timeInterval.end()));
     }
 

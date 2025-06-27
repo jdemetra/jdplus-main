@@ -65,10 +65,10 @@ public final class TimeRecurrenceFormatter {
         int index = getRecurrenceSeparatorIndex(text);
         CharSequence left = text.subSequence(1, index);
         CharSequence right = text.subSequence(index + 1, text.length());
-        return query.queryFrom(
+        R result = query.queryFrom(
                 new TimeRecurrenceAccessor() {
                     @Override
-                    public TimeInterval<?, ?> getInterval() {
+                    public @NonNull TimeInterval<?, ?> getInterval() {
                         return intervalFormatter.parse(right, intervalQuery);
                     }
 
@@ -77,6 +77,10 @@ public final class TimeRecurrenceFormatter {
                         return parseLength(left);
                     }
                 });
+        if (result == null) {
+            throw new DateTimeException("Unable to obtain TimeRecurrence from TimeRecurrenceQuery");
+        }
+        return result;
     }
 
     private static int getRecurrenceSeparatorIndex(CharSequence text) throws DateTimeParseException {

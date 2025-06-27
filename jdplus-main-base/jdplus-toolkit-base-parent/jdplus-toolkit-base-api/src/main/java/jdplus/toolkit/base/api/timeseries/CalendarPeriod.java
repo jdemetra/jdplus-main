@@ -19,16 +19,16 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 
-import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR_TIME;
+import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR;
 
 /**
  * Period defined by a starting date (included) and an ending date (excluded)
@@ -44,12 +44,12 @@ public class CalendarPeriod implements TimeSeriesInterval<Period>, Comparable<Ca
     LocalDate start, end;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return start.atStartOfDay();
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return end.atStartOfDay();
     }
 
@@ -59,7 +59,7 @@ public class CalendarPeriod implements TimeSeriesInterval<Period>, Comparable<Ca
     }
 
     @Override
-    public Period getDuration() {
+    public @NonNull Period getDuration() {
         return Period.between(start, end);
     }
 
@@ -83,16 +83,14 @@ public class CalendarPeriod implements TimeSeriesInterval<Period>, Comparable<Ca
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static CalendarPeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
+    public static @NonNull CalendarPeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, CalendarPeriod::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static CalendarPeriod from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull CalendarPeriod from(@NonNull TimeIntervalAccessor timeInterval) {
         return of(LocalDate.from(timeInterval.start()), LocalDate.from(timeInterval.end()));
     }
 
-    private static final TimeIntervalFormatter.StartEnd ISO_8601 = TimeIntervalFormatter.StartEnd.of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, false);
+    private static final TimeIntervalFormatter.StartEnd ISO_8601 = TimeIntervalFormatter.StartEnd.of(EXTENDED_CALENDAR, LocalDate::from, false);
 }

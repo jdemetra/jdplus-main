@@ -1,32 +1,32 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries;
 
-import static jdplus.toolkit.base.api.timeseries.TsDomain.of;
-import java.time.LocalDateTime;
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 
+import static jdplus.toolkit.base.api.timeseries.TsDomain.of;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 /**
- *
  * @author Philippe Charles
  */
 public class TsDomainTest {
@@ -270,11 +270,13 @@ public class TsDomainTest {
     }
 
     @Test
-    public void testParse() {
+    public void testRepresentableAsString() {
         assertThat(TsDomain.parse("R30/2011-02-01T00:00/P1M"))
+                .hasToString("R30/2011-02-01T00:00:00/P1M")
                 .isEqualTo(of(TsPeriod.monthly(2011, 2), 30));
 
         assertThat(TsDomain.parse("R10/2011-04-01T00:00/P3M"))
+                .hasToString("R10/2011-04-01T00:00:00/P3M")
                 .isEqualTo(of(TsPeriod.quarterly(2011, 2), 10));
     }
 

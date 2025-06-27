@@ -42,12 +42,12 @@ public class Day implements TimeSeriesInterval<Period> {
     LocalDate day;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return day.atStartOfDay();
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return day.plusDays(1).atStartOfDay();
     }
 
@@ -57,7 +57,7 @@ public class Day implements TimeSeriesInterval<Period> {
     }
 
     @Override
-    public Period getDuration() {
+    public @NonNull Period getDuration() {
         return Period.ofDays(1);
     }
 
@@ -67,14 +67,12 @@ public class Day implements TimeSeriesInterval<Period> {
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static Day parse(@NonNull CharSequence text) throws DateTimeParseException {
+    public static @NonNull Day parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, Day::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static Day from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull Day from(@NonNull TimeIntervalAccessor timeInterval) {
         return of(LocalDate.from(timeInterval.start()));
     }
 
