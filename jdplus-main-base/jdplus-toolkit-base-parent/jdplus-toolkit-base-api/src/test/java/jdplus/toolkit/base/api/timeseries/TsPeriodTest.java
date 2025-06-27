@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -202,19 +203,33 @@ public class TsPeriodTest {
 
         assertThat(TsPeriod.parse("2011-02-01T00:00/P1M"))
                 .hasToString("2011-02-01T00:00:00/P1M")
+                .returns("2011-02/P1M", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TsPeriod.parse("2011-02/P1M"))
                 .isEqualTo(monthly(2011, 2));
 
         assertThat(TsPeriod.parse("2020-04-30T00:00/P7D"))
                 .hasToString("2020-04-30T00:00:00/P7D")
+                .returns("2020-04-30/P7D", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TsPeriod.parse("2020-04-30/P7D"))
                 .isEqualTo(weekly(2020, 4, 30));
 
         assertThat(TsPeriod.parse("2011-04-01T00:00/P3M"))
                 .hasToString("2011-04-01T00:00:00/P3M")
+                .returns("2011-04/P3M", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TsPeriod.parse("2011-04/P3M"))
                 .isEqualTo(quarterly(2011, 2));
 
         assertThat(TsPeriod.parse("2011-02-15T10:07/PT1M"))
                 .hasToString("2011-02-15T10:07:00/PT1M")
+                .returns("2011-02-15T10:07/PT1M", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TsPeriod.parse("2011-02-15T10:07/PT1M"))
                 .isEqualTo(minutely(2011, 2, 15, 10, 7));
+
+        assertThat(TsPeriod.parse("2011/P1M"))
+                .hasToString("2011-01-01T00:00:00/P1M")
+                .returns("2011-01/P1M", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TsPeriod.parse("2011-01/P1M"))
+                .isEqualTo(monthly(2011, 1));
 
         assertThat(of(P1Y, d2011_02_01))
                 .hasToString("2011-01-01T00:00:00/P1Y");
@@ -222,7 +237,7 @@ public class TsPeriodTest {
         assertThat(of(P1Y, d2011_02_01).withEpoch(someReference).next())
                 .hasToString("2011-04-01T00:00:00/P1Y");
 
-        assertThat(of(P1D, d2011_02_01).toString())
+        assertThat(of(P1D, d2011_02_01))
                 .hasToString("2011-02-01T00:00:00/P1D");
 
 //        assertThat(TsPeriod.parse("P1M#2"))

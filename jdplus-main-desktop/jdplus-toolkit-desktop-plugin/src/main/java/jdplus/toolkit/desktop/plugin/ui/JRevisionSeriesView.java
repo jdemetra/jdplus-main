@@ -256,7 +256,7 @@ public final class JRevisionSeriesView extends JComponent implements TimeSeriesC
         Point p = e.getTrigger().getLocationOnScreen();
         p.translate(3, 3);
         popup.setLocation(p);
-        popup.setChartTitle(info.toUpperCase(Locale.ROOT) + "[" + start.toString() + "] Revisions");
+        popup.setChartTitle(info.toUpperCase(Locale.ROOT) + "[" + start.toShortString() + "] Revisions");
         popup.setVisible(true);
     }
 

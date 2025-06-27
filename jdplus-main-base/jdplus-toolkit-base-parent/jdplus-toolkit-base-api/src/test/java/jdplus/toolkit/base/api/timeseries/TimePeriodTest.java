@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -31,11 +32,15 @@ public class TimePeriodTest {
     public void testRepresentableAsString() {
         assertThat(TimePeriod.parse("2010-02-17T11:03:00/2010-03-17T11:03:00"))
                 .hasToString("2010-02-17T11:03:00/2010-03-17T11:03:00")
+                .returns("2010-02-17T11:03:00/03-17T11:03:00", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TimePeriod.parse("2010-02-17T11:03:00/03-17T11:03:00"))
                 .returns(LocalDateTime.of(2010, 2, 17, 11, 3), TimePeriod::getStart)
                 .returns(LocalDateTime.of(2010, 3, 17, 11, 3), TimePeriod::getEnd);
 
         assertThat(TimePeriod.parse("2010-01-01T00:00:00/2010-02-01T00:00:00"))
                 .hasToString("2010-01-01T00:00:00/2010-02-01T00:00:00")
+                .returns("2010-01-01T00:00:00/02-01T00:00:00", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TimePeriod.parse("2010-01-01T00:00:00/02-01T00:00:00"))
                 .returns(LocalDateTime.of(2010, 1, 1, 0, 0), TimePeriod::getStart)
                 .returns(LocalDateTime.of(2010, 2, 1, 0, 0), TimePeriod::getEnd);
     }

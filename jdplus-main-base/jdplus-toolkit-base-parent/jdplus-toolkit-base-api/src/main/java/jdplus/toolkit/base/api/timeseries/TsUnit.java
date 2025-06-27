@@ -24,6 +24,7 @@ import lombok.Value;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.time.Duration;
 import java.time.Period;
@@ -107,6 +108,10 @@ public class TsUnit implements TemporalAmount {
             case WEEKS -> "P" + amount + "W";
             default -> Period.from(this).toString();
         };
+    }
+
+    public @Nullable ChronoUnit getPrecision() {
+        return amount != 0 ? chronoUnit : null;
     }
 
     @Override

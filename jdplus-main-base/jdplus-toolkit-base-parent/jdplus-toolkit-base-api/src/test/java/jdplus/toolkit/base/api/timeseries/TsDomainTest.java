@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -23,8 +24,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 import static jdplus.toolkit.base.api.timeseries.TsDomain.of;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author Philippe Charles
@@ -261,22 +261,15 @@ public class TsDomainTest {
     }
 
     @Test
-    public void testToISOString() {
-        assertThat(of(TsPeriod.monthly(2011, 2), 30).toString())
-                .isEqualTo("R30/2011-02-01T00:00:00/P1M");
-
-        assertThat(of(TsPeriod.quarterly(2011, 2), 10).toString())
-                .isEqualTo("R10/2011-04-01T00:00:00/P3M");
-    }
-
-    @Test
     public void testRepresentableAsString() {
-        assertThat(TsDomain.parse("R30/2011-02-01T00:00/P1M"))
+        assertThatObject(TsDomain.parse("R30/2011-02-01T00:00/P1M"))
                 .hasToString("R30/2011-02-01T00:00:00/P1M")
+                .returns("R30/2011-02/P1M", HasShortStringRepresentation::toShortString)
                 .isEqualTo(of(TsPeriod.monthly(2011, 2), 30));
 
-        assertThat(TsDomain.parse("R10/2011-04-01T00:00/P3M"))
+        assertThatObject(TsDomain.parse("R10/2011-04-01T00:00/P3M"))
                 .hasToString("R10/2011-04-01T00:00:00/P3M")
+                .returns("R10/2011-04/P3M", HasShortStringRepresentation::toShortString)
                 .isEqualTo(of(TsPeriod.quarterly(2011, 2), 10));
     }
 

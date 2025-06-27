@@ -19,6 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
@@ -35,7 +36,7 @@ import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR_T
 @ISO_8601
 @RepresentableAsString
 @lombok.Value(staticConstructor = "of")
-public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<TimePeriod> {
+public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<TimePeriod>, HasShortStringRepresentation {
 
     @lombok.NonNull
     LocalDateTime start, end;
@@ -79,6 +80,11 @@ public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<Time
         return ISO_8601.format(this);
     }
 
+    @Override
+    public @NonNull String toShortString() {
+        return ISO_8601_CONCISE.format(this);
+    }
+
     @StaticFactoryMethod
     public static @NonNull TimePeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, TimePeriod::from);
@@ -90,4 +96,5 @@ public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<Time
     }
 
     private static final TimeIntervalFormatter.StartEnd ISO_8601 = TimeIntervalFormatter.StartEnd.of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, false);
+    private static final TimeIntervalFormatter.StartEnd ISO_8601_CONCISE = ISO_8601.withConcise(true);
 }

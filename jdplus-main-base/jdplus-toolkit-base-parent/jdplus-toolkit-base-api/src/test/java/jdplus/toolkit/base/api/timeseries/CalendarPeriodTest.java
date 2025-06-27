@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -32,12 +33,16 @@ public class CalendarPeriodTest {
     public void testRepresentableAsString() {
         assertThat(CalendarPeriod.parse("2010-02-17/2010-03-17"))
                 .hasToString("2010-02-17/2010-03-17")
+                .returns("2010-02-17/03-17", HasShortStringRepresentation::toShortString)
+                .isEqualTo(CalendarPeriod.parse("2010-02-17/03-17"))
                 .returns(LocalDate.of(2010, 2, 17), CalendarPeriod::getStart)
                 .returns(LocalDate.of(2010, 3, 17), CalendarPeriod::getEnd)
                 .returns(Period.parse("P1M"), CalendarPeriod::getDuration);
 
         assertThat(CalendarPeriod.parse("2010-01-01/2010-02-01"))
                 .hasToString("2010-01-01/2010-02-01")
+                .returns("2010-01-01/02-01", HasShortStringRepresentation::toShortString)
+                .isEqualTo(CalendarPeriod.parse("2010-01-01/02-01"))
                 .returns(LocalDate.of(2010, 1, 1), CalendarPeriod::getStart)
                 .returns(LocalDate.of(2010, 2, 1), CalendarPeriod::getEnd)
                 .returns(Period.parse("P1M"), CalendarPeriod::getDuration);

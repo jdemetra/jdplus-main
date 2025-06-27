@@ -19,6 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeRecurrenceAccessor;
 import jdplus.toolkit.base.api.time.TimeRecurrenceFormatter;
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -34,7 +35,7 @@ import java.util.Locale;
 @ISO_8601
 @RepresentableAsString
 @lombok.Value(staticConstructor = "of")
-public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
+public class TsDomain implements TimeSeriesRecurrence<TsPeriod>, HasShortStringRepresentation {
 
     /**
      * Generates a domain which is a splitting of a given period in sub-periods
@@ -359,6 +360,11 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
     @Override
     public String toString() {
         return ISO_8601.format(this);
+    }
+
+    @Override
+    public @NonNull String toShortString() {
+        return ISO_8601.format(this, getTsUnit().getPrecision());
     }
 
     @StaticFactoryMethod

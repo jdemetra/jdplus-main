@@ -114,7 +114,7 @@ public abstract sealed class TimeIntervalFormatter
 
             @Override
             public @NonNull Temporal end() {
-                return startEndFormatter.parse(concise ? expand(left, right) : right, startEndQuery);
+                return startEndFormatter.parse(expand(left, right), startEndQuery);
             }
 
             @Override

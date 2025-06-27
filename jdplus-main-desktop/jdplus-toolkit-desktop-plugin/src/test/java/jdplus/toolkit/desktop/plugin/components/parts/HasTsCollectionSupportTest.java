@@ -67,6 +67,6 @@ class HasTsCollectionSupportTest {
             c.applyData(items);
             c.applySelection(selection);
             return value.isEnabled();
-        }, "enabled on [%s] and %s", items.stream().map(TsData::getDomain).map(TsDomain::toString).collect(joining(", ")), selection);
+        }, "enabled on [%s] and %s", items.stream().map(TsData::getDomain).map(TsDomain::toShortString).collect(joining(", ")), selection);
     }
 }

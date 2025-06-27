@@ -488,7 +488,7 @@ public final class JMarginView extends JComponent implements TimeSeriesComponent
             LocalDate ldate = CalendarUtility.toLocalDate(date);
             TsUnit unit = TsUnit.ofAnnualFrequency(data.series.getAnnualFrequency());
             TsPeriod p = TsPeriod.of(unit, ldate);
-            String label = "Period : " + p + "\nValue : ";
+            String label = "Period : " + p.toShortString() + "\nValue : ";
             label += obsFormatResolver.resolve().numberFormatter().formatAsString(data.series.getDoubleValue(p));
             return label;
         }

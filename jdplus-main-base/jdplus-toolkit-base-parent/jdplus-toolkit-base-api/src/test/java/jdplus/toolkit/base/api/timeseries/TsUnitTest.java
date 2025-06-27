@@ -19,6 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import org.junit.jupiter.api.Test;
 
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.UnsupportedTemporalTypeException;
 
 import static java.time.temporal.ChronoUnit.*;
@@ -186,6 +187,15 @@ public class TsUnitTest {
                 .hasToString("P1D");
     }
 
+    @Test
+    public void testPrecision() {
+        assertThat(P1M.getPrecision()).isEqualTo(MONTHS);
+        assertThat(P2M.getPrecision()).isEqualTo(MONTHS);
+        assertThat(P1Y.getPrecision()).isEqualTo(YEARS);
+        assertThat(P0D.getPrecision()).isNull();
+    }
+
+    private static final TsUnit P0D = parse("P0D");
     private static final TsUnit P14M = parse("P14M");
     private static final TsUnit P7M = parse("P7M");
     private static final TsUnit P12M = parse("P12M");

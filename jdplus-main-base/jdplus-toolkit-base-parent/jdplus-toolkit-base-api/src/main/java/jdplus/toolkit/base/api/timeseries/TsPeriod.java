@@ -19,6 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
@@ -37,7 +38,7 @@ import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR_T
 @RepresentableAsString
 @lombok.Value
 @lombok.Builder(toBuilder = true)
-public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod> {
+public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod>, HasShortStringRepresentation {
 
     @lombok.NonNull
     LocalDateTime epoch;
@@ -170,6 +171,11 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     @Override
     public String toString() {
         return ISO_8601.format(this);
+    }
+
+    @Override
+    public @NonNull String toShortString() {
+        return ISO_8601.format(this, unit.getPrecision());
     }
 
     public long idAt(LocalDateTime date) {
@@ -353,7 +359,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     }
 
     @ISO_8601
-    public static final class Builder implements TimeSeriesInterval<TsUnit> {
+    public static final class Builder implements TimeSeriesInterval<TsUnit>, HasShortStringRepresentation {
 
         private LocalDateTime epoch = DEFAULT_EPOCH;
         private TsUnit unit = TsUnit.P1M;
@@ -414,6 +420,11 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
         @Override
         public String toString() {
             return ISO_8601.format(this);
+        }
+
+        @Override
+        public @NonNull String toShortString() {
+            return ISO_8601.format(this, unit.getPrecision());
         }
     }
 }

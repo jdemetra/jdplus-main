@@ -48,7 +48,7 @@ public class TsDataTest {
         }
 
         System.out.println("\n[Test forEach]");
-        ts.forEach(o -> System.out.println(o));
+        ts.forEach(System.out::println);
 
         System.out.println("\n[Test iterator]");
         for (TsObs o : ts) {
@@ -61,11 +61,11 @@ public class TsDataTest {
                 .forEach(System.out::println);
 
         System.out.println("\n[Test forEach(k, v)]");
-        ts.forEach((k, v) -> System.out.println(k + ":" + v + " "));
+        ts.forEach((k, v) -> System.out.println(k.toShortString() + ":" + v + " "));
 
         System.out.println("\n[Test getPeriod / getValue]");
         for (int i = 0; i < ts.length(); i++) {
-            System.out.println(ts.getPeriod(i) + " -> " + ts.getValue(i));
+            System.out.println(ts.getPeriod(i).toShortString() + " -> " + ts.getValue(i));
         }
 
         System.out.println("\n[Test ITimeSeries.OfDouble]");
@@ -78,7 +78,7 @@ public class TsDataTest {
     }
 
     @Test
-    @SuppressWarnings("null")
+    @SuppressWarnings({"null", "DataFlowIssue"})
     public void testFactories() {
         TsPeriod start = TsPeriod.yearly(2001);
         double[] values = {1, 2, 3};
@@ -141,7 +141,7 @@ public class TsDataTest {
 
         @Test
         public void testNoRatio() {
-            TsData x = dataOf("R24/2010-01-01T00:00:00/P1M");
+            TsData x = dataOf("R24/2010-01/P1M");
 
             assertThatExceptionOfType(TsException.class)
                     .isThrownBy(() -> x.aggregate(P1D, First, true));
@@ -149,7 +149,7 @@ public class TsDataTest {
 
         @Test
         public void testNoChange() {
-            TsData x = dataOf("R24/2010-01-01T00:00:00/P1M");
+            TsData x = dataOf("R24/2010-01/P1M");
 
             assertThatObject(x.aggregate(P1M, First, true))
                     .isEqualTo(x);
@@ -157,155 +157,155 @@ public class TsDataTest {
 
         @Test
         public void testCompleteAfterEpoch() {
-            TsData x = dataOf("R24/2010-01-01T00:00:00/P1M");
+            TsData x = dataOf("R24/2010-01/P1M");
 
             assertThatObject(x.aggregate(P1Y, First, false))
                     .isEqualTo(x.aggregate(P1Y, First, true))
-                    .returns("R2/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R2/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(1, 13), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, Last, false))
                     .isEqualTo(x.aggregate(P1Y, Last, true))
-                    .returns("R2/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R2/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(12, 24), TsData::getValues);
 
             assertThatObject(x.aggregate(P3M, First, false))
                     .isEqualTo(x.aggregate(P3M, First, true))
-                    .returns("R8/2010-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns("R8/2010-01/P3M", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(1, 4, 7, 10, 13, 16, 19, 22), TsData::getValues);
         }
 
         @Test
         public void testIncompleteAfterEpoch() {
-            TsData x = dataOf("R24/2010-02-01T00:00:00/P1M");
+            TsData x = dataOf("R24/2010-02/P1M");
 
             assertThatObject(x.aggregate(P1Y, First, false))
-                    .returns("R3/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R3/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(2, 13, 25), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, First, true))
-                    .returns("R1/2011-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/2011/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(13), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, Last, false))
-                    .returns("R3/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R3/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(12, 24, 25), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, Last, true))
-                    .returns("R1/2011-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/2011/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(24), TsData::getValues);
 
             assertThatObject(x.aggregate(P3M, First, false))
-                    .returns("R9/2010-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns("R9/2010-01/P3M", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(2, 4, 7, 10, 13, 16, 19, 22, 25), TsData::getValues);
 
             assertThatObject(x.aggregate(P3M, First, true))
-                    .returns("R7/2010-04-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns("R7/2010-04/P3M", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(4, 7, 10, 13, 16, 19, 22), TsData::getValues);
         }
 
         @Test
         public void testPartialAfterEpoch() {
-            TsData x = dataOf("R11/2010-01-01T00:00:00/P1M");
+            TsData x = dataOf("R11/2010-01/P1M");
 
             assertThatObject(x.aggregate(P1Y, First, false))
-                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(1), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, First, true))
-                    .returns("R0/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R0/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(Doubles.EMPTY, TsData::getValues);
 
             assertThatObject(TsData.ofInternal(TsPeriod.monthly(2010, 1), new double[]{1, 2, 3}).aggregate(P1Y, Sum, false))
-                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(6), TsData::getValues);
 
             assertThatObject(TsData.ofInternal(TsPeriod.monthly(2010, 9), new double[]{1, 2, 3}).aggregate(P1Y, Sum, false))
-                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(6), TsData::getValues);
 
             assertThatObject(TsData.ofInternal(TsPeriod.monthly(2010, 10), new double[]{1, 2, 3}).aggregate(P1Y, Sum, false))
-                    .returns("R1/2010-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/2010/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(6), TsData::getValues);
         }
 
         @Test
         public void testCompleteBeforeEpoch() {
-            TsData x = dataOf("R24/1969-01-01T00:00:00/P1M");
+            TsData x = dataOf("R24/1969-01/P1M");
 
             assertThatObject(x.aggregate(P1Y, First, false))
                     .isEqualTo(x.aggregate(P1Y, First, true))
-                    .returns("R2/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R2/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(1, 13), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, Last, false))
                     .isEqualTo(x.aggregate(P1Y, Last, true))
-                    .returns("R2/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R2/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(12, 24), TsData::getValues);
 
             assertThatObject(x.aggregate(P3M, First, false))
                     .isEqualTo(x.aggregate(P3M, First, true))
-                    .returns("R8/1969-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns("R8/1969-01/P3M", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(1, 4, 7, 10, 13, 16, 19, 22), TsData::getValues);
         }
 
         @Test
         public void testIncompleteBeforeEpoch() {
-            TsData x = dataOf("R24/1969-02-01T00:00:00/P1M");
+            TsData x = dataOf("R24/1969-02/P1M");
 
             assertThatObject(x.aggregate(P1Y, First, false))
-                    .returns("R3/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R3/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(2, 13, 25), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, First, true))
-                    .returns("R1/1970-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/1970/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(13), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, Last, false))
-                    .returns("R3/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R3/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(12, 24, 25), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, Last, true))
-                    .returns("R1/1970-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/1970/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(24), TsData::getValues);
 
             assertThatObject(x.aggregate(P3M, First, false))
-                    .returns("R9/1969-01-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns("R9/1969-01/P3M", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(2, 4, 7, 10, 13, 16, 19, 22, 25), TsData::getValues);
 
             assertThatObject(x.aggregate(P3M, First, true))
-                    .returns("R7/1969-04-01T00:00:00/P3M", TsDataTest::getDomainAsString)
+                    .returns("R7/1969-04/P3M", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(4, 7, 10, 13, 16, 19, 22), TsData::getValues);
         }
 
         @Test
         public void testPartialBeforeEpoch() {
-            TsData x = dataOf("R11/1969-01-01T00:00:00/P1M");
+            TsData x = dataOf("R11/1969-01/P1M");
 
             assertThatObject(x.aggregate(P1Y, First, false))
-                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(1), TsData::getValues);
 
             assertThatObject(x.aggregate(P1Y, First, true))
-                    .returns("R0/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R0/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(Doubles.EMPTY, TsData::getValues);
 
             assertThatObject(TsData.ofInternal(TsPeriod.monthly(1969, 1), new double[]{1, 2, 3}).aggregate(P1Y, Sum, false))
-                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(6), TsData::getValues);
 
             assertThatObject(TsData.ofInternal(TsPeriod.monthly(1969, 9), new double[]{1, 2, 3}).aggregate(P1Y, Sum, false))
-                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(6), TsData::getValues);
 
             assertThatObject(TsData.ofInternal(TsPeriod.monthly(1969, 10), new double[]{1, 2, 3}).aggregate(P1Y, Sum, false))
-                    .returns("R1/1969-01-01T00:00:00/P1Y", TsDataTest::getDomainAsString)
+                    .returns("R1/1969/P1Y", TsDataTest::getDomainAsString)
                     .returns(DoubleSeq.of(6), TsData::getValues);
         }
 
         @Test
         public void testByPosition() {
-            TsData x = dataOf("R61/1970-02-01T00:00:00/P1M");
+            TsData x = dataOf("R61/1970-02/P1M");
             assertThat(x.aggregateByPosition(P1Y, 3)).hasSize(5);
             assertThat(x.aggregateByPosition(P1Y, 0)).hasSize(5);
             assertThat(x.aggregateByPosition(P1Y, 11)).hasSize(5);
@@ -401,7 +401,7 @@ public class TsDataTest {
     }
 
     private static String getDomainAsString(TsData data) {
-        return data.getDomain().toString();
+        return data.getDomain().toShortString();
     }
 
     private static TsData dataOf(String domain) {
