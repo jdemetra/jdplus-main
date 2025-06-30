@@ -34,11 +34,11 @@ This binary provides its own Java runtime.
 
 1. **Download** the [platform-specific package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-standalone-VERSION-PLATFORM.zip`)
 
-   | `PLATFORM`  | Intel            | Arm              |
-   |:-----------:|------------------|------------------|
-   |  **MacOS**  | `osx-x86_64`     | `osx-aarch_64`   |
-   |  **Linux**  | `linux-x86_64`   | `linux-aarch_64` |
-   | **Windows** | `windows-x86_64` |                  |
+   | `PLATFORM`  | Intel            | Arm                |
+   |:-----------:|------------------|--------------------|
+   |  **MacOS**  | `osx-x86_64`     | `osx-aarch_64`     |
+   |  **Linux**  | `linux-x86_64`   | `linux-aarch_64`   |
+   | **Windows** | `windows-x86_64` | `windows-aarch_64` |
 
 2. **Extract** it to any folder on your system (i.e. `DEMETRA_PATH`)
 3. **Run** the executable file located in the `DEMETRA_PATH/bin` directory
