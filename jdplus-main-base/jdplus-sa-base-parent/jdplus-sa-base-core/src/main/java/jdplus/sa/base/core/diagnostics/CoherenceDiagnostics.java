@@ -163,8 +163,8 @@ public final class CoherenceDiagnostics implements Diagnostics {
             }
         }
         // annual totals
-        TsData yca = yc.aggregate(TsUnit.YEAR, AggregationType.Sum, true);
-        TsData saa = sa.aggregate(TsUnit.YEAR, AggregationType.Sum, true);
+        TsData yca = yc.aggregate(TsUnit.P1Y, AggregationType.Sum, true);
+        TsData saa = sa.aggregate(TsUnit.P1Y, AggregationType.Sum, true);
         maxAnnualDifference = 0;
         for (int k = 0; k < yca.length(); ++k) {
             double dcur = Math.abs(yca.getValue(k) - saa.getValue(k));

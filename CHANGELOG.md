@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![STAT] Add support of compact notation in ISO 8601 time interval [#159](https://github.com/jdemetra/jdplus-main/issues/159)
+
 ## [3.5.1] - 2025-06-12
 
 ### Fixed

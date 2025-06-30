@@ -333,21 +333,21 @@ public class RegArimaKernelTest {
 
         RegArimaKernel processor = RegArimaKernel.of(RegArimaSpec.RG0, null);
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             RegSarimaModel rslt = processor.process(s, null);
             assertTrue(rslt != null);
 //            System.out.println(rslt.getEstimation().getParameters().getValues());
         }
         processor = RegArimaKernel.of(RegArimaSpec.RG3, null);
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             RegSarimaModel rslt = processor.process(s, null);
             assertTrue(rslt != null);
 //            System.out.println(rslt.getEstimation().getParameters().getValues());
         }
         processor = RegArimaKernel.of(RegArimaSpec.RG4, null);
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             RegSarimaModel rslt = processor.process(s, null);
             assertTrue(rslt != null);
 //            System.out.println(rslt.getEstimation().getParameters().getValues());

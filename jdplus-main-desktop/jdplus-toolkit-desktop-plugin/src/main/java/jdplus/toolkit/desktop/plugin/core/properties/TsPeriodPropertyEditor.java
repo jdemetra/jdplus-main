@@ -30,6 +30,6 @@ public class TsPeriodPropertyEditor extends PropertyEditorSupport {
     @Override
     public String getAsText() {
         TsPeriod value = (TsPeriod) getValue();
-        return value != null ? value.toString(): "";
+        return value != null ? value.toShortString(): "";
     }
 }

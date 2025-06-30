@@ -19,13 +19,16 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
+import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import lombok.NonNull;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+
+import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR_TIME;
 
 /**
  * @author Jean Palate
@@ -33,18 +36,18 @@ import java.time.format.DateTimeParseException;
 @ISO_8601
 @RepresentableAsString
 @lombok.Value(staticConstructor = "of")
-public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<TimePeriod> {
+public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<TimePeriod>, HasShortStringRepresentation {
 
     @lombok.NonNull
     LocalDateTime start, end;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return start;
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return end;
     }
 
@@ -54,7 +57,7 @@ public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<Time
     }
 
     @Override
-    public Duration getDuration() {
+    public @NonNull Duration getDuration() {
         return Duration.between(start, end);
     }
 
@@ -74,18 +77,24 @@ public class TimePeriod implements TimeSeriesInterval<Duration>, Comparable<Time
 
     @Override
     public String toString() {
-        return TimeIntervalFormatter.StartEnd.ISO_LOCAL_DATE_TIME.format(this);
+        return ISO_8601.format(this);
+    }
+
+    @Override
+    public @NonNull String toShortString() {
+        return ISO_8601_CONCISE.format(this);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
-        return TimeIntervalFormatter.StartEnd.ISO_LOCAL_DATE_TIME.parse(text, TimePeriod::from);
+    public static @NonNull TimePeriod parse(@NonNull CharSequence text) throws DateTimeParseException {
+        return ISO_8601.parse(text, TimePeriod::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePeriod from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull TimePeriod from(@NonNull TimeIntervalAccessor timeInterval) {
         return TimePeriod.of(LocalDateTime.from(timeInterval.start()), LocalDateTime.from(timeInterval.end()));
     }
+
+    private static final TimeIntervalFormatter.StartEnd ISO_8601 = TimeIntervalFormatter.StartEnd.of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, false);
+    private static final TimeIntervalFormatter.StartEnd ISO_8601_CONCISE = ISO_8601.withConcise(true);
 }

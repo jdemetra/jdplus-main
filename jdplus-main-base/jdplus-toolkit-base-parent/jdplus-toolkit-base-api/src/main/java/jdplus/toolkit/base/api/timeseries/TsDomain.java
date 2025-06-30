@@ -19,6 +19,7 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeRecurrenceAccessor;
 import jdplus.toolkit.base.api.time.TimeRecurrenceFormatter;
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -34,7 +35,7 @@ import java.util.Locale;
 @ISO_8601
 @RepresentableAsString
 @lombok.Value(staticConstructor = "of")
-public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
+public class TsDomain implements TimeSeriesRecurrence<TsPeriod>, HasShortStringRepresentation {
 
     /**
      * Generates a domain which is a splitting of a given period in sub-periods
@@ -58,7 +59,7 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
         }
     }
 
-    public static final TsDomain DEFAULT_EMPTY = of(TsPeriod.of(TsUnit.YEAR, 0), 0);
+    public static final TsDomain DEFAULT_EMPTY = of(TsPeriod.of(TsUnit.P1Y, 0), 0);
 
     @lombok.NonNull
     TsPeriod startPeriod;
@@ -72,7 +73,7 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
     }
 
     @Override
-    public TsPeriod getInterval() {
+    public @NonNull TsPeriod getInterval() {
         return startPeriod;
     }
 
@@ -100,18 +101,18 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
     }
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return startPeriod.start();
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         checkNonEmpty();
         return startPeriod.dateAt(startPeriod.getId() + length);
     }
 
     @Override
-    public boolean contains(LocalDateTime date) {
+    public boolean contains(@NonNull LocalDateTime date) {
         return contains(startPeriod.idAt(date));
     }
 
@@ -361,15 +362,18 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod> {
         return ISO_8601.format(this);
     }
 
+    @Override
+    public @NonNull String toShortString() {
+        return ISO_8601.format(this, getTsUnit().getPrecision());
+    }
+
     @StaticFactoryMethod
-    @NonNull
-    public static TsDomain parse(@NonNull CharSequence text) throws DateTimeParseException {
+    public static @NonNull TsDomain parse(@NonNull CharSequence text) throws DateTimeParseException {
         return ISO_8601.parse(text, TsDomain::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TsDomain from(@NonNull TimeRecurrenceAccessor timeRecurrence) {
+    public static @NonNull TsDomain from(@NonNull TimeRecurrenceAccessor timeRecurrence) {
         return of(TsPeriod.from(timeRecurrence.getInterval()), timeRecurrence.length());
     }
 

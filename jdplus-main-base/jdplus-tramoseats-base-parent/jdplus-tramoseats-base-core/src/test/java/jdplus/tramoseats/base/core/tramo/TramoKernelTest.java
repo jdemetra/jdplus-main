@@ -532,7 +532,7 @@ public class TramoKernelTest {
         IPreprocessor oprocessor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TR0.build();
         int n = 0;
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
@@ -549,7 +549,7 @@ public class TramoKernelTest {
         oprocessor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TR3.build();
         n = 0;
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
@@ -566,7 +566,7 @@ public class TramoKernelTest {
         oprocessor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.build();
         n = 0;
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);

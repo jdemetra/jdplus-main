@@ -64,7 +64,7 @@ public class TsConverterTest {
         for (TsFrequency freq : TsFrequency.values()) {
             assertThat(fromTsUnit(toTsUnit(freq))).isEqualTo(freq);
         }
-        assertThatThrownBy(() -> fromTsUnit(TsUnit.DAY)).isInstanceOf(ConverterException.class);
+        assertThatThrownBy(() -> fromTsUnit(TsUnit.P1D)).isInstanceOf(ConverterException.class);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class TsConverterTest {
             TsPeriod normal = TsPeriod.of(unit, 0);
             assertThat(toTsPeriod(fromTsPeriod(normal))).isEqualTo(normal);
         }
-        assertThatThrownBy(() -> fromTsPeriod(TsPeriod.of(TsUnit.DAY, 0))).isInstanceOf(ConverterException.class);
+        assertThatThrownBy(() -> fromTsPeriod(TsPeriod.of(TsUnit.P1D, 0))).isInstanceOf(ConverterException.class);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class TsConverterTest {
             TsDomain normal = TsDomain.of(TsPeriod.of(unit, 0), 4);
             assertThat(toTsDomain(fromTsDomain(normal))).isEqualTo(normal);
         }
-        assertThatThrownBy(() -> fromTsDomain(TsDomain.of(TsPeriod.of(TsUnit.DAY, 0), 4))).isInstanceOf(ConverterException.class);
+        assertThatThrownBy(() -> fromTsDomain(TsDomain.of(TsPeriod.of(TsUnit.P1D, 0), 4))).isInstanceOf(ConverterException.class);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class TsConverterTest {
         Ts.Builder invalidData = Ts.builder().type(TsInformationType.All);
         assertThat(fromTsBuilder(invalidData.build()).hasData()).isTrue();
 
-        Ts.Builder validData = Ts.builder().type(TsInformationType.All).data(TsData.random(TsUnit.MONTH, 0));
+        Ts.Builder validData = Ts.builder().type(TsInformationType.All).data(TsData.random(TsUnit.P1M, 0));
         assertThat(fromTsBuilder(validData.build()).hasData()).isTrue();
 
         Ts.Builder undefinedData = Ts.builder().type(TsInformationType.MetaData);
@@ -327,7 +327,7 @@ public class TsConverterTest {
     private final TsUnit[] supportedUnits = Stream.of(TsFrequency.values()).map(o -> toTsUnit(o)).filter(o -> !o.equals(TsUnit.UNDEFINED)).toArray(TsUnit[]::new);
 
     private final TsData emptyTsData = TsData.empty("boom");
-    private final TsData monthlyTsData = TsData.random(TsUnit.MONTH, 0);
+    private final TsData monthlyTsData = TsData.random(TsUnit.P1M, 0);
     private final Ts emptyTs = Ts.builder().name("x").data(emptyTsData).meta("k", "v").moniker(TsMoniker.of("a", "b")).type(TsInformationType.UserDefined).build();
     private final Ts monthlyTs = Ts.builder().name("x").data(monthlyTsData).meta("k", "v").moniker(TsMoniker.of("a", "b")).type(TsInformationType.UserDefined).build();
 

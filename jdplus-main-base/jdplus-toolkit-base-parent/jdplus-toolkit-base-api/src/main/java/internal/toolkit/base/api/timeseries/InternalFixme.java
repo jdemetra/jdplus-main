@@ -49,10 +49,10 @@ public class InternalFixme {
     @lombok.AllArgsConstructor
     private enum OldFreq {
         Undefined(0, TsUnit.UNDEFINED),
-        Yearly(1, TsUnit.YEAR),
-        HalfYearly(2, TsUnit.HALF_YEAR),
-        Quarterly(4, TsUnit.QUARTER),
-        Monthly(12, TsUnit.MONTH);
+        Yearly(1, TsUnit.P1Y),
+        HalfYearly(2, TsUnit.P6M),
+        Quarterly(4, TsUnit.P3M),
+        Monthly(12, TsUnit.P1M);
 
         final int annualFrequency;
         final TsUnit freq;

@@ -145,17 +145,17 @@ public enum RegularFrequency {
     public TsUnit toTsUnit() {
         switch (this) {
             case Yearly:
-                return TsUnit.YEAR;
+                return TsUnit.P1Y;
             case HalfYearly:
-                return TsUnit.HALF_YEAR;
+                return TsUnit.P6M;
             case QuadriMonthly:
-                return TsUnit.of(4, ChronoUnit.MONTHS);
+                return TsUnit.P4M;
             case Quarterly:
-                return TsUnit.QUARTER;
+                return TsUnit.P3M;
             case BiMonthly:
-                return TsUnit.of(2, ChronoUnit.MONTHS);
+                return TsUnit.P2M;
             case Monthly:
-                return TsUnit.MONTH;
+                return TsUnit.P1M;
             case Undefined:
                 return TsUnit.UNDEFINED;
         }

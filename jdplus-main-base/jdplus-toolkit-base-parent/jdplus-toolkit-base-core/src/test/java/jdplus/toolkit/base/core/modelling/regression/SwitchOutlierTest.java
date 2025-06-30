@@ -39,7 +39,7 @@ public class SwitchOutlierTest {
 
     @Test
     public void testData() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 20);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 20);
         for (int i = -10; i < 30; ++i) {
             SwitchOutlier wo = new SwitchOutlier(days.get(0).plus(i).start());
             DataBlock buffer = Regression.x(days, wo);

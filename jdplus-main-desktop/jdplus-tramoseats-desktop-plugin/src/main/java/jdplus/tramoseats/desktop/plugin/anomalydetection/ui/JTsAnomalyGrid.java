@@ -459,7 +459,7 @@ public final class JTsAnomalyGrid extends JComponent {
                              */
                             setText(String.valueOf(obs.getValue()));
                             if (outliers.size() <= obs.getSeriesIndex() || outliers.get(obs.getSeriesIndex()) == null) {
-                                setToolTipText("<html>Period : " + obs.getPeriod().toString() + "<br>"
+                                setToolTipText("<html>Period : " + obs.getPeriod().toShortString() + "<br>"
                                         + "Value : " + df.format(obs.getValue()));
                             } else {
                                 OutlierEstimation[] est = outliers.get(obs.getSeriesIndex());
@@ -473,7 +473,7 @@ public final class JTsAnomalyGrid extends JComponent {
 
                                 setText(String.valueOf(obs.getValue()));
                                 if (currentOutlier != null) {
-                                    setToolTipText("<html>Period : " + obs.getPeriod().toString() + "<br>"
+                                    setToolTipText("<html>Period : " + obs.getPeriod().toShortString() + "<br>"
                                             + "Value : " + df.format(obs.getValue()) + "<br>"
                                             + "Outlier Value : " + df.format(currentOutlier.getValue()) + "<br>"
                                             + "Std Err : " + df.format(currentOutlier.getStderr()) + "<br>"
@@ -482,7 +482,7 @@ public final class JTsAnomalyGrid extends JComponent {
                                     setBackground(OutlierColorChooser.getColor(currentOutlier.getCode()));
                                     setForeground(OutlierColorChooser.getForeColor(currentOutlier.getCode()));
                                 } else {
-                                    setToolTipText("<html>Period : " + obs.getPeriod().toString() + "<br>"
+                                    setToolTipText("<html>Period : " + obs.getPeriod().toShortString() + "<br>"
                                             + "Value : " + df.format(obs.getValue()));
                                 }
                             }

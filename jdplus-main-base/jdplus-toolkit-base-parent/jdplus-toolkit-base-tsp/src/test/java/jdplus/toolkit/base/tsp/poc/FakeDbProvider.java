@@ -19,6 +19,7 @@ package jdplus.toolkit.base.tsp.poc;
 import internal.toolkit.base.tsp.cube.CubeRepository;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.tsp.DataSourceLoader;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
 import jdplus.toolkit.base.tsp.HasDataSourceBean;
@@ -33,7 +34,6 @@ import jdplus.toolkit.base.tsp.util.ResourcePool;
 
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.joining;
-import static jdplus.toolkit.base.api.timeseries.TsUnit.MONTH;
 
 /**
  * @author Philippe Charles
@@ -73,9 +73,9 @@ public final class FakeDbProvider implements DataSourceLoader<FakeDbBean> {
         return CubeRepository
                 .builder()
                 .root(root)
-                .item(of(root.child("BE", "INDUSTRY"), TsData.random(MONTH, 1)))
-                .item(of(root.child("FR", "INDUSTRY"), TsData.random(MONTH, 2)))
-                .item(of(root.child("BE", "STUFF"), TsData.random(MONTH, 3)))
+                .item(of(root.child("BE", "INDUSTRY"), TsData.random(TsUnit.P1M, 1)))
+                .item(of(root.child("FR", "INDUSTRY"), TsData.random(TsUnit.P1M, 2)))
+                .item(of(root.child("BE", "STUFF"), TsData.random(TsUnit.P1M, 3)))
                 .item(of(root.child("FR", "STUFF"), TsData.empty("Not enough data")))
                 .name("Fake")
                 .build();

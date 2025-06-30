@@ -354,7 +354,7 @@ public class GenericTradingDaysFactory implements RegressionVariableFactory<Gene
         int n = domain.length();
         int[] start = new int[n + 1]; // id of the first day for each period
         LocalDate cur = domain.start().toLocalDate();
-        int conv = TsUnit.MONTH.ratioOf(domain.getStartPeriod().getUnit());
+        int conv = TsUnit.P1M.ratioOf(domain.getStartPeriod().getUnit());
         int year = cur.getYear(), month = cur.getMonthValue();
         for (int i = 0; i < start.length; ++i) {
             start[i] = calc(year, month, 1);

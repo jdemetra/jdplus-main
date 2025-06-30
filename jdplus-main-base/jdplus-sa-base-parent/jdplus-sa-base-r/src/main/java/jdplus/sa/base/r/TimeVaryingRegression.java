@@ -123,7 +123,7 @@ public class TimeVaryingRegression {
     }
 
     public Results regarima(TsData s, String td, String svar, double aicdiff) {
-        int freq = s.getTsUnit().ratioOf(TsUnit.YEAR);
+        int freq = s.getTsUnit().ratioOf(TsUnit.P1Y);
         SarimaOrders spec = SarimaOrders.airline(freq);
         DayClustering dc = days(td);
         FastMatrix mtd = generate(s.getDomain(), dc);

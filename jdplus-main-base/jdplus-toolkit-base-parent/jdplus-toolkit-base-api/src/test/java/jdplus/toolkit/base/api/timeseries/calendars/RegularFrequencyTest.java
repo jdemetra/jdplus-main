@@ -1,7 +1,6 @@
 package jdplus.toolkit.base.api.timeseries.calendars;
 
 import jdplus.toolkit.base.api.timeseries.TsUnit;
-import jdplus.toolkit.base.api.timeseries.calendars.RegularFrequency;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +25,6 @@ public class RegularFrequencyTest {
                     .isEqualTo(x);
         }
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> RegularFrequency.parseTsUnit(TsUnit.MINUTE));
+                .isThrownBy(() -> RegularFrequency.parseTsUnit(TsUnit.PT1M));
     }
 }

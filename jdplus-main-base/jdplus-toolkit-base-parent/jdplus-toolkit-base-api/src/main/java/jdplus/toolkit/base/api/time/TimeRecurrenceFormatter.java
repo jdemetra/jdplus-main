@@ -17,10 +17,13 @@
 package jdplus.toolkit.base.api.time;
 
 import lombok.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+
+import static jdplus.toolkit.base.api.time.TemporalFormatter.appendTo;
 
 /**
  * @author Philippe Charles
@@ -34,36 +37,38 @@ public final class TimeRecurrenceFormatter {
     @lombok.NonNull
     private final TimeIntervalQuery<? extends TimeInterval<?, ?>> intervalQuery;
 
-    @NonNull
-    public String format(@NonNull TimeRecurrence<?> timeRecurrence) {
+    public @NonNull String format(@NonNull TimeRecurrence<?> timeRecurrence) throws DateTimeException {
+        return format(timeRecurrence, null);
+    }
+
+    public @NonNull String format(@NonNull TimeRecurrence<?> timeRecurrence, @Nullable ChronoUnit precision) throws DateTimeException {
         StringBuilder result = new StringBuilder(32);
-        formatTo(timeRecurrence, result);
+        formatTo(timeRecurrence, result, precision);
         return result.toString();
     }
 
-    public void formatTo(@NonNull TimeRecurrence<?> timeRecurrence, @NonNull Appendable appendable) {
-        try {
-            appendable.append(RECURRENCE_CHAR);
-            appendable.append(String.valueOf(timeRecurrence.length()));
-            appendable.append(RECURRENCE_SEPARATOR);
-            intervalFormatter.formatTo(timeRecurrence.getInterval(), appendable);
-        } catch (IOException ex) {
-            throw new DateTimeException(ex.getMessage(), ex);
-        }
+    public void formatTo(@NonNull TimeRecurrence<?> timeRecurrence, @NonNull Appendable appendable) throws DateTimeException {
+        formatTo(timeRecurrence, appendable, null);
     }
 
-    @NonNull
-    public <R extends TimeRecurrence<?>> R parse(@NonNull CharSequence text, @NonNull TimeRecurrenceQuery<R> query) throws DateTimeParseException {
+    public void formatTo(@NonNull TimeRecurrence<?> timeRecurrence, @NonNull Appendable appendable, @Nullable ChronoUnit precision) throws DateTimeException {
+        appendTo(RECURRENCE_CHAR, appendable);
+        appendTo(String.valueOf(timeRecurrence.length()), appendable);
+        appendTo(RECURRENCE_SEPARATOR, appendable);
+        intervalFormatter.formatTo(timeRecurrence.getInterval(), appendable, precision);
+    }
+
+    public <R extends TimeRecurrence<?>> @NonNull R parse(@NonNull CharSequence text, @NonNull TimeRecurrenceQuery<R> query) throws DateTimeParseException {
         if (text.charAt(0) != RECURRENCE_CHAR) {
             throw new DateTimeParseException("Cannot found recurrence character", text, 0);
         }
         int index = getRecurrenceSeparatorIndex(text);
         CharSequence left = text.subSequence(1, index);
         CharSequence right = text.subSequence(index + 1, text.length());
-        return query.queryFrom(
+        R result = query.queryFrom(
                 new TimeRecurrenceAccessor() {
                     @Override
-                    public TimeInterval<?, ?> getInterval() {
+                    public @NonNull TimeInterval<?, ?> getInterval() {
                         return intervalFormatter.parse(right, intervalQuery);
                     }
 
@@ -72,6 +77,10 @@ public final class TimeRecurrenceFormatter {
                         return parseLength(left);
                     }
                 });
+        if (result == null) {
+            throw new DateTimeException("Unable to obtain TimeRecurrence from TimeRecurrenceQuery");
+        }
+        return result;
     }
 
     private static int getRecurrenceSeparatorIndex(CharSequence text) throws DateTimeParseException {

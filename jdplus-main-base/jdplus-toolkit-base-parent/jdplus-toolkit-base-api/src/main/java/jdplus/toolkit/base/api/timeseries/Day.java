@@ -19,14 +19,16 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.time.ISO_8601;
 import jdplus.toolkit.base.api.time.TimeIntervalAccessor;
 import jdplus.toolkit.base.api.time.TimeIntervalFormatter;
+import lombok.NonNull;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
+
+import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR;
 
 /**
  * @author Jean Palate
@@ -40,12 +42,12 @@ public class Day implements TimeSeriesInterval<Period> {
     LocalDate day;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return day.atStartOfDay();
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return day.plusDays(1).atStartOfDay();
     }
 
@@ -55,24 +57,24 @@ public class Day implements TimeSeriesInterval<Period> {
     }
 
     @Override
-    public Period getDuration() {
+    public @NonNull Period getDuration() {
         return Period.ofDays(1);
     }
 
     @Override
     public String toString() {
-        return TimeIntervalFormatter.StartDuration.ISO_LOCAL_DATE.format(this);
+        return ISO_8601.format(this);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static Day parse(@NonNull CharSequence text) throws DateTimeParseException {
-        return TimeIntervalFormatter.StartDuration.ISO_LOCAL_DATE.parse(text, Day::from);
+    public static @NonNull Day parse(@NonNull CharSequence text) throws DateTimeParseException {
+        return ISO_8601.parse(text, Day::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static Day from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull Day from(@NonNull TimeIntervalAccessor timeInterval) {
         return of(LocalDate.from(timeInterval.start()));
     }
+
+    private static final TimeIntervalFormatter.StartDuration ISO_8601 = TimeIntervalFormatter.StartDuration.of(EXTENDED_CALENDAR, LocalDate::from, Period::parse);
 }

@@ -54,12 +54,12 @@ public final class TsDataView {
         int period=domain.getAnnualFrequency();
         if (period<0)
             throw new TsException(TsException.INVALID_OPERATION);
-        TsPeriod nstart=start.withUnit(TsUnit.YEAR);
+        TsPeriod nstart=start.withUnit(TsUnit.P1Y);
         int nbeg = TsDomain.splitOf(nstart, start.getUnit(), true).indexOf(start);
         if (nbeg != 0) {
             nbeg = period - nbeg;
         }
-        int nend = TsDomain.splitOf(end.withUnit(TsUnit.YEAR), end.getUnit(), true).indexOf(end);
+        int nend = TsDomain.splitOf(end.withUnit(TsUnit.P1Y), end.getUnit(), true).indexOf(end);
         int len = series.length() - nend - nbeg;
         final int beg = nbeg;
         return new TsDataView(start.plus(nbeg), DoubleSeq.onMapping(len, i -> series.getValue(beg + i)), 1);

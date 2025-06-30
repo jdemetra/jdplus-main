@@ -102,7 +102,7 @@ public final class CleanedData {
         double[] tmp = new double[s.length()];
         int[] tpos = new int[tmp.length];
         TsPeriod start = s.getStart();
-        if (!start.getUnit().equals(TsUnit.DAY)) {
+        if (!start.getUnit().equals(TsUnit.P1D)) {
             throw new java.lang.UnsupportedOperationException();
         }
         int pos = start.start().getDayOfWeek().getValue();
@@ -126,7 +126,7 @@ public final class CleanedData {
         double[] tmp = new double[s.length()];
         int[] tpos = new int[tmp.length];
         TsPeriod start = s.getStart();
-        if (!start.getUnit().equals(TsUnit.DAY)) {
+        if (!start.getUnit().equals(TsUnit.P1D)) {
             throw new java.lang.UnsupportedOperationException();
         }
         int pos = start.start().getDayOfWeek().getValue(), i = 0;
