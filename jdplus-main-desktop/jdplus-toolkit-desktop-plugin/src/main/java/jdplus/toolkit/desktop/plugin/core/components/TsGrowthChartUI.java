@@ -22,7 +22,6 @@ import ec.util.chart.SeriesPredicate;
 import ec.util.chart.TimeSeriesChart;
 import ec.util.chart.swing.JTimeSeriesChart;
 import ec.util.various.swing.JCommand;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
 import jdplus.toolkit.desktop.plugin.actions.Actions;
 import jdplus.toolkit.desktop.plugin.components.JTsGrowthChart;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
@@ -30,14 +29,11 @@ import jdplus.toolkit.desktop.plugin.components.parts.*;
 import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
 import jdplus.toolkit.desktop.plugin.util.ActionMaps;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
 import jdplus.toolkit.desktop.plugin.util.InputMaps;
-import org.jfree.data.xy.IntervalXYDataset;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.NumberFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import static jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview.PRINT_ACTION;
@@ -121,12 +117,7 @@ public final class TsGrowthChartUI implements InternalUI<JTsGrowthChart> {
         chartPanel.setObsFormatter(new ObsFunction<String>() {
             @Override
             public String apply(int series, int obs) {
-                IntervalXYDataset dataset = chartPanel.getDataset();
-                CharSequence period = chartPanel.getPeriodFormat().format(new Date(dataset.getX(series, obs).longValue()));
-                CharSequence value = chartPanel.getValueFormat().format(dataset.getY(series, obs));
-                StringBuilder result = new StringBuilder();
-                result.append(period).append(": ").append(value);
-                return result.toString();
+                return target.getTsCollection().get(series).getData().get(obs).toShortString();
             }
         });
         chartPanel.setLegendVisibilityPredicate(new SeriesPredicate() {
@@ -203,8 +194,7 @@ public final class TsGrowthChartUI implements InternalUI<JTsGrowthChart> {
 
     //<editor-fold defaultstate="collapsed" desc="Event handlers">
     private void onDataFormatChange() {
-        ObsFormat obsFormat = obsFormatResolver.resolve();
-        chartPanel.setPeriodFormat(DateFormatAdapter.of(obsFormat));
+        chartPanel.setPeriodFormat(new InternalComponents.DateFormatAdapter(() -> target.getTsCollection().getDomain()));
     }
 
     private void onColorSchemeChange() {

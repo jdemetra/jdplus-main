@@ -465,7 +465,7 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
                         .sequence(Range.of(day, day))
                         .build();
                 niv.add(Variable.<InterventionVariable>builder()
-                        .name(EstimationPolicyType.IV_AO + period.display())
+                        .name(EstimationPolicyType.IV_AO + period.getStartAsShortString())
                         .attributes(IV_AO)
                         .core(ao)
                         .build());

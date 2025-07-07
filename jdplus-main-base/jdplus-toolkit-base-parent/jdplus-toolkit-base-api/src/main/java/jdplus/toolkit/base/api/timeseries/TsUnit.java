@@ -78,6 +78,7 @@ public class TsUnit implements TemporalAmount {
      *
      * @return The number of periods in 1 year or -1 if the unit is not
      * compatible with years
+     * @see #NO_ANNUAL_FREQUENCY
      */
     public int getAnnualFrequency() {
         switch (chronoUnit) {
@@ -93,8 +94,10 @@ public class TsUnit implements TemporalAmount {
                 }
                 break;
         }
-        return -1;
+        return NO_ANNUAL_FREQUENCY;
     }
+
+    public static final int NO_ANNUAL_FREQUENCY = -1;
 
     @Override
     public String toString() {

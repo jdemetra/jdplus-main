@@ -178,6 +178,17 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
         return ISO_8601.format(this, unit.getPrecision());
     }
 
+    /**
+     * Gets the start part of this time interval as a short string using
+     * the <a href="https://en.wikipedia.org/wiki/ISO_8601#Reduced_precision">ISO_8601 reduced precision</a> mechanism.
+     *
+     * @return a non-null string
+     */
+    public @NonNull String getStartAsShortString() {
+        // TODO: add access to TemporalFormatter in StartDuration ?
+        return EXTENDED_CALENDAR_TIME.format(start(), unit.getPrecision());
+    }
+
     public long idAt(LocalDateTime date) {
         return idAt(epoch, unit, date);
     }
@@ -336,6 +347,11 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
 //        return (int) (id0 - id2);
 //    }
 //
+
+    /**
+     * @deprecated see {@link #getStartAsShortString()}
+     */
+    @Deprecated
     public String display() {
         if (unit.getChronoUnit().getDuration().compareTo(ChronoUnit.DAYS.getDuration()) < 0) {
             return start().toString();

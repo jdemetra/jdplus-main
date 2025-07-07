@@ -452,7 +452,7 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
                             .sequence(Range.of(day, day))
                             .build();
                     niv.add(Variable.<InterventionVariable>builder()
-                            .name(EstimationPolicyType.IV_AO+period.display())
+                            .name(EstimationPolicyType.IV_AO+ period.getStartAsShortString())
                             .core(ao)
                             .attributes(IV_AO)
                             .build());

@@ -107,7 +107,7 @@ public class OutlierDescriptor implements IPropertyDescriptors {
             }
         } else {
             TsUnit unit = TsUnit.ofAnnualFrequency(freq);
-            builder.append(type).append(InformationSet.SEP).append(TsPeriod.of(unit, position).display());
+            builder.append(type).append(InformationSet.SEP).append(TsPeriod.of(unit, position).getStartAsShortString());
             if (parameter.isFixed()) {
                 builder.append(" [").append(parameter.getValue()).append(']');
             }

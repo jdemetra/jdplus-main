@@ -70,7 +70,7 @@ public class OutliersDetectionModuleTest {
         int[][] outliers = od.getOutliers();
         for (int i = 0; i < outliers.length; ++i) {
             int[] cur = outliers[i];
-            System.out.println(od.getFactory(cur[1]).getCode() + '-' + start.plus(cur[0]).display());
+            System.out.println(od.getFactory(cur[1]).getCode() + '-' + start.plus(cur[0]).getStartAsShortString());
         }
         assertTrue(outliers.length == 4);
     }
@@ -95,7 +95,7 @@ public class OutliersDetectionModuleTest {
         int[][] outliers = od.getOutliers();
         for (int i = 0; i < outliers.length; ++i) {
             int[] cur = outliers[i];
-            System.out.println(od.getFactory(cur[1]).getCode() + '-' + start.plus(cur[0]).display());
+            System.out.println(od.getFactory(cur[1]).getCode() + '-' + start.plus(cur[0]).getStartAsShortString());
         }
     }
 

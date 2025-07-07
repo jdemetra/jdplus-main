@@ -16,6 +16,18 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
+import ec.util.chart.ObsIndex;
+import ec.util.chart.swing.SwingColorSchemeSupport;
+import ec.util.grid.CellIndex;
+import ec.util.grid.swing.GridModel;
+import ec.util.grid.swing.JGrid;
+import ec.util.grid.swing.XTable;
+import ec.util.various.swing.FontAwesome;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDataTable;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import jdplus.toolkit.desktop.plugin.components.JTsGrid;
 import jdplus.toolkit.desktop.plugin.components.TsFeatureHelper;
@@ -26,24 +38,13 @@ import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.util.ActionMaps;
 import jdplus.toolkit.desktop.plugin.util.Collections2;
 import jdplus.toolkit.desktop.plugin.util.InputMaps;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsDataTable;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
-import ec.util.chart.ObsIndex;
-import ec.util.chart.swing.SwingColorSchemeSupport;
-import ec.util.grid.CellIndex;
-import ec.util.grid.swing.GridModel;
-import ec.util.grid.swing.JGrid;
-import ec.util.grid.swing.XTable;
-import ec.util.various.swing.FontAwesome;
-import nbbrd.io.text.Formatter;
 import lombok.NonNull;
+import nbbrd.io.text.Formatter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.beans.BeanInfo;
@@ -54,30 +55,26 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 import static jdplus.toolkit.desktop.plugin.components.JTsGrid.TOGGLE_MODE_ACTION;
-import jdplus.toolkit.base.api.util.MultiLineNameUtil;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
-import nbbrd.design.MightBePromoted;
 
 public final class TsGridUI implements InternalUI<JTsGrid> {
 
     private JTsGrid target;
 
     private final JGrid grid = new JGrid();
-    private final JComboBox combo = new JComboBox();
-    private final GridHandler gridHandler = new GridHandler();
-    private final CustomCellRenderer defaultCellRenderer = new CustomCellRenderer(grid.getDefaultRenderer(Object.class));
+    private final JComboBox<Ts> combo = new JComboBox<>();
+    private final TsGridChangeListener changeListener = new TsGridChangeListener();
+    private final TsGridCellRenderer defaultCellRenderer = new TsGridCellRenderer(grid.getDefaultRenderer(Object.class));
     private Font originalFont;
 
-    private GridSelectionListener selectionListener;
+    private TsGridSelectionListener selectionListener;
     private HasObsFormatResolver obsFormatResolver;
     private HasColorSchemeResolver colorSchemeResolver;
 
     @Override
-    public void install(JTsGrid component) {
+    public void install(@NonNull JTsGrid component) {
         this.target = component;
 
-        this.selectionListener = new GridSelectionListener(target);
+        this.selectionListener = new TsGridSelectionListener(target);
 
         target.setCellRenderer(defaultCellRenderer);
 
@@ -128,9 +125,10 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
         onTransferHandlerChange();
         onComponentPopupMenuChange();
         grid.setDragEnabled(true);
-        grid.setRowRenderer(new CustomRowRenderer(grid));
+        grid.setRowRenderer(new TsGridRowRenderer(grid.getRowRenderer()));
         grid.getRowSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        grid.setColumnRenderer(new CustomColumnRenderer(grid));
+        grid.setColumnRenderer(new TsGridColumnRenderer(grid.getColumnRenderer()));
+        grid.setCornerRenderer(new TsGridCornerRenderer(new DefaultTableCellRenderer(), () -> target)); // FIXME: DefaultTableCellRenderer
     }
 
     //<editor-fold defaultstate="collapsed" desc="Interactive stuff">
@@ -143,7 +141,7 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     }
 
     private void enableObsHovering() {
-        grid.addPropertyChangeListener(gridHandler);
+        grid.addPropertyChangeListener(changeListener);
     }
 
     private void enableProperties() {
@@ -285,7 +283,7 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     }
 
     private void onHoveredObsChange() {
-        gridHandler.applyHoveredCell(target.getHoveredObs());
+        changeListener.applyHoveredCell(target.getHoveredObs());
     }
 
     private void onZoomChange() {
@@ -321,12 +319,14 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     }
 
     private void updateGridModel() {
-        int index = target.getMode() == JTsGrid.Mode.SINGLETS ? Math.min(target.getSingleTsIndex(), target.getTsCollection().size() - 1) : -1;
+        int index = target.getMode() == JTsGrid.Mode.SINGLETS
+                ? Math.min(target.getSingleTsIndex(), target.getTsCollection().size() - 1)
+                : TsGridData.NO_SINGLE_SERIES_INDEX;
         TsGridData data = TsGridData.create(target.getTsCollection().getItems(), index);
         boolean transposed = target.getOrientation().equals(JTsGrid.Orientation.REVERSED);
         boolean ascending = target.getChronology().equals(JTsGrid.Chronology.ASCENDING);
-        boolean single = index != -1;
-        grid.setModel(new GridModelAdapter(
+        boolean single = index != TsGridData.NO_SINGLE_SERIES_INDEX;
+        grid.setModel(new TsGridModelAdapter(
                 data,
                 transposed,
                 ascending ? i -> i : i -> data.getRowCount() - i - 1,
@@ -354,7 +354,7 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
         if (selectionListener.isEnabled()) {
             if (target.getMode() == JTsGrid.Mode.MULTIPLETS) {
                 selectionListener.changeSelection(target.getOrientation() == JTsGrid.Orientation.NORMAL ? grid.getColumnSelectionModel() : grid.getRowSelectionModel());
-            } else if (target.getTsCollection().size() > 0) {
+            } else if (!target.getTsCollection().isEmpty()) {
                 int index = Math.min(target.getSingleTsIndex(), target.getTsCollection().size() - 1);
                 if (combo.isVisible()) {
                     combo.setSelectedIndex(index);
@@ -375,18 +375,19 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     }
 
     private void updateGridCellRenderer() {
-        TsCollection data = target.getTsCollection();
-        Supplier<TsFeatureHelper> tsFeatures = Collections2.memoize(() -> TsFeatureHelper.of(data.getItems()));
-        Supplier<DoubleSummaryStatistics> stats = Collections2.memoize(() -> target.getSingleTsIndex() != -1
-                ? data.stream().flatMapToDouble(o -> o.getData().getValues().stream()).summaryStatistics()
-                : data.get(target.getSingleTsIndex()).getData().getValues().stream().summaryStatistics());
-        defaultCellRenderer.update(obsFormatResolver.resolve(), target.isUseColorScheme() ? colorSchemeResolver.resolve() : null, target.isShowBars(), tsFeatures, stats);
+        defaultCellRenderer.update(
+                obsFormatResolver.resolve(),
+                target.isUseColorScheme() ? colorSchemeResolver.resolve() : null,
+                target.isShowBars(),
+                Collections2.memoize(() -> getTsFeatureHelper(target)),
+                Collections2.memoize(() -> getDoubleSummaryStatistics(target))
+        );
         grid.setDefaultRenderer(TsGridObs.class, target.getCellRenderer());
         grid.repaint();
     }
 
     private void updateComboCellRenderer() {
-        combo.setRenderer(new ComboCellRenderer(target.isUseColorScheme() ? colorSchemeResolver.resolve() : null));
+        combo.setRenderer(new TsGridComboCellRenderer(new DefaultListCellRenderer(), target.isUseColorScheme() ? colorSchemeResolver.resolve() : null));
     }
 
     private JMenu buildMenu() {
@@ -462,9 +463,9 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
         return result;
     }
 
-    private class GridSelectionListener extends InternalTsSelectionAdapter {
+    private class TsGridSelectionListener extends InternalTsSelectionAdapter {
 
-        private GridSelectionListener(HasTsCollection outer) {
+        private TsGridSelectionListener(HasTsCollection outer) {
             super(outer);
         }
 
@@ -482,17 +483,18 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
         }
     }
 
-    private final class GridHandler implements PropertyChangeListener {
+    private final class TsGridChangeListener implements PropertyChangeListener {
 
         private boolean updating = false;
 
+        @SuppressWarnings("SwitchStatementWithTooFewBranches")
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (!updating) {
                 updating = true;
                 switch (evt.getPropertyName()) {
                     case JGrid.HOVERED_CELL_PROPERTY:
-                        target.setHoveredObs(((GridModelAdapter) grid.getModel()).toObsIndex(grid.getHoveredCell()));
+                        target.setHoveredObs(((TsGridModelAdapter) grid.getModel()).toObsIndex(grid.getHoveredCell()));
                         break;
                 }
                 updating = false;
@@ -501,25 +503,17 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
 
         private void applyHoveredCell(ObsIndex hoveredObs) {
             if (!updating) {
-                grid.setHoveredCell(((GridModelAdapter) grid.getModel()).toCellIndex(hoveredObs));
+                grid.setHoveredCell(((TsGridModelAdapter) grid.getModel()).toCellIndex(hoveredObs));
             }
         }
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Renderers">
-    private static final class CustomRowRenderer implements TableCellRenderer {
-
-        private final TableCellRenderer delegate;
-
-        public CustomRowRenderer(JGrid grid) {
-            this.delegate = grid.getRowRenderer();
-        }
+    private record TsGridRowRenderer(TableCellRenderer delegate) implements TableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component result = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (result instanceof JLabel) {
-                JLabel label = (JLabel) result;
+            if (result instanceof JLabel label) {
                 String text = label.getText();
                 label.setText(MultiLineNameUtil.join(text));
                 label.setToolTipText(MultiLineNameUtil.toHtml(text));
@@ -529,19 +523,12 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
         }
     }
 
-    private static final class CustomColumnRenderer implements TableCellRenderer {
-
-        private final TableCellRenderer delegate;
-
-        public CustomColumnRenderer(JGrid grid) {
-            this.delegate = grid.getColumnRenderer();
-        }
+    private record TsGridColumnRenderer(TableCellRenderer delegate) implements TableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component result = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (result instanceof JLabel) {
-                JLabel label = (JLabel) result;
+            if (result instanceof JLabel label) {
                 String text = label.getText();
                 label.setText(MultiLineNameUtil.join(text));
                 label.setToolTipText(MultiLineNameUtil.toHtml(text));
@@ -550,38 +537,42 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
         }
     }
 
-    @MightBePromoted
-    private static <T> Formatter<T> asFormatter(Class<T> type) {
-        final PropertyEditor editor = PropertyEditorManager.findEditor(type);
-        if (editor == null) {
-            return Formatter.of(Object::toString);
+    private record TsGridCornerRenderer(TableCellRenderer delegate,
+                                        Supplier<JTsGrid> target) implements TableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component result = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (result instanceof JLabel label) {
+                TsDomain domain = getDomain(target.get());
+                label.setText(domain.getTsUnit().toString());
+                label.setToolTipText(domain.toShortString());
+                label.setHorizontalAlignment(JLabel.CENTER);
+            }
+            return result;
         }
-        return Formatter.of(value -> {
-            editor.setValue(value);
-            return editor.getAsText();
-        });
+
+        private static TsDomain getDomain(JTsGrid target) {
+            return target.getMode() == JTsGrid.Mode.SINGLETS
+                    ? target.getTsCollection().get(target.getSingleTsIndex()).getData().getDomain()
+                    : target.getTsCollection().getDomain();
+        }
     }
 
-    private static final class CustomCellRenderer extends BarTableCellRenderer {
+    private static final class TsGridCellRenderer extends BarTableCellRenderer {
 
         private final TableCellRenderer delegate;
-        private final JToolTip toolTip;
-        private final Formatter<? super TsPeriod> periodTooltip;
-        private final Formatter<? super Double> valueTooltip;
         private Formatter<? super Number> valueCell;
         private SwingColorSchemeSupport colorSchemeSupport;
         private boolean showBars;
         private Supplier<TsFeatureHelper> tsFeatures;
         private Supplier<DoubleSummaryStatistics> stats;
 
-        public CustomCellRenderer(@NonNull TableCellRenderer delegate) {
+        public TsGridCellRenderer(@NonNull TableCellRenderer delegate) {
             super(false);
             setHorizontalAlignment(JLabel.TRAILING);
             setOpaque(true);
             this.delegate = delegate;
-            this.toolTip = super.createToolTip();
-            this.periodTooltip = asFormatter(TsPeriod.class);
-            this.valueTooltip = asFormatter(Double.class);
             this.valueCell = ObsFormat.getSystemDefault().numberFormatter();
             this.colorSchemeSupport = null;
             this.showBars = false;
@@ -599,20 +590,74 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
 
         @Override
         public JToolTip createToolTip() {
+            JToolTip result = super.createToolTip();
             if (colorSchemeSupport != null) {
-                toolTip.setBackground(getForeground());
-                toolTip.setForeground(getBackground());
+                result.setBackground(getForeground());
+                result.setForeground(getBackground());
             }
-            return toolTip;
+            return result;
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            Component resource = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            setFont(resource.getFont());
-
             TsGridObs obs = (TsGridObs) value;
 
+            applyFontAndColors(isSelected, obs, delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column));
+
+            switch (obs.getStatus()) {
+                case AFTER:
+                case BEFORE:
+                case EMPTY:
+                case UNUSED:
+                    applyContent(null, null);
+                    applyNoBar();
+                    break;
+                case PRESENT:
+                    if (Double.isNaN(obs.getValue())) {
+                        applyContent(".", obsToString(obs));
+                        applyNoBar();
+                    } else {
+                        String text = valueCell.formatAsString(obs.getValue());
+                        String toolTipText = obsToString(obs);
+                        TsFeatureHelper featureHelper = tsFeatures.get();
+                        if (featureHelper.hasFeature(TsFeatureHelper.Feature.Forecasts, obs.getSeriesIndex(), obs.getIndex())) {
+                            applyContent("<html><i>" + text, "<html>" + toolTipText + "<br>Forecast");
+                        } else if (featureHelper.hasFeature(TsFeatureHelper.Feature.Backcasts, obs.getSeriesIndex(), obs.getIndex())) {
+                            applyContent("<html><i>" + text, "<html>" + toolTipText + "<br>Backcast");
+                        } else {
+                            applyContent(text, toolTipText);
+                        }
+                        if (showBars && !isSelected) {
+                            applyBar(stats.get(), obs.getValue());
+                        } else {
+                            applyNoBar();
+                        }
+                        break;
+                    }
+            }
+
+            return this;
+        }
+
+        private String obsToString(TsGridObs obs) {
+            return obs.getPeriod().toShortString() + "=" + obs.getValue();
+        }
+
+        private void applyBar(DoubleSummaryStatistics stats, double value) {
+            setBarValues(stats.getMin(), stats.getMax(), value);
+        }
+
+        private void applyNoBar() {
+            setBarValues(0, 0, 0);
+        }
+
+        private void applyContent(String text, String tooltipText) {
+            setText(text);
+            setToolTipText(tooltipText);
+        }
+
+        private void applyFontAndColors(boolean isSelected, TsGridObs obs, Component resource) {
+            setFont(resource.getFont());
             if (colorSchemeSupport != null) {
                 Color plotColor = colorSchemeSupport.getPlotColor();
                 Color lineColor = colorSchemeSupport.getLineColor(obs.getSeriesIndex());
@@ -627,75 +672,31 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
                 setBackground(resource.getBackground());
                 setForeground(resource.getForeground());
             }
-
-            switch (obs.getStatus()) {
-                case AFTER:
-                case BEFORE:
-                case EMPTY:
-                case UNUSED:
-                    setText(null);
-                    setToolTipText(null);
-                    setBarValues(0, 0, 0);
-                    break;
-                case PRESENT:
-                    if (Double.isNaN(obs.getValue())) {
-                        setText(".");
-                        setToolTipText(periodTooltip.formatAsString(obs.getPeriod()));
-                        setBarValues(0, 0, 0);
-                    } else {
-                        String text = valueCell.formatAsString(obs.getValue());
-                        String toolTipText = periodTooltip.formatAsString(obs.getPeriod()) + ": " + valueTooltip.formatAsString(obs.getValue());
-                        if (tsFeatures.get().hasFeature(TsFeatureHelper.Feature.Forecasts, obs.getSeriesIndex(), obs.getIndex())) {
-                            setText("<html><i>" + text);
-                            setToolTipText("<html>" + toolTipText + "<br>Forecast");
-                        } else if (tsFeatures.get().hasFeature(TsFeatureHelper.Feature.Backcasts, obs.getSeriesIndex(), obs.getIndex())) {
-                            setText("<html><i>" + text);
-                            setToolTipText("<html>" + toolTipText + "<br>Backcast");
-                        } else {
-                            setText(text);
-                            setToolTipText(toolTipText);
-                        }
-                        if (showBars && !isSelected) {
-                            DoubleSummaryStatistics tmp = stats.get();
-                            setBarValues(tmp.getMin(), tmp.getMax(), obs.getValue());
-                        } else {
-                            setBarValues(0, 0, 0);
-                        }
-                        break;
-                    }
-            }
-
-            return this;
         }
     }
 
-    private static final class ComboCellRenderer extends DefaultListCellRenderer {
-
-        private final SwingColorSchemeSupport colorSchemeSupport;
-
-        public ComboCellRenderer(@Nullable SwingColorSchemeSupport colorSchemeSupport) {
-            this.colorSchemeSupport = colorSchemeSupport;
-        }
+    private record TsGridComboCellRenderer(ListCellRenderer<? super Ts> delegate,
+                                           @Nullable SwingColorSchemeSupport colorSchemeSupport) implements ListCellRenderer<Ts> {
 
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            Ts ts = (Ts) value;
-            setText(ts.getName());
-            setIcon(DataSourceManager.get().getIcon(ts.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
-            if (colorSchemeSupport != null && index != -1) {
-                if (isSelected) {
-                    setBackground(colorSchemeSupport.getPlotColor());
+        public Component getListCellRendererComponent(JList<? extends Ts> list, Ts value, int index, boolean isSelected, boolean cellHasFocus) {
+            Component result = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (result instanceof JLabel label) {
+                label.setText(value.getName());
+                label.setIcon(DataSourceManager.get().getIcon(value.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
+                if (colorSchemeSupport != null && index != -1) {
+                    if (isSelected) {
+                        label.setBackground(colorSchemeSupport.getPlotColor());
+                    }
+                    label.setForeground(colorSchemeSupport.getLineColor(index));
                 }
-                setForeground(colorSchemeSupport.getLineColor(index));
             }
-            return this;
+            return result;
         }
     }
-    //</editor-fold>
 
     @lombok.AllArgsConstructor
-    private static final class GridModelAdapter extends AbstractTableModel implements GridModel {
+    private static final class TsGridModelAdapter extends AbstractTableModel implements GridModel {
 
         private final TsGridData data;
         private final boolean transposed;
@@ -762,5 +763,15 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
                     ? CellIndex.valueOf(rowIndexer.applyAsInt(data.getColumnIndex(index)), columnIndexer.applyAsInt(data.getRowIndex(index)))
                     : CellIndex.valueOf(rowIndexer.applyAsInt(data.getRowIndex(index)), columnIndexer.applyAsInt(data.getColumnIndex(index)));
         }
+    }
+
+    private static TsFeatureHelper getTsFeatureHelper(JTsGrid target) {
+        return TsFeatureHelper.of(target.getTsCollection().getItems());
+    }
+
+    private static DoubleSummaryStatistics getDoubleSummaryStatistics(JTsGrid target) {
+        return target.getMode() == JTsGrid.Mode.MULTIPLETS
+                ? target.getTsCollection().stream().flatMapToDouble(o -> o.getData().getValues().stream()).summaryStatistics()
+                : target.getTsCollection().get(target.getSingleTsIndex()).getData().getValues().stream().summaryStatistics();
     }
 }

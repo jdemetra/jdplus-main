@@ -13,8 +13,8 @@
     <packaging>pom</packaging>
 
     <name>jdplus-main-desktop</name>
-<!--    <description>${project.parent.artifactId} - ${project.artifactId}</description>-->
-<!--    <url>${project.parent.url}</url>-->
+    <!--    <description>${project.parent.artifactId} - ${project.artifactId}</description>-->
+    <!--    <url>${project.parent.url}</url>-->
 
     <properties>
         <!-- NetBeans config -->
@@ -36,6 +36,16 @@
         <module>jdplus-main-desktop-branding</module>
         <module>jdplus-main-desktop-bin</module>
     </modules>
+
+    <dependencies>
+        <!-- test only -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.6</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
@@ -88,7 +98,8 @@
                             <goal>manifest</goal>
                         </goals>
                         <configuration>
-                            <targetManifestFile>${project.build.testOutputDirectory}/runtime-dependencies.mf</targetManifestFile>
+                            <targetManifestFile>${project.build.testOutputDirectory}/runtime-dependencies.mf
+                            </targetManifestFile>
                             <verifyRuntime>skip</verifyRuntime>
                         </configuration>
                     </execution>

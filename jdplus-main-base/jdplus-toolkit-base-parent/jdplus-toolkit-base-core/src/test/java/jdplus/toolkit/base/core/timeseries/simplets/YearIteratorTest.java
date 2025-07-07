@@ -24,7 +24,7 @@ public class YearIteratorTest {
         YearIterator iter=new YearIterator(s);
         while (iter.hasNext()){
             TsDataView view = iter.next();
-            System.out.println(view.getStart().display());
+            System.out.println(view.getStart().getStartAsShortString());
             System.out.print('\t');
             System.out.println(view.getData());
         }
@@ -37,7 +37,7 @@ public class YearIteratorTest {
         YearIterator iter=new YearIterator(s);
         while (iter.hasNext()){
             TsDataView view = iter.next();
-            System.out.println(view.getStart().display());
+            System.out.println(view.getStart().getStartAsShortString());
             System.out.print('\t');
             System.out.println(view.getData());
         }

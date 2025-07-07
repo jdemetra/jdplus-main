@@ -39,7 +39,6 @@ import java.util.Optional;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.TableCellRenderer;
 
 import jdplus.toolkit.desktop.plugin.components.TsIdentifier;
@@ -477,7 +476,7 @@ public final class JTsCheckLastList extends JComponent {
             table.set(row, 0, item.getName());
 
             if (!item.getData().isEmpty()) {
-                table.set(row, 1, item.getData().getDomain().getLastPeriod().display());
+                table.set(row, 1, item.getData().getDomain().getLastPeriod().getStartAsShortString());
             }
 
             table.set(row, 2, item.getStatus().toString());

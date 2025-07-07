@@ -71,7 +71,7 @@ public class HtmlOutliers extends AbstractHtmlElement implements HtmlElement {
         for (OutlierEstimation e : outliers_) {
             stream.open(HtmlTag.TABLEROW);
             stream.write(new HtmlTableCell(e.getCode()).withWidth(40).withClass(OutlierColorChooser.getCodeClass(e.getCode())));
-            stream.write(new HtmlTableCell(e.getPeriod().display()).withWidth(50));
+            stream.write(new HtmlTableCell(e.getPeriod().getStartAsShortString()).withWidth(50));
             stream.write(new HtmlTableCell(df4.format(e.getValue())).withWidth(80));
             stream.write(new HtmlTableCell(df4.format(e.getStderr())).withWidth(80));
             stream.write(new HtmlTableCell(df4.format(e.getTstat())).withWidth(80));

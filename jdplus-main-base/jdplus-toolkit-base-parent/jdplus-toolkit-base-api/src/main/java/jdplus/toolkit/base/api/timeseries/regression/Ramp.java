@@ -54,8 +54,8 @@ public class Ramp implements ISystemVariable, IUserVariable {
             TsUnit unit = TsUnit.ofAnnualFrequency(period);
             TsPeriod pstart = TsPeriod.of(unit, start);
             TsPeriod pend = TsPeriod.of(unit, end);
-            builder.append("ramp ").append(pstart.display())
-                    .append(" / ").append(pend.display());
+            builder.append("ramp ").append(pstart.getStartAsShortString())
+                    .append(" / ").append(pend.getStartAsShortString());
 
         }
         return builder.toString();

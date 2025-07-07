@@ -16,21 +16,21 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
-import jdplus.toolkit.desktop.plugin.components.TsGridObs;
+import ec.util.chart.ObsIndex;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsDataTable;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import ec.util.chart.ObsIndex;
+import jdplus.toolkit.desktop.plugin.components.TsGridObs;
+import lombok.NonNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
  * @author Philippe Charles
  */
-final class ByTsColumn implements TsGridData {
+final class ByTsColumnGridData implements TsGridData {
 
     private final List<String> names;
     private final TsDataTable dataTable;
@@ -38,8 +38,8 @@ final class ByTsColumn implements TsGridData {
     private final TsDataTable.Cursor cursor;
     private final TsGridObs obs;
 
-    public ByTsColumn(List<Ts> col) {
-        this.names = col.stream().map(Ts::getName).collect(Collectors.toList());
+    public ByTsColumnGridData(List<Ts> col) {
+        this.names = col.stream().map(Ts::getName).toList();
         this.dataTable = TsDataTable.of(col, Ts::getData);
         this.domain = dataTable.getDomain();
         this.cursor = dataTable.cursor(TsDataTable.DistributionType.FIRST);
@@ -47,20 +47,20 @@ final class ByTsColumn implements TsGridData {
     }
 
     @Override
-    public String getRowName(int i) {
-        return domain.get(i).display();
+    public @NonNull String getRowName(int i) {
+        return domain.get(i).getStartAsShortString();
     }
 
     @Override
-    public String getColumnName(int j) {
+    public @NonNull String getColumnName(int j) {
         return names.get(j);
     }
 
     @Override
-    public TsGridObs getObs(int period, int series) {
+    public @NonNull TsGridObs getObs(int period, int series) {
         cursor.moveTo(period, series);
         obs.setIndex(cursor.getIndex());
-        obs.setPeriod(domain.get(period));
+        obs.setPeriod(dataTable.getData().get(series).getDomain().get(cursor.getIndex()));
         obs.setSeriesIndex(series);
         obs.setStatus(cursor.getStatus());
         obs.setValue(cursor.getValue());
@@ -78,16 +78,19 @@ final class ByTsColumn implements TsGridData {
     }
 
     @Override
-    public int getRowIndex(ObsIndex index) {
+    public int getRowIndex(@NonNull ObsIndex index) {
         if (ObsIndex.NULL.equals(index)) {
-            return -1;
+            return NO_OBS_INDEX;
         }
-        TsPeriod x = dataTable.getData().get(index.getSeries()).getDomain().get(index.getObs()).withUnit(domain.getTsUnit());
+        TsPeriod x = dataTable
+                .getData().get(index.getSeries())
+                .getDomain().get(index.getObs())
+                .withUnit(domain.getTsUnit());
         return domain.indexOf(x);
     }
 
     @Override
-    public int getColumnIndex(ObsIndex index) {
+    public int getColumnIndex(@NonNull ObsIndex index) {
         return index.getSeries();
     }
 }

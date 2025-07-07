@@ -124,7 +124,7 @@ public class OutlierMapping {
             builder.append(o.getPosition().toLocalDate());
         else{
             TsPeriod p= TsPeriod.of(TsUnit.ofAnnualFrequency(period), o.getPosition());
-            builder.append(p.display());
+            builder.append(p.getStartAsShortString());
         }
         builder.append(')');
         return builder.toString();
