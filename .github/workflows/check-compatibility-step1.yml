@@ -21,7 +21,7 @@ jobs:
 
       - if: ${{ hashFiles('continue') != '' }}
         name: ☕ Check compatibility on PR
-        run: mvn -U verify -D skipTests -P check-compatibility -D compatibility.reportFile=$PWD/report.md
+        run: mvn -U install -D skipTests -P check-compatibility -D compatibility.reportFile=$PWD/report.md
 
       - if: ${{ hashFiles('continue') != '' }}
         name: ⚙️ Store PR number
