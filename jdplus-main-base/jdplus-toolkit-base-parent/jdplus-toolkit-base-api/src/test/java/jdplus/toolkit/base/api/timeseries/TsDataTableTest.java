@@ -16,21 +16,22 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
-import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.api.timeseries.TsDataTable.ValueStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
+import static java.lang.Double.NaN;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyIterator;
 import static jdplus.toolkit.base.api.timeseries.TsDataTable.DistributionType.*;
 import static jdplus.toolkit.base.api.timeseries.TsDataTable.ValueStatus.*;
 import static jdplus.toolkit.base.api.timeseries.TsDataTable.computeDomain;
-import static java.lang.Double.NaN;
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -40,45 +41,49 @@ public class TsDataTableTest {
 
     @Test
     public void testComputeDomain() {
-        assertThat(computeUnit("P14M", "P14M"))
+        assertThat(computeDomain(emptyIterator()))
+                .as("no domains")
+                .isEqualTo(TsDomain.DEFAULT_EMPTY);
+
+        assertThat(computeDomain(domainsOf("R1/1970/P14M", "R1/1970/P14M")))
                 .as("same chrono, same amount")
-                .isEqualTo("P14M");
+                .hasToString("R1/1970-01-01T00:00:00/P14M");
 
-        assertThat(computeUnit("P14M", "P7M"))
+        assertThat(computeDomain(domainsOf("R1/1970/P14M", "R1/1970/P7M")))
                 .as("same chrono, compatible amount")
-                .isEqualTo("P7M");
+                .hasToString("R2/1970-01-01T00:00:00/P7M");
 
-        assertThat(computeUnit("P14M", "P12M"))
-                .as("same chrono, uncompatible amount")
-                .isEqualTo("P2M");
+        assertThat(computeDomain(domainsOf("R1/1970/P14M", "R1/1970/P12M")))
+                .as("same chrono, incompatible amount")
+                .hasToString("R7/1970-01-01T00:00:00/P2M");
 
-        assertThat(computeUnit("P2Y", "P2M"))
+        assertThat(computeDomain(domainsOf("R1/1970/P2Y", "R1/1970/P2M")))
                 .as("compatible chrono, same amount")
-                .isEqualTo("P2M");
+                .hasToString("R12/1970-01-01T00:00:00/P2M");
 
-        assertThat(computeUnit("P2Y", "P12M"))
+        assertThat(computeDomain(domainsOf("R1/1970/P2Y", "R1/1970/P12M")))
                 .as("compatible chrono, compatible amount")
-                .isEqualTo("P12M");
+                .hasToString("R2/1970-01-01T00:00:00/P12M");
 
-        assertThat(computeUnit("P2Y", "P26M"))
-                .as("compatible chrono, uncompatible amount")
-                .isEqualTo("P2M");
+        assertThat(computeDomain(domainsOf("R1/1970/P2Y", "R1/1970/P26M")))
+                .as("compatible chrono, incompatible amount")
+                .hasToString("R13/1970-01-01T00:00:00/P2M");
 
-        assertThat(computeUnit("P2M", "P2D"))
-                .as("uncompatible chrono, same amount")
-                .isEqualTo("P1D");
+        assertThat(computeDomain(domainsOf("R1/1970/P2M", "R1/1970/P2D")))
+                .as("incompatible chrono, same amount")
+                .hasToString("R59/1970-01-01T00:00:00/P1D");
 
-        assertThat(computeUnit("P2M", "P10D"))
-                .as("uncompatible chrono, compatible amount")
-                .isEqualTo("P1D");
+        assertThat(computeDomain(domainsOf("R1/1970/P2M", "R1/1970/P10D")))
+                .as("incompatible chrono, compatible amount")
+                .hasToString("R59/1970-01-01T00:00:00/P1D");
 
-        assertThat(computeUnit("P2M", "P11D"))
-                .as("uncompatible chrono, uncompatible amount")
-                .isEqualTo("P1D");
+        assertThat(computeDomain(domainsOf("R1/1970/P2M", "R1/1970/P11D")))
+                .as("incompatible chrono, incompatible amount")
+                .hasToString("R59/1970-01-01T00:00:00/P1D");
     }
 
     @Test
-    @SuppressWarnings("null")
+    @SuppressWarnings({"null", "DataFlowIssue"})
     public void testFactory() {
         assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(null));
 
@@ -104,13 +109,13 @@ public class TsDataTableTest {
     }
 
     @Test
-    @SuppressWarnings("null")
+    @SuppressWarnings({"null", "DataFlowIssue"})
     public void testCursorValue() {
         assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(Collections.emptyList()).cursor((TsDataTable.DistributionType) null));
         assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(Collections.emptyList()).cursor((IntFunction<TsDataTable.DistributionType>) null));
 
         assertThat(Cell.toArray(TsDataTable.of(Collections.emptyList()).cursor(FIRST))).isEmpty();
-        assertThat(Cell.toArray(TsDataTable.of(asList(empty)).cursor(FIRST))).isEmpty();
+        assertThat(Cell.toArray(TsDataTable.of(List.of(empty)).cursor(FIRST))).isEmpty();
 
         TsDataTable table = TsDataTable.of(asList(p1m_jan2010, p3m_oct2009, empty));
 
@@ -150,11 +155,6 @@ public class TsDataTableTest {
                 });
     }
 
-    private static String computeUnit(String... periods) {
-        Iterator<TsDomain> domains = Stream.of(periods).map(o -> TsDomain.of(TsPeriod.of(TsUnit.parse(o), 0), 1)).iterator();
-        return computeDomain(domains).getStartPeriod().getUnit().toString();
-    }
-
     private final TsData p1m_jan2010 = TsData.ofInternal(TsPeriod.monthly(2010, 1), new double[]{1.1, Double.NaN, 1.3});
     private final TsData p3m_oct2009 = TsData.ofInternal(TsPeriod.quarterly(2009, 4), new double[]{2.1});
     private final TsData empty = TsData.empty("empty");
@@ -164,12 +164,12 @@ public class TsDataTableTest {
 
         static final Cell EMPTY = Cell.of(-1, -1, -1, TsDataTable.ValueStatus.EMPTY, NaN);
 
-        private int index;
-        private int windowLength;
-        private int windowIndex;
+        int index;
+        int windowLength;
+        int windowIndex;
         @lombok.NonNull
-        private ValueStatus status;
-        private double value;
+        ValueStatus status;
+        double value;
 
         static Cell[][] toArray(TsDataTable.Cursor c) {
             Cell[][] result = new Cell[c.getPeriodCount()][c.getSeriesCount()];
@@ -187,5 +187,9 @@ public class TsDataTableTest {
         // workaround of bug in assertj 3.17.0
 //        assertThat(actual).isDeepEqualTo(expected);
         assertThat(Arrays.deepEquals(actual, expected));
+    }
+
+    private Iterator<TsDomain> domainsOf(String... domains) {
+        return Stream.of(domains).map(TsDomain::parse).iterator();
     }
 }
