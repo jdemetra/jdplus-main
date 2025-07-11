@@ -16,5 +16,14 @@ class TsObsTest {
                 .isEqualTo(TsObs.parse("2011-02/P1M=3.14"))
                 .returns(TsPeriod.parse("2011-02-01T00:00/P1M"), TsObs::getPeriod)
                 .returns(3.14, TsObs::getValue);
+
+        // FIXME: is "NaN" the best option to represent Double.NaN?
+        assertThat(TsObs.parse("2011-02-01T00:00/P1M=NaN"))
+                .hasToString("2011-02-01T00:00:00/P1M=NaN")
+                .returns("2011-02/P1M=NaN", HasShortStringRepresentation::toShortString)
+                .isEqualTo(TsObs.of(TsPeriod.parse("2011-02-01T00:00/P1M"), Double.NaN))
+                .isEqualTo(TsObs.parse("2011-02/P1M=NaN"))
+                .returns(TsPeriod.parse("2011-02-01T00:00/P1M"), TsObs::getPeriod)
+                .returns(true, tsObs -> Double.isNaN(tsObs.getValue()));
     }
 }

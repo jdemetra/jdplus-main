@@ -209,7 +209,7 @@ public final class TsDataTable {
         Cursor cursor = this.cursor(DistributionType.LAST);
         int pos = 0;
         for (TsPeriod period : domain) {
-            builder.append(period.display());
+            builder.append(period.getStartAsShortString());
 
             for (int i = 0; i < data.size(); ++i) {
                 cursor.moveTo(pos, i);

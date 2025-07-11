@@ -237,8 +237,8 @@ public class ControlNode {
         if (!data.isEmpty()) {
             DescriptiveStatistics stats=DescriptiveStatistics.of(data.getValues());
             b.with(TsUnit.class).select(data, "getTsUnit", null).display("TsUnit").add();
-            b.with(String.class).select("startPeriod", ()->data.getDomain().getStartPeriod().display(), null).display("First period").add();
-            b.with(String.class).select("lastPeriod", ()->data.getDomain().getLastPeriod().display(), null).display("Last period").add();
+            b.with(String.class).select("startPeriod", ()-> data.getDomain().getStartPeriod().getStartAsShortString(), null).display("First period").add();
+            b.with(String.class).select("lastPeriod", ()-> data.getDomain().getLastPeriod().getStartAsShortString(), null).display("Last period").add();
             b.withInt().select(data, "length", null).display("Obs count").add();
             b.with(TsData.class).selectConst("values", data).display("Values").add();
             b.withDouble().select("min", ()->stats.getMin(), null).display("Min").add();

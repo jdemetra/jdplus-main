@@ -29,7 +29,6 @@ import jdplus.toolkit.desktop.plugin.html.Bootstrap4;
 import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
-import jdplus.toolkit.base.api.stats.ProbabilityType;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
@@ -58,12 +57,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.dstats.F;
 import jdplus.toolkit.base.core.dstats.T;
-import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
-import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.toolkit.base.core.modelling.regression.RegressionDesc;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
@@ -103,8 +97,8 @@ public class HtmlRegSarima extends AbstractHtmlElement {
     private void writeSummary(HtmlStream stream) throws IOException {
         TsDomain edom = model.getEstimation().getDomain();
         stream.write(HtmlTag.HEADER1, "Summary").newLine();
-        stream.write("Estimation span: [").write(edom.getStartPeriod().display());
-        stream.write(" - ").write(edom.getLastPeriod().display()).write(']').newLine();
+        stream.write("Estimation span: [").write(edom.getStartPeriod().getStartAsShortString());
+        stream.write(" - ").write(edom.getLastPeriod().getStartAsShortString()).write(']').newLine();
         GeneralLinearModel.Description<SarimaSpec> description = model.getDescription();
         Variable[] variables = description.getVariables();
         GeneralLinearModel.Estimation estimation = model.getEstimation();
@@ -613,7 +607,7 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         for (int i = 0; i < missings.length; ++i) {
             TsPeriod period = edom.get(missings[i].getPosition());
             stream.open(HtmlTag.TABLEROW);
-            stream.write(new HtmlTableCell(period.display()).withWidth(100));
+            stream.write(new HtmlTableCell(period.getStartAsShortString()).withWidth(100));
             stream.write(new HtmlTableCell(df4.format(missings[i].getValue())).withWidth(100));
             stream.write(new HtmlTableCell(df4.format(missings[i].getStandardError())).withWidth(100));
             stream.write(new HtmlTableCell(df4.format(missingEstimates[i])).withWidth(100));

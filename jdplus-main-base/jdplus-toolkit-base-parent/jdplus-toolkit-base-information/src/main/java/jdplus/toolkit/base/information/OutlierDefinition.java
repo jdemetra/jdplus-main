@@ -23,7 +23,6 @@ import jdplus.toolkit.base.api.timeseries.TsUnit;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 
 /**
  *
@@ -43,7 +42,7 @@ public class OutlierDefinition {
             builder.append(position);
         else{
             TsPeriod p= TsPeriod.of(TsUnit.ofAnnualFrequency(period), position);
-            builder.append(p.display());
+            builder.append(p.getStartAsShortString());
         }
         builder.append(')');
         return builder.toString();

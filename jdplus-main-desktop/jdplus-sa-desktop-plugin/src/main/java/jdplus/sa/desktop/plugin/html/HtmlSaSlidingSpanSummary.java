@@ -79,7 +79,7 @@ public class HtmlSaSlidingSpanSummary<I> extends AbstractHtmlElement implements 
 //        TsPeriod p = new TsPeriod(freq);
         for (int i = 0; i < slidingspans_.getSpanCount(); ++i) {
             TsDomain domain = slidingspans_.getDomain(i);
-            stream.write("Span " + (i + 1) + ": from " + domain.getStartPeriod().display() + " to " + domain.getLastPeriod().display()).newLine();
+            stream.write("Span " + (i + 1) + ": from " + domain.getStartPeriod().getStartAsShortString() + " to " + domain.getLastPeriod().getStartAsShortString()).newLine();
         }
 
         CombinedSeasonality[] tests = new CombinedSeasonality[ncols];

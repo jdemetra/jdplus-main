@@ -46,7 +46,7 @@ public interface IOutlier extends ITsVariable {
         } else {
             TsPeriod p = ((TsDomain) context).get(0);
             p=p.withDate(pos);
-            builder.append(p.display());
+            builder.append(p.getStartAsShortString());
         }
         builder.append(')');
         return builder.toString();

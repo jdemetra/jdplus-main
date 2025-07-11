@@ -1,17 +1,17 @@
 /*
  * Copyright 2013 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.desktop.plugin.ui;
@@ -29,9 +29,9 @@ import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
 import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
 import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.core.components.InternalComponents;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
 import nbbrd.design.SkipProcessing;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.DateAxis;
@@ -60,7 +60,6 @@ import java.util.Date;
 import java.util.stream.Stream;
 
 /**
- *
  * @author Kristof Bayens
  */
 @SwingComponent
@@ -153,8 +152,8 @@ public final class JMarginView extends JComponent implements TimeSeriesComponent
 
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
     private void onDataFormatChange() {
-        DateAxis domainAxis = (DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis();
-        domainAxis.setDateFormatOverride(DateFormatAdapter.of(obsFormatResolver.resolve()));
+        ((DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis())
+                .setDateFormatOverride(new InternalComponents.DateFormatAdapter(() -> data.series.getDomain()));
     }
 
     private void onColorSchemeChange() {

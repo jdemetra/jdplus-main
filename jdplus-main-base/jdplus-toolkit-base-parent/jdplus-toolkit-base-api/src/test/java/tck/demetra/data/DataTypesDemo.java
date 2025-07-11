@@ -29,7 +29,7 @@ public class DataTypesDemo {
         StringBuilder result = new StringBuilder();
         TsDataTable.Cursor cursor = table.cursor(distribution);
         for (int i = 0; i < cursor.getPeriodCount(); i++) {
-            result.append(table.getDomain().get(i).display()).append('\t');
+            result.append(table.getDomain().get(i).getStartAsShortString()).append('\t');
             for (int j = 0; j < cursor.getSeriesCount(); j++) {
                 result.append(valuetoString(cursor.moveTo(i, j))).append('\t');
             }
