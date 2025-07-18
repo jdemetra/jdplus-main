@@ -53,7 +53,6 @@ import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaModel;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaFixedMapping;
-import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping2;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
 import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
@@ -84,7 +83,7 @@ public final class ModelDescription {
     /**
      * Position in the original series of the missing values (if interpolated)
      */
-    private int[] missing=IntList.EMPTY;
+    private int[] missing = IntList.EMPTY;
 
     private boolean logTransformation;
     private LengthOfPeriodType lpTransformation = LengthOfPeriodType.None;
@@ -201,13 +200,13 @@ public final class ModelDescription {
             LogJacobian lj;
             TsData tmp;
             int start, end;
-            if (estimationDomain == null){
-                start=diff;
-                end=series.length();
-            }else{
-                int del=series.getStart().until(estimationDomain.getStartPeriod());
-                start=del+diff;
-                end=del+estimationDomain.getLength();
+            if (estimationDomain == null) {
+                start = diff;
+                end = series.length();
+            } else {
+                int del = series.getStart().until(estimationDomain.getStartPeriod());
+                start = del + diff;
+                end = del + estimationDomain.getLength();
             }
             lj = new LogJacobian(start, end, missing);
             tmp = interpolatedData == null ? series : TsData.ofInternal(series.getStart(), interpolatedData);
@@ -327,9 +326,10 @@ public final class ModelDescription {
         FastMatrix x = reg0.differencedModel().getX();
         HouseholderWithPivoting hous = new HouseholderWithPivoting();
         int curx = reg0.getMissingValuesCount();
-        if (reg0.isMean())
+        if (reg0.isMean()) {
             ++curx;
-        int x0=curx;
+        }
+        int x0 = curx;
         QRDecomposition qr = hous.decompose(x, curx);
         int rank = UpperTriangularMatrix.rank(qr.rawR(), 1e-12);
         if (rank == qr.n()) {
@@ -343,9 +343,9 @@ public final class ModelDescription {
         List<Variable> nvars = new ArrayList<>();
         int[] pivot = qr.pivot();
         int[] pos = pivot == null ? null : new int[pivot.length];
-        if (pivot != null){
-            for (int i=0; i<pivot.length; ++i){
-                pos[pivot[i]]=i;
+        if (pivot != null) {
+            for (int i = 0; i < pivot.length; ++i) {
+                pos[pivot[i]] = i;
             }
         }
         List<DoubleSeq> all = reg0.getX();
@@ -357,19 +357,16 @@ public final class ModelDescription {
                         boolean redundant = pos == null ? curx >= rank : pos[curx] >= rank;
                         if (redundant) {
                             Parameter[] c = v.getCoefficients();
-                            if (c == null) {
-                                c = Parameter.make(dim);
-                            }
                             c[k] = Parameter.zero();
                             v = v.withCoefficients(c);
-                        }else{
-                            builder.addX(all.get(curx-x0));
+                        } else {
+                            builder.addX(all.get(curx - x0));
                         }
                         ++curx;
                     }
                 }
                 if (v.isPreadjustment()) {
-                    v=v.exclude(true);
+                    v = v.exclude(true);
                 }
             }
             nvars.add(v);
@@ -486,10 +483,10 @@ public final class ModelDescription {
         buildTransformation();
         if (correctedForMissings || missing.length == 0) {
             return TsData.ofInternal(series.getStart(), transformedData);
-        }else{
+        } else {
             double[] data = transformedData.clone();
-            for (int i=0; i<missing.length; ++i){
-                data[missing[i]]=Double.NaN;
+            for (int i = 0; i < missing.length; ++i) {
+                data[missing[i]] = Double.NaN;
             }
             return TsData.ofInternal(series.getStart(), data);
         }
@@ -805,9 +802,8 @@ public final class ModelDescription {
         builder.btheta(P);
         arima = builder.buildWithoutValidation();
     }
-    
-    
-    public static final Comparator<Variable> OUTLIER_COMPARATOR= (Variable o1, Variable o2) -> {
+
+    public static final Comparator<Variable> OUTLIER_COMPARATOR = (Variable o1, Variable o2) -> {
         // variable are assumed to refer to outliers
         IOutlier c1 = (IOutlier) o1.getCore();
         IOutlier c2 = (IOutlier) o2.getCore();

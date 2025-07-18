@@ -199,6 +199,7 @@ public class DefaultProcessingLog implements ProcessingLog{
     /**
      * @return the verbose
      */
+    @Override
     public boolean isVerbose() {
         return verbose;
     }
