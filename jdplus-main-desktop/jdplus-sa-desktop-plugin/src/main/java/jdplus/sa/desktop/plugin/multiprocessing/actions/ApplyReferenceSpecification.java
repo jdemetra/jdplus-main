@@ -23,8 +23,6 @@ import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
-import jdplus.sa.base.api.EstimationPolicyType;
-import jdplus.sa.base.api.SaManager;
 import jdplus.sa.base.api.SaSpecification;
 import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
@@ -33,22 +31,22 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
-@ActionID(category = "SaProcessing", id = ResultSpecification.ID)
-@ActionRegistration(displayName = "#CTL_ResultSpecification", lazy = false)
+@ActionID(category = "SaProcessing", id = ApplyReferenceSpecification.ID)
+@ActionRegistration(displayName = "#CTL_ApplyReferenceSpecification", lazy = false)
 @ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1520),
-    @ActionReference(path = MultiProcessingManager.LOCALPATH + Edit.PATH, position = 1520)
+    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1525),
+    @ActionReference(path = MultiProcessingManager.LOCALPATH + Edit.PATH, position = 1525)
 })
-@Messages("CTL_ResultSpecification=Apply Result Specification")
-public final class ResultSpecification extends ActiveViewAction<SaBatchUI> {
+@Messages("CTL_ApplyReferenceSpecification=Apply Reference Specification")
+public final class ApplyReferenceSpecification extends ActiveViewAction<SaBatchUI> {
 
     @ClassNameConstant
-    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.ResultSpecification";
+    public static final String ID = "jdplus.sa.desktop.plugin.multiprocessing.actions.ApplyReferenceSpecification";
 
-    public ResultSpecification() {
+    public ApplyReferenceSpecification() {
         super(SaBatchUI.class);
         refreshAction();
-        putValue(NAME, Bundle.CTL_ResultSpecification());
+        putValue(NAME, Bundle.CTL_ApplyReferenceSpecification());
     }
 
     @Override
@@ -66,9 +64,7 @@ public final class ResultSpecification extends ActiveViewAction<SaBatchUI> {
         for (SaNode o : selection) {
             if (o.isProcessed()) {
                 SaSpecification dspec = o.domainSpec();
-                SaSpecification pspec = o.getOutput().getEstimation().getPointSpec();
-                pspec = SaManager.factoryFor(dspec).refreshSpec(pspec, dspec, EstimationPolicyType.FreeParameters, null);
-                SaNode n = o.withEstimationSpecification((SaSpecification) pspec);
+                SaNode n = o.withEstimationSpecification((SaSpecification) dspec);
                 document.getElement().replace(o.getId(), n);
             }
         }

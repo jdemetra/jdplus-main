@@ -168,6 +168,9 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
         if (policy == EstimationPolicyType.None) {
             return currentSpec;
         }
+        if (policy == EstimationPolicyType.Complete) {
+            return domainSpec;
+        }
         TramoSpec ntspec = TramoFactory.getInstance().refreshSpec(currentSpec.getTramo(), domainSpec.getTramo(), policy, domain);
         return currentSpec.toBuilder()
                 .tramo(ntspec)

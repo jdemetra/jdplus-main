@@ -68,8 +68,8 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
             return;
         }
         if (verbose) {
-            for (ProcessingLog.Information info : all) {
-                write(stream, info);
+            for (ProcessingLog.Information pinfo : all) {
+                write(stream, pinfo);
             }
         } else {
             if (err) {
@@ -154,7 +154,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private void writeLog(HtmlStream stream, ProcessingLog.Information info) throws IOException {
         if (verbose) {
-            stream.write(info.getName()).newLine();
+            stream.write(HtmlTag.EMPHASIZED_TEXT, info.getName()).newLine();
         }
     }
 

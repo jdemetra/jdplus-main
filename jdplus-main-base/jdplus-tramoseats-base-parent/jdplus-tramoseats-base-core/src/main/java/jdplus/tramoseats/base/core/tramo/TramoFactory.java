@@ -71,11 +71,14 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
     }
 
     public TramoSpec refreshSpec(TramoSpec currentSpec, TramoSpec domainSpec, EstimationPolicyType policy, TsDomain frozenDomain) {
+        if (policy == EstimationPolicyType.None) {
+            return currentSpec;
+        }
+        if (policy == EstimationPolicyType.Complete) {
+            return domainSpec;
+        }
         TramoSpec.Builder builder = currentSpec.toBuilder();
         switch (policy) {
-            case Complete -> {
-                return domainSpec;
-            }
             case Outliers_StochasticComponent -> {
                 resetArima(currentSpec, domainSpec, builder);
                 RegressionSpec rspec = removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
