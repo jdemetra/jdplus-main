@@ -25,7 +25,7 @@ import jdplus.toolkit.base.tsp.legacy.LegacyHandler;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.time.Duration;

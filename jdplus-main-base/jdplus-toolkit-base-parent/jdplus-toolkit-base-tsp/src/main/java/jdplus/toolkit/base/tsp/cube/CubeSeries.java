@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.tsp.cube;
 
 import java.util.Map;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

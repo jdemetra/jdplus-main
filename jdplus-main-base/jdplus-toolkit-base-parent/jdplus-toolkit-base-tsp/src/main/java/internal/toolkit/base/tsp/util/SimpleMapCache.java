@@ -1,7 +1,7 @@
 package internal.toolkit.base.tsp.util;
 
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 

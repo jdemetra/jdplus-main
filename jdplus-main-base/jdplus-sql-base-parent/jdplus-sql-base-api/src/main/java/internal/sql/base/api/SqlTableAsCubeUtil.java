@@ -17,7 +17,7 @@
 package internal.sql.base.api;
 
 import jdplus.toolkit.base.tsp.cube.TableAsCubeConnection.*;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.util.Date;

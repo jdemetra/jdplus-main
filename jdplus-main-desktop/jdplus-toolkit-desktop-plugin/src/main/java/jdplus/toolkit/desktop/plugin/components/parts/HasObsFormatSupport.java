@@ -24,7 +24,7 @@ import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 

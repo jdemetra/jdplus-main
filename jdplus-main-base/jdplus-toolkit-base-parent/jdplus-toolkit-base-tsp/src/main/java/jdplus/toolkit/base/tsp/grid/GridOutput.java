@@ -19,9 +19,9 @@ package jdplus.toolkit.base.tsp.grid;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Set;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

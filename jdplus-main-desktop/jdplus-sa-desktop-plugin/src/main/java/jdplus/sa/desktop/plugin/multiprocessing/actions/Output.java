@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import nbbrd.design.ClassNameConstant;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.SwingWorker;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.DialogDescriptor;

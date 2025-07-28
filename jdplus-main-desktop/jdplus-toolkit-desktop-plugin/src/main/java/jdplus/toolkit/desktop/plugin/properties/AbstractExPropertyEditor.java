@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.properties;
 
 import jdplus.toolkit.desktop.plugin.util.Collections2;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.explorer.propertysheet.ExPropertyEditor;
 import org.openide.explorer.propertysheet.InplaceEditor;
 import org.openide.explorer.propertysheet.PropertyEnv;

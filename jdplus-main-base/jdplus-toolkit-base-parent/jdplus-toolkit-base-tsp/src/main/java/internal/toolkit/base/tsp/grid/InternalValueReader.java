@@ -19,7 +19,7 @@ package internal.toolkit.base.tsp.grid;
 import java.time.LocalDateTime;
 import java.util.function.Function;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

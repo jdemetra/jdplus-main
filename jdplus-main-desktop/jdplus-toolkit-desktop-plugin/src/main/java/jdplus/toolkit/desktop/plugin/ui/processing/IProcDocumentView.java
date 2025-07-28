@@ -8,7 +8,7 @@ import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.desktop.plugin.interfaces.Disposable;
 import jdplus.toolkit.base.api.util.Id;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.List;

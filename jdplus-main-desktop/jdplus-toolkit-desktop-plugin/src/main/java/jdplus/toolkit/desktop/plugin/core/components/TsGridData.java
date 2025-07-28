@@ -22,7 +22,7 @@ import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.desktop.plugin.components.TsGridObs;
 import lombok.NonNull;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 import java.util.Collections;
 import java.util.List;

@@ -27,7 +27,7 @@ import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
 import jdplus.toolkit.base.tsp.fixme.Strings;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;

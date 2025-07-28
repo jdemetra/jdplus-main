@@ -21,7 +21,7 @@ import nbbrd.design.VisibleForTesting;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.text.*;
 import java.time.LocalDate;

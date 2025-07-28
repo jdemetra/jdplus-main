@@ -6,7 +6,7 @@ module jdplus.sa.base.workspace {
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
-    requires static org.checkerframework.checker.qual;
+    requires static org.jspecify;
 
     requires jdplus.toolkit.base.workspace;
     requires jdplus.sa.base.information;

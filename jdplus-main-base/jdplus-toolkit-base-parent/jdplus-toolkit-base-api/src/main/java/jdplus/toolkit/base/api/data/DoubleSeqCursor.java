@@ -19,7 +19,7 @@ package jdplus.toolkit.base.api.data;
 import nbbrd.design.Development;
 import internal.toolkit.base.api.data.InternalBlockCursors;
 import java.util.function.DoubleUnaryOperator;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
 
 /**

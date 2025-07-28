@@ -18,7 +18,7 @@ package jdplus.toolkit.base.api.time;
 
 import lombok.NonNull;
 import nbbrd.design.MightBePromoted;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;

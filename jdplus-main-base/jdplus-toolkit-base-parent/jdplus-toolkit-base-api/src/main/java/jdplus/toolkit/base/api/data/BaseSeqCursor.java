@@ -18,7 +18,7 @@ package jdplus.toolkit.base.api.data;
 
 import nbbrd.design.Development;
 import nbbrd.design.NotThreadSafe;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 /**
  * Describes an abstract cursor of elements. A cursor is an iterator with an

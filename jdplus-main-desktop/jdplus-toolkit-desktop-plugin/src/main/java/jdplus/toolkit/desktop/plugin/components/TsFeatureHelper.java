@@ -21,7 +21,7 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.tsp.TsMeta;
 import lombok.AccessLevel;
 import lombok.NonNull;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

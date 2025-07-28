@@ -3,7 +3,7 @@ package jdplus.toolkit.desktop.plugin.components.parts;
 import jdplus.main.desktop.design.SwingAction;
 import jdplus.main.desktop.design.SwingProperty;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface HasChart {
 

@@ -6,7 +6,7 @@ module jdplus.toolkit.base.tsp {
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
-    requires static org.checkerframework.checker.qual;
+    requires static org.jspecify;
 
     requires nbbrd.io.base;
     requires transitive jdplus.toolkit.base.api;

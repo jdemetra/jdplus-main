@@ -37,7 +37,7 @@ import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.util.Collections2;
 import jdplus.toolkit.desktop.plugin.util.KeyStrokes;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;

@@ -25,7 +25,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.util.Date;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JToolTip;

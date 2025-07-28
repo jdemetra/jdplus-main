@@ -11,7 +11,7 @@ module jdplus.toolkit.base.api {
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
-    requires static org.checkerframework.checker.qual;
+    requires static org.jspecify;
 
     exports jdplus.toolkit.base.api.advanced.algebra;
     exports jdplus.toolkit.base.api.advanced.arima;

@@ -23,8 +23,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import nbbrd.design.NonNegative;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;

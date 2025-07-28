@@ -27,7 +27,7 @@ import lombok.AccessLevel;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.MightBePromoted;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

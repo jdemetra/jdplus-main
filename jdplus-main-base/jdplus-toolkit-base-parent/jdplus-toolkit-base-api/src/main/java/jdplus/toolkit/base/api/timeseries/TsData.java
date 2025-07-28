@@ -21,9 +21,9 @@ import jdplus.toolkit.base.api.data.*;
 import lombok.AccessLevel;
 import nbbrd.design.Development;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Random;

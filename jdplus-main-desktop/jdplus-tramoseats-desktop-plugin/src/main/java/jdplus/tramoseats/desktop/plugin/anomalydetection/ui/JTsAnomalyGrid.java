@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.OptionalInt;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;

@@ -18,7 +18,7 @@ package jdplus.toolkit.base.tsp.util;
 
 import lombok.NonNull;
 import nbbrd.design.NotThreadSafe;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Philippe Charles

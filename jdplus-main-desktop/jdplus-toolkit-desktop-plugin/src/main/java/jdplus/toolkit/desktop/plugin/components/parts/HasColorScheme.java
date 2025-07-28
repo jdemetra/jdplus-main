@@ -3,7 +3,7 @@ package jdplus.toolkit.desktop.plugin.components.parts;
 import jdplus.main.desktop.design.SwingAction;
 import jdplus.main.desktop.design.SwingProperty;
 import ec.util.chart.ColorScheme;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

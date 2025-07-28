@@ -25,7 +25,7 @@ import java.nio.file.Files;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import picocli.CommandLine;
 import picocli.jansi.graalvm.AnsiConsole;
 

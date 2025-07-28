@@ -23,8 +23,8 @@ import lombok.NonNull;
 import nbbrd.io.IOIterator;
 import nbbrd.io.Resource;
 import nbbrd.io.function.IORunnable;
-import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import nbbrd.design.NonNegative;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;

@@ -24,7 +24,7 @@ import nbbrd.io.text.Parser;
 import nbbrd.sql.jdbc.SqlFunc;
 import nbbrd.sql.jdbc.SqlTypes;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines a function that creates a new object from the current ResultSet.

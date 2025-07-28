@@ -3,7 +3,7 @@ package internal.toolkit.base.tsp.util;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import nbbrd.design.VisibleForTesting;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.Map;

@@ -38,7 +38,7 @@ import java.util.function.UnaryOperator;
 
 import nbbrd.io.sys.SystemProperties;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileChooserBuilder;

@@ -19,7 +19,7 @@ package internal.toolkit.base.tsp;
 import jdplus.toolkit.base.tsp.fixme.Strings;
 import lombok.NonNull;
 import nbbrd.design.BuilderPattern;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.net.URLDecoder;

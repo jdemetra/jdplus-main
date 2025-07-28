@@ -25,7 +25,7 @@ import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
 import nbbrd.design.MightBePromoted;
 import nbbrd.design.swing.OnEDT;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.util.Exceptions;
 
 import java.util.Collection;

@@ -1,7 +1,7 @@
 package jdplus.toolkit.base.api.time;
 
 import lombok.NonNull;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 import java.time.DateTimeException;
 

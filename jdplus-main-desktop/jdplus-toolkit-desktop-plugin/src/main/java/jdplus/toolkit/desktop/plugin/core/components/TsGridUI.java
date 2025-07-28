@@ -40,7 +40,7 @@ import jdplus.toolkit.desktop.plugin.util.Collections2;
 import jdplus.toolkit.desktop.plugin.util.InputMaps;
 import lombok.NonNull;
 import nbbrd.io.text.Formatter;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

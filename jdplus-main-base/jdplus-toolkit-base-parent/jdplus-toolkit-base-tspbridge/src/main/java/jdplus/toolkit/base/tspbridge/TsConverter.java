@@ -24,7 +24,7 @@ import ec.tss.TsBypass;
 import ec.tstoolkit.maths.matrices.Matrix;
 import jdplus.toolkit.base.tsp.fixme.Strings;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

@@ -273,7 +273,6 @@
                         <publicPackage>org.apache.commons.*</publicPackage>
                         <publicPackage>nbbrd.io.*</publicPackage>
                         <publicPackage>internal.io.*</publicPackage>
-                        <publicPackage>org.checkerframework.*</publicPackage>
                         <publicPackage>javax.*</publicPackage>
                         <publicPackage>com.sun.xml.bind.*</publicPackage>
                         <publicPackage>demetra.desktop.*</publicPackage>

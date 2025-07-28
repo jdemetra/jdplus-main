@@ -20,7 +20,7 @@ import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import jdplus.toolkit.base.tsp.fixme.SortedMaps;
 import nbbrd.design.ThreadSafe;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;

@@ -9,7 +9,7 @@ import ec.util.chart.impl.SmartColorScheme;
 import ec.util.chart.swing.SwingColorSchemeSupport;
 import nbbrd.design.swing.OnEDT;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.List;

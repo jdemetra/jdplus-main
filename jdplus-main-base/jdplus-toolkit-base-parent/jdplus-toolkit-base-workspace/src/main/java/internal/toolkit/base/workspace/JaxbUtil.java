@@ -19,7 +19,7 @@ package internal.toolkit.base.workspace;
 import java.util.Objects;
 import java.util.function.Consumer;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

@@ -3,7 +3,7 @@ package internal.text.base.api;
 import jdplus.toolkit.base.api.design.DemetraPlusLegacy;
 import nbbrd.io.text.Parser;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Demortier Jeremy

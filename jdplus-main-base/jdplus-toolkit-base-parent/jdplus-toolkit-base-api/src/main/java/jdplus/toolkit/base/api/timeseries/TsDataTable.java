@@ -23,7 +23,7 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import nbbrd.design.StaticFactoryMethod;
 import nbbrd.design.VisibleForTesting;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;

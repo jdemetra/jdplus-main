@@ -22,7 +22,7 @@ import jdplus.toolkit.base.tsp.util.ObsFormat;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

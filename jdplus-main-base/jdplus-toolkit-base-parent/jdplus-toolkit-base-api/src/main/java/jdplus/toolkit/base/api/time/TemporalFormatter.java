@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import nbbrd.design.MightBePromoted;
 import nbbrd.design.VisibleForTesting;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.time.DateTimeException;
