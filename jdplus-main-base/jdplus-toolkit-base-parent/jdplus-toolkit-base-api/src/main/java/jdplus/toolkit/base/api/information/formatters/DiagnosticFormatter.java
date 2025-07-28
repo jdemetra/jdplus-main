@@ -27,13 +27,6 @@ import java.util.Locale;
  */
 public final class DiagnosticFormatter implements InformationFormatter {
 
-    private NumberFormat newFormat(Locale locale) {
-        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
-        df4.setMaximumFractionDigits(3);
-        df4.setGroupingUsed(false);
-        return df4;
-    }
-
     @Override
     public String format(Object obj, int item, Locale locale) {
 
@@ -41,7 +34,7 @@ public final class DiagnosticFormatter implements InformationFormatter {
         if (item == 0 || item == 1) {
             return test.getQuality().toString();
         } else if (Math.abs(item) == 2) {
-            return newFormat(locale).format(test.getValue());
+            return InformationFormatter.format3(locale, test.getValue());
         } else {
             return null;
         }

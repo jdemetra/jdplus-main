@@ -38,8 +38,6 @@ public final class DoubleFormatter implements InformationFormatter {
         if (item > 0)
             return null;
         double val=(Double) obj;
-        if (! Double.isFinite(val))
-            return null;
-        return newFormat(locale).format(val);
+        return InformationFormatter.format(newFormat(locale), val);
     }
 }

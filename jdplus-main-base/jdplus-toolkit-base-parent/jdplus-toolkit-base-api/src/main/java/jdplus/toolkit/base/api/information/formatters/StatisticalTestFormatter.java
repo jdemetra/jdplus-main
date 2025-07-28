@@ -13,13 +13,11 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the Licence for the specific language governing permissions and 
 * limitations under the Licence.
-*/
-
+ */
 package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 
-import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
@@ -28,31 +26,22 @@ import java.util.Locale;
  */
 public final class StatisticalTestFormatter implements InformationFormatter {
 
-    private NumberFormat newFormat6(Locale locale) {
-        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
-        df4.setMaximumFractionDigits(6);
-        df4.setGroupingUsed(false);
-        return df4;
-    }
-
-    private NumberFormat newFormat4(Locale locale) {
-        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
-        df4.setMaximumFractionDigits(4);
-        df4.setGroupingUsed(false);
-        return df4;
-    }
-
-    @Override
+   @Override
     public String format(Object obj, int item, Locale locale) {
 
-        StatisticalTest test = (StatisticalTest)obj;
-        if (item == 0)
-            return newFormat6(locale).format(test.getValue());
+        StatisticalTest test = (StatisticalTest) obj;
+        if (item == 0) {
+            InformationFormatter.format6(locale, test.getValue());
+        }
         return switch (Math.abs(item)) {
-            case 1 -> newFormat6(locale).format(test.getValue());
-            case 2 -> newFormat4(locale).format(test.getPvalue());
-            case 3 -> test.getDescription();
-            default -> null;
+            case 1 ->
+                InformationFormatter.format6(locale, test.getValue());
+            case 2 ->
+                InformationFormatter.format4(locale, test.getPvalue());
+            case 3 ->
+                test.getDescription();
+            default ->
+                null;
         };
     }
 }

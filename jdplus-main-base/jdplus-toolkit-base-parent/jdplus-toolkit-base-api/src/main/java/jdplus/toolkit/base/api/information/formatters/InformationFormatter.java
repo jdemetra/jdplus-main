@@ -17,6 +17,7 @@
 
 package jdplus.toolkit.base.api.information.formatters;
 
+import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
@@ -24,6 +25,52 @@ import java.util.Locale;
  * @author Jean Palate
  */
 public interface InformationFormatter {
+
+   public static NumberFormat df(Locale locale, int ndec) {
+        NumberFormat df = NumberFormat.getNumberInstance(locale);
+        df.setMaximumFractionDigits(ndec);
+        df.setGroupingUsed(false);
+        return df;
+    }
+
+    public static NumberFormat df3(Locale locale) {
+        return df(locale, 3);
+    }
+
+    public static NumberFormat df4(Locale locale) {
+        return df(locale, 4);
+    }
+
+    public static NumberFormat df6(Locale locale) {
+        return df(locale, 6);
+    }
+
+    public static String format(NumberFormat fmt, double val) {
+        if (Double.isInfinite(val)) {
+            if (val < 0) {
+                return "-inf";
+            } else {
+                return "inf";
+            }
+        } else if (Double.isNaN(val)) {
+            return "nan";
+        } else {
+            return fmt.format(val);
+        }
+    }
+    
+    public static String format3(Locale locale, double val) {
+        return format(df3(locale), val);
+    }
+
+    public static String format4(Locale locale, double val) {
+        return format(df4(locale), val);
+    }
+
+    public static String format6(Locale locale, double val) {
+        return format(df6(locale), val);
+    }
+
 
     String format(Object obj, int item, Locale locale);
     

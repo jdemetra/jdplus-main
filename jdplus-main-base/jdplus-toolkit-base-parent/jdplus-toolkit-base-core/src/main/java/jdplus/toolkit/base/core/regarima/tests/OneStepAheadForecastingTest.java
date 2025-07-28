@@ -53,7 +53,7 @@ public class OneStepAheadForecastingTest {
             }
 
             int n = residuals.length();
-            if (n <= nback + 2) {
+            if (n <= (nback * 2)) {
                 return null;
             }
             DoubleSeq in = residuals.drop(0, nback);
