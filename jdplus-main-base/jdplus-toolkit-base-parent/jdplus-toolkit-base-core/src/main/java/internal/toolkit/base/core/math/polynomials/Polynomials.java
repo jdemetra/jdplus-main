@@ -93,7 +93,7 @@ public class Polynomials {
      * Evaluates a polynomial with coefficients defined by a give function at a
      * given point.
      *
-     * @param degree The getDegree ofFunction the polynomial
+     * @param degree The getDegree of the polynomial
      * @param fn The function defining the coefficients. fn(i) is the
      * coefficient corresponding to the power i
      * @param x The evaluation point;

@@ -26,19 +26,6 @@ import java.util.Locale;
  */
 public final class RegressionItemFormatter implements InformationFormatter {
 
-    private NumberFormat newFormat6(Locale locale) {
-        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
-        df4.setMaximumFractionDigits(6);
-        df4.setGroupingUsed(false);
-        return df4;
-    }
-
-    private NumberFormat newFormat4(Locale locale) {
-        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
-        df4.setMaximumFractionDigits(4);
-        df4.setGroupingUsed(false);
-        return df4;
-    }
 
     private final boolean showDesc_;
 
@@ -70,17 +57,17 @@ public final class RegressionItemFormatter implements InformationFormatter {
                 return StringFormatter.cleanup(reg.getDescription());
             }
             case 2 -> {
-                return newFormat6(locale).format(reg.getCoefficient());
+                return InformationFormatter.format6(locale, reg.getCoefficient());
             }
             case 3 -> {
                 if (reg.getStdError() == 0) {
                     return null;
                 } else {
-                    return newFormat4(locale).format(reg.getCoefficient() / reg.getStdError());
+                    return InformationFormatter.format4(locale, reg.getCoefficient() / reg.getStdError());
                 }
             }
             case 4 -> {
-                return newFormat4(locale).format(reg.getPvalue());
+                return InformationFormatter.format4(locale, reg.getPvalue());
             }
             default -> {
                 return null;
@@ -95,7 +82,7 @@ public final class RegressionItemFormatter implements InformationFormatter {
         if (reg.getDescription() != null) {
             builder.append(reg.getDescription()).append(':');
         }
-        NumberFormat df4 = newFormat4(locale);
+        NumberFormat df4 = InformationFormatter.df4(locale);
         builder.append(df4.format(reg.getCoefficient()));
         if (reg.getStdError() != 0) {
             builder.append('[').append(
@@ -104,5 +91,6 @@ public final class RegressionItemFormatter implements InformationFormatter {
         return builder.toString();
 
     }
+
 
 }

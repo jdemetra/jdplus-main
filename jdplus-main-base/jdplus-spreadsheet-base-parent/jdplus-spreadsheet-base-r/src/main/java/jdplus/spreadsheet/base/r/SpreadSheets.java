@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import jdplus.spreadsheet.base.api.SpreadSheetBean;
 import jdplus.spreadsheet.base.api.SpreadSheetProvider;
 import jdplus.toolkit.base.api.timeseries.Ts;
@@ -136,6 +137,31 @@ public class SpreadSheets {
         }
     }
 
+    public Ts seriesByName(DataSource source, String sheet, String series, boolean fullName) throws IllegalArgumentException, IOException {
+        SpreadSheetProvider currentProvider = currentProvider();
+        if (currentProvider == null) {
+            throw new RuntimeException("SpreadSheetProvider is not available");
+        }
+        try {
+            currentProvider.open(source);
+            List<DataSet> sheets = currentProvider.children(source);
+            Optional<DataSet> csheet = sheets.stream()
+                    .filter(s -> currentProvider.getDisplayName(s).equals(sheet))
+                    .findFirst();
+            DataSet ds = csheet.orElseThrow(() -> new IllegalArgumentException("Invalid sheet"));
+            List<DataSet> all = currentProvider.children(ds);
+            DataSet q = all.stream()
+                    .filter(s -> currentProvider.getDisplayName(s).equals(series))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid series"));
+            TsMoniker moniker = currentProvider.toMoniker(q);
+            return currentProvider.getTs(moniker, TsInformationType.All)
+                    .withName(fullName ? currentProvider.getDisplayName(q) : currentProvider.getDisplayNodeName(q));
+        } finally {
+            currentProvider.close(source);
+        }
+    }
+
     private Ts of(SpreadSheetProvider provider, DataSet c) {
         TsMoniker moniker = provider.toMoniker(c);
         try {
@@ -161,6 +187,35 @@ public class SpreadSheets {
                 throw new IllegalArgumentException("Invalid sheet");
             }
             DataSet ds = sheets.get(sheet - 1);
+            TsMoniker moniker = currentProvider.toMoniker(ds);
+            if (fullNames) {
+                return currentProvider.getTsCollection(moniker, TsInformationType.All).withName(currentProvider.getDisplayName(ds));
+            } else {
+                List<DataSet> schildren = currentProvider.children(ds);
+                List<Ts> all = schildren.stream().map(c -> of(currentProvider, c)).toList();
+                return TsCollection.builder()
+                        .name(currentProvider.getDisplayName(ds))
+                        .moniker(moniker)
+                        .items(all)
+                        .build();
+            }
+        } finally {
+            currentProvider.close(source);
+        }
+    }
+
+    public TsCollection collectionByName(DataSource source, String sheet, boolean fullNames) throws IllegalArgumentException, IOException {
+        SpreadSheetProvider currentProvider = currentProvider();
+        if (currentProvider == null) {
+            throw new RuntimeException("SpreadSheetProvider is not available");
+        }
+        try {
+            currentProvider.open(source);
+            List<DataSet> sheets = currentProvider.children(source);
+            DataSet ds = sheets.stream()
+                    .filter(s -> currentProvider.getDisplayName(s).equals(sheet))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid sheet"));
             TsMoniker moniker = currentProvider.toMoniker(ds);
             if (fullNames) {
                 return currentProvider.getTsCollection(moniker, TsInformationType.All).withName(currentProvider.getDisplayName(ds));
@@ -206,18 +261,18 @@ public class SpreadSheets {
     public SpreadSheetBean sourceOf(DataSet set) {
         return PROVIDER.decodeBean(set.getDataSource());
     }
-    
-    public DataSet seriesDataSet(DataSource source, String sheetName, String seriesName){
+
+    public DataSet seriesDataSet(DataSource source, String sheetName, String seriesName) {
         return DataSet.builder(source, DataSet.Kind.SERIES)
                 .parameter("sheetName", sheetName)
                 .parameter("seriesName", seriesName)
                 .build();
     }
-    
-    public DataSet sheetDataSet(DataSource source, String sheetName){
+
+    public DataSet sheetDataSet(DataSource source, String sheetName) {
         return DataSet.builder(source, DataSet.Kind.COLLECTION)
                 .parameter("sheetName", sheetName)
                 .build();
     }
-    
+
 }

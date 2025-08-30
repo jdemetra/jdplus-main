@@ -27,23 +27,13 @@ import java.util.Locale;
  */
 public final class ParameterFormatter implements InformationFormatter {
 
-    private NumberFormat newFormat6(Locale locale) {
-        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
-        df4.setMaximumFractionDigits(6);
-        df4.setGroupingUsed(false);
-        return df4;
-    }
-
     @Override
     public String format(Object obj, int item, Locale locale) {
 
         Parameter param = (Parameter) obj;
-        switch (item) {
-            case 0:
-            case 1:
-                return newFormat6(locale).format(param.getValue());
-            default:
-                return null;
-        }
+        return switch (item) {
+            case 0, 1 -> InformationFormatter.format6(locale, param.getValue());
+            default -> null;
+        };
     }
 }
