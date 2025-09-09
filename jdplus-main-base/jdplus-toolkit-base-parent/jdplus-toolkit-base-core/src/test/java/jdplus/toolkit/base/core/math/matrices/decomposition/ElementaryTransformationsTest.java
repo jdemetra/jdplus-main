@@ -8,7 +8,7 @@ package jdplus.toolkit.base.core.math.matrices.decomposition;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

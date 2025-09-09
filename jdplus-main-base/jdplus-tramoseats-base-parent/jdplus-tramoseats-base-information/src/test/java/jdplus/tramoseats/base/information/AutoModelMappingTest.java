@@ -8,7 +8,7 @@ package jdplus.tramoseats.base.information;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.tramoseats.base.api.tramo.AutoModelSpec;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

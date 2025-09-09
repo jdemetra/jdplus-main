@@ -16,11 +16,12 @@ import jdplus.toolkit.base.core.regsarima.internal.HannanRissanenInitializer;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import ec.tstoolkit.timeseries.regression.IOutlierVariable;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import static jdplus.x13.base.core.x13.regarima.OutliersDetectionModule.EPS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import jdplus.toolkit.base.core.modelling.regression.AdditiveOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.LevelShiftFactory;
 import jdplus.toolkit.base.core.modelling.regression.TransitoryChangeFactory;
@@ -72,7 +73,7 @@ public class OutliersDetectionModuleTest {
             int[] cur = outliers[i];
             System.out.println(od.getFactory(cur[1]).getCode() + '-' + start.plus(cur[0]).getStartAsShortString());
         }
-        assertTrue(outliers.length == 4);
+        assertEquals(4, outliers.length);
     }
 
     @Test

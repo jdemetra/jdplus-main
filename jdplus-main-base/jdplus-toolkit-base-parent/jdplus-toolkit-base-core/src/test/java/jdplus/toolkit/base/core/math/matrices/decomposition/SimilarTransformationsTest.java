@@ -12,7 +12,7 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.SimilarTransformatio
 import jdplus.toolkit.base.core.random.JdkRNG;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

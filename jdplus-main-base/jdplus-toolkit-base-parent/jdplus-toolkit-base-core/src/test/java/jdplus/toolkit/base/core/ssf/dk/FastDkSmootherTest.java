@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.ssf.dk;
 
 import jdplus.toolkit.base.api.arima.SarimaOrders;
+import org.junit.jupiter.api.Test;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import java.util.Random;
@@ -26,8 +27,7 @@ import jdplus.toolkit.base.core.ssf.arima.SsfArima;
 import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
 import jdplus.toolkit.base.core.ssf.univariate.Ssf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

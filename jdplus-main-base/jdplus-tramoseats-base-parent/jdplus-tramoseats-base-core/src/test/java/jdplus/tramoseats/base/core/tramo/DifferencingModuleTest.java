@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.tramoseats.base.core.tramo.internal.DifferencingModule;
 import tck.demetra.data.Data;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

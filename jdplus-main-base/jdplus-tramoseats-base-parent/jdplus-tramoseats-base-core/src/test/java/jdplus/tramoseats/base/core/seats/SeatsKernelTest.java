@@ -19,11 +19,12 @@ package jdplus.tramoseats.base.core.seats;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import jdplus.tramoseats.base.api.seats.DecompositionSpec;
 import jdplus.tramoseats.base.api.seats.DecompositionSpec.ComponentsEstimationMethod;
 import jdplus.tramoseats.base.api.seats.SeatsModelSpec;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -51,7 +52,7 @@ public class SeatsKernelTest {
         SeatsKernel kernel = new SeatsKernel(toolkit);
         ProcessingLog log = ProcessingLog.dummy();
         SeatsResults rslt = kernel.process(model, log);
-        assertTrue(rslt != null);
+        assertNotSame(rslt, null);
 //        log.all().forEach(v -> System.out.println(v));
 //        System.out.println(rslt.getInitialComponents());
     }
@@ -73,7 +74,7 @@ public class SeatsKernelTest {
         SeatsKernel kernel = new SeatsKernel(toolkit);
         ProcessingLog log = ProcessingLog.dummy();
         SeatsResults rslt = kernel.process(model, log);
-        assertTrue(rslt != null);
+        assertNotSame(rslt, null);
 //        log.all().forEach(v -> System.out.println(v));
 //        System.out.println(rslt.getInitialComponents());
     }
@@ -99,7 +100,7 @@ public class SeatsKernelTest {
         SeatsKernel kernel = new SeatsKernel(toolkit);
         ProcessingLog log = ProcessingLog.dummy();
         SeatsResults rslt = kernel.process(model, log);
-        assertTrue(rslt != null);
+        assertNotSame(rslt, null);
 //        log.all().forEach(v -> System.out.println(v));
 //        System.out.println(rslt.getInitialComponents());
 //        System.out.println(rslt.getFinalComponents());

@@ -10,6 +10,8 @@ import ec.satoolkit.x11.DefaultX11Utilities;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
 /**
  *
  * @author Christiane Hofer
@@ -54,7 +56,7 @@ public class X11ContextTest {
         ec.satoolkit.x11.IX11Utilities x11Utilities = new DefaultX11Utilities();
         ec.tstoolkit.timeseries.simplets.TsData oldTs = new ec.tstoolkit.timeseries.simplets.TsData(TsFrequency.Monthly, 1900, 0, data, true);
         x11Utilities.checkPositivity(oldTs);
-        org.junit.Assert.assertArrayEquals(messages, oldTs.internalStorage(), dsResults.toArray(), DELTA);
+        assertArrayEquals(oldTs.internalStorage(), dsResults.toArray(), DELTA, messages);
 
     }
 

@@ -9,7 +9,7 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
 

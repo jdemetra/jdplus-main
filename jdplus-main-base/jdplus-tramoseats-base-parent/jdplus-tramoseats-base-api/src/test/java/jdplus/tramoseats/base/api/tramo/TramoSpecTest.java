@@ -22,7 +22,8 @@ import jdplus.tramoseats.base.api.tramo.RegressionSpec;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  *
@@ -64,7 +65,7 @@ public class TramoSpecTest {
                 .build();
 
         assertNotEquals(newSpec, spec);
-        assertTrue(newSpec.getRegression().getCalendar().getEaster().getDuration() == 10);
-        assertTrue(spec.getRegression().getCalendar().getEaster().getDuration() == 6);
+        assertEquals(10, newSpec.getRegression().getCalendar().getEaster().getDuration());
+        assertEquals(6, spec.getRegression().getCalendar().getEaster().getDuration());
     }
 }

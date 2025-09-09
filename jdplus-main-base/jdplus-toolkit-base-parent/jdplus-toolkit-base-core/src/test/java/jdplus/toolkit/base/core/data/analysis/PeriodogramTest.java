@@ -20,7 +20,7 @@ import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

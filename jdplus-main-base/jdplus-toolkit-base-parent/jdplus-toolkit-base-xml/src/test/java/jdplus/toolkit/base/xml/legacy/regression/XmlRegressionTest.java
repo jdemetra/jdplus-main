@@ -34,8 +34,9 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.validation.Validator;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Disabled;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 import xml.Schemas;
@@ -100,7 +101,7 @@ public class XmlRegressionTest {
             rslt = (XmlRegression) unmarshaller.unmarshal(reader);
             for (XmlRegressionItem item : rslt.getItems()){
                 ITsVariable tsvar = item.variable.toTsVariable();
-                assertTrue(tsvar != null);
+                assertNotSame(tsvar, null);
             }
         }
     }

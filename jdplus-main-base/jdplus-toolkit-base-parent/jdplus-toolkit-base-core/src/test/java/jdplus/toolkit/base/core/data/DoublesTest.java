@@ -11,7 +11,7 @@ import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 

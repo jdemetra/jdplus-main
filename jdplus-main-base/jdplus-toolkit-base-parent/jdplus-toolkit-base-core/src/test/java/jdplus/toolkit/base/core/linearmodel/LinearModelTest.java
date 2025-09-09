@@ -22,7 +22,8 @@ import java.util.Random;
 import java.util.function.DoubleSupplier;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 import jdplus.toolkit.base.api.data.Doubles;
 
@@ -45,8 +46,8 @@ public class LinearModelTest {
                 .y(y)
                 .meanCorrection(true)
                 .build();
-        assertTrue(lm != null);
-        assertTrue(lm.calcResiduals(Doubles.of(.5)) != null);
+        assertNotSame(lm, null);
+        assertNotSame(lm.calcResiduals(Doubles.of(.5)), null);
     }
 
     @Test
@@ -64,8 +65,8 @@ public class LinearModelTest {
                 .meanCorrection(true)
                 .addX(x1, x2)
                 .build();
-        assertTrue(lm != null);
-        assertTrue(lm.calcResiduals(Doubles.of(new double[]{.5, -.2, .3})) != null);
+        assertNotSame(lm, null);
+        assertNotSame(lm.calcResiduals(Doubles.of(new double[]{.5, -.2, .3})), null);
     }
 
     @Test
@@ -82,8 +83,8 @@ public class LinearModelTest {
                 .y(y.map(Math::log))
                 .addX(x1, x2)
                 .build();
-        assertTrue(lm != null);
-        assertTrue(lm.calcResiduals(Doubles.of(new double[]{-.002, .003})) != null);
+        assertNotSame(lm, null);
+        assertNotSame(lm.calcResiduals(Doubles.of(new double[]{-.002, .003})), null);
     }
 
 }

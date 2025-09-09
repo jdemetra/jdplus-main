@@ -22,7 +22,8 @@ import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  *

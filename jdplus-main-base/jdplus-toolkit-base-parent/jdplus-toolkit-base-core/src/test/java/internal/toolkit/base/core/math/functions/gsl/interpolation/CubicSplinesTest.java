@@ -10,7 +10,7 @@ import java.util.function.DoubleUnaryOperator;
 import jdplus.toolkit.base.core.math.splines.CubicSpline;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

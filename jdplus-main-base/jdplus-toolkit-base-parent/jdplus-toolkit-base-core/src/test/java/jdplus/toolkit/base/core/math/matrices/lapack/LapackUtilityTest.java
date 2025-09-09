@@ -12,7 +12,8 @@ import jdplus.toolkit.base.core.math.matrices.MatrixUtility;
 import jdplus.toolkit.base.core.math.matrices.lapack.LapackUtility;
 import jdplus.toolkit.base.core.random.JdkRNG;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -25,11 +26,11 @@ public class LapackUtilityTest {
 
     @Test
     public void testDlapy2() {
-        assertTrue(0 == LapackUtility.lapy2(0, 0));
+        assertEquals(0, LapackUtility.lapy2(0, 0));
         assertTrue(Double.isInfinite(LapackUtility.lapy2(0, Double.NEGATIVE_INFINITY)));
         assertTrue(Double.isNaN(LapackUtility.lapy2(Double.NaN, 5)));
         assertEquals(LapackUtility.lapy2(5, -2), Math.sqrt(29), 1e-15);
-        assertEquals(LapackUtility.lapy2(25, 0), 25, 1e-15);
+        assertEquals(25, LapackUtility.lapy2(25, 0), 1e-15);
         assertEquals(LapackUtility.lapy2(1000, 0.001), Math.sqrt(1000.0 * 1000.0 + 0.001 * 0.001), 1e-15);
     }
 

@@ -25,7 +25,7 @@ import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.CholeskyWithPivoting;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -61,7 +61,7 @@ public class CholeskyWithPivotingTest {
 
         FastMatrix D = SymmetricMatrix.XXt(Tc).minus(A);
         double nm = MatrixNorms.infinityNorm(D);
-        assertEquals(nm,0,1e-9);
+        assertEquals(0, nm, 1e-9);
 
     }
 

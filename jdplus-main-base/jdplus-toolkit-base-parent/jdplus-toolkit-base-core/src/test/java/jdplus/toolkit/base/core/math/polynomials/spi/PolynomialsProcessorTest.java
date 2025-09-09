@@ -21,7 +21,7 @@ import jdplus.toolkit.base.api.advanced.math.Polynomials;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

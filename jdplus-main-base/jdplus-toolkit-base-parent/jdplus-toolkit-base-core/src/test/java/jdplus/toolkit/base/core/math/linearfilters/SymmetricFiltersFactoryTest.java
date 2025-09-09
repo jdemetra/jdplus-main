@@ -20,7 +20,8 @@ import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFiltersFactory;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

@@ -1,10 +1,9 @@
 package jdplus.toolkit.base.core.regsarima.regular;
-
+import org.junit.jupiter.api.Test;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import org.junit.Test;
 
 /**
  *

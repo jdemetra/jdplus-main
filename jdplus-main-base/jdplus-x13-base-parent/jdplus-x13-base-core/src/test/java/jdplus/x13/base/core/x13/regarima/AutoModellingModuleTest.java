@@ -13,8 +13,9 @@ import ec.tstoolkit.sarima.SarimaSpecification;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
 import static jdplus.x13.base.core.x13.regarima.Converter.convert;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -51,13 +52,13 @@ public class AutoModellingModuleTest {
             
             SarimaOrders spec=m.getDescription().specification();
             SarimaSpecification ospec = context.description.getSpecification();
-            assertTrue(spec.getP()==ospec.getP());
-            assertTrue(spec.getD()==ospec.getD());
-            assertTrue(spec.getQ()==ospec.getQ());
-            assertTrue(spec.getBp()==ospec.getBP());
-            assertTrue(spec.getBd()==ospec.getBD());
-            assertTrue(spec.getBq()==ospec.getBQ());
-            assertTrue(m.getDescription().isMean()==context.description.isMean());
+            assertEquals(spec.getP(), ospec.getP());
+            assertEquals(spec.getD(), ospec.getD());
+            assertEquals(spec.getQ(), ospec.getQ());
+            assertEquals(spec.getBp(), ospec.getBP());
+            assertEquals(spec.getBd(), ospec.getBD());
+            assertEquals(spec.getBq(), ospec.getBQ());
+            assertEquals(m.getDescription().isMean(), context.description.isMean());
         }
          long t1 = System.currentTimeMillis();
         System.out.println(t1 - t0);
@@ -88,13 +89,13 @@ public class AutoModellingModuleTest {
             
             SarimaOrders spec=m.getDescription().specification();
             SarimaSpecification ospec = context.description.getSpecification();
-            assertTrue(spec.getP()==ospec.getP());
-            assertTrue(spec.getD()==ospec.getD());
-            assertTrue(spec.getQ()==ospec.getQ());
-            assertTrue(spec.getBp()==ospec.getBP());
-            assertTrue(spec.getBd()==ospec.getBD());
-            assertTrue(spec.getBq()==ospec.getBQ());
-            assertTrue(m.getDescription().isMean()==context.description.isMean());
+            assertEquals(spec.getP(), ospec.getP());
+            assertEquals(spec.getD(), ospec.getD());
+            assertEquals(spec.getQ(), ospec.getQ());
+            assertEquals(spec.getBp(), ospec.getBP());
+            assertEquals(spec.getBd(), ospec.getBD());
+            assertEquals(spec.getBq(), ospec.getBQ());
+            assertEquals(m.getDescription().isMean(), context.description.isMean());
         }
          long t1 = System.currentTimeMillis();
         System.out.println(t1 - t0);

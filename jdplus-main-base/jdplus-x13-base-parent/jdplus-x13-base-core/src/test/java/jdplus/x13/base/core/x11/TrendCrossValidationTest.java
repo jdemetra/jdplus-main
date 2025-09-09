@@ -6,10 +6,11 @@ package jdplus.x13.base.core.x11;
 
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
 import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -32,7 +33,7 @@ public class TrendCrossValidationTest {
 //        for (int i = 0; i < cv.length; ++i) {
 //            System.out.println(cv[i]);
 //        }
-        assertTrue(cv != null);
+        assertNotSame(cv, null);
 
     }
 

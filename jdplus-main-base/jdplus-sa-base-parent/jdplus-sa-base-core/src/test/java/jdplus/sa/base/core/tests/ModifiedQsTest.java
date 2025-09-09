@@ -6,13 +6,14 @@ package jdplus.sa.base.core.tests;
 
 import java.util.Arrays;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.dstats.Normal;
 import jdplus.toolkit.base.core.random.XorshiftRNG;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import tck.demetra.data.Data;
 
 /**
@@ -31,7 +32,7 @@ public class ModifiedQsTest {
         Qs test = new Qs(s.getValues(), 12);
         double v0 = test.build().getValue();
         double v1 = ModifiedQs.test(s.getValues(), 12);
-        assertTrue(v0 == v1);
+        assertEquals(v0, v1);
     }
 
     public static void main(String[] args) {

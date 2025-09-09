@@ -9,7 +9,8 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import tck.demetra.data.Data;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -30,7 +31,7 @@ public class TramoOutliersDetectionTest {
 //                System.out.println(outliers[i]);
 //            }
 //        }
-        assertTrue(outliers == null);
+        assertNull(outliers);
     }
 
     @Test
@@ -42,6 +43,6 @@ public class TramoOutliersDetectionTest {
         TsData X=TsData.ofInternal(Data.TS_PROD.getStart(), x);
         TramoOutliersDetection.Results rslts = TramoOutliersDetection.process(X, new int[]{0, 1, 1}, new int[]{0, 1, 1}, false, null, true, true, false, true, 4, false, false);
         String[] outliers = rslts.getData(TramoOutliersDetection.Results.BNAMES, String[].class);
-        assertTrue(outliers.length == 1);
+        assertEquals(1, outliers.length);
     }
 }

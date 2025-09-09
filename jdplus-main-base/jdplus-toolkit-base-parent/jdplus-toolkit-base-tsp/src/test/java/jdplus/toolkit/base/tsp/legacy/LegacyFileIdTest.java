@@ -18,7 +18,6 @@ package jdplus.toolkit.base.tsp.legacy;
 
 import jdplus.toolkit.base.tsp.DataSource;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +26,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Philippe Charles
@@ -56,37 +56,37 @@ public class LegacyFileIdTest {
     @Test
     public void testFromFile() {
         LegacyFileId sourceId = LegacyFileId.of(FILE);
-        Assertions.assertNotNull(sourceId);
-        Assertions.assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
+        assertNotNull(sourceId);
+        assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
     }
 
     @Test
     public void testParseString() {
         LegacyFileId sourceId = LegacyFileId.parse(FILE.getPath());
-        Assertions.assertNotNull(sourceId);
-        Assertions.assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
+        assertNotNull(sourceId);
+        assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
     }
 
     @Test
     public void testParseCharSequence() {
         LegacyFileId sourceId = LegacyFileId.parse((CharSequence) FILE.getPath());
-        Assertions.assertNotNull(sourceId);
-        Assertions.assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
+        assertNotNull(sourceId);
+        assertEquals(FILE, Path.of(sourceId.getFile()).toFile());
     }
 
     @Test
     public void testEquals() throws IOException {
         LegacyFileId sourceId = LegacyFileId.of(FILE);
 
-        Assertions.assertEquals(sourceId, LegacyFileId.of(FILE));
-        Assertions.assertNotSame(sourceId, LegacyFileId.of(FILE));
-        Assertions.assertFalse(sourceId.equals(LegacyFileId.of(OTHER)));
+        assertEquals(sourceId, LegacyFileId.of(FILE));
+        assertNotSame(sourceId, LegacyFileId.of(FILE));
+        assertNotEquals(sourceId, LegacyFileId.of(OTHER));
 
-        Assertions.assertEquals(sourceId, LegacyFileId.parse(FILE.getPath()));
-        Assertions.assertNotSame(sourceId, LegacyFileId.parse(FILE.getPath()));
-        Assertions.assertFalse(sourceId.equals(LegacyFileId.parse(OTHER.getPath())));
+        assertEquals(sourceId, LegacyFileId.parse(FILE.getPath()));
+        assertNotSame(sourceId, LegacyFileId.parse(FILE.getPath()));
+        assertNotEquals(sourceId, LegacyFileId.parse(OTHER.getPath()));
 
-        Assertions.assertEquals(sourceId, LegacyFileId.parse((CharSequence) sourceId));
-        Assertions.assertSame(sourceId, LegacyFileId.parse((CharSequence) sourceId));
+        assertEquals(sourceId, LegacyFileId.parse((CharSequence) sourceId));
+        assertSame(sourceId, LegacyFileId.parse((CharSequence) sourceId));
     }
 }

@@ -16,7 +16,9 @@ import jdplus.toolkit.base.core.math.matrices.MatrixException;
 import jdplus.toolkit.base.core.math.matrices.decomposition.CroutDoolittle;
 import jdplus.toolkit.base.core.math.matrices.decomposition.Gauss;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -63,7 +65,7 @@ public class LULinearSystemSolverTest {
         }catch (MatrixException err){
             ok=false;
         }
-         assertTrue(!ok);
+        assertFalse(ok);
         LULinearSystemSolver solver = LULinearSystemSolver.builder().decomposer((A, e) -> CroutDoolittle.decompose(A, e)).precision(1e-13).build();
         ok=true;
         try{
@@ -71,7 +73,7 @@ public class LULinearSystemSolverTest {
         }catch (MatrixException err){
             ok=false;
         }
-         assertTrue(!ok);
+        assertFalse(ok);
     }
     
     public static void main(String[] args) {

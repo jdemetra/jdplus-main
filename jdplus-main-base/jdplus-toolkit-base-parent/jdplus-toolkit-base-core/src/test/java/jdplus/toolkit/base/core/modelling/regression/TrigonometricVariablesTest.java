@@ -21,7 +21,7 @@ import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
 /**

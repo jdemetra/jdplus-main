@@ -18,7 +18,9 @@ package jdplus.toolkit.base.core.math;
 
 import jdplus.toolkit.base.core.math.Arithmetics;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
  *
@@ -32,26 +34,26 @@ public class ArithmeticsTest {
     @Test
     public void testSumPowers() {
         for (int k = 2; k <= 10; ++k) {
-            assertTrue(Arithmetics.sumOfPowers(k, 25) == sp(k, 25));
+            assertEquals(Arithmetics.sumOfPowers(k, 25), sp(k, 25));
         }
     }
 
     @Test
     public void testgcd() {
         int c = 2 * 3 * 4 * 5, a = c * 12, b = c * 35;
-        assertTrue(Arithmetics.gcd(a, b) == c);
+        assertEquals(Arithmetics.gcd(a, b), c);
         b = c * 30;
-        assertFalse(Arithmetics.gcd(a, b) == c);
+        assertNotSame(Arithmetics.gcd(a, b), c);
         b = -c * 35;
-        assertTrue(Arithmetics.gcd(a, b) == c);
+        assertEquals(Arithmetics.gcd(a, b), c);
     }
 
     @Test
     public void testlonggcd() {
         long c = 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9, a = c * 12, b = c * 35;
-        assertTrue(Arithmetics.gcd(a, b) == c);
+        assertEquals(Arithmetics.gcd(a, b), c);
         b = c * 30;
-        assertFalse(Arithmetics.gcd(a, b) == c);
+        assertNotSame(Arithmetics.gcd(a, b), c);
     }
 
     private long sp(int k, int n) {

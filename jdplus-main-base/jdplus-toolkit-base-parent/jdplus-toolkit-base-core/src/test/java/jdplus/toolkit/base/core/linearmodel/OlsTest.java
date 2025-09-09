@@ -21,7 +21,8 @@ import jdplus.toolkit.base.core.stats.linearmodel.LeastSquaresResults;
 import jdplus.toolkit.base.core.stats.linearmodel.Ols;
 import tck.demetra.data.DataSets;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -57,7 +58,7 @@ public class OlsTest {
 //        System.out.println(rslts);
         assertEquals(Math.abs(rslts.Ttest(0).getValue()), Math.sqrt(rslts.Ftest(0, 1).getValue()), 1e-9);
         assertEquals(rslts.Ftest().getValue(), rslts.Ftest(1, model.getVariablesCount() - 1).getValue(), 1e-9);
-        assertEquals(rslts.Ftest().getValue(), DataSets.Longley.FTest, 1e-9);
+        assertEquals(DataSets.Longley.FTest, rslts.Ftest().getValue(), 1e-9);
         FastMatrix P = rslts.projectionMatrix();
         assertTrue(MatrixNorms.absNorm(P.minus(GeneralMatrix.AB(P, P))) < 1e-6);
     }

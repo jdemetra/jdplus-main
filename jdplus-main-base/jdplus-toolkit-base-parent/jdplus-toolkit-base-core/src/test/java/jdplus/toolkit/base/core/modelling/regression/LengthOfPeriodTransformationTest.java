@@ -12,7 +12,8 @@ import jdplus.toolkit.base.core.timeseries.simplets.TsDataTransformation;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.core.timeseries.simplets.Transformations;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**
@@ -34,7 +35,7 @@ public class LengthOfPeriodTransformationTest {
         TsData s1=lp.transform(s, lj);
         TsData s2=lp.converse().transform(s1, lj);
         assertTrue(s2.getValues().allMatch(x->Math.abs(x-1)<1e-12));
-        assertEquals(lj.value, 0, 1e-12);
+        assertEquals(0, lj.value, 1e-12);
     }
     
     @Test
@@ -47,7 +48,7 @@ public class LengthOfPeriodTransformationTest {
         TsData s1=lp.transform(s, lj);
         TsData s2=lp.converse().transform(s1, lj);
         assertTrue(s2.getValues().allMatch(x->Math.abs(x-1)<1e-12));
-        assertEquals(lj.value, 0, 1e-12);
+        assertEquals(0, lj.value, 1e-12);
     }
 
     @Test
@@ -60,6 +61,6 @@ public class LengthOfPeriodTransformationTest {
         TsData s1=lp.transform(s, lj);
         TsData s2=lp.converse().transform(s1, lj);
         assertTrue(s2.getValues().allMatch(x->Math.abs(x-1)<1e-12));
-        assertEquals(lj.value, 0, 1e-12);
+        assertEquals(0, lj.value, 1e-12);
     }
 }

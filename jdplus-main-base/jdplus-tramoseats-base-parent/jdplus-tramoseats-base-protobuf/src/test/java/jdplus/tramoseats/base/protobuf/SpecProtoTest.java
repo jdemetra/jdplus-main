@@ -19,7 +19,7 @@ package jdplus.tramoseats.base.protobuf;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -34,22 +34,22 @@ public class SpecProtoTest {
     public void testDefault() {
         TramoSeatsSpec s = TramoSeatsSpec.RSA0;
         TramoSeatsSpec ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = TramoSeatsSpec.RSA1;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = TramoSeatsSpec.RSA2;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = TramoSeatsSpec.RSA3;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = TramoSeatsSpec.RSA4;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = TramoSeatsSpec.RSA5;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
 
     }
 }

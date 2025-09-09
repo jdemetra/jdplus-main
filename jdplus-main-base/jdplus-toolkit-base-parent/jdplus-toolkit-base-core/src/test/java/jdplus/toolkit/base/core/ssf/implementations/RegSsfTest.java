@@ -25,7 +25,7 @@ import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.calendars.GenericTradingDays;
 import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.junit.jupiter.api.Test;
 

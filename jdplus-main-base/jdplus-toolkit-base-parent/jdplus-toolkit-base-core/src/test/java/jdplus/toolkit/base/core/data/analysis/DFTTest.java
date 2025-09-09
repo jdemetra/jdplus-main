@@ -18,7 +18,7 @@ package jdplus.toolkit.base.core.data.analysis;
 
 import jdplus.toolkit.base.core.data.analysis.DFT;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Disabled;
 
 /**

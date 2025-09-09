@@ -7,7 +7,8 @@ package jdplus.toolkit.base.api.math.matrices;
 
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -34,7 +35,7 @@ public class MatrixTypeTest {
         }
 
         for (int i = 0; i < data.length; ++i) {
-            assertTrue(data[i] == 0);
+            assertEquals(0, data[i]);
         }
     }
 
@@ -54,7 +55,7 @@ public class MatrixTypeTest {
         }
 
         for (int i = 0; i < data.length; ++i) {
-            assertTrue(data[i] == 0);
+            assertEquals(0, data[i]);
         }
     }
 
@@ -75,7 +76,7 @@ public class MatrixTypeTest {
         }
 
         for (int i = 0; i < data.length; ++i) {
-            assertTrue(data[i] == 0);
+            assertEquals(0, data[i]);
         }
     }
     
@@ -98,7 +99,7 @@ public class MatrixTypeTest {
         }
 
         for (int i = 0; i < data.length; ++i) {
-            assertTrue(data[i] == 0);
+            assertEquals(0, data[i]);
         }
     }
 
@@ -120,7 +121,7 @@ public class MatrixTypeTest {
         }
 
         for (int i = 0; i < data.length; ++i) {
-            assertTrue(data[i] == 0);
+            assertEquals(0, data[i]);
         }
     }
 
@@ -143,7 +144,7 @@ public class MatrixTypeTest {
         }
 
         for (int i = 0; i < data.length; ++i) {
-            assertTrue(data[i] == 0);
+            assertEquals(0, data[i]);
         }
     }
 

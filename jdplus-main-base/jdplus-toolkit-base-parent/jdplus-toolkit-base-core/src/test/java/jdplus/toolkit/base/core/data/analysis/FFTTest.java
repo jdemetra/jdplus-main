@@ -18,7 +18,7 @@ package jdplus.toolkit.base.core.data.analysis;
 
 import jdplus.toolkit.base.api.math.Complex;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -85,8 +85,8 @@ public class FFTTest {
             assertEquals(idata[i], N - i, 1e-9);
         }
         for (int i = N; i < rdata.length; ++i) {
-            assertEquals(rdata[i], 0, 1e-9);
-            assertEquals(idata[i], 0, 1e-9);
+            assertEquals(0, rdata[i], 1e-9);
+            assertEquals(0, idata[i], 1e-9);
         }
     }
     

@@ -35,7 +35,7 @@ import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

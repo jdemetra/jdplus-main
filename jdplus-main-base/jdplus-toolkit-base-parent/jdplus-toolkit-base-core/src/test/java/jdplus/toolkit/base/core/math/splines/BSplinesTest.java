@@ -18,8 +18,11 @@ package jdplus.toolkit.base.core.math.splines;
 
 import internal.toolkit.base.core.math.functions.gsl.interpolation.CubicSplines;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import org.junit.jupiter.api.Test;
 import tck.demetra.data.WeeklyData;
 import jdplus.toolkit.base.core.data.DataBlock;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import jdplus.toolkit.base.core.data.analysis.DiscreteKernel;
 import jdplus.toolkit.base.core.math.linearfilters.AsymmetricFiltersFactory;
 import jdplus.toolkit.base.core.math.linearfilters.FilterUtility;
@@ -32,8 +35,6 @@ import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
  *

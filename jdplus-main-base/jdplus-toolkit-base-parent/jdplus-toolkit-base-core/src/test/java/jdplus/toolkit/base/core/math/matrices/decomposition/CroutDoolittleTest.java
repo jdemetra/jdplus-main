@@ -11,7 +11,7 @@ import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.UpperTriangularMatrix;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

@@ -19,7 +19,7 @@ package jdplus.toolkit.base.core.dstats;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 import jdplus.toolkit.base.core.random.MersenneTwister;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

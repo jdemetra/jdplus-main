@@ -8,7 +8,7 @@ import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.core.data.analysis.Periodogram;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -24,7 +24,7 @@ public class UnitRootsTest {
         double f=Periodogram.getTradingDaysFrequencies(12)[0];
         Polynomial p= UnitRoots.forFrequency(f);
         Complex[] roots=p.roots();
-        assertEquals(roots[0].absSquare(), 1, 1e-9);
+        assertEquals(1, roots[0].absSquare(), 1e-9);
         assertEquals(roots[0].arg(), f, 1e-9);
     }
     
