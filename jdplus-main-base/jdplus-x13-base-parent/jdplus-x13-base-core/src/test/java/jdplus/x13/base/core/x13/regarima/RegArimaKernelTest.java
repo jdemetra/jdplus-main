@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -335,21 +335,21 @@ public class RegArimaKernelTest {
         for (int i = 0; i < all.length; ++i) {
             TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
 //            System.out.println(rslt.getEstimation().getParameters().getValues());
         }
         processor = RegArimaKernel.of(RegArimaSpec.RG3, null);
         for (int i = 0; i < all.length; ++i) {
             TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
 //            System.out.println(rslt.getEstimation().getParameters().getValues());
         }
         processor = RegArimaKernel.of(RegArimaSpec.RG4, null);
         for (int i = 0; i < all.length; ++i) {
             TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
 //            System.out.println(rslt.getEstimation().getParameters().getValues());
         }
     }

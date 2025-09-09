@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -30,7 +31,7 @@ public class VariablesTest {
     @Test
     public void testLp() {
         double[] lp = Variables.leapYear(TsDomain.of(TsPeriod.monthly(2000, 1), 20), true);
-        assertEquals(lp[1], .75, 1e-9);
+        assertEquals(.75, lp[1], 1e-9);
         lp = Variables.leapYear(TsDomain.of(TsPeriod.monthly(2000, 1), 20), false);
         assertEquals(lp[1], 29 - (365.25 / 12), 1e-9);
     }

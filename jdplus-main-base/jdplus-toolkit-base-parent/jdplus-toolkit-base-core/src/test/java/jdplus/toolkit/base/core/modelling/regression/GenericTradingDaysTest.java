@@ -25,7 +25,7 @@ import ec.tstoolkit.timeseries.calendars.DefaultGregorianCalendarProvider;
 import ec.tstoolkit.timeseries.calendars.TradingDaysType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

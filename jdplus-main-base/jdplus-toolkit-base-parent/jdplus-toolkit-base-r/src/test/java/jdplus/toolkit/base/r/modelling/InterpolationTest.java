@@ -15,13 +15,12 @@
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.r.modelling;
-
+import org.junit.jupiter.api.Test;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDataTable;
 import java.util.Arrays;
 import java.util.Random;
-import org.junit.Test;
 
 /**
  *

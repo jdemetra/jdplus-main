@@ -10,7 +10,7 @@ import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

@@ -18,7 +18,9 @@ package jdplus.toolkit.base.core.data.accumulator;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -32,7 +34,7 @@ public class AccSumTest {
     @Test
     public void testRounding() {
         double e = 1e-30;
-        assertTrue(1 + e == 1 - e);
+        assertEquals(1 + e, 1 - e);
     }
 
     @Test

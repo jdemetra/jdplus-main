@@ -18,9 +18,10 @@ package jdplus.toolkit.base.r.timeseries;
 
 import java.time.format.DateTimeFormatter;
 import tck.demetra.data.Data;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -41,7 +42,7 @@ public class TsDataCollectorTest {
         }
         
         TsData s2 = TsDataCollector.of(s.getValues().toArray(), dates);
-        assertTrue(s.equals(s2));
+        assertEquals(s, s2);
     }
     
     @Test
@@ -57,6 +58,6 @@ public class TsDataCollectorTest {
         }
         
         TsData s2 = TsDataCollector.of(s.getValues().toArray(), dates);
-        assertTrue(s.equals(s2));
+        assertEquals(s, s2);
     }
 }

@@ -25,8 +25,8 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.Clock;
 import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -48,7 +48,7 @@ public class TsDataViewTest {
                 d.set(k -> beg + k);
                 TsData s = TsData.of(p.plus(-i), d);
                 TsDataView fy = TsDataView.fullYears(s);
-                Assertions.assertTrue(fy.getData().length() % 12 == 0);
+                assertEquals(0, fy.getData().length() % 12);
 //                Assert.assertTrue(((int) fy.getData().get(0)) % 12 == 0);
             }
         }

@@ -9,7 +9,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.decomposition.GivensReflection;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -28,7 +28,7 @@ public class GivensReflectionTest {
         z.set(1, b);
         GivensReflection gr = GivensReflection.of(z, 0, 1, true);
         assertEquals(z.get(0), Math.sqrt(a*a+b*b), 1e-9);
-        assertEquals(z.get(1), 0, 1e-9);
+        assertEquals(0, z.get(1), 1e-9);
         gr.transform(z);
         assertEquals(z.get(0), a, 1e-9);
         assertEquals(z.get(1), b, 1e-9);

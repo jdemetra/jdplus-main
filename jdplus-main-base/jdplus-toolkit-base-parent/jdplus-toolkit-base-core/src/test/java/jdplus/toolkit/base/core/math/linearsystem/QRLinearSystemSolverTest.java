@@ -11,7 +11,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearsystem.QRLinearSystemSolver;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.HouseholderWithPivoting;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**

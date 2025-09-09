@@ -19,7 +19,7 @@ package jdplus.toolkit.base.core.dstats;
 import jdplus.toolkit.base.api.stats.ProbabilityType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

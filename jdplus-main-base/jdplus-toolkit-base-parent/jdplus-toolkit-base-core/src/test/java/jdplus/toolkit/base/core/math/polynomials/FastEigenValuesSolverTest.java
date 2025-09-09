@@ -8,7 +8,9 @@ package jdplus.toolkit.base.core.math.polynomials;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.math.Complex;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -30,7 +32,7 @@ public class FastEigenValuesSolverTest {
         assertTrue(ok);
         Complex[] nr = solver.roots();
         for (int i=0; i<nr.length; ++i){
-            assertTrue(nr[i]!= null);
+            assertNotSame(nr[i], null);
 //            System.out.print(nr[i].getRe());
 //            System.out.print('\t');
 //            System.out.println(nr[i].getIm());

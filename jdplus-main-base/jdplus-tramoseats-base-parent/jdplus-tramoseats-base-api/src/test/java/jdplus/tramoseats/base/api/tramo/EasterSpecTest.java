@@ -31,11 +31,11 @@ public class EasterSpecTest {
     public void testClone() {
         EasterSpec spec = EasterSpec.builder().build();
         EasterSpec cspec = spec.toBuilder().build();
-        assertTrue(spec.equals(cspec));
+        assertEquals(spec, cspec);
         assertTrue(cspec.isDefault());
         spec = spec.toBuilder().type(EasterSpec.Type.IncludeEaster).build();
         cspec = spec.toBuilder().build();
-        assertTrue(spec.equals(cspec));
+        assertEquals(spec, cspec);
         assertFalse(cspec.isDefault());
     }
     
@@ -45,11 +45,12 @@ public class EasterSpecTest {
         assertEquals(spec, spec.toBuilder().build());
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void testValidation() {
-        EasterSpec.builder()
-                .duration(0)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            EasterSpec.builder()
+                    .duration(0)
+                    .build());
     }
 
 }

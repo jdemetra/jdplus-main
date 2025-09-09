@@ -20,7 +20,7 @@ import java.util.function.DoubleUnaryOperator;
 
 import internal.toolkit.base.core.math.functions.gsl.derivation.GslDerivation;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -36,7 +36,7 @@ public class GslDerivationTest {
         double z=0.01, h = 1e-8;
         DoubleUnaryOperator fn=x -> x - 1 / x;
         double dfc = GslDerivation.centralDerivation(fn, z, h);
-        assertEquals(dfc-1-1/(z*z), 0, 1e-5);
+        assertEquals(0, dfc - 1 - 1 / (z * z), 1e-5);
 
         double dff = GslDerivation.forwardDerivation(fn, z, h);
         double dfb = GslDerivation.backwardDerivation(fn, z, h);

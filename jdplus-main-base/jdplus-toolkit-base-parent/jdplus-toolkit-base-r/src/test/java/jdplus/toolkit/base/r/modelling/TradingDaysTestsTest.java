@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.modelling.regular.tests.TradingDaysTest;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import tck.demetra.data.Data;
 
 /**

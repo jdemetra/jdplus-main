@@ -14,7 +14,7 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.Gauss;
 import jdplus.toolkit.base.core.math.matrices.decomposition.LUDecomposition;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

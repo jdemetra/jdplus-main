@@ -19,7 +19,7 @@ package jdplus.toolkit.base.core.timeseries.calendars;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import java.time.DayOfWeek;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -32,7 +32,7 @@ public class DayClusteringTest {
 
     @Test
     public void testTD2() {
-        assertEquals(DayClustering.TD2.getGroup(DayOfWeek.SATURDAY),0);
+        assertEquals(0, DayClustering.TD2.getGroup(DayOfWeek.SATURDAY));
     }
     
 }

@@ -8,7 +8,7 @@ package demetra.stats;
 import jdplus.toolkit.base.core.stats.Combinatorics;
 import jdplus.toolkit.base.api.math.MathException;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

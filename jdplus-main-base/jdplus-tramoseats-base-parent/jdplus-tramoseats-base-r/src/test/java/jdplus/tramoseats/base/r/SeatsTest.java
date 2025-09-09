@@ -23,7 +23,9 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.toolkit.base.core.ucarima.UcarimaModel;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
  *
@@ -40,13 +42,13 @@ public class SeatsTest {
         Map<String, Class> dictionary = rslts.getDictionary();
 //        dictionary.keySet().forEach(s->System.out.println(s));
         TsData data = rslts.getData("t_lin_f", TsData.class);
-        assertTrue(data.length() == 24);
+        assertEquals(24, data.length());
     }
 
     @Test
     public void testUcm() {
         UcarimaModel ucm = airline(12, -.8, -.8);
-        assertTrue(ucm != null);
+        assertNotSame(ucm, null);
     }
 
     public static void main(String[] args) {

@@ -9,7 +9,8 @@ import internal.toolkit.base.core.math.linearfilters.SymmetricFilterAlgorithms;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

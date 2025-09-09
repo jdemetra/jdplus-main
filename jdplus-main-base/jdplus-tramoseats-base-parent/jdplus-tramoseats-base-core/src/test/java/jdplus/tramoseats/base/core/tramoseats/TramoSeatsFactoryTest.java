@@ -17,7 +17,9 @@ import jdplus.tramoseats.base.api.tramoseats.TramoSeats;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsDictionaries;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import java.util.Map;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,13 +36,13 @@ public class TramoSeatsFactoryTest {
         TramoSeatsKernel ts = TramoSeatsKernel.of(TramoSeatsSpec.RSAfull, null);
         ProcessingLog log = ProcessingLog.dummy();
         TramoSeatsResults rslt = ts.process(Data.TS_PROD, log);
-        assertTrue(rslt.getFinals() != null);
+        assertNotSame(rslt.getFinals(), null);
         TramoSeatsSpec nspec = TramoSeatsFactory.getInstance().generateSpec(TramoSeatsSpec.RSAfull, rslt);
         log = ProcessingLog.dummy();
 //        System.out.println(nspec);
         ts = TramoSeatsKernel.of(nspec, null);
         TramoSeatsResults rslt2 = ts.process(Data.TS_PROD, log);
-        assertTrue(rslt2.getFinals() != null);
+        assertNotSame(rslt2.getFinals(), null);
         TramoSeatsSpec nspec2 = TramoSeatsFactory.getInstance().generateSpec(nspec, rslt2);
 //        System.out.println(nspec2);
         assertEquals(rslt.getPreprocessing().getEstimation().getStatistics().getLogLikelihood(),

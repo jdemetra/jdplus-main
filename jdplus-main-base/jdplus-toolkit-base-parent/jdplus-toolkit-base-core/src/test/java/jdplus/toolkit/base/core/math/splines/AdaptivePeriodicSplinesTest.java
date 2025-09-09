@@ -25,7 +25,6 @@ import jdplus.toolkit.base.core.math.linearfilters.FilterUtility;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
-import org.junit.Test;
 
 /**
  *

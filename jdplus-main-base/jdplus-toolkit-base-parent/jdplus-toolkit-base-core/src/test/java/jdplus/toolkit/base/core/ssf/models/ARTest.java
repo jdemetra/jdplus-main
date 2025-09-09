@@ -13,7 +13,7 @@ import jdplus.toolkit.base.core.math.matrices.MatrixNorms;
 import jdplus.toolkit.base.core.ssf.StateComponent;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

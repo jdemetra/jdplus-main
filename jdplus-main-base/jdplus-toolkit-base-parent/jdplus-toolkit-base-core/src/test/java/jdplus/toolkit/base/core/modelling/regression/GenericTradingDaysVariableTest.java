@@ -23,7 +23,7 @@ import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.calendars.GenericTradingDays;
 import ec.tstoolkit.timeseries.calendars.TradingDaysType;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
 /**

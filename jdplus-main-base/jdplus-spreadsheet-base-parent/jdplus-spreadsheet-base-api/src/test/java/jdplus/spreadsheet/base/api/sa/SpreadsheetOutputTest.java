@@ -12,7 +12,7 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import lombok.NonNull;
 import nbbrd.design.MightBePromoted;
 import org.assertj.core.util.DateUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import tck.demetra.data.Data;
 
 import java.io.File;

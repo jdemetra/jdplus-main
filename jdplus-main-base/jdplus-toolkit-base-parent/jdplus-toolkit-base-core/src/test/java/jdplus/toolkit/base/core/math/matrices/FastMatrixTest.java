@@ -14,7 +14,6 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.Householder2;
 import jdplus.toolkit.base.core.math.matrices.decomposition.LUDecomposition;
 import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -83,14 +82,14 @@ public class FastMatrixTest {
         scols.add(2);
         scols.add(0);
         S = MatrixFactory.select(M, srows, scols);
-        assertTrue(!S.isEmpty());
-        assertEquals(S.get(2, 1), 5, 0);
+        assertFalse(S.isEmpty());
+        assertEquals(5, S.get(2, 1), 0);
 
         S = MatrixFactory.selectRows(M, srows);
-        assertEquals(S.get(2, 1), 6, 0);
+        assertEquals(6, S.get(2, 1), 0);
 
         S = MatrixFactory.selectColumns(M, scols);
-        assertEquals(S.get(2, 1), 2, 0);
+        assertEquals(2, S.get(2, 1), 0);
     }
 
     @Test
@@ -98,7 +97,7 @@ public class FastMatrixTest {
         DoubleSeq q = DoubleSeq.onMapping(20, i -> i + 1);
         FastMatrix M = MatrixFactory.embed(q, 5);
 //        System.out.println(M);
-        assertEquals(M.get(14, 1), 18, 0);
+        assertEquals(18, M.get(14, 1), 0);
 
         FastMatrix N = MatrixFactory.embed(M, 2);
 //        System.out.println(N);

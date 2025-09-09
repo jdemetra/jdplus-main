@@ -11,7 +11,7 @@ import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import jdplus.toolkit.base.core.stats.Kernel;
 import jdplus.toolkit.base.core.stats.Kernels;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -25,7 +25,7 @@ public class KernelsTest {
     @Test
     public void testHenderson() {
         Polynomial p0 = Kernels.hendersonAsPolynomial(11);
-        assertEquals(p0.integrate(-1, 1), 1, 1e-9);
+        assertEquals(1, p0.integrate(-1, 1), 1e-9);
     }
 
     @Test

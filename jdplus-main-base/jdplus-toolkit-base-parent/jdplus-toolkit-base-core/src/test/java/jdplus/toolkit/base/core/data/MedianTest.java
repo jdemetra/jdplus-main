@@ -20,8 +20,9 @@ import java.util.Arrays;
 import java.util.Random;
 
 import jdplus.toolkit.base.core.data.Median;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -51,7 +52,7 @@ public class MedianTest {
 //        System.out.println(t1-t0);
         double k2 = nums2[nums.length / 2];
 //        System.out.println();
-        assertTrue(k1 == k2);
+        assertEquals(k1, k2);
     }
 
     @Test

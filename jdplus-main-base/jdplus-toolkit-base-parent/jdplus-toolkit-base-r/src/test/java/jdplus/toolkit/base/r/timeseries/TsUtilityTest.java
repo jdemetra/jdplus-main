@@ -7,8 +7,9 @@ package jdplus.toolkit.base.r.timeseries;
 
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.timeseries.TsData;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -22,14 +23,14 @@ public class TsUtilityTest {
     @Test
     public void testAggregate() {
         TsData aggregate = TsUtility.aggregate(Data.TS_PROD, 1, "Sum", true);
-        assertTrue(aggregate != null);
+        assertNotSame(aggregate, null);
     }
     
     @Test
     public void testTsData() {
         TsData prod = TsUtility.of(12, 1967, 2, Data.PROD);
-        assertTrue(prod != null);
+        assertNotSame(prod, null);
         TsData aggregate = TsUtility.aggregate(prod, 6, "Sum", true);
-        assertTrue(aggregate != null);
+        assertNotSame(aggregate, null);
    }
 }

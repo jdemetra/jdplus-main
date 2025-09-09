@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import java.time.DayOfWeek;
@@ -84,21 +84,21 @@ public class HolidaysUtilityTest {
         FastMatrix M = FastMatrix.make(365, belgium.getHolidays().length);
         HolidaysUtility.fillDays(belgium.getHolidays(), M, LocalDate.of(2021, 1, 1), new int[]{6, 7}, false);
         for (int i = 0; i < M.getColumnsCount(); ++i) {
-            assertEquals(M.column(i).sum(), 1, 1e-15);
+            assertEquals(1, M.column(i).sum(), 1e-15);
         }
 //        System.out.println(M);
 //        System.out.println();
         M = FastMatrix.make(365, belgium.getHolidays().length);
         HolidaysUtility.fillNextWorkingDays(belgium.getHolidays(), M, LocalDate.of(2021, 1, 1), new int[]{6, 7});
         for (int i = 0; i < M.getColumnsCount(); ++i) {
-            assertEquals(M.column(i).sum(), 1, 1e-15);
+            assertEquals(1, M.column(i).sum(), 1e-15);
         }
 //        System.out.println(M);
 //        System.out.println();
         M = FastMatrix.make(365, belgium.getHolidays().length);
         HolidaysUtility.fillPreviousWorkingDays(belgium.getHolidays(), M, LocalDate.of(2021, 1, 1), new int[]{6, 7});
         for (int i = 0; i < M.getColumnsCount(); ++i) {
-            assertEquals(M.column(i).sum(), 1, 1e-15);
+            assertEquals(1, M.column(i).sum(), 1e-15);
         }
 //        System.out.println(M);
     }
@@ -118,18 +118,18 @@ public class HolidaysUtilityTest {
     @Test
     public void testDays() {
         FastMatrix days = HolidaysUtility.days(belgium, 12, DayOfWeek.SUNDAY);
-        assertEquals(days.sum(), 365.25, 1e-9);
+        assertEquals(365.25, days.sum(), 1e-9);
         days = HolidaysUtility.days(belgium, 4, DayOfWeek.SUNDAY);
-        assertEquals(days.sum(), 365.25, 1e-9);
+        assertEquals(365.25, days.sum(), 1e-9);
     }
 
     @Test
     public void testDaysClustering() {
         FastMatrix days = HolidaysUtility.days(belgium, 12, DayOfWeek.SUNDAY);
         days = HolidaysUtility.clustering(days, DayClustering.TD2);
-        assertEquals(days.sum(), 365.25, 1e-9);
+        assertEquals(365.25, days.sum(), 1e-9);
         days = HolidaysUtility.days(belgium, 4, DayOfWeek.SUNDAY);
         days = HolidaysUtility.clustering(days, DayClustering.TD2);
-        assertEquals(days.sum(), 365.25, 1e-9);
+        assertEquals(365.25, days.sum(), 1e-9);
     }
 }

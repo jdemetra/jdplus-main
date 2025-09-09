@@ -24,7 +24,8 @@ import java.time.Clock;
 import java.time.LocalDate;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -39,22 +40,22 @@ public class ToolkitProtosUtilityTest {
     public void testSpan() {
         TimeSelector first = TimeSelector.first(10);
         TimeSelector convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(first));
-        assertTrue(first.equals(convert));
+        assertEquals(first, convert);
         TimeSelector last = TimeSelector.last(10);
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(last));
-        assertTrue(last.equals(convert));
+        assertEquals(last, convert);
         TimeSelector from = TimeSelector.from(LocalDate.now(Clock.systemDefaultZone()).atStartOfDay());
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(from));
-        assertTrue(from.equals(convert));
+        assertEquals(from, convert);
         TimeSelector to=TimeSelector.to(LocalDate.now(Clock.systemDefaultZone()).atStartOfDay());
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(to));
-        assertTrue(to.equals(convert));
+        assertEquals(to, convert);
         TimeSelector between=TimeSelector.between(LocalDate.now(Clock.systemDefaultZone()).atStartOfDay(), LocalDate.MAX.atStartOfDay());
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(between));
-        assertTrue(between.equals(convert));
+        assertEquals(between, convert);
         TimeSelector excluding = TimeSelector.excluding(5, 10);
         convert = ToolkitProtosUtility.convert(ToolkitProtosUtility.convert(excluding));
-        assertTrue(excluding.equals(convert));
+        assertEquals(excluding, convert);
     }
     
     @Test
@@ -63,8 +64,8 @@ public class ToolkitProtosUtilityTest {
         M.set((r, c)->r+c);
         ToolkitProtos.Matrix m = ToolkitProtosUtility.convert(M);
         int n = m.getValuesCount();
-        assertTrue(n == M.getRowsCount()*M.getColumnsCount());
-        assertTrue(m.getValues(n-1) == M.get(M.getRowsCount()-1, M.getColumnsCount()-1));
+        assertEquals(n, M.getRowsCount() * M.getColumnsCount());
+        assertEquals(m.getValues(n - 1), M.get(M.getRowsCount() - 1, M.getColumnsCount() - 1));
     }
     
     @Test
@@ -72,8 +73,8 @@ public class ToolkitProtosUtilityTest {
         TsData s=Data.TS_ABS_RETAIL;
         ToolkitProtos.TsData data = ToolkitProtosUtility.convert(s);
         int n=s.length();
-        assertTrue(data.getValuesCount() == n);
-        assertTrue(data.getValues(n-1) == s.getValue(n-1));
+        assertEquals(data.getValuesCount(), n);
+        assertEquals(data.getValues(n - 1), s.getValue(n - 1));
         
     }
 

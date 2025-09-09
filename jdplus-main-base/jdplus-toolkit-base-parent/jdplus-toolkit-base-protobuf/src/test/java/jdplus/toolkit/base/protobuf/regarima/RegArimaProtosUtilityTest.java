@@ -19,7 +19,7 @@ package jdplus.toolkit.base.protobuf.regarima;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -34,7 +34,7 @@ public class RegArimaProtosUtilityTest {
     public void testAirline() {
         SarimaSpec airline = SarimaSpec.airline();
         SarimaSpec nspec = RegArimaProtosUtility.convert(RegArimaProtosUtility.convert(airline));
-        assertTrue(airline.equals(nspec));
+        assertEquals(airline, nspec);
     }
     
 }

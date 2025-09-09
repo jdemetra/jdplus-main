@@ -26,7 +26,7 @@ import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.x13.base.core.x13.regarima.RegArimaFactory;
 import jdplus.x13.base.core.x13.regarima.RegArimaKernel;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 /**

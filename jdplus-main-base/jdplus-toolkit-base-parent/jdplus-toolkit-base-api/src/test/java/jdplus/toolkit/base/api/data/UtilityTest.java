@@ -8,7 +8,8 @@ package jdplus.toolkit.base.api.data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Iterables;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -27,7 +28,7 @@ public class UtilityTest {
         for (double s : iter){
             ++n;
         }
-        assertTrue(n == 10);
+        assertEquals(10, n);
     }
     
 }

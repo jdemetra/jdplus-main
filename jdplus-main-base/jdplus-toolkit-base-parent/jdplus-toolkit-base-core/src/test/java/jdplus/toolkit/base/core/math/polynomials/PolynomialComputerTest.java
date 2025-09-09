@@ -18,7 +18,8 @@ package jdplus.toolkit.base.core.math.polynomials;
 
 import jdplus.toolkit.base.api.math.Complex;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**

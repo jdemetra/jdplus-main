@@ -17,7 +17,8 @@ import ec.satoolkit.tramoseats.TramoSeatsSpecification;
 import java.util.Arrays;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -35,9 +36,9 @@ public class TramoSeatsKernelTest {
         ProcessingLog log = ProcessingLog.dummy();
         TsData s = TsData.ofInternal(TsPeriod.monthly(2001, 1), Data.RETAIL_ALLHOME);
         TramoSeatsResults rslt = ts.process(s, log);
-        assertTrue(rslt.getFinals() != null);
+        assertNotSame(rslt.getFinals(), null);
         TramoSeatsDiagnostics diags = rslt.getDiagnostics();
-        assertTrue(diags != null);
+        assertNotSame(diags, null);
 //        System.out.println(rslt.getDecomposition().getInitialComponents());
 //        System.out.println(rslt.getFinals());
 //        Map<String, Class> dictionary = rslt.getDictionary();
@@ -57,9 +58,9 @@ public class TramoSeatsKernelTest {
         ProcessingLog log = ProcessingLog.dummy();
         TsData s = TsData.ofInternal(TsPeriod.monthly(2001, 1), Data.RETAIL_ALLHOME);
         TramoSeatsResults rslt = ts.process(s, log);
-        assertTrue(rslt.getFinals() != null);
+        assertNotSame(rslt.getFinals(), null);
         TramoSeatsDiagnostics diags = rslt.getDiagnostics();
-        assertTrue(diags != null);
+        assertNotSame(diags, null);
     }
 
     @Test
@@ -81,11 +82,11 @@ public class TramoSeatsKernelTest {
         ProcessingLog log = ProcessingLog.dummy();
         TsData s = TsData.ofInternal(TsPeriod.monthly(2001, 1), Data.RETAIL_ALLHOME);
         TramoSeatsResults rslt = ts.process(s, log);
-        assertTrue(rslt.getFinals() != null);
+        assertNotSame(rslt.getFinals(), null);
         TramoSeatsDiagnostics diags = rslt.getDiagnostics();
-        assertTrue(diags != null);
+        assertNotSame(diags, null);
         SaBenchmarkingResults benchmarking = rslt.getBenchmarking();
-        assertTrue(benchmarking != null);
+        assertNotSame(benchmarking, null);
         TsDataTable table=TsDataTable.of(Arrays.asList(benchmarking.getSa(), benchmarking.getTarget(), benchmarking.getBenchmarkedSa()));
 //        System.out.println(table);
     }

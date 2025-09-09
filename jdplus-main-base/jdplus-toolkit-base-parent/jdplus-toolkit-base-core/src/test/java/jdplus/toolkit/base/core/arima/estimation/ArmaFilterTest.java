@@ -9,7 +9,7 @@ import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Disabled;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import internal.toolkit.base.core.arima.KalmanFilter;

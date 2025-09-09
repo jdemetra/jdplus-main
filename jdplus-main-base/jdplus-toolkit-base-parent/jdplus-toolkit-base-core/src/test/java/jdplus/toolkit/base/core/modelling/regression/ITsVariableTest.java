@@ -8,7 +8,7 @@ package jdplus.toolkit.base.core.modelling.regression;
 import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -25,7 +25,7 @@ public class ITsVariableTest {
         for (int i=0; i<20; ++i){
             name=ITsVariable.nextName(name);
         }
-        assertTrue(name.equals("var(20)"));
+        assertEquals("var(20)", name);
     }
     
 }

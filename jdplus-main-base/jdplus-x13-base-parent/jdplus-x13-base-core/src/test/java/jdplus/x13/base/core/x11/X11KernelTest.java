@@ -19,6 +19,9 @@ import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import java.util.Arrays;
 import jdplus.x13.base.api.x11.BiasCorrection;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -124,51 +127,56 @@ public class X11KernelTest {
         testX11Kernel(modeName, seasonalFilterOptionName, filterLength, frequency, HKAS, CalendarSigmaOption.None.name());
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void testProcess_Check_NonannualFrequency() {
         X11Kernel instanceKernel = new X11Kernel();
         X11Spec spec = X11Spec.builder().build();
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.daily(1990, 1, 1), WU5636);
-        instanceKernel.process(tsData, spec);
+        assertThrows(IllegalArgumentException.class, () ->
+            instanceKernel.process(tsData, spec));
     }
 
-    @org.junit.Test(expected = X11Exception.class)
+    @org.junit.jupiter.api.Test
     public void testProcess_Check_TooShort() {
         X11Kernel instanceKernel = new X11Kernel();
         X11Spec spec = X11Spec.builder().build();
         double[] copy = Arrays.copyOf(WU5636, 35);
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        instanceKernel.process(tsData, spec);
+        assertThrows(X11Exception.class, () ->
+            instanceKernel.process(tsData, spec));
     }
 
-    @org.junit.Test(expected = X11Exception.class)
+    @org.junit.jupiter.api.Test
     public void testProcess_Check_MissingValues() {
         X11Kernel instanceKernel = new X11Kernel();
         X11Spec spec = X11Spec.builder().build();
         double[] copy = Arrays.copyOf(WU5636, 36);
         copy[0] = Double.NaN;
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        instanceKernel.process(tsData, spec);
+        assertThrows(X11Exception.class, () ->
+            instanceKernel.process(tsData, spec));
     }
 
-    @org.junit.Test(expected = X11Exception.class)
+    @org.junit.jupiter.api.Test
     public void testProcess_Check_NegativeValues_Mult() {
         X11Kernel instanceKernel = new X11Kernel();
         X11Spec spec = X11Spec.builder().mode(DecompositionMode.Multiplicative).build();
         double[] copy = Arrays.copyOf(WU5636, 36);
         copy[0] = -1;
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        instanceKernel.process(tsData, spec);
+        assertThrows(X11Exception.class, () ->
+            instanceKernel.process(tsData, spec));
     }
 
-    @org.junit.Test(expected = X11Exception.class)
+    @org.junit.jupiter.api.Test
     public void testProcess_Check_NegativeValues_LogAdd() {
         X11Kernel instanceKernel = new X11Kernel();
         X11Spec spec = X11Spec.builder().mode(DecompositionMode.LogAdditive).build();
         double[] copy = Arrays.copyOf(WU5636, 36);
         copy[0] = -1;
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        instanceKernel.process(tsData, spec);
+        assertThrows(X11Exception.class, () ->
+            instanceKernel.process(tsData, spec));
     }
 
     @Test
@@ -221,68 +229,68 @@ public class X11KernelTest {
         ec.satoolkit.x11.X11Results old_Results = old.process(new TsData(TsFrequency.valueOf(frequency), 1900, 0, values, true));
         double[] expected_B1 = old_Results.getData("b-tables.b1", TsData.class).internalStorage();
         double[] actual_B1 = x11Results.getB1().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in B1", expected_B1, actual_B1, DELTA);
+        assertArrayEquals(expected_B1, actual_B1, DELTA, "Error in B1");
 
         double[] expected_B2 = old_Results.getData("b-tables.b2", TsData.class).internalStorage();
         double[] actual_B2 = x11Results.getB2().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in B2", expected_B2, actual_B2, DELTA);
+        assertArrayEquals(expected_B2, actual_B2, DELTA, "Error in B2");
 
         double[] expected_B4 = old_Results.getData("b-tables.b4", TsData.class).internalStorage();
         double[] actual_B4 = x11Results.getB4().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in B4", expected_B4, actual_B4, DELTA);
+        assertArrayEquals(expected_B4, actual_B4, DELTA, "Error in B4");
 
         double[] expected_B5 = old_Results.getData("b-tables.b5", TsData.class).internalStorage();
         double[] actual_B5 = x11Results.getB5().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in B5", expected_B5, actual_B5, DELTA);
+        assertArrayEquals(expected_B5, actual_B5, DELTA, "Error in B5");
 
         double[] expected_B6 = old_Results.getData("b-tables.b6", TsData.class).internalStorage();
         double[] actual_B6 = x11Results.getB6().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in B6", expected_B6, actual_B6, DELTA);
+        assertArrayEquals(expected_B6, actual_B6, DELTA, "Error in B6");
 
         double[] expected_B7 = old_Results.getData("b-tables.b7", TsData.class).internalStorage();
         double[] actual_B7 = x11Results.getB7().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in B7", expected_B7, actual_B7, DELTA);
+        assertArrayEquals(expected_B7, actual_B7, DELTA, "Error in B7");
 
         double[] expected_C13 = old_Results.getData("c-tables.c13", TsData.class).internalStorage();
         double[] actual_C13 = x11Results.getC13().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in C13", expected_C13, actual_C13, DELTA);
+        assertArrayEquals(expected_C13, actual_C13, DELTA, "Error in C13");
 
         double[] expected_D1 = old_Results.getData("d-tables.d1", TsData.class).internalStorage();
         double[] actual_D1 = x11Results.getD1().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D1", expected_D1, actual_D1, DELTA);
+        assertArrayEquals(expected_D1, actual_D1, DELTA, "Error in D1");
         double[] expected_D2 = old_Results.getData("d-tables.d2", TsData.class).cleanExtremities().internalStorage();
         double[] actual_D2 = x11Results.getD2().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D2", expected_D2, actual_D2, DELTA);
+        assertArrayEquals(expected_D2, actual_D2, DELTA, "Error in D2");
         double[] expected_D4 = old_Results.getData("d-tables.d4", TsData.class).cleanExtremities().internalStorage();
         double[] actual_D4 = x11Results.getD4().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D4", expected_D4, actual_D4, DELTA);
+        assertArrayEquals(expected_D4, actual_D4, DELTA, "Error in D4");
         double[] expected_D5 = old_Results.getData("d-tables.d5", TsData.class).internalStorage();
         double[] actual_D5 = x11Results.getD5().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D5", expected_D5, actual_D5, DELTA);
+        assertArrayEquals(expected_D5, actual_D5, DELTA, "Error in D5");
         double[] expected_D6 = old_Results.getData("d-tables.d6", TsData.class).internalStorage();
         double[] actual_D6 = x11Results.getD6().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D6", expected_D6, actual_D6, DELTA);
+        assertArrayEquals(expected_D6, actual_D6, DELTA, "Error in D6");
         double[] expected_D7 = old_Results.getData("d-tables.d7", TsData.class).internalStorage();
         double[] actual_D7 = x11Results.getD7().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D7", expected_D7, actual_D7, DELTA);
+        assertArrayEquals(expected_D7, actual_D7, DELTA, "Error in D7");
         double[] expected_D8 = old_Results.getData("d-tables.d8", TsData.class).internalStorage();
         double[] actual_D8 = x11Results.getD8().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D8", expected_D8, actual_D8, DELTA);
+        assertArrayEquals(expected_D8, actual_D8, DELTA, "Error in D8");
         double[] expected_D9 = old_Results.getData("d-tables.d9", TsData.class).internalStorage();
         double[] actual_D9 = x11Results.getD9().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D9", expected_D9, actual_D9, DELTA);
+        assertArrayEquals(expected_D9, actual_D9, DELTA, "Error in D9");
         double[] expected_D10 = old_Results.getData("d-tables.d10", TsData.class).internalStorage();
         double[] actual_D10 = x11Results.getD10().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D10", expected_D10, actual_D10, DELTA);
+        assertArrayEquals(expected_D10, actual_D10, DELTA, "Error in D10");
         double[] expected_D11 = old_Results.getData("d-tables.d11", TsData.class).internalStorage();
         double[] actual_D11 = x11Results.getD11().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D11", expected_D11, actual_D11, DELTA);
+        assertArrayEquals(expected_D11, actual_D11, DELTA, "Error in D11");
         double[] expected_D12 = old_Results.getData("d-tables.d12", TsData.class).internalStorage();
         double[] actual_D12 = x11Results.getD12().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D12", expected_D12, actual_D12, DELTA);
+        assertArrayEquals(expected_D12, actual_D12, DELTA, "Error in D12");
         double[] expected_D13 = old_Results.getData("d-tables.d13", TsData.class).internalStorage();
         double[] actual_D13 = x11Results.getD13().getValues().toArray();
-        org.junit.Assert.assertArrayEquals("Error in D13", expected_D13, actual_D13, DELTA);
+        assertArrayEquals(expected_D13, actual_D13, DELTA, "Error in D13");
     }
 
 }

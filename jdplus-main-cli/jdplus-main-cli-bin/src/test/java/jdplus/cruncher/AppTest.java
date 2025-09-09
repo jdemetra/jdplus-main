@@ -18,6 +18,8 @@ package jdplus.cruncher;
 
 import jdplus.cruncher.App;
 import jdplus.cruncher.WsaConfig;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -25,21 +27,19 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Unit test for simple App.
  */
 public class AppTest {
 
-    @Rule
-    public TemporaryFolder temp = new TemporaryFolder();
+    @TempDir
+    public File temp;
 
     @Test
     public void testGenerateDefaultConfigFile() throws IOException {
-        File userDir = temp.newFolder("NoArgs");
+        File userDir = newFolder(temp, "NoArgs");
 
         App.generateDefaultConfigFile(userDir);
 
@@ -58,5 +58,14 @@ public class AppTest {
         } catch (JAXBException ex) {
             throw new IOException(ex);
         }
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = root.toPath().resolve(subFolder).toFile();
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }

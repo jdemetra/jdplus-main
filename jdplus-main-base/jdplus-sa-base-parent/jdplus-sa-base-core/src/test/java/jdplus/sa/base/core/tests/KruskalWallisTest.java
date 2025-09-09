@@ -7,7 +7,8 @@ package jdplus.sa.base.core.tests;
 
 import tck.demetra.data.Data;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
  *
@@ -21,7 +22,7 @@ public class KruskalWallisTest {
     @Test
     public void testSomeMethod() {
         KruskalWallis test=new KruskalWallis(Data.TS_ABS_RETAIL.getValues(), 12);
-        assertTrue(test.build() != null);
+        assertNotSame(test.build(), null);
 //        System.out.println(test.build());
     }
     

@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -537,7 +539,7 @@ public class TramoKernelTest {
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
@@ -554,7 +556,7 @@ public class TramoKernelTest {
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
@@ -571,7 +573,7 @@ public class TramoKernelTest {
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {

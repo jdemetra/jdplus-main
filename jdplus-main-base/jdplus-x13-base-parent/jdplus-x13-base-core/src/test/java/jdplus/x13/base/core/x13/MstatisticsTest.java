@@ -22,7 +22,7 @@ import jdplus.x13.base.api.x13.X13Spec;
 import ec.tstoolkit.algorithm.CompositeResults;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

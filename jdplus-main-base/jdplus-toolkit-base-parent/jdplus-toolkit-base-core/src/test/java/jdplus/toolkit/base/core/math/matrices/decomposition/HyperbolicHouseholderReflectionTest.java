@@ -8,7 +8,7 @@ package jdplus.toolkit.base.core.math.matrices.decomposition;
 import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.toolkit.base.core.data.DataBlock;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import org.junit.jupiter.api.Test;
 

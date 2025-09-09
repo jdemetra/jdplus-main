@@ -19,7 +19,8 @@ package jdplus.toolkit.base.core.math.polynomials;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.core.math.ComplexMath;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
@@ -84,9 +85,9 @@ public class PolynomialTest {
     @Test
     public void testConstructors() {
         Polynomial P = Polynomial.valueOf(1, new double[0]);
-        assertTrue(P.equals(Polynomial.ONE));
+        assertEquals(Polynomial.ONE, P);
         Polynomial P2 = Polynomial.valueOf(1, new double[10]);
-        assertTrue(P2.equals(Polynomial.ONE));
+        assertEquals(Polynomial.ONE, P2);
     }
 
     @Test

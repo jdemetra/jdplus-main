@@ -20,7 +20,8 @@ import java.util.Locale;
 import java.util.function.DoubleUnaryOperator;
 import internal.toolkit.base.core.math.functions.gsl.Utility;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

@@ -19,8 +19,7 @@ package jdplus.x13.base.api.regarima;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -34,11 +33,12 @@ public class EstimateSpecTest {
                 .build().isDefault());
     }
     
-    @org.junit.Test(expected = NullPointerException.class)
+    @org.junit.jupiter.api.Test
     public void testSpanNonNull() {
-        EstimateSpec.builder()
-                .span(null)
-                .build();
+        assertThrows(NullPointerException.class, () ->
+            EstimateSpec.builder()
+                    .span(null)
+                    .build());
     }
     
     @Test

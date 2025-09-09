@@ -24,7 +24,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  *
@@ -40,9 +42,9 @@ public class FixedWeekDayInfoTest {
         FixedWeekDay fd = new FixedWeekDay(7, 4, DayOfWeek.MONDAY);
         Iterable<HolidayInfo> iterable = HolidayInfo.iterable(fd, LocalDate.of(2018, 1, 1), LocalDate.of(2018, 1, 1).plus(3, ChronoUnit.YEARS));
         Stream<HolidayInfo> stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.count() == 3);
+         assertEquals(3, stream.count());
         stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.findFirst().orElseThrow().getDay().getYear() == 2018);
+         assertEquals(2018, stream.findFirst().orElseThrow().getDay().getYear());
     }
 
     @Test
@@ -50,9 +52,9 @@ public class FixedWeekDayInfoTest {
         FixedWeekDay fd = new FixedWeekDay(7, 4, DayOfWeek.MONDAY);
         Iterable<HolidayInfo> iterable = HolidayInfo.iterable(fd, LocalDate.of(2017, 7, 21), LocalDate.of(2018, 1, 1).plus(3, ChronoUnit.YEARS));
         Stream<HolidayInfo> stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.count() == 4);
+        assertEquals(4, stream.count());
         stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.findFirst().orElseThrow().getDay().getYear() == 2017);
+        assertEquals(2017, stream.findFirst().orElseThrow().getDay().getYear());
     }
 
     @Test
@@ -60,9 +62,9 @@ public class FixedWeekDayInfoTest {
         FixedWeekDay fd = new FixedWeekDay(7, 4, DayOfWeek.MONDAY);
         Iterable<HolidayInfo> iterable = HolidayInfo.iterable(fd, LocalDate.of(2017, 7, 21), LocalDate.of(2017, 7, 28));
         Stream<HolidayInfo> stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.count() == 1);
+        assertEquals(1, stream.count());
         stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.findFirst().orElseThrow().getDay().getYear() == 2017);
+        assertEquals(2017, stream.findFirst().orElseThrow().getDay().getYear());
     }
 
    @Test
@@ -70,9 +72,9 @@ public class FixedWeekDayInfoTest {
         FixedWeekDay fd = new FixedWeekDay(7, 4, DayOfWeek.MONDAY);
         Iterable<HolidayInfo> iterable = HolidayInfo.iterable(fd, LocalDate.of(2017, 7, 29), LocalDate.of(2018, 7, 21));
         Stream<HolidayInfo> stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(stream.count() == 0);
+       assertEquals(0, stream.count());
         stream = StreamSupport.stream(iterable.spliterator(), false);
-        assertTrue(!stream.findFirst().isPresent());
+       assertFalse(stream.findFirst().isPresent());
     }
     
 }
