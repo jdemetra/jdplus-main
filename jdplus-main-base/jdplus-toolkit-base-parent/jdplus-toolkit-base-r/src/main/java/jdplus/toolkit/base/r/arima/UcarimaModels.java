@@ -13,6 +13,7 @@ import java.util.function.DoubleUnaryOperator;
 import jdplus.toolkit.base.core.arima.ArimaModel;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
+import jdplus.toolkit.base.core.ssf.SsfException;
 import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.composite.CompositeSsf;
 import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
@@ -38,21 +39,23 @@ public class UcarimaModels {
                 .model(model)
                 .add(components).build();
     }
-    
+
     /**
-     * 
+     *
      * @param sarima Model to be decomposed
      * @param rmod Trend tolerance
      * @param epsphi Seasonal tolerance in degrees
-     * @return 
+     * @return
      */
-    public UcarimaModel decompose(SarimaModel sarima, double rmod, double epsphi){
+    public UcarimaModel decompose(SarimaModel sarima, double rmod, double epsphi) {
         TrendCycleSelector tsel = new TrendCycleSelector();
-        if (rmod > 0)
+        if (rmod > 0) {
             tsel.setBound(rmod);
+        }
         SeasonalSelector ssel = new SeasonalSelector(sarima.getPeriod());
-        if (epsphi > 0)
+        if (epsphi > 0) {
             ssel.setTolerance(epsphi);
+        }
 
         ModelDecomposer decomposer = new ModelDecomposer();
         decomposer.add(tsel);
@@ -61,7 +64,7 @@ public class UcarimaModels {
         UcarimaModel ucm = decomposer.decompose(sarima);
         ucm = ucm.setVarianceMax(-1, false);
         return ucm;
-        
+
     }
 
     public UcarimaModel doCanonical(UcarimaModel ucm, int cmp, boolean adjust) {
@@ -130,18 +133,22 @@ public class UcarimaModels {
     public Matrix estimate(double[] data, UcarimaModel ucm, boolean stdev) {
         ucm = ucm.simplify();
         CompositeSsf ssf = SsfUcarima.of(ucm);
-        DefaultSmoothingResults rslt = DkToolkit.sqrtSmooth(ssf, new SsfData(data), stdev, true);
-        int n = ucm.getComponentsCount();
-        FastMatrix M = FastMatrix.make(data.length, stdev ? 2 * n : n);
-        int[] pos = ssf.componentsPosition();
-        for (int i = 0; i < n; ++i) {
-            M.column(i).copy(rslt.getComponent(pos[i]));
-            if (stdev) {
-                M.column(n + i).copy(rslt.getComponentVariance(pos[i]).fastOp(w -> w <= 0 ? 0 : Math.sqrt(w)));
+        try {
+            DefaultSmoothingResults rslt = DkToolkit.sqrtSmooth(ssf, new SsfData(data), stdev, true);
+            int n = ucm.getComponentsCount();
+            FastMatrix M = FastMatrix.make(data.length, stdev ? 2 * n : n);
+            int[] pos = ssf.componentsPosition();
+            for (int i = 0; i < n; ++i) {
+                M.column(i).copy(rslt.getComponent(pos[i]));
+                if (stdev) {
+                    M.column(n + i).copy(rslt.getComponentVariance(pos[i]).fastOp(w -> w <= 0 ? 0 : Math.sqrt(w)));
+                }
             }
+            return M;
+        } catch (SsfException ex) {
+            return null;
         }
 
-        return M;
     }
 
     public byte[] toBuffer(UcarimaModel model) {
