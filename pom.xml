@@ -183,7 +183,7 @@
                 <plugin>
                     <groupId>com.github.nbbrd.heylogs</groupId>
                     <artifactId>heylogs-maven-plugin</artifactId>
-                    <version>0.14.0</version>
+                    <version>0.14.1</version>
                 </plugin>
                 <plugin>
                     <groupId>io.github.ascopes</groupId>
