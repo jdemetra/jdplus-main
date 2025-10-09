@@ -122,7 +122,9 @@ public class QRFilter {
     }
 
     public DiffuseLikelihood diffuseLikelihood(boolean scalingFactor, boolean res) {
-        QRLeastSquaresSolution ls = QRLeastSquaresSolver.robustLeastSquares(yl, Xl);
+        Householder2 hous = new Householder2();
+        QRDecomposition qr = hous.decompose(Xl.deepClone());
+        QRLeastSquaresSolution ls = QRLeastSquaresSolver.leastSquares(qr, yl, 1e-12);
         DataBlock b = DataBlock.of(ls.getB());
         DataBlock e = DataBlock.of(ls.getE());
         int nd = b.length(), n = Xl.getRowsCount();
@@ -139,7 +141,9 @@ public class QRFilter {
     }
 
     public ProfileLikelihood profileLikelihood() {
-        QRLeastSquaresSolution ls = QRLeastSquaresSolver.robustLeastSquares(yl, Xl);
+        Householder2 hous = new Householder2();
+        QRDecomposition qr = hous.decompose(Xl.deepClone());
+        QRLeastSquaresSolution ls = QRLeastSquaresSolver.leastSquares(qr, yl, 1e-12);
         DataBlock b = DataBlock.of(ls.getB());
         int n = Xl.getRowsCount();
         double ssq = ls.getSsqErr();
@@ -149,6 +153,7 @@ public class QRFilter {
         bvar.mul(ssq / n);
         ProfileLikelihood pll = new ProfileLikelihood();
         pll.set(ssq, ldet, b, bvar, n);
+        pll.set(ls.getE());
         return pll;
     }
 

@@ -231,7 +231,7 @@ public class MarginalLikelihood implements Likelihood {
     }
 
     /**
-     * Adjust the likelihood if the toArray have been pre-multiplied by a given
+     * Adjust the likelihood if the array have been pre-multiplied by a given
      * scaling factor
      *
      * @param factor The scaling factor

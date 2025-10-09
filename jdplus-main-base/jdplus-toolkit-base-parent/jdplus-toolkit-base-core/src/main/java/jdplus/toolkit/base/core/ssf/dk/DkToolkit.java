@@ -276,8 +276,8 @@ public class DkToolkit {
 
         ISsfMeasurement m = ssf.measurement();
         double var = frslts.var();
-        int n=data.length();
-        for (int i = 0, pos=n; i < nf; ++i, ++pos) {
+        int n = data.length();
+        for (int i = 0, pos = n; i < nf; ++i, ++pos) {
             DataBlock a = frslts.a(pos);
             F.set(i, 0, m.loading().ZX(pos, a));
             if (variance) {
@@ -286,12 +286,12 @@ public class DkToolkit {
                 if (m.hasError()) {
                     v += m.error().at(pos);
                 }
-                F.set(i, 1, v*var);
+                F.set(i, 1, v * var);
             }
         }
         return F;
     }
-    
+
     private static class LLComputer1 implements ILikelihoodComputer<DiffuseLikelihood> {
 
         private final boolean scalingfactor, res;
@@ -388,18 +388,19 @@ public class DkToolkit {
         public MarginalLikelihood compute(ISsf ssf, ISsfData data) {
 
             DiffusePredictionErrorDecomposition pe = new DiffusePredictionErrorDecomposition(res);
+            int n = data.length();
             if (res) {
-                pe.prepare(ssf, data.length());
+                pe.prepare(ssf, n);
             }
             DiffuseSquareRootInitializer initializer = new DiffuseSquareRootInitializer(pe);
             OrdinaryFilter filter = new OrdinaryFilter(initializer);
             filter.process(ssf, data, pe);
             DiffuseLikelihood likelihood = pe.likelihood(scalingfactor);
-            int collapsing = pe.getEndDiffusePosition();
-            FastMatrix M = FastMatrix.make(collapsing, ssf.getDiffuseDim());
+//            int collapsing = pe.getEndDiffusePosition();
+            FastMatrix M = FastMatrix.make(n, ssf.getDiffuseDim());
             ssf.diffuseEffects(M);
             int j = 0;
-            for (int i = 0; i < collapsing; ++i) {
+            for (int i = 0; i < n; ++i) {
                 if (!data.isMissing(i)) {
                     if (i > j) {
                         M.row(j).copy(M.row(i));
@@ -451,9 +452,9 @@ public class DkToolkit {
                         .scalingFactor(scaling)
                         .build();
             } else {
-                HouseholderWithPivoting h = new HouseholderWithPivoting();
+                Householder2 h = new Householder2();
                 int ndiffuse = model.getDiffuseElements();
-                QRDecomposition qr = h.decompose(xl, ndiffuse);
+                QRDecomposition qr = h.decompose(xl);
                 QRLeastSquaresSolution ls = QRLeastSquaresSolver.leastSquares(qr, yl, 1e-9);
                 DataBlock b = DataBlock.of(ls.getB());
                 DataBlock res = DataBlock.of(ls.getE());
