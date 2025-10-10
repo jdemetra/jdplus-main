@@ -51,8 +51,8 @@ public class SsfFunctionPoint<S, F extends ISsf> implements
      */
     private final DiffuseConcentratedLikelihood ll;
     private final DoubleSeq p;
-    private final DoubleSeq E;
-    private final SsfFunction<S, F> fn;
+    private final SsfFunction<S, F> fn;    private final DoubleSeq E;
+
 
     /**
      *
