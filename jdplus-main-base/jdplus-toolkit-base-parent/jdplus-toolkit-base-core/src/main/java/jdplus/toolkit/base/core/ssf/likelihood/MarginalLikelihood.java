@@ -231,7 +231,7 @@ public class MarginalLikelihood implements Likelihood {
     }
 
     /**
-     * Adjust the likelihood if the array have been pre-multiplied by a given
+     * Adjust the likelihood if the array has been pre-multiplied by a given
      * scaling factor
      *
      * @param factor The scaling factor
@@ -248,7 +248,7 @@ public class MarginalLikelihood implements Likelihood {
                     nres[i] = Double.isFinite(res[i]) ? res[i] / factor : Double.NaN;
                 }
             }
-             return new MarginalLikelihood(scalingFactor, nobs, nd, ssqerr / factor * factor, ldet, dcorr, mcorr, nres, legacy);
+             return new MarginalLikelihood(scalingFactor, nobs, nd, ssqerr / (factor * factor), ldet, dcorr, mcorr, nres, legacy);
         }
     }
 

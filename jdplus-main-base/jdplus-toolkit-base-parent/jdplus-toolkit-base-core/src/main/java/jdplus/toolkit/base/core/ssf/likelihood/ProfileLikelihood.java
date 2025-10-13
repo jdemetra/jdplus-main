@@ -90,6 +90,7 @@ public class ProfileLikelihood implements Likelihood {
      *
      * @return
      */
+    @Override
     public double ser() {
         return Math.sqrt(ssqerr / n);
     }
@@ -123,7 +124,7 @@ public class ProfileLikelihood implements Likelihood {
         ll += n * Math.log(factor);
         if (res != null) {
             for (int i = 0; i < res.length; ++i) {
-                res[i] *= factor;
+                res[i] /= factor;
             }
         }
     }
