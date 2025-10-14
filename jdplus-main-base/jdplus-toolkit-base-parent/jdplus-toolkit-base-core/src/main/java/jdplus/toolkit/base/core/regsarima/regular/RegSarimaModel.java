@@ -125,7 +125,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
 
         List<RegressionDesc> regressionDesc = new ArrayList<>();
         if (description.isMean()) {
-            ITsVariable cur = new TrendConstant(arima.getD(), arima.getBd());
+            ITsVariable cur = new TrendConstant(arima.getD(), arima.getBd(), description.getEstimationDomain().start());
             double c = cursor.getAndNext(), e = Math.sqrt(diag.getAndNext() * vscale);
             regressionDesc.add(new RegressionDesc("const", cur, 0, pos++, c, e, 2 * tstat.getProbability(Math.abs(c / e), ProbabilityType.Upper)));
             variables[k++] = Variable.variable("const", cur)

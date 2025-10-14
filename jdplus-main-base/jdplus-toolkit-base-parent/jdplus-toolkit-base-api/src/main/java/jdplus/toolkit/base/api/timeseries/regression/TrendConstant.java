@@ -32,9 +32,17 @@ public class TrendConstant implements ISystemVariable {
         return "Constant";
     }
    
+    @Deprecated
     public TrendConstant(int d, int bd){
         this.d=d;
         this.bd=bd;
         this.reference=null;
     }
+    
+    public TrendConstant(int d, int bd, LocalDateTime reference){
+        this.d=d;
+        this.bd=bd;
+        this.reference=reference;
+    }
+    
 }

@@ -162,7 +162,7 @@ class X13ModelBuilder implements IModelBuilder {
             model.setMean(false);
         } else if (Parameter.isFixed(mu.getCoefficient())) {
             int d = spec.getArima().getD(), bd = spec.getArima().getBd();
-            add(model, new TrendConstant(d, bd), "const", ComponentType.Undefined, new Parameter[]{mu.getCoefficient()});
+            add(model, new TrendConstant(d, bd, model.getEstimationDomain().start()), "const", ComponentType.Undefined, new Parameter[]{mu.getCoefficient()});
             model.setMean(false);
         } else {
             model.setMean(true);

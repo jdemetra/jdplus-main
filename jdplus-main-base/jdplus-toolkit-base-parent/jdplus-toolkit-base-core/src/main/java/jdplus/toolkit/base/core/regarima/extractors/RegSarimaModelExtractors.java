@@ -264,17 +264,17 @@ public class RegSarimaModelExtractors {
 
 // All deterministic effects
             set(RegressionDictionaries.DET, TsData.class, (RegSarimaModel source) -> {
-                TsData det = source.deterministicEffect(null, v -> true);
+                TsData det = source.deterministicEffect(null, v ->! (v.getCore() instanceof TrendConstant));
                 return source.backTransform(det, true);
             });
             setArray(RegressionDictionaries.DET_F, NFCAST, TsData.class,
                     (source, i) -> {
-                        TsData det = source.deterministicEffect(source.forecastDomain(i), v -> true);
+                        TsData det = source.deterministicEffect(source.forecastDomain(i), v -> ! (v.getCore() instanceof TrendConstant));
                         return source.backTransform(det, true);
                     });
             setArray(RegressionDictionaries.DET_B, NBCAST, TsData.class,
                     (source, i) -> {
-                        TsData det = source.deterministicEffect(source.backcastDomain(i), v -> true);
+                        TsData det = source.deterministicEffect(source.backcastDomain(i), v -> ! (v.getCore() instanceof TrendConstant));
                         return source.backTransform(det, true);
                     });
 
