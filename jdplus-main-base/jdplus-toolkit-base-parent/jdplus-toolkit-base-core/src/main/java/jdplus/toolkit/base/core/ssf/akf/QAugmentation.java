@@ -45,7 +45,7 @@ public class QAugmentation {
     // S * s = - S * a * b' = - a'^-1 * b'
     private FastMatrix Q, B;
     private int n, nd;
-    private DeterminantalTerm det = new DeterminantalTerm();
+    private final DeterminantalTerm det = new DeterminantalTerm();
 
     public void prepare(final int nd, final int nvars) {
         clear();
@@ -96,8 +96,7 @@ public class QAugmentation {
     }
     
     /**
-     * Gets the matrix copyOf the diffuse effects used for collapsing
- More exactly, we provide B*a^-1'
+     * Gets the matrix of the diffuse effects used for collapsing
      * @return 
      */
     public FastMatrix B(){
@@ -140,8 +139,7 @@ public class QAugmentation {
         state.dropAllConstraints();
         return true;
     }
-    // TODO Update with Java 8
-
+ 
     public static boolean isPositive(DataBlock q) {
         for (int i = 0; i < q.length(); ++i) {
             if (q.get(i) < State.ZERO) {

@@ -190,14 +190,21 @@ public class ExactSingleOutlierDetector<T extends IArimaModel> extends SingleOut
                     if (v <= 0) {
                         exclude(i, idx);
                     } else {
-                        setT(i, idx, (xy - DataBlock.of(z).dot(a))
-                                / (Math.sqrt(v) * mad));
+                        double c = xy - DataBlock.of(z).dot(a);
+                        setT(i, idx, c / (Math.sqrt(v) * mad));
+                        setCoefficient(i, idx, c / v);
                     }
                 } else if (xx <= 0) {
                     exclude(i, idx);
+                    setT(i, idx, Double.NaN);
+                    setCoefficient(i, idx, Double.NaN);
                 } else {
                     setT(i, idx, xy / (Math.sqrt(xx) * mad));
+                    setCoefficient(i, idx, xy / xx);
                 }
+            } else {
+                setT(i, idx, Double.NaN);
+                setCoefficient(i, idx, Double.NaN);
             }
         }
     }
