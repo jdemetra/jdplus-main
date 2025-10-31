@@ -47,7 +47,8 @@ public class SmoothationsComputer {
     private DefaultQFilteringResults frslts;
 
     private double err, errVariance;
-    private double u, uc, ucVariance;
+    private double u;
+//    private double uc;
     private DataBlock M, K, E, U, R, Rc;
     private FastMatrix N, Nc, Rd, S;
 //    private FastMatrix V;
@@ -104,8 +105,8 @@ public class SmoothationsComputer {
         delta = q.b().deepClone();
         LowerTriangularMatrix.solvexL(S, delta);
         delta.chs();
-        FastMatrix is = LowerTriangularMatrix.inverse(S);
-        FastMatrix C = SymmetricMatrix.LtL(is);
+//        FastMatrix is = LowerTriangularMatrix.inverse(S);
+//        FastMatrix C = SymmetricMatrix.LtL(is);
     }
 
     private void loadInfo(int pos) {
@@ -206,9 +207,8 @@ public class SmoothationsComputer {
         // u = v(t)/f(t)-K'(t)*R(t)
         if (missing) {
             u = Double.NaN;
-            uc = Double.NaN;
+//            uc = Double.NaN;
             U.set(Double.NaN);
-            ucVariance = Double.NaN;
             return;
         }
 
@@ -218,7 +218,7 @@ public class SmoothationsComputer {
             U.product(K, Rd.columnsIterator());
             U.chs();
             U.addAY(1 / errVariance, E);
-            uc = u + U.dot(delta);
+//            uc = u + U.dot(delta);
 //            if (calcvar) {
 //                FastMatrix A = frslts.B(pos + 1);
 //                // N*A
@@ -244,7 +244,7 @@ public class SmoothationsComputer {
             // apply the same to the colums of Rd
             U.product(K, Rd.columnsIterator());
             U.chs();
-            uc = u + U.dot(delta);
+//            uc = u + U.dot(delta);
         }
     }
 

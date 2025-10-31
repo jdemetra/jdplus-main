@@ -32,7 +32,10 @@ import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolver;
 import jdplus.toolkit.base.core.arima.estimation.ArmaFilter;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
+import jdplus.toolkit.base.core.math.linearfilters.RationalBackFilter;
 import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolution;
+import jdplus.toolkit.base.core.math.polynomials.Polynomial;
+import jdplus.toolkit.base.core.modelling.regression.IOutlierFactory;
 
 /**
  *
@@ -40,7 +43,7 @@ import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolution;
  * @param <T>
  */
 @Development(status = Development.Status.Preliminary)
-public class ExactSingleOutlierDetector<T extends IArimaModel> extends SingleOutlierDetector<T> {
+public class FastOutlierDetector2<T extends IArimaModel> extends SingleOutlierDetector<T> {
 
     private final ArmaFilter filter;
     private final ResidualsComputer resComputer;
@@ -56,7 +59,7 @@ public class ExactSingleOutlierDetector<T extends IArimaModel> extends SingleOut
      * @param filter
      * @param res
      */
-    public ExactSingleOutlierDetector(RobustStandardDeviationComputer computer, ArmaFilter filter, ResidualsComputer res) {
+    public FastOutlierDetector2(RobustStandardDeviationComputer computer, ArmaFilter filter, ResidualsComputer res) {
         super(computer == null ? RobustStandardDeviationComputer.mad() : computer);
         this.filter = filter == null ? new AnsleyFilter() : filter;
         resComputer = res == null ? ResidualsComputer.defaultComputer(this.filter) : res;
@@ -156,29 +159,54 @@ public class ExactSingleOutlierDetector<T extends IArimaModel> extends SingleOut
         int len = regArima.getY().length();
         BackFilter df = regArima.arima().getNonStationaryAr();
         int d = df.getDegree();
-        double[] o = new double[2 * len];
-        DataBlock O = DataBlock.of(o);
-        getOutlierFactory(idx).fill(len, O);
-        double[] od = new double[o.length - d];
-        DataBlock OD = DataBlock.of(od);
-        df.apply(O, OD);
+        IOutlierFactory.FilterRepresentation representation = getOutlierFactory(idx).getFilterRepresentation();
+        if (representation == null) {
+            return;
+        }
+        IArimaModel model = getRegArima().arima();
+        RationalBackFilter pi = model.getPiWeights();
+        double[] o = pi.times(representation.filter).getWeights(len);
+            double corr = 0;
+        if (d == 0 && representation.correction != 0) {
+            // TODO: apply other corrections based on corr !!
+            Polynomial ar = model.getAr().asPolynomial();
+            Polynomial ma = model.getMa().asPolynomial();
+            corr = representation.correction * ar.evaluateAt(1) / ma.evaluateAt(1);
+            for (int i = 0; i < 2*n; ++i) {
+                o[i] += corr;
+            }
+        }
+
         DataBlock Yl = DataBlock.of(yl);
 
         int nx = Xl == null ? 0 : Xl.getColumnsCount();
 
         for (int i = lbound; i < ubound; ++i) {
             if (isAllowed(i, idx)) {
-                O = DataBlock.of(od, len - i, 2 * len - d - i, 1);
                 // ol
-                DataBlock Ol = DataBlock.make(n);
-                filter.apply(O, Ol);
-                double xx = Ol.ssq(), xy = Ol.dot(Yl);
+                DataBlock Olc;
+                FastMatrix Xlc=null;
+                DataBlock Ylc;
+                if (i < d){
+                    Olc=DataBlock.of(o, d-i, d-i+n, 1);
+                    Ylc=Yl;
+                    if (nx>0){
+                        Xlc=Xl;
+                    } 
+                }else{
+                    Olc=DataBlock.of(o, 0, len-i, 1);
+                    Ylc=Yl.drop(i-d,0);
+                    if (nx>0){
+                        Xlc=Xl.extract(i-d, len-i, 0, nx);
+                    } 
+                }
+                double xx = Olc.ssq(), xy = Olc.dot(Ylc);
 
                 if (U != null) {
                     // w=ol*Xl
                     double[] w = new double[b.length];
                     for (int q = 0; q < nx; ++q) {
-                        w[q] = Ol.dot(Xl.column(pivot[q]));
+                        w[q] = Olc.dot(Xlc.column(pivot[q]));
                     }
                     DataBlock a = DataBlock.of(w);
                     // a=wU^-1
