@@ -421,6 +421,47 @@ public class AsymmetricFiltersFactory {
         LinearSystemSolver.fastSolver().solve(L, DataBlock.of(f));
         return f;
     }
+    
+    /**
+     * Retrieve the underlying forecasts corresponding to the asymmetric filters
+     * 
+     * The underlying forecasts corresponds to the forecasts of the input time series for which
+     * applying the symmetric filter to the extended series produces the same results than the
+     * current asymmetric filters
+     *
+     * @param sfilter The underlying symmetric filter
+     * @param afilters The asymmetric filters (from the longest to the
+     * shortest).
+     * @param x The observations, from n-2h+1 to n
+     * @return The forecasts, from n+1 to n+h
+     */
+    public double[] underlyingForecasts(IFiniteFilter sfilter, IFiniteFilter[] afilters, DoubleSeq x) {
+        int h = sfilter.getUpperBound();
+        if (h != afilters.length || x.length() != 2*h) {
+            return null;
+        }
+        double[] f = new double[afilters.length];
+        FastMatrix L = FastMatrix.square(h);
+        IntToDoubleFunction sw = sfilter.weights();// from -h to h
+        for (int i = 0; i < h; ++i) {
+            IntToDoubleFunction aw = afilters[h-i-1].weights(); // from -h to i
+            double q = 0;
+            int j = -h;
+            for (int k = h-i-1; j <= i; ++j, ++k) {
+                q += (aw.applyAsDouble(j) - sw.applyAsDouble(j)) * x.get(k);
+            }
+            f[i] = q;
+            for (j = 1; j <= h; ++j) {
+                if (j <= h-i) {
+                   L.set(i, j - 1, sw.applyAsDouble(j+i));
+                } else {
+                   L.set(i, j - 1, 0);
+                }
+            }
+        }
+        LinearSystemSolver.fastSolver().solve(L, DataBlock.of(f));
+        return f;
+    }
 
     private final double Q = 1 / (2 * Math.PI);
 
