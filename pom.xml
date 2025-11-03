@@ -55,7 +55,7 @@
         <jspecify.version>1.0.0</jspecify.version>
 
         <!-- test frameworks -->
-        <junit.version>6.0.0</junit.version>
+        <junit.version>6.0.1</junit.version>
         <assertj-core.version>3.27.6</assertj-core.version>
 
         <!-- dependencies -->
