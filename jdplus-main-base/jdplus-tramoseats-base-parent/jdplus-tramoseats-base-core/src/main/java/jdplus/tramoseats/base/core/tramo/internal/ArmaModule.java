@@ -36,7 +36,7 @@ import jdplus.toolkit.base.api.processing.ProcessingLog;
 public class ArmaModule implements IArmaModule {
 
     public static final String ARMA = "arma selection",
-            MODELS = "selected models", DEFAULT = "default model selected (not enough obs.)",
+            MODEL = "selected model: ", DEFAULT = "default model selected (not enough obs.)",
             FAILED = "arma selection failed";
 
     @lombok.Value
@@ -246,7 +246,7 @@ public class ArmaModule implements IArmaModule {
             ArmaModelSelector impl = createModule(maxspec);
             SarmaOrders nspec = impl.process(res, desc.getAnnualFrequency(), maxspec.getD(), maxspec.getBd(), seasonal);
             ArmaModelSelector.FastBIC[] models = impl.gePreferredModels();
-            log.info(MODELS, new Info(models, nspec));
+            log.info(MODEL+nspec.toString(), new Info(models, nspec));
             if (nspec.equals(curspec.doStationary())) {
                 return ProcessingResult.Unchanged;
             }

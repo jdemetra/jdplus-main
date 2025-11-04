@@ -5,6 +5,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.regression.Constant;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
@@ -22,13 +23,13 @@ class ConstantFactory implements RegressionVariableFactory<Constant>{
     private ConstantFactory(){}
 
     @Override
-    public boolean fill(Constant var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(Constant var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         buffer.set(1);
         return true;
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(Constant var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(Constant var, D domain, FastMatrix buffer, ProcessingLog log) {
         buffer.set(1);
         return true;
     }

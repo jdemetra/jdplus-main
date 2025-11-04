@@ -5,6 +5,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.regression.LinearTrend;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
@@ -22,14 +23,14 @@ class LinearTrendFactory implements RegressionVariableFactory<LinearTrend>{
     private LinearTrendFactory(){}
 
     @Override
-    public boolean fill(LinearTrend var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(LinearTrend var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         int del=TsPeriod.of(start.getUnit(), var.getStart()).until(start);
         buffer.column(0).set(r->r+del);
         return true;
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(LinearTrend var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(LinearTrend var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

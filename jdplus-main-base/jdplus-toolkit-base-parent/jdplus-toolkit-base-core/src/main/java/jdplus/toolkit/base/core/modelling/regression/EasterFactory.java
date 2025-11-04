@@ -24,6 +24,7 @@ import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.Easter;
 import java.time.LocalDate;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -57,7 +58,7 @@ class EasterFactory implements RegressionVariableFactory<EasterVariable>  {
     private EasterFactory(){}
 
     @Override
-    public boolean fill(EasterVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(EasterVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         if (start.getUnit().getAnnualFrequency()<= 3)
             return false;
         int duration =var.getDuration();
@@ -183,7 +184,7 @@ class EasterFactory implements RegressionVariableFactory<EasterVariable>  {
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(EasterVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(EasterVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 

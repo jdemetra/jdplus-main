@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.regression.TrigonometricVariables;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
@@ -57,7 +58,7 @@ public class TrigonometricVariablesFactory implements RegressionVariableFactory<
     private TrigonometricVariablesFactory(){}
 
     @Override
-    public boolean fill(TrigonometricVariables var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(TrigonometricVariables var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         TsPeriod refPeriod = start.withDate(var.getReference());
         long istart = start.getId() - refPeriod.getId();
         double[] freq = var.getFrequencies();
@@ -80,7 +81,7 @@ public class TrigonometricVariablesFactory implements RegressionVariableFactory<
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(TrigonometricVariables var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(TrigonometricVariables var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

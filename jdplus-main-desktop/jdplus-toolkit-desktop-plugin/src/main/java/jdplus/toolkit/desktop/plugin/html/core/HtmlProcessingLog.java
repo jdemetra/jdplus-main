@@ -22,6 +22,7 @@ import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import java.io.IOException;
 import java.util.List;
+import jdplus.toolkit.desktop.plugin.html.HtmlStyle;
 import org.openide.util.Exceptions;
 
 /**
@@ -68,8 +69,14 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
             return;
         }
         if (verbose) {
+            String previousContext = null;
             for (ProcessingLog.Information pinfo : all) {
+                if (previousContext == null || !pinfo.getName().equalsIgnoreCase(previousContext)) {
+                    previousContext = pinfo.getName();
+                    stream.write(pinfo.getName(), HtmlStyle.Bold, HtmlStyle.Italic).newLine();
+                }
                 write(stream, pinfo);
+
             }
         } else {
             if (err) {
@@ -178,9 +185,8 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private void writeInfo(HtmlStream stream, ProcessingLog.Information msg) throws IOException {
         if (info) {
-            stream.write(msg.getMsg()).newLine();
+            stream.write(msg.getMsg(), HtmlStyle.Blue).newLine();
             if (verbose) {
-                stream.newLine();
                 Object details = msg.getDetails();
                 if (details != null) {
                     HtmlLogFormatters.write(stream, details, verbose);

@@ -16,6 +16,8 @@
  */
 package jdplus.tramoseats.base.core.tramo;
 
+import java.util.Arrays;
+import jdplus.sa.base.core.regarima.AutomaticTradingRegressionModule;
 import jdplus.toolkit.base.api.timeseries.regression.IEasterVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
@@ -23,20 +25,20 @@ import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
-import jdplus.toolkit.base.core.regsarima.regular.IRegressionModule;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
 import jdplus.toolkit.base.core.regsarima.regular.TradingDaysRegressionComparator;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
+import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import nbbrd.design.BuilderPattern;
 
 /**
  * * @author gianluca, jean Correction 22/7/2014. pre-specified Easter effect
  * was not handled with auto-td
  */
-public class AutomaticWaldRegressionTest implements IRegressionModule {
+public class AutomaticWaldRegressionTest implements AutomaticTradingRegressionModule {
 
     public static final double DEF_TMEAN = 1.96, DEF_TLP = 2, DEF_TEASTER = 2.2, DEF_FPVAL = 0.01, DEF_PCONSTRAINT = .10;
 
@@ -150,7 +152,7 @@ public class AutomaticWaldRegressionTest implements IRegressionModule {
 
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
-
+        context.getLog().push(ATD);
         try {
             // first step: test all trading days
             ModelDescription current = context.getDescription();
@@ -159,13 +161,22 @@ public class AutomaticWaldRegressionTest implements IRegressionModule {
 
             ITradingDaysVariable tdsel = best < 2 ? null : td[best - 2];
             ILengthOfPeriodVariable lpsel = best < 1 ? null : lp;
+            Info info = new Info(
+                    AutomaticTradingRegressionModule.modelNames(td),
+                    Arrays.stream(estimations)
+                            .map(e -> e == null ? null : e.statistics())
+                            .toArray(LikelihoodStatistics[]::new), best);
+            context.getLog().info(TD_SEL + info.getNames()[best], info);
             IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
             ModelDescription model = createTestModel(context, tdsel, lpsel);
             RegArimaEstimation<SarimaModel> regarima = processor.process(model.regarima(), model.mapping());
             int nhp = current.getArimaSpec().freeParametersCount();
             return update(current, model, tdsel, lpsel, regarima.getConcentratedLikelihood(), nhp);
         } catch (RuntimeException ex) {
+            context.getLog().remark(ATD_FAILED);
             return ProcessingResult.Failed;
+        } finally {
+            context.getLog().pop();
         }
     }
 

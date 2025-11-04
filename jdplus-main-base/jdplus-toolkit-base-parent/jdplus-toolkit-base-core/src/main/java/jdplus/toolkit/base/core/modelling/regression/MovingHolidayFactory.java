@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
@@ -44,7 +45,7 @@ public class MovingHolidayFactory implements RegressionVariableFactory<MovingHol
      * @return
      */
     @Override
-    public boolean fill(MovingHolidayVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(MovingHolidayVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         MovingHolidayProvider provider = find(var.getEvent());
         if (provider == null) {
             return false;
@@ -112,7 +113,7 @@ public class MovingHolidayFactory implements RegressionVariableFactory<MovingHol
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(MovingHolidayVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(MovingHolidayVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
 //        MovingHolidayProvider provider=find(var.getEvent());
 //        if (provider == null)
 //            return false;

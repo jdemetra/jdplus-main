@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.arima.estimation.IArimaMapping;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
@@ -271,6 +272,10 @@ public final class ModelDescription {
      * @return
      */
     public RegArimaModel<SarimaModel> regarima() {
+        return regarima(null);
+    }
+
+    public RegArimaModel<SarimaModel> regarima(ProcessingLog log) {
         // Consider that all variables can be used (exluded=false). They will be excluded later
         // Explanation: excluding some variable might depend on the differencing orders/presence of other variables
         variables.replaceAll(v -> v.exclude(false));
@@ -301,7 +306,7 @@ public final class ModelDescription {
         List<Variable> excluded = new ArrayList<>();
         for (Variable v : variables) {
             if (!v.isPreadjustment()) {
-                FastMatrix x = Regression.matrix(domain, v.getCore());
+                FastMatrix x = Regression.matrix(domain, log, v.getCore());
                 if (x == null || x.isZero(0)) {
                     excluded.add(v);
                 } else {
@@ -319,10 +324,10 @@ public final class ModelDescription {
         if (!excluded.isEmpty()) {
             variables.replaceAll(v -> v.exclude(excluded.contains(v)));
         }
-        return check(builder.build());
+        return check(builder.build(), log);
     }
 
-    private RegArimaModel<SarimaModel> check(RegArimaModel<SarimaModel> reg0) {
+    private RegArimaModel<SarimaModel> check(RegArimaModel<SarimaModel> reg0, ProcessingLog log) {
         FastMatrix x = reg0.differencedModel().getX();
         HouseholderWithPivoting hous = new HouseholderWithPivoting();
         int curx = reg0.getMissingValuesCount();
@@ -335,6 +340,8 @@ public final class ModelDescription {
         if (rank == qr.n()) {
             return reg0;
         }
+        if (log != null)
+            log.remark(COLLINEAR);
         RegArimaModel.Builder builder = RegArimaModel.<SarimaModel>builder()
                 .y(reg0.getY())
                 .missing(reg0.missing())
@@ -595,7 +602,6 @@ public final class ModelDescription {
      * @param interpolator
      */
     public void interpolate(@NonNull DataInterpolator interpolator) {
-        TsData y = series;
         if (series.getValues().anyMatch(z -> Double.isNaN(z))) {
             IntList lmissing = new IntList();
             interpolatedData = interpolator.interpolate(series.getValues(), lmissing);
@@ -621,11 +627,7 @@ public final class ModelDescription {
     }
 
     public boolean removeVariable(Predicate<Variable> pred) {
-        if (variables.removeIf(pred.and(var -> ModellingUtility.isAutomaticallyIdentified(var)))) {
-            return true;
-        } else {
-            return false;
-        }
+        return variables.removeIf(pred.and(var -> ModellingUtility.isAutomaticallyIdentified(var)));
     }
 
     public int getAnnualFrequency() {
@@ -744,8 +746,11 @@ public final class ModelDescription {
     }
 
     public RegArimaEstimation<SarimaModel> estimate(IRegArimaComputer<SarimaModel> processor) {
+        return estimate(processor, null);
+    }
 
-        RegArimaModel<SarimaModel> model = regarima();
+    public RegArimaEstimation<SarimaModel> estimate(IRegArimaComputer<SarimaModel> processor, ProcessingLog log) {
+        RegArimaModel<SarimaModel> model = regarima(log);
         RegArimaEstimation<SarimaModel> rslt;
         if (!arima.hasFixedParameters()) {
             rslt = processor.process(model, mapping());
@@ -809,5 +814,7 @@ public final class ModelDescription {
         IOutlier c2 = (IOutlier) o2.getCore();
         return c1.getPosition().compareTo(c2.getPosition());
     };
+
+    private static final String EXCLUDED = "excluded variable: ", COLLINEAR = "collinear model. Some coefficients are set to 0";
 
 }

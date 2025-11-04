@@ -22,7 +22,7 @@ import nbbrd.design.Development;
  *
  * @author Jean Palate
  */
-@Development(status=Development.Status.Release)
+@Development(status = Development.Status.Release)
 public enum TradingDaysType {
     /**
      * No regression variable
@@ -49,9 +49,21 @@ public enum TradingDaysType {
      */
     TD2(2),
     /**
-     * Mon-Fri, Sat-Sun
+     * Mon-Sat, Sun
      */
     TD2c(2),
+    /**
+     * Mon-Thu, Fry-Sun
+     */
+    TD2d(2),
+    /**
+     * Mon, Tue-Fri, Sat, Sun
+     */
+    TD4c(4),
+    /**
+     * Mon, Tue, Wed, Thu, Fri, Sat-Sun
+     */
+    TD6(6),
     /**
      * User-defined implementation. not supported yet
      */
@@ -66,28 +78,75 @@ public enum TradingDaysType {
     public int getVariablesCount() {
         return variablesCount;
     }
-    
-    public String[] contrastNames(){
-        return switch (this){
-            case TD2c ->new String[]{"Mon-Sat"};
-            case TD2 ->new String[]{"Week days"};
-            case TD3 ->new String[]{"Mon-Fri", "Sat"};
-            case TD3c ->new String[]{"Mon-Thu", "Fri-Sat"};
-            case TD4 ->new String[]{"Mon-Thu", "Fri", "Sat"};
-            case TD7 ->new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-            default-> null;
+
+    public String[] contrastNames() {
+        return switch (this) {
+            case TD2c ->
+                new String[]{"Mon-Sat"};
+            case TD2d ->
+                new String[]{"Mon-Thu"};
+            case TD2 ->
+                new String[]{"Week days"};
+            case TD3 ->
+                new String[]{"Mon-Fri", "Sat"};
+            case TD3c ->
+                new String[]{"Mon-Thu", "Fri-Sat"};
+            case TD4 ->
+                new String[]{"Mon-Thu", "Fri", "Sat"};
+            case TD4c ->
+                new String[]{"Mon", "Tue-Fri", "Sat"};
+            case TD6 ->
+                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri"};
+            case TD7 ->
+                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+            default ->
+                null;
         };
     }
-    
-    public String[] names(){
-        return switch (this){
-            case TD2c ->new String[]{"Mon-Sat", "Sun"};
-            case TD2 ->new String[]{"Week days", "Week-end"};
-            case TD3 ->new String[]{"Mon-Fri", "Sat", "Sun"};
-            case TD3c ->new String[]{"Mon-Thu", "Fri-Sat", "Sun"};
-            case TD4 ->new String[]{"Mon-Thu", "Fri", "Sat", "Sun"};
-            case TD7 ->new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-            default-> null;
+
+    public String[] names() {
+        return switch (this) {
+            case TD2c ->
+                new String[]{"Mon-Sat", "Sun"};
+            case TD2 ->
+                new String[]{"Week days", "Week-end"};
+            case TD3 ->
+                new String[]{"Mon-Fri", "Sat", "Sun"};
+            case TD3c ->
+                new String[]{"Mon-Thu", "Fri-Sat", "Sun"};
+            case TD4 ->
+                new String[]{"Mon-Thu", "Fri", "Sat", "Sun"};
+            case TD4c ->
+                new String[]{"Mon", "Tue-Fri", "Sat", "Sun"};
+            case TD6 ->
+                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Week-end"};
+            case TD7 ->
+                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+            default ->
+                null;
+        };
+    }
+
+    public String description() {
+        return switch (this) {
+            case TD2 ->
+                "Week days/Week-end";
+            case TD2c ->
+                "Mon-Sat/Sun";
+            case TD3 ->
+                "Mon-Fri/Sat/Sun";
+            case TD3c ->
+                "Mon-Thu/Fri-Sat/Sun";
+            case TD4 ->
+                "Mon-Thu/Fri/Sat/Sun";
+            case TD4c ->
+                "Mon/Tue-Fri/Sat/Sun";
+            case TD6 ->
+                "Mon/Tue/Wed/Thu/Fri/Week-end";
+            case TD7 ->
+                "Mon/Tue/Wed/Thu/Fri/Sat/Sun";
+            default ->
+                null;
         };
     }
 }

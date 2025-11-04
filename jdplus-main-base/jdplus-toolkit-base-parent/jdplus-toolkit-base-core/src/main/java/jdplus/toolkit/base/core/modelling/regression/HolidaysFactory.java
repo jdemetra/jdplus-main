@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
@@ -34,12 +35,12 @@ public class HolidaysFactory implements RegressionVariableFactory<HolidaysVariab
     static HolidaysFactory FACTORY=new HolidaysFactory();
 
     @Override
-    public boolean fill(HolidaysVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(HolidaysVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         return HolidaysUtility.fill(var.getHolidays(), start,var.getHolidaysOption(), var.getNonworking(), buffer);
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(HolidaysVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(HolidaysVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

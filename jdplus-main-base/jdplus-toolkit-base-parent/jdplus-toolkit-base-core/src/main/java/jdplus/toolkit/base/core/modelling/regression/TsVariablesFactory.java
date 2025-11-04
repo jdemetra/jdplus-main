@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 import jdplus.toolkit.base.api.timeseries.TsData;
@@ -32,44 +33,65 @@ import nbbrd.design.Development;
 @Development(status = Development.Status.Alpha)
 class TsVariablesFactory implements RegressionVariableFactory<TsVariables> {
 
+    static final String NOTFOUND = ": data not found", TOOSHORT = ": series too short. Zeroes added";
     static TsVariablesFactory FACTORY = new TsVariablesFactory();
 
     private TsVariablesFactory() {
     }
 
     @Override
-    public boolean fill(TsVariables var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(TsVariables var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         int nvars = var.dim();
+        int n = buffer.getRowsCount();
         for (int i = 0; i < nvars; ++i) {
             TsData v = var.getData(i);
-            TsDomain curdom = v.getDomain();
-            // position of the first data (in m_ts)
-            int istart = curdom.getStartPeriod().until(start);
-            // position of the last data (excluded)
-            int n = buffer.getRowsCount();
-            int iend = istart + n;
+            if (v == null) {
+                if (log != null) {
+                    log.warning(var.getId(i) + NOTFOUND);
+                }
+            } else {
+                TsDomain curdom = v.getDomain();
+                // position of the first data (in m_ts)
+                int istart = curdom.getStartPeriod().until(start);
+                // position of the last data (excluded)
+                int m = curdom.getLength();
+                int iend = istart + n;
 
-            // indexes in data //in buffer
-            int jstart = 0, jend = n;
-            // not enough data at the beginning
-            if (istart < 0) {
-                jstart = -istart;
-                istart = 0;
-            }
-            // not enough data at the end
-            //          if (iend > n) {
-            if (iend > v.getValues().length()) {
+                // indexes in data //in buffer
+                int jstart = 0, jend = n;
+                // not enough data at the beginning
+                boolean ok = true;
+                if (istart < 0) {
+                    ok = false;
+                    jstart = -istart;
+                    istart = 0;
+                }
+                // not enough data at the end
+                //          if (iend > n) {
+                if (iend > m) {
+                    jend = jend - (iend - m);
+                    iend = m;
+                    ok = false;
+                }
+                if (!ok) {
+                    if (log != null) {
+                        log.warning(var.getId(i) + TOOSHORT);
+                    }
+                }
                 // iend = v.getValues().length();
-                jend = v.getValues().length() - istart;
-                iend = v.getValues().length();
+                if (jstart < jend) {
+                    buffer.column(i).range(jstart, jend).copy(v.getValues().range(istart, iend));
+                }
             }
-            buffer.column(i).range(jstart, jend).copy(v.getValues().range(istart, iend));
         }
         return true;
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(TsVariables var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>
+            boolean fill(TsVariables var, D domain,
+                    FastMatrix buffer, ProcessingLog log
+            ) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
