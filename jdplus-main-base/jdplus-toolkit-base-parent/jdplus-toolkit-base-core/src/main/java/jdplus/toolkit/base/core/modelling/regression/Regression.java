@@ -40,6 +40,7 @@ import jdplus.toolkit.base.api.timeseries.regression.UserVariable;
 import jdplus.toolkit.base.api.timeseries.regression.UserVariables;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.MatrixWindow;
@@ -123,8 +124,11 @@ public class Regression {
         
     }
    
-
     public <D extends TimeSeriesDomain> FastMatrix matrix(@NonNull D domain, @NonNull ITsVariable... vars) {
+        return matrix(domain, null, vars);
+    }
+
+    public <D extends TimeSeriesDomain> FastMatrix matrix(@NonNull D domain, ProcessingLog log, @NonNull ITsVariable... vars) {
         if (domain.isEmpty() || vars.length == 0) {
             return FastMatrix.EMPTY;
         }
@@ -141,7 +145,7 @@ public class Regression {
                 if (factory == null) {
                     throw new TsException("Unknown variable");
                 }
-                factory.fill(v, start, wnd.hnext(v.dim()));
+                factory.fill(v, start, wnd.hnext(v.dim()), log);
             }
         } else {
             for (int i = 0, j = 0; i < vars.length; ++i) {

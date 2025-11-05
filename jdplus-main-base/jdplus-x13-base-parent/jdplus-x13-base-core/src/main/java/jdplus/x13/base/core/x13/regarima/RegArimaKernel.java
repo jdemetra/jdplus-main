@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaProcessor;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
-import jdplus.x13.base.api.regarima.RegArimaException;
 import jdplus.x13.base.api.regarima.RegArimaSpec;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
@@ -48,8 +47,12 @@ import lombok.NonNull;
 @Development(status = Development.Status.Alpha)
 public class RegArimaKernel implements RegSarimaProcessor {
 
+    private static final String REGARIMA = "regarima";
+
     private static final String LAST_CHANCE = "last chance model",
-            OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection";
+            OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection",
+            AMI = "automatic model identification", ROUND = "round ",
+            LOGNEG = "can't apply log transformation 'some obs. are <= 0";
 
     @lombok.Value
     @lombok.Builder(builderClassName = "AmiBuilder")
@@ -160,8 +163,9 @@ public class RegArimaKernel implements RegSarimaProcessor {
     }
 
     public static RegArimaKernel of(RegArimaSpec spec, ModellingContext context) {
-        if (!spec.getBasic().isPreprocessing())
+        if (!spec.getBasic().isPreprocessing()) {
             return null;
+        }
         X13SpecDecoder helper = new X13SpecDecoder(spec, context);
         return helper.buildProcessor();
     }
@@ -218,39 +222,41 @@ public class RegArimaKernel implements RegSarimaProcessor {
             log = ProcessingLog.dummy();
         }
         clear();
-        ModelDescription desc = modelBuilder.build(originalTs, log);
-        if (desc == null) {
-            throw new RegArimaException("Initialization failed");
-        }
-        RegSarimaModelling context = RegSarimaModelling.of(desc, log);
-        // initialize some internal variables
-        if (outliers != null) {
-            va0 = options.getVa();
-            if (va0 == 0) {
-                va0 = X13Utility.calcCv(desc.getSeries().getDomain().getLength());
+        log.push(REGARIMA);
+        try {
+            ModelDescription desc = modelBuilder.build(originalTs, log);
+            if (desc == null) {
+                log.error("initialization failed");
+                return null;
             }
-            curva = va0;
-            needOutliers = true;
-        }
+            RegSarimaModelling context = RegSarimaModelling.of(desc, log);
+            // initialize some internal variables
+            if (outliers != null) {
+                va0 = options.getVa();
+                if (va0 == 0) {
+                    va0 = X13Utility.calcCv(desc.getSeries().getDomain().getLength());
+                }
+                curva = va0;
+                needOutliers = true;
+            }
 
-        RegSarimaModel rslt = calc(context);
-//        if (rslt != null) {
-//            rslt.info_ = context.information;
-//            rslt.addProcessingInformation(context.processingLog);
-//        }
-        return rslt;
+            RegSarimaModel rslt = calc(context);
+            return rslt;
+        } finally {
+            log.pop();
+        }
     }
 
     private RegSarimaModel calc(RegSarimaModelling context) {
         try {
-
             if (transformation != null) {
                 transformation.process(context);
             } else if (context.getDescription().isLogTransformation()) {
                 if (context.getDescription().getSeries().getValues().anyMatch(x -> x <= 0)) {
-                    context.getLog().warning("logs changed to levels");
-                    context.getDescription().setLogTransformation(false);
-                    context.clearEstimation();
+                    context.getLog().error(LOGNEG);
+                    return null;
+//                    context.getDescription().setLogTransformation(false);
+//                    context.clearEstimation();
                 }
             }
             regAIC(context);
@@ -443,7 +449,7 @@ public class RegArimaKernel implements RegSarimaProcessor {
             if (curva > MINCV) {
                 curva = Math.max(MINCV, curva * (1 - options.reduceVa));
                 ncv = true;
-            context.getLog().warning(OUTLIERS_VA_REDUCED);
+                context.getLog().warning(OUTLIERS_VA_REDUCED);
             }
             needOutliers = true;
         }

@@ -16,6 +16,7 @@
  */
 package jdplus.sa.base.core.regarima;
 
+import java.util.Arrays;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import nbbrd.design.BuilderPattern;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
@@ -31,12 +32,13 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
 import jdplus.toolkit.base.core.regsarima.regular.TradingDaysRegressionComparator;
 import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissing;
+import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 
 /**
  * * @author gianluca, jean Correction 22/7/2014. pre-specified Easter effect
  * was not handled with auto-td
  */
-public class AutomaticTradingDaysWaldTest implements IRegressionModule {
+public class AutomaticTradingDaysWaldTest implements AutomaticTradingRegressionModule {
 
     public static final double DEF_TLP = 2;
 
@@ -46,8 +48,8 @@ public class AutomaticTradingDaysWaldTest implements IRegressionModule {
 
     @BuilderPattern(AutomaticTradingDaysWaldTest.class)
     public static class Builder {
-        
-        public static final double DEF_PVALUE = 0.01, DEF_CONSTRAINT_PVALUE=0.1; 
+
+        public static final double DEF_PVALUE = 0.01, DEF_CONSTRAINT_PVALUE = 0.1;
 
         /**
          * Increasing complexity
@@ -118,19 +120,33 @@ public class AutomaticTradingDaysWaldTest implements IRegressionModule {
 
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
+        context.getLog().push(ATD);
+        try {
 
-        // first step: test all trading days
-        ModelDescription current = context.getDescription();
-        RegArimaEstimation<SarimaModel>[] estimations = TradingDaysRegressionComparator.test(current, td, lp, precision);
-        int best = TradingDaysRegressionComparator.waldTest(estimations, fpvalue, pconstraint);
+            // first step: test all trading days
+            ModelDescription current = context.getDescription();
+            RegArimaEstimation<SarimaModel>[] estimations = TradingDaysRegressionComparator.test(current, td, lp, precision);
+            int best = TradingDaysRegressionComparator.waldTest(estimations, fpvalue, pconstraint);
 
-        ITradingDaysVariable tdsel = best < 2 ? null : td[best - 2];
-        ILengthOfPeriodVariable lpsel = best < 1 ? null : lp;
-        IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
-        ModelDescription model = createTestModel(context, tdsel, lpsel);
-        RegArimaEstimation<SarimaModel> regarima = processor.process(model.regarima(), model.mapping());
-        int nhp = current.getArimaSpec().freeParametersCount();
-        return update(current, model, tdsel, lpsel, regarima.getConcentratedLikelihood(), nhp);
+            ITradingDaysVariable tdsel = best < 2 ? null : td[best - 2];
+            ILengthOfPeriodVariable lpsel = best < 1 ? null : lp;
+            Info info = new Info(
+                    AutomaticTradingRegressionModule.modelNames(td),
+                    Arrays.stream(estimations)
+                            .map(e -> e == null ? null : e.statistics())
+                            .toArray(LikelihoodStatistics[]::new), best);
+            context.getLog().info(TD_SEL + info.getNames()[best], info);
+            IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
+            ModelDescription model = createTestModel(context, tdsel, lpsel);
+            RegArimaEstimation<SarimaModel> regarima = processor.process(model.regarima(), model.mapping());
+            int nhp = current.getArimaSpec().freeParametersCount();
+            return update(current, model, tdsel, lpsel, regarima.getConcentratedLikelihood(), nhp);
+        } catch (RuntimeException ex) {
+            context.getLog().remark(ATD_FAILED);
+            return ProcessingResult.Failed;
+        } finally {
+            context.getLog().pop();
+        }
     }
 
     private ModelDescription createTestModel(RegSarimaModelling context, ITradingDaysVariable td, ILengthOfPeriodVariable lp) {
@@ -149,7 +165,7 @@ public class AutomaticTradingDaysWaldTest implements IRegressionModule {
 
     private ProcessingResult update(ModelDescription current, ModelDescription test, ITradingDaysVariable aTd, ILengthOfPeriodVariable aLp, ConcentratedLikelihoodWithMissing ll, int nhp) {
         boolean changed = false;
-        boolean preadjustment=adjust && current.isLogTransformation();
+        boolean preadjustment = adjust && current.isLogTransformation();
         Variable var = current.variable("td");
         if (aTd != null) {
             if (var != null) {

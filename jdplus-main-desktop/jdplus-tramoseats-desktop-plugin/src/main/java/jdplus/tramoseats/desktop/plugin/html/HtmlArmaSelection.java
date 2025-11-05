@@ -18,10 +18,8 @@ package jdplus.tramoseats.desktop.plugin.html;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Formatter;
 import java.util.Locale;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
-import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
 import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.HtmlTable;
 import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
@@ -48,9 +46,6 @@ public class HtmlArmaSelection implements HtmlLogFormatter<ArmaModule.Info> {
     @Override
     public void write(HtmlStream stream, ArmaModule.Info details, boolean verbose) throws IOException {
         
-        stream.write("Selected model").write(details.getSelection().toString());
-        
-        stream.newLine();
         stream.open(new HtmlTable().withWidth(200));
         stream.open(HtmlTag.TABLEROW);
         stream.write(new HtmlTableCell("ARMA").withWidth(100));

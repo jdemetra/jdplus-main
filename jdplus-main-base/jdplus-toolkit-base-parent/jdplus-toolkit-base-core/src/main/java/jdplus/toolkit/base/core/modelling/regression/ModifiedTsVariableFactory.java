@@ -26,6 +26,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ModifiedTsVariable;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 
 /**
  *
@@ -40,7 +41,7 @@ class ModifiedTsVariableFactory implements RegressionVariableFactory<ModifiedTsV
     }
 
     @Override
-    public boolean fill(ModifiedTsVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(ModifiedTsVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         ITsVariable core = var.getVariable();
         List<ModifiedTsVariable.Modifier> modifiers = var.getModifiers();
         // Computes first the necessary domains
@@ -82,7 +83,7 @@ class ModifiedTsVariableFactory implements RegressionVariableFactory<ModifiedTsV
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(ModifiedTsVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(ModifiedTsVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

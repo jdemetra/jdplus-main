@@ -23,6 +23,7 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import jdplus.tramoseats.base.api.tramo.TradingDaysSpec.AutoMethod;
 
 /**
  *
@@ -473,6 +474,26 @@ public class TradingDaysSpecUI extends BaseTramoSpecUI {
         }
     }
 
+//    @Messages({"tradingDaysSpecUI.pftdconstraintDesc.name=Pftdconstraint",
+//        "tradingDaysSpecUI.pftdconstraintDesc.desc=P-Value applied to constraints in the wald test."
+//    })
+//    private EnhancedPropertyDescriptor pftdconstraintDesc() {
+//        if (!inner().isAutomatic() || inner().getAutomaticMethod() != AutoMethod.WALD) {
+//            return null;
+//        }
+//        try {
+//            PropertyDescriptor desc = new PropertyDescriptor("pftd", this.getClass());
+//            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, PFTD_ID);
+//            desc.setDisplayName(Bundle.tradingDaysSpecUI_pftdDesc_name());
+//            desc.setShortDescription(Bundle.tradingDaysSpecUI_pftdDesc_desc());
+//            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+//            edesc.setReadOnly(isRo() || hasFixedCoefficients());
+//            return edesc;
+//        } catch (IntrospectionException ex) {
+//            return null;
+//        }
+//    }
+//
     @Messages({"tradingDaysSpecUI.userDesc.name=User Variable",
         "tradingDaysSpecUI.userDesc.desc="
     })

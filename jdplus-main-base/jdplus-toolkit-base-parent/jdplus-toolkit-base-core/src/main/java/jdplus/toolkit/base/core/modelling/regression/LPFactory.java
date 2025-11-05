@@ -5,6 +5,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.regression.LengthOfPeriod;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
@@ -25,21 +26,24 @@ class LPFactory implements RegressionVariableFactory<LengthOfPeriod> {
     private LPFactory(){}
     
     @Override
-    public boolean fill(LengthOfPeriod var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(LengthOfPeriod var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         switch (var.getType()) {
-            case LeapYear:
+            case LeapYear -> {
                 lp(TsDomain.of(start, buffer.getRowsCount()), buffer.column(0));
                 return true;
-            case LengthOfPeriod:
+            }
+            case LengthOfPeriod -> {
                 length(TsDomain.of(start, buffer.getRowsCount()), buffer.column(0));
                 return true;
-            default:
+            }
+            default -> {
                 return false;
+            }
         }
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(LengthOfPeriod var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(LengthOfPeriod var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported.");
     }
 

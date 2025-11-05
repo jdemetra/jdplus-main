@@ -13,14 +13,16 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package jdplus.sa.desktop.plugin.html;
+package jdplus.tramoseats.desktop.plugin.html;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Formatter;
 import java.util.Locale;
-import jdplus.sa.base.core.regarima.LogLevelModule;
 import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlLogFormatter;
+import jdplus.tramoseats.base.core.tramo.AutomaticFRegressionTest;
 import nbbrd.service.ServiceProvider;
 
 /**
@@ -28,21 +30,21 @@ import nbbrd.service.ServiceProvider;
  * @author Jean Palate
  */
 @ServiceProvider(HtmlLogFormatter.class)
-public class HtmlLogLevelDetails implements HtmlLogFormatter<LogLevelModule.Info> {
+public class HtmlAutomaticFRegressionTest implements HtmlLogFormatter<AutomaticFRegressionTest.Info> {
+
+    static final DecimalFormat DF3 = new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
 
     @Override
-    public Class getSourceClass() {
-        return LogLevelModule.Info.class;
+    public Class<AutomaticFRegressionTest.Info> getSourceClass() {
+        return AutomaticFRegressionTest.Info.class;
     }
 
     @Override
-    public void write(HtmlStream stream, LogLevelModule.Info details, boolean verbose) throws IOException {
-        stream.write("AICC on logs=").write(new Formatter(Locale.ROOT).format("%6g", details.getLogs()).toString());
+    public void write(HtmlStream stream, AutomaticFRegressionTest.Info details, boolean verbose) throws IOException {
+        stream.write("FTest for td1: ").write(DF3.format(details.getPftd1()));
         stream.newLine();
-        stream.write("AICC on levels=").write(new Formatter(Locale.ROOT).format("%6g", details.getLevels()).toString());
+        stream.write("FTest for td6: ").write(DF3.format(details.getPftd6()));
         stream.newLine();
-        stream.write("(AICC-preference)=").write(new Formatter(Locale.ROOT).format("%6g", details.getLogpreference()).toString()).write(')');
-
     }
-
+    
 }

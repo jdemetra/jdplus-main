@@ -8,6 +8,7 @@ package jdplus.toolkit.base.core.modelling.regression;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -121,7 +122,7 @@ class TrendConstantFactory implements RegressionVariableFactory<TrendConstant> {
     }
 
     @Override
-    public boolean fill(TrendConstant var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(TrendConstant var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         int n = buffer.getRowsCount();
         int beg = 0;
         if (var.getReference() != null) {
@@ -136,7 +137,7 @@ class TrendConstantFactory implements RegressionVariableFactory<TrendConstant> {
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(TrendConstant var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(TrendConstant var, D domain, FastMatrix buffer, ProcessingLog log) {
         return false;
     }
 

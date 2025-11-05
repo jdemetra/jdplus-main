@@ -41,6 +41,18 @@ enum TradingDays{
 	*/
 	TD4 = 5;
 	TD7 = 6;
+        /*
+	mon-thu + fri-sun
+	*/
+	TD2D = 7;
+	/*
+	mon + thu - fri + sat + sun
+	*/
+	TD4C = 8;
+        /*
+	mon + tue + wed + thu + fri + sat - sun
+	*/
+	TD6 = 9;
 }
 
 message TsVariable{

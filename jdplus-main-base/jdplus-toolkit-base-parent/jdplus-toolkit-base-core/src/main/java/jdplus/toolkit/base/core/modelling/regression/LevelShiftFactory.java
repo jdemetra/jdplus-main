@@ -12,6 +12,7 @@ import jdplus.toolkit.base.core.math.linearfilters.RationalBackFilter;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.LocalDateTime;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -77,14 +78,14 @@ class LSFactory implements RegressionVariableFactory<LevelShift> {
     private LSFactory(){}
 
     @Override
-    public boolean fill(LevelShift var, TsPeriod start, FastMatrix m) {
+    public boolean fill(LevelShift var, TsPeriod start, FastMatrix m, ProcessingLog log) {
         TsPeriod p = start.withDate(var.getPosition());
         fill(var, start.until(p), m.column(0));
         return true;
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(LevelShift var, D domain, FastMatrix m) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(LevelShift var, D domain, FastMatrix m, ProcessingLog log) {
         fill(var, domain.indexOf(var.getPosition()), m.column(0));
         return true;
     }

@@ -13,6 +13,7 @@ import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.LocalDateTime;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -103,7 +104,7 @@ class SOFactory implements RegressionVariableFactory<PeriodicOutlier> {
     }
 
     @Override
-    public boolean fill(PeriodicOutlier var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(PeriodicOutlier var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         int period = var.getPeriod();
         if (period == 0) {
             period = start.getUnit().getAnnualFrequency();
@@ -116,7 +117,7 @@ class SOFactory implements RegressionVariableFactory<PeriodicOutlier> {
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(PeriodicOutlier var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(PeriodicOutlier var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported.");
     }
 

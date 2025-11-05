@@ -13,6 +13,7 @@ import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.calendars.Easter;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -57,7 +58,7 @@ class JulianEasterFactory implements RegressionVariableFactory<JulianEasterVaria
     private JulianEasterFactory(){}
 
     @Override
-    public boolean fill(JulianEasterVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(JulianEasterVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         if (start.getUnit().getAnnualFrequency()<= 2)
             return false;
         // very inefficient code.Should be improved
@@ -119,7 +120,7 @@ class JulianEasterFactory implements RegressionVariableFactory<JulianEasterVaria
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(JulianEasterVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(JulianEasterVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
     

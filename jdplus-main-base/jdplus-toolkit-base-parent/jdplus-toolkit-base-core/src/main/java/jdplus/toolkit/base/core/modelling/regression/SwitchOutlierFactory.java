@@ -12,6 +12,7 @@ import jdplus.toolkit.base.core.math.linearfilters.RationalBackFilter;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.LocalDateTime;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -68,14 +69,14 @@ class WOFactory implements RegressionVariableFactory<SwitchOutlier> {
     }
 
     @Override
-    public boolean fill(SwitchOutlier var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(SwitchOutlier var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         TsPeriod p = start.withDate(var.getPosition());
         set(buffer.column(0), start.until(p));
         return true;
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(SwitchOutlier var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(SwitchOutlier var, D domain, FastMatrix buffer, ProcessingLog log) {
         set(buffer.column(0), (int) domain.indexOf(var.getPosition()));
         return true;
     }

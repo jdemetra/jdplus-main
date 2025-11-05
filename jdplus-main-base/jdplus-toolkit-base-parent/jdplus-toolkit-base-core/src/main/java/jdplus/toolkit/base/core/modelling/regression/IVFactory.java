@@ -13,6 +13,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 import java.time.LocalDateTime;
 import java.util.List;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import jdplus.toolkit.base.core.math.polynomials.RationalFunction;
 
@@ -28,7 +29,7 @@ class IVFactory implements RegressionVariableFactory<InterventionVariable> {
     }
 
     @Override
-    public boolean fill(InterventionVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(InterventionVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         int dcount = buffer.getRowsCount();
         List<Range<LocalDateTime>> seqs = var.getSequences();
         if (seqs.isEmpty()) {
@@ -106,7 +107,7 @@ class IVFactory implements RegressionVariableFactory<InterventionVariable> {
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(InterventionVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(InterventionVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
