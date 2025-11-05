@@ -59,12 +59,14 @@ public class GenericTradingDaysVariable implements ITradingDaysVariable, ISystem
     }
 
     static final String[] TD2 = new String[]{"week", "week-end"};
-    static final String[] TD2c = new String[]{"mon-sat", "sunday"};
-    static final String[] TD2d = new String[]{"mon-thu", "friday-saturday-sunday"};
-    static final String[] TD7 = new String[]{"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
-    static final String[] TD3 = new String[]{"week", "saturday", "sunday"};
-    static final String[] TD3c = new String[]{"mon-thu", "fri-sat", "sunday"};
-    static final String[] TD4 = new String[]{"mon-thu", "friday", "saturday", "sunday"};
+    static final String[] TD2c = new String[]{"mon-sat", "sun"};
+    static final String[] TD2d = new String[]{"mon-thu", "fri-sat-sun"};
+    static final String[] TD7 = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
+    static final String[] TD3 = new String[]{"week", "sat", "sun"};
+    static final String[] TD3c = new String[]{"mon-thu", "fri-sat", "sun"};
+    static final String[] TD4 = new String[]{"mon-thu", "fri", "sat", "sun"};
+    static final String[] TD4c = new String[]{"mon", "tue-fri", "sat", "sun"};
+    static final String[] TD6 = new String[]{"mon", "tue", "wed", "thu", "fri", "week-end"};
 
     public static String description(DayClustering dc, int idx) {
         if (dc.equals(DayClustering.TD2)) {
@@ -81,6 +83,10 @@ public class GenericTradingDaysVariable implements ITradingDaysVariable, ISystem
             return TD3c[idx];
         } else if (dc.equals(DayClustering.TD4)) {
             return TD4[idx];
+        } else if (dc.equals(DayClustering.TD4c)) {
+            return TD4c[idx];
+        } else if (dc.equals(DayClustering.TD6)) {
+            return TD6[idx];
         } else {
             return "td-" + (idx + 1);
         }

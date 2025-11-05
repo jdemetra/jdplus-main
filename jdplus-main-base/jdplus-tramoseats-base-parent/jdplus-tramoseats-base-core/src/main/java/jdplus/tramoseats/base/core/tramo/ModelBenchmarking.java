@@ -31,7 +31,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 @Development(status = Development.Status.Preliminary)
 class ModelBenchmarking extends ModelController {
     
-    public static final String BENCH = "Model benchmarking",
+    public static final String BENCH = "model benchmarking",
             AIRLINE = "airline model finally selected";
     
     public ModelBenchmarking() {

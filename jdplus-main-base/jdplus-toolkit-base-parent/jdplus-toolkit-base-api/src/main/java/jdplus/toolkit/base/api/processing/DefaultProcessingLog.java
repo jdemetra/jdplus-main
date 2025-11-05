@@ -188,12 +188,12 @@ public class DefaultProcessingLog implements ProcessingLog{
     
     @Override
     public void step(String msg) {
-        logs.add(new Information(context(), null, msg, InformationType.Log, null));
+        logs.add(new Information(context(), null, msg, InformationType.Step, null));
     }
 
     @Override
     public void step(String msg, Object info) {
-        logs.add(new Information(context(), null, msg, InformationType.Log, info));
+        logs.add(new Information(context(), null, msg, InformationType.Step, info));
     }
 
     /**

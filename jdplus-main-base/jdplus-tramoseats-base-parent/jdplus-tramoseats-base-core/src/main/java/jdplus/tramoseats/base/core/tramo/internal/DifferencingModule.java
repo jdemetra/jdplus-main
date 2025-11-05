@@ -50,13 +50,16 @@ public class DifferencingModule {
 
     public static final String DIFF = "differencing selection",
             SELECTION = "differencing selection", DEFAULT = "default model selected (not enough obs.)",
+            MEAN = "mean correction",
+            NOMEAN = "no mean correction",
             FAILED = "differencing selection failed";
     
     @lombok.Value
     public static class Info{
         
         private final int d, bd;
-        private final boolean mean;        
+        private final boolean mean;    
+        private final double tmean;
     }
 
     public static final int MAXD = 2, MAXBD = 1;
@@ -562,7 +565,7 @@ public class DifferencingModule {
                 desc.setMean(nmean);
                 context.clearEstimation();
             }
-            log.info(SELECTION, new Info(spec.getD(), spec.getBd(), nmean));
+            log.info(SELECTION, new Info(spec.getD(), spec.getBd(), nmean, tmean ));
             return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
         } catch (RuntimeException err) {
             log.remark(FAILED);

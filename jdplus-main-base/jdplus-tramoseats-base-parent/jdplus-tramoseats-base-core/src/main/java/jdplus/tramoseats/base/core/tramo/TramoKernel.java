@@ -31,7 +31,6 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
-import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.tramoseats.base.api.tramo.AutoModelSpec;
@@ -381,7 +380,7 @@ public class TramoKernel implements RegSarimaProcessor {
      * @return True if the model doesn't need further iteration
      */
     private boolean iterate(RegSarimaModelling modelling) {
-
+        modelling.getLog().step(ROUND + pass);
         if (modelling.needEstimation()) {
             modelling.estimate(options.getIntermediatePrecision());
         }
