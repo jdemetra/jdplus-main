@@ -395,6 +395,8 @@ enum InformationType {
 	Info = 0;
 	Warning = 1;
 	Error = 2;
+	Remark = 3;
+	Step = 4;
 }
 
 message ProcessingDetail{

@@ -76,7 +76,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(pinfo.getName(), HtmlStyle.Bold, HtmlStyle.Italic).newLine();
                 }
                 write(stream, pinfo);
-
+                stream.newLine();
             }
         } else {
             if (err) {
@@ -143,8 +143,8 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
     private void write(HtmlStream stream, ProcessingLog.Information info) {
         try {
             switch (info.getType()) {
-                case Log ->
-                    writeLog(stream, info);
+                case Log, Step ->
+                    writeStep(stream, info);
                 case Error ->
                     writeError(stream, info);
                 case Warning ->
@@ -159,9 +159,9 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
         }
     }
 
-    private void writeLog(HtmlStream stream, ProcessingLog.Information info) throws IOException {
+    private void writeStep(HtmlStream stream, ProcessingLog.Information info) throws IOException {
         if (verbose) {
-            stream.write(HtmlTag.EMPHASIZED_TEXT, info.getName()).newLine();
+            stream.write(HtmlTag.EMPHASIZED_TEXT, info.getMsg()).newLine();
         }
     }
 
@@ -190,7 +190,6 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                 Object details = msg.getDetails();
                 if (details != null) {
                     HtmlLogFormatters.write(stream, details, verbose);
-                    stream.newLine();
                 }
             }
         }

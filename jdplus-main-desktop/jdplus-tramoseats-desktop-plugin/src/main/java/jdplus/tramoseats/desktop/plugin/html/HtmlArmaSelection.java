@@ -61,7 +61,6 @@ public class HtmlArmaSelection implements HtmlLogFormatter<ArmaModule.Info> {
             stream.close(HtmlTag.TABLEROW);
         }
         stream.close(HtmlTag.TABLE);
-        
     }
 
 }

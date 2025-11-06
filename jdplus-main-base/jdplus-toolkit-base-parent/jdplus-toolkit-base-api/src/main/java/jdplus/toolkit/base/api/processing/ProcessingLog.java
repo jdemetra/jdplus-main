@@ -45,10 +45,14 @@ public interface ProcessingLog {
          */
         Remark,
         /**
-         * Step in a complex processing. a given step should not have any "child
-         * information"
+         * Use Step insteado of Log 
          */
+        @Deprecated
         Log,
+        /**
+         * Step in a complex processing. Use it only to visualize the processing path 
+         */
+        Step,
         /**
          * More detailed info on a specific step
          */

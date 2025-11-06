@@ -30,6 +30,8 @@ import static jdplus.sa.base.core.tests.SeasonalityTests.SHORT;
 @Development(status = Development.Status.Preliminary)
 class SeasonalityController extends ModelController {
 
+    public static final String SEAS = "seasonality detected";
+
     private StatisticalTest ftest;
     private SeasonalityTests stests;
     private ModelStatistics mstats;
@@ -161,6 +163,6 @@ class SeasonalityController extends ModelController {
         } else {
             this.transferInformation(referenceModel, context);
             return ProcessingResult.Changed;
-        } 
+        }
     }
 }

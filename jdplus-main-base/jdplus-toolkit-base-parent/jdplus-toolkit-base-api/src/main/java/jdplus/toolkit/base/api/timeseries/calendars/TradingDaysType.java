@@ -82,23 +82,23 @@ public enum TradingDaysType {
     public String[] contrastNames() {
         return switch (this) {
             case TD2c ->
-                new String[]{"Mon-Sat"};
+                new String[]{"mon-sat"};
             case TD2d ->
-                new String[]{"Mon-Thu"};
+                new String[]{"mon-thu"};
             case TD2 ->
-                new String[]{"Week days"};
+                new String[]{"week days"};
             case TD3 ->
-                new String[]{"Mon-Fri", "Sat"};
+                new String[]{"mon-fri", "sat"};
             case TD3c ->
-                new String[]{"Mon-Thu", "Fri-Sat"};
+                new String[]{"mon-thu", "fri-sat"};
             case TD4 ->
-                new String[]{"Mon-Thu", "Fri", "Sat"};
+                new String[]{"mon-thu", "fri", "sat"};
             case TD4c ->
-                new String[]{"Mon", "Tue-Fri", "Sat"};
+                new String[]{"mon", "tue-fri", "sat"};
             case TD6 ->
-                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri"};
+                new String[]{"mon", "tue", "wed", "thu", "fri"};
             case TD7 ->
-                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+                new String[]{"mon", "tue", "wed", "thu", "fri", "sat"};
             default ->
                 null;
         };
@@ -107,21 +107,21 @@ public enum TradingDaysType {
     public String[] names() {
         return switch (this) {
             case TD2c ->
-                new String[]{"Mon-Sat", "Sun"};
+                new String[]{"mon-sat", "sun"};
             case TD2 ->
-                new String[]{"Week days", "Week-end"};
+                new String[]{"week days", "week-end"};
             case TD3 ->
-                new String[]{"Mon-Fri", "Sat", "Sun"};
+                new String[]{"mon-fri", "sat", "sun"};
             case TD3c ->
-                new String[]{"Mon-Thu", "Fri-Sat", "Sun"};
+                new String[]{"mon-thu", "fri-sat", "sun"};
             case TD4 ->
-                new String[]{"Mon-Thu", "Fri", "Sat", "Sun"};
+                new String[]{"mon-thu", "fri", "sat", "sun"};
             case TD4c ->
-                new String[]{"Mon", "Tue-Fri", "Sat", "Sun"};
+                new String[]{"mon", "tue-fri", "sat", "sun"};
             case TD6 ->
-                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Week-end"};
+                new String[]{"mon", "tue", "wed", "thu", "fri", "week-end"};
             case TD7 ->
-                new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+                new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
             default ->
                 null;
         };

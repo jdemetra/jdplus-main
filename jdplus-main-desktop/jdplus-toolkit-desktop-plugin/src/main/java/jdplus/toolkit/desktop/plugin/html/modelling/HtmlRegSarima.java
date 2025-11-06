@@ -56,6 +56,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.dstats.T;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
@@ -540,11 +541,17 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             stream.write(new HtmlTableCell(df4.format(reg.getPvalue())).withWidth(100));
             stream.close(HtmlTag.TABLEROW);
         }
-        if (size > 1 && regs.size() == var.dim() && var instanceof ITradingDaysVariable) {
+        if (size > 1 && regs.size() == var.dim() && var instanceof ITradingDaysVariable tdvar) {
             RegressionDesc derivedTradingDay = model.getDetails().getDerivedTradingDay();
             if (derivedTradingDay != null) {
+                String sun="sun";
+                TradingDaysType type = tdvar.getTradingDaysType();
+                if (type != null){
+                    String[] names = type.names();
+                    sun=names[names.length-1];
+                }
                 stream.open(HtmlTag.TABLEROW);
-                stream.write(new HtmlTableCell("sunday (derived)").withWidth(100));
+                stream.write(new HtmlTableCell(sun +" (derived)").withWidth(100));
                 stream.write(new HtmlTableCell(df4.format(derivedTradingDay.getCoef())).withWidth(100));
                 stream.write(new HtmlTableCell(formatT(derivedTradingDay.getTStat())).withWidth(100));
                 stream.write(new HtmlTableCell(df4.format(derivedTradingDay.getPvalue())).withWidth(100));
