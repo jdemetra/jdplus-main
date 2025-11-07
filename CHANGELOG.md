@@ -16,11 +16,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![STAT] Fix a bug in trend constant variable [#756](https://github.com/jdemetra/jdplus-main/issues/756)
 - ![UI] Add project version to cachedir path [#555](https://github.com/jdemetra/jdplus-main/issues/555)
+- ![UI] Fix IllegalStateException in JTsVariableList [#711](https://github.com/jdemetra/jdplus-main/issues/711)
+- ![UI] Fix scrolling for long list of pre-specified outliers [#667](https://github.com/jdemetra/jdplus-main/issues/667)
 
 ### Changed
 
-- ![STAT] Change the definition of the deterministic component in the preadjustment phase (exclude trend constant as in version 2)  [#756](https://github.- ![UI] Unify period display in GUI [#489](https://github.com/jdemetra/jdplus-main/issues/489)
-com/jdemetra/jdplus-main/issues/756)
+- ![STAT] Change the definition of the deterministic component in the preadjustment phase (exclude trend constant as in version 2)  [#756](https://github.com/jdemetra/jdplus-main/issues/756)
+- ![UI] Unify period display in GUI [#489](https://github.com/jdemetra/jdplus-main/issues/489)
 
 ## [3.5.1] - 2025-06-12
 

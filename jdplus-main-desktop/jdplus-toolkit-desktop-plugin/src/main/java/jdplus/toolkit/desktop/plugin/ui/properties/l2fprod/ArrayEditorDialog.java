@@ -56,8 +56,9 @@ public class ArrayEditorDialog<T> extends JDialog {
 
         final JList list = new JList(JLists.modelOf(currentList));
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setPreferredSize(new Dimension(150, 200));
-        pane.add(NbComponents.newJScrollPane(list), BorderLayout.WEST);
+        JScrollPane scrollPane = NbComponents.newJScrollPane(list);
+        scrollPane.setPreferredSize(new Dimension(150, 200));
+        pane.add(scrollPane, BorderLayout.WEST);
 
         final PropertySheetTableModel model = new PropertySheetTableModel();
         final PropertySheetPanel psp = new PropertySheetPanel(new PropertySheetTable(model));
@@ -113,6 +114,7 @@ public class ArrayEditorDialog<T> extends JDialog {
                 list.setModel(JLists.modelOf(currentList));
                 list.setSelectedValue(o, true);
                 list.invalidate();
+                scrollPane.revalidate();
             });
 
         });
