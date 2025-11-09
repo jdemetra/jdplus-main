@@ -43,6 +43,8 @@ public interface HasTsCollection {
 
     void setTsCollection(@Nullable TsCollection tsCollection);
 
+    void setTsCollection(@Nullable TsCollection tsCollection, String propertyName);
+
     default void loadAsync(TsInformationType info) {
         TsCollection tss = getTsCollection();
         if (tss != null && tss.stream().filter(s -> !s.getType().encompass(info)).count() > 0) {

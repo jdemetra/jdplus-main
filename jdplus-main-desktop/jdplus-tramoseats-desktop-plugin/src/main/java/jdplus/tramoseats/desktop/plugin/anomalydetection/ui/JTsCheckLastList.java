@@ -118,6 +118,7 @@ public final class JTsCheckLastList extends JComponent {
     private void enableProperties() {
         table.addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
+                case HasTsCollection.DROP_CONTENT_PROPERTY:
                 case HasTsCollection.TS_COLLECTION_PROPERTY:
                     onCollectionChange();
                     break;

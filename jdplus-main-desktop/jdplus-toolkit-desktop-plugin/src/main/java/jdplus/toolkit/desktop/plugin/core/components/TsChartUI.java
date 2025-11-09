@@ -190,6 +190,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
                     break;
                 case HasTsCollection.DROP_CONTENT_PROPERTY:
                     onDropContentChange();
+                    onCollectionChange();
                     break;
                 case HasColorScheme.COLOR_SCHEME_PROPERTY:
                     onColorSchemeChange();

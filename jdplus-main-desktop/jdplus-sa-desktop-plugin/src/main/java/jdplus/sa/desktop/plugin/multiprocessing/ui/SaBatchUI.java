@@ -12,8 +12,6 @@ import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
 import jdplus.sa.desktop.plugin.util.ActionsHelper;
 import jdplus.sa.desktop.plugin.util.ActionsHelpers;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
-import jdplus.toolkit.base.api.processing.ProcessingLog.InformationType;
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
@@ -55,7 +53,6 @@ import org.openide.awt.DropDownButtonFactory;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.util.ImageUtilities;
-import org.openide.util.NbBundle;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -71,6 +68,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.BeanInfo;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.*;
@@ -288,7 +286,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         add(visualRepresentation, BorderLayout.CENTER);
         addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
-                case HasTsCollection.DROP_CONTENT_PROPERTY, HasTsCollection.FREEZE_ON_IMPORT_PROPERTY, HasTsCollection.TS_COLLECTION_PROPERTY, HasTsCollection.TS_SELECTION_MODEL_PROPERTY, HasTsCollection.TS_UPDATE_MODE_PROPERTY ->
+                case HasTsCollection.DROP_CONTENT_PROPERTY, HasTsCollection.FREEZE_ON_IMPORT_PROPERTY, HasTsCollection.TS_SELECTION_MODEL_PROPERTY, HasTsCollection.TS_UPDATE_MODE_PROPERTY ->
                     onCollectionChange();
                 case DEFAULT_SPECIFICATION_PROPERTY ->
                     onDefaultSpecificationChange();
@@ -310,9 +308,6 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         return mgr;
     }
 
-    @NbBundle.Messages({
-        "undefinedspec.dialog.title=Undefined specification"
-    })
     private void onCollectionChange() {
         TsCollection coll = getTsCollection();
         if (coll == null) {
@@ -325,7 +320,6 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         getElement().add(defaultSpecification, all);
         controller.getDocument().setDirty();
         redrawAll();
-
     }
 
     public boolean isTableEmpty() {
@@ -863,7 +857,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         }
         SaNode node = selection[0];
         SaItem item = node.getOutput();
-        SaSpecification dspec=item.getDefinition().getDomainSpec();
+        SaSpecification dspec = item.getDefinition().getDomainSpec();
 //        MultiProcessingDocument mdoc = getElement();
         SaSpecification spec = (SaSpecification) doc.getSpecification();
         // new item. The reference spec is the spec of the document. Old behaviour

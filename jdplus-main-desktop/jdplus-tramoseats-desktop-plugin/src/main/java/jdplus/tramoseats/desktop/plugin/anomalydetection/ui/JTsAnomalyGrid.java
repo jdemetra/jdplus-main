@@ -122,6 +122,7 @@ public final class JTsAnomalyGrid extends JComponent {
         // Listening to a data change to calculate the new outliers
         grid.addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
+                case HasTsCollection.DROP_CONTENT_PROPERTY:
                 case HasTsCollection.TS_COLLECTION_PROPERTY:
                     onCollectionChange((TsCollection) evt.getOldValue(), (TsCollection) evt.getNewValue());
                     break;

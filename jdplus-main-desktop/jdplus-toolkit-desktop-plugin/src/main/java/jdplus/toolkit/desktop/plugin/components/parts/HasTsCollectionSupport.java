@@ -695,7 +695,7 @@ public class HasTsCollectionSupport {
                 data = data.load(TsInformationType.Definition, TsManager.get());
             }
             if (!data.isEmpty()) {
-                view.setTsCollection(update(view.getTsUpdateMode(), view.getTsCollection(), data));
+                view.setTsCollection(update(view.getTsUpdateMode(), view.getTsCollection(), data), DROP_CONTENT_PROPERTY);
 //                    TsManager.get().loadAsync(data, TsInformationType.All, view::replaceTsCollection);
             }
 //            }
@@ -832,15 +832,20 @@ public class HasTsCollectionSupport {
 
         @Override
         public void setTsCollection(TsCollection tsCollection) {
+            setTsCollection(tsCollection, TS_COLLECTION_PROPERTY);
+        }
+
+        @Override
+        public void setTsCollection(TsCollection tsCollection, String propertyName) {
             TsCollection old = this.tsCollection;
             this.tsCollection = tsCollection != null ? tsCollection : DEFAULT_TS_COLLECTION;
             boolean toload = tsCollection != null && !checkInfo(tsCollection, loadInfo);
             boolean tobroadcast = tsCollection == null || broadcastInfo == TsInformationType.None || checkInfo(tsCollection, broadcastInfo);
             if (toload) {
-                TsManager.get().loadAsync(tsCollection, loadInfo, this::setTsCollection);
+                TsManager.get().loadAsync(tsCollection, loadInfo, t -> setTsCollection(t, propertyName));
             }
             if (tobroadcast) {
-                broadcaster.firePropertyChange(TS_COLLECTION_PROPERTY, old, this.tsCollection);
+                broadcaster.firePropertyChange(propertyName, old, this.tsCollection);
             }
         }
 
@@ -939,5 +944,6 @@ public class HasTsCollectionSupport {
         private static boolean isEventRelatedToCollection(TsEvent event, TsCollection col) {
             return event.getRelated().test(col.getMoniker());
         }
+
     }
 }

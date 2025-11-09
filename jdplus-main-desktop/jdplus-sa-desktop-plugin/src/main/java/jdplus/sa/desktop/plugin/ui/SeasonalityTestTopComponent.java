@@ -75,7 +75,7 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
         setToolTipText(Bundle.HINT_SeasonalityTestTopComponent());
         jTsChart1 = new JTsChart(TsInformationType.Data);
         jTsChart1.setTsUpdateMode(TsUpdateMode.Single);
-        proxy=HasTsSupport.of(jTsChart1);
+        proxy = HasTsSupport.of(jTsChart1);
 
         jEditorPane1 = new JHtmlView();
 
@@ -86,6 +86,7 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
 
         jTsChart1.addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
+                case HasTsCollection.DROP_CONTENT_PROPERTY:
                 case HasTsCollection.TS_COLLECTION_PROPERTY:
                     onTsChange();
                     break;
@@ -141,7 +142,7 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 
-    private void onTsChange(){
+    private void onTsChange() {
         showTests();
     }
 
@@ -157,7 +158,7 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
             return null;
         }
     }
-    
+
     private void showTests() {
         Ts cur = getTs();
         if (cur == null) {
@@ -170,7 +171,7 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
     private void test() {
 
         TsData s = requestData();
-        if (s==null || s.isEmpty()) {
+        if (s == null || s.isEmpty()) {
             return;
         }
         int freq = s.getAnnualFrequency();
@@ -184,7 +185,7 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
                 s = s.drop(nbeg, 0);
             }
         }
-         if (isLog) {
+        if (isLog) {
             s = s.log();
         }
 

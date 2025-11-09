@@ -48,6 +48,9 @@ public class ControlNode {
                     case HasTsCollection.TS_COLLECTION_PROPERTY:
                         onCollectionChange(mgr, view);
                         break;
+                    case HasTsCollection.DROP_CONTENT_PROPERTY:
+                        onDrop(mgr, view);
+                        break;
                 }
             });
         }
@@ -69,6 +72,16 @@ public class ControlNode {
     private static void onCollectionChange(ExplorerManager mgr, HasTsCollection view) {
         mgr.setRootContext(new TsCollectionNode(view.getTsCollection()));
         selectSingleIfReadonly(mgr, view);
+    }
+
+    private static void onDrop(ExplorerManager mgr, HasTsCollection view) {
+        mgr.setRootContext(new TsCollectionNode(view.getTsCollection()));
+        if (view.getTsSelectionModel().isSelectionEmpty()) {
+            selectSingleIfReadonly(mgr, view);
+        } else {
+            Ts[] tss = view.getTsSelectionStream().toArray(Ts[]::new);
+            selectNodes(mgr, tss);
+        }
     }
 
     private static boolean isReadonly(HasTsCollection view) {
@@ -235,16 +248,16 @@ public class ControlNode {
         b.reset("Data");
         TsData data = ts.getData();
         if (!data.isEmpty()) {
-            DescriptiveStatistics stats=DescriptiveStatistics.of(data.getValues());
+            DescriptiveStatistics stats = DescriptiveStatistics.of(data.getValues());
             b.with(TsUnit.class).select(data, "getTsUnit", null).display("TsUnit").add();
-            b.with(String.class).select("startPeriod", ()-> data.getDomain().getStartPeriod().getStartAsShortString(), null).display("First period").add();
-            b.with(String.class).select("lastPeriod", ()-> data.getDomain().getLastPeriod().getStartAsShortString(), null).display("Last period").add();
+            b.with(String.class).select("startPeriod", () -> data.getDomain().getStartPeriod().getStartAsShortString(), null).display("First period").add();
+            b.with(String.class).select("lastPeriod", () -> data.getDomain().getLastPeriod().getStartAsShortString(), null).display("Last period").add();
             b.withInt().select(data, "length", null).display("Obs count").add();
             b.with(TsData.class).selectConst("values", data).display("Values").add();
-            b.withDouble().select("min", ()->stats.getMin(), null).display("Min").add();
-            b.withDouble().select("max", ()->stats.getMax(), null).display("Max").add();
-            b.withDouble().select("average", ()->stats.getAverage(), null).display("Average").add();
-            b.withDouble().select("stdev", ()->stats.getStdev(), null).display("Standard deviation").add();
+            b.withDouble().select("min", () -> stats.getMin(), null).display("Min").add();
+            b.withDouble().select("max", () -> stats.getMax(), null).display("Max").add();
+            b.withDouble().select("average", () -> stats.getAverage(), null).display("Average").add();
+            b.withDouble().select("stdev", () -> stats.getStdev(), null).display("Standard deviation").add();
         } else {
             b.with(String.class).selectConst("InvalidDataCause", data.getEmptyCause()).display("Invalid data cause").add();
         }

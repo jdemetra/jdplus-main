@@ -15,6 +15,7 @@ import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import java.awt.BorderLayout;
 import java.util.Optional;
 import javax.swing.JSplitPane;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
 
 import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -101,14 +102,19 @@ public final class AggregationTopComponent extends TopComponent {
     }
 
     private void initList() {
-        inputList.addPropertyChangeListener(JTsTable.TS_COLLECTION_PROPERTY, evt -> {
-            Optional<Ts> sum = inputList.getTsCollection()
-                    .stream()
-                    .map(ts -> ts.getData())
-                    .filter(s->!s.isEmpty())
-                    .reduce(TsData::add)
-                    .map(s-> s == null || s.isEmpty() ? null : Ts.builder().moniker(TsMoniker.of()).data(s).name("Sum").build());
-            aggChart.setTsCollection(sum.map(TsCollection::of).orElse(TsCollection.EMPTY));
+        inputList.addPropertyChangeListener(evt -> {
+            switch (evt.getPropertyName()) {
+                case HasTsCollection.DROP_CONTENT_PROPERTY:
+                case HasTsCollection.TS_COLLECTION_PROPERTY:
+                    Optional<Ts> sum = inputList.getTsCollection()
+                            .stream()
+                            .map(ts -> ts.getData())
+                            .filter(s -> !s.isEmpty())
+                            .reduce(TsData::add)
+                            .map(s -> s == null || s.isEmpty() ? null : Ts.builder().moniker(TsMoniker.of()).data(s).name("Sum").build());
+                    aggChart.setTsCollection(sum.map(TsCollection::of).orElse(TsCollection.EMPTY));
+                    break;
+            }
         });
     }
 }

@@ -147,6 +147,7 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     private void enableProperties() {
         target.addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
+                case HasTsCollection.DROP_CONTENT_PROPERTY:
                 case HasTsCollection.TS_COLLECTION_PROPERTY:
                     onCollectionChange();
                     break;

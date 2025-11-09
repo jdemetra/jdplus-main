@@ -33,7 +33,6 @@ import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;
@@ -144,6 +143,7 @@ public final class TsTableUI implements InternalUI<JTsTable> {
                 case JTsTable.WIDTH_AS_PERCENTAGES_PROPERTY:
                     onWidthAsPercentagesChange();
                     break;
+                case HasTsCollection.DROP_CONTENT_PROPERTY:
                 case HasTsCollection.TS_COLLECTION_PROPERTY:
                     onCollectionChange();
                     break;
