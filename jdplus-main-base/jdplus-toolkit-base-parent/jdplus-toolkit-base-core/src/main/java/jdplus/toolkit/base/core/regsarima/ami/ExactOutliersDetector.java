@@ -203,7 +203,7 @@ public class ExactOutliersDetector implements GenericOutliersDetection<SarimaMod
                 int pos = sod.getMaxOutlierPosition();
                 addNewOutlier(pos, type);
                 if (!estimateModel(mapping, true)) {
-                    outliers.remove(outliers.size() - 1);
+                    removeOutlier(outliers.size() - 1);
                     estimateModel(mapping, false);
                     break;
                 }
