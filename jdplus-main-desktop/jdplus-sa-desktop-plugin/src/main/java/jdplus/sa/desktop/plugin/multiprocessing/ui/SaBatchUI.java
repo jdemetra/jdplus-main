@@ -217,7 +217,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     public SaBatchUI(MultiProcessingController controller) {
         super(controller);
         this.collection = HasTsCollectionSupport.of(this::firePropertyChange, TsInformationType.None);
-        collection.setTsUpdateMode(TsUpdateMode.Replace);
+        collection.setTsUpdateMode(TsUpdateMode.Append);
         this.defaultSpecification = DemetraSaUI.get().getDefaultSaSpec();
 
         setName(controller.getDocument().getDisplayName());
@@ -318,14 +318,28 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         if (coll == null) {
             return;
         }
-        Ts[] all = coll.stream().filter(s -> s.getType().encompass(TsInformationType.Data)).toArray(n -> new Ts[n]);
-        if (all.length > 0 && defaultSpecification == null) {
-            editDefaultSpecification();
-        }
-        getElement().add(defaultSpecification, all);
-        controller.getDocument().setDirty();
-        redrawAll();
+        
+        Set<TsMoniker> existingMonikers = getElement().getCurrent()
+                .stream()
+                .map(SaNode::getOutput)
+                .map(o -> o.getDefinition().getTs().unfreeze(TsFactory.getDefault(), TsInformationType.None))
+                .map(Ts::getMoniker)
+                .collect(Collectors.toSet());
 
+        Ts[] newTimeSeries = coll.stream()
+                .filter(ts -> ts.getType().encompass(TsInformationType.Data))
+                .filter(ts -> !existingMonikers.contains(ts.getMoniker()))
+                .map(Ts::freeze)
+                .toArray(n -> new Ts[n]);
+        
+        if (newTimeSeries.length > 0) {
+            if (defaultSpecification == null) {
+                editDefaultSpecification();
+            }
+            getElement().add(defaultSpecification, newTimeSeries);
+            controller.getDocument().setDirty();
+            redrawAll();
+        }
     }
 
     public boolean isTableEmpty() {
