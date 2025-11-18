@@ -63,7 +63,7 @@
         <protobuf.version>4.33.1</protobuf.version>
         <java-io-util.version>0.0.35</java-io-util.version>
         <java-sql-util.version>1.0.7</java-sql-util.version>
-        <spreadsheet4j.version>2.5.9</spreadsheet4j.version>
+        <spreadsheet4j.version>2.5.10</spreadsheet4j.version>
     </properties>
 
     <modules>
