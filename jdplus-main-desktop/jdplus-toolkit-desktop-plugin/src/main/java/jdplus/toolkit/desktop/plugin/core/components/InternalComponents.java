@@ -33,13 +33,13 @@ import lombok.NonNull;
 import nbbrd.io.text.Formatter;
 
 import javax.swing.*;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
+import java.text.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.function.Supplier;
 
 import static jdplus.toolkit.desktop.plugin.actions.ResetableZoom.RESET_ZOOM_ACTION;
@@ -143,10 +143,18 @@ public class InternalComponents {
         }
     }
 
-    @lombok.AllArgsConstructor
-    public static final class DateFormatAdapter extends DateFormat {
+    public static final class TsDomainDateFormat extends DateFormat {
 
         private final Supplier<TsDomain> domainSupplier;
+
+        public TsDomainDateFormat(Supplier<TsDomain> domainSupplier) {
+            this.domainSupplier = domainSupplier;
+
+            // Fix NPE on equals(Object)
+            // Calendar and numberFormat are not used in this implementation
+            this.calendar = new GregorianCalendar(TimeZone.getDefault(), Locale.ROOT);
+            this.numberFormat = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ROOT));
+        }
 
         @Override
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {

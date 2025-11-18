@@ -194,7 +194,7 @@ public final class TsGrowthChartUI implements InternalUI<JTsGrowthChart> {
 
     //<editor-fold defaultstate="collapsed" desc="Event handlers">
     private void onDataFormatChange() {
-        chartPanel.setPeriodFormat(new InternalComponents.DateFormatAdapter(() -> target.getTsCollection().getDomain()));
+        chartPanel.setPeriodFormat(new InternalComponents.TsDomainDateFormat(() -> target.getTsCollection().getDomain()));
     }
 
     private void onColorSchemeChange() {

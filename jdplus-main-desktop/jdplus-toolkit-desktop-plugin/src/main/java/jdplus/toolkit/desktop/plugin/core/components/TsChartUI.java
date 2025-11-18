@@ -236,7 +236,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     //<editor-fold defaultstate="collapsed" desc="Event Handlers">
     private void onDataFormatChange() {
         ObsFormat obsFormat = obsFormatResolver.resolve();
-        chartPanel.setPeriodFormat(new InternalComponents.DateFormatAdapter(() -> target.getTsCollection().getDomain()));
+        chartPanel.setPeriodFormat(new InternalComponents.TsDomainDateFormat(() -> target.getTsCollection().getDomain()));
         chartPanel.setValueFormat(new InternalComponents.NumberFormatAdapter(obsFormat));
     }
 
