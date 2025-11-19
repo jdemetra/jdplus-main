@@ -346,7 +346,10 @@
                                 <requireUpperBoundDeps/>
                                 <!-- 2.2 extra-enforcer-rules -->
                                 <banCircularDependencies/>
-                                <banDuplicateClasses/>
+                                <banDuplicateClasses>
+                                    <!-- Fix org.netbeans.external:net-java-html-boot:jar duplicate classes -->
+                                    <ignoreWhenIdentical>true</ignoreWhenIdentical>
+                                </banDuplicateClasses>
                                 <enforceBytecodeVersion>
                                     <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
                                     <ignoredScopes>

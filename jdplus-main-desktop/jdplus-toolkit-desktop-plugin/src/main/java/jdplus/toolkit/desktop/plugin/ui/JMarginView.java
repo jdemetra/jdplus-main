@@ -153,7 +153,7 @@ public final class JMarginView extends JComponent implements TimeSeriesComponent
     //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
     private void onDataFormatChange() {
         ((DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis())
-                .setDateFormatOverride(new InternalComponents.DateFormatAdapter(() -> data.series.getDomain()));
+                .setDateFormatOverride(new InternalComponents.TsDomainDateFormat(() -> data.series.getDomain()));
     }
 
     private void onColorSchemeChange() {

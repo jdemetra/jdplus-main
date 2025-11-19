@@ -153,7 +153,7 @@ public final class ResidualsViewUI implements InternalUI<JResidualsView> {
         TsData tsData = view.getTsData();
         if (tsData != null)
             ((DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis())
-                    .setDateFormatOverride(new InternalComponents.DateFormatAdapter(tsData::getDomain));
+                    .setDateFormatOverride(new InternalComponents.TsDomainDateFormat(tsData::getDomain));
     }
 
     private void onColorSchemeChange() {

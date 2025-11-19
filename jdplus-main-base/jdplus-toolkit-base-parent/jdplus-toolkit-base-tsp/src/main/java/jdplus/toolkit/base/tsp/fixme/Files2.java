@@ -16,14 +16,13 @@
  */
 package jdplus.toolkit.base.tsp.fixme;
 
+import lombok.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import lombok.NonNull;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Provides utility methods for the {@link File} class;
@@ -94,12 +93,14 @@ public class Files2 {
      */
     @Nullable
     public File extractFile(@NonNull String path) {
-        File file = Path.of(path).toFile();
-        if (file.isFile()) {
-            return file;
+        try {
+            File result = Path.of(path).toFile();
+            while (result != null && !result.exists()) {
+                result = result.getParentFile();
+            }
+            return result;
+        } catch (RuntimeException ignore) {
+            return null;
         }
-        while ((file = file.getParentFile()) != null && !file.exists()) {
-        }
-        return file;
     }
 }

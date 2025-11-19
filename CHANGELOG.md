@@ -19,6 +19,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix IllegalStateException in JTsVariableList [#711](https://github.com/jdemetra/jdplus-main/issues/711)
 - ![UI] Fix scrolling for long list of pre-specified outliers [#667](https://github.com/jdemetra/jdplus-main/issues/667)
 - ![UI] Fix SaItem duplication in SaBatchUI [#761](https://github.com/jdemetra/jdplus-main/issues/761) and [#689](https://github.com/jdemetra/jdplus-main/issues/689)
+- ![UI] Fix InvalidPathException when displaying exceptions [#806](https://github.com/jdemetra/jdplus-main/issues/806)
 
 ### Changed
 
