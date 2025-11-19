@@ -16,6 +16,8 @@
  */
 package jdplus.toolkit.base.core.regsarima.regular;
 
+import jdplus.toolkit.base.api.arima.SarmaOrders;
+
 /**
  * Estimates the stationary part of the arima model provided in the context
  * The context should be contain the new specification on exit. The fully estimated model
@@ -23,6 +25,16 @@ package jdplus.toolkit.base.core.regsarima.regular;
  * @author Jean Palate
  */
 public interface IArmaModule {
+    
+    public static final String ARMA = "arma selection",
+            MODEL = "selected model: ", DEFAULT = "default model selected (not enough obs.)",
+            FAILED = "arma selection failed";
+
+    public static interface Info{
+        SarmaOrders bestModel();
+        SarmaOrders[] models();
+        double[] bic();
+    }
     
     ProcessingResult process(RegSarimaModelling context);
     

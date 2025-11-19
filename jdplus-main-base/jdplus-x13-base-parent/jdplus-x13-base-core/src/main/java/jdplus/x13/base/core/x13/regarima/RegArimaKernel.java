@@ -249,11 +249,12 @@ public class RegArimaKernel implements RegSarimaProcessor {
 
     private RegSarimaModel calc(RegSarimaModelling context) {
         try {
+            ProcessingLog log = context.getLog();
             if (transformation != null) {
                 transformation.process(context);
             } else if (context.getDescription().isLogTransformation()) {
                 if (context.getDescription().getSeries().getValues().anyMatch(x -> x <= 0)) {
-                    context.getLog().error(LOGNEG);
+                    log.error(LOGNEG);
                     return null;
 //                    context.getDescription().setLogTransformation(false);
 //                    context.clearEstimation();
@@ -282,6 +283,7 @@ public class RegArimaKernel implements RegSarimaProcessor {
                     round = 1;
                     loop = 1;
                     do {
+                        log.step(ROUND + round);
                         boolean defModel = false;
                         if (needAutoModelling) {
                             ProcessingResult amrslt = autoModel.process(context);

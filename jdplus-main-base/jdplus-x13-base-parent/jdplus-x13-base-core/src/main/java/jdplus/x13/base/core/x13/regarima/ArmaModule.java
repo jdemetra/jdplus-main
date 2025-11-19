@@ -27,15 +27,59 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
 import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
+import jdplus.toolkit.base.core.regsarima.regular.IArmaModule;
+import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.ARMA;
+import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.DEFAULT;
+import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.FAILED;
+import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.MODEL;
+import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
+import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
+import static jdplus.x13.base.core.x13.regarima.AutoModellingModule.MODEL;
 
 /**
  *
  * @author Jean Palate
  */
 @Development(status = Development.Status.Preliminary)
-public class ArmaModule {
+public class ArmaModule implements IArmaModule {
+
+    @lombok.Value
+    public static class CInfo implements IArmaModule.Info{
+
+        private final RegArmaBic[] models;
+        private final SarmaOrders selection;
+        
+        @Override
+        public SarmaOrders bestModel() {
+            return selection;
+        }
+        
+        @Override
+        public SarmaOrders[] models() {
+            SarmaOrders[] m=new SarmaOrders[models.length];
+            for (int i=0; i<m.length; ++i){
+                if (models[i] != null)
+                    m[i]=models[i].getSpecification();
+            }
+            return m;
+         }
+
+        @Override
+        public double[] bic() {
+            double[] d=new double[models.length];
+            for (int i=0; i<d.length; ++i){
+                if (models[i] != null)
+                    d[i]=models[i].getBIC();
+                else
+                    d[i]=Double.NaN;
+            }
+            return d;
+        }
+    }
 
     static final double NO_BIC = 99999;
     static final int NMOD = 5;
@@ -123,6 +167,31 @@ public class ArmaModule {
         }
     }
 
+    @Override
+    public ProcessingResult process(RegSarimaModelling context) {
+        ProcessingLog log = context.getLog();
+        log.push(ARMA);
+        try {
+            ModelDescription desc = context.getDescription();
+            SarimaOrders curspec = desc.specification();
+ 
+            DoubleSeq res = RegArimaUtility.olsResiduals(desc.regarima());
+           SarmaOrders rsltSpec = select(res, desc.getAnnualFrequency(), curspec.getD(), curspec.getBd());
+            log.info(MODEL + rsltSpec.toString(), new ArmaModule.CInfo(estimations, rsltSpec));
+            if (rsltSpec.equals(curspec.doStationary())) {
+                return ProcessingResult.Unchanged;
+            }
+            curspec = SarimaOrders.of(rsltSpec, curspec.getD(), curspec.getBd());
+            desc.setSpecification(curspec);
+
+            return ProcessingResult.Changed;
+        } catch (RuntimeException ex) {
+            log.remark(FAILED);
+            return ProcessingResult.Failed;
+        } finally {
+            log.pop();
+        }
+    }
     /**
      *
      */
@@ -163,7 +232,7 @@ public class ArmaModule {
          *
          * @return
          */
-        double getBIC() {
+        public double getBIC() {
             return bic;
         }
 
@@ -171,7 +240,7 @@ public class ArmaModule {
          *
          * @return
          */
-        SarmaOrders getSpecification() {
+        public SarmaOrders getSpecification() {
             return arima.orders().doStationary();
         }
 

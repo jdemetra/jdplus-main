@@ -161,7 +161,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private void writeStep(HtmlStream stream, ProcessingLog.Information info) throws IOException {
         if (verbose) {
-            stream.write(HtmlTag.EMPHASIZED_TEXT, info.getMsg()).newLine();
+            stream.write(info.getMsg(), HtmlStyle.Bold, HtmlStyle.Italic, HtmlStyle.Green).newLine();
         }
     }
 

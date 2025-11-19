@@ -58,7 +58,7 @@ public class TramoKernel implements RegSarimaProcessor {
     private static final String LAST_CHANCE = "last chance model",
             OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection",
             AMI = "automatic model identification", ROUND = "round ",
-            LOGNEG="can't apply log transformation 'some obs. are <= 0";
+            LOGNEG = "can't apply log transformation 'some obs. are <= 0";
 
     private static final String TRAMO = "tramo";
 
@@ -326,8 +326,9 @@ public class TramoKernel implements RegSarimaProcessor {
             testSeasonality(modelling);
 
             // Test for loglevel transformation
-            if (! testTransformation(modelling))
+            if (!testTransformation(modelling)) {
                 return null;
+            }
 
             regressionModule(modelling.getDescription().isAdjusted()).test(modelling);
 
@@ -336,7 +337,7 @@ public class TramoKernel implements RegSarimaProcessor {
             int iter = 0;
             do {
                 ++iter;
-            } while (iter < 10 && !iterate(modelling));
+             } while (iter < 10 && !iterate(modelling));
 
             return modelling.build();
         } finally {
@@ -661,9 +662,6 @@ public class TramoKernel implements RegSarimaProcessor {
             if (!useprev) {
                 refAuto = RegSarimaModelling.copyOf(context);
                 refStats = stats;
-                if (pass == 3) {
-                    context.getLog().warning(LAST_CHANCE);
-                }
             } else {
                 restore(context);
                 plbox = plbox0;
@@ -716,6 +714,7 @@ public class TramoKernel implements RegSarimaProcessor {
         desc.removeVariable(var -> ModellingUtility.isOutlier(var, true));
         modelling.setSpecification(nspec);
 //        addArmaHistory(context);
+        modelling.getLog().warning(LAST_CHANCE);
         round = 1;
         needOutliers = isOutliersDetection();
         needAutoModelling = false;
@@ -740,8 +739,8 @@ public class TramoKernel implements RegSarimaProcessor {
 //    }
 //
 
-    private static final String SEAS = "seasonality test", NO_SEAS = "No identifiable seasonality", 
-            HAS_SEAS3="strong seasonality detected", HAS_SEAS2="moderate seasonality detected";
+    private static final String SEAS = "seasonality test", NO_SEAS = "No identifiable seasonality",
+            HAS_SEAS3 = "strong seasonality detected", HAS_SEAS2 = "moderate seasonality detected";
 
     private void testSeasonality(RegSarimaModelling modelling) {
         ModelDescription model = modelling.getDescription();

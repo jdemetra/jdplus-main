@@ -13,16 +13,15 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package jdplus.tramoseats.desktop.plugin.html;
+package jdplus.sa.desktop.plugin.html;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Formatter;
 import java.util.Locale;
+import jdplus.toolkit.base.core.regsarima.regular.IDifferencingModule;
 import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlLogFormatter;
-import jdplus.tramoseats.base.core.tramo.internal.DifferencingModule;
 import nbbrd.service.ServiceProvider;
 
 /**
@@ -30,17 +29,17 @@ import nbbrd.service.ServiceProvider;
  * @author Jean Palate
  */
 @ServiceProvider(HtmlLogFormatter.class)
-public class HtmlDifferencingSelection implements HtmlLogFormatter<DifferencingModule.Info> {
+public class HtmlDifferencingSelection implements HtmlLogFormatter<IDifferencingModule.Info> {
 
     static final DecimalFormat DF4 = new DecimalFormat("0.0000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
 
     @Override
-    public Class<DifferencingModule.Info> getSourceClass() {
-        return DifferencingModule.Info.class;
+    public Class<IDifferencingModule.Info> getSourceClass() {
+        return IDifferencingModule.Info.class;
     }
 
     @Override
-    public void write(HtmlStream stream, DifferencingModule.Info details, boolean verbose) throws IOException {
+    public void write(HtmlStream stream, IDifferencingModule.Info details, boolean verbose) throws IOException {
         stream.write("D: ").write(Integer.toString(details.getD()));
         stream.newLine();
         stream.write("BD: ").write(Integer.toString(details.getBd()));
