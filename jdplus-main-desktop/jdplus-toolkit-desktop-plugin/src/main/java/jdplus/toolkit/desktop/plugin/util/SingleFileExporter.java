@@ -18,8 +18,8 @@ package jdplus.toolkit.desktop.plugin.util;
 
 import jdplus.toolkit.desktop.plugin.notification.MessageType;
 import jdplus.toolkit.desktop.plugin.notification.NotifyUtil;
-import nbbrd.design.LombokWorkaround;
 import lombok.NonNull;
+import nbbrd.design.LombokWorkaround;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -28,7 +28,6 @@ import org.openide.filesystems.FileChooserBuilder;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +38,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+
+import static internal.ui.components.ExceptionUtil.unwrapException;
+import static java.util.Arrays.asList;
 
 /**
  * @author Philippe Charles
@@ -89,8 +91,7 @@ public final class SingleFileExporter {
 
     private void notify(File file, Throwable ex) {
         if (ex != null) {
-            Throwable tmp = unwrapException(ex, CompletionException.class, RuntimeException.class);
-            onError.accept(file, tmp);
+            onError.accept(file, unwrapException(ex, asList(CompletionException.class, RuntimeException.class)));
         } else {
             onSuccess.accept(file);
         }
@@ -102,10 +103,6 @@ public final class SingleFileExporter {
 
     private static void notifySuccess(File file, String message) {
         NotifyUtil.show(message, "Show in folder", MessageType.SUCCESS, ShowInFolderActionListener.of(file), null, null);
-    }
-
-    private static Throwable unwrapException(Throwable ex, Class<? extends Throwable>... types) {
-        return ex.getCause() != null && Arrays.stream(types).anyMatch(o -> o.isInstance(ex)) ? unwrapException(ex.getCause(), types) : ex;
     }
 
     @LombokWorkaround
