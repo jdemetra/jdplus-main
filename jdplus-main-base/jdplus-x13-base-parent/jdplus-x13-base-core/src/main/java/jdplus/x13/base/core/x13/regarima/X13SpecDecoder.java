@@ -158,31 +158,25 @@ final class X13SpecDecoder {
         AICcComparator comparator = new AICcComparator(spec.getRegression().getAicDiff());
         if (tdspec.isAutomatic()) {
             switch (tdspec.getAutomaticMethod()) {
-                case AIC:
-                    builder.calendarTest(AutomaticTradingDaysRegressionTest.builder()
+                case AIC -> builder.calendarTest(AutomaticTradingDaysRegressionTest.builder()
                             .leapYear(X13ModelBuilder.leapYear(tdspec))
                             .tradingDays(alltd(spec, context))
                             .adjust(tdspec.isAutoAdjust())
                             .aic()
                             .build());
-                    break;
-                case BIC:
-                    builder.calendarTest(AutomaticTradingDaysRegressionTest.builder()
+                case BIC -> builder.calendarTest(AutomaticTradingDaysRegressionTest.builder()
                             .leapYear(X13ModelBuilder.leapYear(tdspec))
                             .tradingDays(alltd(spec, context))
                             .adjust(tdspec.isAutoAdjust())
                             .bic()
                             .build());
-                    break;
-                case WALD:
-                    builder.calendarTest(AutomaticTradingDaysWaldTest.builder()
+                case WALD -> builder.calendarTest(AutomaticTradingDaysWaldTest.builder()
                             .leapYear(X13ModelBuilder.leapYear(tdspec))
                             .tradingDays(nestedtd(spec, context))
                             .adjust(tdspec.isAutoAdjust())
                             .pmodel(tdspec.getAutoPvalue1())
                             .pconstraint(tdspec.getAutoPvalue2())
                             .build());
-                    break;
 
             }
         } else if (tdspec.getRegressionTestType() != RegressionTestSpec.None) {

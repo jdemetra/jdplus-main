@@ -55,7 +55,7 @@ public class RegSarimaModelling {
     }
 
     public void estimate(IRegArimaComputer<SarimaModel> processor) {
-        estimation = description.estimate(processor, log);
+        estimation = description.estimate(processor);
     }
 
     public void estimate(double precision) {
@@ -64,7 +64,7 @@ public class RegSarimaModelling {
                 .startingPoint(RegSarimaComputer.StartingPoint.HannanRissanen)
                 .build();
 
-        estimation = description.estimate(processor, log);
+        estimation = description.estimate(processor);
     }
 
     public RegSarimaModel build() {

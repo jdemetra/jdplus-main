@@ -327,7 +327,7 @@ public final class ModelDescription {
         return check(builder.build(), log);
     }
 
-    private RegArimaModel<SarimaModel> check(RegArimaModel<SarimaModel> reg0, ProcessingLog log) {
+    public RegArimaModel<SarimaModel> check(RegArimaModel<SarimaModel> reg0, ProcessingLog log) {
         FastMatrix x = reg0.differencedModel().getX();
         HouseholderWithPivoting hous = new HouseholderWithPivoting();
         int curx = reg0.getMissingValuesCount();
@@ -340,8 +340,9 @@ public final class ModelDescription {
         if (rank == qr.n()) {
             return reg0;
         }
-        if (log != null)
-            log.remark(COLLINEAR);
+        if (log != null) {
+            log.warning(COLLINEAR);
+        }
         RegArimaModel.Builder builder = RegArimaModel.<SarimaModel>builder()
                 .y(reg0.getY())
                 .missing(reg0.missing())
@@ -746,11 +747,7 @@ public final class ModelDescription {
     }
 
     public RegArimaEstimation<SarimaModel> estimate(IRegArimaComputer<SarimaModel> processor) {
-        return estimate(processor, null);
-    }
-
-    public RegArimaEstimation<SarimaModel> estimate(IRegArimaComputer<SarimaModel> processor, ProcessingLog log) {
-        RegArimaModel<SarimaModel> model = regarima(log);
+        RegArimaModel<SarimaModel> model = regarima(null);
         RegArimaEstimation<SarimaModel> rslt;
         if (!arima.hasFixedParameters()) {
             rslt = processor.process(model, mapping());
@@ -815,6 +812,8 @@ public final class ModelDescription {
         return c1.getPosition().compareTo(c2.getPosition());
     };
 
-    private static final String EXCLUDED = "excluded variable: ", COLLINEAR = "collinear model. Some coefficients are set to 0";
+    private static final String EXCLUDED = "excluded variable: ",
+            COLLINEAR = "collinear model. Some coefficients are set to 0",
+            NOTFOUND = ": data not found", ZERO= ": is zero";
 
 }

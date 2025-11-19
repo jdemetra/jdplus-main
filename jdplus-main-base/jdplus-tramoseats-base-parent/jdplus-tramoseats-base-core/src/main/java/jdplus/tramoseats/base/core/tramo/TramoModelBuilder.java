@@ -69,8 +69,10 @@ import jdplus.toolkit.base.core.modelling.regression.HolidaysCorrectionFactory;
 import jdplus.toolkit.base.core.modelling.regression.LevelShiftFactory;
 import jdplus.toolkit.base.core.modelling.regression.PeriodicOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.TransitoryChangeFactory;
+import jdplus.toolkit.base.core.regarima.RegArimaModel;
 import jdplus.toolkit.base.core.regsarima.regular.IModelBuilder;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
+import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import nbbrd.design.Development;
 import lombok.NonNull;
@@ -114,7 +116,7 @@ class TramoModelBuilder implements IModelBuilder {
         }
     }
 
-    private void initializeVariables(ModelDescription model, RegressionSpec regSpec) {
+    private void initializeVariables(ModelDescription model, RegressionSpec regSpec, ProcessingLog log) {
 
         if (!regSpec.isUsed()) {
             return;
@@ -122,7 +124,7 @@ class TramoModelBuilder implements IModelBuilder {
         initializeMean(model, regSpec.getMean());
         initializeCalendar(model, regSpec.getCalendar());
         initializeOutliers(model, regSpec.getOutliers());
-        initializeUsers(model, regSpec.getUserDefinedVariables());
+        initializeUsers(model, regSpec.getUserDefinedVariables(), log);
         initializeInterventions(model, regSpec.getInterventionVariables());
         initializeRamps(model, regSpec.getRamps());
     }
@@ -135,9 +137,10 @@ class TramoModelBuilder implements IModelBuilder {
 
         initializeMissing(cur);
         initializeTransformation(cur, spec.getTransform());
-        initializeVariables(cur, spec.getRegression());
+        initializeVariables(cur, spec.getRegression(), log);
         initializeArima(cur);// Mean is initialized here in case of auto-modelling (mean = true)
-
+        RegArimaModel<SarimaModel> regarima = cur.regarima(log);
+        cur.check(regarima, log);
         return cur;
     }
 
@@ -231,11 +234,14 @@ class TramoModelBuilder implements IModelBuilder {
         }
     }
 
-    private void initializeUsers(ModelDescription model, List< Variable<TsContextVariable>> uvars) {
+    private void initializeUsers(ModelDescription model, List< Variable<TsContextVariable>> uvars, ProcessingLog log) {
         for (Variable<TsContextVariable> user : uvars) {
-            String name = user.getName();
-            ITsVariable var = user.getCore().instantiateFrom(context, name);
-            model.addVariable(user.withCore(var));
+            ITsVariable s = user.getCore().instantiateFrom(context, user.getName());
+            if (s != null) {
+                model.addVariable(user.withCore(s));
+            } else {
+                log.warning(user.getName() + ": not found (removed from the model)");
+            }
         }
     }
 

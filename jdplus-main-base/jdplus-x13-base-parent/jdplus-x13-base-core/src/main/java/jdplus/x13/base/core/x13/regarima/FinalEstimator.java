@@ -18,6 +18,7 @@ package jdplus.x13.base.core.x13.regarima;
 
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.functions.IParametricMapping;
 import jdplus.toolkit.base.core.math.functions.levmar.LevenbergMarquardtMinimizer;
@@ -36,6 +37,8 @@ import nbbrd.design.Development;
  */
 @Development(status = Development.Status.Preliminary)
 public class FinalEstimator implements IModelEstimator {
+
+    public static final String ESTIMATION = "full estimation", FAILED="estimation faied", SPEC_CHANGED = "arima spec changed";
 
     public static Builder builder() {
         return new Builder();
@@ -82,35 +85,42 @@ public class FinalEstimator implements IModelEstimator {
     public boolean estimate(RegSarimaModelling context) {
 
         int niter = 0;
-        do {
-            try {
-                IParametricMapping<SarimaModel> mapping = context.getDescription().mapping();
-                int ndim = mapping.getDim();
-                RegSarimaComputer processor = RegSarimaComputer.builder()
-                        .minimizer(LevenbergMarquardtMinimizer.builder())
-                        .precision(eps)
-                        .startingPoint(RegSarimaComputer.StartingPoint.Multiple)
-                        .computeExactFinalDerivatives(true)
-                        .build();
-                context.getDescription().freeArimaParameters();
-                context.estimate(processor);
-                if (ndim == 0) {
-                    return true;
-                }
-                if (!ami) {
-                    return true;
-                }
-                int itest = test(context);
-                if (itest == 0) {
-                    return true;
-                } else if (itest > 1) {
+        ProcessingLog log = context.getLog();
+        log.push(ESTIMATION);
+        try {
+            do {
+                try {
+                    IParametricMapping<SarimaModel> mapping = context.getDescription().mapping();
+                    int ndim = mapping.getDim();
+                    RegSarimaComputer processor = RegSarimaComputer.builder()
+                            .minimizer(LevenbergMarquardtMinimizer.builder())
+                            .precision(eps)
+                            .startingPoint(RegSarimaComputer.StartingPoint.Multiple)
+                            .computeExactFinalDerivatives(true)
+                            .build();
+                    context.getDescription().freeArimaParameters();
+                    context.estimate(processor);
+                    if (ndim == 0) {
+                        return true;
+                    }
+                    if (!ami) {
+                        return true;
+                    }
+                    int itest = test(context);
+                    if (itest == 0) {
+                        return true;
+                    } else if (itest > 1) {
+                        return false;
+                    }
+                } catch (RuntimeException err) {
+                    log.remark(FAILED);
                     return false;
                 }
-            } catch (RuntimeException err) {
-                return false;
-            }
-        } while (niter++ < 5);
-        return false;
+            } while (niter++ < 5);
+            return false;
+        } finally {
+            log.pop();
+        }
     }
 
     private int test(RegSarimaModelling context) {
@@ -219,6 +229,7 @@ public class FinalEstimator implements IModelEstimator {
             spec.setBq(spec.getBq() - cqs);
         }
 
+        context.getLog().info(SPEC_CHANGED, spec);
         context.setSpecification(spec);
         return nnsig;
     }

@@ -100,7 +100,7 @@ public class TsContextVariable implements ITsVariable {
     
     public ITsVariable instantiateFrom(ModellingContext context, String desc) {
         UserVariable var = UserVariable.of(id, desc, context);
-        if (isLag()) {
+        if (var != null && isLag()) {
             return ModifiedTsVariable.builder()
                     .variable(var)
                     .modifier(new TsLag(lag))
