@@ -76,7 +76,7 @@ public class InternalComponents {
 
     public static JMenuItem newResetZoomMenu(ActionMap am) {
         JMenuItem result = new JMenuItem(am.get(RESET_ZOOM_ACTION));
-        result.setText("Show all");
+        result.setText("Reset zoom");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_EYE));
         return result;
     }
