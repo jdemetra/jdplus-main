@@ -16,6 +16,7 @@
  */
 package jdplus.x13.base.core.x13.regarima;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
 import jdplus.toolkit.base.core.regsarima.regular.IRegressionModule;
@@ -30,6 +31,10 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
  */
 public class MeanController implements IRegressionModule {
 
+    public static final String MEAN = "mean correction",
+            MEAN_ADDED = "mean significant (added)",
+            MEAN_REMOVED = "mean not significant (removed)";
+
     static final double CVAL0 = 1.96, CVAL1 = 1.6, CVALFINAL = 2.5;
 
     private final double cval;
@@ -42,25 +47,32 @@ public class MeanController implements IRegressionModule {
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
 
-        ModelDescription desc = context.getDescription();
-        RegArimaEstimation<SarimaModel> est = context.getEstimation();
-        boolean mean = desc.isMean();
-        if (!mean) {
-            desc = ModelDescription.copyOf(desc);
-            desc.setMean(true);
-            est = null;
-        }
-        if (est == null) {
-            est = desc.estimate(RegArimaUtility.processor(true, eps));
-        }
-        double t = est.getConcentratedLikelihood().tstat(0, 0, false);
-        boolean nmean = Math.abs(t) > cval;
-        if (nmean == mean) {
-            return ProcessingResult.Unchanged;
-        } else {
-            context.getDescription().setMean(nmean);
-            context.clearEstimation();
-            return ProcessingResult.Changed;
+        ProcessingLog log = context.getLog();
+        try {
+            log.push(MEAN);
+            ModelDescription desc = context.getDescription();
+            RegArimaEstimation<SarimaModel> est = context.getEstimation();
+            boolean mean = desc.isMean();
+            if (!mean) {
+                desc = ModelDescription.copyOf(desc);
+                desc.setMean(true);
+                est = null;
+            }
+            if (est == null) {
+                est = desc.estimate(RegArimaUtility.processor(true, eps));
+            }
+            double t = est.getConcentratedLikelihood().tstat(0, 0, false);
+            boolean nmean = Math.abs(t) > cval;
+            if (nmean == mean) {
+                return ProcessingResult.Unchanged;
+            } else {
+                log.info(nmean ? MEAN_ADDED : MEAN_REMOVED);
+                context.getDescription().setMean(nmean);
+                context.clearEstimation();
+                return ProcessingResult.Changed;
+            }
+        } finally {
+            log.pop();
         }
     }
 }

@@ -19,12 +19,14 @@ package jdplus.x13.base.core.x13.regarima;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
 import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
 import jdplus.toolkit.base.core.regsarima.regular.IAutoModellingModule;
+import jdplus.toolkit.base.core.regsarima.regular.IDifferencingModule;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
@@ -36,6 +38,15 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
  */
 @lombok.Value
 public class AutoModellingModule implements IAutoModellingModule {
+
+    public static final String AMI = "automatic arima selection";
+    public static final String ARMA = "arma selection",
+            MODEL = "selected model: ";
+    public static final String DIFF_DEFAULT = "default differencing selected (esttimation failed",
+            SELECTION = "differencing selection", DEFAULT = "default model selected ",
+            MEAN = "mean correction",
+            NOMEAN = "no mean correction",
+            FAILED = "differencing selection failed";
 
     private final DifferencingModule iddiff;
     private final ArmaModule amdid;
@@ -53,38 +64,43 @@ public class AutoModellingModule implements IAutoModellingModule {
         boolean curMean = description.isMean();
         boolean nmean;
         int nd, nbd;
+        ProcessingLog log = modelling.getLog();
+        log.push(AMI);
         try {
             // get residuals of the current estimation
             DoubleSeq res = RegArimaUtility.linearizedData(estimation.getModel(), estimation.getConcentratedLikelihood());
-
             if (iddiff.process(res, period)) {
                 nd = iddiff.getD();
                 nbd = iddiff.getBd();
                 nmean = iddiff.isMeanCorrection();
+            log.info(IDifferencingModule.SELECTION, IDifferencingModule.Info.of(iddiff));
             } else {
                 nd = 1;
                 nbd = 1;
                 nmean = false;
+                log.remark(IDifferencingModule.FAILED);
             }
 
             // compute the differences of the residuals
             DoubleSeq dres;
             if (nd != 0 || nbd != 0) {
-                BackFilter ur=new BackFilter(UnitRoots.D(nd).times(UnitRoots.D(period, nbd)));
+                BackFilter ur = new BackFilter(UnitRoots.D(nd).times(UnitRoots.D(period, nbd)));
                 DataBlock tmp = DataBlock.make(res.length() - ur.getDegree());
                 ur.apply(res, tmp);
-                dres=tmp.unmodifiable();
+                dres = tmp.unmodifiable();
             } else {
                 dres = res;
             }
-//            if (nmean) {
-//                dres.sub(dres.sum() / dres.getLength());
-//            }
             SarmaOrders rsltSpec = amdid.select(dres, period, nd, nbd);
+            ArmaModule.RegArmaBic[] models = amdid.getPreferedModels();
+            log.info(MODEL + rsltSpec.toString(), new ArmaModule.CInfo(models, rsltSpec));
             nspec = SarimaOrders.of(rsltSpec, nd, nbd);
         } catch (RuntimeException err) {
-            nspec=SarimaOrders.airline(period);
-            nmean=false;
+            nspec = SarimaOrders.airline(period);
+            nmean = false;
+            log.remark(DEFAULT);
+        } finally {
+            log.pop();
         }
         boolean changed = false;
         if (!curspec.equals(nspec)) {

@@ -70,8 +70,10 @@ import jdplus.toolkit.base.core.modelling.regression.HolidaysCorrectionFactory;
 import jdplus.toolkit.base.core.modelling.regression.LevelShiftFactory;
 import jdplus.toolkit.base.core.modelling.regression.PeriodicOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.TransitoryChangeFactory;
+import jdplus.toolkit.base.core.regarima.RegArimaModel;
 import jdplus.toolkit.base.core.regsarima.regular.IModelBuilder;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
+import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import nbbrd.design.Development;
 import lombok.NonNull;
@@ -117,7 +119,7 @@ class X13ModelBuilder implements IModelBuilder {
         }
     }
 
-    private void initializeVariables(ModelDescription model, RegressionSpec regSpec) {
+    private void initializeVariables(ModelDescription model, RegressionSpec regSpec, ProcessingLog log) {
 
         if (!regSpec.isUsed()) {
             return;
@@ -127,7 +129,7 @@ class X13ModelBuilder implements IModelBuilder {
         if (regSpec.getOutliersCount() > 0) {
             initializeOutliers(model, regSpec.getOutliers());
         }
-        initializeUsers(model, regSpec.getUserDefinedVariables());
+        initializeUsers(model, regSpec.getUserDefinedVariables(), log);
         initializeInterventions(model, regSpec.getInterventionVariables());
         initializeRamps(model, regSpec.getRamps());
     }
@@ -141,7 +143,9 @@ class X13ModelBuilder implements IModelBuilder {
         initializeMissing(cur);
         initializeTransformation(cur, spec.getTransform());
         initializeArima(cur);
-        initializeVariables(cur, spec.getRegression());
+        initializeVariables(cur, spec.getRegression(), log);
+        RegArimaModel<SarimaModel> regarima = cur.regarima(log);
+        cur.check(regarima, log);
 
         return cur;
     }
@@ -242,9 +246,14 @@ class X13ModelBuilder implements IModelBuilder {
         }
     }
 
-    private void initializeUsers(ModelDescription model, List< Variable<TsContextVariable>> uvars) {
+    private void initializeUsers(ModelDescription model, List< Variable<TsContextVariable>> uvars, ProcessingLog log) {
         for (Variable<TsContextVariable> user : uvars) {
-            model.addVariable(user.withCore(user.getCore().instantiateFrom(context, user.getName())));
+            ITsVariable s = user.getCore().instantiateFrom(context, user.getName());
+            if (s != null) {
+                model.addVariable(user.withCore(s));
+            } else {
+                log.warning(user.getName() + ": not found (removed from the model)");
+            }
         }
     }
 

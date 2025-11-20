@@ -21,7 +21,6 @@ import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import nbbrd.design.BuilderPattern;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
-import jdplus.toolkit.base.core.regsarima.regular.IRegressionModule;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;

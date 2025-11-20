@@ -44,16 +44,29 @@ public class HtmlLogFormatters {
         if (extractors == null) {
             reloadExtractors();
         }
-        return (HtmlLogFormatter<D>) extractors.get(D);
+        HtmlLogFormatter<D> extractor = (HtmlLogFormatter<D>) extractors.get(D);
+
+        if (extractor != null) {
+            return extractor;
+        } else {
+            // default
+            for (Map.Entry<Class, HtmlLogFormatter> entry : extractors.entrySet()) {
+                if (entry.getKey().isAssignableFrom(D)) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return null;
     }
 
     public void write(HtmlStream stream, Object details, boolean verbose) throws IOException {
-        if (details == null)
+        if (details == null) {
             return;
+        }
         HtmlLogFormatter fmt = extractor(details.getClass());
         if (fmt != null) {
             fmt.write(stream, details, verbose);
-        }else{
+        } else {
             stream.write(details.toString()).newLine();
         }
     }

@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.modelling.regression.IOutlierFactory;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 
@@ -52,7 +53,7 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
 
     public static int DEF_MAXROUND = 50;
     public static int DEF_MAXOUTLIERS = 30;
-    public static final double EPS = 1e-7, TCRATE=.7;
+    public static final double EPS = 1e-7, TCRATE = .7;
 
     public static Builder builder() {
         return new Builder();
@@ -65,7 +66,7 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
         private int maxOutliers = DEF_MAXOUTLIERS;
         private int maxRound = DEF_MAXROUND;
         private boolean ao, ls, tc, so;
-        private double tcrate=TCRATE;
+        private double tcrate = TCRATE;
         private TimeSelector span = TimeSelector.all();
 
         private Builder() {
@@ -143,8 +144,8 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
     private SingleOutlierDetector<SarimaModel> factories(int freq) {
         SingleOutlierDetector sod = new ExactSingleOutlierDetector(RobustStandardDeviationComputer.mad(false),
                 null, X13Utility.mlComputer());
-        
-        List<IOutlierFactory> factory=new ArrayList<>();
+
+        List<IOutlierFactory> factory = new ArrayList<>();
         if (ao) {
             factory.add(AdditiveOutlierFactory.FACTORY);
         }
@@ -188,7 +189,7 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
         }
         // exclude pre-specified outliers
         desc.variables()
-                .filter(var ->ModellingUtility.isOutlier(var, false))
+                .filter(var -> ModellingUtility.isOutlier(var, false))
                 .map(var -> (IOutlier) var.getCore()).forEach(
                 o -> impl.exclude(domain.indexOf(o.getPosition()), outlierType(types, o.getCode())));
         // add current outliers
@@ -201,33 +202,47 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
 
     @Override
     public ProcessingResult process(RegSarimaModelling context, double criticalValue) {
+        ProcessingLog log = context.getLog();
+        log.push(OUTLIERS);
         try {
             ModelDescription model = context.getDescription();
             TsDomain domain = model.getEstimationDomain();
             ExactOutliersDetector impl = make(model, criticalValue);
             boolean changed = impl.process(model.regarima(), model.mapping());
+            int[][] outliers = impl.getOutliers();
+            String msg;
+            switch (outliers.length) {
+                case 0 ->
+                    msg = SELECTION0;
+                case 1 ->
+                    msg = SELECTION1;
+                default ->
+                    msg = outliers.length + SELECTION;
+            }
+            log.info(msg, new Info(impl.outlierTypes(), outliers, criticalValue));
             if (!changed) {
                 return ProcessingResult.Unchanged;
             }
             // clear current outliers and add the new ones (that could be partly the same)
             model.removeVariable(var -> ModellingUtility.isOutlier(var, true));
             // add new outliers
-            int[][] outliers = impl.getOutliers();
             for (int i = 0; i < outliers.length; ++i) {
                 int[] cur = outliers[i];
                 TsPeriod pos = domain.get(cur[0]);
                 IOutlier o = impl.getFactory(cur[1]).make(pos.start());
-            model.addVariable(Variable.variable(IOutlier.defaultName(o.getCode(), pos), o, attributes(o)));
+                model.addVariable(Variable.variable(IOutlier.defaultName(o.getCode(), pos), o, attributes(o)));
             }
             context.clearEstimation();
             return ProcessingResult.Changed;
         } catch (RuntimeException err) {
             return ProcessingResult.Failed;
+        } finally {
+            log.pop();
         }
     }
 
-    static Map<String, String> attributes(IOutlier o){
-        HashMap<String, String> attributes=new HashMap<>();
+    static Map<String, String> attributes(IOutlier o) {
+        HashMap<String, String> attributes = new HashMap<>();
         attributes.put(ModellingUtility.AMI, "x13");
         attributes.put(SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(o).name());
         return attributes;
@@ -241,6 +256,5 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
         }
         return -1;
     }
-
 
 }

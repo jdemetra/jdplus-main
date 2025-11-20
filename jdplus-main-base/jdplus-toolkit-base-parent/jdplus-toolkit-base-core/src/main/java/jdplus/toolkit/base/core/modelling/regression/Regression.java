@@ -139,7 +139,7 @@ public class Regression {
         MatrixWindow wnd = M.left(0);
         if (domain instanceof TsDomain tsDomain) {
             TsPeriod start = tsDomain.getStartPeriod();
-            for (int i = 0, j = 0; i < vars.length; ++i) {
+            for (int i = 0; i < vars.length; ++i) {
                 ITsVariable v = vars[i];
                 RegressionVariableFactory factory = FACTORIES.get(v.getClass());
                 if (factory == null) {

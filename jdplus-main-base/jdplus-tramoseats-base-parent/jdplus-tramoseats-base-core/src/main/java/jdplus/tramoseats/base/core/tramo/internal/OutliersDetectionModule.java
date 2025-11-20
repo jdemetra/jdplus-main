@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.modelling.regression.IOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.PeriodicOutlierFactory;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
@@ -215,6 +216,8 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
 
     @Override
     public ProcessingResult process(RegSarimaModelling context, double criticalValue) {
+        ProcessingLog log = context.getLog();
+        log.push(OUTLIERS);
         try {
             ModelDescription model = context.getDescription();
             TsDomain domain = model.getEstimationDomain();
@@ -228,6 +231,16 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
             }
             // add new outliers
             int[][] outliers = impl.getOutliers();
+            String msg;
+            switch (outliers.length) {
+                case 0 ->
+                    msg = SELECTION0;
+                case 1 ->
+                    msg = SELECTION1;
+                default ->
+                    msg = outliers.length + SELECTION;
+            }
+            log.info(msg, new Info(impl.outlierTypes(), outliers, criticalValue));
             if (outliers.length == 0) {
                 return ProcessingResult.Unchanged;
             }
@@ -238,9 +251,12 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
                 model.addVariable(Variable.variable(IOutlier.defaultName(o.getCode(), pos), o, attributes(o)));
             }
             context.clearEstimation();
+
             return ProcessingResult.Changed;
         } catch (RuntimeException err) {
             return ProcessingResult.Failed;
+        } finally {
+            log.pop();
         }
     }
 

@@ -13,20 +13,19 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package jdplus.tramoseats.desktop.plugin.html;
+package jdplus.sa.desktop.plugin.html;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
+import jdplus.toolkit.base.core.regsarima.regular.IArmaModule;
 import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.HtmlTable;
 import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
 import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlLogFormatter;
-import jdplus.tramoseats.base.core.tramo.internal.ArmaModelSelector;
-import jdplus.tramoseats.base.core.tramo.internal.ArmaModule;
 import nbbrd.service.ServiceProvider;
 
 /**
@@ -34,30 +33,34 @@ import nbbrd.service.ServiceProvider;
  * @author Jean Palate
  */
 @ServiceProvider(HtmlLogFormatter.class)
-public class HtmlArmaSelection implements HtmlLogFormatter<ArmaModule.Info> {
+public class HtmlArmaSelection implements HtmlLogFormatter<IArmaModule.Info> {
 
     static final DecimalFormat DF4 = new DecimalFormat("0.0000", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
 
     @Override
-    public Class<ArmaModule.Info> getSourceClass() {
-        return ArmaModule.Info.class;
+    public Class<IArmaModule.Info> getSourceClass() {
+        return IArmaModule.Info.class;
     }
 
     @Override
-    public void write(HtmlStream stream, ArmaModule.Info details, boolean verbose) throws IOException {
-        
+    public void write(HtmlStream stream, IArmaModule.Info details, boolean verbose) throws IOException {
+
         stream.open(new HtmlTable().withWidth(200));
         stream.open(HtmlTag.TABLEROW);
         stream.write(new HtmlTableCell("ARMA").withWidth(100));
         stream.write(new HtmlTableCell("BIC").withWidth(100));
         stream.close(HtmlTag.TABLEROW);
 
-        for (ArmaModelSelector.FastBIC cur : details.getModels()) {
-            SarmaOrders arma = cur.getArma().orders().doStationary();
+        SarmaOrders[] models = details.models();
+        double[] bics = details.bic();
+
+        for (int i = 0; i < models.length; ++i) {
+            SarmaOrders arma = models[i];
+            double bic = bics[i];
             stream.open(HtmlTag.TABLEROW);
 
             stream.write(new HtmlTableCell(arma.toString()).withWidth(100));
-            stream.write(new HtmlTableCell(DF4.format(cur.getBIC())).withWidth(100));
+            stream.write(new HtmlTableCell(DF4.format(bic)).withWidth(100));
             stream.close(HtmlTag.TABLEROW);
         }
         stream.close(HtmlTag.TABLE);

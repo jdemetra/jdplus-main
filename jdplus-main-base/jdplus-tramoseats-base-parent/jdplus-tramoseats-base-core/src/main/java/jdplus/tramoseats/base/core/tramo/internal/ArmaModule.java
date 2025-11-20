@@ -35,15 +35,39 @@ import jdplus.toolkit.base.api.processing.ProcessingLog;
  */
 public class ArmaModule implements IArmaModule {
 
-    public static final String ARMA = "arma selection",
-            MODEL = "selected model: ", DEFAULT = "default model selected (not enough obs.)",
-            FAILED = "arma selection failed";
 
     @lombok.Value
-    public static class Info {
+    public static class CInfo implements Info {
 
         private final ArmaModelSelector.FastBIC[] models;
         private final SarmaOrders selection;
+
+        @Override
+        public SarmaOrders bestModel() {
+            return selection;
+        }
+
+        @Override
+        public SarmaOrders[] models() {
+            SarmaOrders[] m=new SarmaOrders[models.length];
+            for (int i=0; i<m.length; ++i){
+                if (models[i] != null)
+                    m[i]=models[i].getSpecification();
+            }
+            return m;
+         }
+
+        @Override
+        public double[] bic() {
+            double[] d=new double[models.length];
+            for (int i=0; i<d.length; ++i){
+                if (models[i] != null)
+                    d[i]=models[i].getBIC();
+                else
+                    d[i]=Double.NaN;
+            }
+            return d;
+        }
     }
 
     public static Builder builder() {
@@ -246,7 +270,7 @@ public class ArmaModule implements IArmaModule {
             ArmaModelSelector impl = createModule(maxspec);
             SarmaOrders nspec = impl.process(res, desc.getAnnualFrequency(), maxspec.getD(), maxspec.getBd(), seasonal);
             ArmaModelSelector.FastBIC[] models = impl.gePreferredModels();
-            log.info(MODEL+nspec.toString(), new Info(models, nspec));
+            log.info(MODEL+nspec.toString(), new CInfo(models, nspec));
             if (nspec.equals(curspec.doStationary())) {
                 return ProcessingResult.Unchanged;
             }

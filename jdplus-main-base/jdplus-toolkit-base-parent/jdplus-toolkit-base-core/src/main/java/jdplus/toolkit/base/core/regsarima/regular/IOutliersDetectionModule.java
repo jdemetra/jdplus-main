@@ -22,6 +22,16 @@ package jdplus.toolkit.base.core.regsarima.regular;
  */
 public interface IOutliersDetectionModule {
 
+    public static final String OUTLIERS = "outliers selection", SELECTION1 = " outlier selected", SELECTION = " outliers selected", SELECTION0 = "no outlier selected";
+
+    @lombok.Value
+    public static final class Info {
+
+        String[] types;
+        int[][] outliers;
+        double va;
+    }
+
     /**
      * Search outliers in the given RegArima model
      *
