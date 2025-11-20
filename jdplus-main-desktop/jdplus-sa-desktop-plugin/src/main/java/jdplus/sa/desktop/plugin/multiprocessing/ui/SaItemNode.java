@@ -52,7 +52,7 @@ public class SaItemNode extends AbstractNode {
         Sheet sheet = new Sheet();
         sheet.put(getDefinitionSheetSet(item, b));
 
-        if ((item.getMeta().isEmpty())) {
+        if (!item.getMeta().isEmpty()) {
             Sheet.Set info = NbUtilities.createMetadataPropertiesSet(item.getMeta());
             sheet.put(info);
         }
