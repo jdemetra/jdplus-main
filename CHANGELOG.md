@@ -26,6 +26,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![STAT] Change the definition of the deterministic component in the preadjustment phase (exclude trend constant as in version 2)  [#756](https://github.com/jdemetra/jdplus-main/issues/756)
 - ![UI] Unify period display in GUI [#489](https://github.com/jdemetra/jdplus-main/issues/489)
 - ![UI] Improve workspace feedback [#661](https://github.com/jdemetra/jdplus-main/issues/661), [#802](https://github.com/jdemetra/jdplus-main/issues/802), [#420](https://github.com/jdemetra/jdplus-main/issues/420)
+- ![UI] Update reset zoom menu item text to improve clarity [#601](https://github.com/jdemetra/jdplus-main/issues/601)
 
 ## [3.5.1] - 2025-06-12
 
