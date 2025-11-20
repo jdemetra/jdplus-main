@@ -212,7 +212,7 @@ public class FinalEstimator implements IModelEstimator {
                 }
             }
         }
-
+    
         int nnsig = cpr + cps + cqr + cqs;
         if (nnsig == 0) {
             return 0;

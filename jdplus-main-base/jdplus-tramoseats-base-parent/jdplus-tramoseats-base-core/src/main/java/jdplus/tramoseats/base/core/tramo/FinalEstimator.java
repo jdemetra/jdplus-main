@@ -28,6 +28,7 @@ import jdplus.toolkit.base.core.regsarima.RegSarimaComputer;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.functions.levmar.LevenbergMarquardtMinimizer;
 
 /**
@@ -37,6 +38,7 @@ import jdplus.toolkit.base.core.math.functions.levmar.LevenbergMarquardtMinimize
 @Development(status = Development.Status.Preliminary)
 class FinalEstimator implements IModelEstimator {
 
+    public static final String ESTIMATION = "full estimation", FAILED = "estimation faied", SPEC_CHANGED = "arima spec changed";
     private static final int MAXD = 2, MAXBD = 1;
 
     public static Builder builder() {
@@ -109,46 +111,53 @@ class FinalEstimator implements IModelEstimator {
     @Override
     public boolean estimate(RegSarimaModelling context) {
         int niter = 0;
-        do {
-            try {
-                IParametricMapping<SarimaModel> mapping = context.getDescription().mapping();
-                RegSarimaComputer processor = RegSarimaComputer.builder()
-                        .minimizer(LevenbergMarquardtMinimizer.builder())
-                        .precision(eps)
-                        .computeExactFinalDerivatives(true)
-                        //                        .startingPoint(RegSarimaComputer.StartingPoint.Multiple)
-                        .build();
-                context.estimate(processor);
-                int ndim = mapping.getDim();
-                if (ndim == 0) {
-                    return true;
-                }
-//                context.information.subSet(RegArimaEstimator.OPTIMIZATION).set(RegArimaEstimator.SCORE, monitor.getScore());
-                if (!ami) {
-                    return true;
-                }
-                if (checkUnitRoots(context)) {
-                    nnsig = 0;
-                    if (!checkCommonRoots(context)) {
-                        nnsig = 2;
-                    } else {
-                        nnsig = test(context);
-                    }
-                    if (nnsig == 0) {
+        ProcessingLog log = context.getLog();
+        log.push(ESTIMATION);
+        try {
+            do {
+                try {
+                    IParametricMapping<SarimaModel> mapping = context.getDescription().mapping();
+                    RegSarimaComputer processor = RegSarimaComputer.builder()
+                            .minimizer(LevenbergMarquardtMinimizer.builder())
+                            .precision(eps)
+                            .computeExactFinalDerivatives(true)
+                            //                        .startingPoint(RegSarimaComputer.StartingPoint.Multiple)
+                            .build();
+                    context.estimate(processor);
+                    int ndim = mapping.getDim();
+                    if (ndim == 0) {
                         return true;
                     }
-                    if (nnsig == 1) {
-                        continue;
+//                context.information.subSet(RegArimaEstimator.OPTIMIZATION).set(RegArimaEstimator.SCORE, monitor.getScore());
+                    if (!ami) {
+                        return true;
                     }
-                    if (outliers && pass <= 1) {
-                        return false;
+                    if (checkUnitRoots(context)) {
+                        nnsig = 0;
+                        if (!checkCommonRoots(context)) {
+                            nnsig = 2;
+                        } else {
+                            nnsig = test(context);
+                        }
+                        if (nnsig == 0) {
+                            return true;
+                        }
+                        if (nnsig == 1) {
+                            continue;
+                        }
+                        if (outliers && pass <= 1) {
+                            return false;
+                        }
                     }
+                } catch (RuntimeException err) {
+                    log.remark(FAILED);
+                    return false;
                 }
-            } catch (RuntimeException err) {
-                return false;
-            }
-        } while (niter++ < 5);
-        return false;
+            } while (niter++ < 5);
+            return false;
+        } finally {
+            log.pop();
+        }
     }
 
     public int getChangedParametersCount() {
@@ -238,8 +247,8 @@ class FinalEstimator implements IModelEstimator {
             }
         }
 
-        int nnsig = icpr + icps + icqr + icqs;
-        if (nnsig == 0) {
+        int nsig = icpr + icps + icqr + icqs;
+        if (nsig == 0) {
             return 0;
         }
         SarimaOrders nspec = spec.clone();
@@ -256,8 +265,9 @@ class FinalEstimator implements IModelEstimator {
             nspec.setBq(nspec.getBq() - 1);
         }
 
+        context.getLog().info(SPEC_CHANGED, nspec);
         context.setSpecification(nspec);
-        return nnsig;
+        return nsig;
     }
 
     private boolean checkCommonRoots(RegSarimaModelling context) {

@@ -74,8 +74,8 @@ public final class TsManager implements DataSourceFactory, Closeable {
     @OnAnyThread
     public boolean register(@NonNull TsProvider provider) {
         providers.put(provider.getSource(), provider);
-        if (provider instanceof DataSourceProvider) {
-            ((DataSourceProvider) provider).addDataSourceListener(listener);
+        if (provider instanceof DataSourceProvider dataSourceProvider) {
+            dataSourceProvider.addDataSourceListener(listener);
         }
         return true;
     }
@@ -83,8 +83,8 @@ public final class TsManager implements DataSourceFactory, Closeable {
     @OnAnyThread
     public boolean unregister(@NonNull TsProvider provider) {
         TsProvider removedProvider = providers.remove(provider.getSource());
-        if (removedProvider instanceof DataSourceProvider) {
-            ((DataSourceProvider) removedProvider).removeDataSourceListener(listener);
+        if (removedProvider instanceof DataSourceProvider dataSourceProvider) {
+            dataSourceProvider.removeDataSourceListener(listener);
         }
         return true;
     }
