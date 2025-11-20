@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.6.0] - 2025-11-20
+
 ### Added
 
 - ![STAT] Add support of compact notation in ISO 8601 time interval [#159](https://github.com/jdemetra/jdplus-main/issues/159)
@@ -283,7 +285,8 @@ This is the **initial release** of JDemetra+ v3.0.0.
 
 - Initial release
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...HEAD
+[3.6.0]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...v3.6.0
 [3.5.1]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/jdemetra/jd3-main/compare/v3.3.0...v3.4.0
