@@ -16,6 +16,7 @@ import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import ec.satoolkit.tramoseats.TramoSeatsSpecification;
 import java.util.Arrays;
 import jdplus.sa.base.core.SaBenchmarkingResults;
+import jdplus.toolkit.base.api.processing.DefaultProcessingLog;
 
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
@@ -87,7 +88,7 @@ public class TramoSeatsKernelTest {
         assertNotSame(diags, null);
         SaBenchmarkingResults benchmarking = rslt.getBenchmarking();
         assertNotSame(benchmarking, null);
-        TsDataTable table=TsDataTable.of(Arrays.asList(benchmarking.getSa(), benchmarking.getTarget(), benchmarking.getBenchmarkedSa()));
+        TsDataTable table = TsDataTable.of(Arrays.asList(benchmarking.getSa(), benchmarking.getTarget(), benchmarking.getBenchmarkedSa()));
 //        System.out.println(table);
     }
 
@@ -110,5 +111,32 @@ public class TramoSeatsKernelTest {
         TramoSeatsKernel ts = TramoSeatsKernel.of(TramoSeatsSpec.RSAfull, null);
         ProcessingLog log = ProcessingLog.dummy();
         TramoSeatsResults rslt = ts.process(Data.SP_IPI_72, log);
+    }
+
+    public static void main(String[] args) {
+
+        stressTest();
+
+    }
+
+    private static void stressTest() {
+        int N = 20;
+        int K = 100;
+        for (int k = 0; k < K; ++k) {
+            long t0 = System.currentTimeMillis();
+            for (int n = 0; n < N; ++n) {
+                TsData[] all = Data.insee();
+                Arrays.stream(all).parallel().forEach(s -> {
+                    TramoSeatsKernel kernel = TramoSeatsKernel.of(TramoSeatsSpec.RSAfull, null);
+                    ProcessingLog log = new DefaultProcessingLog();
+                    kernel.process(s, log);
+                });
+            }
+            long t1 = System.currentTimeMillis();
+            System.out.print(t1 - t0);
+            System.out.print('\t');
+            System.gc();
+            System.out.println(java.lang.Runtime.getRuntime().freeMemory());
+        }
     }
 }
