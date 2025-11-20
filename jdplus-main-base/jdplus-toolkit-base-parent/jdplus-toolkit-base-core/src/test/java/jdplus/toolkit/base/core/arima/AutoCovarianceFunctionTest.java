@@ -21,7 +21,7 @@ import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -41,7 +41,7 @@ public class AutoCovarianceFunctionTest {
                 .build();
         SarimaModel arma = arima.stationaryTransformation().getStationaryModel();
         BackFilter ma = arma.getMa();
-        assertTrue(ma.getDegree() == 12);
+        assertEquals(12, ma.getDegree());
         AutoCovarianceFunction acf = arma.getAutoCovarianceFunction();
         double[] ac = acf.values(15);
 //        System.out.println(DoubleSeq.of(ac));

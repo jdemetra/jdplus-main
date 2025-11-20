@@ -1,6 +1,6 @@
 package jdplus.toolkit.desktop.plugin.concurrent;
 
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 @lombok.AllArgsConstructor
 public enum ThreadPriority {

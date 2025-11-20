@@ -70,6 +70,22 @@ public class ExactSingleOutlierDetectorTest {
             long t1 = System.currentTimeMillis();
             System.out.println(t1 - t0);
         }
+        for (int l = 0; l < length.length; ++l) {
+            long t0 = System.currentTimeMillis();
+            for (int k = 0; k < K; ++k) {
+                SarimaOrders spec=SarimaOrders.airline(12);
+                SarimaModel model = SarimaModel.builder(spec)
+                        .setDefault().build();
+                forwardstep2(model, Y.log().range(0, length[l]), td.extract(0, length[l], 0, td.getColumnsCount()));
+//                OutliersDetection od = OutliersDetection.builder()
+//                        .bsm(spec)
+//                        .maxIter(1)
+//                        .build();
+//                od.process(Y.log().range(0, length[l]), td.extract(0, length[l], 0, td.getColumnsCount()), 12);
+            }
+            long t1 = System.currentTimeMillis();
+            System.out.println(t1 - t0);
+        }
     }
     
     private static boolean forwardstep(SarimaModel model, DoubleSeq y, FastMatrix W) {
@@ -87,4 +103,18 @@ public class ExactSingleOutlierDetectorTest {
         return true;
     }
     
+    private static boolean forwardstep2(SarimaModel model, DoubleSeq y, FastMatrix W) {
+        
+        FastOutlierDetector2 sod=new FastOutlierDetector2(null, null, null);
+        IOutlierFactory[] factories=new IOutlierFactory[]{AdditiveOutlierFactory.FACTORY,LevelShiftFactory.FACTORY_ZEROENDED, new PeriodicOutlierFactory(12, true)};
+        sod.setOutlierFactories(factories);
+        sod.prepare(y.length());
+        RegArimaModel<SarimaModel> regarima=RegArimaModel.builder()
+                .arima(model)
+                .y(y)
+//                .addX(W)
+                .build();
+        sod.process(regarima);
+        return true;
+    }
 }

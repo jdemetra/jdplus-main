@@ -13,7 +13,9 @@ import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.math.matrices.UpperTriangularMatrix;
 import jdplus.toolkit.base.core.math.matrices.lapack.Cholesky;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -62,7 +64,7 @@ public class CholeskyTest {
         } catch (MatrixException err) {
             ok = false;
         }
-        assertTrue(!ok);
+        assertFalse(ok);
 
         T = S.deepClone();
         SymmetricMatrix.lcholesky(T, 1e-9);
@@ -84,7 +86,7 @@ public class CholeskyTest {
         } catch (MatrixException err) {
             ok = false;
         }
-        assertTrue(!ok);
+        assertFalse(ok);
 
         T = S.deepClone();
         SymmetricMatrix.ucholesky(T, 1e-9);

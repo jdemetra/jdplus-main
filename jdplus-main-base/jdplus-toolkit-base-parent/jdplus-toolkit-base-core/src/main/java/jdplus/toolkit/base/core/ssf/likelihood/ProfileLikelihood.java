@@ -32,21 +32,21 @@ public class ProfileLikelihood implements Likelihood {
      * determinant of the cov matrix diffuse correction
      */
     private double ll,
-
-    /**
-     * Respectively: diffuse log-likelihood sum of the squared e log
- determinant of the cov matrix diffuse correction
-     */
-    ssqerr, 
-
-    /**
-     * Respectively: diffuse log-likelihood sum of the squared e log
- determinant of the cov matrix diffuse correction
-     */
-    ldet;
+            /**
+             * Respectively: diffuse log-likelihood sum of the squared e log
+             * determinant of the cov matrix diffuse correction
+             */
+            ssqerr,
+            /**
+             * Respectively: diffuse log-likelihood sum of the squared e log
+             * determinant of the cov matrix diffuse correction
+             */
+            ldet;
     private int n;
     private DataBlock b;
     private FastMatrix varB;
+
+    private double[] res;
 
     /**
      *
@@ -82,11 +82,6 @@ public class ProfileLikelihood implements Likelihood {
     }
 
     @Override
-    public DoubleSeq e() {
-        return DataBlock.EMPTY;
-    }
-
-    @Override
     public double logDeterminant() {
         return ldet;
     }
@@ -95,6 +90,7 @@ public class ProfileLikelihood implements Likelihood {
      *
      * @return
      */
+    @Override
     public double ser() {
         return Math.sqrt(ssqerr / n);
     }
@@ -109,6 +105,11 @@ public class ProfileLikelihood implements Likelihood {
         return ssqerr;
     }
 
+    @Override
+    public DoubleSeq e() {
+        return res == null ? DoubleSeq.empty() : DoubleSeq.of(res);
+    }
+    
     /**
      * Adjust the likelihood if the data have been pre-multiplied by a given
      * scaling factor
@@ -121,6 +122,11 @@ public class ProfileLikelihood implements Likelihood {
         }
         ssqerr /= factor * factor;
         ll += n * Math.log(factor);
+        if (res != null) {
+            for (int i = 0; i < res.length; ++i) {
+                res[i] /= factor;
+            }
+        }
     }
 
     /**
@@ -149,6 +155,10 @@ public class ProfileLikelihood implements Likelihood {
         this.n = n;
         calcll();
         return true;
+    }
+    
+    public void set(DoubleSeq e){
+        this.res=e.toArray();
     }
 
     private void calcll() {

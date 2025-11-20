@@ -31,7 +31,6 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
-import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.tramoseats.base.api.tramo.AutoModelSpec;
@@ -58,7 +57,8 @@ public class TramoKernel implements RegSarimaProcessor {
 
     private static final String LAST_CHANCE = "last chance model",
             OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection",
-            AMI = "automatic model identification: round ";
+            AMI = "automatic model identification", ROUND = "round ",
+            LOGNEG = "can't apply log transformation 'some obs. are <= 0";
 
     private static final String TRAMO = "tramo";
 
@@ -280,15 +280,19 @@ public class TramoKernel implements RegSarimaProcessor {
             log = ProcessingLog.dummy();
         }
         log.push(TRAMO);
-        ModelDescription desc = build(originalTs, log);
-        if (desc == null) {
-            throw new TramoException("Initialization failed");
-        }
-        RegSarimaModelling modelling = RegSarimaModelling.of(desc, log);
-        RegSarimaModel rslt = ami(modelling);
-        log.pop();
+        try {
+            ModelDescription desc = build(originalTs, log);
+            if (desc == null) {
+                log.error("initialization failed");
+                return null;
+            }
+            RegSarimaModelling modelling = RegSarimaModelling.of(desc, log);
+            RegSarimaModel rslt = ami(modelling);
 
-        return rslt;
+            return rslt;
+        } finally {
+            log.pop();
+        }
     }
 
     private ModelDescription build(TsData originalTs, ProcessingLog log) {
@@ -315,22 +319,30 @@ public class TramoKernel implements RegSarimaProcessor {
             return modelling.build();
         }
 
-        // Test the seasonality
-        testSeasonality(modelling);
+        modelling.getLog().push(AMI);
+        try {
 
-        // Test for loglevel transformation
-        testTransformation(modelling);
+            // Test the seasonality
+            testSeasonality(modelling);
 
-        regressionModule(modelling.getDescription().isAdjusted()).test(modelling);
+            // Test for loglevel transformation
+            if (!testTransformation(modelling)) {
+                return null;
+            }
 
-        initProcessing(modelling.getDescription().regarima().getActualObservationsCount());
+            regressionModule(modelling.getDescription().isAdjusted()).test(modelling);
 
-        int iter = 0;
-        do {
-            ++iter;
-        } while (iter < 10 && !iterate(modelling));
+            initProcessing(modelling.getDescription().regarima().getActualObservationsCount());
 
-        return modelling.build();
+            int iter = 0;
+            do {
+                ++iter;
+             } while (iter < 10 && !iterate(modelling));
+
+            return modelling.build();
+        } finally {
+            modelling.getLog().pop();
+        }
     }
 
     private void initProcessing(int n) {
@@ -369,7 +381,7 @@ public class TramoKernel implements RegSarimaProcessor {
      * @return True if the model doesn't need further iteration
      */
     private boolean iterate(RegSarimaModelling modelling) {
-
+        modelling.getLog().step(ROUND + pass);
         if (modelling.needEstimation()) {
             modelling.estimate(options.getIntermediatePrecision());
         }
@@ -650,9 +662,6 @@ public class TramoKernel implements RegSarimaProcessor {
             if (!useprev) {
                 refAuto = RegSarimaModelling.copyOf(context);
                 refStats = stats;
-                if (pass == 3) {
-                    context.getLog().warning(LAST_CHANCE);
-                }
             } else {
                 restore(context);
                 plbox = plbox0;
@@ -705,6 +714,7 @@ public class TramoKernel implements RegSarimaProcessor {
         desc.removeVariable(var -> ModellingUtility.isOutlier(var, true));
         modelling.setSpecification(nspec);
 //        addArmaHistory(context);
+        modelling.getLog().warning(LAST_CHANCE);
         round = 1;
         needOutliers = isOutliersDetection();
         needAutoModelling = false;
@@ -729,7 +739,8 @@ public class TramoKernel implements RegSarimaProcessor {
 //    }
 //
 
-    private static final String SEAS = "seasonality test", NO_SEAS = "No identifiable seasonality";
+    private static final String SEAS = "seasonality test", NO_SEAS = "No identifiable seasonality",
+            HAS_SEAS3 = "strong seasonality detected", HAS_SEAS2 = "moderate seasonality detected";
 
     private void testSeasonality(RegSarimaModelling modelling) {
         ModelDescription model = modelling.getDescription();
@@ -741,26 +752,29 @@ public class TramoKernel implements RegSarimaProcessor {
         int period = model.getAnnualFrequency();
         if (period > 1) {
             ProcessingLog log = modelling.getLog();
-
-            log.push(SEAS);
-            TramoSeasonalityDetector seas = new TramoSeasonalityDetector();
-            SeasonalityDetector.Seasonality s = seas.hasSeasonality(model.getTransformedSeries().getValues(), period);
-            context.originalSeasonalityTest = s.toInt();
-            if (context.originalSeasonalityTest < 2) {
-                log.warning(NO_SEAS); //, seas.getTests());
-                SarimaOrders nspec = SarimaOrders.m011(period);
-                model.setSpecification(nspec);
-                context.seasonal = false;
-            } else {
-                context.seasonal = true;
+            try {
+                log.push(SEAS);
+                TramoSeasonalityDetector seas = new TramoSeasonalityDetector();
+                SeasonalityDetector.Seasonality s = seas.hasSeasonality(model.getTransformedSeries().getValues(), period);
+                context.originalSeasonalityTest = s.toInt();
+                if (context.originalSeasonalityTest < 2) {
+                    log.remark(NO_SEAS); //, seas.getTests());
+                    SarimaOrders nspec = SarimaOrders.m011(period);
+                    model.setSpecification(nspec);
+                    context.seasonal = false;
+                } else {
+                    log.info(context.originalSeasonalityTest == 2 ? HAS_SEAS2 : HAS_SEAS3); //, seas.getTests());
+                    context.seasonal = true;
+                }
+            } finally {
+                log.pop();
             }
-            log.pop();
         } else {
             context.seasonal = false;
         }
     }
 
-    private void testTransformation(RegSarimaModelling modelling) {
+    private boolean testTransformation(RegSarimaModelling modelling) {
         TransformSpec tspec = spec.getTransform();
         if (tspec.getFunction() == TransformationType.Auto) {
             boolean toClean = false;
@@ -790,12 +804,14 @@ public class TramoKernel implements RegSarimaProcessor {
             }
         } else if (modelling.getDescription().isLogTransformation()) {
             if (modelling.getDescription().getSeries().getValues().anyMatch(x -> x <= 0)) {
-                modelling.getLog().warning("logs changed to levels");
-                modelling.getDescription().setLogTransformation(false);
-                modelling.getDescription().setPreadjustment(LengthOfPeriodType.None);
-                modelling.clearEstimation();
+                modelling.getLog().error(LOGNEG);
+                return false;
+//                modelling.getDescription().setLogTransformation(false);
+//                modelling.getDescription().setPreadjustment(LengthOfPeriodType.None);
+//                modelling.clearEstimation();
             }
         }
+        return true;
     }
 
     private boolean estimateModel(RegSarimaModelling context) {

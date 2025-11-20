@@ -8,10 +8,10 @@ package jdplus.x13.base.r;
 import jdplus.x13.base.api.x11.X11Spec;
 import tck.demetra.data.Data;
 import jdplus.x13.base.api.x13.X13Spec;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import jdplus.x13.base.core.x13.X13Output;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -34,7 +34,7 @@ public class X13Test {
         byte[] sbytes = X13.toBuffer(rslt.getEstimationSpec());
         X13Spec spec = X13.specOf(sbytes);
 
-        assertTrue(spec != null);
+        assertNotSame(spec, null);
     }
 
     @Test
@@ -56,6 +56,6 @@ public class X13Test {
 //        }
         byte[] brslt = X13.toBuffer(rslt);
 
-        assertTrue(brslt != null);
+        assertNotSame(brslt, null);
     }
 }

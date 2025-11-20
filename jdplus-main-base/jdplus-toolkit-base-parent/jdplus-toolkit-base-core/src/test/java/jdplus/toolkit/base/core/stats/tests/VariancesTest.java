@@ -29,7 +29,8 @@ import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import jdplus.toolkit.base.core.stats.samples.Population;
 import jdplus.toolkit.base.core.stats.samples.Sample;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -103,7 +104,7 @@ public class VariancesTest {
 
     @Test
     public void testMonthly() {
-        assertEquals(Variances.cochranCriticalValue(0.05, 12, 9), 0.2187, 1e-4);
+        assertEquals(0.2187, Variances.cochranCriticalValue(0.05, 12, 9), 1e-4);
     }
 
     @Test

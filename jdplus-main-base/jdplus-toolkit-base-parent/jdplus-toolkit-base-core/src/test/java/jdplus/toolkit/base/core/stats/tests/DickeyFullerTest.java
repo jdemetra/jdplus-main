@@ -24,7 +24,7 @@ import jdplus.toolkit.base.core.random.MersenneTwister;
 import jdplus.toolkit.base.core.stats.tests.DickeyFuller.DickeyFullerType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

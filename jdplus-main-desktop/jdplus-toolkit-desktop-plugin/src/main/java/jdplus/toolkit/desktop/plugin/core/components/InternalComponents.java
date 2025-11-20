@@ -16,24 +16,31 @@
  */
 package jdplus.toolkit.desktop.plugin.core.components;
 
-import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
 import ec.util.chart.swing.JTimeSeriesChart;
 import ec.util.chart.swing.JTimeSeriesChartCommand;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
-import nbbrd.io.text.Formatter;
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
 import lombok.NonNull;
+import nbbrd.io.text.Formatter;
 
 import javax.swing.*;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
+import java.text.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.function.Supplier;
 
 import static jdplus.toolkit.desktop.plugin.actions.ResetableZoom.RESET_ZOOM_ACTION;
 
@@ -69,7 +76,7 @@ public class InternalComponents {
 
     public static JMenuItem newResetZoomMenu(ActionMap am) {
         JMenuItem result = new JMenuItem(am.get(RESET_ZOOM_ACTION));
-        result.setText("Show all");
+        result.setText("Reset zoom");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_EYE));
         return result;
     }
@@ -112,7 +119,7 @@ public class InternalComponents {
         }
     }
 
-    static class NumberFormatAdapter extends NumberFormat {
+    static final class NumberFormatAdapter extends NumberFormat {
 
         final Formatter<Number> numberFormatter;
 
@@ -132,6 +139,33 @@ public class InternalComponents {
 
         @Override
         public Number parse(String source, ParsePosition parsePosition) {
+            return null;
+        }
+    }
+
+    public static final class TsDomainDateFormat extends DateFormat {
+
+        private final Supplier<TsDomain> domainSupplier;
+
+        public TsDomainDateFormat(Supplier<TsDomain> domainSupplier) {
+            this.domainSupplier = domainSupplier;
+
+            // Fix NPE on equals(Object)
+            // Calendar and numberFormat are not used in this implementation
+            this.calendar = new GregorianCalendar(TimeZone.getDefault(), Locale.ROOT);
+            this.numberFormat = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ROOT));
+        }
+
+        @Override
+        public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
+            TsPeriod period = domainSupplier.get()
+                    .getStartPeriod()
+                    .withDate(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()));
+            return toAppendTo.append(period.getStartAsShortString());
+        }
+
+        @Override
+        public Date parse(String source, ParsePosition pos) {
             return null;
         }
     }

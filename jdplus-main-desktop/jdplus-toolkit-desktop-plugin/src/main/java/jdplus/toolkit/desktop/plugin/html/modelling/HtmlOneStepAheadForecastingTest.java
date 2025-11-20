@@ -27,6 +27,7 @@ import jdplus.toolkit.desktop.plugin.html.HtmlTableHeader;
 import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.io.IOException;
+import jdplus.toolkit.base.api.math.Constants;
 import jdplus.toolkit.base.core.regarima.diagnostics.OutOfSampleDiagnosticsConfiguration;
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
 
@@ -121,6 +122,11 @@ public class HtmlOneStepAheadForecastingTest extends AbstractHtmlElement impleme
 
     @Override
     public void write(HtmlStream stream) throws IOException {
+        double nrm = test.getInSampleResiduals().fastNorm2();
+        if (nrm <= Constants.getPrecision()) {
+            stream.write(HtmlTag.EMPHASIZED_TEXT, "Deterministic model. No analysis");
+            return;
+        }
         writeHeader(stream);
         writeMeanTest(stream);
         writeMSETest(stream);

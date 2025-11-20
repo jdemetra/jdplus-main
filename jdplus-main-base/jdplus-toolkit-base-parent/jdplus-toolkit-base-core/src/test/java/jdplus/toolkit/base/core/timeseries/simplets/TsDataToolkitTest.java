@@ -20,7 +20,8 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import tck.demetra.data.Data;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.log;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.commit;
 import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.normalize;
@@ -51,7 +52,7 @@ public class TsDataToolkitTest {
     public void testUnaryOperator() {
         TsData t1 = fn(series, x -> Math.log(x));
         TsData t2 = fastFn(series, x -> Math.log(x));
-        assertTrue(t1.getValues().distance(t2.getValues()) == 0);
+        assertEquals(0, t1.getValues().distance(t2.getValues()));
     }
 
     @Test

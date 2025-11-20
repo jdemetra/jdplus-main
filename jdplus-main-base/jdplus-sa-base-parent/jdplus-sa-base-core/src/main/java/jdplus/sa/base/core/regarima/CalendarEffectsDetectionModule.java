@@ -16,6 +16,10 @@
  */
 package jdplus.sa.base.core.regarima;
 
+import java.util.Arrays;
+import static jdplus.sa.base.core.regarima.AutomaticTradingRegressionModule.NOTD;
+import static jdplus.sa.base.core.regarima.AutomaticTradingRegressionModule.TD_SEL;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
@@ -33,13 +37,14 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
+import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 
 /**
  *
  * @author Jean Palate
  */
 @Development(status = Development.Status.Preliminary)
-public class CalendarEffectsDetectionModule implements IRegressionModule {
+public class CalendarEffectsDetectionModule implements AutomaticTradingRegressionModule {
 
     public static Builder builder() {
         return new Builder();
@@ -100,48 +105,62 @@ public class CalendarEffectsDetectionModule implements IRegressionModule {
 
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
+        ProcessingLog log = context.getLog();
+        log.push(ATD);
+        try {
 
-        ModelDescription description = context.getDescription();
-        IRegArimaComputer<SarimaModel> processor = RegArimaUtility.processor(true, eps);
+            ModelDescription description = context.getDescription();
+            IRegArimaComputer<SarimaModel> processor = RegArimaUtility.processor(true, eps);
 
-        // builds models with and without td
-        ModelDescription ntddesc = ModelDescription.copyOf(description);
-        boolean removed = ntddesc.removeVariable(var -> ModellingUtility.isTradingDays(var));
-        if (lp != null) {
-            if (ntddesc.isAdjusted()) {
-                ntddesc.setPreadjustment(LengthOfPeriodType.None);
+            // builds models with and without td
+            ModelDescription ntddesc = ModelDescription.copyOf(description);
+            boolean removed = ntddesc.removeVariable(var -> ModellingUtility.isTradingDays(var));
+            if (lp != null) {
+                if (ntddesc.isAdjusted()) {
+                    ntddesc.setPreadjustment(LengthOfPeriodType.None);
+                } else {
+                    ntddesc.removeVariable(var -> ModellingUtility.isLengthOfPeriod(var));
+                }
+
+            }
+
+            ModelDescription tddesc = ModelDescription.copyOf(ntddesc);
+            tddesc.addVariable(Variable.variable("td", td, ModelBuilder.calendarAMI));
+            if (lp != null) {
+                if (tddesc.isLogTransformation() && adjust != LengthOfPeriodType.None) {
+                    tddesc.setPreadjustment(adjust);
+                } else {
+                    tddesc.addVariable(Variable.variable("lp", lp, ModelBuilder.calendarAMI));
+                }
+            }
+
+            RegArimaEstimation<SarimaModel> tdest = tddesc.estimate(processor);
+            RegArimaEstimation<SarimaModel> ntdest = ntddesc.estimate(processor);
+
+            boolean changed = false;
+            int best;
+            if (comparator.compare(ntdest, tdest) == 0) {
+                best = 1;
+                if (!removed) {
+                    changed = true;
+                }
+                context.set(tddesc, tdest);
             } else {
-                ntddesc.removeVariable(var -> ModellingUtility.isLengthOfPeriod(var));
+                best = 0;
+                if (removed) {
+                    changed = true;
+                }
+                context.set(ntddesc, ntdest);
             }
+            Info info = new Info(new String[]{"no td", td.description(null)},
+                    new LikelihoodStatistics[]{ntdest.statistics(), tdest.statistics()},
+                    best);
 
+            log.info(best == 0 ? NOTD : TD_SEL + info.getNames()[best], info);
+
+            return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
+        } finally {
+            log.pop();
         }
-
-        ModelDescription tddesc = ModelDescription.copyOf(ntddesc);
-        tddesc.addVariable(Variable.variable("td", td, ModelBuilder.calendarAMI));
-        if (lp != null) {
-            if (tddesc.isLogTransformation() && adjust != LengthOfPeriodType.None) {
-                tddesc.setPreadjustment(adjust);
-            } else {
-                tddesc.addVariable(Variable.variable("lp", lp, ModelBuilder.calendarAMI));
-            }
-        }
-
-        RegArimaEstimation<SarimaModel> tdest = tddesc.estimate(processor);
-        RegArimaEstimation<SarimaModel> ntdest = ntddesc.estimate(processor);
-
-        boolean changed = false;
-        if (comparator.compare(ntdest, tdest) == 0) {
-            if (!removed) {
-                changed = true;
-            }
-            context.set(tddesc, tdest);
-        } else {
-            if (removed) {
-                changed = true;
-            }
-            context.set(ntddesc, ntdest);
-        }
-
-        return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
     }
 }

@@ -19,7 +19,6 @@ package jdplus.tramoseats.base.api.tramo;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**

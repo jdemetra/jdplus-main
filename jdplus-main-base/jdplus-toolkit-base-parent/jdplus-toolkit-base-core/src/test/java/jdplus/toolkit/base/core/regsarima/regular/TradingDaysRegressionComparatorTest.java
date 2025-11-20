@@ -1,15 +1,14 @@
 package jdplus.toolkit.base.core.regsarima.regular;
-
+import org.junit.jupiter.api.Test;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.timeseries.TsData;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.regression.LengthOfPeriod;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 
 /**
  *
@@ -33,7 +32,7 @@ public class TradingDaysRegressionComparatorTest {
 //            System.out.println(test[i].statistics().getAIC());
 //        }
         int bestModel = TradingDaysRegressionComparator.bestModel(test, TradingDaysRegressionComparator.bicComparator());
-        assertTrue(bestModel == 4);
+        assertEquals(4, bestModel);
     }
 
    @Test
@@ -49,7 +48,7 @@ public class TradingDaysRegressionComparatorTest {
 //            System.out.println(test[i].statistics().getAIC());
 //        }
         int bestModel = TradingDaysRegressionComparator.bestModel(test, TradingDaysRegressionComparator.bicComparator());
-        assertTrue(bestModel == 4);
+       assertEquals(4, bestModel);
     }
 
     @Test
@@ -63,7 +62,7 @@ public class TradingDaysRegressionComparatorTest {
                         new LengthOfPeriod(LengthOfPeriodType.LeapYear), 1e-5);
         
         int waldTest = TradingDaysRegressionComparator.waldTest(test, 0.01, 0.1);
-        assertTrue(waldTest == 4);
+        assertEquals(4, waldTest);
     }
     
     @Test
@@ -77,7 +76,7 @@ public class TradingDaysRegressionComparatorTest {
                         null, 1e-5);
         
         int waldTest = TradingDaysRegressionComparator.waldTest(test, 0.01, 0.1);
-        assertTrue(waldTest == 4);
+        assertEquals(4, waldTest);
     }
 
     @Test
@@ -91,7 +90,7 @@ public class TradingDaysRegressionComparatorTest {
                         new LengthOfPeriod(LengthOfPeriodType.LeapYear), 1e-5);
         
         int waldTest = TradingDaysRegressionComparator.waldTest(test, 0.01, 0.1);
-        assertTrue(waldTest == 5);
+        assertEquals(5, waldTest);
     }
     
    @Test
@@ -105,6 +104,6 @@ public class TradingDaysRegressionComparatorTest {
                         new LengthOfPeriod(LengthOfPeriodType.LeapYear), 1e-5);
         
         int waldTest = TradingDaysRegressionComparator.waldTest(test, 0.01, 0.1);
-        assertTrue(waldTest == 5);
+       assertEquals(5, waldTest);
     }
 }

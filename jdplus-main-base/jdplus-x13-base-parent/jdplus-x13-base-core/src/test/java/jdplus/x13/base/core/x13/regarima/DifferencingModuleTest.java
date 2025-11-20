@@ -19,7 +19,7 @@ package jdplus.x13.base.core.x13.regarima;
 import tck.demetra.data.Data;
 import ec.tstoolkit.modelling.DefaultTransformationType;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jdplus.toolkit.base.api.timeseries.TsData;
 import ec.tstoolkit.data.ReadDataBlock;
@@ -53,7 +53,7 @@ public class DifferencingModuleTest {
             diff.process(insee[i].getValues(), 12);
             assertEquals(diff.getD(), odiff.getD());
             assertEquals(diff.getBd(), odiff.getBD());
-            assertTrue(diff.isMeanCorrection()==odiff.isMeanCorrection());
+            assertEquals(diff.isMeanCorrection(), odiff.isMeanCorrection());
         }
     }
 
@@ -69,7 +69,7 @@ public class DifferencingModuleTest {
             diff.process(insee[i].getValues().log(), 12);
             assertEquals(diff.getD(), odiff.getD());
             assertEquals(diff.getBd(), odiff.getBD());
-            assertTrue(diff.isMeanCorrection()==odiff.isMeanCorrection());
+            assertEquals(diff.isMeanCorrection(), odiff.isMeanCorrection());
         }
     }
 

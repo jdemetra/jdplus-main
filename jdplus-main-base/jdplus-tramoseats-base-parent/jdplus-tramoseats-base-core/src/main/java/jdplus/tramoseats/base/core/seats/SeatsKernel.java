@@ -29,7 +29,7 @@ import lombok.NonNull;
 @Development(status = Development.Status.Release)
 public class SeatsKernel {
 
-    public static final String SEATS = "Seats";
+    public static final String SEATS = "seats";
     public static final String MODEL = "modelling", VALIDATION = "validation", DECOMPOSITION = "decomposition",
             ESTIMATION = "estimation", BIAS = "bias correction";
 
@@ -48,18 +48,22 @@ public class SeatsKernel {
 
     public SeatsResults process(final SeatsModelSpec modelSpec, ProcessingLog log) {
         log.push(SEATS);
-        // step 0. Build the model
-        SeatsModel model = buildModel(modelSpec, log);
-        // step 1. Validate the current model;
-        validate(model, log);
-        // step 2. Try to decompose the model
-        decomposeModel(model, log);
-        // step 3. Computation of the components
-        estimateComponents(model, log);
-        // step 4. Bias correction
-        biasCorrection(model, log);
-        log.pop();
-        return results(model);
+        try {
+            // step 0. Build the model
+            SeatsModel model = buildModel(modelSpec, log);
+            // step 1. Validate the current model;
+            validate(model, log);
+            // step 2. Try to decompose the model
+            decomposeModel(model, log);
+            // step 3. Computation of the components
+            estimateComponents(model, log);
+            // step 4. Bias correction
+            biasCorrection(model, log);
+            return results(model);
+        } finally {
+            log.pop();
+        }
+
     }
 
     private SeatsModel buildModel(SeatsModelSpec modelSpec, ProcessingLog log) {
@@ -70,62 +74,66 @@ public class SeatsKernel {
 
     private void validate(SeatsModel model, ProcessingLog log) {
         log.push(VALIDATION);
-        IModelValidator validator = toolkit.getModelValidator();
-        if (!validator.validate(model.getCurrentModel())) {
-            model.setCurrentModel(validator.getNewModel());
-            model.setParametersCutOff(true);
-            log.remark(CUT_OFF);
+        try {
+            IModelValidator validator = toolkit.getModelValidator();
+            if (!validator.validate(model.getCurrentModel())) {
+                model.setCurrentModel(validator.getNewModel());
+                model.setParametersCutOff(true);
+                log.remark(CUT_OFF);
+            }
+        } finally {
+            log.pop();
         }
-        log.pop();
     }
 
-    private final String NON_DECOMPOSABLE = "Non decomposable model",
-            CUT_OFF = "Arima parameters cut off",
-            APPROXIMATION = "Model replaced by an approximation",
-            NOISY = "Noisy model used";
+    private final String NON_DECOMPOSABLE = "non decomposable model",
+            CUT_OFF = "arima parameters cut off",
+            APPROXIMATION = "model replaced by an approximation",
+            NOISY = "noisy model used",
+            SEATS_FAILED = "canonical decomposition failed";
 
     private void decomposeModel(SeatsModel model, ProcessingLog log) {
         log.push(DECOMPOSITION);
-        IModelApproximator approximator = toolkit.getModelApproximator();
-        IModelDecomposer decomposer = toolkit.getModelDecomposer();
-        UcarimaModel ucm = null;
-        int nround = 0;
-        while (++nround <= 10) {
-            log.step("Canonical decomposition");
-            ucm = decomposer.decompose(model.getCurrentModel());
-            if (ucm == null && nround == 1) {
-                log.warning(NON_DECOMPOSABLE);
+        try {
+            IModelApproximator approximator = toolkit.getModelApproximator();
+            IModelDecomposer decomposer = toolkit.getModelDecomposer();
+            UcarimaModel ucm = null;
+            int nround = 0;
+            while (++nround <= 10) {
+                ucm = decomposer.decompose(model.getCurrentModel());
+                if (ucm == null && nround == 1) {
+                    log.warning(NON_DECOMPOSABLE);
+                }
+                if (ucm != null || approximator == null) {
+                    break;
+                }
+                if (!approximator.approximate(model)) {
+                    break;
+                } else {
+                    model.setModelChanged(true);
+                    log.remark(APPROXIMATION, model.getCurrentModel().orders());
+                }
             }
-            if (ucm != null || approximator == null) {
-                break;
+            if (ucm == null) {
+                    log.error(SEATS_FAILED);
+               throw new SeatsException(SeatsException.ERR_DECOMP);
             }
-            if (!approximator.approximate(model)) {
-                break;
-            } else {
+            if (!ucm.getModel().equals(model.getCurrentModel())) {
                 model.setModelChanged(true);
-                log.step(APPROXIMATION, model.getCurrentModel().orders());
+                log.warning(NOISY);
             }
+            model.setUcarimaModel(ucm);
+        } finally {
+            log.pop();
         }
-        if (ucm == null) {
-            throw new SeatsException(SeatsException.ERR_DECOMP);
-        }
-        if (!ucm.getModel().equals(model.getCurrentModel())) {
-            model.setModelChanged(true);
-            log.warning(NOISY);
-        }
-        model.setUcarimaModel(ucm);
-
-        log.pop();
     }
 
     private void estimateComponents(SeatsModel model, ProcessingLog log) {
-        log.step(ESTIMATION);
         IComponentsEstimator componentsEstimator = toolkit.getComponentsEstimator();
         model.setInitialComponents(componentsEstimator.decompose(model));
     }
 
     private void biasCorrection(SeatsModel model, ProcessingLog log) {
-        log.step(BIAS);
         IBiasCorrector bias = toolkit.getBiasCorrector();
         if (bias != null) {
             bias.correctBias(model);

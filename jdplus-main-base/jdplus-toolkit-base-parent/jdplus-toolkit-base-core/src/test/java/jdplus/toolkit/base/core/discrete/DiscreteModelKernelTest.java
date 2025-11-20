@@ -25,8 +25,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Random;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-
 import static org.junit.jupiter.api.Assertions.*;
+
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
@@ -59,7 +59,7 @@ public class DiscreteModelKernelTest {
     public void logit() throws URISyntaxException, IOException {
         URI uri = Data.class.getResource("/smarket.txt").toURI();
         Matrix smarket = MatrixSerializer.read(Path.of(uri).toFile());
-        assertTrue(smarket != null);
+        assertNotSame(smarket, null);
         FastMatrix M = FastMatrix.make(smarket.getRowsCount(), 7);
         for (int i = 0; i < 6; ++i) {
             M.column(i + 1).copy(smarket.column(i + 1));

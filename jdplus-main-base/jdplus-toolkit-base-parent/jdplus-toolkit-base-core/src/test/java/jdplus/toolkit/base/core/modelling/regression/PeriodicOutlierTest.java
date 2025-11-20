@@ -26,7 +26,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -39,7 +39,7 @@ public class PeriodicOutlierTest {
 
     @Test
     public void testData() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 20);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 20);
         for (int i = -1; i < 30; ++i) {
             PeriodicOutlier po = new PeriodicOutlier(days.get(0).plus(i).start(), 5, true);
             DataBlock buffer = Regression.x(days, po);
@@ -49,7 +49,7 @@ public class PeriodicOutlierTest {
 
     @Test
     public void testData2() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 20);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 20);
         for (int i = -10; i < 30; ++i) {
             PeriodicOutlier po = new PeriodicOutlier(days.get(0).plus(i).start(), 5, false);
             DataBlock buffer = Regression.x(days, po);

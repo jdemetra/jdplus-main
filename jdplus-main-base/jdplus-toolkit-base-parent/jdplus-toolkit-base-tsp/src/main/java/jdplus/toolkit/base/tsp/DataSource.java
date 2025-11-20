@@ -23,7 +23,7 @@ import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
 import nbbrd.design.ThreadSafe;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.net.URI;
 import java.util.Collections;

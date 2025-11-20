@@ -19,7 +19,7 @@ package jdplus.toolkit.base.api.data;
 import internal.toolkit.base.api.data.InternalSeq;
 import internal.toolkit.base.api.data.InternalSeqCursor;
 import nbbrd.design.Development;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
 
 import java.util.*;

@@ -19,7 +19,7 @@ package jdplus.toolkit.desktop.plugin.components.parts;
 import jdplus.main.desktop.design.SwingAction;
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

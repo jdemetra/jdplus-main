@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 

@@ -24,7 +24,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

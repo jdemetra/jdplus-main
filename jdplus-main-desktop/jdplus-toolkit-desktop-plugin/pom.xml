@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main-desktop</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.0</version>
     </parent>
 
     <artifactId>jdplus-toolkit-desktop-plugin</artifactId>
@@ -17,7 +17,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java-desktop-util.version>2.4.0</java-desktop-util.version>
+        <java-desktop-util.version>2.5.0</java-desktop-util.version>
     </properties>
 
     <dependencies>
@@ -273,7 +273,6 @@
                         <publicPackage>org.apache.commons.*</publicPackage>
                         <publicPackage>nbbrd.io.*</publicPackage>
                         <publicPackage>internal.io.*</publicPackage>
-                        <publicPackage>org.checkerframework.*</publicPackage>
                         <publicPackage>javax.*</publicPackage>
                         <publicPackage>com.sun.xml.bind.*</publicPackage>
                         <publicPackage>demetra.desktop.*</publicPackage>

@@ -13,7 +13,7 @@ import jdplus.toolkit.base.api.util.IntList;
 import jdplus.toolkit.base.core.data.interpolation.ConstInterpolator;
 import jdplus.toolkit.base.core.data.transformation.LogJacobian;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -41,9 +41,9 @@ public class LengthOfPeriodTransformationTest {
         t.transform(sc, ljc);
         assertEquals(lj.value, ljc.value, 1e-9);
         t.converse().transform(s, lj);
-        assertEquals(lj.value, 0, 1e-9);
+        assertEquals(0, lj.value, 1e-9);
         t.converse().transform(sc, ljc);
-        assertEquals(ljc.value, 0, 1e-9);
+        assertEquals(0, ljc.value, 1e-9);
         t = new LengthOfPeriodTransformation(LengthOfPeriodType.LengthOfPeriod);
         lj = new LogJacobian(3, 120, null);
         ljc = new LogJacobian(3, 120, missing.toArray());
@@ -51,9 +51,9 @@ public class LengthOfPeriodTransformationTest {
         t.transform(sc, ljc);
         assertEquals(lj.value, ljc.value, 1e-9);
         t.converse().transform(s, lj);
-        assertEquals(lj.value, 0, 1e-9);
+        assertEquals(0, lj.value, 1e-9);
         t.converse().transform(sc, ljc);
-        assertEquals(ljc.value, 0, 1e-9);
+        assertEquals(0, ljc.value, 1e-9);
     }
 
     @Test
@@ -72,9 +72,9 @@ public class LengthOfPeriodTransformationTest {
         t.transform(sc, ljc);
         assertEquals(lj.value, ljc.value, 1e-9);
         t.converse().transform(s, lj);
-        assertEquals(lj.value, 0, 1e-9);
+        assertEquals(0, lj.value, 1e-9);
         t.converse().transform(sc, ljc);
-        assertEquals(ljc.value, 0, 1e-9);
+        assertEquals(0, ljc.value, 1e-9);
         t = new LengthOfPeriodTransformation(LengthOfPeriodType.LengthOfPeriod);
         lj = new LogJacobian(3, 120, null);
         ljc = new LogJacobian(3, 120, missing.toArray());
@@ -82,9 +82,9 @@ public class LengthOfPeriodTransformationTest {
         t.transform(sc, ljc);
         assertEquals(lj.value, ljc.value, 1e-9);
         t.converse().transform(s, lj);
-        assertEquals(lj.value, 0, 1e-9);
+        assertEquals(0, lj.value, 1e-9);
         t.converse().transform(sc, ljc);
-        assertEquals(ljc.value, 0, 1e-9);
+        assertEquals(0, ljc.value, 1e-9);
     }
 
     @Test
@@ -104,9 +104,9 @@ public class LengthOfPeriodTransformationTest {
         t.transform(sc, ljc);
         assertEquals(lj.value, ljc.value, 1e-9);
         t.converse().transform(s, lj);
-        assertEquals(lj.value, 0, 1e-9);
+        assertEquals(0, lj.value, 1e-9);
         t.converse().transform(sc, ljc);
-        assertEquals(ljc.value, 0, 1e-9);
+        assertEquals(0, ljc.value, 1e-9);
         t = new LengthOfPeriodTransformation(LengthOfPeriodType.LengthOfPeriod);
         lj = new LogJacobian(3, 120, null);
         ljc = new LogJacobian(3, 120, missing.toArray());
@@ -114,8 +114,8 @@ public class LengthOfPeriodTransformationTest {
         t.transform(sc, ljc);
         assertEquals(lj.value, ljc.value, 1e-9);
         t.converse().transform(s, lj);
-        assertEquals(lj.value, 0, 1e-9);
+        assertEquals(0, lj.value, 1e-9);
         t.converse().transform(sc, ljc);
-        assertEquals(ljc.value, 0, 1e-9);
+        assertEquals(0, ljc.value, 1e-9);
     }
 }

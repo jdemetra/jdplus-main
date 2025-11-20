@@ -16,20 +16,22 @@
  */
 package jdplus.toolkit.base.api.time;
 
-import nbbrd.design.MightBePromoted;
 import lombok.NonNull;
+import nbbrd.design.MightBePromoted;
+import org.jspecify.annotations.Nullable;
 
-import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalQuery;
 import java.util.function.Function;
+
+import static jdplus.toolkit.base.api.time.TemporalFormatter.*;
 
 /**
  * @author Philippe Charles
@@ -37,52 +39,54 @@ import java.util.function.Function;
 public abstract sealed class TimeIntervalFormatter
         permits TimeIntervalFormatter.StartEnd, TimeIntervalFormatter.StartDuration, TimeIntervalFormatter.DurationEnd, TimeIntervalFormatter.Duration {
 
-    @NonNull
-    public String format(@NonNull TimeInterval<?, ?> timeInterval) {
+    public @NonNull String format(@NonNull TimeInterval<?, ?> timeInterval) throws DateTimeException {
+        return format(timeInterval, null);
+    }
+
+    public @NonNull String format(@NonNull TimeInterval<?, ?> timeInterval, @Nullable ChronoUnit precision) throws DateTimeException {
         StringBuilder result = new StringBuilder(32);
-        formatTo(timeInterval, result);
+        formatTo(timeInterval, result, precision);
         return result.toString();
     }
 
-    public void formatTo(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable) {
-        try {
-            append(timeInterval, appendable);
-        } catch (IOException ex) {
-            throw new DateTimeException(ex.getMessage(), ex);
-        }
+    public void formatTo(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable) throws DateTimeException {
+        formatTo(timeInterval, appendable, null);
     }
 
-    abstract protected void append(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable) throws IOException;
+    abstract public void formatTo(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable, @Nullable ChronoUnit precision) throws DateTimeException;
 
-    @NonNull
-    abstract public <I extends TimeInterval<?, ?>> I parse(@NonNull CharSequence text, @NonNull TimeIntervalQuery<I> query) throws DateTimeParseException;
+    abstract public <I extends TimeInterval<?, ?>> @NonNull I parse(@NonNull CharSequence text, @NonNull TimeIntervalQuery<I> query) throws DateTimeParseException;
 
     @lombok.AllArgsConstructor(staticName = "of")
     public static final class StartEnd extends TimeIntervalFormatter {
 
-        public static final StartEnd ISO_LOCAL_DATE = of(DateTimeFormatter.ISO_LOCAL_DATE, LocalDate::from, false);
-        public static final StartEnd BASIC_ISO_DATE = of(DateTimeFormatter.BASIC_ISO_DATE, LocalDate::from, false);
-        public static final StartEnd ISO_ORDINAL_DATE = of(DateTimeFormatter.ISO_ORDINAL_DATE, LocalDate::from, false);
-        public static final StartEnd ISO_WEEK_DATE = of(DateTimeFormatter.ISO_WEEK_DATE, LocalDate::from, false);
-        public static final StartEnd ISO_LOCAL_DATE_TIME = of(DateTimeFormatter.ISO_LOCAL_DATE_TIME, LocalDateTime::from, false);
+        @Deprecated
+        public static final StartEnd ISO_LOCAL_DATE = of(EXTENDED_CALENDAR, LocalDate::from, false);
+        @Deprecated
+        public static final StartEnd BASIC_ISO_DATE = of(BASIC_CALENDAR, LocalDate::from, false);
+        @Deprecated
+        public static final StartEnd ISO_ORDINAL_DATE = of(EXTENDED_ORDINAL, LocalDate::from, false);
+        @Deprecated
+        public static final StartEnd ISO_WEEK_DATE = of(EXTENDED_WEEK, LocalDate::from, false);
+        @Deprecated
+        public static final StartEnd ISO_LOCAL_DATE_TIME = of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, false);
 
         @lombok.NonNull
-        private final DateTimeFormatter temporalFormatter;
+        private final TemporalFormatter startEndFormatter;
 
         @lombok.NonNull
-        private final TemporalQuery<? extends Temporal> temporalQuery;
+        private final TemporalQuery<? extends Temporal> startEndQuery;
 
         @lombok.With
         private boolean concise;
 
-
         @Override
-        protected void append(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable) throws IOException {
-            String left = temporalFormatter.format(timeInterval.start());
-            String right = temporalFormatter.format(timeInterval.end());
-            appendable.append(left);
-            appendable.append(INTERVAL_DESIGNATOR);
-            appendable.append(concise ? compact(left, right) : right);
+        public void formatTo(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable, @Nullable ChronoUnit precision) {
+            String left = startEndFormatter.format(timeInterval.start());
+            String right = startEndFormatter.format(timeInterval.end());
+            appendTo(left, appendable);
+            appendTo(INTERVAL_DESIGNATOR, appendable);
+            appendTo(concise ? compact(left, right) : right, appendable);
         }
 
         @Override
@@ -90,43 +94,66 @@ public abstract sealed class TimeIntervalFormatter
             int intervalDesignatorIdx = getIntervalDesignatorIndex(text);
             CharSequence left = text.subSequence(0, intervalDesignatorIdx);
             CharSequence right = text.subSequence(intervalDesignatorIdx + 1, text.length());
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public Temporal start() {
-                    return temporalFormatter.parse(left, temporalQuery);
-                }
+            I result = query.queryFrom(new StartEndAccessor(left, right));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
 
-                @Override
-                public Temporal end() {
-                    return temporalFormatter.parse(concise ? expand(left, right) : right, temporalQuery);
-                }
-            });
+        @lombok.AllArgsConstructor
+        private final class StartEndAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence left;
+            private final CharSequence right;
+
+            @Override
+            public @NonNull Temporal start() {
+                return startEndFormatter.parse(left, startEndQuery);
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                return startEndFormatter.parse(expand(left, right), startEndQuery);
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
         }
     }
 
     @lombok.AllArgsConstructor(staticName = "of")
     public static final class StartDuration extends TimeIntervalFormatter {
 
-        public static final StartDuration ISO_LOCAL_DATE = of(DateTimeFormatter.ISO_LOCAL_DATE, LocalDate::from, Period::parse);
-        public static final StartDuration BASIC_ISO_DATE = of(DateTimeFormatter.BASIC_ISO_DATE, LocalDate::from, Period::parse);
-        public static final StartDuration ISO_ORDINAL_DATE = of(DateTimeFormatter.ISO_ORDINAL_DATE, LocalDate::from, Period::parse);
-        public static final StartDuration ISO_WEEK_DATE = of(DateTimeFormatter.ISO_WEEK_DATE, LocalDate::from, Period::parse);
-        public static final StartDuration ISO_LOCAL_DATE_TIME = of(DateTimeFormatter.ISO_LOCAL_DATE_TIME, LocalDateTime::from, java.time.Duration::parse);
+        @Deprecated
+        public static final StartDuration ISO_LOCAL_DATE = of(EXTENDED_CALENDAR, LocalDate::from, Period::parse);
+        @Deprecated
+        public static final StartDuration BASIC_ISO_DATE = of(BASIC_CALENDAR, LocalDate::from, Period::parse);
+        @Deprecated
+        public static final StartDuration ISO_ORDINAL_DATE = of(EXTENDED_ORDINAL, LocalDate::from, Period::parse);
+        @Deprecated
+        public static final StartDuration ISO_WEEK_DATE = of(EXTENDED_WEEK, LocalDate::from, Period::parse);
+        @Deprecated
+        public static final StartDuration ISO_LOCAL_DATE_TIME = of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, java.time.Duration::parse);
 
         @lombok.NonNull
-        private final DateTimeFormatter temporalFormatter;
+        private final TemporalFormatter startFormatter;
 
         @lombok.NonNull
-        private final TemporalQuery<? extends Temporal> temporalQuery;
+        private final TemporalQuery<? extends Temporal> startQuery;
 
         @lombok.NonNull
         private final Function<? super CharSequence, ? extends TemporalAmount> duration;
 
         @Override
-        protected void append(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable) throws IOException {
-            temporalFormatter.formatTo(timeInterval.start(), appendable);
-            appendable.append(INTERVAL_DESIGNATOR);
-            formatDurationTo(timeInterval.getDuration(), appendable);
+        public void formatTo(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable, @Nullable ChronoUnit precision) {
+            Temporal left = timeInterval.start();
+            TemporalAmount right = timeInterval.getDuration();
+            startFormatter.formatTo(left, appendable, precision);
+            appendTo(INTERVAL_DESIGNATOR, appendable);
+            formatDurationTo(right, appendable);
         }
 
         @Override
@@ -134,43 +161,66 @@ public abstract sealed class TimeIntervalFormatter
             int intervalDesignatorIdx = getIntervalDesignatorIndex(text);
             CharSequence left = text.subSequence(0, intervalDesignatorIdx);
             CharSequence right = text.subSequence(intervalDesignatorIdx + 1, text.length());
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public Temporal start() {
-                    return temporalFormatter.parse(left, temporalQuery);
-                }
+            I result = query.queryFrom(new StartDurationAccessor(left, right));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
 
-                @Override
-                public TemporalAmount getDuration() {
-                    return duration.apply(right);
-                }
-            });
+        @lombok.AllArgsConstructor
+        private final class StartDurationAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence left;
+            private final CharSequence right;
+
+            @Override
+            public @NonNull Temporal start() {
+                return startFormatter.parse(left, startQuery);
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                return duration.apply(right);
+            }
         }
     }
 
     @lombok.AllArgsConstructor(staticName = "of")
     public static final class DurationEnd extends TimeIntervalFormatter {
 
-        public static final DurationEnd ISO_LOCAL_DATE = of(Period::parse, DateTimeFormatter.ISO_LOCAL_DATE, LocalDate::from);
-        public static final DurationEnd BASIC_ISO_DATE = of(Period::parse, DateTimeFormatter.BASIC_ISO_DATE, LocalDate::from);
-        public static final DurationEnd ISO_ORDINAL_DATE = of(Period::parse, DateTimeFormatter.ISO_ORDINAL_DATE, LocalDate::from);
-        public static final DurationEnd ISO_WEEK_DATE = of(Period::parse, DateTimeFormatter.ISO_WEEK_DATE, LocalDate::from);
-        public static final DurationEnd ISO_LOCAL_DATE_TIME = of(java.time.Duration::parse, DateTimeFormatter.ISO_LOCAL_DATE_TIME, LocalDateTime::from);
+        @Deprecated
+        public static final DurationEnd ISO_LOCAL_DATE = of(Period::parse, EXTENDED_CALENDAR, LocalDate::from);
+        @Deprecated
+        public static final DurationEnd BASIC_ISO_DATE = of(Period::parse, BASIC_CALENDAR, LocalDate::from);
+        @Deprecated
+        public static final DurationEnd ISO_ORDINAL_DATE = of(Period::parse, EXTENDED_ORDINAL, LocalDate::from);
+        @Deprecated
+        public static final DurationEnd ISO_WEEK_DATE = of(Period::parse, EXTENDED_WEEK, LocalDate::from);
+        @Deprecated
+        public static final DurationEnd ISO_LOCAL_DATE_TIME = of(java.time.Duration::parse, EXTENDED_CALENDAR_TIME, LocalDateTime::from);
 
         @lombok.NonNull
         private final Function<? super CharSequence, TemporalAmount> duration;
 
         @lombok.NonNull
-        private final DateTimeFormatter temporalFormatter;
+        private final TemporalFormatter endFormatter;
 
         @lombok.NonNull
-        private final TemporalQuery<? extends Temporal> temporalQuery;
+        private final TemporalQuery<? extends Temporal> endQuery;
 
         @Override
-        protected void append(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable) throws IOException {
-            formatDurationTo(timeInterval.getDuration(), appendable);
-            appendable.append(INTERVAL_DESIGNATOR);
-            temporalFormatter.formatTo(timeInterval.end(), appendable);
+        public void formatTo(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable, @Nullable ChronoUnit precision) {
+            TemporalAmount left = timeInterval.getDuration();
+            Temporal right = timeInterval.end();
+            formatDurationTo(left, appendable);
+            appendTo(INTERVAL_DESIGNATOR, appendable);
+            endFormatter.formatTo(right, appendable, precision);
         }
 
         @Override
@@ -178,17 +228,33 @@ public abstract sealed class TimeIntervalFormatter
             int intervalDesignatorIdx = getIntervalDesignatorIndex(text);
             CharSequence left = text.subSequence(0, intervalDesignatorIdx);
             CharSequence right = text.subSequence(intervalDesignatorIdx + 1, text.length());
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public Temporal end() {
-                    return temporalFormatter.parse(right, temporalQuery);
-                }
+            I result = query.queryFrom(new DurationEndAccessor(right, left));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
 
-                @Override
-                public TemporalAmount getDuration() {
-                    return duration.apply(left);
-                }
-            });
+        @lombok.AllArgsConstructor
+        private final class DurationEndAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence right;
+            private final CharSequence left;
+
+            @Override
+            public @NonNull Temporal start() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                return endFormatter.parse(right, endQuery);
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                return duration.apply(left);
+            }
         }
     }
 
@@ -199,29 +265,53 @@ public abstract sealed class TimeIntervalFormatter
         private final Function<? super CharSequence, ? extends TemporalAmount> duration;
 
         @Override
-        protected void append(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable) throws IOException {
+        public void formatTo(@NonNull TimeInterval<?, ?> timeInterval, @NonNull Appendable appendable, @Nullable ChronoUnit precision) {
             formatDurationTo(timeInterval.getDuration(), appendable);
         }
 
         @Override
         public <I extends TimeInterval<?, ?>> @NonNull I parse(@NonNull CharSequence text, @NonNull TimeIntervalQuery<I> query) {
-            return query.queryFrom(new AbstractTimeIntervalAccessor() {
-                @Override
-                public TemporalAmount getDuration() {
-                    return duration.apply(text);
-                }
-            });
+            I result = query.queryFrom(new DurationAccessor(text));
+            if (result == null) {
+                throw new DateTimeException("Unable to obtain TimeInterval from TimeIntervalQuery");
+            }
+            return result;
+        }
+
+        @lombok.AllArgsConstructor
+        private final class DurationAccessor implements TimeIntervalAccessor {
+
+            private final CharSequence text;
+
+            @Override
+            public @NonNull Temporal start() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull Temporal end() {
+                throw new DateTimeException("Not supported for this TimeIntervalFormatter");
+            }
+
+            @Override
+            public @NonNull TemporalAmount getDuration() {
+                return duration.apply(text);
+            }
         }
     }
 
     private static final char INTERVAL_DESIGNATOR = '/';
 
     private static int getIntervalDesignatorIndex(CharSequence text) throws DateTimeParseException {
-        int intervalDesignatorIdx = indexOf(text, INTERVAL_DESIGNATOR);
-        if (intervalDesignatorIdx == -1) {
+        int result = indexOf(text, INTERVAL_DESIGNATOR);
+        if (result == -1) {
             throw new DateTimeParseException("Cannot find interval designator", text, 0);
+        } else if (result == 0) {
+            throw new DateTimeParseException("Cannot find interval left part", text, 0);
+        } else if (result == text.length() - 1) {
+            throw new DateTimeParseException("Cannot find interval right part", text, result);
         }
-        return intervalDesignatorIdx;
+        return result;
     }
 
     @MightBePromoted
@@ -258,24 +348,7 @@ public abstract sealed class TimeIntervalFormatter
         return ref.subSequence(0, diff).toString() + value;
     }
 
-    private static void formatDurationTo(TemporalAmount duration, Appendable appendable) throws IOException {
-        appendable.append(duration.toString());
-    }
-
-    private static abstract class AbstractTimeIntervalAccessor implements TimeIntervalAccessor {
-        @Override
-        public Temporal start() {
-            throw new RuntimeException();
-        }
-
-        @Override
-        public Temporal end() {
-            throw new RuntimeException();
-        }
-
-        @Override
-        public TemporalAmount getDuration() {
-            throw new RuntimeException();
-        }
+    private static void formatDurationTo(TemporalAmount duration, Appendable appendable) {
+        appendTo(duration.toString(), appendable);
     }
 }

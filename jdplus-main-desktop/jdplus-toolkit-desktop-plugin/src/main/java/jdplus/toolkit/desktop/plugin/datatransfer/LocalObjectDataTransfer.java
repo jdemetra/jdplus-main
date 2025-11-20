@@ -8,7 +8,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.util.Table;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 

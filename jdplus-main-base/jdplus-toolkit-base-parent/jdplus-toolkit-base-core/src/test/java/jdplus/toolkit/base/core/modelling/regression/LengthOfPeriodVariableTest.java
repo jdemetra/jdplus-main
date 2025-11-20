@@ -11,7 +11,7 @@ import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -29,7 +29,7 @@ public class LengthOfPeriodVariableTest {
         TsDomain domain=TsDomain.of(start, 28*12);
         DataBlock x= Regression.x(domain, var);
 //        System.out.println(x);
-        assertEquals(x.sum(), 0, 1e-9);
+        assertEquals(0, x.sum(), 1e-9);
     }
     
     @Test
@@ -39,6 +39,6 @@ public class LengthOfPeriodVariableTest {
         TsDomain domain=TsDomain.of(start, 28*12);
         DataBlock x=Regression.x(domain, var);
 //        System.out.println(x);
-        assertEquals(x.sum(), 0, 1e-9);
+        assertEquals(0, x.sum(), 1e-9);
     }
 }

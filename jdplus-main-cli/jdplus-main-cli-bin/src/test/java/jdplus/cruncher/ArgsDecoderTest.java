@@ -16,15 +16,15 @@
  */
 package jdplus.cruncher;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 
 import static jdplus.cruncher.ArgsDecoder2.decode;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,8 +36,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 public class ArgsDecoderTest {
 
-    @Rule
-    public TemporaryFolder temp = new TemporaryFolder();
+    @TempDir
+    public File temp;
 
     @Test
     public void testNoArgs() {
@@ -47,7 +47,7 @@ public class ArgsDecoderTest {
     @Test
     @SuppressWarnings("null")
     public void testX() throws IOException {
-        File userDir = temp.newFolder("X");
+        File userDir = newFolder(temp, "X");
 
         assertThatThrownBy(() -> decode("workspace.xml", "-x", userDir.getAbsolutePath()))
                 .as("Not a file")
@@ -98,5 +98,14 @@ public class ArgsDecoderTest {
     private static void write(File file, String content) throws IOException {
 //        Files.writeString(file.toPath(), content, StandardCharsets.UTF_8);
 //        Files.writeString(file.toPath(), content, StandardCharsets.UTF_8);
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = root.toPath().resolve(subFolder).toFile();
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }

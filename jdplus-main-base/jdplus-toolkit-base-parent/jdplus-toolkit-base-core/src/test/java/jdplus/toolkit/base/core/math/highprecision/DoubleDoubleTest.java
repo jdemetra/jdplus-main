@@ -21,7 +21,7 @@ import jdplus.toolkit.base.core.math.highprecision.DoubleDoubleComputer;
 import jdplus.toolkit.base.core.math.highprecision.LegacyDoubleDouble;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -45,7 +45,7 @@ public class DoubleDoubleTest {
         DoubleDoubleComputer dd = new DoubleDoubleComputer(A);
         DoubleDouble s = dd.mul(B, 0).sqrt().result();
         //System.out.println(s);
-        assertTrue(ls.doubleValue() == s.asDouble());
+        assertEquals(ls.doubleValue(), s.asDouble());
 
     }
 

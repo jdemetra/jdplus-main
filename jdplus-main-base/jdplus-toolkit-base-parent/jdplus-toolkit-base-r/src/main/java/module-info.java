@@ -5,7 +5,7 @@ module jdplus.toolkit.base.r {
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
-    requires static org.checkerframework.checker.qual;
+    requires static org.jspecify;
 
     requires jdplus.toolkit.base.core;
     requires jdplus.toolkit.base.protobuf;

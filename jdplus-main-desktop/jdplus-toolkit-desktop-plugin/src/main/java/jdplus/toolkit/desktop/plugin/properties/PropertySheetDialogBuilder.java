@@ -20,7 +20,7 @@ import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
 import jdplus.toolkit.base.api.util.TreeTraverser;
 import ec.util.table.swing.JTables;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.explorer.propertysheet.PropertySheet;

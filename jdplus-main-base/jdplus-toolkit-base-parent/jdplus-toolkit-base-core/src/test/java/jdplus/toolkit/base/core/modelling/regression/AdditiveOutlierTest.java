@@ -27,7 +27,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -45,37 +45,37 @@ public class AdditiveOutlierTest {
         AdditiveOutlier ao = new AdditiveOutlier(domain.get(pos).start());
         FastMatrix M = Regression.matrix(domain, ao);
         DataBlock buffer = M.column(0);
-        assertTrue(buffer.indexOf(x -> x != 0) == pos);
-        assertTrue(buffer.lastIndexOf(x -> x == 1) == pos);
+        assertEquals(buffer.indexOf(x -> x != 0), pos);
+        assertEquals(buffer.lastIndexOf(x -> x == 1), pos);
 //        System.out.println(ao.getDescription(domain));
     }
 
     @Test
     public void testWeek() {
         final int pos = 25;
-        TsDomain weeks = TsDomain.of(TsPeriod.of(TsUnit.of(7, ChronoUnit.DAYS), LocalDate.now(Clock.systemDefaultZone())), 100);
+        TsDomain weeks = TsDomain.of(TsPeriod.of(TsUnit.P7D, LocalDate.now(Clock.systemDefaultZone())), 100);
         AdditiveOutlier ao = new AdditiveOutlier(weeks.get(pos).start());
         DataBlock buffer = Regression.x(weeks, ao);
-        assertTrue(buffer.indexOf(x -> x != 0) == pos);
-        assertTrue(buffer.lastIndexOf(x -> x == 1) == pos);
+        assertEquals(buffer.indexOf(x -> x != 0), pos);
+        assertEquals(buffer.lastIndexOf(x -> x == 1), pos);
 //        System.out.println(ao.getDescription(weeks));
     }
 
     @Test
     public void testDay() {
         final int pos = 25;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 100);
         AdditiveOutlier ao = new AdditiveOutlier(days.get(pos).start());
         DataBlock buffer = Regression.x(days, ao);
-        assertTrue(buffer.indexOf(x -> x != 0) == pos);
-        assertTrue(buffer.lastIndexOf(x -> x == 1) == pos);
+        assertEquals(buffer.indexOf(x -> x != 0), pos);
+        assertEquals(buffer.lastIndexOf(x -> x == 1), pos);
 //        System.out.println(ao.getDescription(days));
     }
 
     @Test
     public void testInside() {
         final int pos = 25;
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 100);
         AdditiveOutlier ao = new AdditiveOutlier(days.get(pos).start());
         DataBlock buffer = Regression.x(days, ao);
         assertEquals(1, buffer.sum(), 1e-9);
@@ -83,7 +83,7 @@ public class AdditiveOutlierTest {
 
     @Test
     public void testBefore() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 100);
         for (int i = 1; i < 3; ++i) {
             AdditiveOutlier ao = new AdditiveOutlier(days.get(0).plus(-i).start());
             DataBlock buffer = Regression.x(days, ao);
@@ -93,7 +93,7 @@ public class AdditiveOutlierTest {
 
     @Test
     public void testAfter() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 100);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 100);
         for (int i = 1; i < 3; ++i) {
             AdditiveOutlier ao = new AdditiveOutlier(days.get(99).plus(i).start());
             DataBlock buffer = Regression.x(days, ao);

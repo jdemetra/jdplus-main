@@ -29,6 +29,7 @@ import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.x13.base.api.x13.X13Spec;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -45,13 +46,13 @@ public class X13FactoryTest {
         X13Kernel x13 = X13Kernel.of(X13Spec.RSA4, null);
         ProcessingLog log = ProcessingLog.dummy();
         X13Results rslt = x13.process(Data.TS_PROD, log);
-        assertTrue(rslt.getFinals() != null);
+        assertNotSame(rslt.getFinals(), null);
         X13Spec nspec = X13Factory.getInstance().generateSpec(X13Spec.RSA4, rslt);
         log = new DefaultProcessingLog();
 //        System.out.println(nspec);
         x13 = X13Kernel.of(nspec, null);
         X13Results rslt2 = x13.process(Data.TS_PROD, log);
-        assertTrue(rslt2.getFinals() != null);
+        assertNotSame(rslt2.getFinals(), null);
         X13Spec nspec2 = X13Factory.getInstance().generateSpec(nspec, rslt2);
 //        System.out.println(nspec2);
         assertEquals(rslt.getPreprocessing().getEstimation().getStatistics().getLogLikelihood(),
@@ -75,7 +76,7 @@ public class X13FactoryTest {
                 .definition(sadef)
                 .build();
         item.process(null, false);
-        assertTrue(item.getEstimation().getQuality() == ProcQuality.Good);
+        assertSame(item.getEstimation().getQuality(), ProcQuality.Good);
     }
     
     public static void main(String[] args){

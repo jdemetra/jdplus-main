@@ -10,7 +10,9 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.regression.UserVariable;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +32,8 @@ public class TsVariableFactoryTest {
         UserVariable var = new UserVariable("test", s);
         FastMatrix M = FastMatrix.make(12, 1);
         TsVariableFactory.FACTORY.fill(var, TsPeriod.monthly(2000, 3), M);
-        assertTrue(M.get(0, 0) == 3);
-        assertTrue(M.get(11, 0) == 14);
+        assertEquals(3, M.get(0, 0));
+        assertEquals(14, M.get(11, 0));
     }
 
     @Test
@@ -41,10 +43,10 @@ public class TsVariableFactoryTest {
         UserVariable var = new UserVariable("test", s);
         FastMatrix M = FastMatrix.make(36, 1);
         TsVariableFactory.FACTORY.fill(var, TsPeriod.monthly(1999, 3), M);
-        assertTrue(M.get(9, 0) == 0);
-        assertTrue(M.get(10, 0) == 1);
-        assertTrue(M.get(33, 0) == 24);
-        assertTrue(M.get(34, 0) == 0);
+        assertEquals(0, M.get(9, 0));
+        assertEquals(1, M.get(10, 0));
+        assertEquals(24, M.get(33, 0));
+        assertEquals(0, M.get(34, 0));
     }
 
     @Test
@@ -74,8 +76,8 @@ public class TsVariableFactoryTest {
         UserVariable var = new UserVariable("test", s);
         FastMatrix M = FastMatrix.make(36, 1);
         TsVariableFactory.FACTORY.fill(var, TsPeriod.monthly(2000, 7), M);
-        assertTrue(M.get(0, 0) == 7);
-        assertTrue(M.get(17, 0) == 24);
+        assertEquals(7, M.get(0, 0));
+        assertEquals(24, M.get(17, 0));
     }
 
     @Test
@@ -85,8 +87,8 @@ public class TsVariableFactoryTest {
         UserVariable var = new UserVariable("test", s);
         FastMatrix M = FastMatrix.make(36, 1);
         TsVariableFactory.FACTORY.fill(var, TsPeriod.monthly(1998, 1), M);
-        assertTrue(M.get(24, 0) == 1);
-        assertTrue(M.get(35, 0) == 12);
+        assertEquals(1, M.get(24, 0));
+        assertEquals(12, M.get(35, 0));
     }
 
     @Test
@@ -96,8 +98,8 @@ public class TsVariableFactoryTest {
         UserVariable var = new UserVariable("test", s);
         FastMatrix M = FastMatrix.make(36, 1);
         TsVariableFactory.FACTORY.fill(var, TsPeriod.monthly(1998, 1), M);
-        assertTrue(M.get(0, 0) == 1);
-        assertTrue(M.get(35, 0) == 36);
+        assertEquals(1, M.get(0, 0));
+        assertEquals(36, M.get(35, 0));
     }
 
     @Test
@@ -107,9 +109,9 @@ public class TsVariableFactoryTest {
         UserVariable var = new UserVariable("test", s);
         FastMatrix M = FastMatrix.make(36, 1);
         TsVariableFactory.FACTORY.fill(var, TsPeriod.monthly(1998, 1), M);
-        assertTrue(M.get(0, 0) == 0);
-        assertTrue(M.get(1, 0) == 1);
-        assertTrue(M.get(35, 0) == 35);
+        assertEquals(0, M.get(0, 0));
+        assertEquals(1, M.get(1, 0));
+        assertEquals(35, M.get(35, 0));
     }
 
     @Test
@@ -119,9 +121,9 @@ public class TsVariableFactoryTest {
         UserVariable var = new UserVariable("test", s);
         FastMatrix M = FastMatrix.make(36, 1);
         TsVariableFactory.FACTORY.fill(var, TsPeriod.monthly(1998, 1), M);
-        assertTrue(M.get(0, 0) == 2);
-        assertTrue(M.get(34, 0) == 36);
-        assertTrue(M.get(35, 0) == 0);
+        assertEquals(2, M.get(0, 0));
+        assertEquals(36, M.get(34, 0));
+        assertEquals(0, M.get(35, 0));
     }
 
 }

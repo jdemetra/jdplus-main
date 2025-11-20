@@ -19,6 +19,8 @@ package jdplus.x13.base.api.regarima;
 import jdplus.x13.base.api.regarima.EasterSpec;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  *
  * @author Mats Maggi
@@ -32,10 +34,11 @@ public class EasterSpecTest {
                 .build();
     }
     
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidDuration() {
-        EasterSpec.builder()
-                .duration(0)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            EasterSpec.builder()
+                    .duration(0)
+                    .build());
     }
 }

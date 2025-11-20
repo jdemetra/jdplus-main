@@ -23,7 +23,7 @@ import jdplus.toolkit.base.core.ssf.StateComponent;
 import jdplus.toolkit.base.core.ssf.utility.StationaryInitialization;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

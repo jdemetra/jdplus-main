@@ -81,7 +81,7 @@ public class CholetteProcessor {
     }
 
     public TsData benchmark(TsData source, TsData target) {
-        TsData ytarget = target.aggregate(TsUnit.YEAR, AggregationType.Sum, true);
+        TsData ytarget = target.aggregate(TsUnit.P1Y, AggregationType.Sum, true);
         TsData s = correctBias(source, ytarget);
         AbsMeanNormalizer normalizer = new AbsMeanNormalizer();
         DataBlock ns = DataBlock.of(s.getValues());
@@ -99,7 +99,7 @@ public class CholetteProcessor {
         if (bias == BiasCorrection.None) {
             return s;
         }
-        TsData sy = s.aggregate(TsUnit.YEAR, AggregationType.Sum, true);
+        TsData sy = s.aggregate(TsUnit.P1Y, AggregationType.Sum, true);
         // TsDataBlock.all(target).data.sum() is the sum of the aggregation constraints
         //  TsDataBlock.all(sy).data.sum() is the sum of the averages or sums of the original series
         if (bias == BiasCorrection.Multiplicative) {

@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.0</version>
     </parent>
 
     <artifactId>jdplus-main-bom</artifactId>
@@ -18,7 +18,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java.bundled.version>jdk-21.0.7+6</java.bundled.version>
+        <java.bundled.version>jdk-21.0.9+10</java.bundled.version>
         <linux.java.bundled.version>${java.bundled.version}</linux.java.bundled.version>
         <windows.java.bundled.version>${java.bundled.version}</windows.java.bundled.version>
         <osx.java.bundled.version>${java.bundled.version}</osx.java.bundled.version>
@@ -44,7 +44,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.7.0</version>
+                <version>1.7.3</version>
                 <configuration>
                     <flattenMode>bom</flattenMode>
                     <outputDirectory>${project.build.directory}</outputDirectory>
@@ -147,6 +147,14 @@
                                             <archiveType>zip</archiveType>
                                         </pkg>
                                         <pkg>
+                                            <name>jdk-windows-aarch_64</name>
+                                            <distribution>temurin</distribution>
+                                            <platform>windows-aarch64</platform>
+                                            <version>${windows.java.bundled.version}</version>
+                                            <packageType>jre</packageType>
+                                            <archiveType>zip</archiveType>
+                                        </pkg>
+                                        <pkg>
                                             <name>jdk-linux-x86_64</name>
                                             <distribution>temurin</distribution>
                                             <platform>linux-x86_64</platform>
@@ -226,6 +234,7 @@
 
                                         <parallel threadsPerProcessor="1">
                                             <bundle-cli platform="windows-x86_64" extension="zip" dir="${windows.dir}"/>
+                                            <bundle-cli platform="windows-aarch_64" extension="zip" dir="${windows.dir}"/>
                                             <bundle-cli platform="linux-x86_64" extension="tar.gz" dir="${linux.dir}"/>
                                             <bundle-cli platform="linux-aarch_64" extension="tar.gz" dir="${linux.dir}"/>
                                             <bundle-cli platform="osx-x86_64" extension="tar.gz"
@@ -270,6 +279,7 @@
 
                                         <parallel threadsPerProcessor="1">
                                             <bundle-desktop platform="windows-x86_64" extension="zip" dir="${windows.dir}"/>
+                                            <bundle-desktop platform="windows-aarch_64" extension="zip" dir="${windows.dir}"/>
                                             <bundle-desktop platform="linux-x86_64" extension="tar.gz"
                                                             dir="${linux.dir}"/>
                                             <bundle-desktop platform="linux-aarch_64" extension="tar.gz"
@@ -411,7 +421,7 @@
                     <plugin>
                         <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
                         <artifactId>compatibility-maven-plugin</artifactId>
-                        <version>1.0.3</version>
+                        <version>1.1.1</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
@@ -430,6 +440,7 @@
                                         <target>https://github.com/nbbrd/jdplus-sdmx</target>
                                     </targets>
                                     <targetLimits>1,1,1,1,1,1</targetLimits>
+                                    <logErrors>true</logErrors>
                                 </configuration>
                             </execution>
                         </executions>

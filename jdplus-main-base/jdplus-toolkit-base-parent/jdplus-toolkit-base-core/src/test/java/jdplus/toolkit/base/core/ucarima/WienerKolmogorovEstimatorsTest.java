@@ -22,7 +22,7 @@ import jdplus.toolkit.base.core.math.linearfilters.RationalFilter;
 import static jdplus.toolkit.base.core.ucarima.UcarimaModelTest.ucmAirline;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

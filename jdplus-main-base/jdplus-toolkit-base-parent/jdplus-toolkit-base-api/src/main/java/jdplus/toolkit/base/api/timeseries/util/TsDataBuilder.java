@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import nbbrd.design.NotThreadSafe;
 
 /**

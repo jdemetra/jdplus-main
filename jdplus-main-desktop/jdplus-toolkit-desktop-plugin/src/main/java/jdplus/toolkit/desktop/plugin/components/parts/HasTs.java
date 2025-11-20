@@ -21,7 +21,7 @@ import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Philippe Charles

@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main-desktop</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.0</version>
     </parent>
 
     <artifactId>jdplus-main-desktop-bin</artifactId>
@@ -109,12 +109,40 @@
 
     <build>
         <plugins>
+            <!-- Add project version to cachedir path -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-etc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/etc</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <includes>
+                                        <include>nbdemetra.conf</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <escapeString>\</escapeString>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Generates standalone application -->
             <plugin>
                 <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <configuration>
-                    <etcConfFile>src/main/resources/nbdemetra.conf</etcConfFile>
+                    <etcConfFile>target/etc/nbdemetra.conf</etcConfFile>
                 </configuration>
             </plugin>
         </plugins>

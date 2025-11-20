@@ -5,23 +5,18 @@
 package jdplus.toolkit.desktop.plugin.ui;
 
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.core.random.XorshiftRNG;
 import jdplus.toolkit.base.tsp.TsMeta;
+import lombok.NonNull;
+import nbbrd.design.BuilderPattern;
+
 import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import jdplus.toolkit.base.core.random.XorshiftRNG;
-import nbbrd.design.BuilderPattern;
-import lombok.NonNull;
 
 /**
- *
  * @author PALATEJ
  */
 @BuilderPattern(Ts.class)
@@ -29,13 +24,11 @@ public final class DemoTsBuilder {
 
     @NonNull
     public static TsCollection randomTsCollection(int nSeries) {
-        XorshiftRNG rng = new XorshiftRNG(0);
-        DemoTsBuilder builder = new DemoTsBuilder().obsCount(24).rng(rng);
-        return TsCollection
-                .builder()
-                .moniker(TsMoniker.of())
-                .items(IntStream.range(0, nSeries).mapToObj(i -> builder.name("S" + i).build()).collect(Collectors.toList()))
-                .build();
+        DemoTsBuilder builder = new DemoTsBuilder();
+        return IntStream
+                .range(0, nSeries)
+                .mapToObj(i -> builder.name("S" + i).build())
+                .collect(TsCollection.toTsCollection());
     }
 
     private String name;

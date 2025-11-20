@@ -26,7 +26,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;

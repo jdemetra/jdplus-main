@@ -18,7 +18,7 @@ package jdplus.toolkit.base.api.timeseries;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 

@@ -102,7 +102,7 @@ public class MovingRegression {
     }
 
     public Results regarima(TsData s, String td, int nyears) {
-        int period = s.getTsUnit().ratioOf(TsUnit.YEAR);
+        int period = s.getTsUnit().ratioOf(TsUnit.P1Y);
         SarimaOrders spec = SarimaOrders.airline(period);
 
         SarimaModel arima = SarimaModel.builder(spec)

@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.Month;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -47,11 +48,11 @@ public class RampTest {
         // across the end
         domain = TsDomain.of(TsPeriod.monthly(2017, 1), 10);
         data = Regression.x(domain, ramp);
-        assertTrue(data.count(x -> x == -1) == 3);
+        assertEquals(3, data.count(x -> x == -1));
         // across the beginning
         domain = TsDomain.of(TsPeriod.monthly(2017, 10), 10);
         data = Regression.x(domain, ramp);
-        assertTrue(data.count(x -> x != 0) == 5);
+        assertEquals(5, data.count(x -> x != 0));
     }
 
     @Test
@@ -80,14 +81,14 @@ public class RampTest {
         assertTrue(data.allMatch(x -> x == -1));
         domain = TsDomain.of(TsPeriod.daily(2017, 2, 1), 30);
         data = Regression.x(domain, ramp);
-        assertTrue(data.count(x -> x != -1) == 1);
+        assertEquals(1, data.count(x -> x != -1));
         // just after
         domain = TsDomain.of(TsPeriod.daily(2018, 3, 31), 60);
         data = Regression.x(domain, ramp);
         assertTrue(data.allMatch(x -> x == 0));
         domain = TsDomain.of(TsPeriod.daily(2018, 3, 30), 60);
         data = Regression.x(domain, ramp);
-        assertTrue(data.count(x -> x != 0) == 1);
+        assertEquals(1, data.count(x -> x != 0));
     }
 
 }

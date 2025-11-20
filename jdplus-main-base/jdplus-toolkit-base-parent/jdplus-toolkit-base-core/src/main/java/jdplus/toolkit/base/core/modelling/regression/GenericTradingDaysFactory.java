@@ -29,6 +29,7 @@ import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.MatrixWindow;
@@ -122,13 +123,13 @@ public class GenericTradingDaysFactory implements RegressionVariableFactory<Gene
     }
 
     @Override
-    public boolean fill(GenericTradingDaysVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(GenericTradingDaysVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         dataContrast(var.getClustering(), start, buffer);
         return true;
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(GenericTradingDaysVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(GenericTradingDaysVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported.");
     }
 
@@ -354,7 +355,7 @@ public class GenericTradingDaysFactory implements RegressionVariableFactory<Gene
         int n = domain.length();
         int[] start = new int[n + 1]; // id of the first day for each period
         LocalDate cur = domain.start().toLocalDate();
-        int conv = TsUnit.MONTH.ratioOf(domain.getStartPeriod().getUnit());
+        int conv = TsUnit.P1M.ratioOf(domain.getStartPeriod().getUnit());
         int year = cur.getYear(), month = cur.getMonthValue();
         for (int i = 0; i < start.length; ++i) {
             start[i] = calc(year, month, 1);

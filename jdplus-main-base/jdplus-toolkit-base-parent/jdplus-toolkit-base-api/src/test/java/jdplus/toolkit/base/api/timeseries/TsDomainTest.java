@@ -1,33 +1,32 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries;
 
-import static jdplus.toolkit.base.api.timeseries.TsDomain.of;
-import java.time.LocalDateTime;
-import static org.assertj.core.api.Assertions.*;
-
-import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.util.HasShortStringRepresentation;
 import org.junit.jupiter.api.Test;
-import static jdplus.toolkit.base.api.timeseries.TsUnit.HOUR;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 
+import static jdplus.toolkit.base.api.timeseries.TsDomain.of;
+import static org.assertj.core.api.Assertions.*;
+
 /**
- *
  * @author Philippe Charles
  */
 public class TsDomainTest {
@@ -40,9 +39,9 @@ public class TsDomainTest {
 
     @Test
     public void testSplit() {
-        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.MONTH, true).getLength()).isEqualTo(12);
-        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.DAY, true).getLength()).isEqualTo(366);
-        assertThatThrownBy(() -> TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.WEEK, true)).isInstanceOf(TsException.class);
+        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.P1M, true).getLength()).isEqualTo(12);
+        assertThat(TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.P1D, true).getLength()).isEqualTo(366);
+        assertThatThrownBy(() -> TsDomain.splitOf(TsPeriod.yearly(2000), TsUnit.P7D, true)).isInstanceOf(TsException.class);
     }
 
     @Test
@@ -112,7 +111,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 1).contains(x.plus(-1))).isFalse();
         assertThat(of(feb2010, 2).contains(x.plus(1))).isTrue();
 
-        assertThatThrownBy(() -> of(feb2010, 1).contains(x.withUnit(HOUR)))
+        assertThatThrownBy(() -> of(feb2010, 1).contains(x.withUnit(TsUnit.PT1H)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 
@@ -141,7 +140,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 1).indexOf(x.plus(-1))).isEqualTo(-1);
         assertThat(of(feb2010, 2).indexOf(x.plus(1))).isEqualTo(1);
 
-        assertThatThrownBy(() -> of(feb2010, 1).indexOf(x.withUnit(HOUR)))
+        assertThatThrownBy(() -> of(feb2010, 1).indexOf(x.withUnit(TsUnit.PT1H)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 
@@ -179,7 +178,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 2).intersection(x.move(-1))).isEqualTo(of(feb2010, 1));
         assertThat(of(feb2010, 2).intersection(x.move(-2))).isEqualTo(of(feb2010, 0));
 
-        assertThatThrownBy(() -> of(feb2010, 2).intersection(of(feb2010.withUnit(HOUR), 2)))
+        assertThatThrownBy(() -> of(feb2010, 2).intersection(of(feb2010.withUnit(TsUnit.PT1H), 2)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 
@@ -196,7 +195,7 @@ public class TsDomainTest {
         assertThat(of(feb2010, 2).union(x.move(-1))).isEqualTo(of(feb2010.plus(-1), 3));
         assertThat(of(feb2010, 2).union(x.move(-2))).isEqualTo(of(feb2010.plus(-2), 4));
 
-        assertThatThrownBy(() -> of(feb2010, 2).union(of(feb2010.withUnit(HOUR), 2)))
+        assertThatThrownBy(() -> of(feb2010, 2).union(of(feb2010.withUnit(TsUnit.PT1H), 2)))
                 .isInstanceOf(TsException.class)
                 .hasMessage(TsException.INCOMPATIBLE_FREQ);
 
@@ -262,20 +261,15 @@ public class TsDomainTest {
     }
 
     @Test
-    public void testToISOString() {
-        assertThat(of(TsPeriod.monthly(2011, 2), 30).toString())
-                .isEqualTo("R30/2011-02-01T00:00:00/P1M");
-
-        assertThat(of(TsPeriod.quarterly(2011, 2), 10).toString())
-                .isEqualTo("R10/2011-04-01T00:00:00/P3M");
-    }
-
-    @Test
-    public void testParse() {
-        assertThat(TsDomain.parse("R30/2011-02-01T00:00/P1M"))
+    public void testRepresentableAsString() {
+        assertThatObject(TsDomain.parse("R30/2011-02-01T00:00/P1M"))
+                .hasToString("R30/2011-02-01T00:00:00/P1M")
+                .returns("R30/2011-02/P1M", HasShortStringRepresentation::toShortString)
                 .isEqualTo(of(TsPeriod.monthly(2011, 2), 30));
 
-        assertThat(TsDomain.parse("R10/2011-04-01T00:00/P3M"))
+        assertThatObject(TsDomain.parse("R10/2011-04-01T00:00/P3M"))
+                .hasToString("R10/2011-04-01T00:00:00/P3M")
+                .returns("R10/2011-04/P3M", HasShortStringRepresentation::toShortString)
                 .isEqualTo(of(TsPeriod.quarterly(2011, 2), 10));
     }
 

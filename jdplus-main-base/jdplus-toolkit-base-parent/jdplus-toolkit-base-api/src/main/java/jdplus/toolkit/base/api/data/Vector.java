@@ -20,7 +20,7 @@ import lombok.NonNull;
 import nbbrd.design.Development;
 import internal.toolkit.base.api.data.InternalSeqCursor;
 import java.util.function.UnaryOperator;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 /**
  * Describes a writable sequence of elements.

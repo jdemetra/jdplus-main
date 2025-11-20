@@ -16,6 +16,8 @@
  */
 package jdplus.sa.base.core.regarima;
 
+import java.util.Arrays;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.regression.IEasterVariable;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.core.regarima.AICcComparator;
@@ -30,6 +32,7 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
+import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 
 /**
  *
@@ -37,6 +40,27 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
  */
 @Development(status = Development.Status.Preliminary)
 public class EasterDetectionModule implements IRegressionModule {
+
+    public static final String AED = "automatic easter selection",
+            E_SEL = "selected easter variable: ",
+            NOE_SEL = "no selected easter variable",
+            AED_FAILED = "automatic easter selection failed";
+
+    private String[] names(IEasterVariable[] easters) {
+        return Arrays.stream(easters)
+                .map(var->var.description(null))
+                .toArray(String[]::new);
+    }
+
+    @lombok.Getter
+    @lombok.AllArgsConstructor
+    public static class Info {
+
+        final String[] names;
+        final LikelihoodStatistics[] ll;
+        final LikelihoodStatistics ll0;
+        final int best;
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -81,35 +105,54 @@ public class EasterDetectionModule implements IRegressionModule {
 
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
-        ModelDescription description = context.getDescription();
-        if (description.getAnnualFrequency() <= 2)
-            return ProcessingResult.Unprocessed;
-        int n = easters.length;
-        int icur = -1;
-        ModelDescription[] desc = new ModelDescription[n];
-        RegArimaEstimation[] est = new RegArimaEstimation[n];
-        IRegArimaComputer<SarimaModel> processor = RegArimaUtility.processor(true, eps);
+        ProcessingLog log = context.getLog();
+        log.push(AED);
+        try {
+            ModelDescription description = context.getDescription();
+            if (description.getAnnualFrequency() <= 2) {
+                log.info(NOE_SEL);
+                return ProcessingResult.Unprocessed;
+            }
+            int n = easters.length;
+            int icur = -1;
+            ModelDescription[] desc = new ModelDescription[n];
+            RegArimaEstimation[] est = new RegArimaEstimation[n];
+            IRegArimaComputer<SarimaModel> processor = RegArimaUtility.processor(true, eps);
 
-        ModelDescription refdesc = ModelDescription.copyOf(description);
-        refdesc.remove("easter");
-        RegArimaEstimation<SarimaModel> refest = refdesc.estimate(processor);
+            ModelDescription refdesc = ModelDescription.copyOf(description);
+            refdesc.remove("easter");
+            RegArimaEstimation<SarimaModel> refest = refdesc.estimate(processor);
 
-        for (int i = 0; i < n; ++i) {
-            ModelDescription curDesc = ModelDescription.copyOf(refdesc);
-            curDesc.addVariable(Variable.variable("easter", easters[i], ModelBuilder.calendarAMI));
-            desc[i] = curDesc;
-            est[i] = curDesc.estimate(processor);
+            for (int i = 0; i < n; ++i) {
+                ModelDescription curDesc = ModelDescription.copyOf(refdesc);
+                curDesc.addVariable(Variable.variable("easter", easters[i], ModelBuilder.calendarAMI));
+                desc[i] = curDesc;
+                est[i] = curDesc.estimate(processor);
+            }
+
+            // choose best model
+            int imodel = comparator.compare(refest, est);
+            if (imodel < 0) {
+                context.set(refdesc, refest);
+            } else {
+                context.set(desc[imodel], est[imodel]);
+            }
+            Info info = new Info(names(easters),
+                    Arrays.stream(est)
+                            .map(e -> e == null ? null : e.statistics())
+                            .toArray(LikelihoodStatistics[]::new),
+                            refest.statistics(), imodel);
+
+            String msg=imodel<0 ? NOE_SEL : E_SEL+easters[imodel ].description(null);
+            log.info(msg, info);
+
+            return icur == imodel ? ProcessingResult.Unchanged : ProcessingResult.Changed;
+        } catch (RuntimeException ex) {
+            context.getLog().remark(AED_FAILED);
+            return ProcessingResult.Failed;
+
+        } finally {
+            log.pop();
         }
-
-        // choose best model
-        int imodel = comparator.compare(refest, est);
-        if (imodel < 0) {
-            context.set(refdesc, refest);
-        } else {
-            context.set(desc[imodel], est[imodel]);
-        }
-
-        return icur == imodel ? ProcessingResult.Unchanged : ProcessingResult.Changed;
     }
-
 }

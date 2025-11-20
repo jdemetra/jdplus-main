@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.api.util;
 
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines a constraint on an class.

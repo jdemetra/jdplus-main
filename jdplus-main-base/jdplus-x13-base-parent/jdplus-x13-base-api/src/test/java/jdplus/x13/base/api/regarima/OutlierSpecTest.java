@@ -16,7 +16,8 @@
  */
 package jdplus.x13.base.api.regarima;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jdplus.x13.base.api.regarima.OutlierSpec;
 import jdplus.x13.base.api.regarima.SingleOutlierSpec;
@@ -32,21 +33,21 @@ public class OutlierSpecTest {
     public void testDefaultCriticalValue() {
         OutlierSpec spec = OutlierSpec.builder()
                 .build();
-        assertTrue(spec.getDefaultCriticalValue() == 0);
+        assertEquals(0, spec.getDefaultCriticalValue());
         spec = spec.toBuilder()
                 .type(new SingleOutlierSpec("AO", 2))
                 .build();
         
         assertNotNull(spec.getTypes());
-        assertTrue(spec.getTypes().size() == 1);
-        assertTrue(spec.getTypes().get(0).getCriticalValue() == 2);
-        assertTrue("AO".equals(spec.getTypes().get(0).getType()));
+        assertEquals(1, spec.getTypes().size());
+        assertEquals(2, spec.getTypes().get(0).getCriticalValue());
+        assertEquals("AO", spec.getTypes().get(0).getType());
 
         spec = spec.toBuilder()
                 .defaultCriticalValue(1.5)
                 .build();
-        
-        assertTrue(spec.getDefaultCriticalValue() == 1.5);
-        assertTrue(spec.getTypes().get(0).getCriticalValue() == 1.5);
+
+        assertEquals(1.5, spec.getDefaultCriticalValue());
+        assertEquals(1.5, spec.getTypes().get(0).getCriticalValue());
     }
 }

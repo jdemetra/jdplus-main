@@ -27,7 +27,7 @@ import lombok.NonNull;
 import nbbrd.design.Development;
 import nbbrd.design.ReturnNew;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

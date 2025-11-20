@@ -16,9 +16,6 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
-import jdplus.toolkit.desktop.plugin.datatransfer.LocalObjectDataTransfer;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
@@ -69,7 +66,7 @@ public class DataTransferTest {
 
         assertThat(empty.fromTs(Ts.builder().build()).getTransferDataFlavors()).isEmpty();
         assertThat(empty.fromTsCollection(TsCollection.EMPTY).getTransferDataFlavors()).isEmpty();
-        assertThat(empty.fromTsData(TsData.random(TsUnit.YEAR, 0)).getTransferDataFlavors()).isEmpty();
+        assertThat(empty.fromTsData(TsData.random(TsUnit.P1Y, 0)).getTransferDataFlavors()).isEmpty();
         assertThat(empty.fromMatrix(Matrix.of(new double[]{3.14}, 1, 1)).getTransferDataFlavors()).isEmpty();
         assertThat(empty.fromTable(new Table<>(1, 1)).getTransferDataFlavors()).isEmpty();
     }

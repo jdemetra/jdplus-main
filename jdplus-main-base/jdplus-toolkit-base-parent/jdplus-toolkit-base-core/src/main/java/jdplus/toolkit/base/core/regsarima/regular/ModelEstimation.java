@@ -110,7 +110,7 @@ public final class ModelEstimation {
         DoubleSeqCursor cursor = estimation.getConcentratedLikelihood().coefficients().cursor();
         int k = 0;
         if (description.isMean()) {
-            this.variables[k++] = Variable.variable("const", new TrendConstant(arima.getD(), arima.getBd()));
+            this.variables[k++] = Variable.variable("const", new TrendConstant(arima.getD(), arima.getBd(), description.getEstimationDomain().start()));
         }
         // fill the free coefficients
         for (Variable var : vars) {

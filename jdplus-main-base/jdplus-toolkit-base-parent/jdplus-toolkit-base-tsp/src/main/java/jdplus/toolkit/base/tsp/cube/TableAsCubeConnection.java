@@ -23,7 +23,7 @@ import nbbrd.design.NotThreadSafe;
 import nbbrd.io.AbstractIOIterator;
 import nbbrd.io.WrappedIOException;
 import nbbrd.io.function.IORunnable;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;

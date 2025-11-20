@@ -22,6 +22,7 @@ import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import java.io.IOException;
 import java.util.List;
+import jdplus.toolkit.desktop.plugin.html.HtmlStyle;
 import org.openide.util.Exceptions;
 
 /**
@@ -31,7 +32,7 @@ import org.openide.util.Exceptions;
 public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private final ProcessingLog infos_;
-    private boolean err = true, wrn = true, rem = true, info = false, verbose = true;
+    private boolean err = true, wrn = true, rem = false, info = false, verbose = true;
 
     public HtmlProcessingLog(final ProcessingLog infos) {
         infos_ = infos;
@@ -68,8 +69,14 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
             return;
         }
         if (verbose) {
-            for (ProcessingLog.Information info : all) {
-                write(stream, info);
+            String previousContext = null;
+            for (ProcessingLog.Information pinfo : all) {
+                if (previousContext == null || !pinfo.getName().equalsIgnoreCase(previousContext)) {
+                    previousContext = pinfo.getName();
+                    stream.write(pinfo.getName(), HtmlStyle.Bold, HtmlStyle.Italic).newLine();
+                }
+                write(stream, pinfo);
+                stream.newLine();
             }
         } else {
             if (err) {
@@ -78,7 +85,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(HtmlTag.HEADER2, "Errors").newLine();
                     list.forEach(msg -> {
                         try {
-                            stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
+                            stream.write(msg.getMsg(), HtmlStyle.Red, HtmlStyle.Bold).newLine();
                         } catch (IOException ex) {
                         }
                     });
@@ -91,7 +98,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(HtmlTag.HEADER2, "Warnings").newLine();
                     list.forEach(msg -> {
                         try {
-                            stream.write(msg.getMsg()).newLine();
+                            stream.write(msg.getMsg(), HtmlStyle.DarkOrange).newLine();
                         } catch (IOException ex) {
                         }
                     });
@@ -136,8 +143,8 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
     private void write(HtmlStream stream, ProcessingLog.Information info) {
         try {
             switch (info.getType()) {
-                case Log ->
-                    writeLog(stream, info);
+                case Log, Step ->
+                    writeStep(stream, info);
                 case Error ->
                     writeError(stream, info);
                 case Warning ->
@@ -152,9 +159,9 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
         }
     }
 
-    private void writeLog(HtmlStream stream, ProcessingLog.Information info) throws IOException {
+    private void writeStep(HtmlStream stream, ProcessingLog.Information info) throws IOException {
         if (verbose) {
-            stream.write(info.getName()).newLine();
+            stream.write(info.getMsg(), HtmlStyle.Bold, HtmlStyle.Italic, HtmlStyle.Green).newLine();
         }
     }
 
@@ -178,13 +185,11 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private void writeInfo(HtmlStream stream, ProcessingLog.Information msg) throws IOException {
         if (info) {
-            stream.write(msg.getMsg()).newLine();
+            stream.write(msg.getMsg(), HtmlStyle.Blue).newLine();
             if (verbose) {
-                stream.newLine();
                 Object details = msg.getDetails();
                 if (details != null) {
                     HtmlLogFormatters.write(stream, details, verbose);
-                    stream.newLine();
                 }
             }
         }

@@ -14,8 +14,9 @@ import ec.satoolkit.x11.X11Specification;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
 import java.util.concurrent.ThreadLocalRandom;
+import org.junit.jupiter.api.Assumptions;
 
-import org.junit.Assume;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.jupiter.api.Test;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.x13.base.api.x11.CalendarSigmaOption;
@@ -147,7 +148,7 @@ public class X11DStepTest {
 
     @Test
     public void testProcess_Msr_LogAdd() {
-        Assume.assumeTrue("This test expects Math#exp(double) to be intrinsified", Constants.isMathExpIntrinsifiedByVM());
+        Assumptions.assumeTrue(Constants.isMathExpIntrinsifiedByVM(), "This test expects Math#exp(double) to be intrinsified");
         
         String modeName = DecompositionMode.LogAdditive.name();
         String seasonalFilterOptionName = SeasonalFilterOption.Msr.name();
@@ -332,37 +333,37 @@ public class X11DStepTest {
 
         double[] expected_D1 = old_Results.getData("d-tables.d1", TsData.class).internalStorage();
         double[] actual_D1 = prepareForCompare(instance.getD1(), context);
-        org.junit.Assert.assertArrayEquals("Error in D1", expected_D1, actual_D1, DELTA);
+        assertArrayEquals(expected_D1, actual_D1, DELTA, "Error in D1");
         double[] expected_D2 = old_Results.getData("d-tables.d2", TsData.class).cleanExtremities().internalStorage();
         double[] actual_D2 = prepareForCompare(instance.getD2(), context);
-        org.junit.Assert.assertArrayEquals("Error in D2", expected_D2, actual_D2, DELTA);
+        assertArrayEquals(expected_D2, actual_D2, DELTA, "Error in D2");
         double[] expected_D4 = old_Results.getData("d-tables.d4", TsData.class).cleanExtremities().internalStorage();
         double[] actual_D4 = prepareForCompare(instance.getD4(), context);
-        org.junit.Assert.assertArrayEquals("Error in D4", expected_D4, actual_D4, DELTA);
+        assertArrayEquals(expected_D4, actual_D4, DELTA, "Error in D4");
         double[] expected_D5 = old_Results.getData("d-tables.d5", TsData.class).internalStorage();
         double[] actual_D5 = prepareForCompare(instance.getD5(), context);
-        org.junit.Assert.assertArrayEquals("Error in D5", expected_D5, actual_D5, DELTA);
+        assertArrayEquals(expected_D5, actual_D5, DELTA, "Error in D5");
         double[] expected_D6 = old_Results.getData("d-tables.d6", TsData.class).internalStorage();
         double[] actual_D6 = prepareForCompare(instance.getD6(), context);
-        org.junit.Assert.assertArrayEquals("Error in D6", expected_D6, actual_D6, DELTA);
+        assertArrayEquals(expected_D6, actual_D6, DELTA, "Error in D6");
         double[] expected_D7 = old_Results.getData("d-tables.d7", TsData.class).internalStorage();
         double[] actual_D7 = prepareForCompare(instance.getD7(), context);
-        org.junit.Assert.assertArrayEquals("Error in D7", expected_D7, actual_D7, DELTA);
+        assertArrayEquals(expected_D7, actual_D7, DELTA, "Error in D7");
         double[] expected_D8 = old_Results.getData("d-tables.d8", TsData.class).internalStorage();
         double[] actual_D8 =  prepareForCompare(instance.getD8(), context);
-        org.junit.Assert.assertArrayEquals("Error in D8", expected_D8, actual_D8, DELTA);
+        assertArrayEquals(expected_D8, actual_D8, DELTA, "Error in D8");
         double[] expected_D9 = old_Results.getData("d-tables.d9", TsData.class).internalStorage();
         double[] actual_D9 = prepareForCompare(instance.getD9(), context);
-        org.junit.Assert.assertArrayEquals("Error in D9", expected_D9, actual_D9, DELTA);
+        assertArrayEquals(expected_D9, actual_D9, DELTA, "Error in D9");
         double[] expected_D10 = old_Results.getData("d-tables.d10", TsData.class).internalStorage();
         double[] actual_D10 = prepareForCompare(instance.getD10(), context);
-        org.junit.Assert.assertArrayEquals("Error in D10", expected_D10, actual_D10, DELTA);
+        assertArrayEquals(expected_D10, actual_D10, DELTA, "Error in D10");
         double[] expected_D11 = old_Results.getData("d-tables.d11", TsData.class).internalStorage();
         double[] actual_D11 = prepareForCompare(instance.getD11(), context);
-        org.junit.Assert.assertArrayEquals("Error in D11", expected_D11, actual_D11, DELTA);
+        assertArrayEquals(expected_D11, actual_D11, DELTA, "Error in D11");
         double[] expected_D13 = old_Results.getData("d-tables.d13", TsData.class).internalStorage();
         double[] actual_D13 = prepareForCompare(instance.getD13(), context);
-        org.junit.Assert.assertArrayEquals("Error in D13", expected_D13, actual_D13, DELTA);
+        assertArrayEquals(expected_D13, actual_D13, DELTA, "Error in D13");
     }
 
     private double[] prepareForCompare(final DoubleSeq in, X11Context context) {

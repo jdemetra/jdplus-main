@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.components.parts;
 
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.TsData;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

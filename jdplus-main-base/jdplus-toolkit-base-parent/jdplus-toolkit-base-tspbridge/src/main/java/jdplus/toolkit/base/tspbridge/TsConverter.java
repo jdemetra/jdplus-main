@@ -24,7 +24,7 @@ import ec.tss.TsBypass;
 import ec.tstoolkit.maths.matrices.Matrix;
 import jdplus.toolkit.base.tsp.fixme.Strings;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -44,44 +44,44 @@ public class TsConverter {
     public @NonNull TsUnit toTsUnit(ec.tstoolkit.timeseries.simplets.@NonNull TsFrequency o) {
         switch (o) {
             case BiMonthly:
-                return TsUnit.of(2, ChronoUnit.MONTHS);
+                return TsUnit.P2M;
             case HalfYearly:
-                return TsUnit.HALF_YEAR;
+                return TsUnit.P6M;
             case Monthly:
-                return TsUnit.MONTH;
+                return TsUnit.P1M;
             case QuadriMonthly:
-                return TsUnit.of(4, ChronoUnit.MONTHS);
+                return TsUnit.P4M;
             case Quarterly:
-                return TsUnit.QUARTER;
+                return TsUnit.P3M;
             case Undefined:
                 return TsUnit.UNDEFINED;
             case Yearly:
-                return TsUnit.YEAR;
+                return TsUnit.P1Y;
             default:
                 throw ConverterException.notPossible(o);
         }
     }
 
     public ec.tstoolkit.timeseries.simplets.@NonNull TsFrequency fromTsUnit(@NonNull TsUnit o) throws ConverterException {
-        if (o.equals(TsUnit.of(2, ChronoUnit.MONTHS))) {
+        if (o.equals(TsUnit.P2M)) {
             return ec.tstoolkit.timeseries.simplets.TsFrequency.BiMonthly;
         }
-        if (o.equals(TsUnit.HALF_YEAR)) {
+        if (o.equals(TsUnit.P6M)) {
             return ec.tstoolkit.timeseries.simplets.TsFrequency.HalfYearly;
         }
-        if (o.equals(TsUnit.MONTH)) {
+        if (o.equals(TsUnit.P1M)) {
             return ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly;
         }
-        if (o.equals(TsUnit.of(4, ChronoUnit.MONTHS))) {
+        if (o.equals(TsUnit.P4M)) {
             return ec.tstoolkit.timeseries.simplets.TsFrequency.QuadriMonthly;
         }
-        if (o.equals(TsUnit.QUARTER)) {
+        if (o.equals(TsUnit.P3M)) {
             return ec.tstoolkit.timeseries.simplets.TsFrequency.Quarterly;
         }
         if (o.equals(TsUnit.UNDEFINED)) {
             return ec.tstoolkit.timeseries.simplets.TsFrequency.Undefined;
         }
-        if (o.equals(TsUnit.YEAR)) {
+        if (o.equals(TsUnit.P1Y)) {
             return ec.tstoolkit.timeseries.simplets.TsFrequency.Yearly;
         }
         throw ConverterException.of(TsUnit.class, ec.tstoolkit.timeseries.simplets.TsFrequency.class, o);

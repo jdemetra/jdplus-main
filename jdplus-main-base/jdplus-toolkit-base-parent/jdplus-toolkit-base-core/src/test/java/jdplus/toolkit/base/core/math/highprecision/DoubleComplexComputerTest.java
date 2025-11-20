@@ -8,7 +8,7 @@ package jdplus.toolkit.base.core.math.highprecision;
 import jdplus.toolkit.base.api.math.Complex;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

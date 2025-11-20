@@ -17,8 +17,9 @@
 package jdplus.x13.base.r;
 
 import tck.demetra.data.Data;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -39,7 +40,7 @@ public class RegArimaOutliersDetectionTest {
 //                System.out.println(outliers[i]);
 //            }
 //        }
-        assertTrue(outliers == null);
+        assertNull(outliers);
     }
     
 }

@@ -29,7 +29,7 @@ import jdplus.toolkit.base.core.ssf.sts.SeasonalComponent;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 import jdplus.toolkit.base.core.stats.likelihood.DiffuseConcentratedLikelihood;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

@@ -7,11 +7,11 @@ package jdplus.tramoseats.base.core.tramo;
 
 import tck.demetra.data.Data;
 import jdplus.sa.base.api.EstimationPolicyType;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -28,29 +28,29 @@ public class TramoFactoryTest {
         RegSarimaModel rslt = kernel.process(Data.TS_PROD, null);
         TramoSpec pspec = TramoFactory.getInstance().generateSpec(TramoSpec.TRfull, rslt.getDescription());
         TramoSpec nspec = TramoFactory.getInstance().refreshSpec(pspec, TramoSpec.TRfull, EstimationPolicyType.Current, null);
-        assertTrue(nspec != null);
+        assertNotSame(nspec, null);
         RegSarimaModel tmp = TramoKernel.of(nspec, null).process(Data.TS_PROD, null);
-        assertTrue(tmp != null);
+        assertNotSame(tmp, null);
         nspec = TramoFactory.getInstance().refreshSpec(pspec, TramoSpec.TRfull, EstimationPolicyType.Fixed, null);
-        assertTrue(nspec != null);
+        assertNotSame(nspec, null);
         tmp = TramoKernel.of(nspec, null).process(Data.TS_PROD, null);
-        assertTrue(tmp != null);
+        assertNotSame(tmp, null);
         nspec = TramoFactory.getInstance().refreshSpec(pspec, TramoSpec.TRfull, EstimationPolicyType.FixedAutoRegressiveParameters, null);
-        assertTrue(nspec != null);
+        assertNotSame(nspec, null);
         tmp = TramoKernel.of(nspec, null).process(Data.TS_PROD, null);
-        assertTrue(tmp != null);
+        assertNotSame(tmp, null);
         nspec = TramoFactory.getInstance().refreshSpec(pspec, TramoSpec.TRfull, EstimationPolicyType.FreeParameters, null);
-        assertTrue(nspec != null);
+        assertNotSame(nspec, null);
         tmp = TramoKernel.of(nspec, null).process(Data.TS_PROD, null);
-        assertTrue(tmp != null);
+        assertNotSame(tmp, null);
         nspec = TramoFactory.getInstance().refreshSpec(pspec, TramoSpec.TRfull, EstimationPolicyType.Outliers, null);
-        assertTrue(nspec != null);
+        assertNotSame(nspec, null);
         tmp = TramoKernel.of(nspec, null).process(Data.TS_PROD, null);
-        assertTrue(tmp != null);
+        assertNotSame(tmp, null);
         nspec = TramoFactory.getInstance().refreshSpec(pspec, TramoSpec.TRfull, EstimationPolicyType.Outliers_StochasticComponent, null);
-        assertTrue(nspec != null);
+        assertNotSame(nspec, null);
         tmp = TramoKernel.of(nspec, null).process(Data.TS_PROD, null);
-        assertTrue(tmp != null);
+        assertNotSame(tmp, null);
     }
 
 }

@@ -20,8 +20,9 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import java.util.Random;
 
 import jdplus.toolkit.base.core.data.normalizer.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -59,12 +60,12 @@ public class DataNormalizerTest {
         DataBlock w = z.deepClone();
         double c = new SafeNormalizer().normalize(w);
         w.div(c);
-        assertTrue(w.distance(z)==0);
+        assertEquals(0, w.distance(z));
         z.set(i->rnd.nextDouble()/1000000);
         w = z.deepClone();
         c = new SafeNormalizer().normalize(w);
         w.div(c);
-        assertTrue(w.distance(z)==0);
+        assertEquals(0, w.distance(z));
     }
     
 }

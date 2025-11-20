@@ -21,7 +21,7 @@ import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.AutoCompletionSources;
 import nbbrd.design.BuilderPattern;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.nodes.Node;
 import org.openide.nodes.Node.Property;
 import org.openide.nodes.PropertySupport;

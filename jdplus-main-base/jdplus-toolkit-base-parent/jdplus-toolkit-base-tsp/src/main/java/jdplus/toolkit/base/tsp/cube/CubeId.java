@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents an identifier of a cube resource such as a time series or a

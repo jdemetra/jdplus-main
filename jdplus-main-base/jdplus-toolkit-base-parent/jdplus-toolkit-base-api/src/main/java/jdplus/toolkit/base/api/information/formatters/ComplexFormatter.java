@@ -27,13 +27,6 @@ import java.util.Locale;
  */
 public final class ComplexFormatter implements InformationFormatter {
 
-    private NumberFormat newFormat(Locale locale) {
-        NumberFormat df4 = NumberFormat.getNumberInstance(locale);
-        df4.setMaximumFractionDigits(4);
-        df4.setGroupingUsed(false);
-        return df4;
-    }
-
     @Override
     public int getDefaultRepresentationLength() {
         return 2;
@@ -47,12 +40,13 @@ public final class ComplexFormatter implements InformationFormatter {
             return c.toString();
         }
 
-        NumberFormat fmt = newFormat(locale);
+        NumberFormat fmt = InformationFormatter.df4(locale);
 
         switch (Math.abs(item)) {
-            case 1:
+            case 1 -> {
                 return fmt.format(c.abs());
-            case 2:
+            }
+            case 2 -> {
                 double arg = c.arg();
                 if (arg == 0) {
                     return null;
@@ -64,8 +58,10 @@ public final class ComplexFormatter implements InformationFormatter {
                         return fmt.format(period);
                     }
                 }
-            default:
+            }
+            default -> {
                 return null;
+            }
         }
     }
 }

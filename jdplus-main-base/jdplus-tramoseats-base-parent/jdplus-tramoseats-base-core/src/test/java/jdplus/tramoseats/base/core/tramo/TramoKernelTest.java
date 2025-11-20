@@ -4,7 +4,7 @@
  * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
+ * You may obtain a copy of the Licence at:ModelDescr
  * 
  * https://joinup.ec.europa.eu/software/page/eupl
  * 
@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -532,12 +534,12 @@ public class TramoKernelTest {
         IPreprocessor oprocessor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TR0.build();
         int n = 0;
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
@@ -549,12 +551,12 @@ public class TramoKernelTest {
         oprocessor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TR3.build();
         n = 0;
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
@@ -566,12 +568,12 @@ public class TramoKernelTest {
         oprocessor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.build();
         n = 0;
         for (int i = 0; i < all.length; ++i) {
-            TsData s = all[i].aggregate(TsUnit.YEAR, AggregationType.Average, true);
+            TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
             ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
-            assertTrue(rslt != null);
+            assertNotSame(rslt, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {

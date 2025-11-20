@@ -37,8 +37,8 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.beans.BeanInfo;
 import java.beans.Beans;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -68,7 +68,7 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
                 .build();
 
         public static final Column START = builder()
-                .name("Start")
+                .name("First period")
                 .type(TsPeriod.class)
                 .mapper(ts -> ts.getData().isEmpty() ? null : ts.getData().getDomain().getStartPeriod())
                 .comparator(Comparator.comparing(TsPeriod::start))
@@ -76,7 +76,7 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
                 .build();
 
         public static final Column LAST = builder()
-                .name("End")
+                .name("Last period")
                 .type(TsPeriod.class)
                 .mapper(ts -> ts.getData().isEmpty() ? null : ts.getData().getDomain().getLastPeriod())
                 .comparator(Comparator.comparing(TsPeriod::end))
@@ -84,14 +84,14 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
                 .build();
 
         public static final Column LENGTH = builder()
-                .name("Length")
+                .name("Obs count")
                 .type(Integer.class)
                 .mapper(ts -> ts.getData().length())
                 .renderer(table -> JTables.cellRendererOf(JTsTable::renderTsLength))
                 .build();
 
         public static final Column DATA = builder()
-                .name("Data")
+                .name("Values")
                 .type(TsData.class)
                 .mapper(Ts::getData)
                 .comparator((l, r) -> -1)
@@ -99,31 +99,31 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
                 .build();
 
         public static final Column TS_IDENTIFIER = builder()
-                .name("TsIdentifier")
+                .name("Series Name")
                 .type(TsIdentifier.class)
                 .mapper(TsIdentifier::of)
                 .comparator(Comparator.comparing(TsIdentifier::getName))
-                .renderer(table -> new TsIdentifierTableCellRenderer())
+                .renderer(table -> JTables.cellRendererOf(JTsTable::renderTsIdentifier))
                 .build();
 
         @lombok.NonNull
-        private String name;
+        String name;
 
         @lombok.NonNull
         @lombok.Builder.Default
-        private Class<?> type = Object.class;
+        Class<?> type = Object.class;
 
         @lombok.NonNull
         @lombok.Builder.Default
-        private Function<Ts, ?> mapper = Function.identity();
+        Function<Ts, ?> mapper = Function.identity();
 
         @lombok.NonNull
         @lombok.Builder.Default
-        private Comparator<?> comparator = Comparator.naturalOrder();
+        Comparator<?> comparator = Comparator.naturalOrder();
 
         @lombok.NonNull
         @lombok.Builder.Default
-        private Function<JTsTable, TableCellRenderer> renderer = o -> new DefaultTableCellRenderer();
+        Function<JTsTable, TableCellRenderer> renderer = ignore -> new DefaultTableCellRenderer();
     }
 
     @SwingProperty
@@ -155,10 +155,10 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
 
     private final TsSelectionBridge tsSelectionBridge;
 
-    public JTsTable(){
+    public JTsTable() {
         this(TsInformationType.None);
     }
-    
+
     public JTsTable(TsInformationType info) {
         this.collection = HasTsCollectionSupport.of(this::firePropertyChange, info);
         this.tsAction = HasTsActionSupport.of(this::firePropertyChange);
@@ -219,8 +219,8 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
     }
 
     private static void renderTsPeriod(JLabel label, TsPeriod value) {
-        label.setHorizontalAlignment(JLabel.TRAILING);
-        label.setText(value != null ? value.display() : null);
+        label.setHorizontalAlignment(JLabel.LEADING);
+        label.setText(value != null ? value.getStartAsShortString() : null);
     }
 
     private static void renderTsLength(JLabel label, Integer value) {
@@ -228,28 +228,19 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
         label.setText(value != null ? value.toString() : null);
     }
 
-    private static final class TsIdentifierTableCellRenderer extends DefaultTableCellRenderer {
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JLabel result = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value instanceof TsIdentifier) {
-                TsIdentifier id = (TsIdentifier) value;
-                String text = id.getName();
-                if (text.isEmpty()) {
-                    result.setText(" ");
-                    result.setToolTipText(null);
-                } else if (text.startsWith("<html>")) {
-                    result.setText(text);
-                    result.setToolTipText(text);
-                } else {
-                    result.setText(MultiLineNameUtil.join(text));
-                    result.setToolTipText(MultiLineNameUtil.toHtml(text));
-                }
-                result.setIcon(DataSourceManager.get().getIcon(id.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
-            }
-            return result;
+    private static void renderTsIdentifier(JLabel label, TsIdentifier id) {
+        String text = id.getName();
+        if (text.isEmpty()) {
+            label.setText(" ");
+            label.setToolTipText(null);
+        } else if (text.startsWith("<html>")) {
+            label.setText(text);
+            label.setToolTipText(text);
+        } else {
+            label.setText(MultiLineNameUtil.join(text));
+            label.setToolTipText(MultiLineNameUtil.toHtml(text));
         }
+        label.setIcon(DataSourceManager.get().getIcon(id.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
     }
 
     private static final class TsDataTableCellRenderer implements TableCellRenderer {
@@ -288,26 +279,27 @@ public final class JTsTable extends JComponent implements TimeSeriesComponent, P
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (value instanceof TsData) {
-                TsData data = (TsData) value;
-                switch (data.length()) {
-                    case 0:
-                        String cause = data.getEmptyCause();
-                        return renderUsingLabel(table, cause.isEmpty() ? "loading? invalid?" : cause, isSelected, hasFocus, row, column);
-                    case 1:
-                        return renderUsingLabel(table, "Single: " + formatValue(data.getValue(0)), isSelected, hasFocus, row, column);
-                    default:
-                        return renderUsingSparkline(table, value, isSelected, hasFocus, row, column);
-                }
+            if (value instanceof TsData data) {
+                return switch (data.length()) {
+                    case 0 -> renderLabel(table, toEmptyCauseLabel(data), isSelected, hasFocus, row, column);
+                    case 1 ->
+                            renderLabel(table, "Single: " + formatValue(data.getValue(0)), isSelected, hasFocus, row, column);
+                    default -> renderSparkline(table, data, isSelected, hasFocus, row, column);
+                };
             }
-            return renderUsingLabel(table, value, isSelected, hasFocus, row, column);
+            return renderLabel(table, Objects.toString(value), isSelected, hasFocus, row, column);
         }
 
-        private Component renderUsingSparkline(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        private static String toEmptyCauseLabel(TsData data) {
+            String result = data.getEmptyCause();
+            return result == null || result.isEmpty() ? "loading? invalid?" : result;
+        }
+
+        private Component renderSparkline(JTable table, TsData value, boolean isSelected, boolean hasFocus, int row, int column) {
             return dataRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
 
-        private Component renderUsingLabel(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        private Component renderLabel(JTable table, String value, boolean isSelected, boolean hasFocus, int row, int column) {
             labelRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             labelRenderer.setToolTipText(labelRenderer.getText());
             return labelRenderer;

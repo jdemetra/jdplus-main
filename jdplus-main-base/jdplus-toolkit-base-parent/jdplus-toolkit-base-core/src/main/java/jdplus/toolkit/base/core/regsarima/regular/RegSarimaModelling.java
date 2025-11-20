@@ -31,7 +31,7 @@ import lombok.NonNull;
  */
 @Development(status = Development.Status.Preliminary)
 @lombok.Getter
-@lombok.AllArgsConstructor(access=lombok.AccessLevel.PRIVATE)
+@lombok.AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class RegSarimaModelling {
 
     @NonNull
@@ -40,18 +40,18 @@ public class RegSarimaModelling {
 
     @NonNull
     private final ProcessingLog log;
-    
-    public static RegSarimaModelling of(ModelDescription desc){
+
+    public static RegSarimaModelling of(ModelDescription desc) {
         return new RegSarimaModelling(desc, null, ProcessingLog.dummy());
     }
 
-    public static RegSarimaModelling of(ModelDescription desc, ProcessingLog log){
+    public static RegSarimaModelling of(ModelDescription desc, ProcessingLog log) {
         return new RegSarimaModelling(desc, null, log);
     }
 
-    public static RegSarimaModelling copyOf(RegSarimaModelling modelling){
+    public static RegSarimaModelling copyOf(RegSarimaModelling modelling) {
         return new RegSarimaModelling(ModelDescription.copyOf(modelling.description),
-        modelling.estimation, ProcessingLog.dummy());
+                modelling.estimation, ProcessingLog.dummy());
     }
 
     public void estimate(IRegArimaComputer<SarimaModel> processor) {
@@ -70,36 +70,36 @@ public class RegSarimaModelling {
     public RegSarimaModel build() {
         return RegSarimaModel.of(description, estimation, log);
     }
-    
-    public void clearEstimation(){
-        estimation=null;
+
+    public void clearEstimation() {
+        estimation = null;
         description.freeArimaParameters();
     }
 
     public boolean needEstimation() {
         return estimation == null;
     }
-    
+
     /**
      * Change the Arima specification and remove the current estimation
-     * @param spec 
+     *
+     * @param spec
      */
-    public void setSpecification(SarimaOrders spec){
+    public void setSpecification(SarimaOrders spec) {
         description.setSpecification(spec);
-        this.estimation=null;
+        this.estimation = null;
     }
 
-    public void setDescription(ModelDescription desc){
-        this.description=desc;
-        this.estimation=null;
+    public void setDescription(ModelDescription desc) {
+        this.description = desc;
+        this.estimation = null;
     }
-    
-    public void set(ModelDescription desc, RegArimaEstimation<SarimaModel> est){
-        this.description=desc;
-        this.estimation=est;
+
+    public void set(ModelDescription desc, RegArimaEstimation<SarimaModel> est) {
+        this.description = desc;
+        this.estimation = est;
     }
-   
-   
+
 //    public ModellingContext() {
 //        processingLog = new ArrayList<>();
 //    }
@@ -115,7 +115,6 @@ public class RegSarimaModelling {
 //    public PreprocessingModel tmpModel() {
 //        return new PreprocessingModel(description, estimation, log);
 //    }
-
 //    public PreprocessingModel current(boolean update) {
 //        if (!update) {
 //            PreprocessingModel model = new PreprocessingModel(description.clone(), estimation);

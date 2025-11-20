@@ -1,8 +1,13 @@
 package jdplus.toolkit.base.api.time;
 
+import lombok.NonNull;
+import nbbrd.design.NonNegative;
+
+import java.time.DateTimeException;
+
 public interface TimeRecurrenceAccessor {
 
-    TimeInterval<?, ?> getInterval();
+    @NonNull TimeInterval<?, ?> getInterval() throws DateTimeException;
 
-    int length();
+    @NonNegative int length() throws DateTimeException;
 }

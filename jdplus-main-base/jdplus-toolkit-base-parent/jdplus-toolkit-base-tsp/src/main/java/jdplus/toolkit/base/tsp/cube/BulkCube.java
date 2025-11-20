@@ -17,7 +17,7 @@
 package jdplus.toolkit.base.tsp.cube;
 
 import nbbrd.design.LombokWorkaround;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 import java.time.Duration;
 

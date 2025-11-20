@@ -20,8 +20,9 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -56,20 +57,20 @@ public class GenericTradingDaysFactoryTest {
         FastMatrix M=FastMatrix.make(12*28, 7);
         GenericTradingDaysFactory.fillTradingDaysMatrix(TsPeriod.monthly(1980, 1), true, M);
         for (int i=0; i<7; ++i){
-            assertEquals(M.column(i).sum(), 0, 1e-9);
+            assertEquals(0, M.column(i).sum(), 1e-9);
         }
         GenericTradingDaysFactory.fillTradingDaysMatrix(TsPeriod.monthly(1980, 1), false, M);
         for (int i=0; i<7; ++i){
-            assertEquals(M.column(i).sum(), 1461, 1e-9);
+            assertEquals(1461, M.column(i).sum(), 1e-9);
         }
         FastMatrix Q=FastMatrix.make(4*28, 7);
         GenericTradingDaysFactory.fillTradingDaysMatrix(TsPeriod.quarterly(1980, 1), true, Q);
         for (int i=0; i<7; ++i){
-            assertEquals(Q.column(i).sum(), 0, 1e-9);
+            assertEquals(0, Q.column(i).sum(), 1e-9);
         }
         GenericTradingDaysFactory.fillTradingDaysMatrix(TsPeriod.quarterly(1980, 1), false, Q);
         for (int i=0; i<7; ++i){
-            assertEquals(Q.column(i).sum(), 1461, 1e-9);
+            assertEquals(1461, Q.column(i).sum(), 1e-9);
         }
     }    
 }

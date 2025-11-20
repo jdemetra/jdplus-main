@@ -268,27 +268,27 @@ public final class PocProvider implements DataSourceProvider {
     private enum DataType {
 
         NORMAL(new PocDomainBuilder()
-                .units(YEAR, HALF_YEAR, QUARTER, MONTH, DAY)
+                .units(P1Y, P6M, P3M, P1M, P1D)
                 .sizes(0, 1, 24, 60, 120)
                 .build()),
         FAILING_DATA(new PocDomainBuilder()
-                .units(MONTH)
+                .units(P1M)
                 .sizes(60, 120)
                 .build()),
         FAILING_META(new PocDomainBuilder()
-                .units(MONTH)
+                .units(P1M)
                 .sizes(60, 120)
                 .build()),
         FAILING_DEF(new PocDomainBuilder()
-                .units(MONTH)
+                .units(P1M)
                 .sizes(60, 120)
                 .build()),
         UPDATING(new PocDomainBuilder()
-                .units(MONTH)
+                .units(P1M)
                 .sizes(0, 1, 24, 60, 120)
                 .build()),
         SLOW(new PocDomainBuilder()
-                .units(MONTH)
+                .units(P1M)
                 .sizes(60, 120)
                 .build());
 

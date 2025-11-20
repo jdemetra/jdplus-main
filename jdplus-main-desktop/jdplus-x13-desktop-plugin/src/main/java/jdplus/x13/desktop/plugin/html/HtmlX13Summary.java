@@ -70,7 +70,9 @@ public class HtmlX13Summary extends AbstractHtmlElement {
     }
 
     private void writeInformation(HtmlStream stream) throws IOException {
-//        stream.write(new HtmlProcessingLog(infos_));
+        HtmlProcessingLog log = new HtmlProcessingLog(infos_);
+        log.setVerbose(false);
+        stream.write(log);
     }
 
     private void writePreprocessing(HtmlStream stream) throws IOException {

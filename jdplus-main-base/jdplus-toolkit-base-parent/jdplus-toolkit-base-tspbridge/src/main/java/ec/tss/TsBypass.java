@@ -20,7 +20,7 @@ import ec.tstoolkit.MetaData;
 import ec.tstoolkit.timeseries.simplets.TsData;
 import java.util.UUID;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

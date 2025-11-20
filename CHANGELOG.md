@@ -7,6 +7,31 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.6.0] - 2025-11-20
+
+### Added
+
+- ![STAT] Add support of compact notation in ISO 8601 time interval [#159](https://github.com/jdemetra/jdplus-main/issues/159)
+- ![OTHER] Add Windows aarch_64 to standalone binaries [#659](https://github.com/jdemetra/jdplus-main/issues/659)
+
+### Fixed
+
+- ![STAT] Fix a bug in trend constant variable [#756](https://github.com/jdemetra/jdplus-main/issues/756)
+- ![UI] Add project version to cachedir path [#555](https://github.com/jdemetra/jdplus-main/issues/555)
+- ![UI] Fix IllegalStateException in JTsVariableList [#711](https://github.com/jdemetra/jdplus-main/issues/711)
+- ![UI] Fix scrolling for long list of pre-specified outliers [#667](https://github.com/jdemetra/jdplus-main/issues/667)
+- ![UI] Fix SaItem duplication in SaBatchUI [#761](https://github.com/jdemetra/jdplus-main/issues/761) and [#689](https://github.com/jdemetra/jdplus-main/issues/689)
+- ![UI] Fix InvalidPathException when displaying exceptions [#806](https://github.com/jdemetra/jdplus-main/issues/806)
+- ![UI] Fix select all menu item behavior [#607](https://github.com/jdemetra/jdplus-main/issues/607)
+- ![UI] Fix missing meta data in details view and properties in SaBatchUI
+
+### Changed
+
+- ![STAT] Change the definition of the deterministic component in the preadjustment phase (exclude trend constant as in version 2)  [#756](https://github.com/jdemetra/jdplus-main/issues/756)
+- ![UI] Unify period display in GUI [#489](https://github.com/jdemetra/jdplus-main/issues/489)
+- ![UI] Improve workspace feedback [#661](https://github.com/jdemetra/jdplus-main/issues/661), [#802](https://github.com/jdemetra/jdplus-main/issues/802), [#420](https://github.com/jdemetra/jdplus-main/issues/420)
+- ![UI] Update reset zoom menu item text to improve clarity [#601](https://github.com/jdemetra/jdplus-main/issues/601)
+
 ## [3.5.1] - 2025-06-12
 
 ### Fixed
@@ -256,7 +281,12 @@ Install instructions are available at https://github.com/jdemetra/jdplus-main#in
 This is the **initial release** of JDemetra+ v3.0.0.  
 [Java SE 17 or later](https://whichjdk.com/) version is required to run it.
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...HEAD
+### Added
+
+- Initial release
+
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...HEAD
+[3.6.0]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...v3.6.0
 [3.5.1]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...v3.5.0
 [3.4.0]: https://github.com/jdemetra/jd3-main/compare/v3.3.0...v3.4.0

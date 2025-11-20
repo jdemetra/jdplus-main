@@ -40,24 +40,15 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.core.sarima.estimation.HannanRissanen;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
 import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
+import jdplus.toolkit.base.core.regsarima.regular.IDifferencingModule;
 
 /**
  *
  * @author Jean Palate
  */
 @Development(status = Development.Status.Preliminary)
-public class DifferencingModule {
+public class DifferencingModule implements IDifferencingModule{
 
-    public static final String DIFF = "differencing selection",
-            SELECTION = "differencing selection", DEFAULT = "default model selected (not enough obs.)",
-            FAILED = "differencing selection failed";
-    
-    @lombok.Value
-    public static class Info{
-        
-        private final int d, bd;
-        private final boolean mean;        
-    }
 
     public static final int MAXD = 2, MAXBD = 1;
 
@@ -269,10 +260,12 @@ public class DifferencingModule {
         return icon;
     }
 
+    @Override
     public double getTMean() {
         return tmean;
     }
 
+    @Override
     public boolean isMeanCorrection() {
         double vct = 2.5;
         int n = y.length();
@@ -288,10 +281,12 @@ public class DifferencingModule {
         return Math.abs(tmean) > vct;
     }
 
+    @Override
     public int getD() {
         return spec.getD();
     }
 
+    @Override
     public int getBd() {
         return spec.getBd();
     }
@@ -520,6 +515,7 @@ public class DifferencingModule {
         tmean = s / Math.sqrt((s2 * n - s * s) / n);
     }
 
+    @Override
     public ProcessingResult process(RegSarimaModelling context) {
         ModelDescription desc = context.getDescription();
         if (context.needEstimation()) {
@@ -562,7 +558,7 @@ public class DifferencingModule {
                 desc.setMean(nmean);
                 context.clearEstimation();
             }
-            log.info(SELECTION, new Info(spec.getD(), spec.getBd(), nmean));
+            log.info(SELECTION, Info.of(this));
             return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
         } catch (RuntimeException err) {
             log.remark(FAILED);

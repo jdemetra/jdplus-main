@@ -19,7 +19,7 @@ package jdplus.toolkit.desktop.plugin.nodes;
 import nbbrd.design.swing.OnAnyThread;
 import nbbrd.design.swing.OnEDT;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 

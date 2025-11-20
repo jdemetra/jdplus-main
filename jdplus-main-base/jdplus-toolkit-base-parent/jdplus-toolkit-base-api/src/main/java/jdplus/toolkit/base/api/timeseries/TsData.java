@@ -21,8 +21,9 @@ import jdplus.toolkit.base.api.data.*;
 import lombok.AccessLevel;
 import nbbrd.design.Development;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Random;
@@ -116,7 +117,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
     /**
      * Message explaining why the time series data is empty.
      */
-    private final String emptyCause;
+    private final @Nullable String emptyCause;
 
     @Override
     public TsObs get(int index) throws IndexOutOfBoundsException {
@@ -611,7 +612,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
         StringBuilder builder = new StringBuilder();
         DoubleSeqCursor reader = values.cursor();
         for (int i = 0; i < values.length(); ++i) {
-            builder.append(domain.get(i).display()).append('\t').append(reader.getAndNext());
+            builder.append(domain.get(i).getStartAsShortString()).append('\t').append(reader.getAndNext());
             builder.append(System.lineSeparator());
         }
         return builder.toString();

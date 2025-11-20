@@ -31,6 +31,8 @@ public class JulianEasterVariable implements IEasterVariable, ISystemVariable{
     
     @Override
     public <D extends TimeSeriesDomain<?>> String description(D context){
-        return "julian easter";
+        StringBuilder builder=new StringBuilder();
+        builder.append("julian easter").append(" [").append(duration).append(']');
+        return builder.toString();
     }
 }

@@ -9,7 +9,7 @@ import jdplus.sa.base.core.tests.SeasonalityTests;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

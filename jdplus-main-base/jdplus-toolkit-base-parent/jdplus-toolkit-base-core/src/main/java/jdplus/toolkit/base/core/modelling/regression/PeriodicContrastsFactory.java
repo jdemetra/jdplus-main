@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.regression.PeriodicContrasts;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
@@ -59,7 +60,7 @@ public class PeriodicContrastsFactory implements RegressionVariableFactory<Perio
     private PeriodicContrastsFactory(){}
 
     @Override
-    public boolean fill(PeriodicContrasts var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(PeriodicContrasts var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         int period = var.getPeriod();
         TsPeriod refPeriod = start.withDate(var.getReference());
         long del = start.getId() - refPeriod.getId();
@@ -83,7 +84,7 @@ public class PeriodicContrastsFactory implements RegressionVariableFactory<Perio
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(PeriodicContrasts var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(PeriodicContrasts var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

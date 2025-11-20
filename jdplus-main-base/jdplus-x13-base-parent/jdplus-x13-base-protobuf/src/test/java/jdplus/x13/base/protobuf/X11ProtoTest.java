@@ -8,7 +8,8 @@ package jdplus.x13.base.protobuf;
 import com.google.protobuf.InvalidProtocolBufferException;
 import jdplus.x13.base.api.x11.X11Spec;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -23,7 +24,7 @@ public class X11ProtoTest {
     public void testX11Spec() throws InvalidProtocolBufferException {
         X11Spec spec = X11Spec.DEFAULT;
         X11Spec nspec = X11Proto.convert(X11Proto.convert(spec));
-        assertTrue(spec.equals(nspec));
+        assertEquals(spec, nspec);
     }
 
 }

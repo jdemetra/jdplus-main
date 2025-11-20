@@ -11,10 +11,12 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
+import jdplus.toolkit.base.core.ssf.likelihood.MarginalLikelihood;
+import jdplus.toolkit.base.core.ssf.likelihood.ProfileLikelihood;
 import jdplus.toolkit.base.core.ssf.univariate.Ssf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -27,8 +29,9 @@ public class QRFilterTest {
 
     static {
         SarimaOrders spec = SarimaOrders.airline(12);
-        arima1 = SarimaModel.builder(spec).theta(1, -.6).btheta(1, -.8).build();
-        arima2 = SarimaModel.builder(spec).theta(1, .3).btheta(1, -.4).build();
+        spec.setP(1);
+        arima1 = SarimaModel.builder(spec).phi(-.2).theta(1, -.6).btheta(1, -.8).build();
+        arima2 = SarimaModel.builder(spec).phi(-.5).theta(1, .3).btheta(1, -.4).build();
         data = Data.PROD.clone();
         data[data.length - 1] = Double.NaN;
         data[17] = Double.NaN;
@@ -46,6 +49,8 @@ public class QRFilterTest {
         QRFilter filter = new QRFilter();
         filter.process(ssf, ssfData);
         DiffuseLikelihood ll1 = filter.diffuseLikelihood(true, true);
+        MarginalLikelihood mll = filter.marginalLikelihood(true, true);
+        ProfileLikelihood pll = filter.profileLikelihood();
         DiffuseLikelihood ll2 = DkToolkit.likelihood(ssf, ssfData, true, true);
         DiffuseLikelihood ll3 = AkfToolkit.likelihoodComputer(true, true, true).compute(ssf, ssfData);
         assertEquals(ll1.logLikelihood(), ll2.logLikelihood(), 1e-6);

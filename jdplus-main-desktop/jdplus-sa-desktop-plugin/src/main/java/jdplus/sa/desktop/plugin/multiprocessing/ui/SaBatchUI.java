@@ -78,6 +78,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 
 /**
  * @author Philippe Charles
@@ -217,7 +220,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     public SaBatchUI(MultiProcessingController controller) {
         super(controller);
         this.collection = HasTsCollectionSupport.of(this::firePropertyChange, TsInformationType.None);
-        collection.setTsUpdateMode(TsUpdateMode.Replace);
+        collection.setTsUpdateMode(TsUpdateMode.Append);
         this.defaultSpecification = DemetraSaUI.get().getDefaultSaSpec();
 
         setName(controller.getDocument().getDisplayName());
@@ -318,14 +321,28 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         if (coll == null) {
             return;
         }
-        Ts[] all = coll.stream().filter(s -> s.getType().encompass(TsInformationType.Data)).toArray(n -> new Ts[n]);
-        if (all.length > 0 && defaultSpecification == null) {
-            editDefaultSpecification();
-        }
-        getElement().add(defaultSpecification, all);
-        controller.getDocument().setDirty();
-        redrawAll();
 
+        Set<TsMoniker> existingMonikers = getElement().getCurrent()
+                .stream()
+                .map(SaNode::getOutput)
+                .map(o -> o.getDefinition().getTs().unfreeze(TsFactory.getDefault(), TsInformationType.None))
+                .map(Ts::getMoniker)
+                .collect(Collectors.toSet());
+
+        Ts[] newTimeSeries = coll.stream()
+                .filter(ts -> ts.getType().encompass(TsInformationType.Data))
+                .filter(ts -> !existingMonikers.contains(ts.getMoniker()))
+                .map(Ts::freeze)
+                .toArray(n -> new Ts[n]);
+
+        if (newTimeSeries.length > 0) {
+            if (defaultSpecification == null) {
+                editDefaultSpecification();
+            }
+            getElement().add(defaultSpecification, newTimeSeries);
+            controller.getDocument().setDirty();
+            redrawAll();
+        }
     }
 
     public boolean isTableEmpty() {
@@ -388,15 +405,22 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             int i = master.convertRowIndexToView(getElement().getCurrent().indexOf(o));
             master.getSelectionModel().addSelectionInterval(i, i);
         }
+        Node[] child;
         if (selection.length > 0) {
             SaNode item = selection[0];
             item.process(ModellingContext.getActiveContext(), true);
             int idx = getElement().getCurrent().indexOf(item);
             model.fireTableRowsUpdated(idx, idx);
             showDetails(item);
+            child = new Node[]{new SaItemNode(item.output)};
         } else {
             showDetails(null);
+            child = new Node[]{Node.EMPTY.cloneNode()};
         }
+        Children.Array c = new Children.Array();
+        c.add(child);
+        getExplorerManager().setRootContext(new AbstractNode(c));
+        getExplorerManager().setExploredContext(child[0], child);
         listTableListener.setEnabled(true);
     }
     // < EVENT HANDLERS
@@ -808,6 +832,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             if (doc != null && cspec.getClass().isInstance(doc.getSpecification())) {
                 // same document. To be updated
                 doc.setAll(cspec, ts, output.getEstimation().getResults());
+                doc.setMetadata(output.getMeta());
                 detail.resetDocument();
             } else {
                 DocumentUIServices uis = DocumentUIServices.forSpec(cspec.getClass());
@@ -825,6 +850,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                         }
                         TsDynamicProvider.onDocumentOpened(tmp);
                         tmp.setAll(cspec, ts, output.getEstimation().getResults());
+                        tmp.setMetadata(output.getMeta());
                         detail.setDocument(tmp, uis);
                     }
                 }
@@ -863,7 +889,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         }
         SaNode node = selection[0];
         SaItem item = node.getOutput();
-        SaSpecification dspec=item.getDefinition().getDomainSpec();
+        SaSpecification dspec = item.getDefinition().getDomainSpec();
 //        MultiProcessingDocument mdoc = getElement();
         SaSpecification spec = (SaSpecification) doc.getSpecification();
         // new item. The reference spec is the spec of the document. Old behaviour

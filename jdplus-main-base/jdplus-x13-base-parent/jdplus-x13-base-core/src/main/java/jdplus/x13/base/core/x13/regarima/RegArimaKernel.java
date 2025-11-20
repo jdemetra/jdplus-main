@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaProcessor;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
-import jdplus.x13.base.api.regarima.RegArimaException;
 import jdplus.x13.base.api.regarima.RegArimaSpec;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
@@ -48,8 +47,12 @@ import lombok.NonNull;
 @Development(status = Development.Status.Alpha)
 public class RegArimaKernel implements RegSarimaProcessor {
 
+    private static final String REGARIMA = "regarima";
+
     private static final String LAST_CHANCE = "last chance model",
-            OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection";
+            OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection",
+            AMI = "automatic model identification", ROUND = "round ",
+            LOGNEG = "can't apply log transformation 'some obs. are <= 0";
 
     @lombok.Value
     @lombok.Builder(builderClassName = "AmiBuilder")
@@ -160,8 +163,9 @@ public class RegArimaKernel implements RegSarimaProcessor {
     }
 
     public static RegArimaKernel of(RegArimaSpec spec, ModellingContext context) {
-        if (!spec.getBasic().isPreprocessing())
+        if (!spec.getBasic().isPreprocessing()) {
             return null;
+        }
         X13SpecDecoder helper = new X13SpecDecoder(spec, context);
         return helper.buildProcessor();
     }
@@ -218,143 +222,169 @@ public class RegArimaKernel implements RegSarimaProcessor {
             log = ProcessingLog.dummy();
         }
         clear();
-        ModelDescription desc = modelBuilder.build(originalTs, log);
-        if (desc == null) {
-            throw new RegArimaException("Initialization failed");
-        }
-        RegSarimaModelling context = RegSarimaModelling.of(desc, log);
-        // initialize some internal variables
-        if (outliers != null) {
-            va0 = options.getVa();
-            if (va0 == 0) {
-                va0 = X13Utility.calcCv(desc.getSeries().getDomain().getLength());
+        log.push(REGARIMA);
+        try {
+            ModelDescription desc = modelBuilder.build(originalTs, log);
+            if (desc == null) {
+                log.error("initialization failed");
+                return null;
             }
-            curva = va0;
-            needOutliers = true;
-        }
+            RegSarimaModelling context = RegSarimaModelling.of(desc, log);
+            // initialize some internal variables
+            if (outliers != null) {
+                va0 = options.getVa();
+                if (va0 == 0) {
+                    va0 = X13Utility.calcCv(desc.getSeries().getDomain().getLength());
+                }
+                curva = va0;
+                needOutliers = true;
+            }
 
-        RegSarimaModel rslt = calc(context);
-//        if (rslt != null) {
-//            rslt.info_ = context.information;
-//            rslt.addProcessingInformation(context.processingLog);
-//        }
-        return rslt;
+            RegSarimaModel rslt = calc(context);
+            return rslt;
+        } finally {
+            log.pop();
+        }
+    }
+
+    private boolean isFullySpecified() {
+        // Nothing to do.
+        return this.transformation == null
+                && this.outliers == null
+                && this.autoModel == null
+                && !options.checkMu
+                && this.calendarTest == null
+                && this.easterTest == null;
     }
 
     private RegSarimaModel calc(RegSarimaModelling context) {
+        ProcessingLog log = context.getLog();
+        if (context.getDescription().isLogTransformation()) {
+            if (context.getDescription().getSeries().getValues().anyMatch(x -> x <= 0)) {
+                log.error(LOGNEG);
+                return null;
+//                    context.getDescription().setLogTransformation(false);
+//                    context.clearEstimation();
+            }
+        }
         try {
-
-            if (transformation != null) {
-                transformation.process(context);
-            } else if (context.getDescription().isLogTransformation()) {
-                if (context.getDescription().getSeries().getValues().anyMatch(x -> x <= 0)) {
-                    context.getLog().warning("logs changed to levels");
-                    context.getDescription().setLogTransformation(false);
-                    context.clearEstimation();
-                }
+            if (isFullySpecified()) {
+                finalEstimator.estimate(context);
+                return context.build();
             }
-            regAIC(context);
-            checkMu(context, MeanController.CVAL0);
-            if (needOutliers && ProcessingResult.Changed == outliers.process(context, curva)) {
-                if (context.needEstimation()) {
-                    context.estimate(options.precision);
-                }
-                regressionTest0.process(context);
-            }
-            if (isAutoModelling()) {
-                if (context.needEstimation()) {
-                    context.estimate(options.precision);
-                }
-                reference = RegSarimaModelling.copyOf(context);
-                ModelController controller = new ModelController(.95);
-                boolean ok = controller.accept(context);
-                plbox0 = 1 - controller.getLjungBoxTest().getPvalue();
-                rvr0 = controller.getRvr();
-                rtval0 = controller.getRTval();
-                if (!options.acceptAirline || !ok) {
 
-                    round = 1;
-                    loop = 1;
-                    do {
-                        boolean defModel = false;
-                        if (needAutoModelling) {
-                            ProcessingResult amrslt = autoModel.process(context);
-                            defModel = amrslt == ProcessingResult.Unchanged;
-                            if (!defModel) {
-                                if (context.getDescription().removeVariable(var -> ModellingUtility.isOutlier(var, true))) {
-                                    context.clearEstimation();
-                                    needOutliers = outliers != null;
-                                }
-                            }
-                            if (context.needEstimation()) {
-                                context.estimate(options.precision);
-                            }
-                            if (!defModel || loop > 1) {
-                                regAIC(context);
-                            }
-                        }
-                        if (needOutliers) {
-                            outliers.process(context, curva);
-                            if (context.needEstimation()) {
-                                context.estimate(options.precision);
-                            }
-                        }
-                        if (outliers != null && loop <= 2) {
-                            if (!pass2(defModel, context)) {
-                                continue;
-                            }
-                        } else {
-                            controller.accept(context);
-                            rtval0 = controller.getRTval();
-                            rvr0 = controller.getRvr();
-                            plbox0 = 1 - controller.getLjungBoxTest().getPvalue();
-                        }
-                        if (regressionTest1 != null) {
-                            ProcessingResult changed = regressionTest1.process(context);
-                            if (changed == ProcessingResult.Changed) {
-                                if (loop < 3) {
-                                    loop = 3;
-                                }
+            log.push(AMI);
+            try {
+                log.step(ROUND + 0);
+                if (transformation != null) {
+                    transformation.process(context);
+                }
+                regAIC(context);
+                checkMu(context, MeanController.CVAL0);
+                if (needOutliers && ProcessingResult.Changed == outliers.process(context, curva)) {
+                    if (context.needEstimation()) {
+                        context.estimate(options.precision);
+                    }
+                    regressionTest0.process(context);
+                }
+                if (isAutoModelling()) {
+                    if (context.needEstimation()) {
+                        context.estimate(options.precision);
+                    }
+                    reference = RegSarimaModelling.copyOf(context);
+                    ModelController controller = new ModelController(.95);
+                    boolean ok = controller.accept(context);
+                    plbox0 = 1 - controller.getLjungBoxTest().getPvalue();
+                    rvr0 = controller.getRvr();
+                    rtval0 = controller.getRTval();
+                    if (!options.acceptAirline || !ok) {
+
+                        round = 1;
+                        loop = 1;
+                        do {
+                            log.step(ROUND + round);
+                            boolean defModel = false;
+                            if (needAutoModelling) {
+                                ProcessingResult amrslt = autoModel.process(context);
+                                defModel = amrslt == ProcessingResult.Unchanged;
+                                if (!defModel) {
+                                    if (context.getDescription().removeVariable(var -> ModellingUtility.isOutlier(var, true))) {
+                                        context.clearEstimation();
+                                        needOutliers = outliers != null;
+                                    }
+                                } 
                                 if (context.needEstimation()) {
                                     context.estimate(options.precision);
                                 }
+                                if (!defModel || loop > 1) {
+                                    regAIC(context);
+                                }
+                            }
+                            if (needOutliers) {
+                                outliers.process(context, curva);
+                                if (context.needEstimation()) {
+                                    context.estimate(options.precision);
+                                }
+                            }
+                            if (outliers != null && loop <= 2) {
+                                if (!pass2(defModel, context)) {
+                                    continue;
+                                }
+                            } else {
                                 controller.accept(context);
                                 rtval0 = controller.getRTval();
                                 rvr0 = controller.getRvr();
                                 plbox0 = 1 - controller.getLjungBoxTest().getPvalue();
                             }
-                        }
-                        // final tests
-                        boolean checked;
-                        do {
-                            checked = true;
-                            if (!checkUnitRoots(context)) {
-                                checked = false;
+                            if (regressionTest1 != null) {
+                                ProcessingResult changed = regressionTest1.process(context);
+                                if (changed == ProcessingResult.Changed) {
+                                    if (loop < 3) {
+                                        loop = 3;
+                                    }
+                                    if (context.needEstimation()) {
+                                        context.estimate(options.precision);
+                                    }
+                                    controller.accept(context);
+                                    rtval0 = controller.getRTval();
+                                    rvr0 = controller.getRvr();
+                                    plbox0 = 1 - controller.getLjungBoxTest().getPvalue();
+                                }
                             }
-                            if (!checkMA(context)) {
-                                checked = false;
-                            }
-                        } while (!checked);
+                            // final tests
+                            boolean checked;
+                            do {
+                                checked = true;
+                                if (!checkUnitRoots(context)) {
+                                    checked = false;
+                                }
+                                if (!checkMA(context)) {
+                                    checked = false;
+                                }
+                            } while (!checked);
 
-                        if (isAutoModelling() && !context.getDescription().isMean()) {
-                            if (options.checkMu && rtval0 > MeanController.CVALFINAL) {
-                                context.getDescription().setMean(true);
-                                context.clearEstimation();
+                            if (isAutoModelling() && !context.getDescription().isMean()) {
+                                if (options.checkMu && rtval0 > MeanController.CVALFINAL) {
+                                    context.getDescription().setMean(true);
+                                    context.clearEstimation();
+                                }
                             }
-                        }
 
-                        if (finalEstimator.estimate(context)) {
-                            break;
-                        }
-                        if (loop <= 2 && outliers != null) {
-                            curva = Math.max(MINCV, curva * (1 - options.reduceVa));
-                            needOutliers = true;
-                            needAutoModelling = true;
-                        }
-                    } while (round++ < 5);
+                            if (finalEstimator.estimate(context)) {
+                                break;
+                            }
+                            if (loop <= 2 && outliers != null) {
+                                curva = Math.max(MINCV, curva * (1 - options.reduceVa));
+                                needOutliers = true;
+                                needAutoModelling = true;
+                            }
+                        } while (round++ < 5);
+                    }
+                } else {
+                    finalEstimator.estimate(context);
                 }
-            } else {
-                finalEstimator.estimate(context);
+            } finally {
+                log.pop();
             }
 
             return context.build();
@@ -443,7 +473,7 @@ public class RegArimaKernel implements RegSarimaProcessor {
             if (curva > MINCV) {
                 curva = Math.max(MINCV, curva * (1 - options.reduceVa));
                 ncv = true;
-            context.getLog().warning(OUTLIERS_VA_REDUCED);
+                context.getLog().warning(OUTLIERS_VA_REDUCED);
             }
             needOutliers = true;
         }

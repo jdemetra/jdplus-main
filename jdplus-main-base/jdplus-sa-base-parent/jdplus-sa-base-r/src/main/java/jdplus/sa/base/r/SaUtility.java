@@ -31,8 +31,8 @@ public class SaUtility {
         
         DescriptiveStatistics ds = DescriptiveStatistics.of(y.getValues());
         double scale = ds.getRmse();
-        TsData ya = y.aggregate(TsUnit.YEAR, AggregationType.Sum, true);
-        TsData saa = sa.aggregate(TsUnit.YEAR, AggregationType.Sum, true);
+        TsData ya = y.aggregate(TsUnit.P1Y, AggregationType.Sum, true);
+        TsData saa = sa.aggregate(TsUnit.P1Y, AggregationType.Sum, true);
         double maxAnnualDifference = 0;
         for (int k = 0; k < ya.length(); ++k) {
             double dcur = Math.abs(ya.getValue(k) - saa.getValue(k));

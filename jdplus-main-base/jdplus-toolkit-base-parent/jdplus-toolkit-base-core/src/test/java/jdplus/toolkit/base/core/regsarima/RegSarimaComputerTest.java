@@ -10,7 +10,9 @@ import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaModel;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.functions.levmar.LevenbergMarquardtMinimizer;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
@@ -27,7 +29,7 @@ public class RegSarimaComputerTest {
 
     @Test
     public void testProd() {
-        assertTrue(prodAirline() != null);
+        assertNotSame(prodAirline(), null);
     }
     
     @Test

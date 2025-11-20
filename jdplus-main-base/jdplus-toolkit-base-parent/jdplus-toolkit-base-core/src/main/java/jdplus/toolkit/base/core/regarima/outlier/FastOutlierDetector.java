@@ -154,12 +154,16 @@ public class FastOutlierDetector<T extends IArimaModel> extends
                 double val = c * Math.sqrt(sxx) / mad;
                 setCoefficient(pos, idx, c);
                 setT(pos, idx, val);
+            } else {
+                setT(pos, idx, Double.NaN);
+                setCoefficient(pos, idx, Double.NaN);
+
             }
         }
     }
 
     private DoubleSeq fullResiduals(RegArmaModel<T> differencedModel, ConcentratedLikelihoodWithMissing cll) {
-        if (cll.allCoefficients().isEmpty() ) {
+        if (cll.allCoefficients().isEmpty()) {
             return cll.e();
         }
         DataBlock res = differencedModel.asLinearModel().calcResiduals(cll.allCoefficients());

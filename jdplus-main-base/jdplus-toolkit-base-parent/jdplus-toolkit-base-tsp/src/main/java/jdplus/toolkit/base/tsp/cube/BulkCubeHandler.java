@@ -2,7 +2,7 @@ package jdplus.toolkit.base.tsp.cube;
 
 import jdplus.toolkit.base.tsp.util.PropertyHandler;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.function.BiConsumer;
@@ -18,7 +18,7 @@ public final class BulkCubeHandler implements PropertyHandler<BulkCube> {
     private final PropertyHandler<Integer> depth;
 
     @Override
-    public @NonNull @org.checkerframework.checker.nullness.qual.NonNull BulkCube get(@NonNull @org.checkerframework.checker.nullness.qual.NonNull Function<? super String, ? extends CharSequence> properties) {
+    public @NonNull BulkCube get(@NonNull Function<? super String, ? extends CharSequence> properties) {
         return BulkCube
                 .builder()
                 .ttl(ttl.get(properties))
@@ -27,7 +27,7 @@ public final class BulkCubeHandler implements PropertyHandler<BulkCube> {
     }
 
     @Override
-    public void set(@NonNull @org.checkerframework.checker.nullness.qual.NonNull BiConsumer<? super String, ? super String> properties, @Nullable BulkCube value) {
+    public void set(@NonNull BiConsumer<? super String, ? super String> properties, @Nullable BulkCube value) {
         if (value != null) {
             ttl.set(properties, value.getTtl());
             depth.set(properties, value.getDepth());

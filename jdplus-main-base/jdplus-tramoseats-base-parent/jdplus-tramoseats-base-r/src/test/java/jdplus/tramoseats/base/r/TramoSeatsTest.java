@@ -8,6 +8,8 @@ package jdplus.tramoseats.base.r;
 import jdplus.sa.base.api.ComponentType;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.Parameter;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.modelling.ComponentInformation;
 import jdplus.tramoseats.base.api.seats.DecompositionSpec;
@@ -16,7 +18,6 @@ import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsOutput;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -31,8 +32,8 @@ public class TramoSeatsTest {
     public void testProd() {
         TramoSeatsResults rslt = TramoSeats.process(Data.TS_PROD, "rsafull");
         rslt = TramoSeats.process(rslt.getFinals().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value), "rsafull");
-        assertTrue(rslt != null);
-        assertTrue(TramoSeats.toBuffer(rslt) != null);
+        assertNotSame(rslt, null);
+        assertNotSame(TramoSeats.toBuffer(rslt), null);
     }
     
     @Test
@@ -44,8 +45,8 @@ public class TramoSeatsTest {
                         .build())
                 .build();
         TramoSeatsResults rslt = TramoSeats.process(Data.TS_PROD, nspec, null);
-        assertTrue(rslt != null);
-        assertTrue(TramoSeats.toBuffer(rslt) != null);
+        assertNotSame(rslt, null);
+        assertNotSame(TramoSeats.toBuffer(rslt), null);
     }
     
     @Test

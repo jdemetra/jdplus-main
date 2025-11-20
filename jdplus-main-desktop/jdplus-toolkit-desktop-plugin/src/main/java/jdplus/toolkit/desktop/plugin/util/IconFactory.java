@@ -3,7 +3,7 @@ package jdplus.toolkit.desktop.plugin.util;
 import java.awt.Image;
 import java.util.function.Supplier;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 public interface IconFactory {

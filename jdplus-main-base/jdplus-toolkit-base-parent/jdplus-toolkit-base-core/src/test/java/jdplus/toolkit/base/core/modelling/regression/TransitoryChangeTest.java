@@ -26,7 +26,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -43,7 +43,7 @@ public class TransitoryChangeTest {
 
     @Test
     public void testData() {
-        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.DAY, LocalDate.now(Clock.systemDefaultZone())), 20);
+        TsDomain days = TsDomain.of(TsPeriod.of(TsUnit.P1D, LocalDate.now(Clock.systemDefaultZone())), 20);
         for (int i = -10; i < 30; ++i) {
             TransitoryChange tc = new TransitoryChange(days.get(0).plus(i).start(), .7);
             DataBlock x = Regression.x(days, tc);

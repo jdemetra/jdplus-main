@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.ssf.array;
 
 import jdplus.toolkit.base.api.arima.SarimaOrders;
+import org.junit.jupiter.api.Test;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.ssf.arima.SsfArima;
@@ -24,8 +25,7 @@ import jdplus.toolkit.base.core.ssf.ckms.CkmsFilter;
 import jdplus.toolkit.base.core.ssf.univariate.OrdinaryFilter;
 import jdplus.toolkit.base.core.ssf.univariate.PredictionErrorDecomposition;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

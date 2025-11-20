@@ -19,7 +19,8 @@ package jdplus.toolkit.base.core.math.polynomials;
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.toolkit.base.core.math.ComplexMath;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
@@ -45,6 +46,10 @@ public class PolynomialTest {
         double y = 1.0000055;
         double x2 = p.evaluateAt(y);
         assertEquals(x2, (1 - Math.pow(y, 100)) / (1 - y), 1e-9);
+
+        double[] q = new double[]{1, 0, 0, -0.6, 0, 0, 0.09};
+        Polynomial Q = Polynomial.of(q);
+        System.out.println(Q.evaluateAtFrequency(45.123));
     }
 
     @Test
@@ -76,13 +81,13 @@ public class PolynomialTest {
         Polynomial d = s1.plus(s2);
         assertTrue(d.isZero());
     }
-    
+
     @Test
-    public void testConstructors(){
-        Polynomial P=Polynomial.valueOf(1, new double[0]);
-        assertTrue(P.equals(Polynomial.ONE));
-        Polynomial P2=Polynomial.valueOf(1, new double[10]);
-        assertTrue(P2.equals(Polynomial.ONE));
+    public void testConstructors() {
+        Polynomial P = Polynomial.valueOf(1, new double[0]);
+        assertEquals(Polynomial.ONE, P);
+        Polynomial P2 = Polynomial.valueOf(1, new double[10]);
+        assertEquals(Polynomial.ONE, P2);
     }
 
     @Test
@@ -127,7 +132,23 @@ public class PolynomialTest {
     }
 
     public static void main(String[] arg) {
-        stressTestUnitRoots();
+
+        double[] q = new double[]{1, 0, 0, -0.6, 0, 0, 0.09};
+        Polynomial Q = Polynomial.of(q);
+        Q.evaluateAt(1000.0);
+        long t0 = System.currentTimeMillis();
+        Complex s = Complex.cart(0);
+        for (int i = 1; i < 1000000; ++i) {
+            s = s.plus(Q.evaluateAtFrequency(1000.0 / i));
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println(t1 - t0);
+        System.out.println(s);
+        double[] d = new double[]{1, -.2, .1};
+         Polynomial D = Polynomial.of(d);
+         RationalFunction rf=RationalFunction.of(Q, D);
+         System.out.println(DoubleSeq.of(rf.coefficients(20)));
+       stressTestUnitRoots();
     }
 
     public static void stressTestUnitRoots() {
@@ -163,7 +184,7 @@ public class PolynomialTest {
         System.out.println(t1 - t0);
         t0 = System.currentTimeMillis();
         for (int k = 0; k < K; ++k) {
- //           Polynomial Q = P.times(P);
+            //           Polynomial Q = P.times(P);
             Complex[] roots = P.roots(RootsSolver.robustSolver());
             for (Complex root : roots) {
                 assertTrue(Math.abs(root.abs() - w) < 1e-9);

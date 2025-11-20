@@ -21,8 +21,9 @@ import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -41,7 +42,7 @@ public class PeriodicContrastsTest {
         //System.out.println(M);
         DataBlockIterator cols = M.columnsIterator();
         while (cols.hasNext())
-            assertTrue(cols.next().sum()==0);
+            assertEquals(0, cols.next().sum());
     }
 
 }

@@ -156,7 +156,7 @@ public final class JStabilityView extends JComponent implements HasColorScheme {
                     for (Map.Entry<TsDomain, Double> e : i.data.entrySet()) {
                         if (cpt == item) {
                             TsDomain dom = e.getKey();
-                            return "(" + dom.toString()+ ": " + format.format(e.getValue());
+                            return "(" + dom.toShortString() + ": " + format.format(e.getValue());
                         }
                         cpt++;
                     }

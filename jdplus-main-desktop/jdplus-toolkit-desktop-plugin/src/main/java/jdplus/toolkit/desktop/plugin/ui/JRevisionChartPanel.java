@@ -236,7 +236,7 @@ public final class JRevisionChartPanel extends JComponent implements TimeSeriesC
         col.add(ts);
         if (revs != null) {
             for (TsData rev : revs) {
-                ts = Ts.of("Rev->" + ts.getData().getDomain().getLastPeriod(), rev);
+                ts = Ts.of("Rev->" + ts.getData().getDomain().getLastPeriod().toShortString(), rev);
                 col.add(ts);
             }
         }

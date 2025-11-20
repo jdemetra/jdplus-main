@@ -10,7 +10,8 @@ import jdplus.toolkit.base.api.timeseries.calendars.HolidayPattern;
 import jdplus.toolkit.base.api.timeseries.calendars.HolidayPattern.Shape;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -39,7 +40,7 @@ public class HolidayPatternTest {
         HolidayPattern p = HolidayPattern.of(-15, Shape.LinearUp, 10, Shape.Constant, 10, Shape.LinearDown, 10);
         DoubleSeq w = DoubleSeq.of(p.getWeights());
 //        System.out.println(w);
-        assertTrue(w.count(q -> q == 1) == 12);
+        assertEquals(12, w.count(q -> q == 1));
         p = HolidayPattern.of(-15, Shape.LinearUp, 10, Shape.Zero, 10, Shape.LinearDown, 10);
         w = DoubleSeq.of(p.getWeights());
 //        System.out.println(w);

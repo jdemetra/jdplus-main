@@ -34,20 +34,25 @@ public interface ProcessingLog {
          */
         Error,
         /**
-         * Attention point to understand/analyse the results (for example, non decomposable
-         * models in Seats or last chance model in Regarima)
+         * Attention point to understand/analyse the results (for example, non
+         * decomposable models in Seats or last chance model in Regarima)
          */
         Warning,
         /**
-         * Remark for the user (for example, options automatically changed by the
-         * software or minor warning, like automatic cut off of some parameters). 
+         * Remark for the user (for example, options automatically changed by
+         * the software or minor warning, like automatic cut off of some
+         * parameters).
          */
-       Remark,
-         /**
-         * Step in a complex processing. a given step should not have any "child
-         * information"
+        Remark,
+        /**
+         * Use Step insteado of Log 
          */
+        @Deprecated
         Log,
+        /**
+         * Step in a complex processing. Use it only to visualize the processing path 
+         */
+        Step,
         /**
          * More detailed info on a specific step
          */
@@ -66,7 +71,7 @@ public interface ProcessingLog {
          */
         private String origin;
         /**
-         * Actual message that should be displayed. It should gi
+         * Actual message that should be displayed.
          */
         private String msg;
         private InformationType type;
@@ -172,6 +177,10 @@ public interface ProcessingLog {
     default void step(String msg, Object details) {
     }
 
+    default boolean isVerbose() {
+        return true;
+    }
+
     public static ProcessingLog dummy() {
         return DummyLog.DUMMY;
     }
@@ -179,14 +188,25 @@ public interface ProcessingLog {
     public static ProcessingLog notImplemented() {
         return NotImplementedLog.NOTIMPL;
     }
+
 }
 
 class DummyLog implements ProcessingLog {
+
+    @Override
+    public boolean isVerbose() {
+        return false;
+    }
 
     static final DummyLog DUMMY = new DummyLog();
 }
 
 class NotImplementedLog implements ProcessingLog {
+
+    @Override
+    public boolean isVerbose() {
+        return false;
+    }
 
     private static final List<Information> ALL = Collections.singletonList(
             new Information("Processing", null, "not implemented", InformationType.Error, null));

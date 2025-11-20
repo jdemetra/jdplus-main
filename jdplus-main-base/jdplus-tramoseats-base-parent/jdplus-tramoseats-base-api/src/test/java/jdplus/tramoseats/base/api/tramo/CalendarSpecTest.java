@@ -18,7 +18,8 @@ package jdplus.tramoseats.base.api.tramo;
 
 import jdplus.tramoseats.base.api.tramo.CalendarSpec;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -33,7 +34,7 @@ public class CalendarSpecTest {
     public void testClone() {
         CalendarSpec spec = CalendarSpec.builder().build();
         CalendarSpec cspec = spec.toBuilder().build();
-        assertTrue(spec.equals(cspec));
+        assertEquals(spec, cspec);
     }
 
 }

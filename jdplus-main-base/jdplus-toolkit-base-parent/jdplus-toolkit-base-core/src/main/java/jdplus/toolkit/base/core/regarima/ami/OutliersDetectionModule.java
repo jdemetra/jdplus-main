@@ -172,7 +172,7 @@ public class OutliersDetectionModule<T extends IArimaModel>
      */
     @Override
     public int[][] getOutliers() {
-        return outliers.toArray(new int[outliers.size()][]);
+        return outliers.toArray(int[][]::new);
     }
 
     /**

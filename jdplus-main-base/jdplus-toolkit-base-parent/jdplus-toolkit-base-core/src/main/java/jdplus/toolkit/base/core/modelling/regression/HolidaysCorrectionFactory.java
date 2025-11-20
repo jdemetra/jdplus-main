@@ -24,6 +24,7 @@ import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import java.time.DayOfWeek;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 
 /**
@@ -123,7 +124,7 @@ public class HolidaysCorrectionFactory implements RegressionVariableFactory<Holi
 
 
     @Override
-    public boolean fill(HolidaysCorrectedTradingDays var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(HolidaysCorrectedTradingDays var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         return var.isContrast()
                 ? fill(var.getCorrector(), var.getClustering(), var.isWeighted(), start, buffer)
                 : fillRaw(var.getCorrector(), var.getClustering(), start, buffer);
@@ -153,7 +154,7 @@ public class HolidaysCorrectionFactory implements RegressionVariableFactory<Holi
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(HolidaysCorrectedTradingDays var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(HolidaysCorrectedTradingDays var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

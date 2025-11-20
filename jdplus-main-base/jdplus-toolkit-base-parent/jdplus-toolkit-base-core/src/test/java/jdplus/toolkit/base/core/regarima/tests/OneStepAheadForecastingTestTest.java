@@ -12,7 +12,7 @@ import jdplus.toolkit.base.core.regsarima.RegSarimaComputer;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

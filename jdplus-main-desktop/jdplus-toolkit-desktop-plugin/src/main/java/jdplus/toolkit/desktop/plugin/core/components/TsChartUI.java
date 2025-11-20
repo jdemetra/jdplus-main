@@ -31,13 +31,12 @@ import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
 import jdplus.toolkit.desktop.plugin.components.parts.*;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
 import jdplus.toolkit.desktop.plugin.util.ActionMaps;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
 import jdplus.toolkit.desktop.plugin.util.InputMaps;
+import lombok.NonNull;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.DateTickMarkPosition;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
-import org.jfree.data.xy.IntervalXYDataset;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -47,7 +46,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,7 +58,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     private JTsChart target;
 
     private final JTimeSeriesChart chartPanel = new JTimeSeriesChart();
-    private final ChartHandler chartHandler = new ChartHandler();
+    private final TsChartChangeListener changeListener = new TsChartChangeListener();
     private final IntList savedSelection = new IntList();
     private final DualDispatcherListener dualDispatcherListener = new DualDispatcherListener();
 
@@ -70,7 +68,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     private HasColorSchemeResolver colorSchemeResolver;
 
     @Override
-    public void install(JTsChart component) {
+    public void install(@NonNull JTsChart component) {
         this.target = component;
 
         this.selectionListener = new InternalTsSelectionAdapter(target);
@@ -127,11 +125,8 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         chartPanel.setObsFormatter(new ObsFunction<String>() {
             @Override
             public String apply(int series, int obs) {
-                IntervalXYDataset dataset = chartPanel.getDataset();
-                CharSequence period = chartPanel.getPeriodFormat().format(new Date(dataset.getX(series, obs).longValue()));
-                CharSequence value = chartPanel.getValueFormat().format(dataset.getY(series, obs));
                 StringBuilder result = new StringBuilder();
-                result.append(period).append(": ").append(value);
+                result.append(target.getTsCollection().get(series).getData().get(obs).toShortString());
                 if (series < target.getTsCollection().size() && tsFeatures.hasFeature(TsFeatureHelper.Feature.Forecasts, series, obs)) {
                     result.append("\nForecast");
                 }
@@ -178,7 +173,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     }
 
     private void enableObsHovering() {
-        chartPanel.addPropertyChangeListener(chartHandler);
+        chartPanel.addPropertyChangeListener(changeListener);
     }
 
     private void enableProperties() {
@@ -241,7 +236,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     //<editor-fold defaultstate="collapsed" desc="Event Handlers">
     private void onDataFormatChange() {
         ObsFormat obsFormat = obsFormatResolver.resolve();
-        chartPanel.setPeriodFormat(DateFormatAdapter.of(obsFormat));
+        chartPanel.setPeriodFormat(new InternalComponents.TsDomainDateFormat(() -> target.getTsCollection().getDomain()));
         chartPanel.setValueFormat(new InternalComponents.NumberFormatAdapter(obsFormat));
     }
 
@@ -289,7 +284,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
 
         selectionListener.setEnabled(false);
         ListSelectionModel m = chartPanel.getSeriesSelectionModel();
-        if (dropContent.size() > 0) {
+        if (!dropContent.isEmpty()) {
             savedSelection.clear();
             for (int series = m.getMinSelectionIndex(); series <= m.getMaxSelectionIndex(); series++) {
                 if (m.isSelectedIndex(series)) {
@@ -338,7 +333,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     }
 
     private void onHoveredObsChange() {
-        chartHandler.applyHoveredCell(target.getHoveredObs());
+        changeListener.applyHoveredCell(target.getHoveredObs());
     }
 
     private void onDualChartChange() {
@@ -417,10 +412,11 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         return result;
     }
 
-    private final class ChartHandler implements PropertyChangeListener {
+    private final class TsChartChangeListener implements PropertyChangeListener {
 
         private boolean updating = false;
 
+        @SuppressWarnings("SwitchStatementWithTooFewBranches")
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (!updating) {

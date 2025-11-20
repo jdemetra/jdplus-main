@@ -22,7 +22,7 @@ import nbbrd.design.Development;
 import nbbrd.design.Immutable;
 import nbbrd.design.Internal;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 
 import java.util.function.IntToDoubleFunction;
 import java.util.stream.DoubleStream;

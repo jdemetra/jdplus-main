@@ -4,7 +4,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import nbbrd.design.ThreadSafe;
 import nbbrd.io.function.IOFunction;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

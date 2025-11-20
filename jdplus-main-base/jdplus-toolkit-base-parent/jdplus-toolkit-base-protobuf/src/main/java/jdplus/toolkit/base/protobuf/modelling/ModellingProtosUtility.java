@@ -33,6 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import jdplus.toolkit.base.core.arima.IArimaModel;
+import static jdplus.toolkit.base.protobuf.modelling.ModellingProtos.TradingDays.TD2C;
 
 /**
  *
@@ -60,10 +61,13 @@ public class ModellingProtosUtility {
     public ModellingProtos.TradingDays convert(TradingDaysType td) {
         return switch (td) {
             case TD7 -> ModellingProtos.TradingDays.TD7;
+            case TD6 -> ModellingProtos.TradingDays.TD6;
+            case TD4c -> ModellingProtos.TradingDays.TD4C;
             case TD4 -> ModellingProtos.TradingDays.TD4;
             case TD3c -> ModellingProtos.TradingDays.TD3C;
             case TD3 -> ModellingProtos.TradingDays.TD3;
             case TD2c -> ModellingProtos.TradingDays.TD2C;
+            case TD2d -> ModellingProtos.TradingDays.TD2D;
             case TD2 -> ModellingProtos.TradingDays.TD2;
             default -> ModellingProtos.TradingDays.TD_NONE;
         };
@@ -72,10 +76,13 @@ public class ModellingProtosUtility {
     public TradingDaysType convert(ModellingProtos.TradingDays td) {
         return switch (td) {
             case TD7 -> TradingDaysType.TD7;
+            case TD6 -> TradingDaysType.TD6;
+            case TD4C -> TradingDaysType.TD4c;
             case TD4 -> TradingDaysType.TD4;
             case TD3 -> TradingDaysType.TD3;
             case TD3C -> TradingDaysType.TD3c;
             case TD2C -> TradingDaysType.TD2c;
+            case TD2D -> TradingDaysType.TD2d;
             case TD2 -> TradingDaysType.TD2;
             default -> TradingDaysType.NONE;
         };

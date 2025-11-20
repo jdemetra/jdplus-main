@@ -1,6 +1,6 @@
 package jdplus.toolkit.base.api.data;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Defines the ability to get a cause from an empty sequence.

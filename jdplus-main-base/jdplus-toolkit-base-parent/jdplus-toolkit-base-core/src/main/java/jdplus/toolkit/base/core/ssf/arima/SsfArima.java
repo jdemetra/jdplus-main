@@ -80,6 +80,10 @@ public class SsfArima {
     }
 
     public Ssf ssf(IArimaModel arima) {
+        double var = arima.getInnovationVariance();
+        if (var == 0) {
+            throw new SsfException(SsfException.STOCH);
+        }
         return Ssf.of(stateComponent(arima), defaultLoading());
     }
 
@@ -142,20 +146,20 @@ public class SsfArima {
     }
 
     private StateComponent ofStationary(IArimaModel arima) {
-        double var = arima.getInnovationVariance();
-        if (var == 0) {
-            throw new SsfException(SsfException.STOCH);
-        }
+//        double var = arima.getInnovationVariance();
+//        if (var == 0) {
+//            throw new SsfException(SsfException.STOCH);
+//        }
         ArmaInitialization initialization = new ArmaInitialization(arima);
         ISsfDynamics dynamics = new ArimaDynamics(initialization.data);
         return new StateComponent(initialization, dynamics);
     }
 
     private static StateComponent ofNonStationary(IArimaModel arima) {
-        double var = arima.getInnovationVariance();
-        if (var == 0) {
-            throw new SsfException(SsfException.STOCH);
-        }
+//        double var = arima.getInnovationVariance();
+//        if (var == 0) {
+//            throw new SsfException(SsfException.STOCH);
+//        }
         ArimaInitialization initialization = new ArimaInitialization(arima);
         ISsfDynamics dynamics = new ArimaDynamics(initialization.data);
         return new StateComponent(initialization, dynamics);

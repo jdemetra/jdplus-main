@@ -40,11 +40,12 @@ public class AutoModelSpecTest {
                 .build().isDefault());
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidArmaSignificance() {
-        AutoModelSpec.builder()
-                .armaSignificance(0.3)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .armaSignificance(0.3)
+                    .build());
     }
 
     @Test
@@ -61,11 +62,12 @@ public class AutoModelSpecTest {
                 .build();
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidPercentRSE() {
-        AutoModelSpec.builder()
-                .percentRSE(0)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .percentRSE(0)
+                    .build());
     }
 
     @Test
@@ -75,18 +77,20 @@ public class AutoModelSpecTest {
                 .build();
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidPredCV1() {
-        AutoModelSpec.builder()
-                .predcv(0.02)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .predcv(0.02)
+                    .build());
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidPredCV2() {
-        AutoModelSpec.builder()
-                .predcv(3.4)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .predcv(3.4)
+                    .build());
     }
 
     @Test
@@ -96,11 +100,12 @@ public class AutoModelSpecTest {
                 .build();
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidUb1() {
-        AutoModelSpec.builder()
-                .ub1(1)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .ub1(1)
+                    .build());
     }
 
     @Test
@@ -110,11 +115,12 @@ public class AutoModelSpecTest {
                 .build();
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidUb2() {
-        AutoModelSpec.builder()
-                .ub2(1)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .ub2(1)
+                    .build());
     }
 
     @Test
@@ -124,25 +130,28 @@ public class AutoModelSpecTest {
                 .build();
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidUbFinal() {
-        AutoModelSpec.builder()
-                .ubfinal(-1)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .ubfinal(-1)
+                    .build());
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidCancel1() {
-        AutoModelSpec.builder()
-                .cancel(-1.4)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .cancel(-1.4)
+                    .build());
     }
 
-    @org.junit.Test(expected = IllegalArgumentException.class)
+    @org.junit.jupiter.api.Test
     public void invalidCancel2() {
-        AutoModelSpec.builder()
-                .cancel(.3)
-                .build();
+        assertThrows(IllegalArgumentException.class, () ->
+            AutoModelSpec.builder()
+                    .cancel(.3)
+                    .build());
     }
 
     @Test

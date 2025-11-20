@@ -10,7 +10,8 @@ import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
  *
@@ -25,15 +26,15 @@ public class SarimaModelsTest {
     public void testRandom() {
         double[] rnd = SarimaModels.random(200, 12, new double[]{-.2, -.5}, 1, new double[]{-.5}, null, 1, new double[]{-.8}, 1, 5, -1);
 //        System.out.println(DoubleSeq.of(rnd));
-        assertTrue(rnd.length == 200);
+        assertEquals(200, rnd.length);
     }
 
     @Test
     public void testArima() {
         RegArimaEstimation<SarimaModel> estimate = SarimaModels.estimate(Data.PROD, new int[]{0, 1, 1}, 12, new int[]{0, 1, 1}, false, null, null, 1e-9);
-        assertTrue(estimate != null);
+        assertNotSame(estimate, null);
         byte[] buffer = SarimaModels.toBuffer(estimate);
-        assertTrue(buffer != null);
+        assertNotSame(buffer, null);
     }
     
     @Test

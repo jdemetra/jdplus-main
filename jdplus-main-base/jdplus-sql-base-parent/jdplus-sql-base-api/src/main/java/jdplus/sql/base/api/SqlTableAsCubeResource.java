@@ -33,7 +33,7 @@ import lombok.NonNull;
 import nbbrd.design.NotThreadSafe;
 import nbbrd.design.VisibleForTesting;
 import nbbrd.sql.jdbc.SqlIdentifierQuoter;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.*;
 import java.util.GregorianCalendar;

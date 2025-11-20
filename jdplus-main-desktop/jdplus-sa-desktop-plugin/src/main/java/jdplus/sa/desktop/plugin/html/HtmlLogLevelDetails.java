@@ -37,13 +37,12 @@ public class HtmlLogLevelDetails implements HtmlLogFormatter<LogLevelModule.Info
 
     @Override
     public void write(HtmlStream stream, LogLevelModule.Info details, boolean verbose) throws IOException {
-        
-        stream.write("AICC on logs=").write(new Formatter(Locale.ROOT).format("%6g", details.getLogs()).toString());
+        stream.write("AICC on logs: ").write(new Formatter(Locale.ROOT).format("%6g", details.getLogs()).toString());
         stream.newLine();
-        stream.write("AICC on levels=").write(new Formatter(Locale.ROOT).format("%6g", details.getLevels()).toString());
+        stream.write("AICC on levels: ").write(new Formatter(Locale.ROOT).format("%6g", details.getLevels()).toString());
         stream.newLine();
-        stream.write("(AICC-preference)=").write(new Formatter(Locale.ROOT).format("%6g", details.getLogpreference()).toString()).write(')');
-        
+        stream.write("(log-preference)=").write(new Formatter(Locale.ROOT).format("%6g", details.getLogpreference()).toString()).write(')');
+        stream.newLine();
     }
     
 }

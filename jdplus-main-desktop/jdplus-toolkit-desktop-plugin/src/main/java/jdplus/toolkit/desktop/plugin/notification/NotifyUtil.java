@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.notification;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.openide.ErrorManager;
 import org.openide.awt.NotificationDisplayer;
 

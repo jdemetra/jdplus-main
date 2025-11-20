@@ -12,6 +12,7 @@ import jdplus.toolkit.base.core.math.linearfilters.RationalBackFilter;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.LocalDateTime;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -65,7 +66,7 @@ class AOFactory implements RegressionVariableFactory<AdditiveOutlier> {
     private AOFactory(){}
 
     @Override
-    public boolean fill(AdditiveOutlier var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(AdditiveOutlier var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         TsPeriod p = start.withDate(var.getPosition());
         int opos = start.until(p);
         if (opos >= 0 && opos < buffer.getRowsCount()) {
@@ -75,7 +76,7 @@ class AOFactory implements RegressionVariableFactory<AdditiveOutlier> {
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(AdditiveOutlier var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(AdditiveOutlier var, D domain, FastMatrix buffer, ProcessingLog log) {
         long pos = domain.indexOf(var.getPosition());
         if (pos >= 0) {
             buffer.set((int) pos, 0, 1);

@@ -18,13 +18,13 @@ package jdplus.tramoseats.base.protobuf;
 
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsKernel;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -41,7 +41,7 @@ public class TramoSeatsResultsProtoTest {
         ProcessingLog log=ProcessingLog.dummy();
         jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults rslt = ts.process(Data.TS_PROD, log);
         TramoSeatsResults pb = TramoSeatsResultsProto.convert(rslt);
-        assertTrue(pb.toByteArray() != null);
+        assertNotSame(pb.toByteArray(), null);
    }
     
     @Test
@@ -52,6 +52,6 @@ public class TramoSeatsResultsProtoTest {
         ProcessingLog log=ProcessingLog.dummy();
         jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults rslt = ts.process(s, log);
         TramoSeatsResults pb = TramoSeatsResultsProto.convert(rslt);
-        assertTrue(pb.toByteArray() != null);
+        assertNotSame(pb.toByteArray(), null);
    }
 }

@@ -21,7 +21,7 @@ import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
 import jdplus.toolkit.base.api.util.TreeTraverser;
 import nbbrd.io.function.IOFunction;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import lombok.NonNull;
 
 import java.io.IOException;

@@ -31,7 +31,7 @@ import jdplus.toolkit.base.tsp.util.ObsFormat;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import nbbrd.design.LombokWorkaround;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;

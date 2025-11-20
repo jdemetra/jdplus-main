@@ -27,7 +27,9 @@ import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import java.util.Map;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -44,13 +46,13 @@ public class TramoTest {
         RegSarimaModel rslt = Tramo.process(Data.TS_PROD, "TR5");
         Map<String, Class> dictionary = rslt.getDictionary();
 //        dictionary.forEach((k, v)->System.out.println(k));
-        assertTrue(rslt.getData("span.n", Integer.class) == Data.TS_PROD.length());
+        assertEquals(rslt.getData("span.n", Integer.class), Data.TS_PROD.length());
 //        System.out.println(DoubleSeq.of(rslt.getData("sarima.parameters", double[].class)));
 
         SarimaModel model = rslt.getData("model", SarimaModel.class);
         String[] desc = rslt.getData("regression.description", String[].class);
 //        Arrays.stream(desc).forEach(v->System.out.println(v));
-        assertTrue(desc != null);
+        assertNotSame(desc, null);
         StatisticalTest data = rslt.getData("residuals.doornikhansen", StatisticalTest.class);
         System.out.println(data.getPvalue());
     }
@@ -59,16 +61,16 @@ public class TramoTest {
     public void testFull() {
         TramoOutput rslt = Tramo.fullProcess(Data.TS_PROD, "TR5");
         byte[] bytes = Tramo.toBuffer(rslt);
-        assertTrue(bytes != null);
+        assertNotSame(bytes, null);
 
         TramoOutput rslt2 = Tramo.fullProcess(Data.TS_PROD, rslt.getResultSpec(), null);
         byte[] bytes2 = Tramo.toBuffer(rslt2);
-        assertTrue(bytes2 != null);
+        assertNotSame(bytes2, null);
 
         byte[] sbytes = Tramo.toBuffer(rslt.getEstimationSpec());
         TramoSpec spec = Tramo.specOf(sbytes);
 
-        assertTrue(spec != null);
+        assertNotSame(spec, null);
     }
 
     @Test
@@ -83,29 +85,29 @@ public class TramoTest {
         TsData X = TsData.ofInternal(TsPeriod.quarterly(2015, 1), x);
         TramoOutput rslt = Tramo.fullProcess(X, "TRfull");
         byte[] bytes = Tramo.toBuffer(rslt);
-        assertTrue(bytes != null);
+        assertNotSame(bytes, null);
 
         TramoOutput rslt2 = Tramo.fullProcess(X, rslt.getResultSpec(), null);
         byte[] bytes2 = Tramo.toBuffer(rslt2);
-        assertTrue(bytes2 != null);
+        assertNotSame(bytes2, null);
 
         byte[] sbytes = Tramo.toBuffer(rslt.getEstimationSpec());
         TramoSpec spec = Tramo.specOf(sbytes);
 
-        assertTrue(spec != null);
+        assertNotSame(spec, null);
     }
 
     @Test
     public void testSpec() {
         byte[] bytes = Tramo.toBuffer(TramoSpec.TRfull);
         TramoSpec trf = Tramo.specOf(bytes);
-        assertTrue(trf.equals(TramoSpec.TRfull));
+        assertEquals(TramoSpec.TRfull, trf);
     }
 
     @Test
     public void testForecast0() {
         Matrix terror = Tramo.forecast(Data.TS_PROD, TramoSpec.TR0, null, 12);
-        assertTrue(terror != null);
+        assertNotSame(terror, null);
 //        System.out.println(terror);
     }
 
@@ -113,7 +115,7 @@ public class TramoTest {
     public void testForecast() {
         TsData s = TsData.ofInternal(TsPeriod.monthly(1992, 1), Data.RETAIL_BOOKSTORES).drop(0, 12);
         Matrix terror = Tramo.forecast(s, TramoSpec.TRfull, null, 12);
-        assertTrue(terror != null);
+        assertNotSame(terror, null);
         //       System.out.println(terror);
 
     }

@@ -7,7 +7,7 @@ package internal.toolkit.base.core.math.functions.gsl.integration;
 
 import internal.toolkit.base.core.math.functions.gsl.integration.NumericalIntegration;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -35,7 +35,7 @@ public class NumericalIntegrationTest {
     @Test
     public void testInvQAGI() {
         double q = NumericalIntegration.integrateQAGI(x -> 1 / x);
-        assertEquals(q, 0.0, 1e-9);
+        assertEquals(0.0, q, 1e-9);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class NumericalIntegrationTest {
     @Test
     public void testInvQAGIU() {
         double q = NumericalIntegration.integrateQAGIU(x -> 1 / x, Double.POSITIVE_INFINITY);
-        assertEquals(q, 0.0, 1e-9);
+        assertEquals(0.0, q, 1e-9);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class NumericalIntegrationTest {
     @Test
     public void testZero() {
         double q = NumericalIntegration.integrate(x -> 0, 0, 1);
-        assertEquals(q, 0, 1e-9);
+        assertEquals(0, q, 1e-9);
 
     }
 

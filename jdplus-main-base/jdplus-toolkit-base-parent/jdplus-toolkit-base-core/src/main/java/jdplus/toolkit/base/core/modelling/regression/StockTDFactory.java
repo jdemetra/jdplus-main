@@ -10,6 +10,7 @@ import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
 import java.time.LocalDate;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -24,7 +25,7 @@ class StockTDFactory implements RegressionVariableFactory<StockTradingDays> {
     private StockTDFactory(){}
 
     @Override
-    public boolean fill(StockTradingDays var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(StockTradingDays var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         int n = buffer.getRowsCount();
         int w = var.getW();
         TsPeriod cur = start;
@@ -74,7 +75,7 @@ class StockTDFactory implements RegressionVariableFactory<StockTradingDays> {
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(StockTradingDays var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(StockTradingDays var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 

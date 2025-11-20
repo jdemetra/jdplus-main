@@ -8,7 +8,7 @@ module jdplus.sa.base.csv {
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
-    requires static org.checkerframework.checker.qual;
+    requires static org.jspecify;
 
     requires transitive jdplus.sa.base.api;
     requires nbbrd.io.picocsv;

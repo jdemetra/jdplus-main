@@ -28,12 +28,33 @@ import jdplus.toolkit.base.api.processing.ProcessingLog;
  */
 public interface IDifferencingModule {
     
-    boolean process(DoubleSeq data, int period, int d, int bd, boolean isSeasonal, ProcessingLog log);
+    public static final String DIFF = "differencing selection",
+            SELECTION = "differencing selection", DEFAULT = "default model selected (not enough obs.)",
+            MEAN = "mean correction",
+            NOMEAN = "no mean correction",
+            FAILED = "differencing selection failed";
+    
+    @lombok.Getter
+    @lombok.AllArgsConstructor(access=lombok.AccessLevel.PRIVATE)
+    public static class Info{
+        
+        public static Info of(IDifferencingModule diff){
+            return new Info(diff.getD(), diff.getBd(), diff.isMeanCorrection(), diff.getTMean());
+        }
+        
+        private final int d, bd;
+        private final boolean mean;    
+        private final double tmean;
+    }
+
+    ProcessingResult process(RegSarimaModelling context);
     
     int getD();
     
     int getBd();
     
-    boolean isMean();
+    boolean isMeanCorrection();
+    
+    double getTMean();
     
 }

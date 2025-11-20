@@ -69,11 +69,14 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
     }
 
     public RegArimaSpec refreshSpec(RegArimaSpec currentSpec, RegArimaSpec domainSpec, EstimationPolicyType policy, TsDomain frozenDomain) {
+        if (policy == EstimationPolicyType.Complete) {
+            return domainSpec;
+        }
+        if (policy == EstimationPolicyType.None || ! currentSpec.getBasic().isPreprocessing()) {
+            return currentSpec;
+        }
         RegArimaSpec.Builder builder = currentSpec.toBuilder();
         switch (policy) {
-            case Complete -> {
-                return domainSpec;
-            }
             case Outliers_StochasticComponent -> {
                 resetArima(currentSpec, domainSpec, builder);
                 RegressionSpec rspec=removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
@@ -452,7 +455,7 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
                             .sequence(Range.of(day, day))
                             .build();
                     niv.add(Variable.<InterventionVariable>builder()
-                            .name(EstimationPolicyType.IV_AO+period.display())
+                            .name(EstimationPolicyType.IV_AO+ period.getStartAsShortString())
                             .core(ao)
                             .attributes(IV_AO)
                             .build());

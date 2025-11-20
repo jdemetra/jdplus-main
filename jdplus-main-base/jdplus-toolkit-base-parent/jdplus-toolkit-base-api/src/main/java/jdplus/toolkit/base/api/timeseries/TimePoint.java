@@ -27,6 +27,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
+import static jdplus.toolkit.base.api.time.TemporalFormatter.EXTENDED_CALENDAR_TIME;
+
 /**
  * @author Jean Palate
  */
@@ -39,39 +41,39 @@ public class TimePoint implements TimeSeriesInterval<Duration> {
     LocalDateTime point;
 
     @Override
-    public LocalDateTime start() {
+    public @NonNull LocalDateTime start() {
         return point;
     }
 
     @Override
-    public LocalDateTime end() {
+    public @NonNull LocalDateTime end() {
         return point;
     }
 
     @Override
-    public boolean contains(LocalDateTime element) {
+    public boolean contains(@NonNull LocalDateTime element) {
         return point.equals(element);
     }
 
     @Override
-    public Duration getDuration() {
+    public @NonNull Duration getDuration() {
         return Duration.ZERO;
     }
 
     @Override
     public String toString() {
-        return TimeIntervalFormatter.StartEnd.ISO_LOCAL_DATE_TIME.format(this);
+        return ISO_8601.format(this);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePoint parse(@NonNull CharSequence text) throws DateTimeParseException {
-        return TimeIntervalFormatter.StartEnd.ISO_LOCAL_DATE_TIME.parse(text, TimePoint::from);
+    public static @NonNull TimePoint parse(@NonNull CharSequence text) throws DateTimeParseException {
+        return ISO_8601.parse(text, TimePoint::from);
     }
 
     @StaticFactoryMethod
-    @NonNull
-    public static TimePoint from(@NonNull TimeIntervalAccessor timeInterval) {
+    public static @NonNull TimePoint from(@NonNull TimeIntervalAccessor timeInterval) {
         return TimePoint.of(LocalDateTime.from(timeInterval.start()));
     }
+
+    private static final TimeIntervalFormatter.StartEnd ISO_8601 = TimeIntervalFormatter.StartEnd.of(EXTENDED_CALENDAR_TIME, LocalDateTime::from, false);
 }

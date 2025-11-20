@@ -39,15 +39,53 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 public class AutomaticFRegressionTest implements IRegressionModule {
 
     public static final double DEF_TMEAN = 1.96, DEF_TLP = 2, DEF_TEASTER = 2.2, DEF_FPVAL = 0.01;
+    public static final String FTD = "F-based trading days tests";
+
 
     public static Builder builder() {
         return new Builder();
     }
 
+    @lombok.Getter
+    public static class Info {
+
+        final ConcentratedLikelihoodWithMissing ll0, ll1, ll6;
+        final int nhp;
+        final double ss0, ss1, ss6, ssmc1, ssmc6, pftd1, pftd6;
+
+        public Info(ConcentratedLikelihoodWithMissing ll0, ConcentratedLikelihoodWithMissing ll1, ConcentratedLikelihoodWithMissing ll6, int nhp) {
+            this.ll0 = ll0;
+            this.ll1 = ll1;
+            this.ll6 = ll6;
+            this.nhp = nhp;
+            ss0 = ll0.ssq();
+            ss1 = ll1.ssq();
+            ss6 = ll6.ssq();
+            ssmc1 = ss1 / (ll1.degreesOfFreedom() - nhp);
+            ssmc6 = ss6 / (ll6.degreesOfFreedom() - nhp);
+            double ftd = (ss0 - ss1) / ssmc1;
+            pftd1 = ftd <= 0 ? 0 : new F(1, ll1.degreesOfFreedom() - nhp).getProbability(ftd, ProbabilityType.Lower);
+            ftd = (ss0 - ss6) / (ssmc6*6);
+            pftd6 = ftd <= 0 ? 0 : new F(6, ll6.degreesOfFreedom() - nhp).getProbability(ftd, ProbabilityType.Lower);
+        }
+
+        public double SS0() {
+            return ll0.ssq();
+        }
+
+        public double SS1() {
+            return ll1.ssq();
+        }
+
+        public double SS6() {
+            return ll6.ssq();
+        }
+    }
+
     @BuilderPattern(AutomaticFRegressionTest.class)
     public static class Builder {
-
-        private ITradingDaysVariable td, wd;
+   
+    private ITradingDaysVariable td, wd;
         private ILengthOfPeriodVariable lp;
         private IEasterVariable easter;
         private double tmean = DEF_TMEAN, tlp = DEF_TLP, teaster = DEF_TEASTER;
@@ -147,6 +185,7 @@ public class AutomaticFRegressionTest implements IRegressionModule {
 
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
+        context.getLog().push(FTD);
         try {
             ModelDescription current = context.getDescription();
 //      First case TD=0 or Just test EE
@@ -155,43 +194,27 @@ public class AutomaticFRegressionTest implements IRegressionModule {
             RegArimaEstimation regarima0 = processor.process(test0.regarima(), test0.mapping());
             ConcentratedLikelihoodWithMissing ll0 = regarima0.getConcentratedLikelihood();
             int nhp = test0.getArimaSpec().freeParametersCount();
-            double SS0 = ll0.ssq();
-
             if (td == null) {
                 return update(current, test0, null, ll0, nhp);
             }
-
             //      Second case TD=TradindDay only
             ModelDescription test6 = createTestModel(context, td, null);
             RegArimaEstimation regarima6 = processor.process(test6.regarima(), test6.mapping());
             ConcentratedLikelihoodWithMissing ll6 = regarima6.getConcentratedLikelihood();
-            double SS6 = ll6.ssq(), SSmc6 = SS6 / (ll6.degreesOfFreedom() - nhp);
-            double Ftd = (SS0 - SS6) / (SSmc6 * 6);
-            double pFtd6 = 0.0;
-            if (Ftd >= 0) {
-                F f0 = new F(6, ll6.degreesOfFreedom() - nhp);
-                pFtd6 = f0.getProbability(Ftd, ProbabilityType.Lower);
-            }
-
-//      Third case TD=WorkingDay only
+            //      Third case TD=WorkingDay only
             ModelDescription test1 = createTestModel(context, wd, null);
             RegArimaEstimation regarima1 = processor.process(test1.regarima(), test1.mapping());
             ConcentratedLikelihoodWithMissing ll1 = regarima1.getConcentratedLikelihood();
-            double SS1 = ll1.ssq(), SSmc1 = SS1 / (ll1.degreesOfFreedom() - nhp);
-            Ftd = (SS0 - SS1) / SSmc1;
-            double pFtd1 = 0.0;
-            if (Ftd >= 0) {
-                F f1 = new F(1, ll1.degreesOfFreedom() - nhp);
-                pFtd1 = f1.getProbability(Ftd, ProbabilityType.Lower);
-            }
-
-// Check over the 3 cases        
-            if ((pFtd6 > pFtd1) && (pFtd6 > 1 - fpvalue)) {
+            
+            Info info=new Info(ll0, ll1, ll6, nhp);
+            context.getLog().info(FTD, info);
+            // Check over the 3 cases        
+            if ((info.getPftd6() > info.getPftd1()) && (info.getPftd6() > 1 - fpvalue)) {
                 // add leap year
                 ModelDescription all = createTestModel(context, td, lp);
                 RegArimaEstimation regarima = processor.process(all.regarima(), all.mapping());
                 return update(current, all, td, regarima.getConcentratedLikelihood(), nhp);
-            } else if (pFtd1 < 1 - fpvalue) {
+            } else if (info.getPftd1() < 1 - fpvalue) {
                 return update(current, test0, null, ll0, nhp);
             } else {
                 // add leap year
@@ -201,6 +224,8 @@ public class AutomaticFRegressionTest implements IRegressionModule {
             }
         } catch (Exception err) {
             return ProcessingResult.Failed;
+        }finally{
+            context.getLog().pop();
         }
     }
 

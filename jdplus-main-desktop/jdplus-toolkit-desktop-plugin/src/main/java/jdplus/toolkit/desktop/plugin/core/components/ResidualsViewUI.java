@@ -24,7 +24,6 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
 import jdplus.toolkit.desktop.plugin.components.ComponentBackendSpi;
 import jdplus.toolkit.desktop.plugin.components.JResidualsView;
 import jdplus.toolkit.desktop.plugin.components.JTsGrid;
@@ -32,7 +31,6 @@ import jdplus.toolkit.desktop.plugin.components.parts.*;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
-import jdplus.toolkit.desktop.plugin.util.DateFormatAdapter;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
@@ -152,8 +150,10 @@ public final class ResidualsViewUI implements InternalUI<JResidualsView> {
 
     private void onDataFormatChange(JResidualsView view) {
         grid.setObsFormat(view.getObsFormat());
-        ObsFormat obsFormat = obsFormatResolver.resolve();
-        ((DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis()).setDateFormatOverride(DateFormatAdapter.of(obsFormat));
+        TsData tsData = view.getTsData();
+        if (tsData != null)
+            ((DateAxis) chartPanel.getChart().getXYPlot().getDomainAxis())
+                    .setDateFormatOverride(new InternalComponents.TsDomainDateFormat(tsData::getDomain));
     }
 
     private void onColorSchemeChange() {

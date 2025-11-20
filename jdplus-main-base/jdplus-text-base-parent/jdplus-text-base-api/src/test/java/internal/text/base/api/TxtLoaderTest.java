@@ -102,7 +102,7 @@ public class TxtLoaderTest {
     public void testAggregation() throws IOException, URISyntaxException {
         TxtBean bean = new TxtParam.V1().getDefaultValue();
         bean.setFile(getFile("/Insee1.txt"));
-        bean.setGathering(ObsGathering.builder().unit(TsUnit.YEAR).aggregationType(AggregationType.First).build());
+        bean.setGathering(ObsGathering.builder().unit(TsUnit.P1Y).aggregationType(AggregationType.First).build());
 
         TsCollection source = TxtLoader.load(bean, noPath);
 

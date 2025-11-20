@@ -17,7 +17,7 @@
 package jdplus.toolkit.desktop.plugin.html;
 
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  *

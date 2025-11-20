@@ -18,7 +18,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.junit.jupiter.api.Test;
 

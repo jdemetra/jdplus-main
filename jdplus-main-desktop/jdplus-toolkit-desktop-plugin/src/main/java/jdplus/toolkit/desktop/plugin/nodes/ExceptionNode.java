@@ -16,16 +16,13 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
+import internal.ui.components.ExceptionUtil;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.components.JExceptionPanel;
-import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import lombok.NonNull;
-import org.openide.DialogDisplayer;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
-import org.openide.windows.TopComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,44 +77,10 @@ public class ExceptionNode extends AbstractNode {
         }
 
         private void actionPerformed(Node node) {
-            int id = node.getLookup().lookup(Integer.class);
-            Exception ex = node.getLookup().lookup(Exception.class);
-            if (isInModalDialog()) {
-                showDialog(ex);
-            } else {
-                showTopComponent(id, ex);
-            }
-        }
-
-        private static void showTopComponent(int id, Exception exception) {
-            String topComponentName = "exception" + id;
-            NbComponents.findTopComponentByName(topComponentName)
-                    .orElseGet(() -> createComponent(topComponentName, exception))
-                    .requestActive();
-        }
-
-        private static TopComponent createComponent(String name, Exception exception) {
-            TopComponent c = new TopComponent() {
-                @Override
-                public int getPersistenceType() {
-                    return TopComponent.PERSISTENCE_NEVER;
-                }
-            };
-            c.setName(name);
-            c.setDisplayName(exception.getClass().getSimpleName());
-            c.setLayout(new BorderLayout());
-            c.add(JExceptionPanel.create(exception), BorderLayout.CENTER);
-            c.open();
-            return c;
-        }
-
-        private static void showDialog(Exception exception) {
-            JExceptionPanel p = JExceptionPanel.create(exception);
-            DialogDisplayer.getDefault().notify(p.createDialogDescriptor(exception.getClass().getSimpleName()));
-        }
-
-        private static boolean isInModalDialog() {
-            return KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow() instanceof Dialog;
+            ExceptionUtil.showException(
+                    "exception" + node.getLookup().lookup(Integer.class),
+                    node.getLookup().lookup(Exception.class)
+            );
         }
     }
 }

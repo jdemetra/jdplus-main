@@ -25,11 +25,11 @@ import org.openide.nodes.PropertyEditorRegistration;
  * @author Philippe Charles
  */
 @PropertyEditorRegistration(targetType = TsPeriod.class)
-public class TsPeriodPropertyEditor extends PropertyEditorSupport {
+public final class TsPeriodPropertyEditor extends PropertyEditorSupport {
 
     @Override
     public String getAsText() {
         TsPeriod value = (TsPeriod) getValue();
-        return value != null ? value.toString(): "";
+        return value != null ? value.toShortString(): "";
     }
 }

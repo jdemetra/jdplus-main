@@ -20,6 +20,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  *
  * @author s4504gn
@@ -217,7 +219,7 @@ public class MsrFilterSelectionTest {
         MsrTable oldMsrTable = doOldMSR(s, ec.satoolkit.DecompositionMode.valueOf(modeName), context);
         double newMSR = table.getGlobalMsr();
         double oldMSR = oldMsrTable.getGlobalMsr();
-        org.junit.Assert.assertEquals("Error in MSR", oldMSR, newMSR, DELTA);
+        assertEquals(oldMSR, newMSR, DELTA, "Error in MSR");
     }
 
     private MsrTable doOldMSR(ec.tstoolkit.timeseries.simplets.TsData s, ec.satoolkit.DecompositionMode mode, X11Context context) {

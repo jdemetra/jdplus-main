@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.api.timeseries.regression.TsVariable;
@@ -32,14 +33,22 @@ import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 @Development(status = Development.Status.Alpha)
 class TsVariableFactory implements RegressionVariableFactory<TsVariable> {
 
+    static final String NOTFOUND = ": data not found", TOOSHORT = ": series too short. Zeroes added";
+
     static TsVariableFactory FACTORY = new TsVariableFactory();
 
     private TsVariableFactory() {
     }
 
     @Override
-    public boolean fill(TsVariable var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(TsVariable var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         TsData v = var.getData();
+        if (v == null) {
+            if (log != null) {
+                log.warning(var.getId() + NOTFOUND);
+            }
+            return false;
+        }
         TsDomain curdom = v.getDomain();
         // position of the first data (in m_ts)
         int istart = curdom.getStartPeriod().until(start);
@@ -51,14 +60,20 @@ class TsVariableFactory implements RegressionVariableFactory<TsVariable> {
         // indexes in data
         int jstart = 0, jend = n;
         // not enough data at the beginning
+        boolean ok = true;
         if (istart < 0) {
             jstart = -istart;
             istart = 0;
+            ok = false;
         }
         // not enough data at the end
         if (iend > m) {
             jend = jend - (iend - m);
             iend = m;
+            ok = false;
+        }
+        if (!ok && log != null) {
+            log.warning(var.getId() + TOOSHORT);
         }
         if (jstart < jend) {
             buffer.column(0).range(jstart, jend).copy(v.getValues().range(istart, iend));
@@ -67,7 +82,7 @@ class TsVariableFactory implements RegressionVariableFactory<TsVariable> {
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>>  boolean fill(TsVariable var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(TsVariable var, D domain, FastMatrix buffer, ProcessingLog log) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

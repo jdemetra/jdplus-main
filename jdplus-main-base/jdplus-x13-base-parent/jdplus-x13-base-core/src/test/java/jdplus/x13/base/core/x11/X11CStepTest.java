@@ -16,6 +16,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
 /**
  *
  * @author Thomas Witthohn
@@ -218,51 +220,51 @@ public class X11CStepTest {
 
         double[] expected_C1 = old_Results.getData("c-tables.c1", TsData.class).internalStorage();
         double[] actual_C1 = prepareForCompare(instance.getC1(), context);
-        org.junit.Assert.assertArrayEquals("Error in C1", expected_C1, actual_C1, DELTA);
+        assertArrayEquals(expected_C1, actual_C1, DELTA, "Error in C1");
 
         double[] expected_C2 = old_Results.getData("c-tables.c2", TsData.class).internalStorage();
         double[] actual_C2 = prepareForCompare(instance.getC2(), context);
-        org.junit.Assert.assertArrayEquals("Error in C2", expected_C2, actual_C2, DELTA);
+        assertArrayEquals(expected_C2, actual_C2, DELTA, "Error in C2");
 
         double[] expected_C4 = old_Results.getData("c-tables.c4", TsData.class).internalStorage();
         double[] actual_C4 = prepareForCompare(instance.getC4(), context);
-        org.junit.Assert.assertArrayEquals("Error in C4", expected_C4, actual_C4, DELTA);
+        assertArrayEquals(expected_C4, actual_C4, DELTA, "Error in C4");
 
         double[] expected_C5 = old_Results.getData("c-tables.c5", TsData.class).internalStorage();
         double[] actual_C5 = prepareForCompare(instance.getC5(), context);
-        org.junit.Assert.assertArrayEquals("Error in C5", expected_C5, actual_C5, DELTA);
+        assertArrayEquals(expected_C5, actual_C5, DELTA, "Error in C5");
 
         double[] expected_C6 = old_Results.getData("c-tables.c6", TsData.class).internalStorage();
         double[] actual_C6 = prepareForCompare(instance.getC6(), context);
-        org.junit.Assert.assertArrayEquals("Error in C6", expected_C6, actual_C6, DELTA);
+        assertArrayEquals(expected_C6, actual_C6, DELTA, "Error in C6");
 
         double[] expected_C7 = old_Results.getData("c-tables.c7", TsData.class).internalStorage();
         double[] actual_C7 = prepareForCompare(instance.getC7(), context);
-        org.junit.Assert.assertArrayEquals("Error in C7", expected_C7, actual_C7, DELTA);
+        assertArrayEquals(expected_C7, actual_C7, DELTA, "Error in C7");
 
         double[] expected_C9 = old_Results.getData("c-tables.c9", TsData.class).internalStorage();
         double[] actual_C9 = prepareForCompare(instance.getC9(), context);
-        org.junit.Assert.assertArrayEquals("Error in C9", expected_C9, actual_C9, DELTA);
+        assertArrayEquals(expected_C9, actual_C9, DELTA, "Error in C9");
 
         double[] expected_C10 = old_Results.getData("c-tables.c10", TsData.class).internalStorage();
         double[] actual_C10 = prepareForCompare(instance.getC10(), context);
-        org.junit.Assert.assertArrayEquals("Error in C10", expected_C10, actual_C10, DELTA);
+        assertArrayEquals(expected_C10, actual_C10, DELTA, "Error in C10");
 
         double[] expected_C11 = old_Results.getData("c-tables.c11", TsData.class).internalStorage();
         double[] actual_C11 = prepareForCompare(instance.getC11(), context);
-        org.junit.Assert.assertArrayEquals("Error in C11", expected_C11, actual_C11, DELTA);
+        assertArrayEquals(expected_C11, actual_C11, DELTA, "Error in C11");
 
         double[] expected_C13 = old_Results.getData("c-tables.c13", TsData.class).internalStorage();
         double[] actual_C13 = prepareForCompare(instance.getC13(), context);
-        org.junit.Assert.assertArrayEquals("Error in C13", expected_C13, actual_C13, DELTA);
+        assertArrayEquals(expected_C13, actual_C13, DELTA, "Error in C13");
 
         double[] expected_C17 = old_Results.getData("c-tables.c17", TsData.class).internalStorage();
         double[] actual_C17 = instance.getC17().toArray();
-        org.junit.Assert.assertArrayEquals("Error in C17", expected_C17, actual_C17, DELTA);
+        assertArrayEquals(expected_C17, actual_C17, DELTA, "Error in C17");
 
         double[] expected_C20 = old_Results.getData("c-tables.c20", TsData.class).internalStorage();
         double[] actual_C20 = prepareForCompare(instance.getC20(), context);
-        org.junit.Assert.assertArrayEquals("Error in C20", expected_C20, actual_C20, DELTA);
+        assertArrayEquals(expected_C20, actual_C20, DELTA, "Error in C20");
     }
 
     private double[] prepareForCompare(final DoubleSeq in, X11Context context) {

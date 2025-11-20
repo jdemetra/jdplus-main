@@ -23,6 +23,7 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import jdplus.x13.base.api.regarima.TradingDaysSpec.AutoMethod;
 
 /**
  *
@@ -498,7 +499,7 @@ public class TradingDaysSpecUI extends BaseRegArimaSpecUI {
         "tradingDaysSpecUI.pval2Desc.desc=P-Value applied to reject restrictions on the coeff. of the td variables"
     })
     private EnhancedPropertyDescriptor pval2Desc() {
-        if (!inner().isAutomatic()) {
+        if (!inner().isAutomatic() || inner().getAutomaticMethod() != AutoMethod.WALD) {
             return null;
         }
         try {

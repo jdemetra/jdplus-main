@@ -35,7 +35,6 @@ import java.util.function.DoubleUnaryOperator;
 import jdplus.toolkit.base.core.data.DataWindow;
 import jdplus.toolkit.base.core.data.LogSign;
 import jdplus.toolkit.base.core.math.matrices.decomposition.HouseholderWithPivoting;
-import org.checkerframework.checker.index.qual.Positive;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
@@ -59,22 +58,22 @@ public final class FastMatrix implements Matrix.Mutable {
             this.storage = s;
         }
 
-        public Builder start(@Positive final int start) {
+        public Builder start(/*@Positive*/ final int start) {
             this.start = start;
             return this;
         }
 
-        public Builder nrows(@Positive final int nrows) {
+        public Builder nrows(/*@Positive*/ final int nrows) {
             this.nrows = nrows;
             return this;
         }
 
-        public Builder ncolumns(@Positive final int ncols) {
+        public Builder ncolumns(/*@Positive*/ final int ncols) {
             this.ncols = ncols;
             return this;
         }
 
-        public Builder columnIncrement(@Positive final int lda) {
+        public Builder columnIncrement(/*@Positive*/ final int lda) {
             this.lda = lda;
             return this;
         }

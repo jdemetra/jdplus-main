@@ -9,7 +9,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.math.matrices.MatrixNorms;
 import jdplus.toolkit.base.core.math.matrices.decomposition.LDLDecomposition;

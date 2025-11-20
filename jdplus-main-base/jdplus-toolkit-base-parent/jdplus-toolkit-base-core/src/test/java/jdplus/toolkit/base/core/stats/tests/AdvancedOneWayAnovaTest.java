@@ -10,7 +10,7 @@ import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.core.stats.tests.AdvancedOneWayAnova.Group;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -34,11 +34,11 @@ public class AdvancedOneWayAnovaTest {
         anova.add(new Group("G3", DoubleSeq.of(G3)));
         
         StatisticalTest test = anova.build();
-        assertEquals(test.getValue(), 1.13, 1e-2);
-        assertEquals(test.getPvalue(), 0.3288, 1e-4);
-        assertEquals(anova.getR2(), 0.034696, 1e-5);
-        assertEquals(anova.rmse(), 3.0144, 1e-4);
-        assertEquals(anova.cv(), .3079723, 1e-7);
+        assertEquals(1.13, test.getValue(), 1e-2);
+        assertEquals(0.3288, test.getPvalue(), 1e-4);
+        assertEquals(0.034696, anova.getR2(), 1e-5);
+        assertEquals(3.0144, anova.rmse(), 1e-4);
+        assertEquals(.3079723, anova.cv(), 1e-7);
     }
 
 }

@@ -54,22 +54,18 @@ public class DayClustering {
     }
 
     public static DayClustering of(TradingDaysType type) {
-        switch (type) {
-            case TD7:
-                return TD7;
-            case TD2:
-                return TD2;
-            case TD2c:
-                return TD2c;
-            case TD3:
-                return TD3;
-            case TD3c:
-                return TD3c;
-            case TD4:
-                return TD4;
-            default:
-                return null;
-        }
+        return switch (type) {
+            case TD7 -> TD7;
+            case TD2 -> TD2;
+            case TD2c -> TD2c;
+            case TD2d -> TD2d;
+            case TD3 -> TD3;
+            case TD3c -> TD3c;
+            case TD4 -> TD4;
+            case TD4c -> TD4c;
+            case TD6 -> TD6;
+            default -> null;
+        };
     }
 
     public TradingDaysType getType() {
@@ -90,6 +86,12 @@ public class DayClustering {
         }
         if (Arrays.equals(groups, TD4_IDX)) {
             return TradingDaysType.TD4;
+        }
+        if (Arrays.equals(groups, TD4C_IDX)) {
+            return TradingDaysType.TD4c;
+        }
+        if (Arrays.equals(groups, TD6_IDX)) {
+            return TradingDaysType.TD6;
         }
         return TradingDaysType.TDuser;
 
@@ -267,17 +269,23 @@ public class DayClustering {
     private static final int[] TD7_IDX = new int[]{1, 2, 3, 4, 5, 6, 0},
             TD2_IDX = new int[]{1, 1, 1, 1, 1, 0, 0},
             TD2C_IDX = new int[]{1, 1, 1, 1, 1, 1, 0},
+            TD2D_IDX = new int[]{1, 1, 1, 1, 0, 0, 0},
             TD3_IDX = new int[]{1, 1, 1, 1, 1, 2, 0},
             TD3C_IDX = new int[]{1, 1, 1, 1, 2, 2, 0},
-            TD4_IDX = new int[]{1, 1, 1, 1, 2, 3, 0};
+            TD4_IDX = new int[]{1, 1, 1, 1, 2, 3, 0},
+            TD4C_IDX = new int[]{1, 2, 2, 2, 2, 3, 0},
+            TD6_IDX=new int[]{1, 2, 3, 4, 5, 0, 0};
 
     private static final String[] SHORTNAMES = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
 
     public static final DayClustering TD2 = new DayClustering(TD2_IDX),
             TD2c = new DayClustering(TD2C_IDX),
+            TD2d = new DayClustering(TD2D_IDX),
             TD3 = new DayClustering(TD3_IDX),
             TD3c = new DayClustering(TD3C_IDX),
             TD4 = new DayClustering(TD4_IDX),
+            TD4c = new DayClustering(TD4C_IDX),
+            TD6 = new DayClustering(TD6_IDX),
             TD7 = new DayClustering(TD7_IDX);
 
     /**

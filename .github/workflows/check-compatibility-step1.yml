@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⚙️ Checkout and Setup Maven
-        uses: s4u/setup-maven-action@v1.18.0
+        uses: s4u/setup-maven-action@v1.19.0
         with:
           checkout-submodules: true
           checkout-fetch-depth: 0
@@ -21,7 +21,7 @@ jobs:
 
       - if: ${{ hashFiles('continue') != '' }}
         name: ☕ Check compatibility on PR
-        run: mvn -U verify -D skipTests -P check-compatibility -D compatibility.reportFile=$PWD/report.md
+        run: mvn -U install -D skipTests -P check-compatibility -D compatibility.reportFile=$PWD/report.md
 
       - if: ${{ hashFiles('continue') != '' }}
         name: ⚙️ Store PR number
@@ -29,7 +29,7 @@ jobs:
 
       - if: ${{ hashFiles('continue') != '' }}
         name: ⬆️ Upload compatibility report and PR number
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           path: |
             report.md

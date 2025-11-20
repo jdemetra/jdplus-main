@@ -3,7 +3,7 @@ module jdplus.x13.base.xml {
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
-    requires static org.checkerframework.checker.qual;
+    requires static org.jspecify;
 
     requires transitive jdplus.x13.base.api;
     requires java.xml.bind;

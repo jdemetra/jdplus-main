@@ -47,6 +47,8 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 @Development(status = Development.Status.Preliminary)
 public class DefaultRegressionTest implements IRegressionModule {
 
+    public static final String MODULE = "default regression tests";
+
     public static final double CVAL = 1.96;
     public static final double T0 = 2, T1 = 2.6;
     public static final double T2 = 2.2;
@@ -63,7 +65,6 @@ public class DefaultRegressionTest implements IRegressionModule {
         private IEasterVariable easter;
         private double tmean = CVAL, teaster = CVAL;
         private double twd = T2, t0td = T0, t1td = T1;
-        private double fpvalue = 0.05;
         private double precision = 1e-5;
         private boolean adjust = false;
 
@@ -111,7 +112,6 @@ public class DefaultRegressionTest implements IRegressionModule {
         }
 
         public Builder fPValue(double f) {
-            this.fpvalue = f;
             return this;
         }
 
@@ -188,66 +188,70 @@ public class DefaultRegressionTest implements IRegressionModule {
         if (td == null && lp == null && easter == null && meanTest == null) {
             return ProcessingResult.Unprocessed;
         }
-        // estimate the model.
-        ModelDescription currentModel = context.getDescription();
-        ModelDescription tmpModel = createTestModel(context);
-        boolean changed = false;
-        RegArimaModel<SarimaModel> regarima = tmpModel.regarima();
-        IRegArimaComputer<SarimaModel> processor = RegArimaUtility.processor(true, precision);
-        RegArimaEstimation<SarimaModel> rslt = processor.process(regarima, currentModel.mapping());
-        ConcentratedLikelihoodWithMissing ll = rslt.getConcentratedLikelihood();
+        context.getLog().push(MODULE);
+        try {
+            // estimate the model.
+            ModelDescription currentModel = context.getDescription();
+            ModelDescription tmpModel = createTestModel(context);
+            boolean changed = false;
+            RegArimaModel<SarimaModel> regarima = tmpModel.regarima();
+            IRegArimaComputer<SarimaModel> processor = RegArimaUtility.processor(true, precision);
+            RegArimaEstimation<SarimaModel> rslt = processor.process(regarima, currentModel.mapping());
+            ConcentratedLikelihoodWithMissing ll = rslt.getConcentratedLikelihood();
 
-        int nhp = tmpModel.getArimaSpec().freeParametersCount();
-        // td
-        boolean usetd = false;
-        if (td != null) {
-            Variable variable = tmpModel.variable(td);
-            if (variable != null && ModellingUtility.isAutomaticallyIdentified(variable)) {
-                int pos = tmpModel.findPosition(variable.getCore());
-                int dim = variable.getCore().dim();
-                IRegressionTest test = dim == 1 ? wdTest : tdTest;
-                if (test.accept(ll, nhp, pos, dim)) {
-                    usetd = true;
-                    currentModel.addVariable(Variable.variable("td", td, ModelBuilder.calendarAMI));
-                    changed = true;
-                }
-            }
-        }
-        if (lp != null) {
-            Variable variable = tmpModel.variable(lp);
-            if (variable != null && ModellingUtility.isAutomaticallyIdentified(variable)) {
-                int pos = tmpModel.findPosition(variable.getCore());
-                if (usetd && lpTest.accept(ll, nhp, pos, 1)) {
-                    if (adjust && tmpModel.isLogTransformation() && ll.coefficient(pos) > 0) {
-                        currentModel.setPreadjustment(lp.getType());
-                    } else {
-                        currentModel.addVariable(Variable.variable("lp", lp, ModelBuilder.calendarAMI));
+            int nhp = tmpModel.getArimaSpec().freeParametersCount();
+            // td
+            boolean usetd = false;
+            if (td != null) {
+                Variable variable = tmpModel.variable(td);
+                if (variable != null && ModellingUtility.isAutomaticallyIdentified(variable)) {
+                    int pos = tmpModel.findPosition(variable.getCore());
+                    int dim = variable.getCore().dim();
+                    IRegressionTest test = dim == 1 ? wdTest : tdTest;
+                    if (test.accept(ll, nhp, pos, dim)) {
+                        usetd = true;
+                        currentModel.addVariable(Variable.variable("td", td, ModelBuilder.calendarAMI));
+                        changed = true;
                     }
-                    changed = true;
                 }
             }
-        }
-
-        if (easter != null) {
-            Variable variable = tmpModel.variable(easter);
-            if (variable != null && ModellingUtility.isAutomaticallyIdentified(variable)) {
-                int pos = tmpModel.findPosition(variable.getCore());
-                if (mhTest.accept(ll, nhp, pos, 1)) {
-                    currentModel.addVariable(Variable.variable("easter", easter, ModelBuilder.calendarAMI));
-                    changed = true;
+            if (lp != null) {
+                Variable variable = tmpModel.variable(lp);
+                if (variable != null && ModellingUtility.isAutomaticallyIdentified(variable)) {
+                    int pos = tmpModel.findPosition(variable.getCore());
+                    if (usetd && lpTest.accept(ll, nhp, pos, 1)) {
+                        if (adjust && tmpModel.isLogTransformation() && ll.coefficient(pos) > 0) {
+                            currentModel.setPreadjustment(lp.getType());
+                        } else {
+                            currentModel.addVariable(Variable.variable("lp", lp, ModelBuilder.calendarAMI));
+                        }
+                        changed = true;
+                    }
                 }
             }
-        }
-        if (meanTest != null && regarima.isMean() && !meanTest.accept(ll, nhp, 0, 1)) {
-            currentModel.setMean(false);
-            changed = true;
-        }
 
-        if (changed) {
-            context.clearEstimation();
-        }
+            if (easter != null) {
+                Variable variable = tmpModel.variable(easter);
+                if (variable != null && ModellingUtility.isAutomaticallyIdentified(variable)) {
+                    int pos = tmpModel.findPosition(variable.getCore());
+                    if (mhTest.accept(ll, nhp, pos, 1)) {
+                        currentModel.addVariable(Variable.variable("easter", easter, ModelBuilder.calendarAMI));
+                        changed = true;
+                    }
+                }
+            }
+            if (meanTest != null && regarima.isMean() && !meanTest.accept(ll, nhp, 0, 1)) {
+                currentModel.setMean(false);
+                changed = true;
+            }
 
-        return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
+            if (changed) {
+                context.clearEstimation();
+            }
+            return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
+        } finally {
+            context.getLog().pop();
+        }
     }
 
 }

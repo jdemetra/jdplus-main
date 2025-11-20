@@ -24,7 +24,7 @@ import jdplus.toolkit.base.core.ssf.univariate.ISsf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 import java.util.function.DoubleUnaryOperator;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.ssf.univariate.Ssf;

@@ -21,10 +21,10 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import jdplus.toolkit.base.api.timeseries.calendars.Easter;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  *
@@ -40,22 +40,22 @@ public class EasterTest {
         for (int i = 1900; i < 4100; ++i) {
             LocalDate easter = Easter.easter(i);
             LocalDate easter2 = Easter.easter2(i);
-            Assertions.assertEquals(easter, easter2);
+            assertEquals(easter, easter2);
         }
     }
 
     @Test
     public void testJulianEaster() {
-        Assertions.assertEquals(Easter.julianEaster(2008, true), LocalDate.of(2008, 4, 27));
-        Assertions.assertEquals(Easter.julianEaster(2009, true), LocalDate.of(2009, 4, 19));
-        Assertions.assertEquals(Easter.julianEaster(2010, true), LocalDate.of(2010, 4, 4));
-        Assertions.assertEquals(Easter.julianEaster(2011, true), LocalDate.of(2011, 4, 24));
+        assertEquals(Easter.julianEaster(2008, true), LocalDate.of(2008, 4, 27));
+        assertEquals(Easter.julianEaster(2009, true), LocalDate.of(2009, 4, 19));
+        assertEquals(Easter.julianEaster(2010, true), LocalDate.of(2010, 4, 4));
+        assertEquals(Easter.julianEaster(2011, true), LocalDate.of(2011, 4, 24));
     }
 
     @Test
     public void testJulianEaster2() {
         for (int i = 2000; i < 2100; ++i) {
-            assertTrue(Easter.julianEaster(i, true).getDayOfWeek() == DayOfWeek.SUNDAY);
+            assertSame(Easter.julianEaster(i, true).getDayOfWeek(), DayOfWeek.SUNDAY);
         }
     }
 

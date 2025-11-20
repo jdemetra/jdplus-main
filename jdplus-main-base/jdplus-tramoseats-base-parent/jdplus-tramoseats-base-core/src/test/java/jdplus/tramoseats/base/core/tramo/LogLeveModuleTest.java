@@ -19,7 +19,7 @@ package jdplus.tramoseats.base.core.tramo;
 import tck.demetra.data.Data;
 import ec.tstoolkit.modelling.DefaultTransformationType;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;

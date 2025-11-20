@@ -8,7 +8,7 @@ package jdplus.toolkit.base.core.math.matrices;
 import ec.tstoolkit.random.JdkRNG;
 import jdplus.toolkit.base.core.math.matrices.*;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *

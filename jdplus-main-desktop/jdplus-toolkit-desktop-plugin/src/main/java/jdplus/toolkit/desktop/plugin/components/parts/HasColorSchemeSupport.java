@@ -22,7 +22,7 @@ import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
 import ec.util.chart.ColorScheme;
 import ec.util.chart.swing.ColorSchemeIcon;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Objects;

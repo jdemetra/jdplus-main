@@ -7,9 +7,10 @@ package jdplus.sa.base.core;
 
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.timeseries.TsData;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -31,8 +32,8 @@ public class StationaryVarianceDecompositionTest {
                         Data.NILE));
 //        System.out.println(t2);
 
-        assertTrue(t1 != null);
-        assertTrue(t2 != null);
+        assertNotSame(t1, null);
+        assertNotSame(t2, null);
     }
 
 }

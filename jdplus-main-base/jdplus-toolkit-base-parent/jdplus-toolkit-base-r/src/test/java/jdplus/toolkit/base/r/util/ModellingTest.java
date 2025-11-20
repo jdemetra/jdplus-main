@@ -10,8 +10,9 @@ import jdplus.toolkit.base.api.timeseries.calendars.FixedDay;
 import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
 import jdplus.toolkit.base.api.timeseries.calendars.PrespecifiedHoliday;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
  *
@@ -32,7 +33,7 @@ public class ModellingTest {
         
         byte[] toBuffer = Modelling.toBuffer(context);
         ModellingContext context2 = Modelling.of(toBuffer);
-        assertTrue(context2 != null);
+        assertNotSame(context2, null);
     }
     
 }

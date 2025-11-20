@@ -26,7 +26,7 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import java.util.function.DoubleBinaryOperator;
 import java.util.function.DoubleUnaryOperator;
-import org.checkerframework.checker.index.qual.NonNegative;
+import nbbrd.design.NonNegative;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 
 /**

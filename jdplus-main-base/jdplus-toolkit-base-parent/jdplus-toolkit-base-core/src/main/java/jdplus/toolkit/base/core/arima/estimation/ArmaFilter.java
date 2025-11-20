@@ -74,8 +74,13 @@ public interface ArmaFilter {
         return new AnsleyFilter();
     }
 
+    @Deprecated
     public static ArmaFilter kalman(){
         return new KalmanFilter();
+    }
+
+    public static ArmaFilter kalman(boolean multiuse){
+        return new KalmanFilter(multiuse);
     }
 
     public static ArmaFilter ljungBox(boolean modified){

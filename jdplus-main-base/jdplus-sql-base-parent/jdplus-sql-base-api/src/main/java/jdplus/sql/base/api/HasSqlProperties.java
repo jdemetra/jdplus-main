@@ -18,7 +18,7 @@ package jdplus.sql.base.api;
 
 import internal.sql.base.api.SqlPropertiesSupport;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;

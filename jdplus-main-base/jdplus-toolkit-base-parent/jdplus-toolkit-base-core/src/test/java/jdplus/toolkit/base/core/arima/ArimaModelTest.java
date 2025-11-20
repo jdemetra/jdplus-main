@@ -9,7 +9,8 @@ import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  *

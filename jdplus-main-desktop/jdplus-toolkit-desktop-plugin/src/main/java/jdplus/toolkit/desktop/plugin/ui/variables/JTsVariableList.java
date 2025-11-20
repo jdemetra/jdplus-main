@@ -305,8 +305,15 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
                     variables.get(name) instanceof DynamicTsDataSupplier ? "Dynamic" : "Static";
                 case 3 ->
                     variables.get(name).get().getStart();
-                case 4 ->
-                    variables.get(name).get().getEnd().previous();
+                case 4 -> {
+                    var domain = variables.get(name).get().getDomain();
+                    int length = domain.getLength();
+                    if (length == 0) {
+                        yield domain.getStartPeriod();
+                    } else {
+                        yield domain.getLastPeriod();
+                    }
+                }
                 case 5 ->
                     variables.get(name).get();
                 default ->

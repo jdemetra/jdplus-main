@@ -19,11 +19,12 @@ package jdplus.toolkit.base.api.timeseries;
 import jdplus.toolkit.base.api.data.HasEmptyCause;
 import jdplus.toolkit.base.api.data.Seq;
 import jdplus.toolkit.base.api.util.Collections2;
+import lombok.Getter;
+import lombok.NonNull;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.StaticFactoryMethod;
-import org.checkerframework.checker.index.qual.NonNegative;
-import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import nbbrd.design.NonNegative;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -37,26 +38,31 @@ import java.util.stream.Collectors;
  */
 @lombok.Value
 @lombok.Builder(toBuilder = true)
+@lombok.EqualsAndHashCode(exclude = "domain")
 public class TsCollection implements Seq<Ts>, HasEmptyCause {
 
     @lombok.NonNull
-    private TsMoniker moniker;
+    TsMoniker moniker;
 
     @lombok.NonNull
-    private TsInformationType type;
+    TsInformationType type;
 
     @lombok.With
     @lombok.NonNull
-    private String name;
+    String name;
 
     @lombok.Singular("meta")
-    private Map<String, String> meta;
+    Map<String, String> meta;
 
     @lombok.Singular
-    private List<Ts> items;
+    List<Ts> items;
 
     @Nullable
-    private String emptyCause;
+    String emptyCause;
+
+    @NonNull
+    @Getter(lazy = true)
+    TsDomain domain = initDomain(items);
 
     @LombokWorkaround
     public static Builder builder() {
@@ -87,6 +93,7 @@ public class TsCollection implements Seq<Ts>, HasEmptyCause {
         return builder().name(name).build();
     }
 
+    @StaticFactoryMethod(Collector.class)
     public static @NonNull Collector<Ts, ?, TsCollection> toTsCollection() {
         return Collectors.collectingAndThen(Collectors.toList(), TsCollection::of);
     }
@@ -136,5 +143,14 @@ public class TsCollection implements Seq<Ts>, HasEmptyCause {
         }
 
         return modified ? result.build() : this;
+    }
+
+    private static TsDomain initDomain(List<Ts> items) {
+        return TsDataTable.computeDomain(
+                items.stream()
+                        .map(ts -> ts.getData().getDomain())
+                        .filter(domain -> !domain.isEmpty())
+                        .iterator()
+        );
     }
 }

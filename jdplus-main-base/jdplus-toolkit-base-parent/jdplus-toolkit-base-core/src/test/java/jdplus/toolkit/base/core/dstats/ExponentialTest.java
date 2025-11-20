@@ -21,7 +21,7 @@ import java.util.Arrays;
 
 import jdplus.toolkit.base.core.random.MersenneTwister;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *

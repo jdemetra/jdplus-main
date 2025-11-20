@@ -27,7 +27,7 @@ import nbbrd.io.text.TextFormatter;
 import nbbrd.io.text.TextParser;
 import nbbrd.io.xml.bind.Jaxb;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;

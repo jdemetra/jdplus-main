@@ -10,7 +10,8 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.dstats.Chi2;
 import jdplus.toolkit.base.core.random.MersenneTwister;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  *
@@ -26,7 +27,7 @@ public class DistributionsProcessorTest {
         Distributions.Processor.Distribution normal = Distributions.normal();
         DataBlock Z = DataBlock.make(1001);
         Z.set(i -> normal.density((i - 501) * .01));
-        assertTrue(!Z.isZero(0));
+        assertFalse(Z.isZero(0));
     }
 
     @Test
@@ -34,7 +35,7 @@ public class DistributionsProcessorTest {
         Distributions.Processor.Distribution t = Distributions.t(2);
         DataBlock Z = DataBlock.make(1001);
         Z.set(i -> t.density((i - 501) * .01));
-        assertTrue(!Z.isZero(0));
+        assertFalse(Z.isZero(0));
     }
 
     public static void main(String[] arg) {

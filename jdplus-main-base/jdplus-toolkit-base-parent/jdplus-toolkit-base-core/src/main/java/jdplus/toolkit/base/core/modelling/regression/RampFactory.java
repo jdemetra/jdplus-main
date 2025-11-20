@@ -10,6 +10,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import java.time.LocalDateTime;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 
@@ -25,13 +26,13 @@ class RampFactory implements RegressionVariableFactory<Ramp> {
     }
 
     @Override
-    public boolean fill(Ramp var, TsPeriod start, FastMatrix buffer) {
+    public boolean fill(Ramp var, TsPeriod start, FastMatrix buffer, ProcessingLog log) {
         data(var, start, buffer.column(0));
         return true;
     }
 
     @Override
-    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(Ramp var, D domain, FastMatrix buffer) {
+    public <P extends TimeSeriesInterval<?>, D extends TimeSeriesDomain<P>> boolean fill(Ramp var, D domain, FastMatrix buffer, ProcessingLog log) {
         data(var, domain, buffer.column(0));
         return true;
     }

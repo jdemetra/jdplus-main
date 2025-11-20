@@ -20,7 +20,7 @@ import internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.StaticFactoryMethod;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Clock;
 import java.time.LocalDateTime;

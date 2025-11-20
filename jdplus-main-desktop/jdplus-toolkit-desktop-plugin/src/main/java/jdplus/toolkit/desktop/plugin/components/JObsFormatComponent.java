@@ -24,7 +24,7 @@ import ec.util.completion.swing.XPopup;
 import ec.util.various.swing.TextPrompt;
 import nbbrd.io.text.Parser;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;

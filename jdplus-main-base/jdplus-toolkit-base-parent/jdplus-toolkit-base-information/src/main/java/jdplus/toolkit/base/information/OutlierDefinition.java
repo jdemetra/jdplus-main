@@ -23,7 +23,6 @@ import jdplus.toolkit.base.api.timeseries.TsUnit;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 
 /**
  *
@@ -43,7 +42,7 @@ public class OutlierDefinition {
             builder.append(position);
         else{
             TsPeriod p= TsPeriod.of(TsUnit.ofAnnualFrequency(period), position);
-            builder.append(p.display());
+            builder.append(p.getStartAsShortString());
         }
         builder.append(')');
         return builder.toString();
@@ -154,16 +153,16 @@ public class OutlierDefinition {
         switch (s.charAt(pos)) {
             case 'H':
             case 'h':
-                return TsPeriod.of(TsUnit.HALF_YEAR, LocalDate.of(year, (period - 1) * 6 + 1, 1));
+                return TsPeriod.of(TsUnit.P6M, LocalDate.of(year, (period - 1) * 6 + 1, 1));
             case 'T':
             case 't':
-                return TsPeriod.of(TsUnit.of(4, ChronoUnit.MONTHS), LocalDate.of(year, (period - 1) * 4 + 1, 1));
+                return TsPeriod.of(TsUnit.P4M, LocalDate.of(year, (period - 1) * 4 + 1, 1));
             case 'Q':
             case 'q':
                 return TsPeriod.quarterly(year, period);
             case 'B':
             case 'b':
-                return TsPeriod.of(TsUnit.of(2, ChronoUnit.MONTHS), LocalDate.of(year, (period - 1) * 2 + 1, 1));
+                return TsPeriod.of(TsUnit.P2M, LocalDate.of(year, (period - 1) * 2 + 1, 1));
             case 'M':
             case 'm':
                 return TsPeriod.quarterly(year, period);

@@ -24,7 +24,7 @@ import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeSource;
 import jdplus.toolkit.desktop.plugin.components.parts.*;
 import lombok.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

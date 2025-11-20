@@ -7,7 +7,8 @@ package jdplus.x13.base.protobuf;
 
 import jdplus.x13.base.api.x13.X13Spec;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -22,24 +23,24 @@ public class SpecProtoTest {
     public void testDefault() {
         X13Spec s = X13Spec.RSA0;
         X13Spec ns = SpecProto.convert(SpecProto.convert(s));
-         assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = X13Spec.RSA1;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = X13Spec.RSA2;
         ns = SpecProto.convert(SpecProto.convert(s));
         System.out.println(s);
         System.out.println(ns);
-       assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = X13Spec.RSA3;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = X13Spec.RSA4;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
         s = X13Spec.RSA5;
         ns = SpecProto.convert(SpecProto.convert(s));
-        assertTrue(s.equals(ns));
+        assertEquals(s, ns);
 
     }
     

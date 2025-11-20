@@ -19,6 +19,7 @@ package jdplus.x13.base.core.x13.regarima;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.math.Complex;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.x13.base.api.regarima.RegArimaException;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
@@ -26,9 +27,15 @@ import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaModel;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
+import jdplus.toolkit.base.core.regsarima.regular.IDifferencingModule;
+import static jdplus.toolkit.base.core.regsarima.regular.IDifferencingModule.DIFF;
+import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
+import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.sarima.estimation.HannanRissanen;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
+import static jdplus.x13.base.core.x13.regarima.AutoModellingModule.DEFAULT;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
 
@@ -37,7 +44,7 @@ import nbbrd.design.Development;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Preliminary)
-public class DifferencingModule {
+public class DifferencingModule implements IDifferencingModule {
 
     public static final int MAXD = 2, MAXBD = 1;
 
@@ -110,6 +117,8 @@ public class DifferencingModule {
     private double rmax, rsmax, c_;
     private int iter;
     private boolean useml, mlused;
+    private double tmean;
+    private boolean mu;
     private final int maxd, maxbd;
     private final double ub1;
     private final double ub2;
@@ -168,12 +177,15 @@ public class DifferencingModule {
         mlused = false;
         rsmax = 0;
         rmax = 0;
+        tmean = 0;
+        mu = false;
 
         step0();
         iter = 0;
         while (nextstep() && iter < 5) {
             ++iter;
         }
+        calcMean();
         return true;
     }
 
@@ -185,10 +197,10 @@ public class DifferencingModule {
         spec = null;
         x = null;
         useml = false;
-        iter=0;
-        rmax=0;
-        rsmax=0;
-        c_=0;
+        iter = 0;
+        rmax = 0;
+        rsmax = 0;
+        c_ = 0;
     }
 
     private int cond1(int icon) // current condition status
@@ -436,6 +448,40 @@ public class DifferencingModule {
         return finalcond(icon) != 0;
     }
 
+    @Override
+    public ProcessingResult process(RegSarimaModelling modelling) {
+        ModelDescription description = modelling.getDescription();
+        RegArimaEstimation<SarimaModel> estimation = modelling.getEstimation();
+        int period = description.getAnnualFrequency();
+        DoubleSeq res = RegArimaUtility.linearizedData(estimation.getModel(), estimation.getConcentratedLikelihood());
+        ProcessingLog log = modelling.getLog();
+        log.push(DIFF);
+        try {
+            if (process(res, period)) {
+                SarimaOrders curspec = description.specification();
+                boolean nmean = isMeanCorrection();
+                boolean changed = false;
+                if (spec.getD() != curspec.getD() || spec.getBd() != curspec.getBd()) {
+                    changed = true;
+                    description.setSpecification(spec);
+                    modelling.clearEstimation();
+                }
+                if (nmean != description.isMean()) {
+                    changed = true;
+                    description.setMean(nmean);
+                    modelling.clearEstimation();
+                }
+                log.info(SELECTION, Info.of(this));
+                return changed ? ProcessingResult.Changed : ProcessingResult.Unchanged;
+            } else {
+                modelling.getLog().remark(FAILED);
+                return airline(modelling);
+            }
+        } finally {
+            log.pop();
+        }
+    }
+
     /**
      *
      * @param data
@@ -490,23 +536,35 @@ public class DifferencingModule {
         }
     }
 
+    @Override
     public int getD() {
         return spec.getD();
     }
 
+    @Override
     public int getBd() {
         return spec.getBd();
     }
 
+    @Override
     public boolean isMeanCorrection() {
+        return mu;
+    }
+
+    @Override
+    public double getTMean() {
+        return tmean;
+    }
+
+    private void calcMean() {
         if (spec.getDifferenceOrder() == 0) {
-            return isStMean();
+            stMean();
         } else {
-            return isNstMean();
+            nstMean();
         }
     }
 
-    private boolean isStMean() {
+    private void stMean() {
         int n = x.length;
         double wm = 0, ssq = 0;
         for (int i = 0; i < n; ++i) {
@@ -514,7 +572,7 @@ public class DifferencingModule {
             ssq += x[i] * x[i];
         }
         double wd = Math.sqrt(ssq);
-        double tval = wm / wd;
+        tmean = wm / wd;
 
         double vct;
         if (n > 200) {
@@ -524,10 +582,10 @@ public class DifferencingModule {
         } else {
             vct = 1.96;
         }
-        return Math.abs(tval) > vct;
+        mu = Math.abs(tmean) > vct;
     }
 
-    private boolean isNstMean() {
+    private void nstMean() {
         // compute regression model with mean
         //GlsSarimaMonitor monitor = new GlsSarimaMonitor();
         //monitor.setMinimizer(new ProxyMinimizer(new LevenbergMarquardtMethod()));
@@ -541,9 +599,9 @@ public class DifferencingModule {
         RegArimaEstimation<SarimaModel> est = X13Utility.processor(true, eps).process(model, null);
 
         if (est == null) {
-            return false;
+            return;
         }
-        double t = est.getConcentratedLikelihood().tstat(0, 0, false);
+        tmean = est.getConcentratedLikelihood().tstat(0, 0, false);
 
         int n = x.length;
         double vct;
@@ -558,7 +616,7 @@ public class DifferencingModule {
         } else {
             vct = 2.5;
         }
-        return Math.abs(t) > vct;
+        mu = Math.abs(tmean) > vct;
     }
 
 //    @Override
@@ -593,16 +651,16 @@ public class DifferencingModule {
 //        }
 //    }
 //
-//    private ProcessingResult airline(RegSarimaModelling context) {
-//        ModelDescription desc = context.getDescription();
-//        boolean seasonal = desc.getAnnualFrequency() > 1;
-//        if (!desc.specification().isAirline(seasonal)) {
-//            desc.setAirline(seasonal);
-//            desc.setMean(false);
-//            context.clearEstimation();
-//            return ProcessingResult.Changed;
-//        } else {
-//            return ProcessingResult.Unprocessed;
-//        }
-//    }
+    private ProcessingResult airline(RegSarimaModelling context) {
+        ModelDescription desc = context.getDescription();
+        boolean seasonal = desc.getAnnualFrequency() > 1;
+        if (!desc.specification().isAirline(seasonal)) {
+            desc.setAirline(seasonal);
+            desc.setMean(false);
+            context.clearEstimation();
+            return ProcessingResult.Changed;
+        } else {
+            return ProcessingResult.Unprocessed;
+        }
+    }
 }

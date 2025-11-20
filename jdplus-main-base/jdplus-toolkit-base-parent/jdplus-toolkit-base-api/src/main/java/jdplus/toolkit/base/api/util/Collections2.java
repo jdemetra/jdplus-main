@@ -11,12 +11,12 @@ import java.util.stream.StreamSupport;
 public class Collections2 {
 
     public <T> @NonNull Stream<T> streamOf(@NonNull Iterable<T> iterable) {
-        if (iterable instanceof Collection) return ((Collection) iterable).stream();
-        if (iterable instanceof Seq) return ((Seq) iterable).stream();
+        if (iterable instanceof Collection) return ((Collection<T>) iterable).stream();
+        if (iterable instanceof Seq) return ((Seq<T>) iterable).stream();
         return StreamSupport.stream(iterable.spliterator(), false);
     }
     
-    public boolean isNullOrEmpty(Collection coll){
+    public boolean isNullOrEmpty(Collection<?> coll){
         return coll == null || coll.isEmpty();
     }
 }

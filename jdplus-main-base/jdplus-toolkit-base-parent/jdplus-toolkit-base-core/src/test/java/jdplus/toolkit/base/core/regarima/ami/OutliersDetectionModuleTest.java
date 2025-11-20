@@ -18,14 +18,14 @@ package jdplus.toolkit.base.core.regarima.ami;
 
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.Doubles;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.core.regarima.RegArimaModel;
 import jdplus.toolkit.base.core.regarima.outlier.ExactSingleOutlierDetector;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.core.regsarima.GlsSarimaComputer;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import jdplus.toolkit.base.core.regsarima.internal.HannanRissanenInitializer;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
@@ -65,7 +65,7 @@ public class OutliersDetectionModuleTest {
         }
 //        long t1 = System.currentTimeMillis();
 //        System.out.println(t1 - t0);
-        assertTrue(od.getOutliers().length == 8);
+        assertEquals(8, od.getOutliers().length);
     }
 
     @Test
@@ -92,6 +92,6 @@ public class OutliersDetectionModuleTest {
         }
 //        long t1 = System.currentTimeMillis();
 //        System.out.println(t1 - t0);
-        assertTrue(od.getOutliers().length == 8);
+        assertEquals(8, od.getOutliers().length);
     }
 }

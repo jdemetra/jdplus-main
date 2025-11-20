@@ -12,7 +12,7 @@ import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.modelling.regression.Regression;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -32,7 +32,7 @@ public class CalendarsTest {
                 .build();
         
         DataBlock x = Regression.x(TsDomain.of(TsPeriod.monthly(1980, 1), 480), easter);
-        assertEquals(x.sum(), 40, 1e-9);
+        assertEquals(40, x.sum(), 1e-9);
     }
     
 

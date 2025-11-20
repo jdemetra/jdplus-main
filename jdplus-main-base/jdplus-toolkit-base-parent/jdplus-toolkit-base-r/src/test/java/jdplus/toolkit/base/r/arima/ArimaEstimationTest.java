@@ -16,13 +16,13 @@
  */
 package jdplus.toolkit.base.r.arima;
 
-import jdplus.toolkit.base.r.arima.ArimaEstimation;
 import tck.demetra.data.Data;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -55,7 +55,7 @@ public class ArimaEstimationTest {
 //        long t1 = System.currentTimeMillis();
 //        System.out.println(t1 - t0);
         double[] sp = rslt.getData("sarima.spectrum", double[].class);
-        assertTrue(sp != null);
+        assertNotSame(sp, null);
     }
     
 }
