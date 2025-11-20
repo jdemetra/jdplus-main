@@ -512,17 +512,12 @@ public class HasTsCollectionSupport {
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
-            if (c.getTsSelectionModel().getSelectionMode() == 0) {
-                return false;
-            }
             return JLists.getSelectionIndexSize(c.getTsSelectionModel()) != c.getTsCollection().size();
         }
 
         @Override
         public void execute(HasTsCollection c) {
-            if (c.getTsSelectionModel().getSelectionMode() != 0) {
-                c.getTsSelectionModel().setSelectionInterval(0, c.getTsCollection().size());
-            }
+            c.getTsSelectionModel().setSelectionInterval(0, c.getTsCollection().size());
         }
     }
 

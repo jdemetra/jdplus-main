@@ -216,18 +216,22 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     }
 
     private void onCollectionChange() {
-        selectionListener.setEnabled(false);
-        updateGridModel();
-        updateComboModel();
-        updateNoDataMessage();
-        updateGridCellRenderer();
-        selectionListener.setEnabled(true);
+        if (selectionListener.isEnabled()) {
+            selectionListener.setEnabled(false);
+            updateGridModel();
+            updateComboModel();
+            updateNoDataMessage();
+            updateGridCellRenderer();
+            selectionListener.setEnabled(true);
+        }
     }
 
     private void onSelectionChange() {
-        selectionListener.setEnabled(false);
-        updateSelection();
-        selectionListener.setEnabled(true);
+        if (selectionListener.isEnabled()) {
+            selectionListener.setEnabled(false);
+            updateSelection();
+            selectionListener.setEnabled(true);
+        }
     }
 
     private void onUpdateModeChange() {
@@ -235,34 +239,42 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     }
 
     private void onOrientationChange() {
-        selectionListener.setEnabled(false);
-        updateGridModel();
-        updateSelectionBehavior();
-        updateSelection();
-        selectionListener.setEnabled(true);
+        if (selectionListener.isEnabled()) {
+            selectionListener.setEnabled(false);
+            updateGridModel();
+            updateSelectionBehavior();
+            updateSelection();
+            selectionListener.setEnabled(true);
+        }
     }
 
     private void onChronologyChange() {
-        selectionListener.setEnabled(false);
-        updateGridModel();
-        updateSelection();
-        selectionListener.setEnabled(true);
+        if (selectionListener.isEnabled()) {
+            selectionListener.setEnabled(false);
+            updateGridModel();
+            updateSelection();
+            selectionListener.setEnabled(true);
+        }
     }
 
     private void onModeChange() {
-        selectionListener.setEnabled(false);
-        updateGridModel();
-        updateComboModel();
-        updateSelectionBehavior();
-        updateSelection();
-        selectionListener.setEnabled(true);
+        if (selectionListener.isEnabled()) {
+            selectionListener.setEnabled(false);
+            updateGridModel();
+            updateComboModel();
+            updateSelectionBehavior();
+            updateSelection();
+            selectionListener.setEnabled(true);
+        }
     }
 
     private void onSingleTsIndexChange() {
-        selectionListener.setEnabled(false);
-        updateGridModel();
-        updateSelection();
-        selectionListener.setEnabled(true);
+        if (selectionListener.isEnabled()) {
+            selectionListener.setEnabled(false);
+            updateGridModel();
+            updateSelection();
+            selectionListener.setEnabled(true);
+        }
     }
 
     private void onUseColorSchemeChange() {
@@ -351,17 +363,15 @@ public final class TsGridUI implements InternalUI<JTsGrid> {
     }
 
     private void updateSelection() {
-        if (selectionListener.isEnabled()) {
-            if (target.getMode() == JTsGrid.Mode.MULTIPLETS) {
-                selectionListener.changeSelection(target.getOrientation() == JTsGrid.Orientation.NORMAL ? grid.getColumnSelectionModel() : grid.getRowSelectionModel());
-            } else if (!target.getTsCollection().isEmpty()) {
-                int index = Math.min(target.getSingleTsIndex(), target.getTsCollection().size() - 1);
-                if (combo.isVisible()) {
-                    combo.setSelectedIndex(index);
-                }
-                target.getTsSelectionModel().clearSelection();
-                target.getTsSelectionModel().setSelectionInterval(index, index);
+        if (target.getMode() == JTsGrid.Mode.MULTIPLETS) {
+            selectionListener.changeSelection(target.getOrientation() == JTsGrid.Orientation.NORMAL ? grid.getColumnSelectionModel() : grid.getRowSelectionModel());
+        } else if (!target.getTsCollection().isEmpty()) {
+            int index = Math.min(target.getSingleTsIndex(), target.getTsCollection().size() - 1);
+            if (combo.isVisible()) {
+                combo.setSelectedIndex(index);
             }
+            target.getTsSelectionModel().clearSelection();
+            target.getTsSelectionModel().setSelectionInterval(index, index);
         }
     }
 
