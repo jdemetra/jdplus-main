@@ -25,7 +25,7 @@ import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
  */
 public interface AutomaticTradingRegressionModule extends IRegressionModule{
     public static final String ATD = "automatic trading days selection", 
-            TD_SEL = "selected trading days: ",
+            TD_SEL = "selected trading days: ", NOTD="no trading days",
             ATD_FAILED = "automatic trading days selection failed";
 
     @lombok.Getter

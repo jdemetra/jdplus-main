@@ -17,6 +17,7 @@
 package jdplus.sa.base.core.regarima;
 
 import java.util.Arrays;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import nbbrd.design.BuilderPattern;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
@@ -34,12 +35,13 @@ import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissi
 import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 
 /**
- * 
+ *
  * was not handled with auto-td
  */
 public class AutomaticTradingDaysRegressionTest implements AutomaticTradingRegressionModule {
 
     public static final double DEF_TLP = 2;
+
     public static Builder builder() {
         return new Builder();
     }
@@ -118,10 +120,11 @@ public class AutomaticTradingDaysRegressionTest implements AutomaticTradingRegre
         this.adjust = builder.adjust;
         this.tlp = builder.tlp;
     }
-    
+
     @Override
     public ProcessingResult test(RegSarimaModelling context) {
-        context.getLog().push(ATD);
+        ProcessingLog log = context.getLog();
+        log.push(ATD);
         try {
             // first step: test all trading days
             ModelDescription current = context.getDescription();
@@ -136,17 +139,18 @@ public class AutomaticTradingDaysRegressionTest implements AutomaticTradingRegre
                     Arrays.stream(estimations)
                             .map(e -> e == null ? null : e.statistics())
                             .toArray(LikelihoodStatistics[]::new), best);
-            context.getLog().info(TD_SEL + info.getNames()[best], info);
+
+            log.info(tdsel == null ? NOTD : TD_SEL + info.getNames()[best], info);
             IRegArimaComputer processor = RegArimaUtility.processor(true, precision);
             ModelDescription model = createTestModel(context, tdsel, lpsel);
             RegArimaEstimation<SarimaModel> regarima = processor.process(model.regarima(), model.mapping());
             int nhp = current.getArimaSpec().freeParametersCount();
             return update(current, model, tdsel, lpsel, regarima.getConcentratedLikelihood(), nhp);
-         } catch (RuntimeException ex) {
+        } catch (RuntimeException ex) {
             context.getLog().remark(ATD_FAILED);
             return ProcessingResult.Failed;
-       } finally {
-            context.getLog().pop();
+        } finally {
+            log.pop();
         }
     }
 

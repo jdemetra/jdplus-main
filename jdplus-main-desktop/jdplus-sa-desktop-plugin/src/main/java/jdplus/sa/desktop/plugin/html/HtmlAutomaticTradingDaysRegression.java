@@ -21,7 +21,6 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import jdplus.sa.base.core.regarima.AutomaticTradingDaysRegressionTest;
 import jdplus.sa.base.core.regarima.AutomaticTradingRegressionModule;
-import jdplus.toolkit.base.api.arima.SarmaOrders;
 import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.HtmlStyle;

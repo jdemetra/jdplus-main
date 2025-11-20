@@ -18,7 +18,6 @@ package jdplus.x13.base.core.x13.regarima;
 
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.math.Complex;
-import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaProcessor;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.x13.base.api.regarima.RegArimaSpec;
@@ -313,7 +312,7 @@ public class RegArimaKernel implements RegSarimaProcessor {
                                         context.clearEstimation();
                                         needOutliers = outliers != null;
                                     }
-                                }
+                                } 
                                 if (context.needEstimation()) {
                                     context.estimate(options.precision);
                                 }

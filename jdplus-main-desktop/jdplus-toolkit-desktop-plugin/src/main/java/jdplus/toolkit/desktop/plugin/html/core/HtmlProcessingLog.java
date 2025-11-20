@@ -32,7 +32,7 @@ import org.openide.util.Exceptions;
 public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private final ProcessingLog infos_;
-    private boolean err = true, wrn = true, rem = true, info = false, verbose = true;
+    private boolean err = true, wrn = true, rem = false, info = false, verbose = true;
 
     public HtmlProcessingLog(final ProcessingLog infos) {
         infos_ = infos;
@@ -85,7 +85,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(HtmlTag.HEADER2, "Errors").newLine();
                     list.forEach(msg -> {
                         try {
-                            stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
+                            stream.write(msg.getMsg(), HtmlStyle.Red, HtmlStyle.Bold).newLine();
                         } catch (IOException ex) {
                         }
                     });
@@ -98,7 +98,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(HtmlTag.HEADER2, "Warnings").newLine();
                     list.forEach(msg -> {
                         try {
-                            stream.write(msg.getMsg()).newLine();
+                            stream.write(msg.getMsg(), HtmlStyle.DarkOrange).newLine();
                         } catch (IOException ex) {
                         }
                     });
