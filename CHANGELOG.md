@@ -21,6 +21,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix SaItem duplication in SaBatchUI [#761](https://github.com/jdemetra/jdplus-main/issues/761) and [#689](https://github.com/jdemetra/jdplus-main/issues/689)
 - ![UI] Fix InvalidPathException when displaying exceptions [#806](https://github.com/jdemetra/jdplus-main/issues/806)
 - ![UI] Fix select all menu item behavior [#607](https://github.com/jdemetra/jdplus-main/issues/607)
+- ![UI] Fix missing meta data in details view and properties in SaBatchUI
 
 ### Changed
 
