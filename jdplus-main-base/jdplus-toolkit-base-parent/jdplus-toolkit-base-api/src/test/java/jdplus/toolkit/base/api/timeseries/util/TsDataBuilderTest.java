@@ -31,96 +31,79 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil.*;
+import static internal.toolkit.base.api.timeseries.util.NoOpDataBuilder.INVALID_AGGREGATION;
+import static internal.toolkit.base.api.timeseries.util.TsDataCollector.*;
 import static java.lang.Double.NaN;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static jdplus.toolkit.base.api.data.AggregationType.*;
 import static jdplus.toolkit.base.api.timeseries.TsPeriod.DEFAULT_EPOCH;
 import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author Philippe Charles
  */
 public class TsDataBuilderTest {
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
-    public void testBuilderByCalendar() {
-        CustomFactory<Date> factory = new CustomFactory<Date>() {
-            final GregorianCalendar cal = new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault());
+    public void testByCalendar() {
+        var cal = new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault());
 
-            @Override
-            public TsDataBuilder<Date> builder(ObsGathering gathering) {
-                return TsDataBuilder.byCalendar(cal, gathering);
-            }
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byCalendar(null, ObsGathering.DEFAULT));
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byCalendar(cal, null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byCalendar(cal, ObsGathering.DEFAULT, (ObsCharacteristics) null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byCalendar(cal, ObsGathering.DEFAULT, (ObsCharacteristics[]) null));
 
-            @Override
-            public Date date(LocalDateTime o) {
-                return Date.from(o.atZone(ZoneId.systemDefault()).toInstant());
-            }
-
-            @Override
-            public boolean supports(TsUnit unit) {
-                return true;
-            }
-        };
+        var factory = new CustomFactory<>(
+                gathering -> TsDataBuilder.byCalendar(cal, gathering),
+                o -> Date.from(o.atZone(ZoneId.systemDefault()).toInstant()),
+                ignore -> true
+        );
         assertCompliance(factory);
         testBuilderAdd(factory);
         testBuilder(factory);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
-    public void testBuilderByDate() {
-        CustomFactory<LocalDate> factory = new CustomFactory<LocalDate>() {
-            @Override
-            public TsDataBuilder<LocalDate> builder(ObsGathering gathering) {
-                return TsDataBuilder.byDate(gathering);
-            }
+    public void testByDate() {
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byDate(null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byDate(ObsGathering.DEFAULT, (ObsCharacteristics) null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byDate(ObsGathering.DEFAULT, (ObsCharacteristics[]) null));
 
-            @Override
-            public LocalDate date(LocalDateTime o) {
-                return o.toLocalDate();
-            }
-
-            @Override
-            public boolean supports(TsUnit unit) {
-                return unit.getChronoUnit().isDateBased();
-            }
-        };
+        var factory = new CustomFactory<>(
+                TsDataBuilder::byDate,
+                LocalDateTime::toLocalDate,
+                unit -> unit.getChronoUnit().isDateBased()
+        );
         assertCompliance(factory);
         testBuilderAdd(factory);
         testBuilder(factory);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test
-    public void testBuilderByDateTime() {
-        CustomFactory<LocalDateTime> factory = new CustomFactory<LocalDateTime>() {
-            @Override
-            public TsDataBuilder<LocalDateTime> builder(ObsGathering gathering) {
-                return TsDataBuilder.byDateTime(gathering);
-            }
+    public void testByDateTime() {
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byDateTime(null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byDateTime(ObsGathering.DEFAULT, (ObsCharacteristics) null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataBuilder.byDateTime(ObsGathering.DEFAULT, (ObsCharacteristics[]) null));
 
-            @Override
-            public LocalDateTime date(LocalDateTime o) {
-                return o;
-            }
-
-            @Override
-            public boolean supports(TsUnit unit) {
-                return true;
-            }
-        };
+        var factory = new CustomFactory<>(
+                TsDataBuilder::byDateTime,
+                Function.identity(),
+                ignore -> true
+        );
         assertCompliance(factory);
         testBuilderAdd(factory);
         testBuilder(factory);
     }
 
-    @SuppressWarnings("null")
+    @SuppressWarnings({"null", "unchecked"})
     private static <T> void testBuilderAdd(CustomFactory<T> x) {
         double v1 = .1, v2 = .2;
         Object[][] example = {{x.date(START), v1}, {x.date(START.plusMonths(1)), v2}};
@@ -145,7 +128,7 @@ public class TsDataBuilderTest {
         assertThat(b.clear().addAll(Stream.of(example), dateFunc, valueFunc).build()).isEqualTo(data(P1M, DEFAULT_EPOCH, 2010, v1, v2));
     }
 
-    @SuppressWarnings("null")
+    @SuppressWarnings({"null", "DataFlowIssue"})
     private static <T> void assertCompliance(CustomFactory<T> x) {
         TsDataBuilder<T> b = x.builder(ObsGathering.DEFAULT);
 
@@ -223,13 +206,13 @@ public class TsDataBuilderTest {
         double v1 = .12, v2 = .13, v3 = .10, v4 = .11;
 
         forEachDates(unit, reference, start -> {
-            BiFunction<TsUnit, AggregationType, TsDataBuilder<T>> b = (f, a) -> {
-                return x.builder(ObsGathering.builder().unit(f).aggregationType(a).build())
-                        .add(x.date(start), v1)
-                        .add(x.date(start), v2)
-                        .add(x.date(start), v3)
-                        .add(x.date(start), v4);
-            };
+            BiFunction<TsUnit, AggregationType, TsDataBuilder<T>> b = (f, a)
+                    -> x
+                    .builder(ObsGathering.builder().unit(f).aggregationType(a).build())
+                    .add(x.date(start), v1)
+                    .add(x.date(start), v2)
+                    .add(x.date(start), v3)
+                    .add(x.date(start), v4);
 
             assertBuild(b.apply(unit, First), data(unit, reference, start, v1));
             assertBuild(b.apply(unit, Last), data(unit, reference, start, v4));
@@ -247,11 +230,11 @@ public class TsDataBuilderTest {
         LocalDateTime date = start;
         for (double o : values) {
             b.add(x.date(date), o);
-            date = date.plus(guess.getTsUnit());
+            date = date.plus(guess.getUnit());
         }
 
-        if (x.supports(guess.getTsUnit())) {
-            assertBuild(b, data(guess.getTsUnit(), guess.getReference(), start, values));
+        if (x.supports(guess.getUnit())) {
+            assertBuild(b, data(guess.getUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start, values));
         } else {
             assertBuild(b, GUESS_DUPLICATION);
         }
@@ -262,7 +245,7 @@ public class TsDataBuilderTest {
         for (int i = 0; i < values.length; i++) {
             values[i] = i / 10d;
         }
-        forEachDates(guess.getTsUnit(), guess.getReference(), start -> testUndefined(x, guess, start, values));
+        forEachDates(guess.getUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
     }
 
     private static <T> void testUndefinedToDefinedWithMissingValues(CustomFactory<T> x, GuessingUnit guess) {
@@ -270,7 +253,7 @@ public class TsDataBuilderTest {
         for (int i = 0; i < values.length; i++) {
             values[i] = i == 1 ? Double.NaN : i / 10d;
         }
-        forEachDates(guess.getTsUnit(), guess.getReference(), start -> testUndefined(x, guess, start, values));
+        forEachDates(guess.getUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
     }
 
     private static <T> void testUnorderedDailyToMonthly(CustomFactory<T> x) {
@@ -356,13 +339,23 @@ public class TsDataBuilderTest {
                 .isEqualTo(builder.build());
     }
 
-    private interface CustomFactory<T> {
+    private record CustomFactory<DATE>(
+            Function<ObsGathering, TsDataBuilder<DATE>> builderFactory,
+            Function<LocalDateTime, DATE> dateFactory,
+            Predicate<TsUnit> supportPredicate
+    ) {
 
-        TsDataBuilder<T> builder(ObsGathering gathering);
+        TsDataBuilder<DATE> builder(ObsGathering gathering) {
+            return builderFactory.apply(gathering);
+        }
 
-        T date(LocalDateTime o);
+        DATE date(LocalDateTime o) {
+            return dateFactory.apply(o);
+        }
 
-        boolean supports(TsUnit unit);
+        boolean supports(TsUnit unit) {
+            return supportPredicate.test(unit);
+        }
     }
 
     private static TsData data(TsUnit unit, LocalDateTime reference, LocalDateTime date, double... values) {
@@ -387,5 +380,5 @@ public class TsDataBuilderTest {
 
     private static final LocalDateTime START = LocalDateTime.of(2010, 1, 1, 0, 0);
     private static final List<TsUnit> DEFINED_UNITS = Arrays.asList(P1Y, P6M, P4M, P3M, P2M, P1M, P7D, P1D, PT1H, PT1M);
-    private static final List<TsUnit> ALL_UNITS = Stream.concat(Stream.of(UNDEFINED), DEFINED_UNITS.stream()).collect(Collectors.toList());
+    private static final List<TsUnit> ALL_UNITS = Stream.concat(Stream.of(UNDEFINED), DEFINED_UNITS.stream()).toList();
 }

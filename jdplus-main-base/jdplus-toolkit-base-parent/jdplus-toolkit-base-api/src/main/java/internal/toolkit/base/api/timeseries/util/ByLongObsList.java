@@ -1,62 +1,73 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package internal.toolkit.base.api.timeseries.util;
 
-import nbbrd.design.VisibleForTesting;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
+import nbbrd.design.StaticFactoryMethod;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.function.IntUnaryOperator;
-import jdplus.toolkit.base.api.data.Doubles;
 
 /**
  *
  * @author Philippe Charles
  */
-interface ByLongObsList extends ObsList {
-
-    void clear();
+sealed interface ByLongObsList extends ObsList permits ByLongObsList.Sortable, ByLongObsList.PreSorted {
 
     void add(long period, double value);
 
-    interface ToPeriodIdFunc {
+    long getPeriodAt(int index);
 
-        int apply(TsUnit unit, LocalDateTime reference, long value);
+    PeriodIdFactory getPeriodIdFactory();
+
+    @Override
+    default long getPeriodIdAt(int index, LocalDateTime epoch, TsUnit unit) {
+        return getPeriodIdFactory().getPeriodIdOf(epoch, unit, getPeriodAt(index));
     }
 
-    static final class Sortable implements ByLongObsList {
+    @FunctionalInterface
+    interface PeriodIdFactory {
 
-        private final ToPeriodIdFunc tsPeriodIdFunc;
+        long getPeriodIdOf(LocalDateTime epoch, TsUnit unit, long value);
+    }
+
+    @StaticFactoryMethod
+    static ByLongObsList of(boolean preSorted, PeriodIdFactory periodIdFactory, int initialCapacity) {
+        return preSorted
+                ? new PreSorted(periodIdFactory, initialCapacity)
+                : new Sortable(periodIdFactory, initialCapacity);
+    }
+
+    final class Sortable implements ByLongObsList {
+
+        @lombok.Getter
+        private final PeriodIdFactory periodIdFactory;
         private final List<LongObs> list;
         private boolean sorted;
         private long latestPeriod;
 
-        Sortable(ToPeriodIdFunc tsPeriodIdFunc) {
-            this.tsPeriodIdFunc = tsPeriodIdFunc;
-            this.list = new ArrayList<>();
+        Sortable(PeriodIdFactory periodIdFactory, int initialCapacity) {
+            this.periodIdFactory = periodIdFactory;
+            this.list = new ArrayList<>(initialCapacity);
             this.sorted = true;
             this.latestPeriod = Long.MIN_VALUE;
-        }
-
-        @VisibleForTesting
-        boolean isSorted() {
-            return sorted;
         }
 
         @Override
@@ -74,46 +85,43 @@ interface ByLongObsList extends ObsList {
         }
 
         @Override
-        public int size() {
+        public int length() {
             return list.size();
         }
 
         @Override
-        public double getValue(int index) {
-            return list.get(index).value;
+        public long getPeriodAt(int index) {
+            return list.get(index).period;
         }
 
         @Override
-        public IntUnaryOperator getPeriodIdFunc(TsUnit unit, LocalDateTime reference) {
-            return o -> tsPeriodIdFunc.apply(unit, reference, list.get(o).period);
+        public double getValueAt(int index) {
+            return list.get(index).value;
         }
 
         @Override
         public void sortByPeriod() {
             if (!sorted) {
-                list.sort((l, r) -> Long.compare(l.period, r.period));
+                list.sort(Comparator.comparingLong(obs -> obs.period));
                 sorted = true;
-                latestPeriod = list.get(list.size() - 1).period;
+                latestPeriod = getPeriodAt(list.size() - 1);
             }
         }
 
-        @lombok.AllArgsConstructor
-        private static final class LongObs {
-
-            final long period;
-            final double value;
+        private record LongObs(long period, double value) {
         }
     }
 
-    static final class PreSorted implements ByLongObsList {
+    final class PreSorted implements ByLongObsList {
 
-        private final ToPeriodIdFunc tsPeriodIdFunc;
+        @lombok.Getter
+        private final PeriodIdFactory periodIdFactory;
         private long[] periods;
         private double[] values;
         private int size;
 
-        PreSorted(ToPeriodIdFunc tsPeriodIdFunc, int initialCapacity) {
-            this.tsPeriodIdFunc = tsPeriodIdFunc;
+        PreSorted(PeriodIdFactory periodIdFactory, int initialCapacity) {
+            this.periodIdFactory = periodIdFactory;
             this.periods = new long[initialCapacity];
             this.values = new double[initialCapacity];
             this.size = 0;
@@ -142,18 +150,18 @@ interface ByLongObsList extends ObsList {
         }
 
         @Override
-        public int size() {
+        public int length() {
             return size;
         }
 
         @Override
-        public double getValue(int index) {
-            return values[index];
+        public long getPeriodAt(int index) {
+            return periods[index];
         }
 
         @Override
-        public IntUnaryOperator getPeriodIdFunc(TsUnit unit, LocalDateTime reference) {
-            return o -> tsPeriodIdFunc.apply(unit, reference, periods[o]);
+        public double getValueAt(int index) {
+            return values[index];
         }
 
         @Override
@@ -162,8 +170,8 @@ interface ByLongObsList extends ObsList {
         }
 
         @Override
-        public Doubles getValues() {
-            return Doubles.ofInternal(Arrays.copyOf(values, size));
+        public double[] getValues() {
+            return Arrays.copyOf(values, size);
         }
     }
 }
