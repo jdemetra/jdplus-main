@@ -16,10 +16,10 @@
  */
 package internal.toolkit.base.api.timeseries.util;
 
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjuster;
 
 import static java.time.DayOfWeek.MONDAY;
@@ -33,41 +33,46 @@ import static java.time.temporal.TemporalAdjusters.next;
 @lombok.Getter
 public enum GuessingUnit {
 
-    YEAR(TsUnit.P1Y, o -> o, 2),
-    HALF_YEAR(TsUnit.P6M, o -> o, 6),
-    QUADRI_MONTH(TsUnit.P4M, o -> o, 4),
-    QUARTER(TsUnit.P3M, o -> o, 2),
-    MONTH(TsUnit.P1M, o -> o, 2),
-    WEEK_MONDAY(TsUnit.P7D, next(MONDAY), 3),
-    DAY(TsUnit.P1D, o -> o, 2),
-    HOUR(TsUnit.PT1H, o -> o, 2),
-    MINUTE(TsUnit.PT1M, o -> o, 2),
-    SECOND(TsUnit.PT1S, o -> o, 2);
+    YEAR(ChronoUnit.YEARS, o -> o, 2),
+    MONTH(ChronoUnit.MONTHS, o -> o, 2),
+    WEEK_MONDAY(ChronoUnit.WEEKS, next(MONDAY), 3),
+    DAY(ChronoUnit.DAYS, o -> o, 2),
+    HOUR(ChronoUnit.HOURS, o -> o, 2),
+    MINUTE(ChronoUnit.MINUTES, o -> o, 2),
+    SECOND(ChronoUnit.SECONDS, o -> o, 2);
 
-    private final TsUnit unit;
+    private final ChronoUnit unit;
     private final TemporalAdjuster adjuster;
     private final int minimumObsCount;
 
-    TsPeriod atId(long id, LocalDateTime epoch) {
-        return TsPeriod.builder().unit(unit).epoch(epoch.with(adjuster)).id(id).build();
+    public TsUnit getTsUnit() {
+        return TsUnit.of(1, unit);
     }
 
-    TsPeriod atDate(LocalDateTime start, LocalDateTime epoch) {
-        return TsPeriod.builder().unit(unit).epoch(epoch.with(adjuster)).date(start).build();
-    }
-
-    boolean fillPeriodIds(ObsSeq obs, int[] ids, LocalDateTime epoch) throws ArithmeticException {
+    TsUnit fillPeriodIds(ObsSeq obs, int[] ids, LocalDateTime epoch) throws ArithmeticException {
         if (obs.size() < minimumObsCount) {
-            return false;
+            return null;
         }
+        int minGap = Integer.MAX_VALUE;
+        TsUnit baseUnit = TsUnit.of(1, unit);
         LocalDateTime adjustedEpoch = epoch.with(adjuster);
-        ids[0] = obs.getIntPeriodIdAt(0, adjustedEpoch, unit);
+        ids[0] = obs.getIntPeriodIdAt(0, adjustedEpoch, baseUnit);
         for (int i = 1; i < ids.length; ++i) {
-            ids[i] = obs.getIntPeriodIdAt(i, adjustedEpoch, unit);
-            if (ids[i] == ids[i - 1]) {
-                return false;
+            ids[i] = obs.getIntPeriodIdAt(i, adjustedEpoch, baseUnit);
+            int gap = ids[i] - ids[i - 1];
+            if (gap == 0) {
+                return null;
+            }
+            if (gap < minGap) {
+                minGap = gap;
             }
         }
-        return true;
+        if (minGap > 1) {
+            for (int i = 0; i < ids.length; ++i) {
+                ids[i] /= minGap;
+            }
+            return TsUnit.of(minGap, unit);
+        }
+        return baseUnit;
     }
 }

@@ -265,11 +265,17 @@ public final class TsDataCollector {
 
         try {
             for (var guess : GuessingUnit.values()) {
-                if (guess.fillPeriodIds(obs, ids, epoch)) {
+                TsUnit adjustedUnit = null;
+                if ((adjustedUnit = guess.fillPeriodIds(obs, ids, epoch)) != null) {
                     final int firstId = ids[0];
                     final int lastId = ids[size - 1];
 
-                    final TsPeriod start = guess.atId(firstId, epoch);
+                    final TsPeriod start = TsPeriod
+                            .builder()
+                            .unit(adjustedUnit)
+                            .epoch(epoch.with(guess.getAdjuster()))
+                            .id(firstId)
+                            .build();
 
                     // check if the series is continuous and complete.
                     final int expectedSize = lastId - firstId + 1;

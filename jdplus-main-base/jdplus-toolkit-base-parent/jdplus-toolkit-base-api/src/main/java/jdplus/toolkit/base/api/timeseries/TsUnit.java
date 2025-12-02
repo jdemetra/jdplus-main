@@ -315,7 +315,7 @@ public class TsUnit implements TemporalAmount {
         throw new DateTimeParseException("Text cannot be parsed to a freq", text, 0);
     }
 
-    private static final Pattern DATE_PATTERN = Pattern.compile("P([0-9]+)([YMD])", Pattern.CASE_INSENSITIVE);
+    private static final Pattern DATE_PATTERN = Pattern.compile("P([0-9]+)([YMWD])", Pattern.CASE_INSENSITIVE);
     private static final Pattern TIME_PATTERN = Pattern.compile("PT([0-9]+)([HMS])", Pattern.CASE_INSENSITIVE);
 
     private static long getLowestAmount(long lowestAmount, ChronoUnit oldUnit, ChronoUnit newUnit) {

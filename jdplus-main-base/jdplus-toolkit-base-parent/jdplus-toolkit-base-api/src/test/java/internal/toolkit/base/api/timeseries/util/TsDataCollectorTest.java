@@ -3,17 +3,19 @@ package internal.toolkit.base.api.timeseries.util;
 import jdplus.toolkit.base.api.data.AggregationType;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsObs;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import nbbrd.design.MightBePromoted;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static internal.toolkit.base.api.timeseries.util.TsDataCollector.*;
 import static java.lang.Double.NaN;
+import static java.time.DayOfWeek.MONDAY;
 import static java.time.LocalDateTime.parse;
+import static java.time.temporal.TemporalAdjusters.next;
 import static jdplus.toolkit.base.api.data.AggregationType.*;
 import static jdplus.toolkit.base.api.timeseries.TsPeriod.DEFAULT_EPOCH;
 import static jdplus.toolkit.base.api.timeseries.TsUnit.*;
@@ -204,6 +206,13 @@ public class TsDataCollectorTest {
 
         obs.clear();
         obs.add(parse("2020-01-01T00:00"), 1.1);
+        obs.add(parse("2020-08-01T00:00"), 2.2);
+        assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
+                .describedAs("7-months frequency")
+                .isEqualTo(dataOf("2020-01/P7M", 1.1, 2.2));
+
+        obs.clear();
+        obs.add(parse("2020-01-01T00:00"), 1.1);
         obs.add(parse("2020-07-01T00:00"), 2.2);
         obs.add(parse("2021-01-01T00:00"), 3.3);
         obs.add(parse("2021-07-01T00:00"), 4.4);
@@ -231,6 +240,21 @@ public class TsDataCollectorTest {
 
         obs.clear();
         obs.add(parse("2020-01-01T00:00"), 1.1);
+        obs.add(parse("2020-03-01T00:00"), 2.2);
+        assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
+                .describedAs("Bimonthly frequency")
+                .isEqualTo(dataOf("2020-01/P2M", 1.1, 2.2));
+
+        obs.clear();
+        obs.add(DEFAULT_EPOCH.minusMonths(2), 0.0);
+        obs.add(DEFAULT_EPOCH, 1.1);
+        obs.add(DEFAULT_EPOCH.plusMonths(2), 2.2);
+        assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
+                .describedAs("Bimonthly frequency across several years and around epoch")
+                .isEqualTo(dataOf("1969-11/P2M", 0.0, 1.1, 2.2));
+
+        obs.clear();
+        obs.add(parse("2020-01-01T00:00"), 1.1);
         obs.add(parse("2020-02-01T00:00"), 2.2);
         assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
                 .describedAs("Monthly frequency")
@@ -239,9 +263,10 @@ public class TsDataCollectorTest {
         obs.clear();
         obs.add(parse("2020-01-01T00:00"), 1.1);
         obs.add(parse("2020-03-01T00:00"), 2.2);
+        obs.add(parse("2020-04-01T00:00"), 3.3);
         assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
                 .describedAs("Non continuous series should fill with NaN")
-                .isEqualTo(dataOf("2020-01/P1M", 1.1, NaN, 2.2));
+                .isEqualTo(dataOf("2020-01/P1M", 1.1, NaN, 2.2, 3.3));
 
         obs.clear();
         obs.add(parse("2020-01-06T00:00"), 1.1);
@@ -249,9 +274,15 @@ public class TsDataCollectorTest {
         obs.add(parse("2020-01-20T00:00"), 3.3);
         assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
                 .describedAs("Weekly frequency")
-                .map(TsObs::toShortString)
-                .containsExactly(
-                        "2020-01-06/P7D=1.1", "2020-01-13/P7D=2.2", "2020-01-20/P7D=3.3");
+                .isEqualTo(TsData.of(periodOf(TsPeriod.DEFAULT_EPOCH.with(next(MONDAY)), P1W, LocalDate.parse("2020-01-06")), DoubleSeq.of(1.1, 2.2, 3.3)));
+
+        obs.clear();
+        obs.add(parse("2020-01-06T00:00"), 1.1);
+        obs.add(parse("2020-01-20T00:00"), 2.2);
+        obs.add(parse("2020-02-03T00:00"), 3.3);
+        assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
+                .describedAs("2-weeks frequency")
+                .isEqualTo(TsData.of(periodOf(TsPeriod.DEFAULT_EPOCH.with(next(MONDAY)), TsUnit.parse("P2W"), LocalDate.parse("2019-12-30")), DoubleSeq.of(1.1, 2.2, 3.3)));
 
         obs.clear();
         obs.add(parse("2020-01-01T00:00"), 1.1);
@@ -266,6 +297,13 @@ public class TsDataCollectorTest {
         assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
                 .describedAs("Hourly frequency")
                 .isEqualTo(dataOf("2020-01-01T00/PT1H", 1.1, 2.2));
+
+        obs.clear();
+        obs.add(parse("2020-01-01T00:00"), 1.1);
+        obs.add(parse("2020-01-01T00:05"), 2.2);
+        assertThat(makeFromUnknownUnit(obs, DEFAULT_EPOCH))
+                .describedAs("5-minutes frequency")
+                .isEqualTo(dataOf("2020-01-01T00:00/PT5M", 1.1, 2.2));
 
         obs.clear();
         obs.add(parse("2020-01-01T00:00"), 1.1);
@@ -303,5 +341,10 @@ public class TsDataCollectorTest {
     @MightBePromoted
     private static TsData dataOf(String start, double... values) {
         return TsData.of(TsPeriod.parse(start), DoubleSeq.of(values));
+    }
+
+    @MightBePromoted
+    private static TsPeriod periodOf(LocalDateTime epoch, TsUnit unit, LocalDate date) {
+        return TsPeriod.builder().epoch(epoch).unit(unit).date(date).build();
     }
 }

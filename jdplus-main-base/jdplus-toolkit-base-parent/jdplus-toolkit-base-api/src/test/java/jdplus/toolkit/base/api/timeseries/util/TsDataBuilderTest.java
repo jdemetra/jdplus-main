@@ -230,11 +230,11 @@ public class TsDataBuilderTest {
         LocalDateTime date = start;
         for (double o : values) {
             b.add(x.date(date), o);
-            date = date.plus(guess.getUnit());
+            date = date.plus(guess.getTsUnit());
         }
 
-        if (x.supports(guess.getUnit())) {
-            assertBuild(b, data(guess.getUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start, values));
+        if (x.supports(guess.getTsUnit())) {
+            assertBuild(b, data(guess.getTsUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start, values));
         } else {
             assertBuild(b, GUESS_DUPLICATION);
         }
@@ -245,7 +245,7 @@ public class TsDataBuilderTest {
         for (int i = 0; i < values.length; i++) {
             values[i] = i / 10d;
         }
-        forEachDates(guess.getUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
+        forEachDates(guess.getTsUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
     }
 
     private static <T> void testUndefinedToDefinedWithMissingValues(CustomFactory<T> x, GuessingUnit guess) {
@@ -253,7 +253,7 @@ public class TsDataBuilderTest {
         for (int i = 0; i < values.length; i++) {
             values[i] = i == 1 ? Double.NaN : i / 10d;
         }
-        forEachDates(guess.getUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
+        forEachDates(guess.getTsUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
     }
 
     private static <T> void testUnorderedDailyToMonthly(CustomFactory<T> x) {
