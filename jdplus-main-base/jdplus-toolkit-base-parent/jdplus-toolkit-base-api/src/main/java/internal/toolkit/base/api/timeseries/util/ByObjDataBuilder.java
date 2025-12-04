@@ -16,64 +16,44 @@
  */
 package internal.toolkit.base.api.timeseries.util;
 
-import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.util.ObsCharacteristics;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 import jdplus.toolkit.base.api.timeseries.util.TsDataBuilder;
-import lombok.AccessLevel;
+import lombok.NonNull;
+import nbbrd.design.StaticFactoryMethod;
 
 import java.time.LocalDateTime;
-import java.util.function.Function;
 
 /**
- * @param <T>
+ * @param <DATE>
  * @author Philippe Charles
  */
-@lombok.AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ByObjDataBuilder<T> implements TsDataBuilder<T> {
+public final class ByObjDataBuilder<DATE> extends ObsListDataBuilder<DATE, ByObjObsList<DATE>> {
 
-    public static TsDataBuilder<LocalDateTime> fromDateTime(ObsGathering gathering, ObsCharacteristics[] characteristics) {
-        return TsDataBuilderUtil.isValid(gathering)
-                ? new ByObjDataBuilder<>(getDateTimeObsList(TsDataBuilderUtil.isOrdered(characteristics)), !gathering.isIncludeMissingValues(), TsDataBuilderUtil.getMaker(gathering))
-                : new NoOpDataBuilder<>(TsDataBuilderUtil.INVALID_AGGREGATION);
+    @StaticFactoryMethod
+    public static ByObjDataBuilder<LocalDateTime> fromDateTime(ObsGathering gathering, ObsCharacteristics[] characteristics, int initialCapacity) {
+        return new ByObjDataBuilder<>(
+                ByObjObsList.of(isOrdered(characteristics), TsPeriod::idAt, initialCapacity, LocalDateTime::compareTo),
+                gathering
+        );
     }
 
-    private final ByObjObsList<T> obsList;
-    private final boolean skipMissingValues;
-    private final Function<ObsList, TsData> maker;
-
-    @Override
-    public TsDataBuilder clear() {
-        obsList.clear();
-        return this;
+    private ByObjDataBuilder(
+            ByObjObsList<DATE> obsList,
+            ObsGathering gathering) {
+        super(obsList, gathering);
     }
 
     @Override
-    public TsDataBuilder add(T date, Number value) {
+    public @NonNull TsDataBuilder<DATE> add(DATE date, Number value) {
         if (date != null) {
             if (value != null) {
                 obsList.add(date, value.doubleValue());
-            } else if (!skipMissingValues) {
+            } else if (gathering.isIncludeMissingValues()) {
                 obsList.add(date, Double.NaN);
             }
         }
         return this;
-    }
-
-    @Override
-    public TsData build() {
-        return maker.apply(obsList);
-    }
-
-    private static ByObjObsList<LocalDateTime> getDateTimeObsList(boolean preSorted) {
-        return preSorted
-                ? new ByObjObsList.PreSorted<>(ByObjDataBuilder::getPeriodIdFunc, 32)
-                : new ByObjObsList.Sortable<>(ByObjDataBuilder::getPeriodIdFunc, LocalDateTime::compareTo);
-    }
-
-    private static int getPeriodIdFunc(TsUnit unit, LocalDateTime reference, LocalDateTime date) {
-        return (int) TsPeriod.idAt(reference, unit, date);
     }
 }

@@ -55,31 +55,35 @@ class TemporalFormatterTest {
 
     @Test
     public void testGetAsShortString() {
-        assertThat(getAsShortString(_2010_01_01, SECONDS)).isEqualTo("2010-01-01T00:00:00");
-        assertThat(getAsShortString(_2010_01_01, MINUTES)).isEqualTo("2010-01-01T00:00");
-        assertThat(getAsShortString(_2010_01_01, HOURS)).isEqualTo("2010-01-01T00");
-        assertThat(getAsShortString(_2010_01_01, DAYS)).isEqualTo("2010-01-01");
-        assertThat(getAsShortString(_2010_01_01, MONTHS)).isEqualTo("2010-01");
-        assertThat(getAsShortString(_2010_01_01, YEARS)).isEqualTo("2010");
+        assertThat(getAsShortString(_2010_01_01, SECONDS)).isEqualTo("2010-01-01T00:00:00").isEqualTo(getAsShortString(_2010_01_01.atStartOfDay(), SECONDS));
+        assertThat(getAsShortString(_2010_01_01, MINUTES)).isEqualTo("2010-01-01T00:00").isEqualTo(getAsShortString(_2010_01_01.atStartOfDay(), MINUTES));
+        assertThat(getAsShortString(_2010_01_01, HOURS)).isEqualTo("2010-01-01T00").isEqualTo(getAsShortString(_2010_01_01.atStartOfDay(), HOURS));
+        assertThat(getAsShortString(_2010_01_01, DAYS)).isEqualTo("2010-01-01").isEqualTo(getAsShortString(_2010_01_01.atStartOfDay(), DAYS));
+        assertThat(getAsShortString(_2010_01_01, WEEKS)).isEqualTo("2010-01-01").isEqualTo(getAsShortString(_2010_01_01.atStartOfDay(), WEEKS));
+        assertThat(getAsShortString(_2010_01_01, MONTHS)).isEqualTo("2010-01").isEqualTo(getAsShortString(_2010_01_01.atStartOfDay(), MONTHS));
+        assertThat(getAsShortString(_2010_01_01, YEARS)).isEqualTo("2010").isEqualTo(getAsShortString(_2010_01_01.atStartOfDay(), YEARS));
 
-        assertThat(getAsShortString(_2010_02_01, SECONDS)).isEqualTo("2010-02-01T00:00:00");
-        assertThat(getAsShortString(_2010_02_01, MINUTES)).isEqualTo("2010-02-01T00:00");
-        assertThat(getAsShortString(_2010_02_01, HOURS)).isEqualTo("2010-02-01T00");
-        assertThat(getAsShortString(_2010_02_01, DAYS)).isEqualTo("2010-02-01");
-        assertThat(getAsShortString(_2010_02_01, MONTHS)).isEqualTo("2010-02");
-        assertThat(getAsShortString(_2010_02_01, YEARS)).isEqualTo("2010-02");
+        assertThat(getAsShortString(_2010_02_01, SECONDS)).isEqualTo("2010-02-01T00:00:00").isEqualTo(getAsShortString(_2010_02_01.atStartOfDay(), SECONDS));
+        assertThat(getAsShortString(_2010_02_01, MINUTES)).isEqualTo("2010-02-01T00:00").isEqualTo(getAsShortString(_2010_02_01.atStartOfDay(), MINUTES));
+        assertThat(getAsShortString(_2010_02_01, HOURS)).isEqualTo("2010-02-01T00").isEqualTo(getAsShortString(_2010_02_01.atStartOfDay(), HOURS));
+        assertThat(getAsShortString(_2010_02_01, DAYS)).isEqualTo("2010-02-01").isEqualTo(getAsShortString(_2010_02_01.atStartOfDay(), DAYS));
+        assertThat(getAsShortString(_2010_02_01, WEEKS)).isEqualTo("2010-02-01").isEqualTo(getAsShortString(_2010_02_01.atStartOfDay(), WEEKS));
+        assertThat(getAsShortString(_2010_02_01, MONTHS)).isEqualTo("2010-02").isEqualTo(getAsShortString(_2010_02_01.atStartOfDay(), MONTHS));
+        assertThat(getAsShortString(_2010_02_01, YEARS)).isEqualTo("2010-02").isEqualTo(getAsShortString(_2010_02_01.atStartOfDay(), YEARS));
 
-        assertThat(getAsShortString(_2010_02_15, SECONDS)).isEqualTo("2010-02-15T00:00:00");
-        assertThat(getAsShortString(_2010_02_15, MINUTES)).isEqualTo("2010-02-15T00:00");
-        assertThat(getAsShortString(_2010_02_15, HOURS)).isEqualTo("2010-02-15T00");
-        assertThat(getAsShortString(_2010_02_15, DAYS)).isEqualTo("2010-02-15");
-        assertThat(getAsShortString(_2010_02_15, MONTHS)).isEqualTo("2010-02-15");
-        assertThat(getAsShortString(_2010_02_15, YEARS)).isEqualTo("2010-02-15");
+        assertThat(getAsShortString(_2010_02_15, SECONDS)).isEqualTo("2010-02-15T00:00:00").isEqualTo(getAsShortString(_2010_02_15.atStartOfDay(), SECONDS));
+        assertThat(getAsShortString(_2010_02_15, MINUTES)).isEqualTo("2010-02-15T00:00").isEqualTo(getAsShortString(_2010_02_15.atStartOfDay(), MINUTES));
+        assertThat(getAsShortString(_2010_02_15, HOURS)).isEqualTo("2010-02-15T00").isEqualTo(getAsShortString(_2010_02_15.atStartOfDay(), HOURS));
+        assertThat(getAsShortString(_2010_02_15, DAYS)).isEqualTo("2010-02-15").isEqualTo(getAsShortString(_2010_02_15.atStartOfDay(), DAYS));
+        assertThat(getAsShortString(_2010_02_15, WEEKS)).isEqualTo("2010-02-15").isEqualTo(getAsShortString(_2010_02_15.atStartOfDay(), WEEKS));
+        assertThat(getAsShortString(_2010_02_15, MONTHS)).isEqualTo("2010-02-15").isEqualTo(getAsShortString(_2010_02_15.atStartOfDay(), MONTHS));
+        assertThat(getAsShortString(_2010_02_15, YEARS)).isEqualTo("2010-02-15").isEqualTo(getAsShortString(_2010_02_15.atStartOfDay(), YEARS));
 
         assertThat(getAsShortString(_2010_02_15T01_02_03, SECONDS)).isEqualTo("2010-02-15T01:02:03");
         assertThat(getAsShortString(_2010_02_15T01_02_03, MINUTES)).isEqualTo("2010-02-15T01:02:03");
         assertThat(getAsShortString(_2010_02_15T01_02_03, HOURS)).isEqualTo("2010-02-15T01:02:03");
         assertThat(getAsShortString(_2010_02_15T01_02_03, DAYS)).isEqualTo("2010-02-15T01:02:03");
+        assertThat(getAsShortString(_2010_02_15T01_02_03, WEEKS)).isEqualTo("2010-02-15T01:02:03");
         assertThat(getAsShortString(_2010_02_15T01_02_03, MONTHS)).isEqualTo("2010-02-15T01:02:03");
         assertThat(getAsShortString(_2010_02_15T01_02_03, YEARS)).isEqualTo("2010-02-15T01:02:03");
     }

@@ -107,7 +107,7 @@ public class TsUnitTest {
 
         var inputs = new String[]{"",
                 "P1000Y", "P100Y", "P10Y", "P1Y", "P6M", "P3M", "P1M", "P7D",
-                "P1D", "PT1H", "PT1M", "PT1S"
+                "P1D", "PT1H", "PT1M", "PT1S", "P1W"
         };
 
         for (String input : inputs) {

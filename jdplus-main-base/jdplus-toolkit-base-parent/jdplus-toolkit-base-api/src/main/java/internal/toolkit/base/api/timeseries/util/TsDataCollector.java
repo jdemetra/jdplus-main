@@ -1,31 +1,32 @@
 /*
-* Copyright 2013 National Bank of Belgium
-*
-* Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
-* by the European Commission - subsequent versions of the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
-* limitations under the Licence.
+ * Copyright 2013 National Bank of Belgium
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package internal.toolkit.base.api.timeseries.util;
 
-import nbbrd.design.Development;
-import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.data.AggregationType;
-import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import lombok.NonNull;
+import nbbrd.design.Development;
+import nbbrd.design.StaticFactoryMethod;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.function.IntToDoubleFunction;
-import java.util.function.IntUnaryOperator;
 
 /**
  * A TsDataCollector collects time observations (identified by pairs of
@@ -36,224 +37,268 @@ import java.util.function.IntUnaryOperator;
  * @author Jean Palate. National Bank of Belgium
  */
 @Development(status = Development.Status.Alpha)
-@lombok.experimental.UtilityClass
-class TsDataCollector {
+public final class TsDataCollector {
 
-    public TsData makeWithAggregation(ObsList obs, TsUnit unit, LocalDateTime reference, AggregationType convMode) {
+    private TsDataCollector() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
+    public static final TsData NO_DATA = TsData.empty("No data available");
+    public static final TsData GUESS_SINGLE = TsData.empty("Cannot guess frequency with a single observation");
+    public static final TsData GUESS_DUPLICATION = TsData.empty("Cannot guess frequency with duplicated periods");
+    public static final TsData DUPLICATION_WITHOUT_AGGREGATION = TsData.empty("Duplicated observations without aggregation");
+    public static final TsData ARITHMETIC_EXCEPTION = TsData.empty("Periods exceeding Integer.MAX_VALUE are not supported");
+    public static final TsData NO_AGGREGATION = TsData.empty("No valid aggregation specified");
+    public static final TsData NO_DATA_AFTER_AGGREGATION = TsData.empty("No data to aggregate");
+
+    public static boolean isSupportedAggregationType(AggregationType aggregationType) {
+        return !aggregationType.equals(AggregationType.None)
+                && !aggregationType.equals(AggregationType.UserDefined);
+    }
+
+    @StaticFactoryMethod(TsData.class)
+    public static @NonNull TsData makeWithAggregation(ObsSeq obs, LocalDateTime epoch, TsUnit unit, AggregationType aggregationType, boolean allowPartialAggregation) {
+        TsData result = TsDataCollector.makeFromUnknownUnit(obs, epoch);
+        if (!result.isEmpty() && unit.contains(result.getTsUnit())) {
+            return result.aggregate(unit, aggregationType, !allowPartialAggregation);
+        } else {
+            return TsDataCollector.makeWithAggregation(obs, epoch, unit, aggregationType);
+        }
+    }
+
+    @StaticFactoryMethod(TsData.class)
+    public static @NonNull TsData makeWithAggregation(ObsSeq obs, LocalDateTime epoch, TsUnit unit, AggregationType aggregationType) {
+        if (!isSupportedAggregationType(aggregationType)) {
+            return NO_AGGREGATION;
+        }
+
         int n = obs.size();
         if (n == 0) {
-            return null; // NO_DATA
+            return NO_DATA;
         }
         obs.sortByPeriod();
-
-        IntUnaryOperator toPeriodId = obs.getPeriodIdFunc(unit, reference);
 
         double[] vals = new double[n];
         int[] ids = new int[n];
         int ncur = -1;
 
-        int avn = 0;
-        for (int i = 0; i < n; ++i) {
-            int curid = toPeriodId.applyAsInt(i);
-            double value = obs.getValue(i);
-            switch (convMode) {
+        try {
+            switch (aggregationType) {
                 case Average: {
-                    if (!Double.isFinite(value)) {
-                        continue;
-                    }
-                    if (isNewPeriod(ncur, curid, ids)) {
-                        if (ncur >= 0) {
-                            vals[ncur] /= avn;
+                    int avn = 0;
+                    for (int i = 0; i < n; ++i) {
+                        double value = obs.getValueAt(i);
+                        if (Double.isFinite(value)) {
+                            int periodId = obs.getIntPeriodIdAt(i, epoch, unit);
+                            if (isNewPeriod(ncur, periodId, ids)) {
+                                if (ncur >= 0) {
+                                    vals[ncur] /= avn;
+                                }
+                                vals[++ncur] = value;
+                                ids[ncur] = periodId;
+                                avn = 1;
+                            } else {
+                                vals[ncur] += value;
+                                ++avn;
+                            }
                         }
-                        vals[++ncur] = value;
-                        ids[ncur] = curid;
-                        avn = 1;
-                    } else {
-                        vals[ncur] += value;
-                        ++avn;
+                    }
+                    // correction pour le dernier cas
+                    if (ncur >= 0) {
+                        vals[ncur] /= avn;
                     }
                     break;
                 }
                 case Sum: {
-                    if (!Double.isFinite(value)) {
-                        continue;
-                    }
-                    if (isNewPeriod(ncur, curid, ids)) {
-                        vals[++ncur] = value;
-                        ids[ncur] = curid;
-                    } else {
-                        vals[ncur] += value;
+                    for (int i = 0; i < n; ++i) {
+                        double value = obs.getValueAt(i);
+                        if (Double.isFinite(value)) {
+                            int periodId = obs.getIntPeriodIdAt(i, epoch, unit);
+                            if (isNewPeriod(ncur, periodId, ids)) {
+                                vals[++ncur] = value;
+                                ids[ncur] = periodId;
+                            } else {
+                                vals[ncur] += value;
+                            }
+                        }
                     }
                     break;
                 }
                 case First: {
-                    if (!Double.isFinite(value)) {
-                        continue;
-                    }
-                    if (isNewPeriod(ncur, curid, ids)) {
-                        vals[++ncur] = value;
-                        ids[ncur] = curid;
+                    for (int i = 0; i < n; ++i) {
+                        double value = obs.getValueAt(i);
+                        if (Double.isFinite(value)) {
+                            int periodId = obs.getIntPeriodIdAt(i, epoch, unit);
+                            if (isNewPeriod(ncur, periodId, ids)) {
+                                vals[++ncur] = value;
+                                ids[ncur] = periodId;
+                            }
+                        }
                     }
                     break;
                 }
                 case Last: {
-                    if (!Double.isFinite(value)) {
-                        continue;
+                    for (int i = 0; i < n; ++i) {
+                        double value = obs.getValueAt(i);
+                        if (Double.isFinite(value)) {
+                            int periodId = obs.getIntPeriodIdAt(i, epoch, unit);
+                            if (isNewPeriod(ncur, periodId, ids)) {
+                                ids[++ncur] = periodId;
+                            }
+                            vals[ncur] = value;
+                        }
                     }
-                    if (isNewPeriod(ncur, curid, ids)) {
-                        ids[++ncur] = curid;
-                    }
-                    vals[ncur] = value;
                     break;
                 }
                 case Max: {
-                    if (!Double.isFinite(value)) {
-                        continue;
-                    }
-                    if (isNewPeriod(ncur, curid, ids)) {
-                        vals[++ncur] = value;
-                        ids[ncur] = curid;
-                    } else {
-                        double dcur = value;
-                        if (dcur > vals[ncur]) {
-                            vals[ncur] = dcur;
+                    for (int i = 0; i < n; ++i) {
+                        double value = obs.getValueAt(i);
+                        if (Double.isFinite(value)) {
+                            int periodId = obs.getIntPeriodIdAt(i, epoch, unit);
+                            if (isNewPeriod(ncur, periodId, ids)) {
+                                vals[++ncur] = value;
+                                ids[ncur] = periodId;
+                            } else {
+                                if (value > vals[ncur]) {
+                                    vals[ncur] = value;
+                                }
+                            }
                         }
                     }
                     break;
                 }
                 case Min: {
-                    if (!Double.isFinite(value)) {
-                        continue;
-                    }
-                    if (isNewPeriod(ncur, curid, ids)) {
-                        vals[++ncur] = value;
-                        ids[ncur] = curid;
-                    } else {
-                        double dcur = value;
-                        if (dcur < vals[ncur]) {
-                            vals[ncur] = dcur;
+                    for (int i = 0; i < n; ++i) {
+                        double value = obs.getValueAt(i);
+                        if (Double.isFinite(value)) {
+                            int periodId = obs.getIntPeriodIdAt(i, epoch, unit);
+                            if (isNewPeriod(ncur, periodId, ids)) {
+                                vals[++ncur] = value;
+                                ids[ncur] = periodId;
+                            } else {
+                                if (value < vals[ncur]) {
+                                    vals[ncur] = value;
+                                }
+                            }
                         }
                     }
                     break;
                 }
             }
+        } catch (ArithmeticException ex) {
+            return ARITHMETIC_EXCEPTION;
         }
 
-        // correction pour le dernier cas
-        if (convMode == AggregationType.Average && ncur >= 0) {
-            vals[ncur] /= avn;
+        if (ncur < 0) {
+            return NO_DATA_AFTER_AGGREGATION;
         }
 
-        int firstId = ids[0];
-        int lastId = ids[ncur];
+        final int size = ncur + 1;
 
-        TsPeriod start = TsPeriod.of(unit, firstId);
+        final int firstId = ids[0];
+        final int lastId = ids[size - 1];
+
+        final TsPeriod start = TsPeriod.of(unit, firstId);
 
         // check if the series is continuous and complete.
-        int l = lastId - firstId + 1;
-        if (l == ncur + 1) {
-            return TsData.ofInternal(start, ncur + 1 == n ? vals : Arrays.copyOf(vals, ncur + 1));
-        } else {
-            return TsData.of(start, expand(ncur + 1, l, ids, o -> vals[o]));
-        }
-    }
-
-    private boolean isNewPeriod(int ncur, int curid, int[] ids) {
-        return ncur < 0 || curid != ids[ncur];
-    }
-
-    public TsData makeFromUnknownUnit(ObsList obs) {
-        int size = obs.size();
-        if (size < 2) {
-            return null; // NO_DATA or GUESS_SINGLE
-        }
-        obs.sortByPeriod();
-
-        int[] ids = new int[size];
-
-        GuessingUnit guess = makeIds(obs, ids);
-        if (guess == null) {
-            return null; // GUESS_DUPLICATION
-        }
-
-        int firstId = ids[0];
-        int lastId = ids[size - 1];
-
-        TsPeriod start = guess.atId(firstId);
-
-        // check if the series is continuous and complete.
-        int expectedSize = lastId - firstId + 1;
+        final int expectedSize = lastId - firstId + 1;
         if (expectedSize == size) {
-            return TsData.of(start, obs.getValues());
+            return TsData.ofInternal(start, size == n ? vals : Arrays.copyOf(vals, size));
         } else {
-            return TsData.of(start, expand(size, expectedSize, ids, obs::getValue));
+            return TsData.ofInternal(start, expand(size, expectedSize, ids, index -> vals[index]));
         }
     }
 
-    private GuessingUnit makeIds(ObsList obs, int[] ids) {
-        for (GuessingUnit o : GuessingUnit.values()) {
-            if (makeIdsFromUnit(obs, ids, o)) {
-                return o;
-            }
-        }
-        return null;
+    private static boolean isNewPeriod(int ncur, int periodId, int[] ids) {
+        return ncur < 0 || periodId != ids[ncur];
     }
 
-    private boolean makeIdsFromUnit(ObsList obs, int[] ids, GuessingUnit guess) {
-        if (obs.size() < guess.getMinimumObsCount()) {
-            return false;
-        }
-        IntUnaryOperator toPeriodId = obs.getPeriodIdFunc(guess.getTsUnit(), guess.getReference());
-        ids[0] = toPeriodId.applyAsInt(0);
-        for (int i = 1; i < ids.length; ++i) {
-            ids[i] = toPeriodId.applyAsInt(i);
-            if (ids[i] == ids[i - 1]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public TsData makeWithoutAggregation(ObsList obs, TsUnit unit, LocalDateTime reference) {
-        int size = obs.size();
+    @StaticFactoryMethod(TsData.class)
+    public static @NonNull TsData makeWithoutAggregation(ObsSeq obs, LocalDateTime epoch, TsUnit unit) {
+        final int size = obs.size();
         if (size == 0) {
-            return null; // NO_DATA
+            return NO_DATA;
         }
 
         obs.sortByPeriod();
 
-        IntUnaryOperator toPeriodId = obs.getPeriodIdFunc(unit, reference);
-
-        int[] ids = new int[size];
-        ids[0] = toPeriodId.applyAsInt(0);
-        for (int i = 1; i < size; i++) {
-            ids[i] = toPeriodId.applyAsInt(i);
-            if (ids[i] == ids[i - 1]) {
-                return null; // DUPLICATION_WITHOUT_AGGREGATION
+        final int[] ids = new int[size];
+        try {
+            ids[0] = obs.getIntPeriodIdAt(0, epoch, unit);
+            for (int i = 1; i < size; i++) {
+                ids[i] = obs.getIntPeriodIdAt(i, epoch, unit);
+                if (ids[i] == ids[i - 1]) {
+                    return DUPLICATION_WITHOUT_AGGREGATION;
+                }
             }
+        } catch (ArithmeticException ex) {
+            return ARITHMETIC_EXCEPTION;
         }
 
-        int firstId = ids[0];
-        int lastId = ids[size - 1];
+        final int firstId = ids[0];
+        final int lastId = ids[size - 1];
 
-        TsPeriod start = TsPeriod.of(unit, firstId);
+        final TsPeriod start = TsPeriod.of(unit, firstId);
 
         // check if the series is continuous and complete.
-        int expectedSize = lastId - firstId + 1;
+        final int expectedSize = lastId - firstId + 1;
         if (expectedSize == size) {
-            return TsData.of(start, obs.getValues());
+            return TsData.ofInternal(start, obs.getValues());
         } else {
-            return TsData.of(start, expand(size, expectedSize, ids, obs::getValue));
+            return TsData.ofInternal(start, expand(size, expectedSize, ids, obs::getValueAt));
         }
     }
 
-    private DoubleSeq expand(int currentSize, int expectedSize, int[] ids, IntToDoubleFunction valueFunc) {
+    @StaticFactoryMethod(TsData.class)
+    public static @NonNull TsData makeFromUnknownUnit(ObsSeq obs, LocalDateTime epoch) {
+        final int size = obs.size();
+        switch (size) {
+            case 0:
+                return NO_DATA;
+            case 1:
+                return GUESS_SINGLE;
+        }
+
+        obs.sortByPeriod();
+
+        final int[] ids = new int[size];
+
+        try {
+            for (var guess : GuessingUnit.values()) {
+                TsUnit adjustedUnit = null;
+                if ((adjustedUnit = guess.fillPeriodIds(obs, ids, epoch)) != null) {
+                    final int firstId = ids[0];
+                    final int lastId = ids[size - 1];
+
+                    final TsPeriod start = TsPeriod
+                            .builder()
+                            .unit(adjustedUnit)
+                            .epoch(epoch.with(guess.getAdjuster()))
+                            .id(firstId)
+                            .build();
+
+                    // check if the series is continuous and complete.
+                    final int expectedSize = lastId - firstId + 1;
+                    if (expectedSize == size) {
+                        return TsData.ofInternal(start, obs.getValues());
+                    } else {
+                        return TsData.ofInternal(start, expand(size, expectedSize, ids, obs::getValueAt));
+                    }
+                }
+            }
+            return GUESS_DUPLICATION;
+        } catch (ArithmeticException ex) {
+            return ARITHMETIC_EXCEPTION;
+        }
+    }
+
+    private static double[] expand(int currentSize, int expectedSize, int[] ids, IntToDoubleFunction valueFunc) {
         double[] safeArray = new double[expectedSize];
         Arrays.fill(safeArray, Double.NaN);
         safeArray[0] = valueFunc.applyAsDouble(0);
         for (int j = 1; j < currentSize; ++j) {
             safeArray[ids[j] - ids[0]] = valueFunc.applyAsDouble(j);
         }
-        return DoubleSeq.of(safeArray);
+        return safeArray;
     }
 }

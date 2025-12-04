@@ -16,13 +16,13 @@
  */
 package internal.toolkit.base.api.timeseries.util;
 
-import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.timeseries.util.ObsCharacteristics;
 import jdplus.toolkit.base.api.timeseries.util.ObsGathering;
 import jdplus.toolkit.base.api.timeseries.util.TsDataBuilder;
-import lombok.AccessLevel;
+import lombok.NonNull;
+import nbbrd.design.StaticFactoryMethod;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -30,78 +30,66 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.function.Function;
 import java.util.function.ToLongFunction;
 
 /**
- * @param <T>
+ * @param <DATE>
  * @author Philippe Charles
  */
-@lombok.AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ByLongDataBuilder<T> implements TsDataBuilder<T> {
+public final class ByLongDataBuilder<DATE> extends ObsListDataBuilder<DATE, ByLongObsList> {
 
-    public static TsDataBuilder<Date> fromCalendar(Calendar resource, ObsGathering gathering, ObsCharacteristics[] characteristics) {
-        return TsDataBuilderUtil.isValid(gathering)
-                ? of(gathering, characteristics, new CalendarConverter(resource.getTimeZone().toZoneId()))
-                : new NoOpDataBuilder<>(TsDataBuilderUtil.INVALID_AGGREGATION);
+    @StaticFactoryMethod
+    public static ByLongDataBuilder<Date> fromCalendar(ObsGathering gathering, ObsCharacteristics[] characteristics, int initialCapacity, Calendar resource) {
+        return of(gathering, characteristics, initialCapacity, new CalendarConverter(resource.getTimeZone().toZoneId()));
     }
 
-    public static TsDataBuilder<LocalDate> fromDate(ObsGathering gathering, ObsCharacteristics[] characteristics) {
-        return TsDataBuilderUtil.isValid(gathering)
-                ? of(gathering, characteristics, DateConverter.INSTANCE)
-                : new NoOpDataBuilder<>(TsDataBuilderUtil.INVALID_AGGREGATION);
+    @StaticFactoryMethod
+    public static ByLongDataBuilder<LocalDate> fromDate(ObsGathering gathering, ObsCharacteristics[] characteristics, int initialCapacity) {
+        return of(gathering, characteristics, initialCapacity, DateConverter.INSTANCE);
     }
 
-    private final ByLongObsList obsList;
-    private final ToLongFunction<T> toLong;
-    private final boolean skipMissingValues;
-    private final Function<ObsList, TsData> maker;
+    private static <T> ByLongDataBuilder<T> of(
+            ObsGathering gathering, ObsCharacteristics[] characteristics, int initialCapacity,
+            Converter<T> converter) {
+
+        return new ByLongDataBuilder<>(
+                ByLongObsList.of(isOrdered(characteristics), converter.asPeriodIdFactory(), initialCapacity),
+                converter::dateToLong,
+                gathering
+        );
+    }
+
+    private final ToLongFunction<DATE> toLong;
+
+    private ByLongDataBuilder(
+            ByLongObsList obsList,
+            ToLongFunction<DATE> toLong,
+            ObsGathering gathering) {
+        super(obsList, gathering);
+        this.toLong = toLong;
+    }
 
     @Override
-    public TsDataBuilder<T> clear() {
-        obsList.clear();
-        return this;
-    }
-
-    @Override
-    public TsDataBuilder<T> add(T date, Number value) {
+    public @NonNull TsDataBuilder<DATE> add(DATE date, Number value) {
         if (date != null) {
             if (value != null) {
                 obsList.add(toLong.applyAsLong(date), value.doubleValue());
-            } else if (!skipMissingValues) {
+            } else if (gathering.isIncludeMissingValues()) {
                 obsList.add(toLong.applyAsLong(date), Double.NaN);
             }
         }
         return this;
     }
 
-    @Override
-    public TsData build() {
-        return maker.apply(obsList);
-    }
+    private sealed interface Converter<DATE> permits CalendarConverter, DateConverter {
 
-    private static <T> ByLongDataBuilder<T> of(
-            ObsGathering gathering, ObsCharacteristics[] characteristics,
-            Converter<T> converter) {
+        long dateToLong(DATE value);
 
-        return new ByLongDataBuilder<>(
-                getLongObsList(TsDataBuilderUtil.isOrdered(characteristics), converter::longToPeriodId),
-                converter::valueToLong,
-                !gathering.isIncludeMissingValues(),
-                TsDataBuilderUtil.getMaker(gathering));
-    }
+        LocalDateTime longToLocalDateTime(long l);
 
-    private static ByLongObsList getLongObsList(boolean preSorted, ByLongObsList.ToPeriodIdFunc tsPeriodIdFunc) {
-        return preSorted
-                ? new ByLongObsList.PreSorted(tsPeriodIdFunc, 32)
-                : new ByLongObsList.Sortable(tsPeriodIdFunc);
-    }
-
-    private interface Converter<T> {
-
-        long valueToLong(T value);
-
-        int longToPeriodId(TsUnit unit, LocalDateTime reference, long l);
+        default ByLongObsList.PeriodIdFactory asPeriodIdFactory() {
+            return (LocalDateTime epoch, TsUnit unit, long l) -> TsPeriod.idAt(epoch, unit, longToLocalDateTime(l));
+        }
     }
 
     @lombok.AllArgsConstructor
@@ -110,17 +98,13 @@ public final class ByLongDataBuilder<T> implements TsDataBuilder<T> {
         private final ZoneId zoneId;
 
         @Override
-        public long valueToLong(Date value) {
+        public long dateToLong(Date value) {
             return value.getTime();
         }
 
         @Override
-        public int longToPeriodId(TsUnit unit, LocalDateTime reference, long l) {
-            return (int) TsPeriod.idAt(reference, unit, toLocalDateTime(l));
-        }
-
-        private LocalDateTime toLocalDateTime(long l) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(l), zoneId);
+        public LocalDateTime longToLocalDateTime(long value) {
+            return LocalDateTime.ofInstant(Instant.ofEpochMilli(value), zoneId);
         }
     }
 
@@ -128,16 +112,12 @@ public final class ByLongDataBuilder<T> implements TsDataBuilder<T> {
         INSTANCE;
 
         @Override
-        public long valueToLong(LocalDate date) {
-            return (long) (date.getYear() * 100 + date.getMonthValue()) * 100 + date.getDayOfMonth();
+        public long dateToLong(LocalDate date) {
+            return (date.getYear() * 100L + date.getMonthValue()) * 100 + date.getDayOfMonth();
         }
 
         @Override
-        public int longToPeriodId(TsUnit unit, LocalDateTime reference, long l) {
-            return (int) TsPeriod.idAt(reference, unit, toLocalDateTime(l));
-        }
-
-        private static LocalDateTime toLocalDateTime(long value) {
+        public LocalDateTime longToLocalDateTime(long value) {
             int dayOfMonth = (int) value % 100;
             value /= 100;
             int month = (int) value % 100;

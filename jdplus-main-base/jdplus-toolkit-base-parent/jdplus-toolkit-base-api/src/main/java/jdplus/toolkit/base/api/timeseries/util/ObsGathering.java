@@ -17,8 +17,11 @@
 package jdplus.toolkit.base.api.timeseries.util;
 
 import jdplus.toolkit.base.api.data.AggregationType;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import nbbrd.design.LombokWorkaround;
+
+import java.time.LocalDateTime;
 
 /**
  * Parameters used when collecting observations in order to create time series.
@@ -32,18 +35,22 @@ public class ObsGathering {
     public static final ObsGathering DEFAULT = builder().build();
 
     @lombok.NonNull
-    private TsUnit unit;
+    LocalDateTime epoch;
 
     @lombok.NonNull
-    private AggregationType aggregationType;
+    TsUnit unit;
 
-    private boolean allowPartialAggregation;
+    @lombok.NonNull
+    AggregationType aggregationType;
 
-    private boolean includeMissingValues;
+    boolean allowPartialAggregation;
+
+    boolean includeMissingValues;
 
     @LombokWorkaround
     public static Builder builder() {
         return new Builder()
+                .epoch(TsPeriod.DEFAULT_EPOCH)
                 .unit(TsUnit.UNDEFINED)
                 .aggregationType(AggregationType.None)
                 .allowPartialAggregation(false)
