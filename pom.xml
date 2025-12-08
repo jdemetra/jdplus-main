@@ -60,7 +60,7 @@
 
         <!-- dependencies -->
         <jd2.version>2.2.6</jd2.version>
-        <protobuf.version>4.33.1</protobuf.version>
+        <protobuf.version>4.33.2</protobuf.version>
         <java-io-util.version>0.0.35</java-io-util.version>
         <java-sql-util.version>1.0.7</java-sql-util.version>
         <spreadsheet4j.version>2.5.10</spreadsheet4j.version>
