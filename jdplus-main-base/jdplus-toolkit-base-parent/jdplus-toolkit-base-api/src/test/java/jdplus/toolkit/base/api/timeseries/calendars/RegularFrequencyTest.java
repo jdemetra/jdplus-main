@@ -1,6 +1,7 @@
 package jdplus.toolkit.base.api.timeseries.calendars;
 
 import jdplus.toolkit.base.api.timeseries.TsUnit;
+import net.bytebuddy.dynamic.loading.PackageDefinitionStrategy;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +25,11 @@ public class RegularFrequencyTest {
             assertThat(RegularFrequency.parseTsUnit(x.toTsUnit()))
                     .isEqualTo(x);
         }
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> RegularFrequency.parseTsUnit(TsUnit.PT1M));
+
+        assertThat(RegularFrequency.parseTsUnit(TsUnit.PT1M))
+                .isEqualTo(RegularFrequency.Undefined);
+
+        assertThat(RegularFrequency.parseTsUnit(TsUnit.UNDEFINED))
+                .isEqualTo(RegularFrequency.Undefined);
     }
 }

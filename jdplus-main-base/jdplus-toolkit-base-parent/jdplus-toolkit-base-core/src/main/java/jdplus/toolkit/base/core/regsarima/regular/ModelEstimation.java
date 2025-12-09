@@ -22,6 +22,7 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.timeseries.HasAnnualFrequency;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
@@ -54,7 +55,7 @@ import nbbrd.design.Development;
  */
 @Development(status = Development.Status.Preliminary)
 @lombok.Value
-public final class ModelEstimation {
+public final class ModelEstimation implements HasAnnualFrequency {
 
     private static final boolean[] EB = new boolean[0];
 
@@ -203,6 +204,7 @@ public final class ModelEstimation {
         return m;
     }
 
+    @Override
     public int getAnnualFrequency() {
         return originalSeries.getAnnualFrequency();
     }
