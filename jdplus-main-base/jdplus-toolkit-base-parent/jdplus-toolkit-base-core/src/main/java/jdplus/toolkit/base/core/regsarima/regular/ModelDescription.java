@@ -21,6 +21,7 @@ import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.timeseries.HasAnnualFrequency;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsException;
@@ -67,7 +68,7 @@ import lombok.NonNull;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Preliminary)
-public final class ModelDescription {
+public final class ModelDescription implements HasAnnualFrequency {
 
     /**
      * Original series
@@ -631,6 +632,7 @@ public final class ModelDescription {
         return variables.removeIf(pred.and(var -> ModellingUtility.isAutomaticallyIdentified(var)));
     }
 
+    @Override
     public int getAnnualFrequency() {
         return series.getAnnualFrequency();
     }

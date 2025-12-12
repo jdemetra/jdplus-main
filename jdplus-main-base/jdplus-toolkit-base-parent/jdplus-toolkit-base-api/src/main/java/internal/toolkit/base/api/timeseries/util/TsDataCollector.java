@@ -193,19 +193,19 @@ public final class TsDataCollector {
             return NO_DATA_AFTER_AGGREGATION;
         }
 
-        final int size = ncur + 1;
+        final int obsSize = ncur + 1;
 
         final int firstId = ids[0];
-        final int lastId = ids[size - 1];
+        final int lastId = ids[obsSize - 1];
 
         final TsPeriod start = TsPeriod.of(unit, firstId);
 
         // check if the series is continuous and complete.
-        final int expectedSize = lastId - firstId + 1;
-        if (expectedSize == size) {
-            return TsData.ofInternal(start, size == n ? vals : Arrays.copyOf(vals, size));
+        final int domainSize = lastId - firstId + 1;
+        if (domainSize == obsSize) {
+            return TsData.ofInternal(start, obsSize == n ? vals : Arrays.copyOf(vals, obsSize));
         } else {
-            return TsData.ofInternal(start, expand(size, expectedSize, ids, index -> vals[index]));
+            return TsData.ofInternal(start, expand(obsSize, domainSize, ids, index -> vals[index]));
         }
     }
 
@@ -215,17 +215,17 @@ public final class TsDataCollector {
 
     @StaticFactoryMethod(TsData.class)
     public static @NonNull TsData makeWithoutAggregation(ObsSeq obs, LocalDateTime epoch, TsUnit unit) {
-        final int size = obs.size();
-        if (size == 0) {
+        final int obsSize = obs.size();
+        if (obsSize == 0) {
             return NO_DATA;
         }
 
         obs.sortByPeriod();
 
-        final int[] ids = new int[size];
+        final int[] ids = new int[obsSize];
         try {
             ids[0] = obs.getIntPeriodIdAt(0, epoch, unit);
-            for (int i = 1; i < size; i++) {
+            for (int i = 1; i < obsSize; i++) {
                 ids[i] = obs.getIntPeriodIdAt(i, epoch, unit);
                 if (ids[i] == ids[i - 1]) {
                     return DUPLICATION_WITHOUT_AGGREGATION;
@@ -236,23 +236,23 @@ public final class TsDataCollector {
         }
 
         final int firstId = ids[0];
-        final int lastId = ids[size - 1];
+        final int lastId = ids[obsSize - 1];
 
         final TsPeriod start = TsPeriod.of(unit, firstId);
 
         // check if the series is continuous and complete.
-        final int expectedSize = lastId - firstId + 1;
-        if (expectedSize == size) {
+        final int domainSize = lastId - firstId + 1;
+        if (domainSize == obsSize) {
             return TsData.ofInternal(start, obs.getValues());
         } else {
-            return TsData.ofInternal(start, expand(size, expectedSize, ids, obs::getValueAt));
+            return TsData.ofInternal(start, expand(obsSize, domainSize, ids, obs::getValueAt));
         }
     }
 
     @StaticFactoryMethod(TsData.class)
     public static @NonNull TsData makeFromUnknownUnit(ObsSeq obs, LocalDateTime epoch) {
-        final int size = obs.size();
-        switch (size) {
+        final int obsSize = obs.size();
+        switch (obsSize) {
             case 0:
                 return NO_DATA;
             case 1:
@@ -261,44 +261,80 @@ public final class TsDataCollector {
 
         obs.sortByPeriod();
 
-        final int[] ids = new int[size];
+        final int[] ids = new int[obsSize];
 
         try {
+            TsData bestData = null;
             for (var guess : GuessingUnit.values()) {
-                TsUnit adjustedUnit = null;
-                if ((adjustedUnit = guess.fillPeriodIds(obs, ids, epoch)) != null) {
+                int unitAmount;
+                if ((unitAmount = guess.fillPeriodIds(obs, ids, epoch)) != GuessingUnit.NO_UNIT_AMOUNT) {
                     final int firstId = ids[0];
-                    final int lastId = ids[size - 1];
+                    final int lastId = ids[obsSize - 1];
+                    final int domainSize = lastId - firstId + 1;
+
+                    if (bestData != null) {
+                        double estimatedDurationRatio = guess.getTsUnit(unitAmount).getEstimatedDurationRatio(bestData.getTsUnit());
+                        int minObsSize = estimatedDurationRatio < 1
+                                ? (int) Math.ceil(guess.getMinimumLengthForGuessing(unitAmount) * estimatedDurationRatio)
+                                : guess.getMinimumLengthForGuessing(unitAmount) + 1;
+
+                        if (obsSize < minObsSize) {
+                            // there are not enough observations to guess reliably this unit and higher ones
+                            return bestData;
+                        }
+
+                        if (bestData.size() < domainSize) {
+                            // this unit creates NaN gaps, so we keep the best one found so far and search deeper
+                            continue;
+                        }
+
+                        if (bestData.size() == domainSize) {
+                            if (estimatedDurationRatio == 1d) {
+                                // same unit, so we keep the best one found so far and search deeper
+                                continue;
+                            }
+
+                            if (estimatedDurationRatio > 1d) {
+                                double nextEstimation = guess.getTsUnit(unitAmount + 1).getEstimatedDurationRatio(bestData.getTsUnit());
+                                if (nextEstimation < 1d) {
+                                    // unit smaller due to estimation error, so we keep the best one found so far and search deeper
+                                    continue;
+                                }
+                                // (nextEstimation >= 1d) -> this unit is smaller than the previous one
+                            }
+                            // (estimatedDurationRatio < 1d) -> this unit is bigger than the previous one
+                        }
+                        // (bestData.size() > domainSize) -> this unit is more precise than the previous one
+                    }
 
                     final TsPeriod start = TsPeriod
                             .builder()
-                            .unit(adjustedUnit)
-                            .epoch(epoch.with(guess.getAdjuster()))
+                            .unit(guess.getTsUnit(unitAmount))
+                            .epoch(guess.getAdjustedEpoch(epoch))
                             .id(firstId)
                             .build();
 
                     // check if the series is continuous and complete.
-                    final int expectedSize = lastId - firstId + 1;
-                    if (expectedSize == size) {
-                        return TsData.ofInternal(start, obs.getValues());
+                    if (domainSize == obsSize) {
+                        bestData = TsData.ofInternal(start, obs.getValues());
                     } else {
-                        return TsData.ofInternal(start, expand(size, expectedSize, ids, obs::getValueAt));
+                        bestData = TsData.ofInternal(start, expand(obsSize, domainSize, ids, obs::getValueAt));
                     }
                 }
             }
-            return GUESS_DUPLICATION;
+            return bestData != null ? bestData : GUESS_DUPLICATION;
         } catch (ArithmeticException ex) {
             return ARITHMETIC_EXCEPTION;
         }
     }
 
-    private static double[] expand(int currentSize, int expectedSize, int[] ids, IntToDoubleFunction valueFunc) {
-        double[] safeArray = new double[expectedSize];
-        Arrays.fill(safeArray, Double.NaN);
-        safeArray[0] = valueFunc.applyAsDouble(0);
-        for (int j = 1; j < currentSize; ++j) {
-            safeArray[ids[j] - ids[0]] = valueFunc.applyAsDouble(j);
+    private static double[] expand(int obsSize, int domainSize, int[] ids, IntToDoubleFunction valueByIndex) {
+        double[] result = new double[domainSize];
+        Arrays.fill(result, Double.NaN);
+        result[0] = valueByIndex.applyAsDouble(0);
+        for (int i = 1; i < obsSize; ++i) {
+            result[ids[i] - ids[0]] = valueByIndex.applyAsDouble(i);
         }
-        return safeArray;
+        return result;
     }
 }
