@@ -14,7 +14,7 @@ jobs:
       pull-requests: write
     steps:
       - name: ⬇️ Download compatibility report and PR number
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           run-id: ${{github.event.workflow_run.id }}
           merge-multiple: true
