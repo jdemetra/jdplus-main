@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
+
 ### Changed
 
 - ![IO] Improve data collector to include any multiple of ChronoUnit [#825](https://github.com/jdemetra/jdplus-main/issues/825)
