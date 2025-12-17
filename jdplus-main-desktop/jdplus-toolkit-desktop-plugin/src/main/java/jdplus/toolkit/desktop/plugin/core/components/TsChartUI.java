@@ -249,7 +249,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         selectionListener.setEnabled(false);
         TsCollection tss = target.getTsCollection();
         tsFeatures = TsFeatureHelper.of(tss.getItems());
-        chartPanel.setDataset(TsXYDataset.of(tss.getItems()));
+        chartPanel.setDataset(TsXYDataset.ofTs(tss.getItems()));
         updateNoDataMessage();
         selectionListener.setEnabled(true);
     }
@@ -280,7 +280,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
         List<Ts> tss = Stream
                 .concat(collection.stream(), tmp.stream())
                 .collect(Collectors.toList());
-        chartPanel.setDataset(TsXYDataset.of(tss));
+        chartPanel.setDataset(TsXYDataset.ofTs(tss));
 
         selectionListener.setEnabled(false);
         ListSelectionModel m = chartPanel.getSeriesSelectionModel();

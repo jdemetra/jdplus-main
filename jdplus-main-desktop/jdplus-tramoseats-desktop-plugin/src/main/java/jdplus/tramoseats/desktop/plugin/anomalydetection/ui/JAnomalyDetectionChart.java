@@ -16,39 +16,32 @@
  */
 package jdplus.tramoseats.desktop.plugin.anomalydetection.ui;
 
-import jdplus.tramoseats.desktop.plugin.anomalydetection.OutlierEstimation;
-import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.OutlierColorChooser;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Transferable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.NumberFormat;
-import lombok.NonNull;
-import org.jspecify.annotations.Nullable;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
+import ec.util.chart.*;
+import ec.util.chart.swing.JTimeSeriesChart;
+import ec.util.various.swing.JCommand;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
-import jdplus.toolkit.desktop.plugin.ui.TsXYDatasets;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.util.Table;
-import ec.util.chart.ColorScheme;
-import ec.util.chart.ObsFunction;
-import ec.util.chart.ObsIndex;
-import ec.util.chart.ObsPredicate;
-import ec.util.chart.SeriesFunction;
-import ec.util.chart.SeriesPredicate;
-import ec.util.chart.swing.JTimeSeriesChart;
-import static ec.util.chart.swing.JTimeSeriesChartCommand.copyImage;
-import static ec.util.chart.swing.JTimeSeriesChartCommand.printImage;
-import static ec.util.chart.swing.JTimeSeriesChartCommand.saveImage;
-import ec.util.various.swing.JCommand;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.OutlierColorChooser;
+import jdplus.tramoseats.desktop.plugin.anomalydetection.OutlierEstimation;
+import lombok.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.NumberFormat;
+import java.util.List;
+
+import static ec.util.chart.swing.JTimeSeriesChartCommand.*;
 
 /**
  *
@@ -136,7 +129,7 @@ final class JAnomalyDetectionChart extends JComponent {
 
     //<editor-fold defaultstate="collapsed" desc="Event handlers">
     private void onModelChange() {
-        chart.setDataset(model != null ? TsXYDatasets.from(model.getTs()) : null);
+        chart.setDataset(model != null ? TsXYDataset.ofTs(List.of(model.getTs())) : null);
     }
 
     private void onHoveredObsChange() {
