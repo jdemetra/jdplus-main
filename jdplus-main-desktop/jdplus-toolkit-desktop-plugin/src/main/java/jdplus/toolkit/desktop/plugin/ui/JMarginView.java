@@ -32,6 +32,7 @@ import jdplus.toolkit.desktop.plugin.components.parts.*;
 import jdplus.toolkit.desktop.plugin.core.components.InternalComponents;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
 import nbbrd.design.SkipProcessing;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.DateAxis;
@@ -57,6 +58,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -196,8 +198,8 @@ public final class JMarginView extends JComponent implements TimeSeriesComponent
 
         XYPlot plot = chartPanel.getChart().getXYPlot();
 
-        plot.setDataset(MAIN_INDEX, TsXYDatasets.from("series", data.series));
-        plot.setDataset(DIFFERENCE_INDEX, TsXYDatasets.builder().add("lower", data.lower).add("upper", data.upper).build());
+        plot.setDataset(MAIN_INDEX, TsXYDataset.ofTsData(Map.of("series", data.series)));
+        plot.setDataset(DIFFERENCE_INDEX, TsXYDataset.ofTsData(Map.of("lower", data.lower, "upper", data.upper)));
 
         onPrecisionMarkersVisible();
         onDataFormatChange();

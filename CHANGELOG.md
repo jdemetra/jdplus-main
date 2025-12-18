@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
+- ![UI] Fix slow charts when displaying lots of observations [#844](https://github.com/jdemetra/jdplus-main/issues/844)
 
 ### Changed
 
