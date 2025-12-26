@@ -26,15 +26,15 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
  *
  * @author palatej
  */
-@lombok.Getter
 public class GenericSaTests implements GenericExplorable {
     
     private final RegSarimaModel regarima;
     private final boolean mul;
+    @lombok.Getter
     private final TsData linearized, residuals;
     
     private final TsData y, sa, irr, si;
-    
+    @lombok.Getter
     private final TsData lsa, lirr;
     
     @lombok.Builder(builderClassName = "Builder")

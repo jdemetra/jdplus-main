@@ -31,9 +31,11 @@ public class DifferencingResult {
     private static boolean checkStationarity(DoubleSeq data, int period) {
         IntToDoubleFunction cov = AutoCovariances.autoCovarianceFunction(data, 0);
         if (period <= 4) {
+            
             double var = cov.applyAsDouble(0);
             for (int i = 1; i <= period; ++i) {
-                if (cov.applyAsDouble(i) / var <= 0.2) {
+                double c=cov.applyAsDouble(i)/var;
+                if (c <= 0.2) {
                     return true;
                 }
             }

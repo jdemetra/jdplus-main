@@ -98,7 +98,7 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
                     stream.write(HtmlTag.HEADER2, "Warnings").newLine();
                     list.forEach(msg -> {
                         try {
-                            stream.write(msg.getMsg(), HtmlStyle.DarkOrange).newLine();
+                            stream.write(msg.getMsg(), HtmlStyle.DarkOrange, HtmlStyle.Bold).newLine();
                         } catch (IOException ex) {
                         }
                     });
@@ -167,13 +167,13 @@ public class HtmlProcessingLog extends AbstractHtmlElement {
 
     private void writeError(HtmlStream stream, ProcessingLog.Information msg) throws IOException {
         if (err) {
-            stream.write(HtmlTag.IMPORTANT_TEXT, msg.getMsg()).newLine();
+            stream.write(msg.getMsg(), HtmlStyle.Red, HtmlStyle.Bold).newLine();
         }
     }
 
     private void writeWarning(HtmlStream stream, ProcessingLog.Information msg) throws IOException {
         if (wrn) {
-            stream.write(HtmlTag.EMPHASIZED_TEXT, msg.getMsg()).newLine();
+            stream.write(msg.getMsg(), HtmlStyle.DarkOrange, HtmlStyle.Bold).newLine();
         }
     }
 

@@ -54,7 +54,7 @@ public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements H
         this.noSeasControl = noSeasControl;
         if (tests != null) {
             int period = tests.getPeriod();
-            ftest = new FTest(tests.getDifferencing().getRestrictedOriginal(), period)
+            ftest = new FTest(tests.getDifferencing().getOriginal(), period)
                     .model(SarimaOrders.Prespecified.D1).build();
             kwTest = new KruskalWallis(tests.getDifferencing().getDifferenced(), period).build();
         } else {

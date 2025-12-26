@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - ![IO] Improve data collector to include any multiple of ChronoUnit [#825](https://github.com/jdemetra/jdplus-main/issues/825)
+- ![IO] Fix missing results in the SA multi-processing matrix view
 
 ## [3.6.0] - 2025-11-20
 
