@@ -136,7 +136,7 @@ public final class ResidualsViewUI implements InternalUI<JResidualsView> {
     private void onTsDataChange(JResidualsView view) {
         TsData data = view.getTsData();
         Ts ts = Ts.builder().moniker(TsMoniker.of()).name("Residuals").data(data).build();
-        chartPanel.getChart().getXYPlot().setDataset(TsXYDataset.of(Collections.singletonList(ts)));
+        chartPanel.getChart().getXYPlot().setDataset(TsXYDataset.ofTs(Collections.singletonList(ts)));
         if (!data.isEmpty()) {
             Range rng = calcRange(data.getValues().toArray());
             ((NumberAxis) chartPanel.getChart().getXYPlot().getRangeAxis()).setTickUnit(new NumberTickUnit(calcTick(rng)), true, false);

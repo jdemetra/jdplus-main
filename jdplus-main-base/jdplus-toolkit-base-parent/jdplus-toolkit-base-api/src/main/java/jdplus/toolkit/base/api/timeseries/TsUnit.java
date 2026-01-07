@@ -21,9 +21,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
+import nbbrd.design.NonNegative;
 import nbbrd.design.RepresentableAsString;
 import nbbrd.design.StaticFactoryMethod;
-import nbbrd.design.NonNegative;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
@@ -44,7 +44,7 @@ import static java.time.temporal.ChronoUnit.*;
 @RepresentableAsString
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TsUnit implements TemporalAmount {
+public class TsUnit implements TemporalAmount, HasAnnualFrequency {
 
     @NonNegative
     long amount;
@@ -63,7 +63,7 @@ public class TsUnit implements TemporalAmount {
      * @return
      */
     public int ratioOf(@NonNull TsUnit other) {
-        double x = 1D * other.chronoUnit.getDuration().getSeconds() / chronoUnit.getDuration().getSeconds() * other.amount / amount;
+        double x = getEstimatedDurationRatio(other);
         if (x < 1) {
             return NO_RATIO;
         }
@@ -74,12 +74,18 @@ public class TsUnit implements TemporalAmount {
     }
 
     /**
-     * Gets the number of periods in one year.
+     * Returns an estimated ratio of durations between this unit and the given unit
      *
-     * @return The number of periods in 1 year or -1 if the unit is not
-     * compatible with years
-     * @see #NO_ANNUAL_FREQUENCY
+     * @param other the unit to compare with
+     * @return the estimated ratio of durations; less than 1 if this unit is greater than the other, more than 1 if this unit is smaller than the other, O if equal
      */
+    public double getEstimatedDurationRatio(@NonNull TsUnit other) {
+        return 1d
+                * other.getChronoUnit().getDuration().getSeconds() / getChronoUnit().getDuration().getSeconds()
+                * other.getAmount() / getAmount();
+    }
+
+    @Override
     public int getAnnualFrequency() {
         switch (chronoUnit) {
             case YEARS:
@@ -138,6 +144,23 @@ public class TsUnit implements TemporalAmount {
     @Override
     public Temporal subtractFrom(Temporal temporal) {
         return temporal.minus(amount, chronoUnit);
+    }
+
+    /**
+     * Returns a copy of this unit multiplied by the scalar.
+     *
+     * @param multiplicand the positive value to multiply the unit by
+     * @return a {@code TsUnit} based on this unit multiplied by the specified scalar, not null
+     * @throws ArithmeticException if numeric overflow occurs or multiplicand is negative
+     */
+    public TsUnit multipliedBy(long multiplicand) {
+        if (multiplicand < 0) {
+            throw new ArithmeticException("The multiplicand must be non-negative");
+        }
+        if (multiplicand == 1) {
+            return this;
+        }
+        return TsUnit.of(amount * multiplicand, chronoUnit);
     }
 
     public static final int NO_RATIO = -1;

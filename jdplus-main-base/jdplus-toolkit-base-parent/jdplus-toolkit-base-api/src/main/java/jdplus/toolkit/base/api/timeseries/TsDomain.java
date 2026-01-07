@@ -35,7 +35,7 @@ import java.util.Locale;
 @ISO_8601
 @RepresentableAsString
 @lombok.Value(staticConstructor = "of")
-public class TsDomain implements TimeSeriesRecurrence<TsPeriod>, HasShortStringRepresentation {
+public class TsDomain implements TimeSeriesRecurrence<TsPeriod>, HasShortStringRepresentation, HasAnnualFrequency {
 
     /**
      * Generates a domain which is a splitting of a given period in sub-periods
@@ -86,6 +86,7 @@ public class TsDomain implements TimeSeriesRecurrence<TsPeriod>, HasShortStringR
         return startPeriod.getUnit();
     }
 
+    @Override
     public int getAnnualFrequency() {
         return startPeriod.getUnit().getAnnualFrequency();
     }

@@ -561,7 +561,9 @@ public class HasTsCollectionSupport {
         }
 
         private static boolean isValid(TsData data) {
-            return !data.isEmpty() && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365;
+            return !data.isEmpty()
+                    && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365
+                    && data.getTsUnit().ratioOf(TsUnit.P1Y) >= 1;
         }
 
         @Override

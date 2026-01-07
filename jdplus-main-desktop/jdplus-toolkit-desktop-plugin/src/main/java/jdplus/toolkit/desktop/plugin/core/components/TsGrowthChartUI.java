@@ -204,7 +204,7 @@ public final class TsGrowthChartUI implements InternalUI<JTsGrowthChart> {
 
     private void onCollectionChange() {
         selectionListener.setEnabled(false);
-        chartPanel.setDataset(TsXYDataset.of(target.computeGrowthData()));
+        chartPanel.setDataset(TsXYDataset.ofTs(target.computeGrowthData()));
         selectionListener.setEnabled(true);
     }
 

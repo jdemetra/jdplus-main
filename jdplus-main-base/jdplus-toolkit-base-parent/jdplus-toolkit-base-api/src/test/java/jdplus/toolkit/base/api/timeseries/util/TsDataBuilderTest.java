@@ -230,30 +230,30 @@ public class TsDataBuilderTest {
         LocalDateTime date = start;
         for (double o : values) {
             b.add(x.date(date), o);
-            date = date.plus(guess.getTsUnit());
+            date = date.plus(guess.getTsUnit(1));
         }
 
-        if (x.supports(guess.getTsUnit())) {
-            assertBuild(b, data(guess.getTsUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start, values));
+        if (x.supports(guess.getTsUnit(1))) {
+            assertBuild(b, data(guess.getTsUnit(1), guess.getAdjustedEpoch(DEFAULT_EPOCH), start, values));
         } else {
             assertBuild(b, GUESS_DUPLICATION);
         }
     }
 
     private static <T> void testUndefinedToDefined(CustomFactory<T> x, GuessingUnit guess) {
-        double[] values = new double[guess.getMinimumObsCount()];
+        double[] values = new double[GuessingUnit.MINIMUM_OBS_COUNT + 1];
         for (int i = 0; i < values.length; i++) {
             values[i] = i / 10d;
         }
-        forEachDates(guess.getTsUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
+        forEachDates(guess.getTsUnit(1), guess.getAdjustedEpoch(DEFAULT_EPOCH), start -> testUndefined(x, guess, start, values));
     }
 
     private static <T> void testUndefinedToDefinedWithMissingValues(CustomFactory<T> x, GuessingUnit guess) {
-        double[] values = new double[guess.getMinimumObsCount() + 1];
+        double[] values = new double[GuessingUnit.MINIMUM_OBS_COUNT + 1];
         for (int i = 0; i < values.length; i++) {
             values[i] = i == 1 ? Double.NaN : i / 10d;
         }
-        forEachDates(guess.getTsUnit(), DEFAULT_EPOCH.with(guess.getAdjuster()), start -> testUndefined(x, guess, start, values));
+        forEachDates(guess.getTsUnit(1), guess.getAdjustedEpoch(DEFAULT_EPOCH), start -> testUndefined(x, guess, start, values));
     }
 
     private static <T> void testUnorderedDailyToMonthly(CustomFactory<T> x) {

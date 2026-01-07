@@ -236,6 +236,10 @@ public class TsPeriodTest {
                 .isEqualTo(TsPeriod.parse("2011-01/P1M"))
                 .isEqualTo(monthly(2011, 1));
 
+        assertThat(TsPeriod.parse("2020-01-01/P7M"))
+                .describedAs("FIXME: alignment problem with epoch if duration ratio over year is not an integer")
+                .hasToString("2019-08-01T00:00:00/P7M");
+
         assertThat(of(P1Y, d2011_02_01))
                 .hasToString("2011-01-01T00:00:00/P1Y");
 
