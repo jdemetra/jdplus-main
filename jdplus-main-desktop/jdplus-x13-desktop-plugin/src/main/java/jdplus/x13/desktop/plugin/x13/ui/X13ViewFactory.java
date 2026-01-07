@@ -71,7 +71,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
+import jdplus.sa.base.core.diagnostics.GenericSaTests;
 import jdplus.sa.base.core.tests.SeasonalityTests;
+import jdplus.sa.desktop.plugin.html.HtmlResidualSeasonalityDiagnostics;
 import jdplus.sa.desktop.plugin.processing.SiRatioUI;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
@@ -900,12 +902,12 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null || rslt.getPreprocessing() == null) {
                     return null;
                 }
-                TsData s = rslt.getPreprocessing().linearizedSeries();
-                if (s == null) {
+                GenericSaTests diags = rslt.getDiagnostics().getGenericDiagnostics();
+                if (diags == null) {
                     return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "Linearized series", true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 1, true, true), false));
+                        new HtmlResidualSeasonalityDiagnostics(diags.seasonalityTestsOnLinearized(), false));
 
             }, new HtmlItemUI());
         }
@@ -925,12 +927,12 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null || rslt.getPreprocessing() == null) {
                     return null;
                 }
-                TsData s = rslt.getPreprocessing().fullResiduals();
-                if (s == null) {
+                GenericSaTests diags = rslt.getDiagnostics().getGenericDiagnostics();
+                if (diags == null) {
                     return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "Full residuals", true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 0, false, true), true));
+                        new HtmlResidualSeasonalityDiagnostics(diags.residualSeasonalityTestsOnResiduals(), true));
 
             }, new HtmlItemUI());
         }
@@ -974,13 +976,12 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
-                X11Results x11 = rslt.getDecomposition();
-                TsData s = TsData.fitToDomain(x11.getD11(), x11.getActualDomain());
-                if (x11.getMode().isMultiplicative()) {
-                    s = s.log();
+                GenericSaTests diags = rslt.getDiagnostics().getGenericDiagnostics();
+                if (diags == null) {
+                    return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "[Linearized] seasonally adjusted series", true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 1, true, true), true));
+                        new HtmlResidualSeasonalityDiagnostics(diags.residualSeasonalityTestsOnSa(), true));
 
             }, new HtmlItemUI());
         }
@@ -1000,13 +1001,12 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                 if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
-                X11Results x11 = rslt.getDecomposition();
-                TsData s = TsData.fitToDomain(x11.getD13(), x11.getActualDomain());
-                if (x11.getMode().isMultiplicative()) {
-                    s = s.log();
+                GenericSaTests diags = rslt.getDiagnostics().getGenericDiagnostics();
+                if (diags == null) {
+                    return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "[Linearized] irregular component", true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 0, false, true), true));
+                        new HtmlResidualSeasonalityDiagnostics(diags.residualSeasonalityTestsOnIrregular(), true));
 
             }, new HtmlItemUI());
         }

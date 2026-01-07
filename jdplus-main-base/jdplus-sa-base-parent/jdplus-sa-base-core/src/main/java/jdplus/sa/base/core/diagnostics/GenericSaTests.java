@@ -21,22 +21,29 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.regarima.diagnostics.RegArimaDiagnostics;
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.sarima.SarimaModel;
 
 /**
  *
  * @author palatej
  */
 public class GenericSaTests implements GenericExplorable {
-    
+
+    @lombok.Getter
     private final RegSarimaModel regarima;
+
+    @lombok.Getter
     private final boolean mul;
+
     @lombok.Getter
     private final TsData linearized, residuals;
-    
+
+    @lombok.Getter
     private final TsData y, sa, irr, si;
+
     @lombok.Getter
     private final TsData lsa, lirr;
-    
+
     @lombok.Builder(builderClassName = "Builder")
     private GenericSaTests(RegSarimaModel regarima, boolean mul,
             TsData y, TsData res, TsData sa, TsData irr, TsData si, TsData lin, TsData lsa, TsData lirr) {
@@ -51,7 +58,7 @@ public class GenericSaTests implements GenericExplorable {
         this.lsa = lsa;
         this.lirr = lirr;
     }
-    
+
     @lombok.Getter(lombok.AccessLevel.PRIVATE)
     private volatile ResidualSeasonalityTests linearizedTests, residualsTests, lsaTests, lirrTests;
     @lombok.Getter(lombok.AccessLevel.PRIVATE)
@@ -60,11 +67,28 @@ public class GenericSaTests implements GenericExplorable {
     private volatile ResidualTradingDaysTests tdTests;
     @lombok.Getter(lombok.AccessLevel.PRIVATE)
     private volatile OneStepAheadForecastingTest outOfSampleTest;
-    
+
     public int annualFrequency() {
         return linearized.getAnnualFrequency();
     }
-    
+
+    private int differencingOrder() {
+        if (regarima != null) {
+            SarimaModel arima = regarima.arima();
+            return arima.getD() + arima.getBd();
+        } else {
+            return -1;
+        }
+    }
+
+    private boolean mean() {
+        if (regarima != null) {
+            return regarima.isMeanCorrection();
+        } else {
+            return true;
+        }
+    }
+
     public ResidualSeasonalityTests residualSeasonalityTestsOnResiduals() {
         if (residuals == null) {
             return null;
@@ -86,8 +110,8 @@ public class GenericSaTests implements GenericExplorable {
         }
         return tests;
     }
-    
-     public ResidualSeasonalityTests seasonalityTestsOnLinearized() {
+
+    public ResidualSeasonalityTests seasonalityTestsOnLinearized() {
         if (linearized == null) {
             return null;
         }
@@ -98,8 +122,8 @@ public class GenericSaTests implements GenericExplorable {
                 if (tests == null) {
                     tests = ResidualSeasonalityTests.builder()
                             .series(linearized)
-                            .ndiff(-1)
-                            .mean(true)
+                            .ndiff(differencingOrder())
+                            .mean(mean())
                             .options(ResidualSeasonalityTestsOptions.getDefault())
                             .build();
                     linearizedTests = tests;
@@ -120,8 +144,8 @@ public class GenericSaTests implements GenericExplorable {
                 if (tests == null) {
                     tests = ResidualSeasonalityTests.builder()
                             .series(lsa)
-                            .ndiff(-1)
-                            .mean(true)
+                            .ndiff(differencingOrder())
+                            .mean(mean())
                             .options(ResidualSeasonalityTestsOptions.getDefault())
                             .build();
                     lsaTests = tests;
@@ -130,7 +154,7 @@ public class GenericSaTests implements GenericExplorable {
         }
         return tests;
     }
-    
+
     public ResidualSeasonalityTests residualSeasonalityTestsOnIrregular() {
         if (lirr == null) {
             return null;
@@ -152,7 +176,7 @@ public class GenericSaTests implements GenericExplorable {
         }
         return tests;
     }
-    
+
     public CombinedSeasonalityTests combinedSeasonalityTests() {
         CombinedSeasonalityTests tests = combinedTests;
         if (tests == null) {
@@ -193,7 +217,7 @@ public class GenericSaTests implements GenericExplorable {
         }
         return tests;
     }
-   
+
     public OneStepAheadForecastingTest forecastingTest() {
         if (regarima == null) {
             return null;
@@ -207,12 +231,12 @@ public class GenericSaTests implements GenericExplorable {
                         os = RegArimaDiagnostics.oneStepAheadForecastingTest(regarima.regarima(), 0);
                         outOfSampleTest = os;
                     } catch (Exception err) {
-                        
+
                     }
                 }
             }
         }
         return os;
     }
-    
+
 }

@@ -16,6 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![IO] Improve data collector to include any multiple of ChronoUnit [#825](https://github.com/jdemetra/jdplus-main/issues/825)
 - ![IO] Fix missing results in the SA multi-processing matrix view
+- ![STAT] Change seasonality tests for SA series (use of the differencing order of the regarima model when it is available to avoid misleading results)
 
 ## [3.6.0] - 2025-11-20
 
