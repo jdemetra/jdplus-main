@@ -14,8 +14,14 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package jdplus.sa.base.core.tests;
+package jdplus.tramoseats.base.core.tramo;
 
+import jdplus.sa.base.core.tests.AutoRegressiveSpectrumTest;
+import jdplus.sa.base.core.tests.Friedman;
+import jdplus.sa.base.core.tests.PeriodogramTest;
+import jdplus.sa.base.core.tests.Qs;
+import jdplus.sa.base.core.tests.SpectralPeaks;
+import jdplus.sa.base.core.tests.TukeySpectrumPeaksTest;
 import jdplus.toolkit.base.core.data.analysis.WindowFunction;
 import jdplus.toolkit.base.core.data.analysis.SmoothedPeriodogram;
 import jdplus.toolkit.base.api.timeseries.TsException;
@@ -141,7 +147,7 @@ public class SeasonalityTests {
         return period;
     }
 
-    // Lazy evaulation
+    // Lazy evaluation
     public StatisticalTest getNonParametricTest() {
         if (nptest == null) {
             Friedman friedman = new Friedman(delta.getDifferenced(), period);

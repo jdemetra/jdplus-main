@@ -16,6 +16,7 @@
  */
 package jdplus.sa.base.core.diagnostics;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import jdplus.toolkit.base.api.information.GenericExplorable;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.regarima.diagnostics.RegArimaDiagnostics;
@@ -28,6 +29,16 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
  * @author palatej
  */
 public class GenericSaTests implements GenericExplorable {
+
+    public static int lastYears(){
+        return lastYears.get();
+    }
+    
+    public static void seLastYears(int ly){
+        lastYears.set(ly);
+    }
+
+    private static final AtomicInteger lastYears=new AtomicInteger(10);
 
     @lombok.Getter
     private final RegSarimaModel regarima;
@@ -60,7 +71,7 @@ public class GenericSaTests implements GenericExplorable {
     }
 
     @lombok.Getter(lombok.AccessLevel.PRIVATE)
-    private volatile ResidualSeasonalityTests linearizedTests, residualsTests, lsaTests, lirrTests;
+    private volatile GenericSeasonalityTests linearizedTests, residualsTests, lsaTests, lirrTests, lsaTestsOnLastYears, lirrTestsOnLastYears, residualsTestsOnLastYears;
     @lombok.Getter(lombok.AccessLevel.PRIVATE)
     private volatile CombinedSeasonalityTests combinedTests;
     @lombok.Getter(lombok.AccessLevel.PRIVATE)
@@ -89,20 +100,20 @@ public class GenericSaTests implements GenericExplorable {
         }
     }
 
-    public ResidualSeasonalityTests residualSeasonalityTestsOnResiduals() {
+    public GenericSeasonalityTests residualSeasonalityTestsOnResiduals() {
         if (residuals == null) {
             return null;
         }
-        ResidualSeasonalityTests tests = residualsTests;
+        GenericSeasonalityTests tests = residualsTests;
         if (tests == null) {
             synchronized (this) {
                 tests = residualsTests;
                 if (tests == null) {
-                    tests = ResidualSeasonalityTests.builder()
+                    tests = GenericSeasonalityTests.builder()
                             .series(residuals)
                             .ndiff(0)
                             .mean(false)
-                            .options(ResidualSeasonalityTestsOptions.getDefault())
+                            .ncycles(0)
                             .build();
                     residualsTests = tests;
                 }
@@ -111,20 +122,20 @@ public class GenericSaTests implements GenericExplorable {
         return tests;
     }
 
-    public ResidualSeasonalityTests seasonalityTestsOnLinearized() {
+    public GenericSeasonalityTests seasonalityTestsOnLinearized() {
         if (linearized == null) {
             return null;
         }
-        ResidualSeasonalityTests tests = linearizedTests;
+        GenericSeasonalityTests tests = linearizedTests;
         if (tests == null) {
             synchronized (this) {
                 tests = linearizedTests;
                 if (tests == null) {
-                    tests = ResidualSeasonalityTests.builder()
+                    tests = GenericSeasonalityTests.builder()
                             .series(linearized)
                             .ndiff(differencingOrder())
                             .mean(mean())
-                            .options(ResidualSeasonalityTestsOptions.getDefault())
+                            .ncycles(0)
                             .build();
                     linearizedTests = tests;
                 }
@@ -133,20 +144,20 @@ public class GenericSaTests implements GenericExplorable {
         return tests;
     }
 
-    public ResidualSeasonalityTests residualSeasonalityTestsOnSa() {
+    public GenericSeasonalityTests residualSeasonalityTestsOnSa() {
         if (lsa == null) {
             return null;
         }
-        ResidualSeasonalityTests tests = lsaTests;
+        GenericSeasonalityTests tests = lsaTests;
         if (tests == null) {
             synchronized (this) {
                 tests = lsaTests;
                 if (tests == null) {
-                    tests = ResidualSeasonalityTests.builder()
+                    tests = GenericSeasonalityTests.builder()
                             .series(lsa)
                             .ndiff(differencingOrder())
                             .mean(mean())
-                            .options(ResidualSeasonalityTestsOptions.getDefault())
+                            .ncycles(0)
                             .build();
                     lsaTests = tests;
                 }
@@ -155,22 +166,88 @@ public class GenericSaTests implements GenericExplorable {
         return tests;
     }
 
-    public ResidualSeasonalityTests residualSeasonalityTestsOnIrregular() {
+    public GenericSeasonalityTests residualSeasonalityTestsOnIrregular() {
         if (lirr == null) {
             return null;
         }
-        ResidualSeasonalityTests tests = lirrTests;
+        GenericSeasonalityTests tests = lirrTests;
         if (tests == null) {
             synchronized (this) {
                 tests = lirrTests;
                 if (tests == null) {
-                    tests = ResidualSeasonalityTests.builder()
+                    tests = GenericSeasonalityTests.builder()
                             .series(lirr)
                             .ndiff(0)
                             .mean(false)
-                            .options(ResidualSeasonalityTestsOptions.getDefault())
+                            .ncycles(0)
                             .build();
                     lirrTests = tests;
+                }
+            }
+        }
+        return tests;
+    }
+
+    public GenericSeasonalityTests residualSeasonalityTestsOnLastResiduals() {
+        if (residuals == null) {
+            return null;
+        }
+        GenericSeasonalityTests tests = residualsTestsOnLastYears;
+        if (tests == null) {
+            synchronized (this) {
+                tests = residualsTestsOnLastYears;
+                if (tests == null) {
+                    tests = GenericSeasonalityTests.builder()
+                            .series(residuals)
+                            .ndiff(0)
+                            .mean(false)
+                            .ncycles(lastYears())
+                            .build();
+                    residualsTestsOnLastYears = tests;
+                }
+            }
+        }
+        return tests;
+    }
+
+    public GenericSeasonalityTests residualSeasonalityTestsOnLastSa() {
+        if (lsa == null) {
+            return null;
+        }
+        GenericSeasonalityTests tests = lsaTestsOnLastYears;
+        if (tests == null) {
+            synchronized (this) {
+                tests = lsaTestsOnLastYears;
+                if (tests == null) {
+                    tests = GenericSeasonalityTests.builder()
+                            .series(lsa)
+                            .ndiff(differencingOrder())
+                            .mean(mean())
+                            .ncycles(lastYears())
+                            .build();
+                    lsaTestsOnLastYears = tests;
+                }
+            }
+        }
+        return tests;
+    }
+
+    public GenericSeasonalityTests residualSeasonalityTestsOnLastIrregular() {
+        if (lirr == null) {
+            return null;
+        }
+        GenericSeasonalityTests tests = lirrTestsOnLastYears;
+        if (tests == null) {
+            synchronized (this) {
+                tests = lirrTestsOnLastYears;
+                if (tests == null) {
+                    tests = GenericSeasonalityTests.builder()
+                            .series(lirr)
+                            .ndiff(0)
+                            .mean(false)
+                            .ncycles(lastYears())
+                            .build();
+                    lirrTestsOnLastYears = tests;
                 }
             }
         }

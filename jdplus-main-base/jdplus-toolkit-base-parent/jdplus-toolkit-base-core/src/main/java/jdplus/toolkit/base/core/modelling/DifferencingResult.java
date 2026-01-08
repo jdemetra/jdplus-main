@@ -89,6 +89,7 @@ public class DifferencingResult {
         return original.length() - differenced.length();
     }
 
+    @Deprecated
     public DoubleSeq getRestrictedOriginal() {
         return original.drop(getDifferencingOrder(), 0);
     }

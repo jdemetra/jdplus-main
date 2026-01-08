@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import jdplus.sa.base.core.diagnostics.CombinedSeasonalityOptions;
+import jdplus.sa.base.core.diagnostics.GenericSaTests;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.IntProperty;
 import nbbrd.io.text.Parser;
@@ -86,6 +87,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
     public void setSeasonalityLength(Integer lastYears) {
         Integer old = this.seasonalityLength;
         seasonalityLength = lastYears != null ? lastYears : DEFAULT_SEASONALITY_LENGTH;
+        GenericSaTests.seLastYears(seasonalityLength);
         broadcaster.firePropertyChange(SEASONALITY_LENGTH_PROPERTY, old, seasonalityLength);
     }
 

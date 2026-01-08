@@ -5,7 +5,6 @@
  */
 package jdplus.tramoseats.base.core.tramo;
 
-import jdplus.sa.base.core.tests.SeasonalityTests;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 

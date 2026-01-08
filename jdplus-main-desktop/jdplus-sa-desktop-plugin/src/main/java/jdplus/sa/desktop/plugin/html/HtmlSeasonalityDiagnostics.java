@@ -28,41 +28,27 @@ import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.io.IOException;
 import java.util.function.IntToDoubleFunction;
-import jdplus.sa.base.core.tests.FTest;
-import jdplus.sa.base.core.tests.KruskalWallis;
-import jdplus.sa.base.core.tests.SeasonalityTests;
+import jdplus.sa.base.core.diagnostics.GenericSeasonalityTests;
+import jdplus.sa.base.core.diagnostics.ResidualSeasonalityTests;
 import jdplus.sa.base.core.tests.SpectralPeaks;
 import jdplus.toolkit.base.api.stats.AutoCovariances;
+import jdplus.toolkit.base.core.modelling.DifferencingResult;
 
 /**
  *
  * @author Jean Palate
  */
 public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements HtmlElement {
-
-    private final SeasonalityTests tests;
-    private final StatisticalTest ftest, ftestAMI;
+    private final GenericSeasonalityTests tests;
     private final boolean noSeasControl;
-    private final StatisticalTest kwTest;
 
-    public HtmlSeasonalityDiagnostics(final SeasonalityTests tests) {
+    public HtmlSeasonalityDiagnostics(final GenericSeasonalityTests tests) {
         this(tests, false);
     }
 
-    public HtmlSeasonalityDiagnostics(final SeasonalityTests tests, final boolean noSeasControl) {
+    public HtmlSeasonalityDiagnostics(final GenericSeasonalityTests tests, final boolean noSeasControl) {
         this.tests = tests;
         this.noSeasControl = noSeasControl;
-        if (tests != null) {
-            int period = tests.getPeriod();
-            ftest = new FTest(tests.getDifferencing().getOriginal(), period)
-                    .model(SarimaOrders.Prespecified.D1).build();
-            kwTest = new KruskalWallis(tests.getDifferencing().getDifferenced(), period).build();
-        } else {
-            ftest = null;
-            kwTest = null;
-        }
-        // Not implemented yet
-        ftestAMI = null;
     }
 
     @Override
@@ -75,14 +61,13 @@ public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements H
             writeSpectrum(stream);
             writePeriodogram(stream);
             writeFTest(stream);
-            writeFTestAMI(stream);
         } else {
             stream.write("Series can't be tested");
         }
     }
 
     public void writeTransformation(HtmlStream stream) throws IOException {
-        if (tests.getDifferencing().isMeanCorrection()&& tests.getDifferencing().getDifferencingOrder() == 1) {
+        if (tests.getDifferencing().isMeanCorrection() && tests.getDifferencing().getDifferencingOrder() == 1) {
             stream.write(HtmlTag.EMPHASIZED_TEXT, "Data have been differenced and corrected for mean").newLines(2);
         } else if (tests.getDifferencing().getDifferencingOrder() > 0) {
             stream.write(HtmlTag.EMPHASIZED_TEXT, "Data have been differenced " + tests.getDifferencing().getDifferencingOrder() + " times").newLine();
@@ -94,77 +79,79 @@ public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements H
     }
 
     public void writeQS(HtmlStream stream) throws IOException {
+        StatisticalTest test = tests.qsTest();
+        if (test == null) {
+            return;
+        }
         stream.write(HtmlTag.HEADER4, "1. Tests on autocorrelations at seasonal lags").newLine();
-        writeSummary(stream, tests.getQs().getPvalue());
+        writeSummary(stream, test.getPvalue());
         stream.newLines(2);
-        IntToDoubleFunction ac = AutoCovariances.autoCorrelationFunction(tests.getDifferencing().getDifferenced(), 0);
-        int period = tests.getPeriod();
+        DifferencingResult differencing = tests.getDifferencing();
+        int period = tests.getSeries().getAnnualFrequency();
+        IntToDoubleFunction ac = AutoCovariances.autoCorrelationFunction(differencing.getDifferenced(), 0);
         stream.write("ac(").write(period).write(")=").write(df4.format(ac.applyAsDouble(period))).newLine();
-        stream.write("ac(").write(2 * period).write(")=").write(df4.format(ac.applyAsDouble(2*period))).newLines(2);
-        stream.write("Distribution: " + tests.getQs().getDescription()).newLine();
-        stream.write("Value: " + df4.format(tests.getQs().getValue())).newLine();
-        stream.write("PValue: " + df4.format(tests.getQs().getPvalue()));
+        stream.write("ac(").write(2 * period).write(")=").write(df4.format(ac.applyAsDouble(2 * period))).newLines(2);
+        stream.write("Distribution: " + test.getDescription()).newLine();
+        stream.write("Value: " + df4.format(test.getValue())).newLine();
+        stream.write("PValue: " + df4.format(test.getPvalue()));
         stream.write(HtmlTag.LINEBREAK);
     }
 
     public void writeFTest(HtmlStream stream) throws IOException {
-        if (ftest == null)
+        StatisticalTest test = tests.fTest();
+        if (test == null) {
             return;
+        }
         stream.write(HtmlTag.HEADER4, "6. Tests on regression with fixed seasonal dummies ").newLine();
         stream.write(HtmlTag.EMPHASIZED_TEXT, "Data have been differenced and corrected for mean").newLine();
-        writeSummary(stream, ftest .getPvalue());
+        writeSummary(stream, test.getPvalue());
         stream.newLines(2);
-        stream.write("Distribution: " + ftest.getDescription()).newLine();
-        stream.write("Value: " + df4.format(ftest.getValue())).newLine();
-        stream.write("PValue: " + df4.format(ftest.getPvalue()));
+        stream.write("Distribution: " + test.getDescription()).newLine();
+        stream.write("Value: " + df4.format(test.getValue())).newLine();
+        stream.write("PValue: " + df4.format(test.getPvalue()));
         stream.write(HtmlTag.LINEBREAK);
     }
 
-    public void writeFTestAMI(HtmlStream stream) throws IOException {
-        if (ftestAMI == null)
-            return;
-//        stream.write(HtmlTag.HEADER4, "6bis. Tests on regression with fixed seasonal dummies ").newLine();
-//        stream.write(HtmlTag.EMPHASIZED_TEXT, "Regression model (on original series) with ARIMA automatically identified").newLine();
-//        stream.write(HtmlTag.EMPHASIZED_TEXT, "model is: " + ftestAMI.getEstimatedModel().model.getArima().toString()).newLine();
-//        writeSummary(stream, ftestAMI.getFTest().getPValue());
-//        stream.newLines(2);
-//        stream.write("Distribution: " + ftestAMI.getFTest().getDistribution().getDescription()).newLine();
-//        stream.write("Value: " + df4.format(ftestAMI.getFTest().getValue())).newLine();
-//        stream.write("PValue: " + df4.format(ftestAMI.getFTest().getPValue()));
-//        stream.write(HtmlTag.LINEBREAK);
-    }
-
     public void writeFriedman(HtmlStream stream) throws IOException {
+        StatisticalTest test = tests.friedmanTest();
+        if (test == null) {
+            return;
+        }
         stream.write(HtmlTag.HEADER4, "2. Non parametric (Friedman) test");
         stream.write(HtmlTag.EMPHASIZED_TEXT, "Based on the rank of the observations in each year").newLines(2);
-        writeSummary(stream, tests.getNonParametricTest().getPvalue());
+        writeSummary(stream, test.getPvalue());
         stream.newLine();
-        stream.write("Distribution: " + tests.getNonParametricTest().getDescription()).newLine();
-        stream.write("Value: " + df4.format(tests.getNonParametricTest().getValue())).newLine();
-        stream.write("PValue: " + df4.format(tests.getNonParametricTest().getPvalue()));
+        stream.write("Distribution: " + test.getDescription()).newLine();
+        stream.write("Value: " + df4.format(test.getValue())).newLine();
+        stream.write("PValue: " + df4.format(test.getPvalue()));
         stream.write(HtmlTag.LINEBREAK);
     }
 
     public void writeKruskalWallis(HtmlStream stream) throws IOException {
+        StatisticalTest test = tests.kruskalWallisTest();
+        if (test == null) {
+            return;
+        }
         stream.write(HtmlTag.HEADER4, "3. Non parametric (Kruskal-Wallis) test");
         stream.write(HtmlTag.EMPHASIZED_TEXT, "Based on the rank of the observations").newLines(2);
-        writeSummary(stream, kwTest.getPvalue());
+        writeSummary(stream, test.getPvalue());
         stream.newLine();
-        stream.write("Distribution: " + kwTest.getDescription()).newLine();
-        stream.write("Value: " + df4.format(kwTest.getValue())).newLine();
-        stream.write("PValue: " + df4.format(kwTest.getPvalue()));
+        stream.write("Distribution: " + test.getDescription()).newLine();
+        stream.write("Value: " + df4.format(test.getValue())).newLine();
+        stream.write("PValue: " + df4.format(test.getPvalue()));
         stream.write(HtmlTag.LINEBREAK);
     }
 
     public void writeSpectrum(HtmlStream stream) throws IOException {
-        if (tests.getSpectralPeaks() == null) {
+        SpectralPeaks[] spectralPeaks = tests.spectralPeaks();
+        if (spectralPeaks == null) {
             return;
         }
         stream.write(HtmlTag.HEADER4, "4. Identification of seasonal peaks in a Tukey periodogram and in an auto-regressive spectrum");
         int diag = 1;
-        if (SpectralPeaks.hasHighSeasonalPeaks(tests.getSpectralPeaks())) {
+        if (SpectralPeaks.hasHighSeasonalPeaks(spectralPeaks)) {
             diag = -1;
-        } else if (SpectralPeaks.hasSeasonalPeaks(tests.getSpectralPeaks())) {
+        } else if (SpectralPeaks.hasSeasonalPeaks(spectralPeaks)) {
             diag = 0;
         }
         stream.newLine();
@@ -172,15 +159,18 @@ public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements H
         stream.newLines(2);
         stream.write(HtmlTag.EMPHASIZED_TEXT, "T or t for Tukey periodogram, A or a for auto-regressive spectrum; 'T' or 'A' for very signficant peaks, 't' or 'a' for signficant peaks, '_' otherwise").newLines(2);
         stream.newLine();
-        stream.write(SpectralPeaks.format(tests.getSpectralPeaks()));
+        stream.write(SpectralPeaks.format(spectralPeaks));
         stream.write(HtmlTag.LINEBREAK);
     }
 
     public void writePeriodogram(HtmlStream stream) throws IOException {
+        StatisticalTest test = tests.periodogramTest();
+        if (test == null) {
+            return;
+        }
         stream.write(HtmlTag.HEADER4, "5. Periodogram");
         stream.write(HtmlTag.EMPHASIZED_TEXT, "Test on the sum of the values of a periodogram at seasonal frequencies").newLines(2);
         stream.newLine();
-        StatisticalTest test = tests.getPeriodogramTest();
         writeSummary(stream, test.getPvalue());
         stream.newLines(2);
         stream.write("Distribution: " + test.getDescription()).newLine();
@@ -198,26 +188,36 @@ public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements H
         stream.write(new HtmlTableCell("Seasonality").withWidth(50));
         stream.close(HtmlTag.TABLEROW);
 
-        stream.open(HtmlTag.TABLEROW);
-        stream.write(new HtmlTableCell("1. Auto-correlations at seasonal lags").withWidth(250));
-        stream.write(getCellSummary(tests.getQs().getPvalue(), 50));
-        stream.close(HtmlTag.TABLEROW);
+        StatisticalTest test = tests.qsTest();
+        if (test != null) {
+            stream.open(HtmlTag.TABLEROW);
+            stream.write(new HtmlTableCell("1. Auto-correlations at seasonal lags").withWidth(250));
+            stream.write(getCellSummary(test.getPvalue(), 50));
+            stream.close(HtmlTag.TABLEROW);
+        }
 
-        stream.open(HtmlTag.TABLEROW);
-        stream.write(new HtmlTableCell("2. Friedman (non parametric)").withWidth(250));
-        stream.write(getCellSummary(tests.getNonParametricTest().getPvalue(), 50));
-        stream.close(HtmlTag.TABLEROW);
+        test = tests.friedmanTest();
+        if (test != null) {
+            stream.open(HtmlTag.TABLEROW);
+            stream.write(new HtmlTableCell("2. Friedman (non parametric)").withWidth(250));
+            stream.write(getCellSummary(test.getPvalue(), 50));
+            stream.close(HtmlTag.TABLEROW);
+        }
 
-        stream.open(HtmlTag.TABLEROW);
-        stream.write(new HtmlTableCell("3. Kruskal-Wallis (non parametric)").withWidth(250));
-        stream.write(getCellSummary(kwTest.getPvalue(), 50));
-        stream.close(HtmlTag.TABLEROW);
+        test = tests.kruskalWallisTest();
+        if (test != null) {
+            stream.open(HtmlTag.TABLEROW);
+            stream.write(new HtmlTableCell("3. Kruskal-Wallis (non parametric)").withWidth(250));
+            stream.write(getCellSummary(test.getPvalue(), 50));
+            stream.close(HtmlTag.TABLEROW);
+        }
 
-        if (tests.getSpectralPeaks() != null) {
+        SpectralPeaks[] spectralPeaks = tests.spectralPeaks();
+        if (spectralPeaks != null) {
             int diag = 1;
-            if (SpectralPeaks.hasHighSeasonalPeaks(tests.getSpectralPeaks())) {
+            if (SpectralPeaks.hasHighSeasonalPeaks(spectralPeaks)) {
                 diag = -1;
-            } else if (SpectralPeaks.hasSeasonalPeaks(tests.getSpectralPeaks())) {
+            } else if (SpectralPeaks.hasSeasonalPeaks(spectralPeaks)) {
                 diag = 0;
             }
             stream.open(HtmlTag.TABLEROW);
@@ -226,25 +226,22 @@ public class HtmlSeasonalityDiagnostics extends AbstractHtmlElement implements H
             stream.close(HtmlTag.TABLEROW);
         }
 
-//        TsData ddata = tests.getDifferencing().getDifferenced();
-//        int ifreq = ddata.getFrequency().intValue();
-        stream.open(HtmlTag.TABLEROW);
-        stream.write(new HtmlTableCell("5. Periodogram ").withWidth(250));
-        stream.write(getCellSummary(tests.getPeriodogramTest().getPvalue(), 50));
-        stream.close(HtmlTag.TABLEROW);
-//        stream.open(HtmlTag.TABLEROW);
-//        stream.write(new HtmlTableCell("5bis. Max Periodogram ", 250));
-//        stream.write(getCellSummary(PeriodogramTest.computeMax(ddata, ifreq), 50));
-//        stream.close(HtmlTag.TABLEROW);
-        stream.open(HtmlTag.TABLEROW);
-        stream.write(new HtmlTableCell("6. Seasonal dummies").withWidth(250));
-        stream.write(getCellSummary(ftest.getPvalue(), 50));
-        stream.close(HtmlTag.TABLEROW);
-        stream.open(HtmlTag.TABLEROW);
-//        stream.write(new HtmlTableCell("6bis. Seasonal dummies (AMI)").withWidth(250));
-//        stream.write(getCellSummary(ftestAMI.getFTest().getPValue(), 50));
-//        stream.close(HtmlTag.TABLEROW);
+        test = tests.periodogramTest();
+        if (test != null) {
+            stream.open(HtmlTag.TABLEROW);
+            stream.write(new HtmlTableCell("5. Periodogram ").withWidth(250));
+            stream.write(getCellSummary(test.getPvalue(), 50));
+            stream.close(HtmlTag.TABLEROW);
+        }
 
+        test = tests.fTest();
+        if (test != null) {
+            stream.open(HtmlTag.TABLEROW);
+            stream.write(new HtmlTableCell("6. Seasonal dummies").withWidth(250));
+            stream.write(getCellSummary(test.getPvalue(), 50));
+            stream.close(HtmlTag.TABLEROW);
+            stream.open(HtmlTag.TABLEROW);
+        }
         stream.close(HtmlTag.TABLE);
         stream.write(HtmlTag.LINEBREAK);
     }

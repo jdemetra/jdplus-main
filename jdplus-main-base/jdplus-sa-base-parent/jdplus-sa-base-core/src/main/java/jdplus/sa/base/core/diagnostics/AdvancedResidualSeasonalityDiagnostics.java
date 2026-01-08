@@ -41,8 +41,8 @@ public class AdvancedResidualSeasonalityDiagnostics implements Diagnostics {
         }
         try {
             AdvancedResidualSeasonalityDiagnostics test = new AdvancedResidualSeasonalityDiagnostics();
-            ResidualSeasonalityTests rsa = data.residualSeasonalityTestsOnSa();
-            ResidualSeasonalityTests ri = data.residualSeasonalityTestsOnIrregular();
+            GenericSeasonalityTests rsa = data.residualSeasonalityTestsOnSa();
+            GenericSeasonalityTests ri = data.residualSeasonalityTestsOnIrregular();
             if (rsa == null || ri == null)
                 return null;
             TsData sa = rsa.getSeries();

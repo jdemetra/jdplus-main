@@ -79,9 +79,8 @@ import java.util.function.Function;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.diagnostics.GenericSaTests;
+import jdplus.sa.base.core.diagnostics.GenericSeasonalityTests;
 import jdplus.sa.base.core.diagnostics.SignificantSeasonalityTest;
-import jdplus.sa.base.core.tests.SeasonalityTests;
-import jdplus.sa.desktop.plugin.html.HtmlResidualSeasonalityDiagnostics;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.tramoseats.base.core.seats.SeatsResults;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
@@ -988,7 +987,11 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                     return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "Original [transformed] series", true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 1, true, true), false));
+                        new HtmlSeasonalityDiagnostics(GenericSeasonalityTests.builder()
+                                .series(s)
+                                .ndiff(1)
+                                .mean(true)
+                                .build(), false));
 
             }, new HtmlItemUI());
         }
@@ -1013,7 +1016,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                     return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "Linearized series", true),
-                        new HtmlResidualSeasonalityDiagnostics(diags.seasonalityTestsOnLinearized(), false));
+                        new HtmlSeasonalityDiagnostics(diags.seasonalityTestsOnLinearized(), false));
 
             }, new HtmlItemUI());
         }
@@ -1038,7 +1041,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                     return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "Full residuals", true),
-                        new HtmlResidualSeasonalityDiagnostics(diags.residualSeasonalityTestsOnResiduals(), true));
+                        new HtmlSeasonalityDiagnostics(diags.residualSeasonalityTestsOnResiduals(), true));
 
             }, new HtmlItemUI());
         }
@@ -1063,7 +1066,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                     return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "[Linearized] seasonally adjusted series", true),
-                        new HtmlResidualSeasonalityDiagnostics(diags.residualSeasonalityTestsOnSa(), true));
+                        new HtmlSeasonalityDiagnostics(diags.residualSeasonalityTestsOnSa(), true));
             }, new HtmlItemUI());
         }
 
@@ -1087,7 +1090,7 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                     return null;
                 }
                 return new HtmlElements(new HtmlHeader(1, "[Linearized] irregular component", true),
-                        new HtmlResidualSeasonalityDiagnostics(diags.residualSeasonalityTestsOnIrregular(), true));
+                        new HtmlSeasonalityDiagnostics(diags.residualSeasonalityTestsOnIrregular(), true));
 
             }, new HtmlItemUI());
         }
@@ -1107,18 +1110,17 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
-                TsData s = rslt.getPreprocessing().fullResiduals();
-                if (s == null) {
+                GenericSaTests diags = rslt.getDiagnostics().getGenericDiagnostics();
+                if (diags == null) {
                     return null;
                 }
+                GenericSeasonalityTests tests = diags.residualSeasonalityTestsOnLastResiduals();
                 StringBuilder header = new StringBuilder().append("Full residuals");
-                int ny = DemetraSaUI.get().getSeasonalityLength();
-                if (ny > 0) {
-                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny), 0);
-                    header.append(" (last ").append(ny).append(" years)");
+                if (tests.getNcycles() > 0) {
+                    header.append(" (last ").append(tests.getNcycles()).append(" years)");
                 }
                 return new HtmlElements(new HtmlHeader(1, header.toString(), true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 0, false, true), true));
+                        new HtmlSeasonalityDiagnostics(tests, true));
 
             }, new HtmlItemUI());
         }
@@ -1138,18 +1140,17 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
-                TsData s = rslt.getDecomposition().getInitialComponents().getSeries(ComponentType.SeasonallyAdjusted, ComponentInformation.Value);
-                if (s == null) {
+                GenericSaTests diags = rslt.getDiagnostics().getGenericDiagnostics();
+                if (diags == null) {
                     return null;
                 }
                 StringBuilder header = new StringBuilder().append("[Linearized] seasonally adjusted series");
-                int ny = DemetraSaUI.get().getSeasonalityLength();
-                if (ny > 0) {
-                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny - 1), 0);
-                    header.append(" (last ").append(ny).append(" years)");
+                GenericSeasonalityTests tests = diags.residualSeasonalityTestsOnLastSa();
+                if (tests.getNcycles() > 0) {
+                    header.append(" (last ").append(tests.getNcycles()).append(" years)");
                 }
                 return new HtmlElements(new HtmlHeader(1, header.toString(), true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 1, true, true), true));
+                        new HtmlSeasonalityDiagnostics(tests, true));
 
             }, new HtmlItemUI());
         }
@@ -1169,18 +1170,17 @@ public class TramoSeatsViewFactory extends ProcDocumentViewFactory<TramoSeatsDoc
                 if (rslt == null || !rslt.isValid()) {
                     return null;
                 }
-                TsData s = rslt.getDecomposition().getInitialComponents().getSeries(ComponentType.Irregular, ComponentInformation.Value);
-                if (s == null) {
+                GenericSaTests diags = rslt.getDiagnostics().getGenericDiagnostics();
+                if (diags == null) {
                     return null;
                 }
                 StringBuilder header = new StringBuilder().append("[Linearized] irregular component");
-                int ny = DemetraSaUI.get().getSeasonalityLength();
-                if (ny > 0) {
-                    s = s.drop(Math.max(0, s.length() - s.getAnnualFrequency() * ny), 0);
-                    header.append(" (last ").append(ny).append(" years)");
+                  GenericSeasonalityTests tests = diags.residualSeasonalityTestsOnLastIrregular();
+                if (tests.getNcycles() > 0) {
+                    header.append(" (last ").append(tests.getNcycles()).append(" years)");
                 }
                 return new HtmlElements(new HtmlHeader(1, header.toString(), true),
-                        new HtmlSeasonalityDiagnostics(SeasonalityTests.seasonalityTest(s.getValues(), s.getAnnualFrequency(), 0, false, true), true));
+                        new HtmlSeasonalityDiagnostics(tests, true));
 
             }, new HtmlItemUI());
         }
