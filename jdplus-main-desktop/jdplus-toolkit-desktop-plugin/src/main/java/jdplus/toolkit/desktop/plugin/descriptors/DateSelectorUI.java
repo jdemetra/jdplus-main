@@ -20,7 +20,7 @@ import org.openide.util.NbBundle;
  *
  * @author Jean Palate
  */
-public class DateSelectorUI implements IPropertyDescriptors {    
+public class DateSelectorUI implements IPropertyDescriptors {
 
     public enum Type {
 
@@ -88,14 +88,14 @@ public class DateSelectorUI implements IPropertyDescriptors {
         core = sel;
         ro_ = ro;
         domain = null;
-        this.callback=callback;
+        this.callback = callback;
     }
 
     public DateSelectorUI(TimeSelector sel, TsDomain domain, boolean ro, Consumer<TimeSelector> callback) {
         core = sel;
         ro_ = ro;
         this.domain = domain;
-        this.callback=callback;
+        this.callback = callback;
     }
 
     public TimeSelector getCore() {
@@ -107,7 +107,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
     }
 
     public void setType(Type value) {
-        core=core
+        core = core
                 .toBuilder()
                 .type(Type.to(value))
                 .build();
@@ -116,34 +116,41 @@ public class DateSelectorUI implements IPropertyDescriptors {
 
     public LocalDate getStart() {
         if (core.getD0().equals(LocalDateTime.MIN)) {
-            if (domain != null)
-               return domain.getStartPeriod().start().toLocalDate();
-            else
-                return LocalDate.now(Clock.systemDefaultZone());
+            LocalDate start;
+            if (domain != null) {
+                start = domain.getStartPeriod().start().toLocalDate();
+            } else {
+                start = LocalDate.now(Clock.systemDefaultZone());
+            }
+            setStart(start);
+            return start;
         }
         return core.getD0().toLocalDate();
     }
 
     public void setStart(LocalDate day) {
-        core=core.toBuilder()
+        core = core.toBuilder()
                 .d0(day.atStartOfDay())
                 .build();
         callback.accept(core);
     }
 
     public LocalDate getEnd() {
-        if (core.getD1().equals(LocalDateTime.MAX)){
-            if (domain != null){
-                return domain.getLastPeriod().end().toLocalDate().minusDays(1);
-            }else{ 
-                return LocalDate.now(Clock.systemDefaultZone());
+        if (core.getD1().equals(LocalDateTime.MAX)) {
+            LocalDate end;
+            if (domain != null) {
+                end = domain.getLastPeriod().end().toLocalDate().minusDays(1);
+            } else {
+                end = LocalDate.now(Clock.systemDefaultZone());
             }
+            setEnd(end);
+            return end;
         }
         return core.getD1().toLocalDate().minusDays(1);
     }
 
     public void setEnd(LocalDate day) {
-        core=core.toBuilder()
+        core = core.toBuilder()
                 .d1(day.plusDays(1).atStartOfDay())
                 .build();
         callback.accept(core);
@@ -154,7 +161,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
     }
 
     public void setFirst(int n) {
-        core=core.toBuilder().n0(n).build();
+        core = core.toBuilder().n0(n).build();
         callback.accept(core);
     }
 
@@ -163,7 +170,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
     }
 
     public void setLast(int n) {
-        core=core.toBuilder().n1(n).build();
+        core = core.toBuilder().n1(n).build();
         callback.accept(core);
     }
 
@@ -229,7 +236,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
         }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("start", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, TYPE_ID);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, D0_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.tsPeriodSelectorUI_startDesc_name());
             desc.setShortDescription(Bundle.tsPeriodSelectorUI_startDesc_desc());
@@ -251,7 +258,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
         }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("end", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, TYPE_ID);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, D1_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.tsPeriodSelectorUI_endDesc_name());
             desc.setShortDescription(Bundle.tsPeriodSelectorUI_endDesc_desc());
@@ -273,7 +280,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
         }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("first", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, TYPE_ID);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, N0_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.tsPeriodSelectorUI_firstDesc_name());
             desc.setShortDescription(Bundle.tsPeriodSelectorUI_firstDesc_desc());
@@ -295,7 +302,7 @@ public class DateSelectorUI implements IPropertyDescriptors {
         }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("last", this.getClass());
-            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, TYPE_ID);
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, N1_ID);
             desc.setDisplayName(Bundle.tsPeriodSelectorUI_lastDesc_name());
             desc.setShortDescription(Bundle.tsPeriodSelectorUI_lastDesc_desc());
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
