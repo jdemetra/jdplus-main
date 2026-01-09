@@ -31,7 +31,7 @@ import org.openide.windows.TopComponent;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
-import jdplus.sa.base.core.tests.SeasonalityTests;
+import jdplus.sa.base.core.diagnostics.GenericSeasonalityTests;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.util.Exceptions;
@@ -188,7 +188,12 @@ public final class SeasonalityTestTopComponent extends TopComponent implements H
             s = s.log();
         }
 
-        SeasonalityTests tests = SeasonalityTests.seasonalityTest(s.getValues(), freq, diffOrder, diffOrder <= 1, true);
+        GenericSeasonalityTests tests = GenericSeasonalityTests.builder()
+                .series(s)
+                .ndiff(diffOrder)
+                .mean(diffOrder <= 1)
+                .ncycles(0)
+                .build();
         HtmlSeasonalityDiagnostics html = new HtmlSeasonalityDiagnostics(tests);
         jEditorPane1.setHtml(HtmlUtil.toString(html));
     }
