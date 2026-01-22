@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.base.core.ssf.univariate;
 
-import jdplus.toolkit.base.api.math.Constants;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.ssf.ISsfDynamics;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;

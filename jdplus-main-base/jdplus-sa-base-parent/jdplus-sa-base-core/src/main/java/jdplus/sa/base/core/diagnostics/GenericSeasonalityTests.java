@@ -16,7 +16,6 @@
  */
 package jdplus.sa.base.core.diagnostics;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.modelling.DifferencingResult;
 import jdplus.toolkit.base.api.stats.StatisticalTest;

@@ -55,11 +55,11 @@ public class AugmentedFilter {
         collapsing = false;
     }
 
-    public AugmentedFilter(final boolean collapsing) {
+    AugmentedFilter(final boolean collapsing) {
         this.collapsing = collapsing;
     }
 
-    protected boolean error(int t) {
+    private boolean error(int t) {
         missing = data.isMissing(t);
         if (missing) {
             pe.E().set(0);
@@ -93,7 +93,7 @@ public class AugmentedFilter {
         }
     }
 
-    protected void update() {
+    private void update() {
         double v = pe.getVariance(), e = pe.get();
         if (v == 0){
             if (Math.abs(e)<State.ZERO)
@@ -121,7 +121,7 @@ public class AugmentedFilter {
         return state;
     }
 
-    public int getCollapsingPosition() {
+    int getCollapsingPosition() {
         return collapsingPos;
     }
 
@@ -170,9 +170,6 @@ public class AugmentedFilter {
             }
             state.next(t++, dynamics);
         }
-//        if (collapsing && collapsingPos < 0) {
-//            collapsingPos=end;
-//        }
         return true;
     }
 
@@ -212,7 +209,7 @@ public class AugmentedFilter {
         P.addXaXt(-1 / v, C);
     }
 
-    protected boolean collapse(int t, IQFilteringResults decomp) {
+    private boolean collapse(int t, IQFilteringResults decomp) {
         if (!collapsing) {
             return false;
         }

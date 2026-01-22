@@ -32,17 +32,17 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 public class QAugmentation {
 
     // Q is related to the cholesky factor of the usual "Q matrix" of De Jong.
-    // Q(dj) = |S^-1   -s|
-    //         |-s'     q|
-    // Q = |a 0|
+    // Q(dj) = |S   s|
+    //         |s'     q|
+    // Q = |A 0|
     //     |b c|
     // so that we have:
     // q = b * b' + c * c
-    // S^-1 = a * a' 
-    // -s = a * b'
-    // s' * S * s = b * a' * S * a * b' = b * b'
-    // q - s' * S * s = c * c
-    // S * s = - S * a * b' = - a'^-1 * b'
+    // S = A * A' 
+    // s = A * b'
+    // s' * S^-1 * s = b * A' * S^-1 * A * b' = b * b'
+    // q - s' * S^-1 * s = c * c
+    // S^-1 * s = (AA')^-1 * A * b' = A'^-1 * b'
     private FastMatrix Q, B;
     private int n, nd;
     private final DeterminantalTerm det = new DeterminantalTerm();
@@ -63,12 +63,6 @@ public class QAugmentation {
         return n-nd;
     }
 
-//    public void update(FastMatrix E, DataBlock2 U) {
-//        Q.subMatrix(0, nd, nd + 1, nd + 1 + nvars).copy(E.subMatrix());
-//        Q.row(nd).range(nd + 1, nd + 1 + nvars).copy(U);
-//        ec.tstoolkit.maths.matrices.ElementaryTransformations.fastGivensTriangularize(Q.subMatrix());
-//    }
-//
     public void update(AugmentedUpdateInformation pe) {
         double v = pe.getVariance();
         if (v == 0)
@@ -117,11 +111,11 @@ public class QAugmentation {
     }
 
     public boolean canCollapse() {
-        return isPositive(Q.diagonal().drop(0, 1));
+        return isNotNull(Q.diagonal().drop(0, 1));
     }
 
     public boolean collapse(AugmentedState state) {
-        if (!isPositive(Q.diagonal().drop(0, 1))) {
+        if (!isNotNull(Q.diagonal().drop(0, 1))) {
             return false;
         }
 
@@ -140,9 +134,9 @@ public class QAugmentation {
         return true;
     }
  
-    public static boolean isPositive(DataBlock q) {
+    public static boolean isNotNull(DataBlock q) {
         for (int i = 0; i < q.length(); ++i) {
-            if (q.get(i) < State.ZERO) {
+            if (Math.abs(q.get(i)) < State.ZERO) {
                 return false;
             }
         }
