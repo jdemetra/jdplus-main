@@ -231,8 +231,8 @@ public class SsfArma2 {
         @Override
         public void S(int i, FastMatrix sm) {
             double[] s = sm.getStorage();
-            for (int j = 0; j < data.theta.length; ++j) {
-                s[j] = data.se * data.theta[j];
+            for (int j = 0, k=sm.getStartPosition(); j < data.theta.length; ++j, ++k) {
+                s[k] = data.se * data.theta[j];
             }
         }
 

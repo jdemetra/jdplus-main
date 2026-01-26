@@ -25,6 +25,7 @@ import jdplus.toolkit.base.core.ssf.ISsfInitialization;
 import jdplus.toolkit.base.core.math.linearsystem.LinearSystemSolver;
 import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.ssf.StateComponent;
 
@@ -107,40 +108,54 @@ public class SeasonalComponent {
 
     private synchronized FastMatrix hslVar(int freq) {
         switch (freq) {
-            case 12:
+            case 12 -> {
                 if (LHS12 == null) {
                     LHS12 = hsvar(12);
-                    SymmetricMatrix.lcholesky(LHS12);
+                    SymmetricMatrix.lcholesky(LHS12, 1e-12);
+                    LowerTriangularMatrix.toLower(LHS12);
                 }
                 return LHS12.deepClone();
-            case 4:
+            }
+            case 4 -> {
                 if (LHS4 == null) {
                     LHS4 = hsvar(4);
-                    SymmetricMatrix.lcholesky(LHS4);
+                    SymmetricMatrix.lcholesky(LHS4, 1e-12);
+                    LowerTriangularMatrix.toLower(LHS4);
                 }
                 return LHS4.deepClone();
-            case 2:
+            }
+            case 2 -> {
                 if (LHS2 == null) {
                     LHS2 = hsvar(2);
-                    SymmetricMatrix.lcholesky(LHS2);
+                    SymmetricMatrix.lcholesky(LHS2, 1e-12);
+                    LowerTriangularMatrix.toLower(LHS2);
                 }
                 return LHS2.deepClone();
-            case 3:
+            }
+            case 3 -> {
                 if (LHS3 == null) {
                     LHS3 = hsvar(3);
                     SymmetricMatrix.lcholesky(LHS3);
+                    SymmetricMatrix.lcholesky(LHS3, 1e-12);
+                    LowerTriangularMatrix.toLower(LHS3);
                 }
                 return LHS3.deepClone();
-            case 6:
+            }
+            case 6 -> {
                 if (LHS6 == null) {
                     LHS6 = hsvar(6);
                     SymmetricMatrix.lcholesky(LHS6);
+                    SymmetricMatrix.lcholesky(LHS6, 1e-12);
+                    LowerTriangularMatrix.toLower(LHS6);
                 }
                 return LHS6.deepClone();
-            default:
+            }
+            default -> {
                 FastMatrix lhs = hsvar(freq);
                 SymmetricMatrix.lcholesky(lhs);
+                LowerTriangularMatrix.toLower(lhs);
                 return lhs;
+            }
         }
     }
 
@@ -175,70 +190,77 @@ public class SeasonalComponent {
 
     private synchronized FastMatrix tslVar(int freq) {
         switch (freq) {
-            case 12:
+            case 12 -> {
                 if (LVTS12 == null) {
                     LVTS12 = tsvar(12);
-                    SymmetricMatrix.lcholesky(LVTS12);
-                    LVTS12.apply(x -> Math.abs(x) < 1e-12 ? 0 : x);
+                    SymmetricMatrix.lcholesky(LVTS12, 1e-12);
+                    LowerTriangularMatrix.toLower(LVTS12);
                 }
                 return LVTS12.deepClone();
-            case 4:
+            }
+            case 4 -> {
                 if (LVTS4 == null) {
                     LVTS4 = tsvar(4);
-                    LVTS4.apply(x -> Math.abs(x) < 1e-12 ? 0 : x);
-                    SymmetricMatrix.lcholesky(LVTS4);
+                    SymmetricMatrix.lcholesky(LVTS4, 1e-12);
+                    LowerTriangularMatrix.toLower(LVTS4);
                 }
                 return LVTS4.deepClone();
-            case 2:
+            }
+            case 2 -> {
                 if (LVTS2 == null) {
                     LVTS2 = tsvar(2);
-                    LVTS2.apply(x -> Math.abs(x) < 1e-12 ? 0 : x);
-                    SymmetricMatrix.lcholesky(LVTS2);
+                    SymmetricMatrix.lcholesky(LVTS2, 1e-12);
+                    LowerTriangularMatrix.toLower(LVTS2);
                 }
                 return LVTS2.deepClone();
-            case 3:
+            }
+            case 3 -> {
                 if (LVTS3 == null) {
                     LVTS3 = tsvar(3);
-                    SymmetricMatrix.lcholesky(LVTS3);
-                    LVTS3.apply(x -> Math.abs(x) < 1e-12 ? 0 : x);
+                    SymmetricMatrix.lcholesky(LVTS3, 1e-12);
+                    LowerTriangularMatrix.toLower(LVTS3);
                 }
                 return LVTS3.deepClone();
-            case 6:
+            }
+            case 6 -> {
                 if (LVTS6 == null) {
                     LVTS6 = tsvar(6);
-                    SymmetricMatrix.lcholesky(LVTS6);
-                    LVTS6.apply(x -> Math.abs(x) < 1e-12 ? 0 : x);
+                    SymmetricMatrix.lcholesky(LVTS6, 1e-12);
+                    LowerTriangularMatrix.toLower(LVTS6);
                 }
                 return LVTS6.deepClone();
-            default:
+            }
+            default -> {
                 FastMatrix var = tsvar(freq);
-                SymmetricMatrix.lcholesky(var);
-                var.apply(x -> Math.abs(x) < 1e-12 ? 0 : x);
+                SymmetricMatrix.lcholesky(var, 1e-12);
+                LowerTriangularMatrix.toLower(var);
                 return var;
+            }
         }
     }
 
     public FastMatrix tslVar(SeasonalModel seasModel, final int freq) {
         switch (seasModel) {
-            case Trigonometric:
+            case Trigonometric -> {
                 return tslVar(freq);
-            case HarrisonStevens:
+            }
+            case HarrisonStevens -> {
                 return hslVar(freq);
-            default:
+            }
+            default -> {
                 int n = freq - 1;
                 FastMatrix Q = FastMatrix.square(n);
                 switch (seasModel) {
-                    case Dummy:
+                    case Dummy ->
                         Q.set(n - 1, n - 1, 1);
-                        break;
-                    case Crude:
+                    case Crude ->
                         Q.set(1);
-                        //Q.set(0, 0, freq * var);
-                        break;
-                    default:
-                        break;
+                    //Q.set(0, 0, freq * var);
+                    default -> {
+                    }
                 }
                 return Q;
+            }
         }
     }
 
@@ -391,7 +413,7 @@ public class SeasonalComponent {
         public void V(int pos, FastMatrix v) {
             if (data.seasVar > 0) {
                 if (data.seasModel == SeasonalModel.Dummy) {
-                    v.set(0, 0, data.seasVar);
+                    v.set(data.period - 2, data.period - 2, data.seasVar);
                 } else {
                     v.copy(data.tsvar);
                 }
@@ -407,15 +429,12 @@ public class SeasonalComponent {
         public void S(int pos, FastMatrix s) {
             if (null != data.seasModel) {
                 switch (data.seasModel) {
-                    case Crude:
+                    case Crude ->
                         s.set(data.std());
-                        break;
-                    case Dummy:
-                        s.set(data.period - 2, data.period - 2, data.std());
-                        break;
-                    default:
+                    case Dummy ->
+                        s.set(data.period - 2, 0, data.std());
+                    default ->
                         s.copy(data.lvar);
-                        break;
                 }
             }
         }
@@ -476,17 +495,15 @@ public class SeasonalComponent {
         @Override
         public void addV(int pos, FastMatrix p) {
             switch (data.seasModel) {
-                case Fixed:
+                case Fixed -> {
                     return;
-                case Dummy:
+                }
+                case Dummy ->
                     p.add(data.period - 2, data.period - 2, data.seasVar);
-                    break;
-                case Crude:
+                case Crude ->
                     p.add(data.seasVar);
-                    break;
-                default:
+                default ->
                     p.add(data.tsvar);
-                    break;
             }
         }
     }

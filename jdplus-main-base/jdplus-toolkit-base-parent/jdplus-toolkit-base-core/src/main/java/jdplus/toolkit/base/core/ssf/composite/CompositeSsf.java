@@ -25,6 +25,27 @@ import nbbrd.design.BuilderPattern;
  */
 public class CompositeSsf extends Ssf {
 
+    public static StateComponent of(StateComponent[] cmps) {
+        if (cmps == null || cmps.length == 0) {
+            return null;
+        }
+        int n = cmps.length;
+        int[] dim = new int[n];
+        ISsfInitialization[] i = new ISsfInitialization[n];
+        ISsfDynamics[] d = new ISsfDynamics[n];
+        ISsfLoading[] l = new ISsfLoading[n];
+        for (int j = 0; j < n; ++j) {
+            StateComponent cur = cmps[j];
+            i[j] = cur.initialization();
+            d[j] = cur.dynamics();
+            dim[j] = i[j].getStateDim();
+        }
+
+        return new StateComponent(new CompositeInitialization(dim, i),
+                new CompositeDynamics(dim, d));
+
+    }
+
     private final int[] pos;
     private final int[] dim;
 
@@ -51,7 +72,6 @@ public class CompositeSsf extends Ssf {
 
         private int[] dim, pos;
 
- 
         public Builder add(StateComponent cmp, ISsfLoading loading) {
             components.add(cmp);
             loadings.add(loading);
