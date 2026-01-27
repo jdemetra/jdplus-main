@@ -113,7 +113,7 @@ public class UpdateInformation {
     public void setMissing() {
         e = Double.NaN;
         status = Status.MISSING;
-        M.set(() -> Double.NaN);
+        M.set(Double.NaN);
     }
 
     public Status getStatus() {

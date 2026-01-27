@@ -43,7 +43,7 @@ public class QAugmentation {
     // s' * S^-1 * s = b * A' * S^-1 * A * b' = b * b'
     // q - s' * S^-1 * s = c * c
     // S^-1 * s = (AA')^-1 * A * b' = A'^-1 * b'
-    private FastMatrix Q, B;
+    private FastMatrix Q, A;
     private int n, nd;
     private final DeterminantalTerm det = new DeterminantalTerm();
 
@@ -94,7 +94,7 @@ public class QAugmentation {
      * @return 
      */
     public FastMatrix B(){
-        return B;
+        return A;
     }
 
     public DiffuseLikelihood likelihood(boolean scalingfactor) {
@@ -120,13 +120,13 @@ public class QAugmentation {
         }
 
         // update the state vector
-        B =state.B().deepClone();
-        int d = B.getColumnsCount();
+        A =state.A().deepClone();
+        int d = A.getColumnsCount();
         FastMatrix S = a();
-        // aC'=B' <-> Ca'=B <-> C=B*a'^-1
-        LowerTriangularMatrix.solveXLt(S, B);
+        // aC'=A' <-> Ca'=A <-> C=A*a'^-1
+        LowerTriangularMatrix.solveXLt(S, A);
         for (int i = 0; i < d; ++i) {
-            DataBlock col = B.column(i);
+            DataBlock col = A.column(i);
             state.a().addAY(-Q.get(d, i), col);
             state.P().addXaXt(1, col);
         }

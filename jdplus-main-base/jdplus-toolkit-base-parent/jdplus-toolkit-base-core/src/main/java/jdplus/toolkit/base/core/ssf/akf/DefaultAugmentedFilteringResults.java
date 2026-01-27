@@ -31,12 +31,12 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
  */
 public class DefaultAugmentedFilteringResults extends DefaultFilteringResults implements IAugmentedFilteringResults {
 
-    private final MatrixResults B;
+    private final MatrixResults A;
     private final DataBlockResults E;
 
     protected DefaultAugmentedFilteringResults(boolean var) {
         super(var);
-        B = new MatrixResults();
+        A = new MatrixResults();
         E = new DataBlockResults();
     }
 
@@ -53,7 +53,7 @@ public class DefaultAugmentedFilteringResults extends DefaultFilteringResults im
         super.prepare(ssf, start, end);
         ISsfInitialization initialization = ssf.initialization();
         int dim = initialization.getStateDim(), n = initialization.getDiffuseDim();
-        B.prepare(dim, n, 0, n);
+        A.prepare(dim, n, 0, n);
         E.prepare(dim, 0, n);
     }
 
@@ -73,12 +73,12 @@ public class DefaultAugmentedFilteringResults extends DefaultFilteringResults im
             return;
         }
         super.save(t, state, info);
-        B.save(t, state.B());
+        A.save(t, state.A());
     }
 
     @Override
-    public FastMatrix B(int pos) {
-        return B.matrix(pos);
+    public FastMatrix A(int pos) {
+        return A.matrix(pos);
     }
 
     @Override
@@ -89,6 +89,6 @@ public class DefaultAugmentedFilteringResults extends DefaultFilteringResults im
     @Override
     public void clear() {
         super.clear();
-        B.clear();
+        A.clear();
     }
 }

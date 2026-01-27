@@ -22,11 +22,13 @@ import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.data.DataBlockStorage;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
+import jdplus.toolkit.base.core.ssf.StateComponent;
 import jdplus.toolkit.base.core.ssf.akf.AkfToolkit;
 import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.composite.CompositeSsf;
 import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
+import jdplus.toolkit.base.core.ssf.utility.DynamicsCoherence;
 import jdplus.toolkit.base.core.ucarima.ModelDecomposer;
 import jdplus.toolkit.base.core.ucarima.SeasonalSelector;
 import jdplus.toolkit.base.core.ucarima.TrendCycleSelector;
@@ -44,6 +46,15 @@ public class SsfUcarimaTest {
     public SsfUcarimaTest() {
     }
 
+    @Test
+    public void testDynamics(){
+        UcarimaModel ucm = ucmAirline(-.6, -.8);
+        ucm = ucm.simplify();
+        CompositeSsf ssf = SsfUcarima.of(ucm);
+        StateComponent cmp = ssf.asComponent();
+        DynamicsCoherence.check(cmp.dynamics(), cmp.dim());
+    }
+    
     @Test
     public void testDkSmoother() {
         UcarimaModel ucm = ucmAirline(-.6, -.8);

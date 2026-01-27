@@ -43,7 +43,7 @@ public class AugmentedFilter {
     private ISsfError error;
     private ISsfDynamics dynamics;
     private ISsfData data;
-    private boolean missing;
+//    private boolean missing;
     private final boolean collapsing;
     private int collapsingPos = -1;
     //private double scale;
@@ -60,19 +60,14 @@ public class AugmentedFilter {
     }
 
     private boolean error(int t) {
-        missing = data.isMissing(t);
-        if (missing) {
-            pe.E().set(0);
-            pe.M().set(0);
-            // pe_ = null;
+        if (data.isMissing(t)) {
+            pe.setMissing();
             return false;
         } else {
             // K = PZ'/f
-            // computes (ZP)' in K'. Missing values are set to 0 
-            // Z~v x r, P~r x r, K~r x v
+            // computes (ZP)' in C'. Missing values are set to 0 
+            // Z~v x r, P~r x r, C~r x v
             DataBlock C = pe.M();
-            // computes ZPZ'; results in pe_.L
-            //measurement.ZVZ(pos_, state_.P.subMatrix(), F);
             loading.ZM(t, state.P(), C);
             double v = loading.ZX(t, C);
             if (error != null) {
@@ -82,12 +77,11 @@ public class AugmentedFilter {
                 v = 0;
             }
             pe.setVariance(v);
-            // We put in K  PZ'*(ZPZ'+H)^-1 = PZ'* F^-1 = PZ'*(LL')^-1/2 = PZ'(L')^-1
-            // K L' = PZ' or L K' = ZP
-
+            
             double y = data.get(t);
             pe.set(y - loading.ZX(t, state.a()), data.isConstraint(t));
-            loading.ZM(t, state.B(), pe.E());
+
+            loading.ZM(t, state.A(), pe.E());
             pe.E().apply(x -> -x);
             return true;
         }
@@ -105,7 +99,7 @@ public class AugmentedFilter {
         // PZ'(LL')^-1 ZP' =PZ'L'^-1*L^-1*ZP'
         // a = a + (M)* F^-1 * v
         state.a().addAY(e / v, pe.M());
-        DataBlockIterator acols = state.B().columnsIterator();
+        DataBlockIterator acols = state.A().columnsIterator();
         DoubleSeqCursor cell = pe.E().cursor();
         while (acols.hasNext()) {
             acols.next().addAY(cell.getAndNext() / v, pe.M());

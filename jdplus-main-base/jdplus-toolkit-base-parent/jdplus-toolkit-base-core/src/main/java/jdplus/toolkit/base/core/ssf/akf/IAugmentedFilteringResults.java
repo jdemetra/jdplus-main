@@ -48,7 +48,7 @@ public interface IAugmentedFilteringResults extends IFilteringResults {
      */
     void save(int t, AugmentedState state, StateInfo info);
 
-    default FastMatrix B(int pos) {
+    default FastMatrix A(int pos) {
         return null;
     }
 

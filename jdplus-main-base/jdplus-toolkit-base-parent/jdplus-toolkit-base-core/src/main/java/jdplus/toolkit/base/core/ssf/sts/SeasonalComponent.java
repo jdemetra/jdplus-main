@@ -135,7 +135,6 @@ public class SeasonalComponent {
             case 3 -> {
                 if (LHS3 == null) {
                     LHS3 = hsvar(3);
-                    SymmetricMatrix.lcholesky(LHS3);
                     SymmetricMatrix.lcholesky(LHS3, 1e-12);
                     LowerTriangularMatrix.toLower(LHS3);
                 }
@@ -144,7 +143,6 @@ public class SeasonalComponent {
             case 6 -> {
                 if (LHS6 == null) {
                     LHS6 = hsvar(6);
-                    SymmetricMatrix.lcholesky(LHS6);
                     SymmetricMatrix.lcholesky(LHS6, 1e-12);
                     LowerTriangularMatrix.toLower(LHS6);
                 }
@@ -442,30 +440,18 @@ public class SeasonalComponent {
         @Override
         public void addSU(int pos, DataBlock x, DataBlock u) {
             switch (data.seasModel) {
-                case Crude:
-                    x.add(data.std() * u.get(0));
-                    break;
-                case Dummy:
-                    x.add(0, data.std() * u.get(0));
-                    break;
-                default:
-                    x.addProduct(data.lvar.rowsIterator(), u);
-                    break;
+                case Crude -> x.add(data.std() * u.get(0));
+                case Dummy -> x.add(0, data.std() * u.get(0));
+                default -> x.addProduct(data.lvar.rowsIterator(), u);
             }
         }
 
         @Override
         public void XS(int pos, DataBlock x, DataBlock xs) {
             switch (data.seasModel) {
-                case Crude:
-                    xs.set(0, data.std() * x.sum());
-                    break;
-                case Dummy:
-                    xs.set(0, data.std() * x.get(data.period - 2));
-                    break;
-                default:
-                    xs.product(x, data.lvar.columnsIterator());
-                    break;
+                case Crude -> xs.set(0, data.std() * x.sum());
+                case Dummy -> xs.set(0, data.std() * x.get(data.period - 2));
+                default -> xs.product(x, data.lvar.columnsIterator());
             }
         }
 
@@ -479,24 +465,23 @@ public class SeasonalComponent {
 
         @Override
         public void TX(int pos, DataBlock x) {
-            x.fshiftAndNegSum();
+            x.bshiftAndNegSum();
         }
 
         @Override
         public void XT(int pos, DataBlock x) {
             int imax = data.period - 2;
-            double xs = x.get(0);
-            for (int i = 0; i < imax; ++i) {
-                x.set(i, x.get(i + 1) - xs);
+            double xs = x.get(imax);
+            for (int i = imax; i >0; --i) {
+                x.set(i, x.get(i-1) - xs);
             }
-            x.set(imax, -xs);
+            x.set(0, -xs);
         }
 
         @Override
         public void addV(int pos, FastMatrix p) {
             switch (data.seasModel) {
                 case Fixed -> {
-                    return;
                 }
                 case Dummy ->
                     p.add(data.period - 2, data.period - 2, data.seasVar);

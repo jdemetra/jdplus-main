@@ -98,7 +98,7 @@ public class SmoothationsComputer {
 
         // computes the smoothed diffuse effects and their covariance...
         QAugmentation q = frslts.getAugmentation();
-//        FastMatrix B = q.B(); // B*a^-1'
+//        FastMatrix A = q.A(); // A*a^-1'
         // Psi = = a'^-1* a^-1
         S = q.a().deepClone(); // 
         // delta=-a'^-1 * b
@@ -220,7 +220,7 @@ public class SmoothationsComputer {
             U.addAY(1 / errVariance, E);
 //            uc = u + U.dot(delta);
 //            if (calcvar) {
-//                FastMatrix A = frslts.B(pos + 1);
+//                FastMatrix A = frslts.A(pos + 1);
 //                // N*A
 //                FastMatrix NA = GeneralMatrix.AB(N, A);
 //                NA.add(Rd);

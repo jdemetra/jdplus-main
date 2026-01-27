@@ -68,11 +68,11 @@ public class AugmentedSmoother {
         int t = results.getCollapsingPosition();
         if (t == 0) {
             QAugmentation q = results.getAugmentation();
-            // delta = S(s+B'*R), psi = S - S*B'*N*B*S 
-            // delta = a'^-1*a^-1(-a*b' + B'*R)
-            // delta = - (b * a^-1)' + a'^-1*a^-1*B'*r = a'^-1 * (a^-1*B'*r - b)
-            // Psi = = a'^-1*(I - a^-1*B'*N*B*a'^-1)* a^-1
-            FastMatrix B = q.B(); // B*a^-1'
+            // delta = S(s+A'*R), psi = S - S*A'*N*A*S 
+            // delta = a'^-1*a^-1(-a*b' + A'*R)
+            // delta = - (b * a^-1)' + a'^-1*a^-1*A'*r = a'^-1 * (a^-1*A'*r - b)
+            // Psi = = a'^-1*(I - a^-1*A'*N*A*a'^-1)* a^-1
+            FastMatrix B = q.B(); // A*a^-1'
             S = q.a().deepClone();
             delta = q.b().deepClone();
             delta.chs();
@@ -164,7 +164,7 @@ public class AugmentedSmoother {
         }
         state.a().copy(fa);
         if (calcvar) {
-            state.restoreB(frslts.B(pos));
+            state.restoreA(frslts.A(pos));
             state.P().copy(frslts.P(pos));
         }
     }
@@ -185,10 +185,10 @@ public class AugmentedSmoother {
 
     // 
     private void calcB(int pos) {
-        // B = A + PR
+        // A = A + PR
         DataBlockIterator bcolumns = B.columnsIterator();
         DataBlockIterator rcolumns = Rd.columnsIterator();
-        DataBlockIterator acolumns = calcvar ? state.B().columnsIterator() : frslts.B(pos).columnsIterator();
+        DataBlockIterator acolumns = calcvar ? state.A().columnsIterator() : frslts.A(pos).columnsIterator();
         DataBlockIterator prows = calcvar ? state.P().rowsIterator() : frslts.P(pos).rowsIterator();
         while (bcolumns.hasNext() && rcolumns.hasNext() && acolumns.hasNext()) {
             prows.reset();
@@ -204,7 +204,7 @@ public class AugmentedSmoother {
         // RNA = R + NA
         DataBlockIterator rnacolumns = RNA.columnsIterator();
         DataBlockIterator rcolumns = Rd.columnsIterator();
-        DataBlockIterator acolumns = state.B().columnsIterator();
+        DataBlockIterator acolumns = state.A().columnsIterator();
         while (rnacolumns.hasNext() && rcolumns.hasNext() && acolumns.hasNext()) {
             DataBlock rnac = rnacolumns.next();
             rnac.product(N.rowsIterator(), acolumns.next());
@@ -230,8 +230,8 @@ public class AugmentedSmoother {
 
     private void updateP() {
         // P(t|y)=var(a(t) + P*r(t-1) + (A(t)+P*R(t-1))*d)
-        // B(t)=(A(t)+P*R(t-1)), C(t)=R(t-1)+N(t-1)*A(t)
-        // P(t|y)=P(t)-P(t)N(t-1)P(t)+B(t)*psi*B'(t)-B(t)*S*C't)*P(t)-P(t)*C(t)*B'(t)
+        // A(t)=(A(t)+P*R(t-1)), C(t)=R(t-1)+N(t-1)*A(t)
+        // P(t|y)=P(t)-P(t)N(t-1)P(t)+A(t)*psi*A'(t)-A(t)*S*C't)*P(t)-P(t)*C(t)*A'(t)
         FastMatrix P = state.P();
         // normal iteration
         FastMatrix PNP = SymmetricMatrix.XtSX(N, P);
@@ -275,7 +275,7 @@ public class AugmentedSmoother {
         SymmetricMatrix.reenforceSymmetry(N);
 //        N.apply(z -> Math.abs(z) < State.ZERO ? 0 : z);
 
-        FastMatrix A = frslts.B(pos);
+        FastMatrix A = frslts.A(pos);
         // Rd(t-1)+N(t-1)*A(t)
         FastMatrix NA = GeneralMatrix.AB(N, A);
         NA.add(Rd);
@@ -328,7 +328,7 @@ public class AugmentedSmoother {
             U.addAY(1 / errVariance, E);
             uc = u + U.dot(delta);
             if (calcvar) {
-                FastMatrix A = frslts.B(pos);
+                FastMatrix A = frslts.A(pos);
                 // N*A
                 FastMatrix NA = GeneralMatrix.AB(N, A);
                 NA.add(Rd);
@@ -386,26 +386,26 @@ public class AugmentedSmoother {
 
     private void calcSmoothedDiffuseEffects(QAugmentation q) {
         // computes the smoothed diffuse effects and their covariance...
-        // delta = S(s+B'*R), psi = S - S*B'*N*B*S 
-        // delta = a'^-1*a^-1(-a*b' + B'*R)
-        // delta = - (b * a^-1)' + a'^-1*a^-1*B'*r = a'^-1 * (a^-1*B'*r - b)
-        // Psi = = a'^-1*(I - a^-1*B'*N*B*a'^-1)* a^-1
-        FastMatrix B = q.B(); // B*a^-1'
+        // delta = S(s+A'*R), psi = S - S*A'*N*A*S 
+        // delta = a'^-1*a^-1(-a*b' + A'*R)
+        // delta = - (b * a^-1)' + a'^-1*a^-1*A'*r = a'^-1 * (a^-1*A'*r - b)
+        // Psi = = a'^-1*(I - a^-1*A'*N*A*a'^-1)* a^-1
+        FastMatrix B = q.B(); // A*a^-1'
         S = q.a().deepClone();
-        // computes a^-1*B'*r (or r*B*a^-1')
+        // computes a^-1*A'*r (or r*A*a^-1')
         delta = DataBlock.make(B.getColumnsCount());
         delta.product(B.columnsIterator(), R);
         // t1 = - b*a^-1 <-> -t1*a=b
         delta.sub(q.b());
         LowerTriangularMatrix.solvexL(S, delta);
-        // B'NB 
+        // A'NB 
         if (N != null) {
             Psi = SymmetricMatrix.XtSX(N, B);
             Psi.chs();
             Psi.diagonal().add(1);
-            // B*a^-1* =C <->B =Ca
+            // A*a^-1* =C <->A =Ca
             LowerTriangularMatrix.solveXL(S, Psi);
-            // a'^-1*B = C <-> B' = C'a
+            // a'^-1*A = C <-> A' = C'a
             LowerTriangularMatrix.solveLtX(S, Psi);
         }
     }
@@ -437,7 +437,7 @@ public class AugmentedSmoother {
         V.add(BPsiB);
         LowerTriangularMatrix.solveXLt(S, B);
         LowerTriangularMatrix.solveXLt(S, C);
-        // compute B*C'
+        // compute A*C'
         FastMatrix UV = GeneralMatrix.ABt(B, C);
         V.sub(UV);
         V.subTranspose(UV);
@@ -448,7 +448,7 @@ public class AugmentedSmoother {
         double v = QuadraticForm.apply(Psi, B);
         LowerTriangularMatrix.solveLx(S, B);
         LowerTriangularMatrix.solveLx(S, C);
-        // compute B*C'
+        // compute A*C'
         return v - 2 * B.dot(C);
     }
 
