@@ -31,10 +31,16 @@ import jdplus.toolkit.base.core.ssf.univariate.PredictionErrorDecomposition;
 public class QPredictionErrorDecomposition extends PredictionErrorDecomposition implements IQFilteringResults {
 
     private int nd, ncollapsed;
-    private final QAugmentation Q = new QAugmentation();
+    private final QAugmentation Q;
+
+    public QPredictionErrorDecomposition(QAugmentation Q, boolean res) {
+        super(res);
+        this.Q = Q;
+    }
 
     public QPredictionErrorDecomposition(boolean res) {
         super(res);
+        Q = QAugmentation.defaultQ();
     }
 
     @Override

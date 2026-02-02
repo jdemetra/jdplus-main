@@ -72,9 +72,9 @@ public class AugmentedSmoother {
             // delta = a'^-1*a^-1(-a*b' + A'*R)
             // delta = - (b * a^-1)' + a'^-1*a^-1*A'*r = a'^-1 * (a^-1*A'*r - b)
             // Psi = = a'^-1*(I - a^-1*A'*N*A*a'^-1)* a^-1
-            FastMatrix B = q.B(); // A*a^-1'
-            S = q.a().deepClone();
-            delta = q.b().deepClone();
+//            FastMatrix B = q.B(); // A*a^-1'
+//            S = q.S().deepClone();
+//            delta = q.b().deepClone();
             delta.chs();
             LowerTriangularMatrix.solvexL(S, delta);
             if (N != null) {
@@ -390,14 +390,14 @@ public class AugmentedSmoother {
         // delta = a'^-1*a^-1(-a*b' + A'*R)
         // delta = - (b * a^-1)' + a'^-1*a^-1*A'*r = a'^-1 * (a^-1*A'*r - b)
         // Psi = = a'^-1*(I - a^-1*A'*N*A*a'^-1)* a^-1
-        FastMatrix B = q.B(); // A*a^-1'
-        S = q.a().deepClone();
-        // computes a^-1*A'*r (or r*A*a^-1')
-        delta = DataBlock.make(B.getColumnsCount());
-        delta.product(B.columnsIterator(), R);
-        // t1 = - b*a^-1 <-> -t1*a=b
-        delta.sub(q.b());
-        LowerTriangularMatrix.solvexL(S, delta);
+//        FastMatrix B = q.B(); // A*a^-1'
+//        S = q.S().deepClone();
+//        // computes a^-1*A'*r (or r*A*a^-1')
+//        delta = DataBlock.make(B.getColumnsCount());
+//        delta.product(B.columnsIterator(), R);
+//        // t1 = - b*a^-1 <-> -t1*a=b
+//        delta.sub(q.b());
+//        LowerTriangularMatrix.solvexL(S, delta);
         // A'NB 
         if (N != null) {
             Psi = SymmetricMatrix.XtSX(N, B);

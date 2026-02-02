@@ -199,10 +199,9 @@ public class AkfToolkit {
     }
 
     public double var(int n, DefaultQFilteringResults frslts) {
-        double c = frslts.getAugmentation().c();
-        double ssq = c * c;
+        double ssq = frslts.getAugmentation().ssq();
         int nd = frslts.getCollapsingPosition();
-        int m = frslts.getAugmentation().getDegreesofFreedom();
+        int m = frslts.getAugmentation().getDegreesOfFreedom();
         for (int i = nd; i < n; ++i) {
             double e = frslts.error(i);
             if (Double.isFinite(e)) {

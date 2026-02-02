@@ -64,25 +64,24 @@ public class AugmentedFilter {
             pe.setMissing();
             return false;
         } else {
-            // K = PZ'/f
             // computes (ZP)' in C'. Missing values are set to 0 
-            // Z~v x r, P~r x r, C~r x v
+            // Z~m x r, P~r x r, C~r x f
             DataBlock C = pe.M();
             loading.ZM(t, state.P(), C);
-            double v = loading.ZX(t, C);
+            // f = ZPZ'+ h = ZC + h
+            double f = loading.ZX(t, C);
             if (error != null) {
-                v += error.at(t);
+                f += error.at(t);
             }
-            if (v < State.ZERO) {
-                v = 0;
+            if (f < State.ZERO) {
+                f = 0;
             }
-            pe.setVariance(v);
+            pe.setVariance(f);
             
             double y = data.get(t);
             pe.set(y - loading.ZX(t, state.a()), data.isConstraint(t));
 
             loading.ZM(t, state.A(), pe.E());
-            pe.E().apply(x -> -x);
             return true;
         }
     }
@@ -95,14 +94,14 @@ public class AugmentedFilter {
             else
                 throw new SsfException(SsfException.INCONSISTENT); 
         }
-        // P = P - (M)* F^-1 *(M)' --> Symmetric
-        // PZ'(LL')^-1 ZP' =PZ'L'^-1*L^-1*ZP'
-        // a = a + (M)* F^-1 * v
+        // P = P - M * v^-1 * M' --> Symmetric
+        // a = a + M * v^-1 * e
+        // A = A - M * v^-1 * E
         state.a().addAY(e / v, pe.M());
         DataBlockIterator acols = state.A().columnsIterator();
         DoubleSeqCursor cell = pe.E().cursor();
         while (acols.hasNext()) {
-            acols.next().addAY(cell.getAndNext() / v, pe.M());
+            acols.next().addAY(-cell.getAndNext() / v, pe.M());
         }
         update(state.P(), v, pe.M());
     }
@@ -207,6 +206,8 @@ public class AugmentedFilter {
         if (!collapsing) {
             return false;
         }
+        if (! decomp.canCollapse())
+            return false;
         // update the state vector
         if (!decomp.collapse(t, state)) {
             return false;

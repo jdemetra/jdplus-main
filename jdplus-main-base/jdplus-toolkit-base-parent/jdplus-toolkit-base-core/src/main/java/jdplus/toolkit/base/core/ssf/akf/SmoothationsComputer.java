@@ -100,9 +100,9 @@ public class SmoothationsComputer {
         QAugmentation q = frslts.getAugmentation();
 //        FastMatrix A = q.A(); // A*a^-1'
         // Psi = = a'^-1* a^-1
-        S = q.a().deepClone(); // 
-        // delta=-a'^-1 * b
-        delta = q.b().deepClone();
+//        S = q.S().deepClone(); // 
+//        // delta=-a'^-1 * b
+//        delta = q.b();
         LowerTriangularMatrix.solvexL(S, delta);
         delta.chs();
 //        FastMatrix is = LowerTriangularMatrix.inverse(S);

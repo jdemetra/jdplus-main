@@ -25,10 +25,11 @@ import jdplus.toolkit.base.core.ssf.univariate.ISsf;
 public class DefaultQFilteringResults extends DefaultAugmentedFilteringResults implements IQFilteringResults {
 
     private int collapsed;
-    private final QAugmentation Q = new QAugmentation();
+    private final QAugmentation Q;
 
     private DefaultQFilteringResults(boolean var) {
         super(var);
+        Q=QAugmentation.defaultQ();
     }
 
     public static DefaultQFilteringResults full() {
