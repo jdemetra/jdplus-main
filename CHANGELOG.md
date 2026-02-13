@@ -12,12 +12,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
 - ![UI] Fix slow charts when displaying lots of observations [#844](https://github.com/jdemetra/jdplus-main/issues/844)
 - ![UI] Fix DateSelectorUI showing "from"/"to" default values without setting them [#856](https://github.com/jdemetra/jdplus-main/issues/856)
+- ![STAT] Fix errors in the dynamics of some state space forms (seasonal component, composite models, ARMA models (second form))
 
 ### Changed
 
 - ![IO] Improve data collector to include any multiple of ChronoUnit [#825](https://github.com/jdemetra/jdplus-main/issues/825)
 - ![IO] Fix missing results in the SA multi-processing matrix view
 - ![STAT] Change seasonality tests for SA series (use of the differencing order of the regarima model when it is available to avoid misleading results)
+- ![STAT] Improve the implementation of the augmented Kalman filter
 
 ## [3.6.0] - 2025-11-20
 
