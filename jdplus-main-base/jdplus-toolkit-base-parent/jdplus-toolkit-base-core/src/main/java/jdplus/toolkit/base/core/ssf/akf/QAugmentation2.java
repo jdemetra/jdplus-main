@@ -18,11 +18,9 @@ package jdplus.toolkit.base.core.ssf.akf;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.data.LogSign;
 import jdplus.toolkit.base.core.stats.likelihood.DeterminantalTerm;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
 /**
@@ -48,7 +46,7 @@ public class QAugmentation2 implements QAugmentation{
     private final DeterminantalTerm det = new DeterminantalTerm();
 
     @Override
-    public void prepare(final int nd, final int nvars) {
+    public void prepare(final int nd, final int nvars, int nmax) {
         clear();
         this.nd = nd;
         Q = FastMatrix.make(nd + 1, nd + 1 + nvars);
@@ -61,12 +59,25 @@ public class QAugmentation2 implements QAugmentation{
         det.clear();
     }
     
-    public int getDegreesofFreedom(){
-        return n-nd;
+    @Override
+    public int n(){
+        return n;
     }
 
     @Override
+    public int nd(){
+        return nd;
+    }
+
+    @Override
+    public double logDeterminant(){
+        return det.getLogDeterminant();
+    }
+    
+    @Override
     public void update(AugmentedUpdateInformation pe) {
+        if (pe.isMissing())
+            return;
         double v = pe.getVariance();
         if (v == 0)
             return; // redundant constraint
@@ -79,6 +90,13 @@ public class QAugmentation2 implements QAugmentation{
         col.set(nd, e / se);
         ElementaryTransformations.fastGivensTriangularize(Q);
     }
+
+    @Override
+    public DoubleSeq delta() {
+        DataBlock b=b().deepClone();
+        LowerTriangularMatrix.solvexL(choleskyS(), b);
+        return b;
+    }    
 
     DataBlock b() {
         return Q.row(nd).range(0, nd);
@@ -95,45 +113,10 @@ public class QAugmentation2 implements QAugmentation{
     }
     
     @Override
-    public int getDegreesOfFreedom(){
-        return n-nd;
-    }
-
-    /**
-     * Gets the matrix of the diffuse effects used for collapsing
-     * @return 
-     */
-    public FastMatrix B(){
-        return A;
-    }
-    
-    @Override
     public FastMatrix choleskyS(){
         return Q.extract(0, nd, 0, nd);
     }
     
-    @Override
-    public DoubleSeq delta(){
-        FastMatrix LS = choleskyS();
-        DataBlock b = b().deepClone();
-        LowerTriangularMatrix.solveLx(LS, b);
-        return b;
-    }
-
-    @Override
-    public DiffuseLikelihood likelihood(boolean scalingfactor) {
-        double cc = c();
-        cc *= cc;
-        LogSign dsl = LogSign.of(choleskyS().diagonal());
-        double dcorr = 2 * dsl.getValue();
-        return DiffuseLikelihood.builder(n, nd)
-                .ssqErr(cc)
-                .logDeterminant(det.getLogDeterminant())
-                .diffuseCorrection(dcorr)
-                .concentratedScalingFactor(scalingfactor)
-                .build();
-    }
-
     @Override
     public boolean canCollapse() {
         if (n < nd) {
@@ -141,7 +124,7 @@ public class QAugmentation2 implements QAugmentation{
         }
         return isWellConditioned();
     }
-
+    
     @Override
     public boolean collapse(AugmentedState state) {
         if (!QAugmentation.isNotNull(Q.diagonal().drop(0, 1))) {
@@ -154,7 +137,7 @@ public class QAugmentation2 implements QAugmentation{
         LowerTriangularMatrix.solveXLt(choleskyS(), A);
         for (int i = 0; i < d; ++i) {
             DataBlock col = A.column(i);
-            state.a().addAY(Q.get(d, i), col);
+            state.a().addAY(-Q.get(d, i), col);
             state.P().addXaXt(1, col);
         }
         state.dropAllConstraints();

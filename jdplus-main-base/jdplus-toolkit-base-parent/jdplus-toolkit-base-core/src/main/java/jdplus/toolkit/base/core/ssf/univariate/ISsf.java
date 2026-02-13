@@ -61,32 +61,24 @@ public interface ISsf extends ISsfState {
         loading().XpZd(pos, x, -x.dot(m) / f);
     }
 
-    default void XL(int pos, FastMatrix X, DataBlock m, double f) {
+    default void XL(int pos, DataBlockIterator X, DataBlock m, double f) {
         // XT - [(XT)*m]/f * z
         ISsfDynamics dynamics = dynamics();
         ISsfLoading loading = loading();
         // Apply XL on each row of X
-        DataBlockIterator rows = X.rowsIterator();
-        while (rows.hasNext()) {
-            DataBlock row = rows.next();
-            dynamics.XT(pos, row);
-            loading.XpZd(pos, row, -row.dot(m) / f);
+        while (X.hasNext()) {
+            DataBlock x = X.next();
+            dynamics.XT(pos, x);
+            loading.XpZd(pos, x, -x.dot(m) / f);
         }
-
     }
 
-    default void XtL(int pos, FastMatrix X, DataBlock m, double f) {
-        // XT - [(XT)*m]/f * z
-        ISsfDynamics dynamics = dynamics();
-        ISsfLoading loading = loading();
-        // Apply XL on each column of M
-        DataBlockIterator cols = X.columnsIterator();
-        while (cols.hasNext()) {
-            DataBlock col = cols.next();
-            dynamics.XT(pos, col);
-            loading.XpZd(pos, col, -col.dot(m) / f);
-        }
+    default void XL(int pos, FastMatrix X, DataBlock m, double f) {
+        XL(pos, X.rowsIterator(), m, f);
+     }
 
+    default void XtL(int pos, FastMatrix X, DataBlock m, double f) {
+        XL(pos, X.columnsIterator(), m, f);
     }
 
     /**

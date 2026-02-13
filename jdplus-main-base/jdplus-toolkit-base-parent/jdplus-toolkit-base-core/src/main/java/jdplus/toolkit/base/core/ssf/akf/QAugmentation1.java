@@ -18,11 +18,9 @@ package jdplus.toolkit.base.core.ssf.akf;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.data.LogSign;
 import jdplus.toolkit.base.core.stats.likelihood.DeterminantalTerm;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
 /**
@@ -38,7 +36,7 @@ public class QAugmentation1 implements QAugmentation {
     private final DeterminantalTerm det = new DeterminantalTerm();
 
     @Override
-    public void prepare(final int nd, final int nvars) {
+    public void prepare(final int nd, final int nvars, final int nmax) {
         clear();
         this.nd = nd;
         S = FastMatrix.make(nd, nd + nvars);
@@ -53,9 +51,26 @@ public class QAugmentation1 implements QAugmentation {
         q = 0;
         s = null;
     }
+    
+    @Override
+    public int n(){
+        return n;
+    }
 
     @Override
+    public int nd(){
+        return nd;
+    }
+
+    @Override
+    public double logDeterminant(){
+        return det.getLogDeterminant();
+    }
+    
+    @Override
     public void update(AugmentedUpdateInformation pe) {
+        if (pe.isMissing())
+            return;
         double v = pe.getVariance();
         if (v == 0) {
             return; // redundant constraint
@@ -76,49 +91,23 @@ public class QAugmentation1 implements QAugmentation {
         return S.extract(0, nd, 0, nd);
     }
 
-    public DataBlock s() {
-        return s;
-    }
-
     @Override
     public DoubleSeq delta() {
-        DataBlock b = s.deepClone();
-        LowerTriangularMatrix.solveLx(S.extract(0, nd, 0, nd), b);
+        DataBlock b = b();
+        LowerTriangularMatrix.solvexL(S.extract(0, nd, 0, nd), b);
         return b;
     }
 
     @Override
-    public double ssq() {
-        DoubleSeq b = delta();
-        return q - b.fastNorm2();
-    }
-    
-    @Override
-    public int getDegreesOfFreedom(){
-        return n-nd;
+    public double ssq(){
+        DoubleSeq b = b();
+        return q - b.ssq();
     }
 
-    /**
-     * Gets the matrix of the diffuse effects used for collapsing
-     *
-     * @return
-     */
-    public FastMatrix B() {
-        return A;
-    }
-
-    @Override
-    public DiffuseLikelihood likelihood(boolean scalingfactor) {
-        DoubleSeq b = delta();
-        double cc = q - b.ssq();
-        LogSign dsl = LogSign.of(S.diagonal());
-        double dcorr = 2 * dsl.getValue();
-        return DiffuseLikelihood.builder(n, nd)
-                .ssqErr(cc)
-                .logDeterminant(det.getLogDeterminant())
-                .diffuseCorrection(dcorr)
-                .concentratedScalingFactor(scalingfactor)
-                .build();
+    DataBlock b() {
+        DataBlock b = s.deepClone();
+        LowerTriangularMatrix.solveLx(S.extract(0, nd, 0, nd), b);
+        return b;
     }
 
     @Override
@@ -126,7 +115,7 @@ public class QAugmentation1 implements QAugmentation {
         if (n < nd) {
             return false;
         }
-        
+
         return isWellConditioned();
     }
 
@@ -145,7 +134,7 @@ public class QAugmentation1 implements QAugmentation {
         LowerTriangularMatrix.solveLx(W, w);
         for (int i = 0; i < d; ++i) {
             DataBlock col = A.column(i);
-            state.a().addAY(w.get(i), col);
+            state.a().addAY(-w.get(i), col);
             state.P().addXaXt(1, col);
         }
         state.dropAllConstraints();

@@ -18,10 +18,8 @@ package jdplus.toolkit.base.core.ssf.akf;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.data.LogSign;
 import jdplus.toolkit.base.core.stats.likelihood.DeterminantalTerm;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.MatrixException;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
@@ -39,7 +37,7 @@ public class QAugmentation3 implements QAugmentation {
     private final DeterminantalTerm det = new DeterminantalTerm();
 
     @Override
-    public void prepare(final int nd, final int nvars) {
+    public void prepare(final int nd, final int nvars, final int nmax) {
         clear();
         this.nd = nd;
         S = FastMatrix.make(nd, nd);
@@ -58,12 +56,26 @@ public class QAugmentation3 implements QAugmentation {
         s = null;
     }
 
-    public int getDegreesofFreedom() {
-        return n - nd;
+    @Override
+    public int n() {
+        return n;
+    }
+
+    @Override
+    public int nd() {
+        return nd;
+    }
+
+    @Override
+    public double logDeterminant() {
+        return det.getLogDeterminant();
     }
 
     @Override
     public void update(AugmentedUpdateInformation pe) {
+        if (pe.isMissing()) {
+            return;
+        }
         double v = pe.getVariance();
         if (v == 0) {
             return; // redundant constraint
@@ -81,14 +93,16 @@ public class QAugmentation3 implements QAugmentation {
         return S.extract(0, nd, 0, nd);
     }
 
-    public DataBlock s() {
-        return s;
+    @Override
+    public double ssq() {
+        return q - b().ssq();
     }
 
     DataBlock b() {
-        FastMatrix LS=choleskyS();
-        if (LS == null)
+        FastMatrix LS = choleskyS();
+        if (LS == null) {
             return null;
+        }
         DataBlock b = s.deepClone();
         LowerTriangularMatrix.solveLx(LS, b);
         return b;
@@ -97,24 +111,15 @@ public class QAugmentation3 implements QAugmentation {
     @Override
     public DoubleSeq delta() {
         DataBlock b = b();
+        if (b == null)
+            return null;
         LowerTriangularMatrix.solvexL(L, b);
         return b;
     }
 
     @Override
-    public double ssq() {
-        DataBlock b = b();
-        return q - b.fastNorm2();
-    }
-
-    @Override
-    public int getDegreesOfFreedom(){
-        return n-nd;
-    }
-
-    @Override
     public FastMatrix choleskyS() {
-       if (L == null) {
+        if (L == null) {
             try {
                 L = S.deepClone();
                 SymmetricMatrix.lcholesky(L);
@@ -126,23 +131,6 @@ public class QAugmentation3 implements QAugmentation {
     }
 
     @Override
-    public DiffuseLikelihood likelihood(boolean scalingfactor) {
-        FastMatrix LS=choleskyS();
-        if (LS == null)
-            return null;
-        DataBlock b = b();
-        double cc = q - b.ssq();
-        LogSign dsl = LogSign.of(LS.diagonal());
-        double dcorr = 2 * dsl.getValue();
-        return DiffuseLikelihood.builder(n, nd)
-                .ssqErr(cc)
-                .logDeterminant(det.getLogDeterminant())
-                .diffuseCorrection(dcorr)
-                .concentratedScalingFactor(scalingfactor)
-                .build();
-    }
-
-    @Override
     public boolean canCollapse() {
         if (n < nd) {
             return false;
@@ -151,8 +139,9 @@ public class QAugmentation3 implements QAugmentation {
             try {
                 L = S.deepClone();
                 SymmetricMatrix.lcholesky(L);
-                if (!QAugmentation.isWellConditioned(L.diagonal()))
+                if (!QAugmentation.isWellConditioned(L.diagonal())) {
                     return false;
+                }
             } catch (MatrixException err) {
                 L = null;
                 return false;
@@ -167,8 +156,9 @@ public class QAugmentation3 implements QAugmentation {
             try {
                 L = S.deepClone();
                 SymmetricMatrix.lcholesky(L);
-                if (!QAugmentation.isNotNull(L.diagonal()))
+                if (!QAugmentation.isNotNull(L.diagonal())) {
                     return false;
+                }
             } catch (MatrixException err) {
                 L = null;
                 return false;
@@ -183,7 +173,7 @@ public class QAugmentation3 implements QAugmentation {
         LowerTriangularMatrix.solveLx(L, w);
         for (int i = 0; i < d; ++i) {
             DataBlock col = A.column(i);
-            state.a().addAY(w.get(i), col);
+            state.a().addAY(-w.get(i), col);
             state.P().addXaXt(1, col);
         }
         state.dropAllConstraints();

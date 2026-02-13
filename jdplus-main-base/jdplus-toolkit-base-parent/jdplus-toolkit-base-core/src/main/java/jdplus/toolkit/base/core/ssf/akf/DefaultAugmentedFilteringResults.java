@@ -33,19 +33,26 @@ public class DefaultAugmentedFilteringResults extends DefaultFilteringResults im
 
     private final MatrixResults A;
     private final DataBlockResults E;
+    private int collapsed;
+    private final QAugmentation Q;
 
-    protected DefaultAugmentedFilteringResults(boolean var) {
+    private DefaultAugmentedFilteringResults(QAugmentation q, boolean var) {
         super(var);
         A = new MatrixResults();
         E = new DataBlockResults();
+        Q = q == null ? QAugmentation.of(QAugmentation.DEFAULT) : q;
     }
 
-    public static DefaultAugmentedFilteringResults full() {
-        return new DefaultAugmentedFilteringResults(true);
+    public DefaultAugmentedFilteringResults(QAugmentation.QType q, boolean var) {
+        this(QAugmentation.of(q), var);
     }
 
-    public static DefaultAugmentedFilteringResults light() {
-        return new DefaultAugmentedFilteringResults(false);
+    public static DefaultAugmentedFilteringResults full(QAugmentation q) {
+        return new DefaultAugmentedFilteringResults(q, true);
+    }
+
+    public static DefaultAugmentedFilteringResults light(QAugmentation q) {
+        return new DefaultAugmentedFilteringResults(q, false);
     }
 
     @Override
@@ -55,16 +62,52 @@ public class DefaultAugmentedFilteringResults extends DefaultFilteringResults im
         int dim = initialization.getStateDim(), n = initialization.getDiffuseDim();
         A.prepare(dim, n, 0, n);
         E.prepare(dim, 0, n);
+        Q.prepare(n, 1, end);
+        collapsed = end;
     }
 
     @Override
     public void save(int t, AugmentedUpdateInformation pe) {
         super.save(t, pe);
         E.save(t, pe.E());
+        Q.update(pe);
     }
 
     @Override
     public void close(int pos) {
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        A.clear();
+        E.clear();
+        collapsed = 0;
+    }
+
+    @Override
+    public int getCollapsingPosition() {
+        return collapsed;
+    }
+
+    @Override
+    public QAugmentation getAugmentation() {
+        return Q;
+    }
+
+    @Override
+    public boolean canCollapse() {
+        return Q.canCollapse();
+    }
+
+    @Override
+    public boolean collapse(int pos, AugmentedState state) {
+        if (Q.collapse(state)) {
+            collapsed = pos;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -86,9 +129,4 @@ public class DefaultAugmentedFilteringResults extends DefaultFilteringResults im
         return E.datablock(pos);
     }
 
-    @Override
-    public void clear() {
-        super.clear();
-        A.clear();
-    }
 }

@@ -77,31 +77,33 @@ public class AugmentedFilter {
                 f = 0;
             }
             pe.setVariance(f);
-            
+
             double y = data.get(t);
             pe.set(y - loading.ZX(t, state.a()), data.isConstraint(t));
 
             loading.ZM(t, state.A(), pe.E());
+            pe.E().chs();
             return true;
         }
     }
 
     private void update() {
         double v = pe.getVariance(), e = pe.get();
-        if (v == 0){
-            if (Math.abs(e)<State.ZERO)
+        if (v == 0) {
+            if (Math.abs(e) < State.ZERO) {
                 return;
-            else
-                throw new SsfException(SsfException.INCONSISTENT); 
+            } else {
+                throw new SsfException(SsfException.INCONSISTENT);
+            }
         }
         // P = P - M * v^-1 * M' --> Symmetric
         // a = a + M * v^-1 * e
-        // A = A - M * v^-1 * E
+        // A = A - M * v^-1 * tilde(E) = = A + M * v^-1 * E
         state.a().addAY(e / v, pe.M());
         DataBlockIterator acols = state.A().columnsIterator();
         DoubleSeqCursor cell = pe.E().cursor();
         while (acols.hasNext()) {
-            acols.next().addAY(-cell.getAndNext() / v, pe.M());
+            acols.next().addAY(cell.getAndNext() / v, pe.M());
         }
         update(state.P(), v, pe.M());
     }
@@ -135,7 +137,7 @@ public class AugmentedFilter {
      * @param rslts
      * @return
      */
-    public boolean process(final ISsf ssf, final ISsfData data, final IQFilteringResults rslts) {
+    public boolean process(final ISsf ssf, final ISsfData data, final IAugmentedFilteringResults rslts) {
         this.ssf = ssf;
         loading = ssf.loading();
         error = ssf.measurementError();
@@ -145,6 +147,9 @@ public class AugmentedFilter {
             return false;
         }
         int t = 0, end = data.length();
+        if (!collapsing) {
+            collapsingPos = end;
+        }
         while (t < end) {
             if (rslts != null) {
                 rslts.save(t, state, StateInfo.Forecast);
@@ -166,48 +171,18 @@ public class AugmentedFilter {
         return true;
     }
 
-    public boolean process(final ISsf ssf, final ISsfData data, final IAugmentedFilteringResults rslts) {
-        this.ssf = ssf;
-        loading = ssf.loading();
-        error = ssf.measurementError();
-        dynamics = ssf.dynamics();
-        this.data = data;
-        if (!initState()) {
-            return false;
-        }
-        int t = 0, end = data.length();
-        while (t < end) {
-            if (rslts != null) {
-                rslts.save(t, state, StateInfo.Forecast);
-            }
-            if (error(t)) {
-                if (rslts != null) {
-                    rslts.save(t, pe);
-                }
-                update();
-            }
-            if (rslts != null) {
-                rslts.save(t, state, StateInfo.Concurrent);
-            }
-            state.next(t++, dynamics);
-        }
-//        if (collapsing && collapsingPos < 0) {
-//            collapsingPos=end;
-//        }
-        return true;
-    }
-
     // P -= c*r
     private void update(FastMatrix P, double v, DataBlock C) {
         P.addXaXt(-1 / v, C);
     }
 
-    private boolean collapse(int t, IQFilteringResults decomp) {
+    private boolean collapse(int t, IAugmentedFilteringResults decomp) {
         if (!collapsing) {
             return false;
         }
-        if (! decomp.canCollapse())
+        if (!decomp.canCollapse()) {
             return false;
+        }
         // update the state vector
         if (!decomp.collapse(t, state)) {
             return false;

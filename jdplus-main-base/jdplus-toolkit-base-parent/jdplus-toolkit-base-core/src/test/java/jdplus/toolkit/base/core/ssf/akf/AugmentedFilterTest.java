@@ -17,13 +17,13 @@ package jdplus.toolkit.base.core.ssf.akf;
 
 import java.util.Random;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
-import jdplus.toolkit.base.core.arima.StationaryTransformation;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.ssf.StateComponent;
+import jdplus.toolkit.base.core.ssf.akf.QAugmentation.QType;
 import jdplus.toolkit.base.core.ssf.arima.SsfArima;
 import jdplus.toolkit.base.core.ssf.composite.CompositeSsf;
-import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
 import jdplus.toolkit.base.core.ssf.sts.Noise;
 import jdplus.toolkit.base.core.ssf.sts.PeriodicComponent;
@@ -32,6 +32,7 @@ import jdplus.toolkit.base.core.ssf.univariate.Ssf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -59,7 +60,7 @@ public class AugmentedFilterTest {
 
         Ssf ssf = Ssf.of(SsfArima.stateComponent(arima1), SsfArima.defaultLoading());
         SsfData ssfData = new SsfData(A);
-        QPredictionErrorDecomposition frslts = new QPredictionErrorDecomposition(new QAugmentation2(), true);
+        QPredictionErrorDecomposition frslts = new QPredictionErrorDecomposition(QAugmentation.QType.PARTIAL_TRIANGULARIZATION, true);
         AugmentedFilter filter = new AugmentedFilter();
         frslts.prepare(ssf, A.length());
         filter.process(ssf, ssfData, frslts);
@@ -73,15 +74,78 @@ public class AugmentedFilterTest {
         assertEquals(ll0.logLikelihood(), ll2.logLikelihood(), 1e-10);
     }
 
+    @Test
+    public void testQ() {
+        DataBlock A = DataBlock.make(300);
+        Random rnd = new Random(0);
+        A.apply(i -> rnd.nextDouble());
+
+        Ssf ssf = Ssf.of(SsfArima.stateComponent(arima1), SsfArima.defaultLoading());
+        SsfData ssfData = new SsfData(A);
+        for (int i = 0; i < 2; ++i) {
+            QPredictionErrorDecomposition frslts = new QPredictionErrorDecomposition(QType.NORMAL, true);
+            AugmentedFilter filter = new AugmentedFilter(i == 0);
+            frslts.prepare(ssf, A.length());
+            filter.process(ssf, ssfData, frslts);
+            DoubleSeq delta1 = frslts.getAugmentation().delta();
+            DoubleSeq d1 = frslts.getAugmentation().choleskyS().diagonal();
+            double q1 = frslts.getAugmentation().ssq();
+
+            frslts = new QPredictionErrorDecomposition(QType.PARTIAL_TRIANGULARIZATION, true);
+            frslts.prepare(ssf, A.length());
+            filter.process(ssf, ssfData, frslts);
+            DoubleSeq delta2 = frslts.getAugmentation().delta();
+            DoubleSeq d2 = frslts.getAugmentation().choleskyS().diagonal();
+            double q2 = frslts.getAugmentation().ssq();
+
+            frslts = new QPredictionErrorDecomposition(QType.FULL_TRIANGULARIZATION, true);
+            frslts.prepare(ssf, A.length());
+            filter.process(ssf, ssfData, frslts);
+            DoubleSeq delta3 = frslts.getAugmentation().delta();
+            DoubleSeq d3 = frslts.getAugmentation().choleskyS().diagonal();
+            double q3 = frslts.getAugmentation().ssq();
+
+            frslts = new QPredictionErrorDecomposition(QType.QR, true);
+            frslts.prepare(ssf, A.length());
+            filter.process(ssf, ssfData, frslts);
+            DoubleSeq delta4 = frslts.getAugmentation().delta();
+            DoubleSeq d4 = frslts.getAugmentation().choleskyS().diagonal();
+            double q4 = frslts.getAugmentation().ssq();
+//            System.out.println(delta1);
+//            System.out.println(delta2);
+//            System.out.println(delta3);
+//            System.out.println(delta4);
+
+            assertTrue(delta1.distance(delta2) < 1e-12);
+            assertTrue(delta1.distance(delta3) < 1e-12);
+            assertTrue(delta1.distance(delta4) < 1e-12);
+
+//            System.out.println(d1);
+//            System.out.println(d2);
+//            System.out.println(d3);
+//            System.out.println(d4);
+            assertTrue(d1.distance(d2) < 1e-12);
+            assertTrue(d1.distance(d3) < 1e-12);
+            assertTrue(d1.distance(d4) < 1e-12);
+
+//            System.out.println(s1);
+//            System.out.println(s2);
+//            System.out.println(s3);
+            assertEquals(q1, q2, 1e-12);
+            assertEquals(q1, q3, 1e-12);
+            assertEquals(q1, q4, 1e-12);
+        }
+    }
+
     public static void main(String[] arg) {
         int N = 10000, K = 100;
-        for (int q = 1; q <= 3; ++q) {
+        for (int q = 1; q <= 4; ++q) {
             test1(N, K, 36, q, true);
         }
-         for (int q = 1; q <= 3; ++q) {
-            test2(N, K, 300, q, true);
+        for (int q = 1; q <= 4; ++q) {
+            test2(N, K, 100, q, true);
         }
-   }
+    }
 
     private static void test1(int N, int K, int p, int q, boolean print) {
         SarimaOrders spec = SarimaOrders.airline(p);
@@ -93,14 +157,15 @@ public class AugmentedFilterTest {
 
         Ssf ssf = Ssf.of(SsfArima.stateComponent(m), SsfArima.defaultLoading());
         SsfData ssfData = new SsfData(A);
-        QAugmentation Q;
-        Q = switch (q) {
+        QType Q = switch (q) {
             case 1 ->
-                QAugmentation.byPartialTriangularization();
+                QType.NORMAL;
             case 2 ->
-                QAugmentation.byFullTriangularization();
+                QType.PARTIAL_TRIANGULARIZATION;
+            case 3 ->
+                QType.FULL_TRIANGULARIZATION;
             default ->
-                QAugmentation.normalEquation();
+                QType.QR;
         };
         QPredictionErrorDecomposition frslts = new QPredictionErrorDecomposition(Q, false);
         AugmentedFilter filter = new AugmentedFilter(false);
@@ -118,17 +183,16 @@ public class AugmentedFilterTest {
             System.out.println(dl);
         }
 
-        QRFilter filter2 = new QRFilter();
-        t0 = System.currentTimeMillis();
-        for (int i = 0; i < K; ++i) {
-            filter2.process(ssf, ssfData);
-        }
-        t1 = System.currentTimeMillis();
-        System.out.println(t1 - t0);
-        if (print) {
-            System.out.println(filter2.diffuseLikelihood(true, true));
-        }
-
+//        QRFilter filter2 = new QRFilter();
+//        t0 = System.currentTimeMillis();
+//        for (int i = 0; i < K; ++i) {
+//            filter2.process(ssf, ssfData);
+//        }
+//        t1 = System.currentTimeMillis();
+//        System.out.println(t1 - t0);
+//        if (print) {
+//            System.out.println(filter2.diffuseLikelihood(true, true));
+//        }
         t0 = System.currentTimeMillis();
 
         AugmentedFilterInitializer initializer = new AugmentedFilterInitializer(frslts);
@@ -145,14 +209,14 @@ public class AugmentedFilterTest {
             System.out.println(dl);
         }
 
-        StationaryTransformation<SarimaModel> st = m.stationaryTransformation();
-        DataBlock Ast = DataBlock.make(N - st.getUnitRoots().getDegree());
-        st.getUnitRoots().apply(A, Ast);
-
-        DiffuseLikelihood ll = DkToolkit.likelihoodComputer(true, true, true).compute(Ssf.of(SsfArima.stateComponent(st.getStationaryModel()), SsfArima.defaultLoading()), new SsfData(Ast));
-        if (print) {
-            System.out.println(ll);
-        }
+//        StationaryTransformation<SarimaModel> st = m.stationaryTransformation();
+//        DataBlock Ast = DataBlock.make(N - st.getUnitRoots().getDegree());
+//        st.getUnitRoots().apply(A, Ast);
+//
+//        DiffuseLikelihood ll = DkToolkit.likelihoodComputer(true, true, true).compute(Ssf.of(SsfArima.stateComponent(st.getStationaryModel()), SsfArima.defaultLoading()), new SsfData(Ast));
+//        if (print) {
+//            System.out.println(ll);
+//        }
     }
 
     private static void test2(int N, int K, int p, int q, boolean print) {
@@ -170,14 +234,15 @@ public class AugmentedFilterTest {
         A.apply(i -> rnd.nextDouble());
 
         SsfData ssfData = new SsfData(A);
-        QAugmentation Q;
-        Q = switch (q) {
-           case 1 ->
-                QAugmentation.byPartialTriangularization();
+        QType Q = switch (q) {
+            case 1 ->
+                QType.NORMAL;
             case 2 ->
-                QAugmentation.byFullTriangularization();
+                QType.PARTIAL_TRIANGULARIZATION;
+            case 3 ->
+                QType.FULL_TRIANGULARIZATION;
             default ->
-                QAugmentation.normalEquation();
+                QType.QR;
         };
         QPredictionErrorDecomposition frslts = new QPredictionErrorDecomposition(Q, false);
         AugmentedFilter filter = new AugmentedFilter(false);
@@ -195,17 +260,16 @@ public class AugmentedFilterTest {
             System.out.println(dl);
         }
 
-        QRFilter filter2 = new QRFilter();
-        t0 = System.currentTimeMillis();
-        for (int i = 0; i < K; ++i) {
-            filter2.process(ssf, ssfData);
-        }
-        t1 = System.currentTimeMillis();
-        System.out.println(t1 - t0);
-        if (print) {
-            System.out.println(filter2.diffuseLikelihood(true, true));
-        }
-
+//        QRFilter filter2 = new QRFilter();
+//        t0 = System.currentTimeMillis();
+//        for (int i = 0; i < K; ++i) {
+//            filter2.process(ssf, ssfData);
+//        }
+//        t1 = System.currentTimeMillis();
+//        System.out.println(t1 - t0);
+//        if (print) {
+//            System.out.println(filter2.diffuseLikelihood(true, true));
+//        }
         t0 = System.currentTimeMillis();
 
         AugmentedFilterInitializer initializer = new AugmentedFilterInitializer(frslts);
