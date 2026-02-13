@@ -43,7 +43,7 @@ public class AugmentedFilter {
     private ISsfError error;
     private ISsfDynamics dynamics;
     private ISsfData data;
-    private boolean missing;
+//    private boolean missing;
     private final boolean collapsing;
     private int collapsingPos = -1;
     //private double scale;
@@ -55,57 +55,52 @@ public class AugmentedFilter {
         collapsing = false;
     }
 
-    public AugmentedFilter(final boolean collapsing) {
+    AugmentedFilter(final boolean collapsing) {
         this.collapsing = collapsing;
     }
 
-    protected boolean error(int t) {
-        missing = data.isMissing(t);
-        if (missing) {
-            pe.E().set(0);
-            pe.M().set(0);
-            // pe_ = null;
+    private boolean error(int t) {
+        if (data.isMissing(t)) {
+            pe.setMissing();
             return false;
         } else {
-            // K = PZ'/f
-            // computes (ZP)' in K'. Missing values are set to 0 
-            // Z~v x r, P~r x r, K~r x v
+            // computes (ZP)' in C'. Missing values are set to 0 
+            // Z~m x r, P~r x r, C~r x f
             DataBlock C = pe.M();
-            // computes ZPZ'; results in pe_.L
-            //measurement.ZVZ(pos_, state_.P.subMatrix(), F);
             loading.ZM(t, state.P(), C);
-            double v = loading.ZX(t, C);
+            // f = ZPZ'+ h = ZC + h
+            double f = loading.ZX(t, C);
             if (error != null) {
-                v += error.at(t);
+                f += error.at(t);
             }
-            if (v < State.ZERO) {
-                v = 0;
+            if (f < State.ZERO) {
+                f = 0;
             }
-            pe.setVariance(v);
-            // We put in K  PZ'*(ZPZ'+H)^-1 = PZ'* F^-1 = PZ'*(LL')^-1/2 = PZ'(L')^-1
-            // K L' = PZ' or L K' = ZP
+            pe.setVariance(f);
 
             double y = data.get(t);
             pe.set(y - loading.ZX(t, state.a()), data.isConstraint(t));
-            loading.ZM(t, state.B(), pe.E());
-            pe.E().apply(x -> -x);
+
+            loading.ZM(t, state.A(), pe.E());
+            pe.E().chs();
             return true;
         }
     }
 
-    protected void update() {
+    private void update() {
         double v = pe.getVariance(), e = pe.get();
-        if (v == 0){
-            if (Math.abs(e)<State.ZERO)
+        if (v == 0) {
+            if (Math.abs(e) < State.ZERO) {
                 return;
-            else
-                throw new SsfException(SsfException.INCONSISTENT); 
+            } else {
+                throw new SsfException(SsfException.INCONSISTENT);
+            }
         }
-        // P = P - (M)* F^-1 *(M)' --> Symmetric
-        // PZ'(LL')^-1 ZP' =PZ'L'^-1*L^-1*ZP'
-        // a = a + (M)* F^-1 * v
+        // P = P - M * v^-1 * M' --> Symmetric
+        // a = a + M * v^-1 * e
+        // A = A - M * v^-1 * tilde(E) = = A + M * v^-1 * E
         state.a().addAY(e / v, pe.M());
-        DataBlockIterator acols = state.B().columnsIterator();
+        DataBlockIterator acols = state.A().columnsIterator();
         DoubleSeqCursor cell = pe.E().cursor();
         while (acols.hasNext()) {
             acols.next().addAY(cell.getAndNext() / v, pe.M());
@@ -121,7 +116,7 @@ public class AugmentedFilter {
         return state;
     }
 
-    public int getCollapsingPosition() {
+    int getCollapsingPosition() {
         return collapsingPos;
     }
 
@@ -142,7 +137,7 @@ public class AugmentedFilter {
      * @param rslts
      * @return
      */
-    public boolean process(final ISsf ssf, final ISsfData data, final IQFilteringResults rslts) {
+    public boolean process(final ISsf ssf, final ISsfData data, final IAugmentedFilteringResults rslts) {
         this.ssf = ssf;
         loading = ssf.loading();
         error = ssf.measurementError();
@@ -152,6 +147,9 @@ public class AugmentedFilter {
             return false;
         }
         int t = 0, end = data.length();
+        if (!collapsing) {
+            collapsingPos = end;
+        }
         while (t < end) {
             if (rslts != null) {
                 rslts.save(t, state, StateInfo.Forecast);
@@ -170,40 +168,6 @@ public class AugmentedFilter {
             }
             state.next(t++, dynamics);
         }
-//        if (collapsing && collapsingPos < 0) {
-//            collapsingPos=end;
-//        }
-        return true;
-    }
-
-    public boolean process(final ISsf ssf, final ISsfData data, final IAugmentedFilteringResults rslts) {
-        this.ssf = ssf;
-        loading = ssf.loading();
-        error = ssf.measurementError();
-        dynamics = ssf.dynamics();
-        this.data = data;
-        if (!initState()) {
-            return false;
-        }
-        int t = 0, end = data.length();
-        while (t < end) {
-            if (rslts != null) {
-                rslts.save(t, state, StateInfo.Forecast);
-            }
-            if (error(t)) {
-                if (rslts != null) {
-                    rslts.save(t, pe);
-                }
-                update();
-            }
-            if (rslts != null) {
-                rslts.save(t, state, StateInfo.Concurrent);
-            }
-            state.next(t++, dynamics);
-        }
-//        if (collapsing && collapsingPos < 0) {
-//            collapsingPos=end;
-//        }
         return true;
     }
 
@@ -212,8 +176,11 @@ public class AugmentedFilter {
         P.addXaXt(-1 / v, C);
     }
 
-    protected boolean collapse(int t, IQFilteringResults decomp) {
+    private boolean collapse(int t, IAugmentedFilteringResults decomp) {
         if (!collapsing) {
+            return false;
+        }
+        if (!decomp.canCollapse()) {
             return false;
         }
         // update the state vector

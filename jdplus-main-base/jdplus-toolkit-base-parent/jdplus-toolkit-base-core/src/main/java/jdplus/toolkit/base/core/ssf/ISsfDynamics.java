@@ -17,6 +17,7 @@
 package jdplus.toolkit.base.core.ssf;
 
 import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
@@ -150,7 +151,12 @@ public interface ISsfDynamics extends ISsfRoot {
      * @param M
      */
     default void MT(int pos, FastMatrix M) {
-        M.applyByRows(row->XT(pos, row));
+        MT(pos, M.rowsIterator());
+    }
+
+    default void MT(int pos, DataBlockIterator M) {
+        while (M.hasNext())
+            XT(pos, M.next());
     }
 
     /**
@@ -160,7 +166,7 @@ public interface ISsfDynamics extends ISsfRoot {
      * @param M
      */
     default void TtM(int pos, FastMatrix M) {
-        M.applyByColumns(col->XT(pos, col));
+        MT(pos, M.columnsIterator());
     }
     /**
      * Computes xs = x*S(pos)

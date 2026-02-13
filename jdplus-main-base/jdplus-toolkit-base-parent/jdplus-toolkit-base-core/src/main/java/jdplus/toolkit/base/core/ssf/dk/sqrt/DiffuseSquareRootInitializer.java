@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.base.core.ssf.dk.sqrt;
 
-import jdplus.toolkit.base.api.math.Constants;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
@@ -133,7 +132,7 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
             if (!astate.isDiffuse()) {
                 break;
             }
-            // astate contains now a(t+1|t), P(t+1|t), B(t+1)
+            // astate contains now a(t+1|t), P(t+1|t), A(t+1)
             astate.next(t++, dynamics);
         }
         if (t < end) {
@@ -273,7 +272,7 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
     // XX' = |RR'+ZXX'Z' ZXX'| = |AA'     AB'|
     //       |XX'Z'      XX' | = |BA' BB'+CC'|
     // A = Fi^1/2
-    // B = Ci * Fi^-1/2
+    // A = Ci * Fi^-1/2
     // C = X(t+1)
     private void preArray() {
         DataBlock zconstraints = zconstraints();
@@ -284,7 +283,7 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
     }
 
     private FastMatrix constraints() {
-        return astate.B();
+        return astate.A();
     }
 
     private DataBlock zconstraints() {

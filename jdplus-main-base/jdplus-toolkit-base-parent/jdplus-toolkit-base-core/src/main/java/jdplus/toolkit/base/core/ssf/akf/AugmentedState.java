@@ -39,16 +39,16 @@ public class AugmentedState extends State {
         initialization.a0(state.a());
         initialization.Pf0(state.P());
         if (initialization.isDiffuse()) {
-            initialization.diffuseConstraints(state.B);
+            initialization.diffuseConstraints(state.A);
         }
         return state;
     }
 
     /**
-     * B contains the states of the constraints. Its interpretation depends on
+     * A contains the states of the constraints. Its interpretation depends on
      * the considered step
      */
-    private final FastMatrix B;
+    private final FastMatrix A;
     private int ndropped = 0;
 
     /**
@@ -59,17 +59,17 @@ public class AugmentedState extends State {
      */
     public AugmentedState(final int dim, final int ndiffuse) {
         super(dim);
-        B = FastMatrix.make(dim, ndiffuse);
+        A = FastMatrix.make(dim, ndiffuse);
     }
 
-    public final FastMatrix B() {
-        return B.extract(0, B.getRowsCount(), ndropped, B.getColumnsCount()-ndropped);
+    public final FastMatrix A() {
+        return A.extract(0, A.getRowsCount(), ndropped, A.getColumnsCount()-ndropped);
     }
 
-    public void restoreB(FastMatrix b) {
-        int n = b.getColumnsCount(), m = B.getColumnsCount();
+    public void restoreA(FastMatrix a) {
+        int n = a.getColumnsCount(), m = A.getColumnsCount();
         ndropped = m - n;
-        B().copy(b);
+        A().copy(a);
     }
 
     public final void dropDiffuseConstraint() {
@@ -77,15 +77,15 @@ public class AugmentedState extends State {
     }
 
     public final void dropAllConstraints() {
-        ndropped = B.getColumnsCount();
+        ndropped = A.getColumnsCount();
     }
 
     public final boolean isDiffuse() {
-        return ndropped < B.getColumnsCount();
+        return ndropped < A.getColumnsCount();
     }
 
     public int getDiffuseDim() {
-        return B.getColumnsCount() - ndropped;
+        return A.getColumnsCount() - ndropped;
     }
 
     /**
@@ -100,7 +100,7 @@ public class AugmentedState extends State {
     public void next(int pos, ISsfDynamics dynamics) {
         super.next(pos, dynamics);
         if (isDiffuse()) {
-            dynamics.TM(pos, B);
+            dynamics.TM(pos, A);
         }
     }
 }

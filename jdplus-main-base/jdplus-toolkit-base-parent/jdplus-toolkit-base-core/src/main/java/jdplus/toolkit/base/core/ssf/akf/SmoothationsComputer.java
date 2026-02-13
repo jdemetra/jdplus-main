@@ -44,7 +44,7 @@ public class SmoothationsComputer {
     private ISsfLoading loading;
     private DataBlockStorage allR;
     private MatrixStorage allRvar;
-    private DefaultQFilteringResults frslts;
+    private DefaultAugmentedFilteringResults frslts;
 
     private double err, errVariance;
     private double u;
@@ -57,7 +57,7 @@ public class SmoothationsComputer {
 
     public boolean process(ISsf ssf, final ISsfData data) {
         int n = data.length();
-        frslts = DefaultQFilteringResults.light();
+        frslts = DefaultAugmentedFilteringResults.light(null);
         frslts.prepare(ssf, 0, n);
         AugmentedFilter filter = new AugmentedFilter(false);
         filter.process(ssf, data, frslts);
@@ -98,15 +98,8 @@ public class SmoothationsComputer {
 
         // computes the smoothed diffuse effects and their covariance...
         QAugmentation q = frslts.getAugmentation();
-//        FastMatrix B = q.B(); // B*a^-1'
-        // Psi = = a'^-1* a^-1
-        S = q.a().deepClone(); // 
-        // delta=-a'^-1 * b
-        delta = q.b().deepClone();
-        LowerTriangularMatrix.solvexL(S, delta);
-        delta.chs();
-//        FastMatrix is = LowerTriangularMatrix.inverse(S);
-//        FastMatrix C = SymmetricMatrix.LtL(is);
+        delta=DataBlock.of(q.delta());
+        S=q.Psi();
     }
 
     private void loadInfo(int pos) {
@@ -220,7 +213,7 @@ public class SmoothationsComputer {
             U.addAY(1 / errVariance, E);
 //            uc = u + U.dot(delta);
 //            if (calcvar) {
-//                FastMatrix A = frslts.B(pos + 1);
+//                FastMatrix A = frslts.A(pos + 1);
 //                // N*A
 //                FastMatrix NA = GeneralMatrix.AB(N, A);
 //                NA.add(Rd);
@@ -253,7 +246,7 @@ public class SmoothationsComputer {
         loading = ssf.loading();
     }
 
-    public DefaultQFilteringResults getFilteringResults() {
+    public DefaultAugmentedFilteringResults getFilteringResults() {
         return frslts;
     }
     

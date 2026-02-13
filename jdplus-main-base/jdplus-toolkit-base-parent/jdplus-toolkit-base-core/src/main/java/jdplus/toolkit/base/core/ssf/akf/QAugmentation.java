@@ -16,138 +16,148 @@
  */
 package jdplus.toolkit.base.core.ssf.akf;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.LogSign;
-import jdplus.toolkit.base.core.stats.likelihood.DeterminantalTerm;
-import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
+import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.State;
 import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
-import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 
 /**
+ * Q = | chol. S s' | | s q | delta = S^-1 s var(delta) : S^-1
  *
  * @author Jean Palate
  */
-public class QAugmentation {
+public interface QAugmentation {
 
-    // Q is related to the cholesky factor of the usual "Q matrix" of De Jong.
-    // Q(dj) = |S^-1   -s|
-    //         |-s'     q|
-    // Q = |a 0|
-    //     |b c|
-    // so that we have:
-    // q = b * b' + c * c
-    // S^-1 = a * a' 
-    // -s = a * b'
-    // s' * S * s = b * a' * S * a * b' = b * b'
-    // q - s' * S * s = c * c
-    // S * s = - S * a * b' = - a'^-1 * b'
-    private FastMatrix Q, B;
-    private int n, nd;
-    private final DeterminantalTerm det = new DeterminantalTerm();
-
-    public void prepare(final int nd, final int nvars) {
-        clear();
-        this.nd = nd;
-        Q = FastMatrix.make(nd + 1, nd + 1 + nvars);
-    }
-
-    public void clear() {
-        n = 0;
-        Q = null;
-        det.clear();
+    public static enum QType {
+        NORMAL,
+        PARTIAL_TRIANGULARIZATION,
+        FULL_TRIANGULARIZATION,
+        QR
     }
     
-    public int getDegreesofFreedom(){
-        return n-nd;
+    public static final QType DEFAULT = QType.PARTIAL_TRIANGULARIZATION;
+    public static final QType DEFAULT_COLLAPSING = QType.PARTIAL_TRIANGULARIZATION;
+    public static final QType DEFAULT_NOCOLLAPSING = QType.NORMAL;
+
+    public static QAugmentation of(QType type) {
+        return switch (type) {
+            case NORMAL ->
+                new QAugmentation3();
+            case PARTIAL_TRIANGULARIZATION ->
+                new QAugmentation1();
+            case FULL_TRIANGULARIZATION ->
+                new QAugmentation2();
+            case QR ->
+                new QRAugmentation();
+        };
     }
 
-//    public void update(FastMatrix E, DataBlock2 U) {
-//        Q.subMatrix(0, nd, nd + 1, nd + 1 + nvars).copy(E.subMatrix());
-//        Q.row(nd).range(nd + 1, nd + 1 + nvars).copy(U);
-//        ec.tstoolkit.maths.matrices.ElementaryTransformations.fastGivensTriangularize(Q.subMatrix());
-//    }
-//
-    public void update(AugmentedUpdateInformation pe) {
-        double v = pe.getVariance();
-        if (v == 0)
-            return; // redundant constraint
-        ++n;
-        double e = pe.get();
-        det.add(v);
-        DataBlock col = Q.column(nd + 1);
-        double se = Math.sqrt(v);
-        col.range(0, nd).setAY(1 / se, pe.E());
-        col.set(nd, e / se);
-        ElementaryTransformations.fastGivensTriangularize(Q);
+    void prepare(final int ndiffuse, final int nvars, final int nmax);
+
+    void clear();
+
+    void update(AugmentedUpdateInformation pe);
+
+    boolean canCollapse();
+
+    boolean collapse(AugmentedState state);
+
+    default int getDegreesOfFreedom() {
+        return n() - nd();
     }
 
-    public FastMatrix a() {
-        return Q.extract(0, nd, 0, nd);
-    }
-
-    public DataBlock b() {
-        return Q.row(nd).range(0, nd);
-    }
-
-    public double c() {
-        return Q.get(nd, nd);
-    }
-    
     /**
-     * Gets the matrix of the diffuse effects used for collapsing
-     * @return 
+     * Number of observations introduced in the augmentation
+     *
+     * @return
      */
-    public FastMatrix B(){
-        return B;
+    int n();
+
+    /**
+     * Number of diffuse elements (= number of regression variables)
+     *
+     * @return
+     */
+    int nd();
+
+    /**
+     * Determinantal term
+     *
+     * @return
+     */
+    double logDeterminant();
+
+    /**
+     * Computes the Cholesky factor of S (= Xl'Xl), writtend S^(1/2)
+     *
+     * @return A Matrix. Only the lower triangular part of the matrix should be
+     * used.
+     */
+    FastMatrix choleskyS();
+
+    /**
+     * The covariance of delta
+     *
+     * @return S^-1
+     */
+    default FastMatrix Psi() {
+        FastMatrix L = choleskyS();
+        L = LowerTriangularMatrix.inverse(L);
+        return SymmetricMatrix.LtL(L);
     }
 
-    public DiffuseLikelihood likelihood(boolean scalingfactor) {
-        double cc = c();
-        cc *= cc;
-        LogSign dsl = LogSign.of(a().diagonal());
-        double dcorr = 2 * dsl.getValue();
-        return DiffuseLikelihood.builder(n, nd)
-                .ssqErr(cc)
-                .logDeterminant(det.getLogDeterminant())
-                .diffuseCorrection(dcorr)
-                .concentratedScalingFactor(scalingfactor)
-                .build();
-    }
+    /**
+     * Returns S^-1 * s
+     *
+     * @return
+     */
+    DoubleSeq delta();
 
-    public boolean canCollapse() {
-        return isPositive(Q.diagonal().drop(0, 1));
-    }
+    /**
+     * Return q - s S^-1 s
+     *
+     * @return
+     */
+    double ssq();
 
-    public boolean collapse(AugmentedState state) {
-        if (!isPositive(Q.diagonal().drop(0, 1))) {
-            return false;
-        }
-
-        // update the state vector
-        B =state.B().deepClone();
-        int d = B.getColumnsCount();
-        FastMatrix S = a();
-        // aC'=B' <-> Ca'=B <-> C=B*a'^-1
-        LowerTriangularMatrix.solveXLt(S, B);
-        for (int i = 0; i < d; ++i) {
-            DataBlock col = B.column(i);
-            state.a().addAY(-Q.get(d, i), col);
-            state.P().addXaXt(1, col);
-        }
-        state.dropAllConstraints();
-        return true;
-    }
- 
-    public static boolean isPositive(DataBlock q) {
+    public static boolean isNotNull(DataBlock q) {
         for (int i = 0; i < q.length(); ++i) {
-            if (q.get(i) < State.ZERO) {
+            if (Math.abs(q.get(i)) < State.ZERO) {
                 return false;
             }
         }
         return true;
     }
-    
+
+    default DiffuseLikelihood likelihood(boolean scalingfactor) {
+        LogSign dsl = LogSign.of(choleskyS().diagonal());
+        double dcorr = 2 * dsl.getValue();
+        return DiffuseLikelihood.builder(n(), nd())
+                .ssqErr(ssq())
+                .logDeterminant(logDeterminant())
+                .diffuseCorrection(dcorr)
+                .concentratedScalingFactor(scalingfactor)
+                .build();
+    }
+
+    default boolean isWellConditioned() {
+        return isWellConditioned(choleskyS().diagonal(), COND);
+    }
+
+    public static double COND = 16;
+
+    public static boolean isWellConditioned(DoubleSeq d) {
+        return isWellConditioned(d, COND);
+    }
+
+    public static boolean isWellConditioned(DoubleSeq d, double r) {
+        double max = d.max();
+        double min = d.min();
+        return (max / min <= r);
+    }
 
 }

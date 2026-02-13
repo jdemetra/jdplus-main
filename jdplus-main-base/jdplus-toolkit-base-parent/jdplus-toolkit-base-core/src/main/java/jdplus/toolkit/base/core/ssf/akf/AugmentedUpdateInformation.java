@@ -49,5 +49,10 @@ public class AugmentedUpdateInformation extends UpdateInformation {
          return !E.isZero(State.ZERO);
     }
 
+    @Override
+    public void setMissing() {
+        super.setMissing();
+        E.set(Double.NaN);
+    }
 
 }

@@ -26,6 +26,7 @@ import jdplus.toolkit.base.core.ssf.univariate.ISsfData;
 import jdplus.toolkit.base.core.ssf.univariate.OrdinaryFilter;
 import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.StateStorage;
+import jdplus.toolkit.base.core.ssf.akf.QAugmentation.QType;
 import jdplus.toolkit.base.core.ssf.ckms.CkmsDiffuseInitializer;
 import jdplus.toolkit.base.core.ssf.ckms.CkmsFilter;
 import jdplus.toolkit.base.core.ssf.multivariate.IMultivariateSsf;
@@ -82,9 +83,11 @@ public class AkfToolkit {
         };
     }
 
-    public DefaultQFilteringResults filter(ISsf ssf, ISsfData data, boolean all, boolean collapsing) {
-        DefaultQFilteringResults frslts = all
-                ? DefaultQFilteringResults.full() : DefaultQFilteringResults.light();
+    public DefaultAugmentedFilteringResults filter(ISsf ssf, ISsfData data, boolean all, boolean collapsing) {
+        QAugmentation Q = collapsing ? QAugmentation.of(QAugmentation.DEFAULT_COLLAPSING)
+                : QAugmentation.of(QAugmentation.DEFAULT_NOCOLLAPSING);
+        DefaultAugmentedFilteringResults frslts = all
+                ? DefaultAugmentedFilteringResults.full(Q) : DefaultAugmentedFilteringResults.light(Q);
         frslts.prepare(ssf, 0, data.length());
         if (collapsing) {
             AugmentedFilterInitializer initializer = new AugmentedFilterInitializer(frslts);
@@ -103,7 +106,7 @@ public class AkfToolkit {
         DefaultSmoothingResults sresults = all ? DefaultSmoothingResults.full()
                 : DefaultSmoothingResults.light();
         sresults.prepare(ssf.getStateDim(), 0, data.length());
-        DefaultQFilteringResults fresults = filter(ssf, data, true, collapsing);
+        DefaultAugmentedFilteringResults fresults = filter(ssf, data, true, collapsing);
         if (smoother.process(ssf, data.length(), fresults, sresults)) {
             if (rescaleVariance) {
                 sresults.rescaleVariances(var(data.length(), fresults));
@@ -115,7 +118,7 @@ public class AkfToolkit {
     }
 
     public SmoothingOutput robustSmooth(ISsf ssf, ISsfData data, boolean all, boolean rescaleVariance) {
-       return QRSmoother.process(ssf, data, all, rescaleVariance);
+        return QRSmoother.process(ssf, data, all, rescaleVariance);
     }
 
     public StateStorage smooth(IMultivariateSsf ssf, IMultivariateSsfData data, boolean all, boolean rescaleVariance, boolean collapsing) {
@@ -168,7 +171,7 @@ public class AkfToolkit {
         @Override
         public DiffuseLikelihood compute(ISsf ssf, ISsfData data) {
             AugmentedFilter akf = new AugmentedFilter();
-            QPredictionErrorDecomposition pe = new QPredictionErrorDecomposition(res);
+            QPredictionErrorDecomposition pe = new QPredictionErrorDecomposition(QType.NORMAL, res);
             pe.prepare(ssf, data.length());
             if (!akf.process(ssf, data, pe)) {
                 return null;
@@ -189,7 +192,7 @@ public class AkfToolkit {
 
         @Override
         public DiffuseLikelihood compute(ISsf ssf, ISsfData data) {
-            QPredictionErrorDecomposition pe = new QPredictionErrorDecomposition(res);
+            QPredictionErrorDecomposition pe = new QPredictionErrorDecomposition(QType.PARTIAL_TRIANGULARIZATION, res);
             pe.prepare(ssf, data.length());
             AugmentedFilterInitializer initializer = new AugmentedFilterInitializer(pe);
             OrdinaryFilter filter = new OrdinaryFilter(initializer);
@@ -198,11 +201,10 @@ public class AkfToolkit {
         }
     }
 
-    public double var(int n, DefaultQFilteringResults frslts) {
-        double c = frslts.getAugmentation().c();
-        double ssq = c * c;
+    public double var(int n, DefaultAugmentedFilteringResults frslts) {
+        double ssq = frslts.getAugmentation().ssq();
         int nd = frslts.getCollapsingPosition();
-        int m = frslts.getAugmentation().getDegreesofFreedom();
+        int m = frslts.getAugmentation().getDegreesOfFreedom();
         for (int i = nd; i < n; ++i) {
             double e = frslts.error(i);
             if (Double.isFinite(e)) {

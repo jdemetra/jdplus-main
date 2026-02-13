@@ -18,7 +18,6 @@
  */
 package jdplus.toolkit.base.core.ssf.univariate;
 
-import jdplus.toolkit.base.api.math.Constants;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
@@ -206,14 +205,14 @@ public class OrdinarySmoother {
         // u = v(t)/f(t)-K'(t)*R(t)
         DataBlock k = M.deepClone();
         dynamics.TX(pos, k);
-        k.div(errVariance);
+//        k.div(errVariance);
         if (errVariance != 0) {
-            u = err / errVariance - R.dot(k);
+            u = (err - R.dot(k)) / errVariance;
             // apply the same to the colums of Rd
             if (calcvar) {
                 // uvar = 1/f(t)+ K'NK
                 // = 1/f + 1/f*M'T'*N*T*M/f
-                uVariance = 1 / errVariance + QuadraticForm.apply(N, k);
+                uVariance = (1 + QuadraticForm.apply(N, k) / errVariance) / errVariance;
                 if (uVariance < State.ZERO) {
                     uVariance = 0;
                 }

@@ -48,11 +48,21 @@ public interface IAugmentedFilteringResults extends IFilteringResults {
      */
     void save(int t, AugmentedState state, StateInfo info);
 
-    default FastMatrix B(int pos) {
+    default FastMatrix A(int pos) {
         return null;
     }
 
     default DataBlock E(int pos) {
         return null;
     }
+    
+    boolean canCollapse();
+
+    boolean collapse(int pos, AugmentedState state);
+
+    int getCollapsingPosition();
+    
+    QAugmentation getAugmentation();
+    
+    
 }

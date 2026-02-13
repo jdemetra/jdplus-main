@@ -30,11 +30,11 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
  */
 public class DefaultDiffuseSquareRootFilteringResults extends BaseDiffuseFilteringResults implements IDiffuseSquareRootFilteringResults {
 
-    private final DataBlocksResults B;
+    private final DataBlocksResults A;
 
     private DefaultDiffuseSquareRootFilteringResults(boolean var) {
         super(var);
-        B = var ? new DataBlocksResults() : null;
+        A = var ? new DataBlocksResults() : null;
     }
 
     public static DefaultDiffuseSquareRootFilteringResults full() {
@@ -50,8 +50,8 @@ public class DefaultDiffuseSquareRootFilteringResults extends BaseDiffuseFilteri
         super.prepare(ssf, start, end);
         ISsfInitialization initialization = ssf.initialization();
         int dim = initialization.getStateDim(), n = initialization.getDiffuseDim();
-        if (B != null) {
-            B.prepare(dim, n, n);
+        if (A != null) {
+            A.prepare(dim, n, n);
         }
     }
 
@@ -61,20 +61,20 @@ public class DefaultDiffuseSquareRootFilteringResults extends BaseDiffuseFilteri
             return;
         }
         super.save(t, state, info);
-        if (B != null) {
-            B.save(t, state.B());
+        if (A != null) {
+            A.save(t, state.A());
         }
 
     }
 
-    public FastMatrix B(int pos) {
-        return B.matrix(pos);
+    public FastMatrix A(int pos) {
+        return A.matrix(pos);
     }
 
     @Override
     public void clear() {
         super.clear();
-        B.clear();
+        A.clear();
     }
 
 }

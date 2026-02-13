@@ -28,20 +28,31 @@ import jdplus.toolkit.base.core.ssf.univariate.PredictionErrorDecomposition;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Alpha)
-public class QPredictionErrorDecomposition extends PredictionErrorDecomposition implements IQFilteringResults {
+public class QPredictionErrorDecomposition extends PredictionErrorDecomposition implements IAugmentedFilteringResults {
 
     private int nd, ncollapsed;
-    private final QAugmentation Q = new QAugmentation();
+    private final QAugmentation Q;
+
+    public QPredictionErrorDecomposition(QAugmentation Q, boolean res) {
+        super(res);
+        this.Q = Q;
+    }
+
+    public QPredictionErrorDecomposition(QAugmentation.QType Q, boolean res) {
+        super(res);
+        this.Q = QAugmentation.of(Q);
+    }
 
     public QPredictionErrorDecomposition(boolean res) {
         super(res);
+        Q = QAugmentation.of(QAugmentation.DEFAULT);
     }
 
     @Override
     public void prepare(final ISsf ssf, final int n) {
         super.prepare(ssf, n);
         nd = ssf.getDiffuseDim();
-        Q.prepare(nd, 1);
+        Q.prepare(nd, 1, n);
     }
 
     @Override
@@ -99,6 +110,9 @@ public class QPredictionErrorDecomposition extends PredictionErrorDecomposition 
     @Override
     public DiffuseLikelihood likelihood(boolean scalingfactor) {
         DiffuseLikelihood ll = Q.likelihood(scalingfactor);
+        if (ll == null) {
+            return null;
+        }
         return ll.add(super.likelihood(scalingfactor));
     }
 
