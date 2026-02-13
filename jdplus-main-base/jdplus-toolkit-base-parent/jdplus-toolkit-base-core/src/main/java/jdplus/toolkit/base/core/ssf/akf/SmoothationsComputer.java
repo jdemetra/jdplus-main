@@ -50,10 +50,10 @@ public class SmoothationsComputer {
     private double u;
 //    private double uc;
     private DataBlock M, K, E, U, R, Rc;
-    private FastMatrix N, Nc, Rd, S;
+    private FastMatrix N, Nc, Rd, lS;
 //    private FastMatrix V;
     private DataBlock delta;
-    private boolean missing, hasinfo;
+    private boolean missing;
 
     public boolean process(ISsf ssf, final ISsfData data) {
         int n = data.length();
@@ -65,11 +65,10 @@ public class SmoothationsComputer {
         int dim = ssf.getStateDim();
         allR = new DataBlockStorage(dim, n);
         allRvar = new MatrixStorage(dim, dim, n);
-
         initSmoother(ssf);
         while (--n >= 0) {
             iterate(n);
-            if (hasinfo) {
+            if (!missing) {
                 allR.save(n, Rc);
                 allRvar.save(n, Nc);
             }
@@ -98,30 +97,29 @@ public class SmoothationsComputer {
 
         // computes the smoothed diffuse effects and their covariance...
         QAugmentation q = frslts.getAugmentation();
-        delta=DataBlock.of(q.delta());
-        S=q.Psi();
+        delta = DataBlock.of(q.delta());
+        delta.chs();
+        lS = q.choleskyS();
     }
 
     private void loadInfo(int pos) {
-        err = frslts.error(pos);
-        errVariance = frslts.errorVariance(pos);
-        missing = !Double.isFinite(err);
+        missing = frslts.isMissing(pos);
+        if (!missing) {
+            err = frslts.error(pos);
+            errVariance = frslts.errorVariance(pos);
+            E.copy(frslts.E(pos));
+            M.copy(frslts.M(pos));
+            // T*P*Z/f
+            if (errVariance != 0) {
+                K.copy(frslts.M(pos));
+                dynamics.TX(pos, K);
+                K.div(errVariance);
+            }
+        }
 
-        E.copy(frslts.E(pos));
-        // P*Z
-        M.copy(frslts.M(pos));
-        // T*P*Z/f
-        if (errVariance != 0) {
-            K.copy(frslts.M(pos));
-            dynamics.TX(pos, K);
-            K.div(errVariance);
-        }
-        DataBlock fa = frslts.a(pos);
-        hasinfo = fa != null;
-        if (!hasinfo) {
-            return;
-        }
-        state.a().copy(fa);
+        state.a().copy(frslts.a(pos));
+//        A.copy(frslts.A(pos));
+//        state.P().copy(frslts.P(pos));
     }
 
     private void iterate(int pos) {
@@ -166,7 +164,7 @@ public class SmoothationsComputer {
         N.apply(z -> Math.abs(z) < State.ZERO ? 0 : z);
 
         FastMatrix W = Rd.deepClone();
-        LowerTriangularMatrix.solveXLt(S, W);
+        LowerTriangularMatrix.solveXLt(lS, W);
         Nc.copy(N);
         GeneralMatrix.aAB_p_bC(-1, W, W, 1, Nc, MatrixTransformation.None, MatrixTransformation.Transpose);
         SymmetricMatrix.reenforceSymmetry(Nc);
@@ -249,13 +247,13 @@ public class SmoothationsComputer {
     public DefaultAugmentedFilteringResults getFilteringResults() {
         return frslts;
     }
-    
-    public DataBlock R(int pos){
+
+    public DataBlock R(int pos) {
         return allR.block(pos);
     }
 
-    public FastMatrix Rvar(int pos){
+    public FastMatrix Rvar(int pos) {
         return allRvar.matrix(pos);
     }
- 
+
 }
