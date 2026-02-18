@@ -122,11 +122,11 @@ public class IsolationForests {
         }
         
         public static Node of(int size){
-            switch (size){
-                case 0 : return ZERO;
-                case 1: return ONE;
-                default:return new FinalNode(size);
-            }
+            return switch (size){
+                case 0  -> ZERO;
+                case 1 -> ONE;
+                default -> new FinalNode(size);
+            };
         }
         
         @Override
@@ -148,14 +148,11 @@ public class IsolationForests {
     public double findPath(Node node, DoubleSeq x) {
             if (node.isFinal()) {
                 int size = node.size();
-                switch (size) {
-                    case 0:
-                        return 0; // unused node
-                    case 1:
-                        return 1; // true final level
-                    default:
-                        return 1 + cFactor(size);
-                }
+                return switch (size) {
+                    case 0 -> 0; // unused node
+                    case 1 -> 1; // true final level
+                    default -> 1 + cFactor(size);
+                };
             } else {
                 return 1+findPath(node.branch(x), x);
             }

@@ -76,7 +76,7 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
 
     @Override
     public AbstractOutputNode createNodeFor(Object properties) {
-        return properties instanceof CsvOutputConfiguration ? new CsvNode((CsvOutputConfiguration) properties) : null;
+        return properties instanceof CsvOutputConfiguration coc ? new CsvNode(coc) : null;
     }
 
     @Override

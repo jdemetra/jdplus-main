@@ -202,8 +202,8 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
         if (value == null) {
             return "";
         }
-        if (value instanceof LocalDate) {
-            return ((LocalDate) value).format(dateFormat);
+        if (value instanceof LocalDate date) {
+            return date.format(dateFormat);
         }
         if (value instanceof Number) {
             return numberFormat.format(value);
@@ -314,8 +314,8 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
             // Search for the orientation, the titles and the dates
             // if vertical, m(1,0) is a date. Otherwise m(0,1)
             boolean datesAreVertical = null != parseDate(rows.get(1)[0]);
-            boolean hasTitles = null == parseDate(rows.get(0)[0]);
-            boolean datesAreHorizontal = null != parseDate(rows.get(0)[1]);
+            boolean hasTitles = null == parseDate(rows.getFirst()[0]);
+            boolean datesAreHorizontal = null != parseDate(rows.getFirst()[1]);
             if (!datesAreVertical && !datesAreHorizontal) {
                 return null;
             }
@@ -328,7 +328,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
                 titles = new String[ncols - 1];
                 if (hasTitles) {
                     for (int i = 0; i < titles.length; ++i) {
-                        titles[i] = rows.get(0)[i + 1];
+                        titles[i] = rows.getFirst()[i + 1];
                     }
                     data = FastMatrix.make(nrows - 1, ncols - 1);
                 } else {
@@ -356,7 +356,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
                 }
                 dates = new LocalDate[data.getRowsCount()];
                 for (int i = 0, j = hasTitles ? 1 : 0; i < dates.length; ++i, ++j) {
-                    dates[i] = parseDate(rows.get(0)[j]);
+                    dates[i] = parseDate(rows.getFirst()[j]);
                 }
             }
             data.set(Double.NaN);

@@ -68,21 +68,14 @@ public final class KeyStrokes {
 
         protected KeyStroke getFallback(ActionType key) {
             int platformKeyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            switch (key) {
-                case COPY:
-                    return KeyStroke.getKeyStroke(KeyEvent.VK_C, platformKeyMask);
-                case DELETE:
-                    return KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, platformKeyMask);
-                case PASTE:
-                    return KeyStroke.getKeyStroke(KeyEvent.VK_V, platformKeyMask);
-                case SELECT_ALL:
-                    return KeyStroke.getKeyStroke(KeyEvent.VK_A, platformKeyMask);
-                case OPEN:
-                    return KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-                case CLEAR:
-                    return KeyStroke.getKeyStroke(KeyEvent.VK_L, platformKeyMask);
-            }
-            return null;
+            return switch (key) {
+                case COPY -> KeyStroke.getKeyStroke(KeyEvent.VK_C, platformKeyMask);
+                case DELETE -> KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, platformKeyMask);
+                case PASTE -> KeyStroke.getKeyStroke(KeyEvent.VK_V, platformKeyMask);
+                case SELECT_ALL -> KeyStroke.getKeyStroke(KeyEvent.VK_A, platformKeyMask);
+                case OPEN -> KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+                case CLEAR -> KeyStroke.getKeyStroke(KeyEvent.VK_L, platformKeyMask);
+            };
         }
 
         @Override

@@ -32,5 +32,5 @@ public enum SeasonalFilterOption {
     S3X15,
     Stable,
     X11Default,
-    Msr;
+    Msr
 }

@@ -62,26 +62,20 @@ public enum RegressionTestEnum {
             if (v == null) {
                 return RegressionTestSpec.None;
             }
-            switch (v) {
-                case ADD:
-                    return RegressionTestSpec.Add;
-                case REMOVE:
-                    return RegressionTestSpec.Remove;
-                default:
-                    return RegressionTestSpec.None;
-            }
+            return switch (v) {
+                case ADD -> RegressionTestSpec.Add;
+                case REMOVE -> RegressionTestSpec.Remove;
+                default -> RegressionTestSpec.None;
+            };
         }
 
         @Override
         public RegressionTestEnum marshal(RegressionTestSpec v) throws Exception {
-            switch (v) {
-                case Add:
-                    return RegressionTestEnum.ADD;
-                case Remove:
-                    return RegressionTestEnum.REMOVE;
-                default:
-                    return null;
-            }
+            return switch (v) {
+                case Add -> RegressionTestEnum.ADD;
+                case Remove -> RegressionTestEnum.REMOVE;
+                default -> null;
+            };
 
         }
     }

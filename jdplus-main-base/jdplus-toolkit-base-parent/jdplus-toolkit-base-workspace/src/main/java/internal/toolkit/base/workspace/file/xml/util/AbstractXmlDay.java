@@ -52,34 +52,34 @@ public abstract class AbstractXmlDay {
     {
         if (day == null)
             return null;
-        if (day instanceof FixedDay)
+        if (day instanceof FixedDay fixedDay)
         {
             XmlFixedDay fday=new XmlFixedDay();
-            fday.copy((FixedDay)day);
+            fday.copy(fixedDay);
             return fday;
         }
-        if (day instanceof FixedWeekDay)
+        if (day instanceof FixedWeekDay weekDay)
         {
             XmlFixedWeekDay fday=new XmlFixedWeekDay();
-            fday.copy((FixedWeekDay)day);
+            fday.copy(weekDay);
             return fday;
         }
-        if (day instanceof EasterRelatedDay)
+        if (day instanceof EasterRelatedDay relatedDay)
         {
             XmlEasterRelatedDay fday=new XmlEasterRelatedDay();
-            fday.copy((EasterRelatedDay)day);
+            fday.copy(relatedDay);
             return fday;
         }
-        if (day instanceof PrespecifiedHoliday)
+        if (day instanceof PrespecifiedHoliday holiday)
         {
             XmlSpecialCalendarDay sday=new XmlSpecialCalendarDay();
-            sday.copy((PrespecifiedHoliday)day);
+            sday.copy(holiday);
             return sday;
         }
-        if (day instanceof SingleDate)
+        if (day instanceof SingleDate date)
         {
             XmlSingleDate sday=new XmlSingleDate();
-            sday.copy((SingleDate)day);
+            sday.copy(date);
             return sday;
         }
         return null;

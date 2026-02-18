@@ -71,12 +71,12 @@ public enum RegressionTest
    * @return The enum associated with the given numeric wire value.
    */
   public static RegressionTest forNumber(int value) {
-    switch (value) {
-      case 0: return TEST_NO;
-      case 1: return TEST_ADD;
-      case 2: return TEST_REMOVE;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> TEST_NO;
+      case 1 -> TEST_ADD;
+      case 2 -> TEST_REMOVE;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<RegressionTest>

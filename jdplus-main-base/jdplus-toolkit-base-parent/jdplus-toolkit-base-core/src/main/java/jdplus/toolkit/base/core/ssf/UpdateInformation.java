@@ -90,8 +90,6 @@ public class UpdateInformation {
         this.stde = Math.sqrt(f);
     }
 
-    ;
-    
     public void setStandardDeviation(final double e) {
         this.f = e * e;
         this.stde = e;

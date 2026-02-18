@@ -63,7 +63,7 @@ public final class MailBroker implements InterchangeSpi {
     }
 
     private static void store(@NonNull Desktop desktop, @NonNull Configs configs) throws IOException {
-        String subject = configs.getItems().size() == 1 ? configs.getItems().get(0).getName() : "Configs";
+        String subject = configs.getItems().size() == 1 ? configs.getItems().getFirst().getName() : "Configs";
         String body = Configs.xmlFormatter(true).formatToString(configs);
         desktop.mail(new MailtoBuilder().subject(subject).body(body).build());
     }

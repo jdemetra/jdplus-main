@@ -74,12 +74,10 @@ public class X13SpecMapping {
     public static final String REGARIMA = "regarima", X11 = "x11", BENCH = "benchmarking";
 
     public InformationSet write(X13Spec spec, TsDomain context, boolean verbose, DemetraVersion version) {
-        switch (version) {
-            case JD2:
-                return writeLegacy(spec, context, verbose);
-            default:
-                return write(spec, context, verbose);
-        }
+        return switch (version) {
+            case JD2 -> writeLegacy(spec, context, verbose);
+            default -> write(spec, context, verbose);
+        };
     }
 
     public InformationSet write(X13Spec spec, TsDomain context, boolean verbose) {
@@ -174,8 +172,8 @@ public class X13SpecMapping {
 
         @Override
         public InformationSet write(SaSpecification spec, TsDomain context, boolean verbose, DemetraVersion version) {
-            if (spec instanceof X13Spec) {
-                return X13SpecMapping.write((X13Spec) spec, context, verbose, version);
+            if (spec instanceof X13Spec x13Spec) {
+                return X13SpecMapping.write(x13Spec, context, verbose, version);
             } else {
                 return null;
             }

@@ -47,8 +47,8 @@ public final class WorkspaceFamily implements Id {
      */
     @NonNull
     public static WorkspaceFamily of(@NonNull Id id) {
-        if (id instanceof WorkspaceFamily) {
-            return (WorkspaceFamily) id;
+        if (id instanceof WorkspaceFamily family) {
+            return family;
         }
         if (id.getCount() == 0) {
             return EMPTY;
@@ -89,14 +89,11 @@ public final class WorkspaceFamily implements Id {
 
     @Override
     public WorkspaceFamily parent() {
-        switch (getCount()) {
-            case 0:
-                return null;
-            case 1:
-                return EMPTY;
-            default:
-                return new WorkspaceFamily(Arrays.copyOf(data, data.length - 1));
-        }
+        return switch (getCount()) {
+            case 0 -> null;
+            case 1 -> EMPTY;
+            default -> new WorkspaceFamily(Arrays.copyOf(data, data.length - 1));
+        };
     }
 
     @Override
@@ -106,7 +103,7 @@ public final class WorkspaceFamily implements Id {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof WorkspaceFamily && equals((WorkspaceFamily) obj));
+        return this == obj || (obj instanceof WorkspaceFamily wf && equals(wf));
     }
 
     private boolean equals(WorkspaceFamily that) {

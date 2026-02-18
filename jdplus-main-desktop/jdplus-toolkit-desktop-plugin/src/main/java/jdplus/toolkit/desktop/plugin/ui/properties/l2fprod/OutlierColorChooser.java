@@ -35,20 +35,14 @@ public class OutlierColorChooser {
     private static final Color LIGHT = new Color(230, 230, 230);
 
     public static Color getColor(String type) {
-        switch (type) {
-            case "AO":
-                return CUSTOMGREEN;
-            case "LS":
-                return CUSTOMRED;
-            case "TC":
-                return CUSTOMBLUE;
-            case "SO":
-                return CUSTOMPINK;
-            case "WO":
-                return CUSTOMPINK;
-            default:
-                return Color.white;
-        }
+        return switch (type) {
+            case "AO" -> CUSTOMGREEN;
+            case "LS" -> CUSTOMRED;
+            case "TC" -> CUSTOMBLUE;
+            case "SO" -> CUSTOMPINK;
+            case "WO" -> CUSTOMPINK;
+            default -> Color.white;
+        };
     }
 
     public static Color getForeColor(String type) {

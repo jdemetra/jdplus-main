@@ -63,11 +63,11 @@ public enum SeatsAlgorithm
    * @return The enum associated with the given numeric wire value.
    */
   public static SeatsAlgorithm forNumber(int value) {
-    switch (value) {
-      case 0: return SEATS_ALG_BURMAN;
-      case 1: return SEATS_ALG_KALMANSMOOTHER;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> SEATS_ALG_BURMAN;
+      case 1 -> SEATS_ALG_KALMANSMOOTHER;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<SeatsAlgorithm>

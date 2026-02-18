@@ -109,7 +109,7 @@ public class TsRegressionProcessingViewer<S extends ProcSpecification, D extends
             yList.setTsCollection(TsCollection.EMPTY);
             xList.setTsCollection(TsCollection.EMPTY);
         } else {
-            yList.setTsCollection(TsCollection.of(s.get(0)));
+            yList.setTsCollection(TsCollection.of(s.getFirst()));
             xList.setTsCollection(TsCollection.of(s.subList(1, s.size())));
         }
     }

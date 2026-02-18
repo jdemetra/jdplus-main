@@ -157,8 +157,8 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component result = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (result instanceof JLabel) {
-                    ((JLabel) result).setHorizontalAlignment(JLabel.CENTER);
+                if (result instanceof JLabel label) {
+                    label.setHorizontalAlignment(JLabel.CENTER);
                 }
                 return result;
             }

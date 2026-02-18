@@ -216,14 +216,11 @@ public abstract class InstallerStep {
 
         @Override
         public InstallerStep and(InstallerStep... steps) {
-            switch (steps.length) {
-                case 0:
-                    return this;
-                case 1:
-                    return new AllInstallerStep(List.of(steps[0]));
-                default:
-                    return new AllInstallerStep(List.copyOf(Arrays.asList(steps)));
-            }
+            return switch (steps.length) {
+                case 0 -> this;
+                case 1 -> new AllInstallerStep(List.of(steps[0]));
+                default -> new AllInstallerStep(List.copyOf(Arrays.asList(steps)));
+            };
         }
     }
     //</editor-fold>

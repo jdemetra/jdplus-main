@@ -210,15 +210,11 @@ public class OutliersDetectionModule implements IOutliersDetectionModule {
             ExactOutliersDetector impl = make(model, criticalValue);
             boolean changed = impl.process(model.regarima(), model.mapping());
             int[][] outliers = impl.getOutliers();
-            String msg;
-            switch (outliers.length) {
-                case 0 ->
-                    msg = SELECTION0;
-                case 1 ->
-                    msg = SELECTION1;
-                default ->
-                    msg = outliers.length + SELECTION;
-            }
+            String msg = switch (outliers.length) {
+                case 0 -> SELECTION0;
+                case 1 -> SELECTION1;
+                default -> outliers.length + SELECTION;
+            };
             log.info(msg, new Info(impl.outlierTypes(), outliers, criticalValue));
             if (!changed) {
                 return ProcessingResult.Unchanged;

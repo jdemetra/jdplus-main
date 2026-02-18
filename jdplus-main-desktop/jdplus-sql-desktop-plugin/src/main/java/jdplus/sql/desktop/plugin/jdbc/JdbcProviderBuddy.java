@@ -58,8 +58,8 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -121,14 +121,11 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     @Override
     public Image getIconOrNull(DataSource dataSource, int type, boolean opened) {
         Image image = getIconOrNull(type, opened);
-        switch (getStatus(dataSource)) {
-            case DISCONNECTED:
-                return ImageUtilities.mergeImages(image, warningBadge, 8, 8);
-            case MISSING:
-                return ImageUtilities.mergeImages(image, errorBadge, 8, 8);
-            default:
-                return image;
-        }
+        return switch (getStatus(dataSource)) {
+            case DISCONNECTED -> ImageUtilities.mergeImages(image, warningBadge, 8, 8);
+            case MISSING -> ImageUtilities.mergeImages(image, errorBadge, 8, 8);
+            default -> image;
+        };
     }
 
     private DbConnStatus getStatus(DataSource dataSource) {
@@ -154,7 +151,7 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
 
     @Override
     public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
-        return bean instanceof JdbcBean ? createSheetSets((JdbcBean) bean) : null;
+        return bean instanceof JdbcBean jb ? createSheetSets(jb) : null;
     }
 
     private List<Sheet.Set> createSheetSets(JdbcBean bean) {

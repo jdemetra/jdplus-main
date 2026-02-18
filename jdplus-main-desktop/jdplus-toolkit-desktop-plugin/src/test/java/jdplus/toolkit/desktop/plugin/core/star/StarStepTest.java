@@ -71,8 +71,8 @@ public class StarStepTest {
         @Override
         protected void removeNodeSpi() throws BackingStoreException {
             Preferences parent = parent();
-            if (parent instanceof MockedPreferences) {
-                ((MockedPreferences) parent).children.remove(name());
+            if (parent instanceof MockedPreferences preferences) {
+                preferences.children.remove(name());
             }
         }
 

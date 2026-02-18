@@ -100,7 +100,7 @@ public final class JSpecSelectionComponent extends JComponent implements Explore
     }
 
     boolean isCurrentSpecificationNode(Node o) {
-        return o instanceof ItemWsNode && ((ItemWsNode) o).getItem().getElement().equals(specification);
+        return o instanceof ItemWsNode iwn && iwn.getItem().getElement().equals(specification);
     }
 
     class SelectionListener implements VetoableChangeListener {

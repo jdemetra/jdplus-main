@@ -122,18 +122,13 @@ public enum TsInformationType {
     public boolean encompass(TsInformationType newtype) {
         if (this == UserDefined)
             return true;
-        switch (newtype) {
-            case All:
-                return this == All;
-            case Data:
-                return this == Data || this == All;
-            case MetaData:
-                return this == MetaData || this == All;
-            case Definition:
-                return this == All || this == Data || this == Definition;
-            default:
-                return true;
-        }
+        return switch (newtype) {
+            case All -> this == All;
+            case Data -> this == Data || this == All;
+            case MetaData -> this == MetaData || this == All;
+            case Definition -> this == All || this == Data || this == Definition;
+            default -> true;
+        };
     }
 
     public boolean hasData() {

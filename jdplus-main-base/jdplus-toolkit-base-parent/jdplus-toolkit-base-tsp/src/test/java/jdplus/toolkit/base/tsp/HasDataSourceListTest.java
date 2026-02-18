@@ -46,9 +46,9 @@ public class HasDataSourceListTest {
         assertThatThrownBy(() -> list.addDataSourceListener(null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> list.removeDataSourceListener(null)).isInstanceOf(NullPointerException.class);
 
-        assertThat(list.getDataSources()).containsExactly(items.get(0));
+        assertThat(list.getDataSources()).containsExactly(items.getFirst());
 
         items.add(b.parameter("key", "v2").build());
-        assertThat(list.getDataSources()).containsExactly(items.get(0));
+        assertThat(list.getDataSources()).containsExactly(items.getFirst());
     }
 }

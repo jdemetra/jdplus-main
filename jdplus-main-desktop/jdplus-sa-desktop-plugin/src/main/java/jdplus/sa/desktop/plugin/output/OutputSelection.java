@@ -28,7 +28,7 @@ public class OutputSelection {
             return Collections.emptyList();
         }
         if (fac.size() == 1) {
-            return fac.get(0).outputDictionary().entries().
+            return fac.getFirst().outputDictionary().entries().
                     filter(entry -> selector.test(entry.getOutputClass())).
                     map(entry -> entry.fullName()).
                     collect(Collectors.toList());

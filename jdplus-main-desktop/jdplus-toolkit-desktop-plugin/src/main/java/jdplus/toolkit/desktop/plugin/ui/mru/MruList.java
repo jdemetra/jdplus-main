@@ -70,9 +70,9 @@ public final class MruList implements PropertyChangeSource.WithWeakListeners, It
         list.remove(item);
 
         // add to the top
-        list.add(0, item);
+        list.addFirst(item);
         while (list.size() > maxSize) {
-            list.remove(list.size() - 1);
+            list.removeLast();
         }
         broadcaster.firePropertyChange(CONTENT_PROPERTY, null, list);
     }

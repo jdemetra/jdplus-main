@@ -200,16 +200,12 @@ public class XmlParameter {
     }
 
     public static Parameter unmarshal(XmlParameter v){
-        switch (v.type) {
-            case Initial:
-                return Parameter.initial(v.value);
-            case Fixed:
-                return Parameter.fixed(v.value);
-            case Estimated:
-                return Parameter.estimated(v.value);
-            default:
-                return Parameter.undefined();
-        }
+        return switch (v.type) {
+            case Initial -> Parameter.initial(v.value);
+            case Fixed -> Parameter.fixed(v.value);
+            case Estimated -> Parameter.estimated(v.value);
+            default -> Parameter.undefined();
+        };
     }
 
     public static class Adapter extends XmlAdapter<XmlParameter, Parameter> {
@@ -225,7 +221,7 @@ public class XmlParameter {
             XmlParameter.marshal(v, x);
             return x;
         }
-    };
+    }
 
     private final static Adapter ADAPTER = new Adapter();
 

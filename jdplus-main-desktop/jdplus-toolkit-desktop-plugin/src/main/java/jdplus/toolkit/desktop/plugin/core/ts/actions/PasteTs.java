@@ -47,7 +47,7 @@ public final class PasteTs extends ActiveViewAction<WorkspaceTsTopComponent> {
         WorkspaceTsTopComponent top = context();
         if (top != null) {
             Optional<Ts> s = DataTransferManager.get().toTs(DataTransfers.systemClipboardAsTransferable());
-            if (!s.isPresent()) {
+            if (s.isEmpty()) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message("Unable to paste ts");
                 DialogDisplayer.getDefault().notify(nd);
             } else {

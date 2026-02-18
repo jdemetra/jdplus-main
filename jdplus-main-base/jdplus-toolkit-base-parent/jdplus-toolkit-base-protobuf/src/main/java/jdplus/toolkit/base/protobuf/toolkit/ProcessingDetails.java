@@ -70,18 +70,18 @@ public class ProcessingDetails {
     ToolkitProtos.ProcessingDetail of(Object data) {
         if (data == null) {
             return null;
-        } else if (data instanceof TsData) {
-            return of((TsData) data);
-        } else if (data instanceof Matrix) {
-            return of((Matrix) data);
-        } else if (data instanceof DoubleSeq) {
-            return of((DoubleSeq) data);
-        } else if (data instanceof StatisticalTest) {
-            return of((StatisticalTest) data);
-        } else if (data instanceof Double) {
-            return of((double) data);
-        } else if (data instanceof Integer) {
-            return of((int) data);
+        } else if (data instanceof TsData tsData) {
+            return of(tsData);
+        } else if (data instanceof Matrix matrix) {
+            return of(matrix);
+        } else if (data instanceof DoubleSeq seq) {
+            return of(seq);
+        } else if (data instanceof StatisticalTest test) {
+            return of(test);
+        } else if (data instanceof Double double1) {
+            return of(double1);
+        } else if (data instanceof Integer integer) {
+            return of(integer);
         }
         return null;
     }

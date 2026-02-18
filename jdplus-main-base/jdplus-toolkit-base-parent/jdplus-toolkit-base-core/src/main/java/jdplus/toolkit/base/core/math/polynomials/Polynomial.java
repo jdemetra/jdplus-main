@@ -362,7 +362,7 @@ public final class Polynomial {
      */
     @Override
     public boolean equals(final Object obj) {
-        return obj instanceof Polynomial ? equals((Polynomial) obj, Coefficients.EPSILON) : false;
+        return obj instanceof Polynomial p ? equals(p, Coefficients.EPSILON) : false;
     }
 
     public boolean equals(Polynomial other, double epsilon) {

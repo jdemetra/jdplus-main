@@ -14,8 +14,8 @@ import java.util.Objects;
 public class ToFileLoader extends ToDataSourceLoader implements FileLoader {
 
     public static @NonNull FileLoader<? extends FileBean> toFileLoader(ec.tss.tsproviders.@NonNull IFileLoader delegate) {
-        return delegate instanceof FromFileLoader
-                ? ((FromFileLoader) delegate).getDelegate()
+        return delegate instanceof FromFileLoader ffl
+                ? ffl.getDelegate()
                 : new ToFileLoader(delegate);
     }
 

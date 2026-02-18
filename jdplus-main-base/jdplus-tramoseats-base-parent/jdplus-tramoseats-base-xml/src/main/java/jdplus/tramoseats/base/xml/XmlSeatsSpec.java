@@ -337,6 +337,6 @@ public class XmlSeatsSpec
         xml.setForceModel(v.getApproximationMode());
         xml.setMethod(v.getMethod());
         return true;
-    };
+    }
 
 }

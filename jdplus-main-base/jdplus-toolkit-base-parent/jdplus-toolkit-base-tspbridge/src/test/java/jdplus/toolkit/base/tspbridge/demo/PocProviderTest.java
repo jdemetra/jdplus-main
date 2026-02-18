@@ -48,7 +48,7 @@ public class PocProviderTest {
             public @NonNull Optional<DataSet> tsDataSet(@NonNull DataSourceProvider p) {
                 return dataSource(p).map(o -> {
                     try {
-                        return p.children(o).get(0);
+                        return p.children(o).getFirst();
                     } catch (IllegalArgumentException | IOException ex) {
                         log.log(Level.SEVERE, "Unexpected error in '#toDataSet(DataSourceProvider)'", ex);
                     }
@@ -60,7 +60,7 @@ public class PocProviderTest {
             public @NonNull Optional<DataSet> tsCollectionDataSet(@NonNull DataSourceProvider p) {
                 return dataSource(p).map(o -> {
                     try {
-                        return p.children(o).get(0);
+                        return p.children(o).getFirst();
                     } catch (IllegalArgumentException | IOException ex) {
                         log.log(Level.SEVERE, "Unexpected error in '#tsCollectionDataSet(DataSourceProvider)'", ex);
                     }

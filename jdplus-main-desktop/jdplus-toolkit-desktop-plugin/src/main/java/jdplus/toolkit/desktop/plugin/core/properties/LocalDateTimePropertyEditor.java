@@ -89,6 +89,6 @@ public final class LocalDateTimePropertyEditor extends AbstractExPropertyEditor 
     }
 
     private static String formatLocalDateTime(Object o, String nullString, DateTimeFormatter formatter) {
-        return o instanceof LocalDateTime ? ((LocalDateTime) o).format(formatter) : nullString;
+        return o instanceof LocalDateTime ldt ? ldt.format(formatter) : nullString;
     }
 }

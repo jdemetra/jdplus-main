@@ -44,16 +44,13 @@ public class OutlierMapping {
         info.set(TYPE, o.getCode());
         info.set(POS, o.getPosition().toLocalDate().format(DateTimeFormatter.ISO_DATE));
 
-        if (o instanceof LevelShift) {
-            LevelShift ls = (LevelShift) o;
+        if (o instanceof LevelShift ls) {
             if (verbose || !ls.isZeroEnded()) {
                 info.set(ZEROENDED, ls.isZeroEnded());
             }
-        } else if (o instanceof TransitoryChange) {
-            TransitoryChange tc = (TransitoryChange) o;
+        } else if (o instanceof TransitoryChange tc) {
             info.set(TCRATE, tc.getRate());
-        } else if (o instanceof PeriodicOutlier) {
-            PeriodicOutlier so = (PeriodicOutlier) o;
+        } else if (o instanceof PeriodicOutlier so) {
             if (verbose || !so.isZeroEnded()) {
                 info.set(ZEROENDED, so.isZeroEnded());
             }

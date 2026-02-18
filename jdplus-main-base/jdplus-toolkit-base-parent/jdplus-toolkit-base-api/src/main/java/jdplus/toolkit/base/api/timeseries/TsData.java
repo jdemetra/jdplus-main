@@ -630,7 +630,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
 
     @Override
     public boolean equals(Object that) {
-        return this == that || (that instanceof TsData && equals((TsData) that));
+        return this == that || (that instanceof TsData td && equals(td));
     }
 
     private boolean equals(TsData that) {

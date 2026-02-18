@@ -74,6 +74,6 @@ public class ExceptionUtil {
     );
 
     private static JExceptionPanel newPanel(Throwable t) {
-        return JExceptionPanel.create(t instanceof Exception ? (Exception) t : new RuntimeException(t));
+        return JExceptionPanel.create(t instanceof Exception e ? e : new RuntimeException(t));
     }
 }

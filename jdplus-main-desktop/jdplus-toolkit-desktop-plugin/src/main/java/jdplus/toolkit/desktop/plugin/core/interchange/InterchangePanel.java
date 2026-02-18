@@ -98,8 +98,8 @@ final class InterchangePanel extends javax.swing.JPanel implements ExplorerManag
 
     void store() {
         for (Node o : em.getRootContext().getChildren().getNodes()) {
-            if (o instanceof NamedServiceNode) {
-                ((NamedServiceNode) o).applyConfig();
+            if (o instanceof NamedServiceNode node) {
+                node.applyConfig();
             }
         }
     }

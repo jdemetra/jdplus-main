@@ -42,7 +42,7 @@ public class X11 {
             return GenericResults.notImplemented();
         }
         
-     };
+     }
     
     public ProcResults process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec, List<String> items) {
         return PROCESSOR.get().process(timeSeries, spec, items);

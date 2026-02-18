@@ -84,7 +84,7 @@ public final class ExportCalendarAction extends NodeAction implements Presenter.
     }
 
     private static boolean isExportable(Node o) {
-        return o instanceof ItemWsNode && isExportable((ItemWsNode) o);
+        return o instanceof ItemWsNode iwn && isExportable(iwn);
     }
 
     private static boolean isExportable(ItemWsNode o) {

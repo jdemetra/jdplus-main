@@ -63,8 +63,8 @@ public class SigmaVecPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof SigmaVecOption[]) {
-            groups = (SigmaVecOption[]) value;
+        if (null != value && value instanceof SigmaVecOption[] options) {
+            groups = options;
             ((SigmavecEditor) editor).setGroups(groups);
         }
     }

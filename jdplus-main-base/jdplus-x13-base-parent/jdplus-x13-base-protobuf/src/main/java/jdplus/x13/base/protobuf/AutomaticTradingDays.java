@@ -79,13 +79,13 @@ public enum AutomaticTradingDays
    * @return The enum associated with the given numeric wire value.
    */
   public static AutomaticTradingDays forNumber(int value) {
-    switch (value) {
-      case 0: return TD_AUTO_NO;
-      case 1: return TD_AUTO_WALD;
-      case 2: return TD_AUTO_AIC;
-      case 3: return TD_AUTO_BIC;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> TD_AUTO_NO;
+      case 1 -> TD_AUTO_WALD;
+      case 2 -> TD_AUTO_AIC;
+      case 3 -> TD_AUTO_BIC;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<AutomaticTradingDays>

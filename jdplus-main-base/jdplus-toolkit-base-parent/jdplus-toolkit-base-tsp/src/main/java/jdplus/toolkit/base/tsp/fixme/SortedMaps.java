@@ -32,12 +32,10 @@ public class SortedMaps {
 
     @NonNull
     public <K, V> SortedMap<K, V> immutableCopyOf(@NonNull Map<K, V> input) {
-        switch (input.size()) {
-            case 0:
-                return Collections.emptySortedMap();
-            default:
-                return Collections.unmodifiableSortedMap(new TreeMap<>(input));
-        }
+        return switch (input.size()) {
+            case 0 -> Collections.emptySortedMap();
+            default -> Collections.unmodifiableSortedMap(new TreeMap<>(input));
+        };
     }
 
     @NonNull

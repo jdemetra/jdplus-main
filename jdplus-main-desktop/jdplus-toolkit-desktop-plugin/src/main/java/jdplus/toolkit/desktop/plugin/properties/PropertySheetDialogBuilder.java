@@ -96,8 +96,8 @@ public final class PropertySheetDialogBuilder {
     }
 
     private static Iterable<Component> children(Component c) {
-        return c instanceof Container && ((Container) c).getComponentCount() > 0
-                ? Arrays.asList(((Container) c).getComponents())
+        return c instanceof Container c1 && c1.getComponentCount() > 0
+                ? Arrays.asList(c1.getComponents())
                 : Collections.emptyList();
     }
 }

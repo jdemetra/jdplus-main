@@ -59,7 +59,7 @@ public @interface AlgorithmImplementation {
         /**
          * No specific feature
          */
-        None;
+        None
     }
 
     public Class<?> algorithm();

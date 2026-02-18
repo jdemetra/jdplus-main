@@ -37,40 +37,27 @@ public class Buffers {
     }
 
     public String outlier(int type) {
-        switch (type) {
-            case 1:
-                return "AO";
-            case 2:
-                return "LS";
-            case 3:
-                return "TC";
-            case 4:
-                return "SO";
-            default:
-                return null;
-        }
+        return switch (type) {
+            case 1 -> "AO";
+            case 2 -> "LS";
+            case 3 -> "TC";
+            case 4 -> "SO";
+            default -> null;
+        };
     }
 
     public TimeSelector selector(double[] buffer, int pos) {
         int stype = (int) buffer[pos++];
-        switch (stype) {
-            case 1:
-                return TimeSelector.all();
-            case 2:
-                return TimeSelector.from(dateTime(buffer, pos));
-            case 3:
-                return TimeSelector.to(dateTime(buffer, pos + 3));
-            case 4:
-                return TimeSelector.between(dateTime(buffer, pos), dateTime(buffer, pos + 3));
-            case 5:
-                return TimeSelector.last((int) buffer[pos + 3]);
-            case 6:
-                return TimeSelector.first((int) buffer[pos]);
-            case 7:
-                return TimeSelector.excluding((int) buffer[pos], (int) buffer[pos + 3]);
-            default:
-                return TimeSelector.none();
-        }
+        return switch (stype) {
+            case 1 -> TimeSelector.all();
+            case 2 -> TimeSelector.from(dateTime(buffer, pos));
+            case 3 -> TimeSelector.to(dateTime(buffer, pos + 3));
+            case 4 -> TimeSelector.between(dateTime(buffer, pos), dateTime(buffer, pos + 3));
+            case 5 -> TimeSelector.last((int) buffer[pos + 3]);
+            case 6 -> TimeSelector.first((int) buffer[pos]);
+            case 7 -> TimeSelector.excluding((int) buffer[pos], (int) buffer[pos + 3]);
+            default -> TimeSelector.none();
+        };
     }
 
     public static void selector(double[] input, int pos, TimeSelector span) {
@@ -108,24 +95,16 @@ public class Buffers {
     }
 
     public TimeSelector.SelectionType selectorType(int type) {
-        switch (type) {
-            case 1:
-                return TimeSelector.SelectionType.All;
-            case 2:
-                return TimeSelector.SelectionType.From;
-            case 3:
-                return TimeSelector.SelectionType.To;
-            case 4:
-                return TimeSelector.SelectionType.Between;
-            case 5:
-                return TimeSelector.SelectionType.Last;
-            case 6:
-                return TimeSelector.SelectionType.First;
-            case 7:
-                return TimeSelector.SelectionType.Excluding;
-            default:
-                return TimeSelector.SelectionType.None;
-        }
+        return switch (type) {
+            case 1 -> TimeSelector.SelectionType.All;
+            case 2 -> TimeSelector.SelectionType.From;
+            case 3 -> TimeSelector.SelectionType.To;
+            case 4 -> TimeSelector.SelectionType.Between;
+            case 5 -> TimeSelector.SelectionType.Last;
+            case 6 -> TimeSelector.SelectionType.First;
+            case 7 -> TimeSelector.SelectionType.Excluding;
+            default -> TimeSelector.SelectionType.None;
+        };
     }
 
     public LocalDate date(double[] buffer, int pos) {
@@ -147,33 +126,23 @@ public class Buffers {
     }
 
     public int parameterType(ParameterType type) {
-        switch (type) {
-            case Undefined:
-                return 1;
-            case Initial:
-                return 2;
-            case Fixed:
-                return 3;
-            case Estimated:
-                return 4;
-            default:
-                return 0;
-        }
+        return switch (type) {
+            case Undefined -> 1;
+            case Initial -> 2;
+            case Fixed -> 3;
+            case Estimated -> 4;
+            default -> 0;
+        };
     }
 
     public ParameterType parameterType(int type) {
-        switch (type) {
-            case 1:
-                return ParameterType.Undefined;
-            case 2:
-                return ParameterType.Initial;
-            case 3:
-                return ParameterType.Fixed;
-            case 4:
-                return ParameterType.Estimated;
-            default:
-                return null;
-        }
+        return switch (type) {
+            case 1 -> ParameterType.Undefined;
+            case 2 -> ParameterType.Initial;
+            case 3 -> ParameterType.Fixed;
+            case 4 -> ParameterType.Estimated;
+            default -> null;
+        };
     }
 
 }

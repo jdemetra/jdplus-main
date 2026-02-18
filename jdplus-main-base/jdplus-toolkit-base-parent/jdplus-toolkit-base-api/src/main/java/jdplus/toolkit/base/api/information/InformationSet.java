@@ -961,8 +961,8 @@ public final class InformationSet implements Cloneable {
             } else {
                 return null;
             }
-        } else if (obj.obj instanceof InformationSet) {
-            return (InformationSet) obj.obj;
+        } else if (obj.obj instanceof InformationSet set) {
+            return set;
 
         } else {
             return null;

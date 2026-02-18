@@ -88,7 +88,7 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
 
     public static <T extends DataSourceLoader> Optional<T> chooseLoader(List<T> loaders) {
         if (loaders.size() == 1) {
-            return Optional.of(loaders.get(0));
+            return Optional.of(loaders.getFirst());
         }
         JComboBox cb = new JComboBox(loaders.toArray());
         cb.setRenderer(JLists.cellRendererOf(FileDataSourceTransfer::renderLoader));

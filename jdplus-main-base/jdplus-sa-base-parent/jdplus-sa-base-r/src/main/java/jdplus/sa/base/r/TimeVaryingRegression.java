@@ -220,25 +220,13 @@ public class TimeVaryingRegression {
     }
 
     private DayClustering days(String td) {
-        DayClustering dc;
-        switch (td) {
-            case "TD2":
-                dc = DayClustering.TD2;
-                break;
-            case "TD3":
-                dc = DayClustering.TD3;
-                break;
-            case "TD3c":
-                dc = DayClustering.TD3c;
-                break;
-            case "TD4":
-                dc = DayClustering.TD4;
-                break;
-            default:
-                dc = DayClustering.TD7;
-                break;
-        }
-        return dc;
+        return switch (td) {
+            case "TD2" -> DayClustering.TD2;
+            case "TD3" -> DayClustering.TD3;
+            case "TD3c" -> DayClustering.TD3c;
+            case "TD4" -> DayClustering.TD4;
+            default -> DayClustering.TD7;
+        };
     }
 
     public FastMatrix generate(TsDomain domain, DayClustering dc) {

@@ -10,8 +10,8 @@ import java.io.IOException;
 public class ToTsProvider implements TsProvider {
 
     public static @NonNull TsProvider toTsProvider(ec.tss.@NonNull ITsProvider delegate) {
-        return delegate instanceof FromTsProvider
-                ? ((FromTsProvider) delegate).getDelegate()
+        return delegate instanceof FromTsProvider ftp
+                ? ftp.getDelegate()
                 : new ToTsProvider(delegate);
     }
 

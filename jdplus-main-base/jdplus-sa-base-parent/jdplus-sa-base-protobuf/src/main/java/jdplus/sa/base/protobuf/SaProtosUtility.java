@@ -28,47 +28,35 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 public class SaProtosUtility {
 
     public SaBenchmarkingSpec.Target convert(SaProtos.BenchmarkingTarget t) {
-        switch (t) {
-            case BENCH_TARGET_ORIGINAL:
-                return SaBenchmarkingSpec.Target.Original;
-            default:
-                return SaBenchmarkingSpec.Target.CalendarAdjusted;
-        }
+        return switch (t) {
+            case BENCH_TARGET_ORIGINAL -> SaBenchmarkingSpec.Target.Original;
+            default -> SaBenchmarkingSpec.Target.CalendarAdjusted;
+        };
     }
 
     public SaProtos.BenchmarkingTarget convert(SaBenchmarkingSpec.Target t) {
-        switch (t) {
-            case Original:
-                return SaProtos.BenchmarkingTarget.BENCH_TARGET_ORIGINAL;
-            case CalendarAdjusted:
-                return SaProtos.BenchmarkingTarget.BENCH_TARGET_CALENDARADJUSTED;
-            default:
-                return SaProtos.BenchmarkingTarget.UNRECOGNIZED;
-        }
+        return switch (t) {
+            case Original -> SaProtos.BenchmarkingTarget.BENCH_TARGET_ORIGINAL;
+            case CalendarAdjusted -> SaProtos.BenchmarkingTarget.BENCH_TARGET_CALENDARADJUSTED;
+            default -> SaProtos.BenchmarkingTarget.UNRECOGNIZED;
+        };
     }
 
     public SaProtos.BenchmarkingBias convert(SaBenchmarkingSpec.BiasCorrection t) {
-        switch (t) {
-            case None:
-                return SaProtos.BenchmarkingBias.BENCH_BIAS_NONE;
-            case Additive:
-                return SaProtos.BenchmarkingBias.BENCH_BIAS_ADDITIVE;
-            case Multiplicative:
-                return SaProtos.BenchmarkingBias.BENCH_BIAS_MULTIPLICATIVE;
-            default:
-                return SaProtos.BenchmarkingBias.UNRECOGNIZED;
-        }
+        return switch (t) {
+            case None -> SaProtos.BenchmarkingBias.BENCH_BIAS_NONE;
+            case Additive -> SaProtos.BenchmarkingBias.BENCH_BIAS_ADDITIVE;
+            case Multiplicative -> SaProtos.BenchmarkingBias.BENCH_BIAS_MULTIPLICATIVE;
+            default -> SaProtos.BenchmarkingBias.UNRECOGNIZED;
+        };
     }
 
     public SaBenchmarkingSpec.BiasCorrection convert(SaProtos.BenchmarkingBias t) {
-        switch (t) {
-            case BENCH_BIAS_ADDITIVE:
-                return SaBenchmarkingSpec.BiasCorrection.Additive;
-            case BENCH_BIAS_MULTIPLICATIVE:
-                return SaBenchmarkingSpec.BiasCorrection.Multiplicative;
-            default:
-                return SaBenchmarkingSpec.BiasCorrection.None;
-        }
+        return switch (t) {
+            case BENCH_BIAS_ADDITIVE -> SaBenchmarkingSpec.BiasCorrection.Additive;
+            case BENCH_BIAS_MULTIPLICATIVE -> SaBenchmarkingSpec.BiasCorrection.Multiplicative;
+            default -> SaBenchmarkingSpec.BiasCorrection.None;
+        };
     }
 
     public SaBenchmarkingSpec convert(SaProtos.BenchmarkingSpec spec) {
@@ -135,20 +123,14 @@ public class SaProtosUtility {
     }
 
     public SaProtos.ComponentType convert(ComponentType type) {
-        switch (type) {
-            case Series:
-                return SaProtos.ComponentType.SERIES;
-            case SeasonallyAdjusted:
-                return SaProtos.ComponentType.SEASONALLYADJUSTED;
-            case Trend:
-                return SaProtos.ComponentType.TREND;
-            case Seasonal:
-                return SaProtos.ComponentType.SEASONAL;
-            case Irregular:
-                return SaProtos.ComponentType.IRREGULAR;
-            default:
-                return SaProtos.ComponentType.UNDEFINED;
-        }
+        return switch (type) {
+            case Series -> SaProtos.ComponentType.SERIES;
+            case SeasonallyAdjusted -> SaProtos.ComponentType.SEASONALLYADJUSTED;
+            case Trend -> SaProtos.ComponentType.TREND;
+            case Seasonal -> SaProtos.ComponentType.SEASONAL;
+            case Irregular -> SaProtos.ComponentType.IRREGULAR;
+            default -> SaProtos.ComponentType.UNDEFINED;
+        };
     }
 
     public SaProtos.VarianceDecomposition convert(StationaryVarianceDecomposition var) {
@@ -176,62 +158,42 @@ public class SaProtosUtility {
     }
 
     public SaProtos.EstimationPolicy convert(EstimationPolicyType policy) {
-        switch (policy) {
-            case Complete:
-                return SaProtos.EstimationPolicy.POLICY_COMPLETE;
-            case Outliers_StochasticComponent:
-                return SaProtos.EstimationPolicy.POLICY_ARIMA;
-            case Outliers:
-                return SaProtos.EstimationPolicy.POLICY_OUTLIERS;
-            case LastOutliers:
-                return SaProtos.EstimationPolicy.POLICY_LASTOUTLIERS;
-            case FreeParameters:
-                return SaProtos.EstimationPolicy.POLICY_FREE_PARAMETERS;
-            case FixedAutoRegressiveParameters:
-                return SaProtos.EstimationPolicy.POLICY_FIXED_AUTOREGRESSIVEPARAMETERS;
-            case FixedParameters:
-                return SaProtos.EstimationPolicy.POLICY_FIXED_PARAMETERS;
-            case Fixed:
-                return SaProtos.EstimationPolicy.POLICY_FIXED;
-            case Current:
-                return SaProtos.EstimationPolicy.POLICY_CURRENT;
-            default:
-                return SaProtos.EstimationPolicy.UNRECOGNIZED;
-        }
+        return switch (policy) {
+            case Complete -> SaProtos.EstimationPolicy.POLICY_COMPLETE;
+            case Outliers_StochasticComponent -> SaProtos.EstimationPolicy.POLICY_ARIMA;
+            case Outliers -> SaProtos.EstimationPolicy.POLICY_OUTLIERS;
+            case LastOutliers -> SaProtos.EstimationPolicy.POLICY_LASTOUTLIERS;
+            case FreeParameters -> SaProtos.EstimationPolicy.POLICY_FREE_PARAMETERS;
+            case FixedAutoRegressiveParameters -> SaProtos.EstimationPolicy.POLICY_FIXED_AUTOREGRESSIVEPARAMETERS;
+            case FixedParameters -> SaProtos.EstimationPolicy.POLICY_FIXED_PARAMETERS;
+            case Fixed -> SaProtos.EstimationPolicy.POLICY_FIXED;
+            case Current -> SaProtos.EstimationPolicy.POLICY_CURRENT;
+            default -> SaProtos.EstimationPolicy.UNRECOGNIZED;
+        };
     }
 
     public EstimationPolicyType convert(SaProtos.EstimationPolicy policy) {
-        switch (policy) {
-            case POLICY_COMPLETE:
-                return EstimationPolicyType.Complete;
-            case POLICY_ARIMA:
-                return EstimationPolicyType.Outliers_StochasticComponent;
-            case POLICY_OUTLIERS:
-                return EstimationPolicyType.Outliers;
-            case POLICY_LASTOUTLIERS:
-                return EstimationPolicyType.LastOutliers;
-            case POLICY_FREE_PARAMETERS:
-                return EstimationPolicyType.FreeParameters;
-            case POLICY_FIXED_AUTOREGRESSIVEPARAMETERS:
-                return EstimationPolicyType.FixedAutoRegressiveParameters;
-            case POLICY_FIXED_PARAMETERS:
-                return EstimationPolicyType.FixedParameters;
-            case POLICY_FIXED:
-                return EstimationPolicyType.Fixed;
-            case POLICY_CURRENT:
-                return EstimationPolicyType.Current;
-            default:
-                return EstimationPolicyType.None;
-        }
+        return switch (policy) {
+            case POLICY_COMPLETE -> EstimationPolicyType.Complete;
+            case POLICY_ARIMA -> EstimationPolicyType.Outliers_StochasticComponent;
+            case POLICY_OUTLIERS -> EstimationPolicyType.Outliers;
+            case POLICY_LASTOUTLIERS -> EstimationPolicyType.LastOutliers;
+            case POLICY_FREE_PARAMETERS -> EstimationPolicyType.FreeParameters;
+            case POLICY_FIXED_AUTOREGRESSIVEPARAMETERS -> EstimationPolicyType.FixedAutoRegressiveParameters;
+            case POLICY_FIXED_PARAMETERS -> EstimationPolicyType.FixedParameters;
+            case POLICY_FIXED -> EstimationPolicyType.Fixed;
+            case POLICY_CURRENT -> EstimationPolicyType.Current;
+            default -> EstimationPolicyType.None;
+        };
     }
     
     public SaProtos.IdentifiableSeasonality convert(CombinedSeasonalityTest.IdentifiableSeasonality seas){
-        switch (seas){
-            case None: return SaProtos.IdentifiableSeasonality.SA_NONE;
-            case ProbablyNone: return SaProtos.IdentifiableSeasonality.SA_PROBABLY_NONE;
-            case Present: return SaProtos.IdentifiableSeasonality.SA_PRESENT;
-            default: return SaProtos.IdentifiableSeasonality.SA_UNKNOWN;
-        }
+        return switch (seas){
+            case None -> SaProtos.IdentifiableSeasonality.SA_NONE;
+            case ProbablyNone -> SaProtos.IdentifiableSeasonality.SA_PROBABLY_NONE;
+            case Present -> SaProtos.IdentifiableSeasonality.SA_PRESENT;
+            default -> SaProtos.IdentifiableSeasonality.SA_UNKNOWN;
+        };
     }
     
     public SaProtos.CombinedSeasonalityTest convert(CombinedSeasonality cs){

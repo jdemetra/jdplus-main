@@ -40,8 +40,8 @@ public class Disposables {
     }
 
     public void dispose(Component c) {
-        if (c instanceof Disposable) {
-            ((Disposable) c).dispose();
+        if (c instanceof Disposable disposable) {
+            disposable.dispose();
         }
     }
 }

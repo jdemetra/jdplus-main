@@ -129,8 +129,8 @@ class DemoUtil {
             @Override
             Optional<Ts> getFirst(DataSourceProvider provider, DataSource dataSource) throws IOException {
                 IOFunction<Object, Iterable<? extends Object>> children = o -> {
-                    return o instanceof DataSource
-                            ? provider.children((DataSource) o)
+                    return o instanceof DataSource ds
+                            ? provider.children(ds)
                             : ((DataSet) o).getKind() == DataSet.Kind.COLLECTION ? provider.children((DataSet) o) : Collections.emptyList();
                 };
 

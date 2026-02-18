@@ -450,18 +450,15 @@ class X13ModelBuilder implements IModelBuilder {
     }
 
     public static IEasterVariable easter(Type type, int w) {
-        switch (type) {
-            case JulianEaster:
-                return new JulianEasterVariable(w, true);
-            case Easter:
-                return EasterVariable.builder()
+        return switch (type) {
+            case JulianEaster -> new JulianEasterVariable(w, true);
+            case Easter -> EasterVariable.builder()
                         .duration(w)
                         .meanCorrection(EasterVariable.Correction.PreComputed)
                         .endPosition(-1)
                         .build();
-            default:
-                return null;
-        }
+            default -> null;
+        };
     }
 
 }

@@ -18,6 +18,8 @@ package jdplus.toolkit.base.core.math.linearfilters;
 
 import nbbrd.design.Development;
 
+import java.io.Serial;
+
 /**
  *
  * @author Jean Palate
@@ -27,8 +29,9 @@ public class LinearFilterException extends RuntimeException
 {
 
     /**
-	 * 
-	 */
+     * 
+     */
+    @Serial
     private static final long serialVersionUID = 3845976478247215076L;
 
     /**

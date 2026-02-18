@@ -207,8 +207,8 @@ public final class DataSourceNode extends AbstractNode {
 
         @Override
         protected Node createExceptionNode(Exception ex) {
-            if (ex instanceof IOException) {
-                return new ProviderExceptionNode((IOException) ex, dataSource.getProviderName());
+            if (ex instanceof IOException exception) {
+                return new ProviderExceptionNode(exception, dataSource.getProviderName());
             }
             return super.createExceptionNode(ex);
         }

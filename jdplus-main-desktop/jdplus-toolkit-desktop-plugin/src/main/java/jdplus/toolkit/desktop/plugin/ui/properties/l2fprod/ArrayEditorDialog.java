@@ -27,7 +27,6 @@ import javax.swing.*;
 public class ArrayEditorDialog<T> extends JDialog {
 
     private final Supplier<T> newItem;
-    ;
     private final T[] initialItems;
     private List<T> currentList;
     private T current;

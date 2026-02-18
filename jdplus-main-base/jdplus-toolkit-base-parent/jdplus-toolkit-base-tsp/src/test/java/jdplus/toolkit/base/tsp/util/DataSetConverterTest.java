@@ -41,8 +41,8 @@ public class DataSetConverterTest {
         builder.clearParameters();
         keyValues.forEach(builder::parameter);
         DataSource normalConfig = builder.build();
-        if (newValue instanceof double[]) {
-            assertThat((double[]) param.get(normalConfig)).containsExactly((double[]) newValue);
+        if (newValue instanceof double[] doubles) {
+            assertThat((double[]) param.get(normalConfig)).containsExactly(doubles);
         } else {
             assertThat(param.get(normalConfig)).isEqualTo(newValue);
         }

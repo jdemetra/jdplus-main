@@ -14,5 +14,5 @@ public enum TypeOfMatrix {
     LowerTriangular,
     UpperTriangular,
     UpperHessenberg,
-    Symmetric;
+    Symmetric
 }

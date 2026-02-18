@@ -5,6 +5,8 @@
 
 package jdplus.tramoseats.base.protobuf;
 
+import java.io.Serial;
+
 /**
  * Protobuf type {@code tramoseats.TramoSeatsResults}
  */
@@ -12,7 +14,8 @@ public final class TramoSeatsResults extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:tramoseats.TramoSeatsResults)
     TramoSeatsResultsOrBuilder {
-private static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -483,8 +486,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.tramoseats.base.protobuf.TramoSeatsResults) {
-        return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSeatsResults)other);
+      if (other instanceof jdplus.tramoseats.base.protobuf.TramoSeatsResults results) {
+        return mergeFrom(results);
       } else {
         super.mergeFrom(other);
         return this;

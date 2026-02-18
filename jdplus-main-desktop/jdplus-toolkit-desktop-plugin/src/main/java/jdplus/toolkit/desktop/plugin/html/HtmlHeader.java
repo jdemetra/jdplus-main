@@ -37,27 +37,14 @@ public class HtmlHeader extends AbstractHtmlElement {
 
     @Override
     public void write(HtmlStream stream) throws IOException {
-        HtmlTag h;
-        switch (level) {
-            case 1:
-                h = HtmlTag.HEADER1;
-                break;
-            case 2:
-                h = HtmlTag.HEADER2;
-                break;
-            case 3:
-                h = HtmlTag.HEADER3;
-                break;
-            case 4:
-                h = HtmlTag.HEADER4;
-                break;
-            case 5:
-                h = HtmlTag.HEADER5;
-                break;
-            default:
-                h = HtmlTag.HEADER6;
-                break;
-        }
+        HtmlTag h = switch (level) {
+            case 1 -> HtmlTag.HEADER1;
+            case 2 -> HtmlTag.HEADER2;
+            case 3 -> HtmlTag.HEADER3;
+            case 4 -> HtmlTag.HEADER4;
+            case 5 -> HtmlTag.HEADER5;
+            default -> HtmlTag.HEADER6;
+        };
         if (level <= 3) {
             stream.write(h, txt);
         }

@@ -71,12 +71,12 @@ public enum SeatsApproximation
    * @return The enum associated with the given numeric wire value.
    */
   public static SeatsApproximation forNumber(int value) {
-    switch (value) {
-      case 0: return SEATS_APP_NONE;
-      case 1: return SEATS_APP_LEGACY;
-      case 2: return SEATS_APP_NOISY;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> SEATS_APP_NONE;
+      case 1 -> SEATS_APP_LEGACY;
+      case 2 -> SEATS_APP_NOISY;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<SeatsApproximation>
@@ -105,7 +105,7 @@ public enum SeatsApproximation
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return jdplus.tramoseats.base.protobuf.TramoSeatsProtos.getDescriptor().getEnumTypes().get(0);
+    return jdplus.tramoseats.base.protobuf.TramoSeatsProtos.getDescriptor().getEnumTypes().getFirst();
   }
 
   private static final SeatsApproximation[] VALUES = values();

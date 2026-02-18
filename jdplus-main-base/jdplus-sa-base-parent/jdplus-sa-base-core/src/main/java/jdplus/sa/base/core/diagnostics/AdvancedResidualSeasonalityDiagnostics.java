@@ -98,36 +98,26 @@ public class AdvancedResidualSeasonalityDiagnostics implements Diagnostics {
     @Override
     public ProcQuality getDiagnostic(String test
     ) {
-        switch (test) {
-            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_SA:
-                return quality(qs_sa);
-            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_SA:
-                return quality(f_sa);
-            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_I:
-                return quality(qs_i);
-            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_I:
-                return quality(f_i);
+        return switch (test) {
+            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_SA -> quality(qs_sa);
+            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_SA -> quality(f_sa);
+            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_I -> quality(qs_i);
+            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_I -> quality(f_i);
 
-            default:
-                return ProcQuality.Undefined;
-        }
+            default -> ProcQuality.Undefined;
+        };
     }
 
     @Override
     public double getValue(String test
     ) {
-        switch (test) {
-            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_SA:
-                return pvalue(qs_sa);
-            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_SA:
-                return pvalue(f_sa);
-            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_I:
-                return pvalue(qs_i);
-            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_I:
-                return pvalue(f_i);
-            default:
-                return Double.NaN;
-        }
+        return switch (test) {
+            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_SA -> pvalue(qs_sa);
+            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_SA -> pvalue(f_sa);
+            case AdvancedResidualSeasonalityDiagnosticsFactory.QS_I -> pvalue(qs_i);
+            case AdvancedResidualSeasonalityDiagnosticsFactory.FTEST_I -> pvalue(f_i);
+            default -> Double.NaN;
+        };
     }
 
     @Override

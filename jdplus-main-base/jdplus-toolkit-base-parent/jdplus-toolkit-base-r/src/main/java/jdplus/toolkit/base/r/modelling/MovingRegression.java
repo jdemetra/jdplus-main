@@ -151,7 +151,7 @@ public class MovingRegression {
         cl.set(Double.NaN);
         int j = 0;
         for (; j < (period * nyears) / 2; ++j) {
-            cl.row(j).copyFrom(coef.get(0), 0);
+            cl.row(j).copyFrom(coef.getFirst(), 0);
         }
         for (int i = 1; i < coef.size(); ++i) {
             double[] a = coef.get(i - 1), b = coef.get(i);
@@ -164,7 +164,7 @@ public class MovingRegression {
             }
         }
 
-        double[] last = coef.get(coef.size() - 1);
+        double[] last = coef.getLast();
         for (; j < cl.getRowsCount(); ++j) {
             cl.row(j).copyFrom(last, 0);
         }

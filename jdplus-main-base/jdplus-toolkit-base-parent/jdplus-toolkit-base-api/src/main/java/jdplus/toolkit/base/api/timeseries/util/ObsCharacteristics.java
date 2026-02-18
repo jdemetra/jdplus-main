@@ -28,5 +28,5 @@ public enum ObsCharacteristics {
     /**
      * Specifies that the observations are already ordered chronologically
      */
-    ORDERED;
+    ORDERED
 }

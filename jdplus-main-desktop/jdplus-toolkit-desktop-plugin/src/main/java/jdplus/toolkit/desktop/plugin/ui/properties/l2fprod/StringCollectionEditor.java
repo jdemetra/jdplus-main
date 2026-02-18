@@ -39,9 +39,9 @@ public class StringCollectionEditor extends AbstractPropertyEditor {
 
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof String[]) {
+        if (null != value && value instanceof String[] strings) {
             String[] old = strings_;
-            strings_ = (String[]) value;
+            strings_ = strings;
             firePropertyChange(old, strings_);
         }
     }

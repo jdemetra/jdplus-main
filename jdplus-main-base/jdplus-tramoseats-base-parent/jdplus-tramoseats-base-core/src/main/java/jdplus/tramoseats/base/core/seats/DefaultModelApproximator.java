@@ -175,14 +175,11 @@ public class DefaultModelApproximator implements IModelApproximator {
         if (bp != 0 || bd != 1 || q > 1 || p != 0) {
             return false;
         }
-        switch (d) {
-            case 0:
-                return app_001011(sm, cur, spec);
-            case 2:
-                return app_021011(sm, cur, spec);
-            default:
-                return app_011011(sm, cur, spec);
-        }
+        return switch (d) {
+            case 0 -> app_001011(sm, cur, spec);
+            case 2 -> app_021011(sm, cur, spec);
+            default -> app_011011(sm, cur, spec);
+        };
     }
 
     private boolean app_001011(SeatsModel sm, SarimaModel cur, SarimaOrders spec) {

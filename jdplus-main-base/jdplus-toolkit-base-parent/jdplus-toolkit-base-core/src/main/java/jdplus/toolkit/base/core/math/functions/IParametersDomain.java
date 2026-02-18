@@ -76,7 +76,7 @@ public interface IParametersDomain {
     
     default String getDescription(int idx){
         return "parameter-"+(idx+1);
-    };
+    }
     
 
 }

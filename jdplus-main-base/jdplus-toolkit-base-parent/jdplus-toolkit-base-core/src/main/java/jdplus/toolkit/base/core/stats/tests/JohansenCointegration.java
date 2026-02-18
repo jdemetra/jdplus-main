@@ -280,14 +280,11 @@ public class JohansenCointegration {
     }
 
     private double cv(int a, int b, int c) {
-        switch (ecdet) {
-            case cnt:
-                return cvconst(a, b, c);
-            case trend:
-                return cvtrend(a, b, c);
-            default:
-                return cvnone(a, b, c);
-        }
+        return switch (ecdet) {
+            case cnt -> cvconst(a, b, c);
+            case trend -> cvtrend(a, b, c);
+            default -> cvnone(a, b, c);
+        };
     }
 
     private static double cvnone(int a, int b, int c) {

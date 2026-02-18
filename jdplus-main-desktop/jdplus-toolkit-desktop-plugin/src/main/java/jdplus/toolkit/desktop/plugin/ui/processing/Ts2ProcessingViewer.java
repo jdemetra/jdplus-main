@@ -86,7 +86,7 @@ public class Ts2ProcessingViewer<S extends ProcSpecification, D extends MultiTsD
             tsLabely.setVisible(false);
             specLabel.setVisible(false);
         } else {
-            Ts low = input.get(0);
+            Ts low = input.getFirst();
             Ts high = input.size() > 1 ? input.get(1) : null;
             dropDataLabely.setVisible(false);
             TsMoniker monikery = low.getMoniker();

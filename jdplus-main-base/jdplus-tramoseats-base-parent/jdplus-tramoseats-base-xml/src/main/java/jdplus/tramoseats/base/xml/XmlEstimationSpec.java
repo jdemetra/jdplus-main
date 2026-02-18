@@ -186,5 +186,5 @@ public class XmlEstimationSpec
         xml.setPrecision(v.getTol());
         xml.setUBP(v.getUbp());
         return true;
-    };
+    }
 }

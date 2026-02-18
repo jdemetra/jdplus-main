@@ -91,7 +91,7 @@ final class LegacyId implements Comparable<LegacyId>, Iterable<String> {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof LegacyId && equals((LegacyId) obj));
+        return this == obj || (obj instanceof LegacyId li && equals(li));
     }
 
     private boolean equals(LegacyId other) {

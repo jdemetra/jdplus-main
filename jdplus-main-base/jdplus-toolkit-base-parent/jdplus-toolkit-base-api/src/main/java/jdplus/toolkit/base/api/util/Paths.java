@@ -170,9 +170,8 @@ public final class Paths {
         if (context == null) {
             return folder(folder);
         }
-        if (context instanceof Id) {
-            Id id = (Id) context;
-            return fileFromId(folder(folder), (Id) context);
+        if (context instanceof Id id) {
+            return fileFromId(folder(folder), id);
         } else {
             return concatenate(folder(folder), context.toString());
         }
@@ -180,8 +179,7 @@ public final class Paths {
 
     public String folderFromContext(String folder, Object context) {
         String nfolder = folder(folder);
-        if (context != null && context instanceof Id) {
-            Id parent = (Id) context;
+        if (context != null && context instanceof Id parent) {
             for (int i = 0; i < parent.getCount(); ++i) {
                 nfolder = concatenate(nfolder, parent.get(i));
             }
@@ -195,8 +193,7 @@ public final class Paths {
 
     public File folderFromContext(File folder, Object context) {
         File nfolder = folder(folder);
-        if (context != null && context instanceof Id) {
-            Id parent = (Id) context;
+        if (context != null && context instanceof Id parent) {
             for (int i = 0; i < parent.getCount(); ++i) {
                 nfolder = nfolder.toPath().resolve(parent.get(i)).toFile();
             }

@@ -111,17 +111,17 @@ public enum SeasonalFilter
    * @return The enum associated with the given numeric wire value.
    */
   public static SeasonalFilter forNumber(int value) {
-    switch (value) {
-      case 0: return SEASONAL_FILTER_MSR;
-      case 1: return SEASONAL_FILTER_S3X1;
-      case 2: return SEASONAL_FILTER_S3X3;
-      case 3: return SEASONAL_FILTER_S3X5;
-      case 4: return SEASONAL_FILTER_S3X9;
-      case 5: return SEASONAL_FILTER_S3X15;
-      case 6: return SEASONAL_FILTER_STABLE;
-      case 7: return SEASONAL_FILTER_X11DEFAULT;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> SEASONAL_FILTER_MSR;
+      case 1 -> SEASONAL_FILTER_S3X1;
+      case 2 -> SEASONAL_FILTER_S3X3;
+      case 3 -> SEASONAL_FILTER_S3X5;
+      case 4 -> SEASONAL_FILTER_S3X9;
+      case 5 -> SEASONAL_FILTER_S3X15;
+      case 6 -> SEASONAL_FILTER_STABLE;
+      case 7 -> SEASONAL_FILTER_X11DEFAULT;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<SeasonalFilter>

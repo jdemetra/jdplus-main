@@ -498,7 +498,7 @@ public class SarimaComponent {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof SarimaComponent && equals((SarimaComponent) obj));
+        return this == obj || (obj instanceof SarimaComponent sc && equals(sc));
     }
 
     private boolean equals(SarimaComponent other) {

@@ -50,8 +50,7 @@ public class XmlGenericTradingDays extends XmlModifiableRegressionVariable {
 
         @Override
         public ITsVariable unmarshal(XmlRegressionVariable xvar) throws Exception {
-            if (xvar instanceof XmlGenericTradingDays) {
-                XmlGenericTradingDays v = (XmlGenericTradingDays) xvar;
+            if (xvar instanceof XmlGenericTradingDays v) {
                 DayClustering clustering = DayClustering.of(v.dayClustering);
 
                 GenericTradingDays gtd;
@@ -79,11 +78,11 @@ public class XmlGenericTradingDays extends XmlModifiableRegressionVariable {
         public XmlGenericTradingDays marshal(ITsVariable v) throws Exception {
             GenericTradingDaysVariable td = null;
             ModifiedTsVariable mv = null;
-            if (v instanceof GenericTradingDaysVariable) {
-                td = (GenericTradingDaysVariable) v;
+            if (v instanceof GenericTradingDaysVariable variable1) {
+                td = variable1;
                 mv = null;
-            } else if (v instanceof ModifiedTsVariable) {
-                mv = (ModifiedTsVariable) v;
+            } else if (v instanceof ModifiedTsVariable variable) {
+                mv = variable;
                 if (mv.getVariable() instanceof GenericTradingDaysVariable) {
                     td = (GenericTradingDaysVariable) mv.getVariable();
                 }

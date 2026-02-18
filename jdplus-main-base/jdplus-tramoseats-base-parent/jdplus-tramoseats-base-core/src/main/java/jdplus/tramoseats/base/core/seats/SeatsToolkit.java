@@ -43,36 +43,23 @@ public class SeatsToolkit {
 
         DefaultModelDecomposer decomposer = new DefaultModelDecomposer(spec);
 
-        IModelApproximator approximator;
-        switch (spec.getApproximationMode()) {
-            case None:
-                approximator = null;
-                break;
-            default:
-                approximator = new DefaultModelApproximator(estimator);
-        }
+        IModelApproximator approximator = switch (spec.getApproximationMode()) {
+            case None -> null;
+            default -> new DefaultModelApproximator(estimator);
+        };
 
         int nf = spec.getForecastCount(), nb = spec.getBackcastCount();
 
-        IComponentsEstimator cmpEstimator;
-        switch (spec.getMethod()) {
-            case KalmanSmoother:
-                cmpEstimator = new KalmanEstimator(nb, nf);
-                break;
-            default:
-                cmpEstimator = new WienerKolmogorovEstimator(nb, nf);
-                break;
-        }
+        IComponentsEstimator cmpEstimator = switch (spec.getMethod()) {
+            case KalmanSmoother -> new KalmanEstimator(nb, nf);
+            default -> new WienerKolmogorovEstimator(nb, nf);
+        };
 //               cmpEstimator = new KalmanEstimator(nb, nf);
 
-        IBiasCorrector bias;
-        switch (spec.getBiasCorrection()) {
-            case Legacy:
-                bias = new DefaultBiasCorrector(true);
-                break;
-            default:
-                bias = new DefaultBiasCorrector(false);
-        }
+        IBiasCorrector bias = switch (spec.getBiasCorrection()) {
+            case Legacy -> new DefaultBiasCorrector(true);
+            default -> new DefaultBiasCorrector(false);
+        };
 
         return builder()
                 .modelValidator(validator)
