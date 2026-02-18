@@ -28,7 +28,8 @@ public class ArimaDictionaries {
     public final String AR = "ar", // Stationary auto-regressive polynomial
             DELTA = "delta", // Differencing polynomial
             MA = "ma", // Moving average polynomial
-            VAR = "var";// Innovation variance
+            VAR = "var",// Innovation variance
+            NAME = "name";// name of the class e.g.ArimaModel
 
     public final Dictionary ARIMA = AtomicDictionary.builder()
             .name("arima")

@@ -123,6 +123,7 @@ module jdplus.toolkit.base.core {
 
     provides InformationExtractor with
             jdplus.toolkit.base.core.modelling.extractors.ArimaExtractor,
+            jdplus.toolkit.base.core.modelling.extractors.IArimaModelExtractor,
             jdplus.toolkit.base.core.modelling.extractors.DiffuseLikelihoodStatisticsExtractor,
             jdplus.toolkit.base.core.modelling.extractors.LikelihoodStatisticsExtractor,
             jdplus.toolkit.base.core.modelling.extractors.LinearModelExtractors.Default,

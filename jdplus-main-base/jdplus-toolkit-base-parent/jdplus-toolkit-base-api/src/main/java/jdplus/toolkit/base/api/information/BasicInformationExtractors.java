@@ -39,14 +39,17 @@ class BasicInformationExtractors {
     }
 
     static int listItem(String prefix, String key, int defValue) {
-        if (!key.startsWith(prefix)) {
-            return Integer.MIN_VALUE;
-        }
         if (key.equals(prefix)) {
             return defValue;
         }
+
+        if (!key.startsWith(prefix + LSTART)) {
+            return Integer.MIN_VALUE;
+        }
+
         int start = prefix.length() + LSTART.length();
-        int end = key.length() - LEND.length();
+        //   int end = key.length() - LEND.length();
+        int end = key.indexOf(LEND);
         if (end <= start) {
             return Integer.MIN_VALUE;
         }
