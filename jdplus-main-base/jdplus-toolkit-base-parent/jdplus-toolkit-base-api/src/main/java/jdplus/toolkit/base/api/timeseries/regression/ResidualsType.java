@@ -29,6 +29,6 @@ public enum ResidualsType {
     /**
      * L^-1(y-Xb)
      */
-    FullResiduals;
+    FullResiduals
 
 }

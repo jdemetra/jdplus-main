@@ -242,11 +242,11 @@ public final class ProvidersNode extends AbstractNode {
     private static final Comparator<DataSource> ON_TO_STRING = Comparator.comparing(Object::toString);
 
     public static Optional<Node> findNode(DataSource dataSource, Node node) {
-        if (node instanceof ProvidersNode) {
-            return find(dataSource, (ProvidersNode) node);
+        if (node instanceof ProvidersNode providersNode) {
+            return find(dataSource, providersNode);
         }
-        if (node instanceof ProviderNode) {
-            return find(dataSource, (ProviderNode) node);
+        if (node instanceof ProviderNode providerNode) {
+            return find(dataSource, providerNode);
         }
         return Optional.empty();
     }

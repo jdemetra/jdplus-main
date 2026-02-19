@@ -50,8 +50,7 @@ public class HtmlInformationSet extends AbstractHtmlElement {
     public static final HtmlFormatter defFormatter = new HtmlFormatter() {
         @Override
         public HtmlElement format(Object t) {
-            if (t instanceof Object[]) {
-                Object[] a = (Object[]) t;
+            if (t instanceof Object[] a) {
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < a.length; ++i) {
                     builder.append(a[i]);

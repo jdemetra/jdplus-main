@@ -30,8 +30,8 @@ import java.util.Objects;
 public final class ToDataSourceListener implements DataSourceListener {
 
     public static @NonNull DataSourceListener toDataSourceListener(ec.tss.tsproviders.@NonNull IDataSourceListener delegate) {
-        return delegate instanceof FromDataSourceListener
-                ? ((FromDataSourceListener) delegate).getDelegate()
+        return delegate instanceof FromDataSourceListener fdsl
+                ? fdsl.getDelegate()
                 : new ToDataSourceListener(delegate);
     }
 
@@ -65,8 +65,8 @@ public final class ToDataSourceListener implements DataSourceListener {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof ToDataSourceListener
-                && this.delegate.equals(((ToDataSourceListener) obj).delegate);
+        return obj instanceof ToDataSourceListener tdsl
+                && this.delegate.equals(tdsl.delegate);
     }
 
     @Override

@@ -303,8 +303,8 @@ public final class SpreadSheetView extends javax.swing.JPanel implements HasColo
         @Override
         public void execute(SpreadSheetView component) throws Exception {
             Component grid = component.tabbedPane.getSelectedComponent();
-            if (grid instanceof JGrid) {
-                delegate.execute((JGrid) grid);
+            if (grid instanceof JGrid jGrid) {
+                delegate.execute(jGrid);
             }
         }
     }

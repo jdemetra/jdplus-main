@@ -50,8 +50,8 @@ public final class NamedServiceNode extends AbstractNode {
         super(Children.LEAF, new AbstractLookup(abilities));
         // order matters !
         if (namedService instanceof Persistable) {
-            if (namedService instanceof Resetable) {
-                abilities.add(new LateConfigurableAndResetable((Persistable) namedService, (Resetable) namedService));
+            if (namedService instanceof Resetable resetable) {
+                abilities.add(new LateConfigurableAndResetable((Persistable) namedService, resetable));
             } else {
                 abilities.add(new LateConfigurable((Persistable) namedService));
             }
@@ -107,12 +107,12 @@ public final class NamedServiceNode extends AbstractNode {
 
     public static void storeAll(ExplorerManager em) {
         for (Node o : em.getRootContext().getChildren().getNodes()) {
-            if (o instanceof NamedServiceNode) {
-                ((NamedServiceNode) o).applyConfig();
+            if (o instanceof NamedServiceNode node) {
+                node.applyConfig();
             }
             for (Node c : o.getChildren().getNodes()) {
-                if (c instanceof NamedServiceNode) {
-                    ((NamedServiceNode) c).applyConfig();
+                if (c instanceof NamedServiceNode node) {
+                    node.applyConfig();
                 }
             }
         }

@@ -316,8 +316,8 @@ public abstract sealed class TimeIntervalFormatter
 
     @MightBePromoted
     static int indexOf(CharSequence text, char c) {
-        if (text instanceof String) {
-            return ((String) text).indexOf(c);
+        if (text instanceof String string) {
+            return string.indexOf(c);
         }
         for (int i = 0; i < text.length(); i++) {
             if (text.charAt(i) == c) {

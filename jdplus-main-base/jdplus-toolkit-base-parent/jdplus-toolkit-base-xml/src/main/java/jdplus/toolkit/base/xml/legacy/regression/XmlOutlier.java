@@ -93,17 +93,12 @@ public abstract class XmlOutlier extends XmlRegressionVariable {
     }
 
     public static final XmlOutlier marshal(IOutlier v) {
-        switch (v.getCode()) {
-            case "AO":
-                return XmlAdditiveOutlier.ADAPTER.marshal(v);
-            case "LS":
-                return XmlLevelShift.ADAPTER.marshal(v);
-            case "TC":
-                return XmlTransitoryChange.ADAPTER.marshal(v);
-            case "SO":
-                return XmlSeasonalOutlier.ADAPTER.marshal(v);
-            default:
-                return null;
-        }
+        return switch (v.getCode()) {
+            case "AO" -> XmlAdditiveOutlier.ADAPTER.marshal(v);
+            case "LS" -> XmlLevelShift.ADAPTER.marshal(v);
+            case "TC" -> XmlTransitoryChange.ADAPTER.marshal(v);
+            case "SO" -> XmlSeasonalOutlier.ADAPTER.marshal(v);
+            default -> null;
+        };
     }
 }

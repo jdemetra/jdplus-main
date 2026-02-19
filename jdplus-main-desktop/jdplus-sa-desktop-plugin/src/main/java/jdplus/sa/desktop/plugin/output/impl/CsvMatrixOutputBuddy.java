@@ -75,7 +75,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
 
     @Override
     public AbstractOutputNode createNodeFor(Object properties) {
-        return properties instanceof CsvMatrixOutputConfiguration ? new CsvMatrixNode((CsvMatrixOutputConfiguration) properties) : null;
+        return properties instanceof CsvMatrixOutputConfiguration cmoc ? new CsvMatrixNode(cmoc) : null;
     }
 
     @Override

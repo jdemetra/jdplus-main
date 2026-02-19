@@ -158,7 +158,7 @@ public final class SingleFileExporter {
         FileChooserBuilder result = new FileChooserBuilder(preferencesKey);
         if (!filters.isEmpty()) {
             filters.forEach(result::addFileFilter);
-            result.setFileFilter(filters.get(0));
+            result.setFileFilter(filters.getFirst());
             result.setSelectionApprover(new AndThenApprover(new FileFilterApprover(filters), overwriteApprover()));
         } else {
             result.setSelectionApprover(overwriteApprover());

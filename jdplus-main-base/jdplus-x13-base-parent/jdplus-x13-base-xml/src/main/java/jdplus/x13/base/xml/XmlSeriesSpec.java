@@ -100,7 +100,7 @@ public class XmlSeriesSpec
             xml.span=XmlPeriodSelection.marshal(vspan);
         }
         return true;
-    };
+    }
     
     public static final BasicSpec unmarshal(XmlSeriesSpec xml) {
         if (xml == null)
@@ -111,5 +111,5 @@ public class XmlSeriesSpec
         if (xml.span != null)
             builder.span(XmlPeriodSelection.unmarshal(xml.span));
         return builder.build();
-    };
+    }
 }

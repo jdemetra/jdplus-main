@@ -31,7 +31,7 @@ public abstract class AbstractIterator<E> implements Iterator<E> {
 
     enum State {
         COMPUTED, NOT_COMPUTED, DONE
-    };
+    }
 
     private State state = State.NOT_COMPUTED;
 

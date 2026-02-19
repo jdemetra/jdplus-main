@@ -121,10 +121,10 @@ public class XmlTsVariables {
         for (int i = 0; i < names.length; ++i) {
             TsDataSupplier var = v.get(names[i]);
             XmlTsVariable xvar = null;
-            if (var instanceof DynamicTsDataSupplier) {
-                xvar = XmlDynamicTsVariable.getAdapter().marshal((DynamicTsDataSupplier) var);
-            } else if (var instanceof StaticTsDataSupplier) {
-                xvar = XmlStaticTsVariable.getAdapter().marshal((StaticTsDataSupplier) var);
+            if (var instanceof DynamicTsDataSupplier supplier1) {
+                xvar = XmlDynamicTsVariable.getAdapter().marshal(supplier1);
+            } else if (var instanceof StaticTsDataSupplier supplier) {
+                xvar = XmlStaticTsVariable.getAdapter().marshal(supplier);
             }
             if (xvar != null) {
                 xvar.setName(names[i]);
@@ -138,10 +138,10 @@ public class XmlTsVariables {
         TsDataSuppliers v=new TsDataSuppliers();
         for (XmlTsVariable xvar : xml.getVariables()) {
             TsDataSupplier var = null;
-            if (xvar instanceof XmlStaticTsVariable) {
-                var = XmlStaticTsVariable.getAdapter().unmarshal((XmlStaticTsVariable) xvar);
-            } else if (xvar instanceof XmlDynamicTsVariable) {
-                var = XmlDynamicTsVariable.getAdapter().unmarshal((XmlDynamicTsVariable) xvar);
+            if (xvar instanceof XmlStaticTsVariable tsVariable1) {
+                var = XmlStaticTsVariable.getAdapter().unmarshal(tsVariable1);
+            } else if (xvar instanceof XmlDynamicTsVariable tsVariable) {
+                var = XmlDynamicTsVariable.getAdapter().unmarshal(tsVariable);
             }
             if (var != null) {
                 v.set(xvar.getName(), var);

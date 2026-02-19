@@ -96,7 +96,7 @@ public final class SheetGridOutput implements GridOutput {
         }
 
         private Object toSheetValue(Object value) {
-            return value instanceof LocalDateTime ? fromDateTime((LocalDateTime) value) : value;
+            return value instanceof LocalDateTime ldt ? fromDateTime(ldt) : value;
         }
 
         private Date fromDateTime(LocalDateTime o) {

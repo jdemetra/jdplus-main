@@ -53,5 +53,5 @@ public enum ComponentInformation {
     /**
      * Standard deviations of the backcasts
      */
-    StdevBackcast;
+    StdevBackcast
 }

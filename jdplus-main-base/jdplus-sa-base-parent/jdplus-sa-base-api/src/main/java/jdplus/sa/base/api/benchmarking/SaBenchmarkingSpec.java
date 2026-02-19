@@ -50,7 +50,7 @@ public final class SaBenchmarkingSpec implements Validatable<SaBenchmarkingSpec>
 
     public static enum BiasCorrection {
         None, Additive, Multiplicative
-    };
+    }
 
     private boolean enabled, forecast;
     @lombok.NonNull

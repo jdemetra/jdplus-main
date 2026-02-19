@@ -228,7 +228,7 @@ public final class TramoSeatsProtos {
           jdplus.sa.base.protobuf.SaProtos.getDescriptor(),
         });
     internal_static_tramoseats_DecompositionSpec_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+      getDescriptor().getMessageTypes().getFirst();
     internal_static_tramoseats_DecompositionSpec_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tramoseats_DecompositionSpec_descriptor,
@@ -240,7 +240,7 @@ public final class TramoSeatsProtos {
         internal_static_tramoseats_TramoSpec_descriptor,
         new java.lang.String[] { "Basic", "Transform", "Outlier", "Arima", "Automodel", "Regression", "Estimate", });
     internal_static_tramoseats_TramoSpec_BasicSpec_descriptor =
-      internal_static_tramoseats_TramoSpec_descriptor.getNestedTypes().get(0);
+      internal_static_tramoseats_TramoSpec_descriptor.getNestedTypes().getFirst();
     internal_static_tramoseats_TramoSpec_BasicSpec_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tramoseats_TramoSpec_BasicSpec_descriptor,
@@ -306,7 +306,7 @@ public final class TramoSeatsProtos {
         internal_static_tramoseats_TramoOutput_descriptor,
         new java.lang.String[] { "Result", "EstimationSpec", "ResultSpec", "Log", "Details", });
     internal_static_tramoseats_TramoOutput_DetailsEntry_descriptor =
-      internal_static_tramoseats_TramoOutput_descriptor.getNestedTypes().get(0);
+      internal_static_tramoseats_TramoOutput_descriptor.getNestedTypes().getFirst();
     internal_static_tramoseats_TramoOutput_DetailsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tramoseats_TramoOutput_DetailsEntry_descriptor,
@@ -318,7 +318,7 @@ public final class TramoSeatsProtos {
         internal_static_tramoseats_TramoSeatsOutput_descriptor,
         new java.lang.String[] { "Result", "EstimationSpec", "ResultSpec", "Log", "Details", });
     internal_static_tramoseats_TramoSeatsOutput_DetailsEntry_descriptor =
-      internal_static_tramoseats_TramoSeatsOutput_descriptor.getNestedTypes().get(0);
+      internal_static_tramoseats_TramoSeatsOutput_descriptor.getNestedTypes().getFirst();
     internal_static_tramoseats_TramoSeatsOutput_DetailsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tramoseats_TramoSeatsOutput_DetailsEntry_descriptor,

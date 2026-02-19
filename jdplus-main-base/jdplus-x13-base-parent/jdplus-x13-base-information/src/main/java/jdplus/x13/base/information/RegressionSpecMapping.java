@@ -177,7 +177,7 @@ class RegressionSpecMapping {
             for (Information<InformationSet> sub : sel) {
                 List<Variable<TsContextVariable>> v = TsContextVariableMapping.readLegacy(sub.getValue());
                 if (!v.isEmpty()) {
-                    Parameter[] c = coefficientsOf(regInfo, v.get(0).getName());
+                    Parameter[] c = coefficientsOf(regInfo, v.getFirst().getName());
                     int j = 0;
                     if (c != null) {
                         v.forEach(var -> builder.userDefinedVariable(var.withCoefficient(c[j])));

@@ -54,8 +54,7 @@ public class UserVariablesEditor extends AbstractPropertyEditor {
     
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof UserVariables) {
-            UserVariables val = (UserVariables) value;
+        if (null != value && value instanceof UserVariables val) {
             variables = val.getNames().clone();
         } else {
             variables = new String[0];

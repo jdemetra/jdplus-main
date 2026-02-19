@@ -36,5 +36,5 @@ public enum TestType {
      * test_TwoSided : test that a statistic is below some value and above
      * another value
      */
-    TwoSided;
+    TwoSided
 }

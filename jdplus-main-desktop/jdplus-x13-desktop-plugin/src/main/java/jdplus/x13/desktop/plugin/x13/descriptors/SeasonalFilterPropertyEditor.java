@@ -63,8 +63,8 @@ public class SeasonalFilterPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof SeasonalFilterOption[]) {
-            filters = (SeasonalFilterOption[]) value;
+        if (null != value && value instanceof SeasonalFilterOption[] options) {
+            filters = options;
             ((SeasonalFilterEditor) editor).setFilters(filters);
         }
     }

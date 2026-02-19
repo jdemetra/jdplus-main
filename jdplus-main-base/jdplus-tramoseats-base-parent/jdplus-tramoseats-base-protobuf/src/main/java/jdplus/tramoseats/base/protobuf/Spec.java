@@ -5,6 +5,8 @@
 
 package jdplus.tramoseats.base.protobuf;
 
+import java.io.Serial;
+
 /**
  * Protobuf type {@code tramoseats.Spec}
  */
@@ -12,7 +14,8 @@ public final class Spec extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:tramoseats.Spec)
     SpecOrBuilder {
-private static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -429,8 +432,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.tramoseats.base.protobuf.Spec) {
-        return mergeFrom((jdplus.tramoseats.base.protobuf.Spec)other);
+      if (other instanceof jdplus.tramoseats.base.protobuf.Spec spec) {
+        return mergeFrom(spec);
       } else {
         super.mergeFrom(other);
         return this;

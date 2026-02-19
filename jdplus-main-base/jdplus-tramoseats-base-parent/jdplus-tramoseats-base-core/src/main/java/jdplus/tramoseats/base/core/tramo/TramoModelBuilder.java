@@ -412,17 +412,11 @@ class TramoModelBuilder implements IModelBuilder {
         if (espec.isJulian()) {
             return new JulianEasterVariable(espec.getDuration(), true);
         } else {
-            int endpos;
-            switch (espec.getType()) {
-                case IncludeEaster:
-                    endpos = 0;
-                    break;
-                case IncludeEasterMonday:
-                    endpos = 1;
-                    break;
-                default:
-                    endpos = -1;
-            }
+            int endpos = switch (espec.getType()) {
+                case IncludeEaster -> 0;
+                case IncludeEasterMonday -> 1;
+                default -> -1;
+            };
             return EasterVariable.builder()
                     .duration(espec.getDuration())
                     .meanCorrection(EasterVariable.Correction.Simple)

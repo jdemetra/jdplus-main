@@ -72,8 +72,8 @@ public final class ToolsPersistence {
     }
 
     public static void writeTsCollection(@NonNull HasTsCollection view, @NonNull Properties p) {
-        if (view instanceof Persistable) {
-            Config config = ((Persistable) view).getConfig();
+        if (view instanceof Persistable persistable) {
+            Config config = persistable.getConfig();
             tryPut(p, "config", XmlConfig.xmlFormatter(false)::format, true, config);
         }
         if (DemetraBehaviour.get().isPersistToolsContent()) {
@@ -95,8 +95,8 @@ public final class ToolsPersistence {
                         .forEach(i -> view.getTsSelectionModel().addSelectionInterval(i, i));
             });
         }
-        if (view instanceof Persistable) {
-            tryGet(p, "config", XmlConfig.xmlParser()::parse, true).ifPresent(((Persistable) view)::setConfig);
+        if (view instanceof Persistable persistable) {
+            tryGet(p, "config", XmlConfig.xmlParser()::parse, true).ifPresent(persistable::setConfig);
         }
     }
 

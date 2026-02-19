@@ -38,25 +38,16 @@ public enum DiscreteKernel {
     Trapezoidal;
 
     public IntToDoubleFunction asFunction(int h) {
-        switch (this) {
-            case Uniform:
-                return uniform(h);
-            case Triangular:
-                return triangular(h);
-            case Epanechnikov:
-                return epanechnikov(h);
-            case Biweight:
-                return biweight(h);
-            case Triweight:
-                return triweight(h);
-            case Tricube:
-                return tricube(h);
-            case Henderson:
-                return henderson(h);
-            case Trapezoidal:
-                return trapezoidal(h);
-        }
-        return null;
+        return switch (this) {
+            case Uniform -> uniform(h);
+            case Triangular -> triangular(h);
+            case Epanechnikov -> epanechnikov(h);
+            case Biweight -> biweight(h);
+            case Triweight -> triweight(h);
+            case Tricube -> tricube(h);
+            case Henderson -> henderson(h);
+            case Trapezoidal -> trapezoidal(h);
+        };
     }
 
     public static IntToDoubleFunction uniform(final int h) {

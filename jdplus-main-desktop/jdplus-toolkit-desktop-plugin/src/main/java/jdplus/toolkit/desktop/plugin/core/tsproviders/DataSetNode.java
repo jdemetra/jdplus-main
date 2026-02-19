@@ -158,8 +158,8 @@ abstract public class DataSetNode extends AbstractNode {
 
         @Override
         protected Node createExceptionNode(Exception ex) {
-            if (ex instanceof IOException) {
-                return new ProviderExceptionNode((IOException) ex, dataSet.getDataSource().getProviderName());
+            if (ex instanceof IOException exception) {
+                return new ProviderExceptionNode(exception, dataSet.getDataSource().getProviderName());
             }
             return super.createExceptionNode(ex);
         }

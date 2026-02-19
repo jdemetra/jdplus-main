@@ -189,8 +189,8 @@ public final class TramoSeatsFactory implements SaProcessingFactory<TramoSeatsSp
 
     @Override
     public TramoSeatsSpec decode(SaSpecification spec) {
-        if (spec instanceof TramoSeatsSpec) {
-            return (TramoSeatsSpec) spec;
+        if (spec instanceof TramoSeatsSpec seatsSpec) {
+            return seatsSpec;
         } else {
             return null;
         }

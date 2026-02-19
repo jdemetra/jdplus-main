@@ -143,7 +143,7 @@ public class TimeInvariantDynamics implements ISsfDynamics {
             DataBlock col = cols.next();
             tx.product(T.rowsIterator(), col);
             col.copy(tx);
-        } ;
+        }
     }
 
     @Override

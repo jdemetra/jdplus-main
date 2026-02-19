@@ -515,8 +515,7 @@ public final class JTsCheckLastList extends JComponent {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component result = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (result instanceof JLabel) {
-                JLabel c = (JLabel) result;
+            if (result instanceof JLabel c) {
                 int rowIndex = table.convertRowIndexToModel(row);
                 TsCollection coll = getTsCollection();
                 if (coll.size() > row) {

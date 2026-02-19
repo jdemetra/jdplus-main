@@ -54,24 +54,16 @@ public class DateSelectorUI implements IPropertyDescriptors {
         }
 
         public static TimeSelector.SelectionType to(Type type) {
-            switch (type) {
-                case All:
-                    return TimeSelector.SelectionType.All;
-                case From:
-                    return TimeSelector.SelectionType.From;
-                case To:
-                    return TimeSelector.SelectionType.To;
-                case Between:
-                    return TimeSelector.SelectionType.Between;
-                case Last:
-                    return TimeSelector.SelectionType.Last;
-                case First:
-                    return TimeSelector.SelectionType.First;
-                case Excluding:
-                    return TimeSelector.SelectionType.Excluding;
-                default:
-                    return TimeSelector.SelectionType.None;
-            }
+            return switch (type) {
+                case All -> TimeSelector.SelectionType.All;
+                case From -> TimeSelector.SelectionType.From;
+                case To -> TimeSelector.SelectionType.To;
+                case Between -> TimeSelector.SelectionType.Between;
+                case Last -> TimeSelector.SelectionType.Last;
+                case First -> TimeSelector.SelectionType.First;
+                case Excluding -> TimeSelector.SelectionType.Excluding;
+                default -> TimeSelector.SelectionType.None;
+            };
         }
     }
 

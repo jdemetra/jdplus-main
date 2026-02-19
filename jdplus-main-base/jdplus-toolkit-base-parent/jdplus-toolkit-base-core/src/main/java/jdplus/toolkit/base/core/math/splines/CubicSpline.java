@@ -40,7 +40,7 @@ public class CubicSpline {
     }
 
     public static enum MonotonicMethod {
-        FritschCarlson, Steffen, Stineman;
+        FritschCarlson, Steffen, Stineman
     }
 
     public DoubleUnaryOperator monotonic(double[] xi, double[] fxi) {//, MonotonicMethod method) {

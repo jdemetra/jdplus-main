@@ -87,14 +87,14 @@ public enum DecompositionMode
    * @return The enum associated with the given numeric wire value.
    */
   public static DecompositionMode forNumber(int value) {
-    switch (value) {
-      case 0: return MODE_UNKNOWN;
-      case 1: return MODE_ADDITIVE;
-      case 2: return MODE_MULTIPLICATIVE;
-      case 3: return MODE_LOGADDITIVE;
-      case 4: return MODE_PSEUDOADDITIVE;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> MODE_UNKNOWN;
+      case 1 -> MODE_ADDITIVE;
+      case 2 -> MODE_MULTIPLICATIVE;
+      case 3 -> MODE_LOGADDITIVE;
+      case 4 -> MODE_PSEUDOADDITIVE;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<DecompositionMode>
@@ -123,7 +123,7 @@ public enum DecompositionMode
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return jdplus.x13.base.protobuf.X13Protos.getDescriptor().getEnumTypes().get(0);
+    return jdplus.x13.base.protobuf.X13Protos.getDescriptor().getEnumTypes().getFirst();
   }
 
   private static final DecompositionMode[] VALUES = values();

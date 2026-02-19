@@ -74,7 +74,7 @@ public final class SpreadsheetProviderBuddy implements DataSourceProviderBuddy {
 
     @Override
     public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
-        return bean instanceof SpreadSheetBean ? createSheetSets((SpreadSheetBean) bean) : null;
+        return bean instanceof SpreadSheetBean ssb ? createSheetSets(ssb) : null;
     }
 
     private List<Sheet.Set> createSheetSets(SpreadSheetBean bean) {

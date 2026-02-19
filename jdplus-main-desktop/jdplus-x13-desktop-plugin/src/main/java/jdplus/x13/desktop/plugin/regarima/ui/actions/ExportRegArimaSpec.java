@@ -81,7 +81,7 @@ public class ExportRegArimaSpec extends NodeAction implements Presenter.Popup {
     }
 
     private static boolean isExportable(Node o) {
-        return o instanceof ItemWsNode && isExportable((ItemWsNode) o);
+        return o instanceof ItemWsNode iwn && isExportable(iwn);
     }
 
     private static boolean isExportable(ItemWsNode o) {

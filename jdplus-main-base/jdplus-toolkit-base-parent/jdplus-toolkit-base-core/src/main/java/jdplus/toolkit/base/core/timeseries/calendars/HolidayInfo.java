@@ -149,22 +149,21 @@ public interface HolidayInfo {
     }
 
     static HolidayInfo of(Holiday holiday, int year) {
-        if (holiday instanceof FixedDay) {
-            return new FixedDayInfo(year, (FixedDay) holiday);
-        } else if (holiday instanceof EasterRelatedDay) {
-            return of((EasterRelatedDay) holiday, year);
-         } else if (holiday instanceof FixedWeekDay) {
-            return of((FixedWeekDay) holiday, year);
-        } else if (holiday instanceof PrespecifiedHoliday) {
-            PrespecifiedHoliday ph = (PrespecifiedHoliday) holiday;
+        if (holiday instanceof FixedDay day2) {
+            return new FixedDayInfo(year, day2);
+        } else if (holiday instanceof EasterRelatedDay day1) {
+            return of(day1, year);
+         } else if (holiday instanceof FixedWeekDay day) {
+            return of(day, year);
+        } else if (holiday instanceof PrespecifiedHoliday ph) {
             return of(ph.rawHoliday(), year);
         }
         throw new IllegalArgumentException();
     }
 
     static Iterable<HolidayInfo> iterable(Holiday holiday, LocalDate fstart, LocalDate fend) {
-        if (holiday instanceof FixedDay) {
-            return new FixedDayInfo.FixedDayIterable((FixedDay) holiday, fstart, fend);
+        if (holiday instanceof FixedDay day) {
+            return new FixedDayInfo.FixedDayIterable(day, fstart, fend);
         } else if (holiday instanceof EasterRelatedDay eday) {
              ValidityPeriod vp = eday.getValidityPeriod();
             if (vp.getStart().isAfter(fstart))

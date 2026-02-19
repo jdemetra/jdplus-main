@@ -36,6 +36,6 @@ public abstract class ComponentCommand<C> extends JCommand<C> {
     @Override
     public @NonNull JCommand<C>.ActionAdapter toAction(@NonNull C c) {
         JCommand<C>.ActionAdapter result = super.toAction(c);
-        return c instanceof Component ? result.withWeakPropertyChangeListener((Component) c, properties) : result;
+        return c instanceof Component c1 ? result.withWeakPropertyChangeListener(c1, properties) : result;
     }
 }

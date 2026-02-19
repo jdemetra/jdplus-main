@@ -55,7 +55,7 @@ public final class TxtProviderBuddy implements DataSourceProviderBuddy {
 
     @Override
     public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
-        return bean instanceof TxtBean ? createSheetSets((TxtBean) bean) : null;
+        return bean instanceof TxtBean tb ? createSheetSets(tb) : null;
     }
 
     private List<Sheet.Set> createSheetSets(TxtBean bean) {

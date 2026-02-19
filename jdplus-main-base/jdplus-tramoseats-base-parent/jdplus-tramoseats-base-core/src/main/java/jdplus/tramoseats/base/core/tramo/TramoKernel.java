@@ -173,9 +173,8 @@ public class TramoKernel implements RegSarimaProcessor {
         EasterSpec espec = spec.getRegression().getCalendar().getEaster();
         ILengthOfPeriodVariable lp = preadjusted ? null : TramoModelBuilder.leapYear(tdspec);
         if (tdspec.isAutomatic()) {
-            switch (tdspec.getAutomaticMethod()) {
-                case FTEST -> {
-                    return AutomaticFRegressionTest.builder()
+            return switch (tdspec.getAutomaticMethod()) {
+                case FTEST -> AutomaticFRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
                             .adjust(tdspec.isAutoAdjust())
@@ -185,9 +184,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .fPValue(tdspec.getProbabilityForFTest())
                             .estimationPrecision(options.intermediatePrecision)
                             .build();
-                }
-                case AIC -> {
-                    return AutomaticRegressionTest.builder()
+                case AIC -> AutomaticRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
                             .tradingDays(alltd())
@@ -196,9 +193,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .adjust(tdspec.isAutoAdjust())
                             .aic()
                             .build();
-                }
-                case BIC -> {
-                    return AutomaticRegressionTest.builder()
+                case BIC -> AutomaticRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
                             .adjust(tdspec.isAutoAdjust())
@@ -207,9 +202,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .estimationPrecision(options.intermediatePrecision)
                             .bic()
                             .build();
-                }
-                default -> {
-                    return AutomaticWaldRegressionTest.builder()
+                default -> AutomaticWaldRegressionTest.builder()
                             .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)
                             .leapYear(lp)
                             .tradingDays(nestedtd())
@@ -219,8 +212,7 @@ public class TramoKernel implements RegSarimaProcessor {
                             .pmodel(tdspec.getProbabilityForFTest())
                             .adjust(tdspec.isAutoAdjust())
                             .build();
-                }
-            }
+            };
         } else {
             return DefaultRegressionTest.builder()
                     .easter(espec.isTest() ? TramoModelBuilder.easter(spec) : null)

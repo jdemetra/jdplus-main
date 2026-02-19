@@ -5,6 +5,8 @@
 
 package jdplus.tramoseats.base.protobuf;
 
+import java.io.Serial;
+
 /**
  * Protobuf type {@code tramoseats.SeatsResults}
  */
@@ -12,7 +14,8 @@ public final class SeatsResults extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:tramoseats.SeatsResults)
     SeatsResultsOrBuilder {
-private static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -67,17 +70,17 @@ private static final long serialVersionUID = 0L;
     }
 
     public static ModelCase forNumber(int value) {
-      switch (value) {
-        case 1: return SEATS_ARIMA;
-        case 2: return SEATS_SARIMA;
-        case 0: return MODEL_NOT_SET;
-        default: return null;
-      }
+      return switch (value) {
+        case 1 -> SEATS_ARIMA;
+        case 2 -> SEATS_SARIMA;
+        case 0 -> MODEL_NOT_SET;
+        default -> null;
+      };
     }
     public int getNumber() {
       return this.value;
     }
-  };
+  }
 
   public ModelCase
   getModelCase() {
@@ -567,8 +570,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.tramoseats.base.protobuf.SeatsResults) {
-        return mergeFrom((jdplus.tramoseats.base.protobuf.SeatsResults)other);
+      if (other instanceof jdplus.tramoseats.base.protobuf.SeatsResults results) {
+        return mergeFrom(results);
       } else {
         super.mergeFrom(other);
         return this;

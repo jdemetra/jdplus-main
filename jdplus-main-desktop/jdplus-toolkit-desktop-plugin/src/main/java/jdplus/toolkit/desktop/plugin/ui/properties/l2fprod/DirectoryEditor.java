@@ -38,9 +38,9 @@ public class DirectoryEditor extends AbstractPropertyEditor {
 
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof File) {
+        if (null != value && value instanceof File file) {
             File old = directory_;
-            directory_ = (File) value;
+            directory_ = file;
             firePropertyChange(old, directory_);
         }
     }

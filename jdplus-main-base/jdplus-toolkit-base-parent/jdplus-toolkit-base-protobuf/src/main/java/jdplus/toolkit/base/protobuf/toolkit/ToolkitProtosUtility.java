@@ -162,46 +162,32 @@ public class ToolkitProtosUtility {
     }
 
     public ParameterType convert(ToolkitProtos.ParameterType t) {
-        switch (t) {
-            case PARAMETER_FIXED:
-                return ParameterType.Fixed;
-            case PARAMETER_INITIAL:
-                return ParameterType.Initial;
-            case PARAMETER_ESTIMATED:
-                return ParameterType.Estimated;
-            case PARAMETER_UNDEFINED:
-                return ParameterType.Undefined;
-            default:
-                return null;
-        }
+        return switch (t) {
+            case PARAMETER_FIXED -> ParameterType.Fixed;
+            case PARAMETER_INITIAL -> ParameterType.Initial;
+            case PARAMETER_ESTIMATED -> ParameterType.Estimated;
+            case PARAMETER_UNDEFINED -> ParameterType.Undefined;
+            default -> null;
+        };
     }
 
     public ToolkitProtos.ParameterType convert(@NonNull ParameterType t) {
-        switch (t) {
-            case Fixed:
-                return ToolkitProtos.ParameterType.PARAMETER_FIXED;
-            case Initial:
-                return ToolkitProtos.ParameterType.PARAMETER_INITIAL;
-            case Estimated:
-                return ToolkitProtos.ParameterType.PARAMETER_ESTIMATED;
-            default:
-                return ToolkitProtos.ParameterType.PARAMETER_UNDEFINED;
-        }
+        return switch (t) {
+            case Fixed -> ToolkitProtos.ParameterType.PARAMETER_FIXED;
+            case Initial -> ToolkitProtos.ParameterType.PARAMETER_INITIAL;
+            case Estimated -> ToolkitProtos.ParameterType.PARAMETER_ESTIMATED;
+            default -> ToolkitProtos.ParameterType.PARAMETER_UNDEFINED;
+        };
     }
 
     public Parameter convert(ToolkitProtos.Parameter p) {
-        switch (p.getType()) {
-            case PARAMETER_FIXED:
-                return Parameter.fixed(p.getValue());
-            case PARAMETER_INITIAL:
-                return Parameter.initial(p.getValue());
-            case PARAMETER_ESTIMATED:
-                return Parameter.estimated(p.getValue());
-            case PARAMETER_UNDEFINED:
-                return Parameter.undefined();
-            default: // UNUSED
-                return null;
-        }
+        return switch (p.getType()) {
+            case PARAMETER_FIXED -> Parameter.fixed(p.getValue());
+            case PARAMETER_INITIAL -> Parameter.initial(p.getValue());
+            case PARAMETER_ESTIMATED -> Parameter.estimated(p.getValue());
+            case PARAMETER_UNDEFINED -> Parameter.undefined();
+            default -> null;
+        };
     }
 
     public ToolkitProtos.Parameter convert(Parameter p) {

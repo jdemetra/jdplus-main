@@ -177,7 +177,7 @@ public final class CubeId {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof CubeId && equals((CubeId) obj));
+        return this == obj || (obj instanceof CubeId ci && equals(ci));
     }
 
     @Override

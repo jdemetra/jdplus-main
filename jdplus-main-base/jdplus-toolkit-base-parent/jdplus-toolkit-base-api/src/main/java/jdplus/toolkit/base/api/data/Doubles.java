@@ -61,7 +61,7 @@ public final class Doubles implements DoubleSeq {
     @StaticFactoryMethod
     @NonNull
     public static Doubles of(@NonNull DoubleSeq seq) {
-        return seq instanceof Doubles ? (Doubles) seq : new Doubles(seq.toArray());
+        return seq instanceof Doubles d ? d : new Doubles(seq.toArray());
     }
 
     @StaticFactoryMethod

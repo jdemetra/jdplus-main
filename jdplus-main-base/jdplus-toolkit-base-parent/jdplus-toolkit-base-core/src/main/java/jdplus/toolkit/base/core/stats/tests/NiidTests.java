@@ -46,19 +46,11 @@ public class NiidTests {
          * @return
          */
         public static int acTestsLength(int period) {
-            int n;
-            switch (period) {
-                case 12:
-                    n = 24;
-                    break;
-                case 1:
-                    n = 8;
-                    break;
-                default:
-                    n = 4 * period;
-                    break;
-            }
-            return n;
+            return switch (period) {
+                case 12 -> 24;
+                case 1 -> 8;
+                default -> 4 * period;
+            };
         }
 
         // Data

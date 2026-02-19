@@ -37,5 +37,5 @@ public enum BoundaryType {
      * Bounded domain. The boundary doesn't belong to the domain (the function
      * is asymptotical on that boundary)
      */
-    Asymptotical;
+    Asymptotical
 }

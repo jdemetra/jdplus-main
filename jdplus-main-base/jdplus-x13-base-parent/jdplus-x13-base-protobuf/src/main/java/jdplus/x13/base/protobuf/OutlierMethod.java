@@ -63,11 +63,11 @@ public enum OutlierMethod
    * @return The enum associated with the given numeric wire value.
    */
   public static OutlierMethod forNumber(int value) {
-    switch (value) {
-      case 0: return OUTLIER_ADDONE;
-      case 1: return OUTLIER_ADDALL;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> OUTLIER_ADDONE;
+      case 1 -> OUTLIER_ADDALL;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<OutlierMethod>

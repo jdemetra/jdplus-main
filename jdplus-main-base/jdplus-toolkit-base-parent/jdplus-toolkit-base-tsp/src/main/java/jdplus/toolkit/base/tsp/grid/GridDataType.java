@@ -22,5 +22,5 @@ package jdplus.toolkit.base.tsp.grid;
  */
 public enum GridDataType {
 
-    DOUBLE, LOCAL_DATE_TIME, STRING;
+    DOUBLE, LOCAL_DATE_TIME, STRING
 }

@@ -92,14 +92,11 @@ public class OutOfSampleDiagnostics implements Diagnostics {
 
     @Override
     public double getValue(String test) {
-        switch (test) {
-            case OutOfSampleDiagnosticsFactory.MEAN:
-                return mpval;
-            case OutOfSampleDiagnosticsFactory.MSE:
-                return vpval;
-            default:
-                return Double.NaN;
-        }
+        return switch (test) {
+            case OutOfSampleDiagnosticsFactory.MEAN -> mpval;
+            case OutOfSampleDiagnosticsFactory.MSE -> vpval;
+            default -> Double.NaN;
+        };
     }
 
     @Override

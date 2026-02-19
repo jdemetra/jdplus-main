@@ -249,5 +249,4 @@ public class XmlOutliersSpec
         }
         return true;
     }
-;
 }

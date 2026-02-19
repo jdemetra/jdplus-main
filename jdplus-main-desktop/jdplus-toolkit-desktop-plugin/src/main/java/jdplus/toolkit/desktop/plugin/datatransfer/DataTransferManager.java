@@ -209,7 +209,7 @@ public final class DataTransferManager implements PropertyChangeSource.WithWeakL
         return toTsCollection(transferable)
                 .map(TsCollection::getItems)
                 .filter(o -> !o.isEmpty())
-                .map(o -> o.get(0));
+                .map(o -> o.getFirst());
     }
 
     /**

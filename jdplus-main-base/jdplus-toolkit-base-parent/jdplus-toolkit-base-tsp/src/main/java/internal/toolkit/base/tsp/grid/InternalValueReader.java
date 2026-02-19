@@ -42,7 +42,7 @@ public interface InternalValueReader<T> {
 
     @NonNull
     static <X> InternalValueReader<X> onStringParser(@NonNull Function<String, X> parser) {
-        return obj -> obj instanceof String ? parser.apply((String) obj) : null;
+        return obj -> obj instanceof String s ? parser.apply(s) : null;
     }
 
     @NonNull

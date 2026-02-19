@@ -187,17 +187,10 @@ public class HtmlSaSlidingSpanSummary<I> extends AbstractHtmlElement implements 
     }
 
     private HtmlTableCell IdentifiableCell(CombinedSeasonality test) {
-        switch (test.getSummary()) {
-            case None -> {
-                return new HtmlTableCell("NO").withClass(TEXT_DANGER);
-            }
-            case ProbablyNone -> {
-                return new HtmlTableCell("???").withClass(TEXT_WARNING);
-            }
-            case Present -> {
-                return new HtmlTableCell("YES").withClass(TEXT_SUCCESS);
-            }
-        }
-        return null;
+        return switch (test.getSummary()) {
+            case None -> new HtmlTableCell("NO").withClass(TEXT_DANGER);
+            case ProbablyNone -> new HtmlTableCell("???").withClass(TEXT_WARNING);
+            case Present -> new HtmlTableCell("YES").withClass(TEXT_SUCCESS);
+        };
     }
 }

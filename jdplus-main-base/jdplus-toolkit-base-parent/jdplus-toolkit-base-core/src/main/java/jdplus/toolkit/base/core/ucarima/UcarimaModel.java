@@ -95,7 +95,7 @@ public class UcarimaModel {
             if (components.isEmpty()) {
                 return ArimaModel.NULL;
             }
-            ArimaModel sum = components.get(0);
+            ArimaModel sum = components.getFirst();
 
             for (int i = 1; i < components.size(); ++i) {
                 sum = sum.plus(components.get(i), false);

@@ -39,8 +39,8 @@ public class ControlNode {
     private static final Node VOID = new AbstractNodeBuilder().name("void").build();
 
     public static Node onComponentOpened(final ExplorerManager mgr, final HasTsCollection view) {
-        if (view instanceof JComponent) {
-            ((JComponent) view).addPropertyChangeListener(evt -> {
+        if (view instanceof JComponent component) {
+            component.addPropertyChangeListener(evt -> {
                 switch (evt.getPropertyName()) {
                     case TsSelectionBridge.TS_SELECTION_PROPERTY:
                         onSelectionChange(mgr, view);

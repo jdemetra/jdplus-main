@@ -42,7 +42,7 @@ public class AutoRegressiveSpectrum {
     public static enum Method {
 
         Ols, Durbin
-    };
+    }
 
     public AutoRegressiveSpectrum(Method m) {
         method_ = m;

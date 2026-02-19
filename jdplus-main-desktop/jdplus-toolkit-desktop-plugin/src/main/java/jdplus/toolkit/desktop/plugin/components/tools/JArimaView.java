@@ -65,8 +65,7 @@ public final class JArimaView extends JComponent {
         for (Entry<String, ? extends IArimaModel> o : models.entrySet()) {
             IArimaModel model = o.getValue();
             m[cur++] = model;
-            if (model instanceof SarimaModel) {
-                SarimaModel sarima = (SarimaModel) model;
+            if (model instanceof SarimaModel sarima) {
                 HtmlSarimaPolynomials document = new HtmlSarimaPolynomials(sarima);
                 StringBuilder title = new StringBuilder();
                 title.append(o.getKey()).append(" ").append(sarima.orders().toString());

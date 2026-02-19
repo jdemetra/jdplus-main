@@ -227,7 +227,7 @@ public final class CoherenceDiagnostics implements Diagnostics {
 
     @Override
     public ProcQuality getDiagnostic(String test) {
-        if (test.equals(CoherenceDiagnosticsFactory.ALL.get(0))) {
+        if (test.equals(CoherenceDiagnosticsFactory.ALL.getFirst())) {
             if (Double.isNaN(maxDefinitionDifference)) {
                 return ProcQuality.Error;
             }
@@ -250,7 +250,7 @@ public final class CoherenceDiagnostics implements Diagnostics {
     @Override
     public double getValue(String test) {
         double val;
-        if (test.equals(CoherenceDiagnosticsFactory.ALL.get(0))) {
+        if (test.equals(CoherenceDiagnosticsFactory.ALL.getFirst())) {
             val = maxDefinitionDifference;
         } else {
             val = maxAnnualDifference;

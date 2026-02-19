@@ -110,7 +110,7 @@ public class XmlProviderTest {
                         assertThat(o.getParameters()).containsOnlyKeys("collectionIndex");
                     });
 
-            DataSet node0 = nodes.get(0);
+            DataSet node0 = nodes.getFirst();
             assertThat(p.getDisplayName(node0)).isEqualTo("S1");
             assertThat(p.getDisplayNodeName(node0)).isEqualTo("S1");
             assertThat(p.getTsCollection(p.toMoniker(node0), TsInformationType.All))

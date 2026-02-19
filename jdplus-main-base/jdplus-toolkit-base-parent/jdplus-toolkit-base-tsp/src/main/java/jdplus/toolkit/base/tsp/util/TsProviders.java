@@ -41,8 +41,8 @@ public class TsProviders {
 
     public @NonNull TreeTraverser<?> getTreeTraverser(@NonNull DataSourceProvider provider, @NonNull DataSource dataSource) {
         IOFunction<Object, Iterable<?>> children = o ->
-                o instanceof DataSource
-                        ? provider.children((DataSource) o)
+                o instanceof DataSource ds
+                        ? provider.children(ds)
                         : ((DataSet) o).getKind() == DataSet.Kind.COLLECTION ? provider.children((DataSet) o) : Collections.emptyList();
 
         return TreeTraverser.of(dataSource, children.asUnchecked());
@@ -56,8 +56,8 @@ public class TsProviders {
             boolean displayName) throws IOException {
 
         Function<Object, String> formatter = displayName
-                ? o -> o instanceof DataSource ? provider.getDisplayName((DataSource) o) : " " + provider.getDisplayNodeName((DataSet) o)
-                : o -> o instanceof DataSource ? provider.toMoniker((DataSource) o).getId() : " " + provider.toMoniker((DataSet) o).getId();
+                ? o -> o instanceof DataSource ds ? provider.getDisplayName(ds) : " " + provider.getDisplayNodeName((DataSet) o)
+                : o -> o instanceof DataSource ds ? provider.toMoniker(ds).getId() : " " + provider.toMoniker((DataSet) o).getId();
 
         try {
             getTreeTraverser(provider, dataSource).prettyPrintTo(printStream, maxLevel, formatter);

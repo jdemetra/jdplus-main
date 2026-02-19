@@ -40,7 +40,7 @@ import java.util.List;
 public class HighFreqOutlierDescriptor implements IPropertyDescriptors {
     
     public static enum OutlierType {
-        AO, LS, WO;
+        AO, LS, WO
     }
     
     private static final int NAME_ID = 0, POSITION_ID = 1, TYPE_ID = 2, PARAMETER_ID = 3;

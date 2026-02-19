@@ -174,8 +174,8 @@ public class SummaryView extends AbstractSaProcessingTopComponent implements Mul
                         report = new RegSarimaReport(freq);
                         cur.put(method, report);
                     }
-                    if (rslt instanceof HasRegSarimaPreprocessing) {
-                        report.add(((HasRegSarimaPreprocessing) rslt).getPreprocessing());
+                    if (rslt instanceof HasRegSarimaPreprocessing preprocessing) {
+                        report.add(preprocessing.getPreprocessing());
                     }
                 }
             }

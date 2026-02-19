@@ -235,7 +235,7 @@ public class TramoSeatsSpecMappingTest {
 
         InformationSet info = rslt.create();
         SaItems nspec = SaItemsMapping.read(info);
-        System.out.println(nspec.getItems().get(0).getDefinition().getDomainSpec().equals(TramoSeatsSpec.RSA5));
+        System.out.println(nspec.getItems().getFirst().getDefinition().getDomainSpec().equals(TramoSeatsSpec.RSA5));
         System.out.println("");
     }
 

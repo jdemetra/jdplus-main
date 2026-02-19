@@ -75,15 +75,11 @@ public class AdaptivePeriodicSplines {
             double ll = result.getLl();
             if (ll0 == 0 || steps.stream().allMatch(s -> s.getLl() != ll)) {
                 steps.add(result);
-                double c = 0;
-                switch (spec.criterion) {
-                    case AIC ->
-                        c = result.getAic();
-                    case BIC ->
-                        c = result.getBic();
-                    case EBIC ->
-                        c = result.getEbic();
-                }
+                double c = switch (spec.criterion) {
+                    case AIC -> result.getAic();
+                    case BIC -> result.getBic();
+                    case EBIC -> result.getEbic();
+                };
                 if (min == 0 || c < min) {
                     min = c;
                     best = cur;
@@ -147,7 +143,7 @@ public class AdaptivePeriodicSplines {
     }
 
     public AdaptivePeriodicSpline.Step result() {
-        return steps.get(steps.size() - 1);
+        return steps.getLast();
     }
 
     public AdaptivePeriodicSpline adaptiveSpline() {

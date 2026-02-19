@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![OTHER] Add option to retrieve desktop application version in headless environment [#556](https://github.com/jdemetra/jdplus-main/issues/556)
+
 ### Fixed
 
 - ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
@@ -20,6 +24,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![IO] Fix missing results in the SA multi-processing matrix view
 - ![STAT] Change seasonality tests for SA series (use of the differencing order of the regarima model when it is available to avoid misleading results)
 - ![STAT] Improve the implementation of the augmented Kalman filter
+- ![OTHER] Migrate to Java 21 [#160](https://github.com/jdemetra/jdplus-main/issues/160)
 
 ## [3.6.0] - 2025-11-20
 

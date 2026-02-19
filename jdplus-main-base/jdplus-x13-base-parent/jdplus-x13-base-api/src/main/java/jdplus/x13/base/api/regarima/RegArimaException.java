@@ -18,6 +18,8 @@ package jdplus.x13.base.api.regarima;
 
 import nbbrd.design.Development;
 
+import java.io.Serial;
+
 /**
  *
  * @author Jean Palate
@@ -25,6 +27,7 @@ import nbbrd.design.Development;
 @Development(status = Development.Status.Preliminary)
 public class RegArimaException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = -8351066904274802554L;
 
     final static String ATIP_E = "Failure in the outliers identification procedure";

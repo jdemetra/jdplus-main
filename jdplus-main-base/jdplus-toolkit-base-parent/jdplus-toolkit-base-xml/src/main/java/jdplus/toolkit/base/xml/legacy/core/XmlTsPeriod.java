@@ -73,16 +73,12 @@ public class XmlTsPeriod implements IXmlConverter<TsPeriod> {
 
     public static TsPeriod of(int f, int y, Integer P) {
         int p = P == null ? 1 : P;
-        switch (f) {
-            case 1:
-                return TsPeriod.yearly(y);
-            case 4:
-                return TsPeriod.quarterly(y, p);
-            case 12:
-                return TsPeriod.monthly(y, p);
-            default:
-                return TsPeriod.of(TsUnit.ofAnnualFrequency(f), LocalDate.of(y, p * 12 / f, 1));
-        }
+        return switch (f) {
+            case 1 -> TsPeriod.yearly(y);
+            case 4 -> TsPeriod.quarterly(y, p);
+            case 12 -> TsPeriod.monthly(y, p);
+            default -> TsPeriod.of(TsUnit.ofAnnualFrequency(f), LocalDate.of(y, p * 12 / f, 1));
+        };
 
     }
 }

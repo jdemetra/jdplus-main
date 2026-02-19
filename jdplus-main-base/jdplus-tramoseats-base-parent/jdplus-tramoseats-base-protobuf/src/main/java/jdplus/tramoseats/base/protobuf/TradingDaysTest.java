@@ -71,12 +71,12 @@ public enum TradingDaysTest
    * @return The enum associated with the given numeric wire value.
    */
   public static TradingDaysTest forNumber(int value) {
-    switch (value) {
-      case 0: return TD_TEST_NO;
-      case 1: return TD_TEST_SEPARATE_T;
-      case 2: return TD_TEST_JOINT_F;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> TD_TEST_NO;
+      case 1 -> TD_TEST_SEPARATE_T;
+      case 2 -> TD_TEST_JOINT_F;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<TradingDaysTest>

@@ -307,8 +307,7 @@ public class DayClustering {
         if (this == other) {
             return true;
         }
-        if (other instanceof DayClustering) {
-            DayClustering x = (DayClustering) other;
+        if (other instanceof DayClustering x) {
             return Arrays.equals(groups, x.groups);
         } else {
             return false;

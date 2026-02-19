@@ -37,8 +37,7 @@ public class XmlAdditiveOutlier extends XmlOutlier {
 
         @Override
         public AdditiveOutlier unmarshal(XmlRegressionVariable x) {
-            if (x instanceof XmlAdditiveOutlier) {
-                XmlAdditiveOutlier xvar = (XmlAdditiveOutlier) x;
+            if (x instanceof XmlAdditiveOutlier xvar) {
                 AdditiveOutlier o = new AdditiveOutlier(xvar.position.atStartOfDay());
                 return o;
             } else {
@@ -48,8 +47,7 @@ public class XmlAdditiveOutlier extends XmlOutlier {
 
         @Override
         public XmlAdditiveOutlier marshal(ITsVariable var) {
-            if (var instanceof AdditiveOutlier) {
-                AdditiveOutlier v = (AdditiveOutlier) var;
+            if (var instanceof AdditiveOutlier v) {
                 XmlAdditiveOutlier xml = new XmlAdditiveOutlier();
                 xml.position = v.getPosition().toLocalDate();
                 return xml;

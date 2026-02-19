@@ -115,7 +115,7 @@ public class ActiveViewManager implements Lookup.Provider {
             updating = true;
             TopComponent activated = WindowManager.getDefault().getRegistry().getActivated();
             if (activated != null) {
-                ActiveView view = activated instanceof ActiveView ? (ActiveView) activated : activated.getLookup().lookup(ActiveView.class);
+                ActiveView view = activated instanceof ActiveView av ? av : activated.getLookup().lookup(ActiveView.class);
                 if (view == null) {
                     current.setVisible(false);
                 } else {

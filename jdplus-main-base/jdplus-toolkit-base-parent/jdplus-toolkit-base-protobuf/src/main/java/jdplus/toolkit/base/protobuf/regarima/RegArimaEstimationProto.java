@@ -164,8 +164,7 @@ public class RegArimaEstimationProto {
         ModellingProtos.Diagnostics.Builder builder = ModellingProtos.Diagnostics.newBuilder();
         model.getResiduals().getTests().forEach((k, v)
                 -> {
-            if (v instanceof StatisticalTest) {
-                StatisticalTest st = (StatisticalTest) v;
+            if (v instanceof StatisticalTest st) {
                 if (st.isValid()) {
                     ToolkitProtos.StatisticalTest test = ToolkitProtosUtility.convert(st);
                     builder.putResidualsTests(k, test);
@@ -188,8 +187,8 @@ public class RegArimaEstimationProto {
         if (var instanceof IEasterVariable) {
             return ModellingProtos.VariableType.VAR_EASTER;
         }
-        if (var instanceof IOutlier) {
-            switch (((IOutlier) var).getCode()) {
+        if (var instanceof IOutlier outlier) {
+            switch (outlier.getCode()) {
                 case AdditiveOutlier.CODE:
                     return ModellingProtos.VariableType.VAR_AO;
                 case LevelShift.CODE:

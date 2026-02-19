@@ -20,14 +20,14 @@ public final class TsSparklineCellRenderer extends SparklineCellRenderer {
 
     @Override
     protected XYDataset getDataset(Object value) {
-        if (value instanceof TimeSeries) {
-            return new TimeSeriesCollection((TimeSeries) value);
+        if (value instanceof TimeSeries series) {
+            return new TimeSeriesCollection(series);
         }
-        if (value instanceof TsData) {
-            return TsCharts.newSparklineDataset((TsData) value);
+        if (value instanceof TsData data) {
+            return TsCharts.newSparklineDataset(data);
         }
-        if (value instanceof Ts) {
-            return TsCharts.newSparklineDataset(((Ts) value).getData());
+        if (value instanceof Ts ts) {
+            return TsCharts.newSparklineDataset(ts.getData());
         }
         return super.getDataset(value);
     }
