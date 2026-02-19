@@ -31,8 +31,8 @@ import jdplus.toolkit.base.api.util.Validatable;
 public final class EasterSpec implements Validatable<EasterSpec> {
 
     public static enum Type {
-        UNUSED, EASTER, JULIANEASTER;
-    };
+        UNUSED, EASTER, JULIANEASTER
+    }
 
     public static final int DEF_IDUR = 6;
     public static final Type DEF_TYPE = Type.UNUSED;

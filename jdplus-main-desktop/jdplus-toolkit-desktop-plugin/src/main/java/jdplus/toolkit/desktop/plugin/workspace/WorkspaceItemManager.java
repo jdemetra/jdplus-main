@@ -44,7 +44,7 @@ public interface WorkspaceItemManager<D> {
         Acceptable,
         Legacy,
         Experimental,
-        User;
+        User
 
     }
 

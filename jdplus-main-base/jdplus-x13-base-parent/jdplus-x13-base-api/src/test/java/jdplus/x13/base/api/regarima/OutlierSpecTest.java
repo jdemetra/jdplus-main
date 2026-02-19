@@ -40,14 +40,14 @@ public class OutlierSpecTest {
         
         assertNotNull(spec.getTypes());
         assertEquals(1, spec.getTypes().size());
-        assertEquals(2, spec.getTypes().get(0).getCriticalValue());
-        assertEquals("AO", spec.getTypes().get(0).getType());
+        assertEquals(2, spec.getTypes().getFirst().getCriticalValue());
+        assertEquals("AO", spec.getTypes().getFirst().getType());
 
         spec = spec.toBuilder()
                 .defaultCriticalValue(1.5)
                 .build();
 
         assertEquals(1.5, spec.getDefaultCriticalValue());
-        assertEquals(1.5, spec.getTypes().get(0).getCriticalValue());
+        assertEquals(1.5, spec.getTypes().getFirst().getCriticalValue());
     }
 }

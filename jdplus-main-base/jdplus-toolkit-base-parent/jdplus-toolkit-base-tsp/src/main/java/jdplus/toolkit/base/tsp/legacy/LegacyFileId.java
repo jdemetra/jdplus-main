@@ -40,7 +40,7 @@ public class LegacyFileId implements CharSequence {
 
     @Nullable
     public static LegacyFileId parse(@NonNull CharSequence input) {
-        return input instanceof LegacyFileId ? (LegacyFileId) input : parse(input.toString());
+        return input instanceof LegacyFileId lfi ? lfi : parse(input.toString());
     }
 
     @Nullable

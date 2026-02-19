@@ -442,14 +442,11 @@ public final class GridReader {
 
     private static Substitutor getIndexSubstitutor(AtomicInteger counter) {
         return Substitutor.of(key -> {
-            switch (key) {
-                case "index":
-                    return counter.get();
-                case "number":
-                    return counter.get() + 1;
-                default:
-                    return null;
-            }
+            return switch (key) {
+                case "index" -> counter.get();
+                case "number" -> counter.get() + 1;
+                default -> null;
+            };
         });
     }
 

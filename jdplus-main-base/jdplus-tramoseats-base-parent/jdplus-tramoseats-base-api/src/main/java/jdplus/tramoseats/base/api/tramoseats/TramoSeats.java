@@ -86,7 +86,7 @@ public class TramoSeats {
             return Collections.emptyMap();
         }
 
-    };
+    }
 
     @InterchangeableProcessor
     @Algorithm

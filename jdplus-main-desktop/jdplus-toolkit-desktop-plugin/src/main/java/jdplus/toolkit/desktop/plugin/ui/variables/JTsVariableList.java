@@ -115,7 +115,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
 
         item = new JMenuItem(actionMap.get(OPEN_ACTION));
         item.setText("Open");
-        item.setAccelerator(KeyStrokes.OPEN.get(0));
+        item.setAccelerator(KeyStrokes.OPEN.getFirst());
         item.setFont(item.getFont().deriveFont(Font.BOLD));
         result.add(item);
 
@@ -135,12 +135,12 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
 
         item = new JMenuItem(actionMap.get(DELETE_ACTION));
         item.setText("Remove");
-        item.setAccelerator(KeyStrokes.DELETE.get(0));
+        item.setAccelerator(KeyStrokes.DELETE.getFirst());
         result.add(item);
 
         item = new JMenuItem(actionMap.get(CLEAR_ACTION));
         item.setText("Clear");
-        item.setAccelerator(KeyStrokes.CLEAR.get(0));
+        item.setAccelerator(KeyStrokes.CLEAR.getFirst());
         result.add(item);
 
         return result.getPopupMenu();

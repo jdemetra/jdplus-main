@@ -100,13 +100,13 @@ public final class ArrayGridOutput implements GridOutput {
                 switch (layout) {
                     case VERTICAL:
                     case UNDEFINED:
-                        int prevRow = cells.get(cells.size() - 1).getRow();
+                        int prevRow = cells.getLast().getRow();
                         if (row < prevRow) {
                             throw new IllegalArgumentException(row + " vs " + prevRow);
                         }
                         break;
                     case HORIZONTAL:
-                        int prevColumn = cells.get(cells.size() - 1).getColumn();
+                        int prevColumn = cells.getLast().getColumn();
                         if (column < prevColumn) {
                             throw new IllegalArgumentException(column + " vs " + prevColumn);
                         }

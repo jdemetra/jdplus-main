@@ -20,6 +20,8 @@ package jdplus.toolkit.base.core.math.polynomials;
 
 import nbbrd.design.Development;
 
+import java.io.Serial;
+
 
 /**
  * 
@@ -29,8 +31,9 @@ import nbbrd.design.Development;
 public class PolynomialException extends RuntimeException {
 
     /**
-	 * 
-	 */
+     * 
+     */
+    @Serial
     private static final long serialVersionUID = 4381169988217677067L;
 
     /**

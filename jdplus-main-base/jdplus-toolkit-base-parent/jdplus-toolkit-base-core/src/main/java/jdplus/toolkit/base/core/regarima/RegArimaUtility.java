@@ -244,13 +244,10 @@ public class RegArimaUtility {
     }
 
     public static int defaultLjungBoxLength(final int period) {
-        switch (period) {
-            case 12:
-                return 24;
-            case 1:
-                return 8;
-            default:
-                return 4 * period;
-        }
+        return switch (period) {
+            case 12 -> 24;
+            case 1 -> 8;
+            default -> 4 * period;
+        };
     }
 }

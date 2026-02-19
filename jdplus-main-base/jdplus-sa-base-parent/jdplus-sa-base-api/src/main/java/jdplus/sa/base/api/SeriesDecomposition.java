@@ -127,20 +127,14 @@ public final class SeriesDecomposition implements GenericExplorable{
      */
     public TsData getSeries(ComponentType cmp, ComponentInformation info) {
 
-        switch (info) {
-            case Stdev:
-                return ecmps.get(cmp);
-            case Forecast:
-                return fcmps.get(cmp);
-            case StdevForecast:
-                return efcmps.get(cmp);
-            case Backcast:
-                return bcmps.get(cmp);
-            case StdevBackcast:
-                return ebcmps.get(cmp);
-            default:
-                return cmps.get(cmp);
-        }
+        return switch (info) {
+            case Stdev -> ecmps.get(cmp);
+            case Forecast -> fcmps.get(cmp);
+            case StdevForecast -> efcmps.get(cmp);
+            case Backcast -> bcmps.get(cmp);
+            case StdevBackcast -> ebcmps.get(cmp);
+            default -> cmps.get(cmp);
+        };
     }
 
     @Override

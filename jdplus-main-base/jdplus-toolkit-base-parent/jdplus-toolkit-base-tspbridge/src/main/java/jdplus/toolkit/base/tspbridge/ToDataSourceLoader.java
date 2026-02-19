@@ -7,8 +7,8 @@ import lombok.NonNull;
 public class ToDataSourceLoader extends ToDataSourceProvider implements DataSourceLoader {
 
     public static @NonNull DataSourceLoader toDataSourceLoader(ec.tss.tsproviders.@NonNull IDataSourceLoader delegate) {
-        return delegate instanceof FromDataSourceLoader
-                ? ((FromDataSourceLoader) delegate).getDelegate()
+        return delegate instanceof FromDataSourceLoader fdsl
+                ? fdsl.getDelegate()
                 : new ToDataSourceLoader(delegate);
     }
 

@@ -56,11 +56,9 @@ public class XmlTsVariables implements IXmlConverter<TsDataSuppliers> {
         if (!isEmpty()) {
             for (int i = 0; i < vars.length; ++i) {
                 if (vars[i] != null) {
-                    if (vars[i] instanceof XmlTsVariable) {
-                        XmlTsVariable v = (XmlTsVariable) vars[i];
+                    if (vars[i] instanceof XmlTsVariable v) {
                         nvars.set(v.name, v.create());
-                    } else if (vars[i] instanceof XmlDynamicTsVariable) {
-                        XmlDynamicTsVariable v = (XmlDynamicTsVariable) vars[i];
+                    } else if (vars[i] instanceof XmlDynamicTsVariable v) {
                         nvars.set(v.name, v.create());
                     }
                 }
@@ -79,15 +77,15 @@ public class XmlTsVariables implements IXmlConverter<TsDataSuppliers> {
         vars = new XmlNamedObject[n.length];
         for (int i = 0; i < n.length; ++i) {
             TsDataSupplier v = t.get(n[i]);
-            if (v instanceof StaticTsDataSupplier) {
+            if (v instanceof StaticTsDataSupplier supplier1) {
                 XmlTsVariable var = new XmlTsVariable();
                 var.name = n[i];
-                var.copy((StaticTsDataSupplier) v);
+                var.copy(supplier1);
                 vars[i] = var;
-            } else if (v instanceof DynamicTsDataSupplier) {
+            } else if (v instanceof DynamicTsDataSupplier supplier) {
                 XmlDynamicTsVariable var = new XmlDynamicTsVariable();
                 var.name = n[i];
-                var.copy((DynamicTsDataSupplier) v);
+                var.copy(supplier);
                 vars[i] = var;
             }
         }

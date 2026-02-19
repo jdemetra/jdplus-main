@@ -203,8 +203,7 @@ public class DemetraWsUI extends TopComponent implements ExplorerManager.Provide
     }
 
     private WsNode search(Id id, Node node) {
-        if (node instanceof WsNode) {
-            WsNode wnode = (WsNode) node;
+        if (node instanceof WsNode wnode) {
             if (wnode.lookup().equals(id)) {
                 return wnode;
             }

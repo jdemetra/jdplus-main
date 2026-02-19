@@ -93,7 +93,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
 
     @Override
     public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
-        return bean instanceof OdbcBean ? createSheetSets((OdbcBean) bean) : null;
+        return bean instanceof OdbcBean ob ? createSheetSets(ob) : null;
     }
 
     private List<Sheet.Set> createSheetSets(OdbcBean bean) {
@@ -182,7 +182,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     private static void launchOdbcDataSourceAdministrator() {
         try {
             // %SystemRoot%\\system32\\odbcad32.exe
-            Runtime.getRuntime().exec("odbcad32.exe");
+            Runtime.getRuntime().exec(new String[]{"odbcad32.exe"});
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

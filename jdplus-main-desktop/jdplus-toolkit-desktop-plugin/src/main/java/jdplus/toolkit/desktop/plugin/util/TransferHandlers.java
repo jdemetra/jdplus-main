@@ -36,8 +36,8 @@ public final class TransferHandlers {
     private static void layoutComponent(Component c) {
         synchronized (c.getTreeLock()) {
             c.doLayout();
-            if (c instanceof Container) {
-                for (Component child : ((Container) c).getComponents()) {
+            if (c instanceof Container container) {
+                for (Component child : container.getComponents()) {
                     layoutComponent(child);
                 }
             }

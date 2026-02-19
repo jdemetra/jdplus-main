@@ -134,7 +134,7 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         }
         Optional<Variable> ee = Arrays.stream(variables).filter(var -> var.isFree() && var.getCore() instanceof IEasterVariable).findFirst();
         Optional<Variable> fee = Arrays.stream(variables).filter(var -> !var.isFree() && var.getCore() instanceof IEasterVariable).findFirst();
-        if (!ee.isPresent() && !fee.isPresent()) {
+        if (ee.isEmpty() && fee.isEmpty()) {
             stream.write("No easter effect").newLine();
         } else {
             if (ee.isPresent()) {
@@ -358,14 +358,14 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         }
         Variable[] variables = model.getDescription().getVariables();
         Optional<Variable> mean = Arrays.stream(variables).filter(var -> var.getCore() instanceof TrendConstant).findFirst();
-        if (!mean.isPresent()) {
+        if (mean.isEmpty()) {
             return;
         }
         Variable v = mean.orElseThrow();
         if (v.isFree()) {
             List<RegressionDesc> regressionItems = model.getDetails().getRegressionItems();
             Optional<RegressionDesc> d = regressionItems.stream().filter(desc -> desc.getCore() instanceof TrendConstant).findFirst();
-            if (!d.isPresent()) {
+            if (d.isEmpty()) {
                 return;
             }
             RegressionDesc reg = d.orElseThrow();

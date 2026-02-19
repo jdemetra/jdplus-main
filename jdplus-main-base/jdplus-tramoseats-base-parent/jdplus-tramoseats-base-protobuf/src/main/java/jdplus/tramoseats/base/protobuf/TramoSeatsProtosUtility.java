@@ -29,66 +29,47 @@ import jdplus.tramoseats.base.core.tramoseats.TramoSeatsResults;
 public class TramoSeatsProtosUtility {
 
     public EasterSpec.Type convert(EasterType type) {
-        switch (type) {
-            case EASTER_STANDARD:
-                return EasterSpec.Type.Standard;
-            case EASTER_INCLUDEEASTER:
-                return EasterSpec.Type.IncludeEaster;
-            case EASTER_INCLUDEEASTERMONDAY:
-                return EasterSpec.Type.IncludeEasterMonday;
-            default:
-                return EasterSpec.Type.Unused;
-        }
+        return switch (type) {
+            case EASTER_STANDARD -> EasterSpec.Type.Standard;
+            case EASTER_INCLUDEEASTER -> EasterSpec.Type.IncludeEaster;
+            case EASTER_INCLUDEEASTERMONDAY -> EasterSpec.Type.IncludeEasterMonday;
+            default -> EasterSpec.Type.Unused;
+        };
     }
 
     public EasterType convert(EasterSpec.Type type) {
-        switch (type) {
-            case Standard:
-                return EasterType.EASTER_STANDARD;
-            case IncludeEaster:
-                return EasterType.EASTER_INCLUDEEASTER;
-            case IncludeEasterMonday:
-                return EasterType.EASTER_INCLUDEEASTERMONDAY;
-            default:
-                return EasterType.EASTER_UNUSED;
-        }
+        return switch (type) {
+            case Standard -> EasterType.EASTER_STANDARD;
+            case IncludeEaster -> EasterType.EASTER_INCLUDEEASTER;
+            case IncludeEasterMonday -> EasterType.EASTER_INCLUDEEASTERMONDAY;
+            default -> EasterType.EASTER_UNUSED;
+        };
     }
 
     public TradingDaysTest convert(RegressionTestType test) {
-        switch (test) {
-            case Joint_F:
-                return TradingDaysTest.TD_TEST_JOINT_F;
-            case Separate_T:
-                return TradingDaysTest.TD_TEST_SEPARATE_T;
-            default:
-                return TradingDaysTest.TD_TEST_NO;
-        }
+        return switch (test) {
+            case Joint_F -> TradingDaysTest.TD_TEST_JOINT_F;
+            case Separate_T -> TradingDaysTest.TD_TEST_SEPARATE_T;
+            default -> TradingDaysTest.TD_TEST_NO;
+        };
     }
 
     public RegressionTestType convert(TradingDaysTest test) {
-        switch (test) {
-            case TD_TEST_JOINT_F:
-                return RegressionTestType.Joint_F;
-            case TD_TEST_SEPARATE_T:
-                return RegressionTestType.Separate_T;
-            default:
-                return RegressionTestType.None;
-        }
+        return switch (test) {
+            case TD_TEST_JOINT_F -> RegressionTestType.Joint_F;
+            case TD_TEST_SEPARATE_T -> RegressionTestType.Separate_T;
+            default -> RegressionTestType.None;
+        };
     }
 
     public AutomaticTradingDays convert(TradingDaysSpec.AutoMethod auto) {
-        switch (auto) {
-            case FTEST:
-                return AutomaticTradingDays.TD_AUTO_FTEST;
-            case WALD:
-                return AutomaticTradingDays.TD_AUTO_WALD;
-            case BIC:
-                return AutomaticTradingDays.TD_AUTO_BIC;
-            case AIC:
-                return AutomaticTradingDays.TD_AUTO_AIC;
-            default:
-                return AutomaticTradingDays.TD_AUTO_NO;
-        }
+        return switch (auto) {
+            case FTEST -> AutomaticTradingDays.TD_AUTO_FTEST;
+            case WALD -> AutomaticTradingDays.TD_AUTO_WALD;
+            case BIC -> AutomaticTradingDays.TD_AUTO_BIC;
+            case AIC -> AutomaticTradingDays.TD_AUTO_AIC;
+            default -> AutomaticTradingDays.TD_AUTO_NO;
+        };
     }
 
     public TradingDaysSpec.AutoMethod convert(AutomaticTradingDays  auto) {

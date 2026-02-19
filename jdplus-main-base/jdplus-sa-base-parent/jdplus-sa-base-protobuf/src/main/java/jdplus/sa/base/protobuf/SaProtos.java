@@ -123,16 +123,16 @@ public final class SaProtos {
      * @return The enum associated with the given numeric wire value.
      */
     public static ComponentType forNumber(int value) {
-      switch (value) {
-        case 0: return UNDEFINED;
-        case 1: return SERIES;
-        case 2: return TREND;
-        case 3: return SEASONAL;
-        case 4: return SEASONALLYADJUSTED;
-        case 5: return IRREGULAR;
-        case 6: return CALENDAR;
-        default: return null;
-      }
+      return switch (value) {
+        case 0 -> UNDEFINED;
+        case 1 -> SERIES;
+        case 2 -> TREND;
+        case 3 -> SEASONAL;
+        case 4 -> SEASONALLYADJUSTED;
+        case 5 -> IRREGULAR;
+        case 6 -> CALENDAR;
+        default -> null;
+      };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<ComponentType>
@@ -161,7 +161,7 @@ public final class SaProtos {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return jdplus.sa.base.protobuf.SaProtos.getDescriptor().getEnumTypes().get(0);
+      return jdplus.sa.base.protobuf.SaProtos.getDescriptor().getEnumTypes().getFirst();
     }
 
     private static final ComponentType[] VALUES = values();
@@ -301,14 +301,14 @@ public final class SaProtos {
      * @return The enum associated with the given numeric wire value.
      */
     public static DecompositionMode forNumber(int value) {
-      switch (value) {
-        case 0: return UNKNOWN;
-        case 1: return ADDITIVE;
-        case 2: return MULTIPLICATIVE;
-        case 3: return LOGADDITIVE;
-        case 4: return PSEUDOADDITIVE;
-        default: return null;
-      }
+      return switch (value) {
+        case 0 -> UNKNOWN;
+        case 1 -> ADDITIVE;
+        case 2 -> MULTIPLICATIVE;
+        case 3 -> LOGADDITIVE;
+        case 4 -> PSEUDOADDITIVE;
+        default -> null;
+      };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<DecompositionMode>
@@ -429,12 +429,12 @@ public final class SaProtos {
      * @return The enum associated with the given numeric wire value.
      */
     public static BenchmarkingTarget forNumber(int value) {
-      switch (value) {
-        case 0: return BENCH_TARGET_UNSPECIFIED;
-        case 1: return BENCH_TARGET_ORIGINAL;
-        case 2: return BENCH_TARGET_CALENDARADJUSTED;
-        default: return null;
-      }
+      return switch (value) {
+        case 0 -> BENCH_TARGET_UNSPECIFIED;
+        case 1 -> BENCH_TARGET_ORIGINAL;
+        case 2 -> BENCH_TARGET_CALENDARADJUSTED;
+        default -> null;
+      };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<BenchmarkingTarget>
@@ -563,13 +563,13 @@ public final class SaProtos {
      * @return The enum associated with the given numeric wire value.
      */
     public static BenchmarkingBias forNumber(int value) {
-      switch (value) {
-        case 0: return BENCH_BIAS_UNSPECIFIED;
-        case 1: return BENCH_BIAS_NONE;
-        case 2: return BENCH_BIAS_ADDITIVE;
-        case 3: return BENCH_BIAS_MULTIPLICATIVE;
-        default: return null;
-      }
+      return switch (value) {
+        case 0 -> BENCH_BIAS_UNSPECIFIED;
+        case 1 -> BENCH_BIAS_NONE;
+        case 2 -> BENCH_BIAS_ADDITIVE;
+        case 3 -> BENCH_BIAS_MULTIPLICATIVE;
+        default -> null;
+      };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<BenchmarkingBias>
@@ -746,19 +746,19 @@ public final class SaProtos {
      * @return The enum associated with the given numeric wire value.
      */
     public static EstimationPolicy forNumber(int value) {
-      switch (value) {
-        case 0: return POLICY_NONE;
-        case 1: return POLICY_CURRENT;
-        case 2: return POLICY_FIXED;
-        case 3: return POLICY_FIXED_PARAMETERS;
-        case 4: return POLICY_FIXED_AUTOREGRESSIVEPARAMETERS;
-        case 5: return POLICY_FREE_PARAMETERS;
-        case 6: return POLICY_LASTOUTLIERS;
-        case 7: return POLICY_OUTLIERS;
-        case 8: return POLICY_ARIMA;
-        case 9: return POLICY_COMPLETE;
-        default: return null;
-      }
+      return switch (value) {
+        case 0 -> POLICY_NONE;
+        case 1 -> POLICY_CURRENT;
+        case 2 -> POLICY_FIXED;
+        case 3 -> POLICY_FIXED_PARAMETERS;
+        case 4 -> POLICY_FIXED_AUTOREGRESSIVEPARAMETERS;
+        case 5 -> POLICY_FREE_PARAMETERS;
+        case 6 -> POLICY_LASTOUTLIERS;
+        case 7 -> POLICY_OUTLIERS;
+        case 8 -> POLICY_ARIMA;
+        case 9 -> POLICY_COMPLETE;
+        default -> null;
+      };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<EstimationPolicy>
@@ -887,13 +887,13 @@ public final class SaProtos {
      * @return The enum associated with the given numeric wire value.
      */
     public static IdentifiableSeasonality forNumber(int value) {
-      switch (value) {
-        case 0: return SA_UNKNOWN;
-        case 1: return SA_NONE;
-        case 2: return SA_PROBABLY_NONE;
-        case 3: return SA_PRESENT;
-        default: return null;
-      }
+      return switch (value) {
+        case 0 -> SA_UNKNOWN;
+        case 1 -> SA_NONE;
+        case 2 -> SA_PROBABLY_NONE;
+        case 3 -> SA_PRESENT;
+        default -> null;
+      };
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<IdentifiableSeasonality>
@@ -1603,8 +1603,8 @@ public final class SaProtos {
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.sa.base.protobuf.SaProtos.SaDecomposition) {
-          return mergeFrom((jdplus.sa.base.protobuf.SaProtos.SaDecomposition)other);
+        if (other instanceof jdplus.sa.base.protobuf.SaProtos.SaDecomposition decomposition) {
+          return mergeFrom(decomposition);
         } else {
           super.mergeFrom(other);
           return this;
@@ -2903,8 +2903,8 @@ public final class SaProtos {
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.sa.base.protobuf.SaProtos.BenchmarkingSpec) {
-          return mergeFrom((jdplus.sa.base.protobuf.SaProtos.BenchmarkingSpec)other);
+        if (other instanceof jdplus.sa.base.protobuf.SaProtos.BenchmarkingSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -3751,8 +3751,8 @@ public final class SaProtos {
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.sa.base.protobuf.SaProtos.VarianceDecomposition) {
-          return mergeFrom((jdplus.sa.base.protobuf.SaProtos.VarianceDecomposition)other);
+        if (other instanceof jdplus.sa.base.protobuf.SaProtos.VarianceDecomposition decomposition) {
+          return mergeFrom(decomposition);
         } else {
           super.mergeFrom(other);
           return this;
@@ -4844,8 +4844,8 @@ public final class SaProtos {
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.sa.base.protobuf.SaProtos.Diagnostics) {
-          return mergeFrom((jdplus.sa.base.protobuf.SaProtos.Diagnostics)other);
+        if (other instanceof jdplus.sa.base.protobuf.SaProtos.Diagnostics diagnostics) {
+          return mergeFrom(diagnostics);
         } else {
           super.mergeFrom(other);
           return this;
@@ -6382,8 +6382,8 @@ public final class SaProtos {
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.sa.base.protobuf.SaProtos.CombinedSeasonalityTest) {
-          return mergeFrom((jdplus.sa.base.protobuf.SaProtos.CombinedSeasonalityTest)other);
+        if (other instanceof jdplus.sa.base.protobuf.SaProtos.CombinedSeasonalityTest test) {
+          return mergeFrom(test);
         } else {
           super.mergeFrom(other);
           return this;
@@ -7035,7 +7035,7 @@ public final class SaProtos {
           jdplus.toolkit.base.protobuf.modelling.ModellingProtos.getDescriptor(),
         });
     internal_static_sa_SaDecomposition_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+      getDescriptor().getMessageTypes().getFirst();
     internal_static_sa_SaDecomposition_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_sa_SaDecomposition_descriptor,

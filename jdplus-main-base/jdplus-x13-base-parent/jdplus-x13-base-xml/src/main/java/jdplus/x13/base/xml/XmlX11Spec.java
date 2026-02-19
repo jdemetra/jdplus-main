@@ -528,8 +528,6 @@ public class XmlX11Spec {
         return builder.build();
     }
 
-    ;
-    
     private static int[] convert(SigmaVecOption[] sv) {
         if (sv == null || sv.length == 0) {
             return null;

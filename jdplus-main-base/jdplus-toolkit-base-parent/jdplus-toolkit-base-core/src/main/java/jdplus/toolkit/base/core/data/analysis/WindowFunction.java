@@ -43,21 +43,12 @@ public enum WindowFunction {
      * @return
      */
     public DoubleUnaryOperator window() {
-        switch (this) {
-            case Welch -> {
-                return x -> 1.0 - x * x;
-            }
-            case Tukey -> {
-                return x -> 0.5 * (1 + Math.cos(Math.PI * x));
-            }
-            case Bartlett -> {
-                return x -> x < 0 ? 1 + x : 1 - x;
-            }
-            case Hamming -> {
-                return x -> 0.54 + 0.46 * Math.cos(Math.PI * x);
-            }
-            case Parzen -> {
-                return x -> {
+        return switch (this) {
+            case Welch -> x -> 1.0 - x * x;
+            case Tukey -> x -> 0.5 * (1 + Math.cos(Math.PI * x));
+            case Bartlett -> x -> x < 0 ? 1 + x : 1 - x;
+            case Hamming -> x -> 0.54 + 0.46 * Math.cos(Math.PI * x);
+            case Parzen -> x -> {
                     double x1 = x < 0 ? -x : x;
                     if (x <= .5) {
                         double x2 = x1 * x1, x3 = x1 * x2;
@@ -67,12 +58,8 @@ public enum WindowFunction {
                         return 2.0 * y * y * y;
                     }
                 };
-            }
-            case Square -> {
-                return x -> 1;
-            }
-        }
-        return null;
+            case Square -> x -> 1;
+        };
     }
 
     /**

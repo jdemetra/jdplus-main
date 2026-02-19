@@ -79,13 +79,13 @@ public enum BiasCorrection
    * @return The enum associated with the given numeric wire value.
    */
   public static BiasCorrection forNumber(int value) {
-    switch (value) {
-      case 0: return BIAS_NONE;
-      case 1: return BIAS_LEGACY;
-      case 2: return BIAS_SMOOTH;
-      case 3: return BIAS_RATIO;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> BIAS_NONE;
+      case 1 -> BIAS_LEGACY;
+      case 2 -> BIAS_SMOOTH;
+      case 3 -> BIAS_RATIO;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<BiasCorrection>

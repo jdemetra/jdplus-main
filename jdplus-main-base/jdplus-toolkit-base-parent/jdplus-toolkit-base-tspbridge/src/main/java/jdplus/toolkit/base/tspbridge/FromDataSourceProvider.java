@@ -37,8 +37,8 @@ import java.util.stream.Collectors;
 public class FromDataSourceProvider extends FromTsProvider implements ec.tss.tsproviders.IDataSourceProvider {
 
     public static ec.tss.tsproviders.@NonNull IDataSourceProvider fromDataSourceProvider(@NonNull DataSourceProvider delegate) {
-        return delegate instanceof ToDataSourceProvider
-                ? ((ToDataSourceProvider) delegate).getDelegate()
+        return delegate instanceof ToDataSourceProvider tdsp
+                ? tdsp.getDelegate()
                 : new FromDataSourceProvider(delegate);
     }
 

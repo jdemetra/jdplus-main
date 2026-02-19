@@ -727,8 +727,7 @@ public final class SarimaModel extends AbstractArimaModel {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof SarimaModel) {
-            SarimaModel m = (SarimaModel) other;
+        if (other instanceof SarimaModel m) {
             return s == m.s && d == m.d && bd == m.bd
                     && Arrays.equals(phi, m.phi)
                     && Arrays.equals(bphi, m.bphi)

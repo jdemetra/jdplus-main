@@ -873,8 +873,9 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     void saveDetail() {
         if (detail != null) {
             if (detail.isDirty()) {
-                NotifyDescriptor nd = new NotifyDescriptor.Confirmation("There are unsaved changes in the previously selected item's spec."
-                        + "\nDo you want to save them ?", "Unsaved changes", NotifyDescriptor.YES_NO_OPTION);
+                NotifyDescriptor nd = new NotifyDescriptor.Confirmation("""
+                        There are unsaved changes in the previously selected item's spec.
+                        Do you want to save them ?""", "Unsaved changes", NotifyDescriptor.YES_NO_OPTION);
                 if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.YES_OPTION) {
                     save((TsDocument) detail.getDocument());
                 }
@@ -905,7 +906,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                 .policy(EstimationPolicyType.Interactive)
                 .build();
 
-        SaEstimation estimation = doc instanceof HasSaEstimation ? ((HasSaEstimation) doc).getEstimation() : null;
+        SaEstimation estimation = doc instanceof HasSaEstimation hse ? hse.getEstimation() : null;
 //        
         SaItem nitem = SaItem.builder()
                 .name(item.getName())
@@ -1224,30 +1225,15 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         }
 
         Color getColor(ProcQuality quality) {
-            switch (quality) {
-                case Error -> {
-                    return Color.RED.darker().darker();
-                }
-                case Severe -> {
-                    return Color.RED.darker();
-                }
-                case Bad -> {
-                    return Color.RED;
-                }
-                case Uncertain -> {
-                    return Color.ORANGE.darker();
-                }
-                case Good -> {
-                    return Color.GREEN.darker();
-                }
-                case Accepted -> {
-                    return Color.GRAY;
-                }
-                case Undefined -> {
-                    return null;
-                }
-            }
-            throw new RuntimeException();
+            return switch (quality) {
+                case Error -> Color.RED.darker().darker();
+                case Severe -> Color.RED.darker();
+                case Bad -> Color.RED;
+                case Uncertain -> Color.ORANGE.darker();
+                case Good -> Color.GREEN.darker();
+                case Accepted -> Color.GRAY;
+                case Undefined -> null;
+            };
         }
     }
 
@@ -1416,7 +1402,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             progressCount += chunks.size();
             if (progressHandle != null) {
                 if (!chunks.isEmpty()) {
-                    progressHandle.progress(chunks.get(chunks.size() - 1).getName(), progressCount);
+                    progressHandle.progress(chunks.getLast().getName(), progressCount);
                 } else {
                     progressHandle.progress(progressCount);
                 }

@@ -90,8 +90,6 @@ public class Cochran {
         return C;
     }
 
-    ;
-
     /**
      * Calculates the Cochran test for a given Timeseries, and sets result to false if the
      * Nullhypothesis of equal variances of the periods has to be rejected and

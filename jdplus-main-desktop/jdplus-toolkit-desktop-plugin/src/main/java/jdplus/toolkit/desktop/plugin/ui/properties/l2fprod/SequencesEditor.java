@@ -60,8 +60,7 @@ public class SequencesEditor extends AbstractPropertyEditor {
 
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof Sequence[]) {
-            Sequence[] val = (Sequence[]) value;
+        if (null != value && value instanceof Sequence[] val) {
             seqs_ = val.clone();
         }
         else {

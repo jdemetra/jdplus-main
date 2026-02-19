@@ -38,8 +38,8 @@ public class Menus {
         for (String path : paths) {
             List<? extends Action> actionsForPath = Utilities.actionsForPath(path);
             for (Action a : actionsForPath) {
-                if (a instanceof Presenter.Popup) {
-                    List<Action> presenterActions = findSubActions((Presenter.Popup) a);
+                if (a instanceof Presenter.Popup popup) {
+                    List<Action> presenterActions = findSubActions(popup);
                     if (!presenterActions.isEmpty()) {
                         subActions.addAll(presenterActions);
                     }
@@ -83,8 +83,7 @@ public class Menus {
             }
             else {
                 sep = true;
-                if (action instanceof DynamicMenuContent) {
-                    DynamicMenuContent dmenu = (DynamicMenuContent) action;
+                if (action instanceof DynamicMenuContent dmenu) {
                     JComponent[] items = dmenu.getMenuPresenters();
                     if (items != null) {
                         for (JComponent item : items) {
@@ -92,16 +91,14 @@ public class Menus {
                         }
                     }
                 }
-                else if (action instanceof Presenter.Popup) {
-                    Presenter.Popup popup = (Presenter.Popup) action;
+                else if (action instanceof Presenter.Popup popup) {
                     menu.add(popup.getPopupPresenter());
                 }
-                else if (action instanceof Presenter.Menu) {
-                    Presenter.Menu item = (Presenter.Menu) action;
+                else if (action instanceof Presenter.Menu item) {
                     menu.add(item.getMenuPresenter());
                 }
-                else if (action instanceof ContextAwareAction) {
-                    menu.add(((ContextAwareAction) action).createContextAwareInstance(Utilities.actionsGlobalContext()));
+                else if (action instanceof ContextAwareAction awareAction) {
+                    menu.add(awareAction.createContextAwareInstance(Utilities.actionsGlobalContext()));
                 }
                 else {
                     menu.add(action);
@@ -114,16 +111,15 @@ public class Menus {
         List<Action> actions = new ArrayList<>();
 
         JMenuItem item = subMenu.getPopupPresenter();
-        if (item instanceof JMenu) {
-            JMenu menu = (JMenu) item;
+        if (item instanceof JMenu menu) {
             for (int i = 0; i < menu.getItemCount(); i++) {
                 JMenuItem cur = menu.getItem(i);
                 if (cur != null) {
                     Action a = menu.getItem(i).getAction();
                     actions.add(a);
 
-                    if (a instanceof Presenter.Popup) {
-                        actions.addAll(findSubActions((Presenter.Popup) a));
+                    if (a instanceof Presenter.Popup popup) {
+                        actions.addAll(findSubActions(popup));
                     }
                 }
             }

@@ -55,7 +55,7 @@ public final class DataTransfers {
             try {
                 List<File> files = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
                 if (files.size() == 1) {
-                    return Optional.of(files.get(0));
+                    return Optional.of(files.getFirst());
                 }
             } catch (UnsupportedFlavorException | IOException ex) {
                 throw new RuntimeException(ex);

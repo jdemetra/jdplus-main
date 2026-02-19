@@ -32,16 +32,12 @@ public class SpectralPeaks {
         }
         
         public static AR fromInt(int v) {
-            switch (v) {
-                case 0:
-                    return none;
-                case 1:
-                    return a;
-                case 2:
-                    return A;
-                default:
-                    return undef;
-            }
+            return switch (v) {
+                case 0 -> none;
+                case 1 -> a;
+                case 2 -> A;
+                default -> undef;
+            };
         }
     }
     
@@ -54,16 +50,12 @@ public class SpectralPeaks {
         }
         
         public static Tukey fromInt(int v) {
-            switch (v) {
-                case 0:
-                    return none;
-                case 1:
-                    return t;
-                case 2:
-                    return T;
-                default:
-                    return undef;
-            }
+            return switch (v) {
+                case 0 -> none;
+                case 1 -> t;
+                case 2 -> T;
+                default -> undef;
+            };
         }
     }
     public final AR ar;
@@ -95,7 +87,7 @@ public class SpectralPeaks {
     
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof SpectralPeaks && equals((SpectralPeaks) obj));
+        return this == obj || (obj instanceof SpectralPeaks sp && equals(sp));
     }
     
     public boolean equals(SpectralPeaks peaks) {
@@ -142,16 +134,12 @@ public class SpectralPeaks {
         if (peaks == null) {
             return false;
         }
-        switch (peaks.length) {
-            case 6:
-                return hasMonthlyPeaks(peaks);
-            case 2:
-                return hasQuarterlyPeaks(peaks);
-            case 1:
-                return hasHalfYearlyPreaks(peaks);   
-            default:
-                return false;
-        }
+        return switch (peaks.length) {
+            case 6 -> hasMonthlyPeaks(peaks);
+            case 2 -> hasQuarterlyPeaks(peaks);
+            case 1 -> hasHalfYearlyPreaks(peaks);   
+            default -> false;
+        };
     }
 
     /**
@@ -161,16 +149,12 @@ public class SpectralPeaks {
      * @return
      */
     public static boolean hasHighSeasonalPeaks(SpectralPeaks[] peaks) {
-        switch (peaks.length) {
-            case 6:
-                return hasHighMonthlyPeaks(peaks);
-            case 2:
-                return hasHighQuarterlyPeaks(peaks);
-            case 1:
-                return hasHighHalfYearlyPreaks(peaks);
-            default:
-                return false;
-        }
+        return switch (peaks.length) {
+            case 6 -> hasHighMonthlyPeaks(peaks);
+            case 2 -> hasHighQuarterlyPeaks(peaks);
+            case 1 -> hasHighHalfYearlyPreaks(peaks);
+            default -> false;
+        };
     }
     
     private static boolean hasMonthlyPeaks(SpectralPeaks[] peaks) {

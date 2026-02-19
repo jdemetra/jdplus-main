@@ -11,5 +11,5 @@ package jdplus.toolkit.base.core.math.matrices;
  */
 public enum MatrixOperation {
       Left,
-      Right;
+      Right
 }

@@ -78,7 +78,7 @@ public final class SwingPropertyProcessor extends CustomProcessor {
 
         Optional<ExecutableElement> setter = findSetter(property, fieldName);
 
-        if (!setter.isPresent()) {
+        if (setter.isEmpty()) {
             error("Missing setter for '" + fieldName + "'", property);
             return;
         }
@@ -87,7 +87,7 @@ public final class SwingPropertyProcessor extends CustomProcessor {
 
         Optional<ExecutableElement> getter = findGetter(property, fieldName, fieldType.getKind().equals(TypeKind.BOOLEAN));
 
-        if (!getter.isPresent()) {
+        if (getter.isEmpty()) {
             error("Missing getter for '" + fieldName + "'", property);
             return;
         }
@@ -107,7 +107,7 @@ public final class SwingPropertyProcessor extends CustomProcessor {
     }
 
     private static TypeMirror getFirstParameterType(Optional<ExecutableElement> setter) {
-        return setter.orElseThrow().getParameters().get(0).asType();
+        return setter.orElseThrow().getParameters().getFirst().asType();
     }
 
     private static boolean isPrivateNotFinalNotStatic(VariableElement field) {

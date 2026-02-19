@@ -101,6 +101,5 @@ public class XmlAutoTransformationSpec {
         xml.setAicDiff(v.getAicDiff());
         return xml;
     }
-;
 
 }

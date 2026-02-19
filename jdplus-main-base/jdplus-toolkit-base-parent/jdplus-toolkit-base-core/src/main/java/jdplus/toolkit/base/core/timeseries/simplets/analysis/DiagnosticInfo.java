@@ -52,32 +52,25 @@ public enum DiagnosticInfo {
     AnnualDifference;
 
     public DiagnosticTsFunction asFunction() {
-        switch (this) {
+        return switch (this) {
 
-            case AbsoluteDifference:
-                return (ref, s, pos) -> ref.getValue(pos) - s.getValue(pos);
-            case RelativeDifference:
-                return (ref, s, pos) -> {
+            case AbsoluteDifference -> (ref, s, pos) -> ref.getValue(pos) - s.getValue(pos);
+            case RelativeDifference -> (ref, s, pos) -> {
                     double T = ref.getValue(pos);
                     return 100*(T - s.getValue(pos)) / T; // percent
                 };
-            case PeriodToPeriodGrowthDifference:
-                return (ref, s, pos) -> 100*(ref.getValue(pos) / ref.getValue(pos - 1) - s.getValue(pos) / s.getValue(pos - 1));
-            case PeriodToPeriodDifference:
-                return (ref, s, pos) -> (ref.getValue(pos) - ref.getValue(pos - 1)) - (s.getValue(pos) - s.getValue(pos - 1));
-            case AnnualGrowthDifference:
-                return (ref, s, pos) -> {
+            case PeriodToPeriodGrowthDifference -> (ref, s, pos) -> 100*(ref.getValue(pos) / ref.getValue(pos - 1) - s.getValue(pos) / s.getValue(pos - 1));
+            case PeriodToPeriodDifference -> (ref, s, pos) -> (ref.getValue(pos) - ref.getValue(pos - 1)) - (s.getValue(pos) - s.getValue(pos - 1));
+            case AnnualGrowthDifference -> (ref, s, pos) -> {
                     int lag = ref.getAnnualFrequency();
                     return 100*(ref.getValue(pos) / ref.getValue(pos - lag) - s.getValue(pos) / s.getValue(pos - lag));
                 };
-            case AnnualDifference:
-                return (ref, s, pos) -> {
+            case AnnualDifference -> (ref, s, pos) -> {
                     int lag = ref.getAnnualFrequency();
                     return (ref.getValue(pos) - ref.getValue(pos - lag)) - (s.getValue(pos) - s.getValue(pos - lag));
                 };
-            default:
-                return (ref, s, pos) -> Double.NaN;
-        }
+            default -> (ref, s, pos) -> Double.NaN;
+        };
 
     }
 

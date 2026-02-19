@@ -155,5 +155,5 @@ public class XmlTramoSeatsSpec
         xml.decomposition=XmlSeatsSpec.marshal(v.getSeats());
         xml.benchmarking=XmlCholetteSpec.marshal(v.getBenchmarking());
         return xml;
-    };
+    }
 }

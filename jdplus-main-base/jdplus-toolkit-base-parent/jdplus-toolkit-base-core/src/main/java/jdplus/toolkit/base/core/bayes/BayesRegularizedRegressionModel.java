@@ -17,7 +17,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 public class BayesRegularizedRegressionModel {
 
     public static enum ModelType {
-        GAUSSIAN, LAPLACE, T, BINOMIAL, POISSON, GEOMETRIC;
+        GAUSSIAN, LAPLACE, T, BINOMIAL, POISSON, GEOMETRIC
     }
 
     public static enum Prior {
@@ -26,13 +26,13 @@ public class BayesRegularizedRegressionModel {
         LASSO,
         HORSESHOE,
         HORSESHOEPLUS,
-        LOGT;
+        LOGT
     }
     
     public static enum Tau2Prior{
         HC,
         SB,
-        UNIFORM;
+        UNIFORM
     }
     
     @lombok.NonNull

@@ -112,5 +112,4 @@ public class XmlEstimationSpec
         xml.setPrecision(v.getTol());
         return true;
     }
-;
 }

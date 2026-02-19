@@ -29,12 +29,10 @@ public final class XmlFileFilter implements FileFilter {
 
     @Override
     public boolean accept(File pathname) {
-        switch (Files2.getFileExtension(pathname).toLowerCase(Locale.ENGLISH)) {
-            case "xml":
-                return true;
-            default:
-                return false;
-        }
+        return switch (Files2.getFileExtension(pathname).toLowerCase(Locale.ENGLISH)) {
+            case "xml" -> true;
+            default -> false;
+        };
     }
 
     public String getFileDescription() {

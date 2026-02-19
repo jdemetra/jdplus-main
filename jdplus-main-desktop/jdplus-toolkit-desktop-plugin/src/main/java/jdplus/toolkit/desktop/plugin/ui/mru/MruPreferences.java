@@ -38,7 +38,7 @@ enum MruPreferences {
                             return;
                         }
                         Optional<DataSource> dataSource = parser.parseValue(tmp);
-                        if (!dataSource.isPresent()) {
+                        if (dataSource.isEmpty()) {
                             return;
                         }
                         String label = node.get(LABEL_PROPERTY, null);

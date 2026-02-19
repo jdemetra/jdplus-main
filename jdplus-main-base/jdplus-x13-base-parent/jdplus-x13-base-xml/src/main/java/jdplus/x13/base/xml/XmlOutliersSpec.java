@@ -230,7 +230,7 @@ public class XmlOutliersSpec
         xml.setCriticalValue(v.getDefaultCriticalValue());
         xml.setDeltaTC(v.getMonthlyTCRate());
         List<SingleOutlierSpec> otypes = v.getTypes();
-        double va=otypes  .get(0).getCriticalValue();
+        double va=otypes  .getFirst().getCriticalValue();
         boolean same = true;
         for (int i = 1; i < otypes.size(); ++i) {
             if (otypes.get(i).getCriticalValue() != va) {
@@ -252,5 +252,4 @@ public class XmlOutliersSpec
         }
         return true;
     }
-;
 }

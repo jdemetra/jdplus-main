@@ -95,8 +95,7 @@ public class TramoSpecPropertyEditor extends PropertyEditorSupport implements Ex
 
         @Override
         public void setValue(Object o) {
-            if (o != null && o instanceof TramoSpec) {
-                TramoSpec spec=(TramoSpec) o;
+            if (o != null && o instanceof TramoSpec spec) {
                 specs.setSelectedItem(spec.display());
             }
         }

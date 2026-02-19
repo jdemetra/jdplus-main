@@ -49,14 +49,11 @@ public class ParametersPropertyEditor extends AbstractPropertyEditor {
         if (null == t) {
             return Type.Undefined;
         } else {
-            switch (t) {
-                case Initial:
-                    return Type.Initial;
-                case Fixed:
-                    return Type.Fixed;
-                default:
-                    return Type.Undefined;
-            }
+            return switch (t) {
+                case Initial -> Type.Initial;
+                case Fixed -> Type.Fixed;
+                default -> Type.Undefined;
+            };
         }
     }
 
@@ -78,8 +75,8 @@ public class ParametersPropertyEditor extends AbstractPropertyEditor {
     @Override
     public void setValue(Object value) {
 
-        if (null != value && value instanceof Parameter[]) {
-            parameters_ = (Parameter[]) value;
+        if (null != value && value instanceof Parameter[] parameters) {
+            parameters_ = parameters;
             ((ParametersEditor) editor).setParameters(parameters_);
         }
     }
@@ -102,14 +99,11 @@ public class ParametersPropertyEditor extends AbstractPropertyEditor {
 
                     @Override
                     public String getColumnName(int column) {
-                        switch (column) {
-                            case 0:
-                                return "Value";
-                            case 1:
-                                return "Fixed";
-                            default:
-                                return "";
-                        }
+                        return switch (column) {
+                            case 0 -> "Value";
+                            case 1 -> "Fixed";
+                            default -> "";
+                        };
                     }
 
                     @Override

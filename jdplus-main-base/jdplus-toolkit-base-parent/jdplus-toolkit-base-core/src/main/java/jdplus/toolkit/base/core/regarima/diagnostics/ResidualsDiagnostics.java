@@ -276,39 +276,28 @@ public class ResidualsDiagnostics implements Diagnostics {
     }
 
     public double getNIIDBound(ProcQuality quality) {
-        switch (quality) {
-            case Bad:
-                return N1;
-            case Uncertain:
-                return N0;
-            default:
-                return Double.NaN;
-        }
+        return switch (quality) {
+            case Bad -> N1;
+            case Uncertain -> N0;
+            default -> Double.NaN;
+        };
     }
 
     public double getTDPeriodogram(ProcQuality quality) {
-        switch (quality) {
-            case Severe:
-                return tdPeriodogram2;
-            case Bad:
-                return tdPeriodogram1;
-            case Uncertain:
-                return tdPeriodogram0;
-            default:
-                return Double.NaN;
-        }
+        return switch (quality) {
+            case Severe -> tdPeriodogram2;
+            case Bad -> tdPeriodogram1;
+            case Uncertain -> tdPeriodogram0;
+            default -> Double.NaN;
+        };
     }
 
     public double getSPeriodogram(ProcQuality quality) {
-        switch (quality) {
-            case Severe:
-                return sPeriodogram2;
-            case Bad:
-                return sPeriodogram1;
-            case Uncertain:
-                return sPeriodogram0;
-            default:
-                return Double.NaN;
-        }
+        return switch (quality) {
+            case Severe -> sPeriodogram2;
+            case Bad -> sPeriodogram1;
+            case Uncertain -> sPeriodogram0;
+            default -> Double.NaN;
+        };
     }
 }

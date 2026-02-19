@@ -71,7 +71,7 @@ public final class SpreadsheetOutputBuddy implements OutputFactoryBuddy, Configu
 
     @Override
     public AbstractOutputNode createNodeFor(Object properties) {
-        return properties instanceof SpreadsheetOutputConfiguration ? new SpreadsheetNode((SpreadsheetOutputConfiguration) properties) : null;
+        return properties instanceof SpreadsheetOutputConfiguration soc ? new SpreadsheetNode(soc) : null;
     }
 
     @Override

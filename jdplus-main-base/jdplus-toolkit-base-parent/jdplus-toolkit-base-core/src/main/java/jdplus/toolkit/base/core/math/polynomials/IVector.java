@@ -170,7 +170,7 @@ class IVector implements Cloneable {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof IVector && equals((IVector) obj));
+        return this == obj || (obj instanceof IVector iv && equals(iv));
     }
     
     /**

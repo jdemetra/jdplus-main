@@ -31,17 +31,14 @@ public class TxtLegacyId {
         String[] parts = monikerId.split(SEP, -1);
 
         try {
-            switch (parts.length) {
-                case 2:
-                    return Parser.onInteger()
+            return switch (parts.length) {
+                case 2 -> Parser.onInteger()
                             .parseValue(parts[1])
                             .map(index -> series(parts[0], index))
                             .orElse(null);
-                case 1:
-                    return collection(parts[0]);
-                default:
-                    return null;
-            }
+                case 1 -> collection(parts[0]);
+                default -> null;
+            };
         } catch (NumberFormatException err) {
             return null;
         }

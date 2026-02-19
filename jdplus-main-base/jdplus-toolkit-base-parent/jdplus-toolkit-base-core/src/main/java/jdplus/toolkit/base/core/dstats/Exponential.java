@@ -78,14 +78,11 @@ public class Exponential implements ContinuousDistribution {
         if (x <= 0.0) {
             return 0.0;
         }
-        switch (pt) {
-            case Lower:
-                return 1.0 - Math.exp(-x / scale);
-            case Upper:
-                return Math.exp(-x / scale);
-            default:
-                return 0;
-        }
+        return switch (pt) {
+            case Lower -> 1.0 - Math.exp(-x / scale);
+            case Upper -> Math.exp(-x / scale);
+            default -> 0;
+        };
     }
 
     @Override
@@ -96,14 +93,11 @@ public class Exponential implements ContinuousDistribution {
             return Double.POSITIVE_INFINITY;
         }
 
-        switch (pt) {
-            case Lower:
-                return -Math.log(1 - p) * scale;
-            case Upper:
-                return -Math.log(p) * scale;
-            default:
-                return Double.NaN;
-        }
+        return switch (pt) {
+            case Lower -> -Math.log(1 - p) * scale;
+            case Upper -> -Math.log(p) * scale;
+            default -> Double.NaN;
+        };
     }
 
     @Override

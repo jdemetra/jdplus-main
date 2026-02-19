@@ -20,6 +20,8 @@ package jdplus.toolkit.base.core.math.functions;
 
 import nbbrd.design.Development;
 
+import java.io.Serial;
+
 
 /**
  * 
@@ -31,8 +33,9 @@ public class FunctionException extends RuntimeException {
     // private static final long serialVersionUID = -7244734237040488179L;
 
     /**
-	 * 
-	 */
+     * 
+     */
+    @Serial
     private static final long serialVersionUID = -2180798689166385013L;
 
     /**

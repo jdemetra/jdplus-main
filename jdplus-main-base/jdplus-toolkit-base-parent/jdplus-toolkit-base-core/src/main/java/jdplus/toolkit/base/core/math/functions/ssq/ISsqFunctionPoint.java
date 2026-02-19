@@ -40,7 +40,7 @@ public interface ISsqFunctionPoint {
      */
     default ISsqFunctionDerivatives ssqDerivatives(){
         return new SsqNumericalDerivatives(this, false);
-    };
+    }
     
     default int getDim(){
         return getE().length();
@@ -63,5 +63,5 @@ public interface ISsqFunctionPoint {
      */
     default double getSsqE(){
         return getE().ssq();
-    };
+    }
 }

@@ -432,16 +432,14 @@ public final class JTsAnomalyGrid extends JComponent {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component resource = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (resource instanceof JLabel) {
-                JLabel label = (JLabel) resource;
+            if (resource instanceof JLabel label) {
                 setBackground(resource.getBackground());
                 setForeground(resource.getForeground());
                 setBorder(label.getBorder());
                 setFont(resource.getFont());
             }
 
-            if (value instanceof TsGridObs) {
-                TsGridObs obs = (TsGridObs) value;
+            if (value instanceof TsGridObs obs) {
                 currentOutlier = null;
                 switch (obs.getStatus()) {
                     case AFTER:

@@ -423,8 +423,8 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
         }
         tree.setTransferHandler(null);
         Component old = splitter.getBottomComponent();
-        if (old instanceof Disposable) {
-            ((Disposable) old).dispose();
+        if (old instanceof Disposable disposable) {
+            disposable.dispose();
         }
         splitter.setBottomComponent(emptyView);
         removeAll();
@@ -445,8 +445,7 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
 
     private void updateButtons(Container c, String sourceButton) {
         for (Component o : c.getComponents()) {
-            if (o instanceof JButton) {
-                JButton button = (JButton) o;
+            if (o instanceof JButton button) {
                 String command = button.getActionCommand();
                 if (sourceButton == null) {
                     // Internal change
@@ -462,8 +461,8 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
                             break;
                     }
                 }
-            } else if (o instanceof Container && BUTTONS.equals(o.getName())) {
-                updateButtons((Container) o, sourceButton);
+            } else if (o instanceof Container container && BUTTONS.equals(o.getName())) {
+                updateButtons(container, sourceButton);
             }
         }
     }

@@ -104,8 +104,7 @@ public class WorkspaceUtility {
         boolean dirty = false;
         Collection<TsDataSupplier> variables = vars.variables();
         for (TsDataSupplier var : variables) {
-            if (var instanceof DynamicTsDataSupplier) {
-                DynamicTsDataSupplier dvar = (DynamicTsDataSupplier) var;
+            if (var instanceof DynamicTsDataSupplier dvar) {
                 dvar.refresh();
                 dirty = true;
             }

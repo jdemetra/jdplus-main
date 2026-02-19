@@ -56,7 +56,7 @@ public class InformationExtractors {
                 return Integer.compare(p2, p1);
             });
             // last one
-            InformationExtractor last = cur.get(cur.size() - 1);
+            InformationExtractor last = cur.getLast();
             if (last.getPriority() == -1) {
                 x.put(cl, Collections.singletonList(last));
             } else {

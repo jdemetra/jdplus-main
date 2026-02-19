@@ -80,8 +80,8 @@ public abstract class FailSafeChildFactory extends ChildFactory.Detachable<Objec
 
     @Override
     final protected Node createNodeForKey(Object key) {
-        if (key instanceof ExceptionKey) {
-            return createExceptionNode(((ExceptionKey) key).exception);
+        if (key instanceof ExceptionKey exceptionKey) {
+            return createExceptionNode(exceptionKey.exception);
         }
         try {
             return tryCreateNodeForKey(key);
@@ -92,8 +92,8 @@ public abstract class FailSafeChildFactory extends ChildFactory.Detachable<Objec
 
     @Override
     final protected Node[] createNodesForKey(Object key) {
-        if (key instanceof ExceptionKey) {
-            return createExceptionNodes(((ExceptionKey) key).exception);
+        if (key instanceof ExceptionKey exceptionKey) {
+            return createExceptionNodes(exceptionKey.exception);
         }
         try {
             return tryCreateNodesForKey(key);

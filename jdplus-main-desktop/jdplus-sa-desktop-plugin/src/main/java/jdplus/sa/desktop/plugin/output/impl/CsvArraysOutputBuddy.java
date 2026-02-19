@@ -75,7 +75,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
 
     @Override
     public AbstractOutputNode createNodeFor(Object properties) {
-        return properties instanceof CsvArrayOutputConfiguration ? new CsvArraysNode((CsvArrayOutputConfiguration) properties) : null;
+        return properties instanceof CsvArrayOutputConfiguration caoc ? new CsvArraysNode(caoc) : null;
     }
 
     @Override

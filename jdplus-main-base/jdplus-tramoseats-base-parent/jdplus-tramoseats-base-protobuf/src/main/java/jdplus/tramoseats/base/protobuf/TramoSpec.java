@@ -5,6 +5,8 @@
 
 package jdplus.tramoseats.base.protobuf;
 
+import java.io.Serial;
+
 /**
  * Protobuf type {@code tramoseats.TramoSpec}
  */
@@ -12,7 +14,8 @@ public final class TramoSpec extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec)
     TramoSpecOrBuilder {
-private static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -74,7 +77,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.BasicSpec)
       BasicSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -410,8 +414,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.BasicSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.BasicSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.BasicSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -730,7 +734,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.TransformSpec)
       TransformSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -1098,8 +1103,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.TransformSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.TransformSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.TransformSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1478,7 +1483,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.OutlierSpec)
       OutlierSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -2005,8 +2011,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.OutlierSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.OutlierSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.OutlierSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -2625,7 +2631,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.AutoModelSpec)
       AutoModelSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -3121,8 +3128,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.AutoModelSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.AutoModelSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.AutoModelSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -3640,7 +3647,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.EasterSpec)
       EasterSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -4062,8 +4070,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.EasterSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.EasterSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.EasterSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -4627,7 +4635,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.TradingDaysSpec)
       TradingDaysSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -4712,8 +4721,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public java.lang.String getHolidays() {
       java.lang.Object ref = holidays_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+      if (ref instanceof java.lang.String string) {
+        return string;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
@@ -4730,10 +4739,10 @@ private static final long serialVersionUID = 0L;
     public com.google.protobuf.ByteString
         getHolidaysBytes() {
       java.lang.Object ref = holidays_;
-      if (ref instanceof java.lang.String) {
+      if (ref instanceof java.lang.String string) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                string);
         holidays_ = b;
         return b;
       } else {
@@ -5341,8 +5350,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.TradingDaysSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.TradingDaysSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.TradingDaysSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -5655,10 +5664,10 @@ private static final long serialVersionUID = 0L;
       public com.google.protobuf.ByteString
           getHolidaysBytes() {
         java.lang.Object ref = holidays_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String string) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  string);
           holidays_ = b;
           return b;
         } else {
@@ -5794,7 +5803,7 @@ private static final long serialVersionUID = 0L;
       public Builder clearUsers() {
         users_ =
           com.google.protobuf.LazyStringArrayList.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000008);;
+        bitField0_ = (bitField0_ & ~0x00000008);
         onChanged();
         return this;
       }
@@ -6586,7 +6595,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.RegressionSpec)
       RegressionSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -7322,8 +7332,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.RegressionSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.RegressionSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.RegressionSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -9019,7 +9029,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:tramoseats.TramoSpec.EstimateSpec)
       EstimateSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -9411,8 +9422,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.EstimateSpec) {
-          return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec.EstimateSpec)other);
+        if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec.EstimateSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -10369,8 +10380,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec) {
-        return mergeFrom((jdplus.tramoseats.base.protobuf.TramoSpec)other);
+      if (other instanceof jdplus.tramoseats.base.protobuf.TramoSpec spec) {
+        return mergeFrom(spec);
       } else {
         super.mergeFrom(other);
         return this;

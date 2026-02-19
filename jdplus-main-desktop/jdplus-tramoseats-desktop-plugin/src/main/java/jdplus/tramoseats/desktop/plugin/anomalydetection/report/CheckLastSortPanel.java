@@ -46,27 +46,19 @@ public class CheckLastSortPanel extends javax.swing.JPanel {
 
     public AnomalyPojoComparator getComparator() {
         if (ascendingRadio.isSelected()) {
-            switch (sortComboBox.getSelectedIndex()) {
-                case 1:
-                    return AnomalyPojoComparator.Relative_Asc;
-                case 2:
-                    return AnomalyPojoComparator.Absolute_Asc;
-                case 3:
-                    return AnomalyPojoComparator.Period_Asc;
-                default:
-                    return null;
-            }
+            return switch (sortComboBox.getSelectedIndex()) {
+                case 1 -> AnomalyPojoComparator.Relative_Asc;
+                case 2 -> AnomalyPojoComparator.Absolute_Asc;
+                case 3 -> AnomalyPojoComparator.Period_Asc;
+                default -> null;
+            };
         } else {
-            switch (sortComboBox.getSelectedIndex()) {
-                case 1:
-                    return AnomalyPojoComparator.Relative_Desc;
-                case 2:
-                    return AnomalyPojoComparator.Absolute_Desc;
-                case 3:
-                    return AnomalyPojoComparator.Period_Desc;
-                default:
-                    return null;
-            }
+            return switch (sortComboBox.getSelectedIndex()) {
+                case 1 -> AnomalyPojoComparator.Relative_Desc;
+                case 2 -> AnomalyPojoComparator.Absolute_Desc;
+                case 3 -> AnomalyPojoComparator.Period_Desc;
+                default -> null;
+            };
         }
     }
 

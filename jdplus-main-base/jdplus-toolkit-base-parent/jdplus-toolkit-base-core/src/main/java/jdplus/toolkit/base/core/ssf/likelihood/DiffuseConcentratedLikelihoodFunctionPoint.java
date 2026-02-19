@@ -155,11 +155,8 @@ public class DiffuseConcentratedLikelihoodFunctionPoint<S, F extends ISsf> imple
         return new NumericalDerivatives(this, fn.isSymmetric(), fn.isMultiThreaded());
     }
 
-    ;
-
     @Override
     public ISsqFunctionDerivatives ssqDerivatives() {
         return new SsqNumericalDerivatives(this, fn.isSymmetric(), fn.isMultiThreaded());
     }
-;
 }
