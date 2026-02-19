@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![OTHER] Add option to retrieve desktop application version in headless environment [#556](https://github.com/jdemetra/jdplus-main/issues/556)
+
 ### Fixed
 
 - ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
