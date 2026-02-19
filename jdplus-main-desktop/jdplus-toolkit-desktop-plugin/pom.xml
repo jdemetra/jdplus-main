@@ -112,6 +112,11 @@
             <artifactId>org-netbeans-core-multiview</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-sendopts</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
 
         <!-- 2. JD3 Desktop -->
         <dependency>
