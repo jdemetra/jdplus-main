@@ -114,6 +114,7 @@ public class QAugmentation3 implements QAugmentation {
         if (b == null)
             return null;
         LowerTriangularMatrix.solvexL(L, b);
+        b.chs();
         return b;
     }
 

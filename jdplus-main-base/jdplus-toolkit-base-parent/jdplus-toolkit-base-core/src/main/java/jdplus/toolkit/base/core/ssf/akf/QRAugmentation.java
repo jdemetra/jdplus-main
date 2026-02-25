@@ -130,7 +130,7 @@ public class QRAugmentation implements QAugmentation {
         if (!compute()) {
             return null;
         }
-        return ls.getB();
+        return ls.getB().fn(x->-x);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class QRAugmentation implements QAugmentation {
         LowerTriangularMatrix.solveXLt(L, B);
         DoubleSeq w = delta();
         for (int i = 0; i < d; ++i) {
-            state.a().addAY(-w.get(i), A.column(i));
+            state.a().addAY(w.get(i), A.column(i));
             state.P().addXaXt(1, B.column(i));
         }
         state.dropAllConstraints();

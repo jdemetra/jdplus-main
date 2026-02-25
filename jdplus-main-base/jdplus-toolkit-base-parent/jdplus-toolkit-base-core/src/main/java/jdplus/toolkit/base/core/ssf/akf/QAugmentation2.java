@@ -95,6 +95,7 @@ public class QAugmentation2 implements QAugmentation{
     public DoubleSeq delta() {
         DataBlock b=b().deepClone();
         LowerTriangularMatrix.solvexL(choleskyS(), b);
+        b.chs();
         return b;
     }    
 

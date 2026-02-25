@@ -95,6 +95,7 @@ public class QAugmentation1 implements QAugmentation {
     public DoubleSeq delta() {
         DataBlock b = b();
         LowerTriangularMatrix.solvexL(S.extract(0, nd, 0, nd), b);
+        b.chs();
         return b;
     }
 

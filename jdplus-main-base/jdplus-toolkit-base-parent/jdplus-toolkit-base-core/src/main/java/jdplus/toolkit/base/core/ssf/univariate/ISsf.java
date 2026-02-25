@@ -56,7 +56,7 @@ public interface ISsf extends ISsfState {
      * @param f The divisor of m (usually ZPZ'+ H)
      */
     default void xL(int pos, DataBlock x, DataBlock m, double f) {
-        // XT - [(XT)*m]/f * z 
+        // xT - (xT)*m /f * z 
         dynamics().XT(pos, x);
         loading().XpZd(pos, x, -x.dot(m) / f);
     }
@@ -81,6 +81,9 @@ public interface ISsf extends ISsfState {
         XL(pos, X.columnsIterator(), m, f);
     }
 
+    default void LtX(int pos, FastMatrix X, DataBlock m, double f) {
+        XL(pos, X.columnsIterator(), m, f);
+    }
     /**
      * L is defined by T-KZ = T - Tm/f Z
      *
