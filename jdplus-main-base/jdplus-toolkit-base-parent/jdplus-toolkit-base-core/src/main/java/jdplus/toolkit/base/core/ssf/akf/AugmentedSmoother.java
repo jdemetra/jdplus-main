@@ -22,6 +22,7 @@ import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
+import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.ISsfDynamics;
 import jdplus.toolkit.base.core.ssf.ISsfInitialization;
@@ -39,6 +40,7 @@ import jdplus.toolkit.base.core.ssf.univariate.OrdinarySmoother;
  */
 public class AugmentedSmoother {
 
+    private ISsf ssf;
     private ISsfDynamics dynamics;
     private ISsfLoading loading;
     private ISmoothingResults srslts;
@@ -51,11 +53,8 @@ public class AugmentedSmoother {
     // 1-step ahead errors and their variances
     private double err, errVariance;
     private DataBlock E;
-    // smoothations + their diffuse corrections
-    private double u, uVariance;
-    private DataBlock U;
     // smoothing arrays (ordinary, diffuse)
-    private DataBlock R;
+    private DataBlock r, rc;
     private FastMatrix Rd;
     // variances of the smoothing arrays;
     private FastMatrix N;
@@ -63,8 +62,8 @@ public class AugmentedSmoother {
     private FastMatrix lS, Psi;
     private DataBlock delta;
     // auxiliary
-    private DataBlock M, K;
-    private FastMatrix B;
+    private DataBlock m;
+    private FastMatrix RpNA, B;
     private boolean missing, calcvar = true;
 
     public boolean process(final ISsf ssf, final ISsfData data, boolean collapsing, ISmoothingResults sresults) {
@@ -85,7 +84,6 @@ public class AugmentedSmoother {
         QAugmentation q = results.getAugmentation();
         lS = q.choleskyS();
         delta = DataBlock.of(q.delta());
-        delta.chs();
         Psi = q.Psi();
         // Psi = (lS*lS')^-1
         if (t >= endpos) {
@@ -97,8 +95,6 @@ public class AugmentedSmoother {
                 calcSmoothedDiffuseEffects();
                 while (--t >= 0) {
                     iterate(t, true);
-                    srslts.saveSmoothation(t, u, uVariance);
-                    srslts.saveR(t, R, N);
                     srslts.save(t, state, StateInfo.Smoothed);
                 }
             }
@@ -106,38 +102,25 @@ public class AugmentedSmoother {
         return true;
     }
 
-//    private boolean process(ISsf ssf, final int endpos, DefaultAugmentedFilteringResults results, FastMatrix lS, DoubleSeq delta, ISmoothingResults sresults) {
-//        frslts = results;
-//        srslts = sresults;
-//        initFilter(ssf);
-//        initSmoother(ssf, endpos);
-//        this.delta = DataBlock.of(delta);
-//        this.lS = lS;
-//        if (N != null) {
-//            Psi = FastMatrix.identity(lS.getColumnsCount());
-//            LowerTriangularMatrix.solveXL(this.lS, Psi);
-//            LowerTriangularMatrix.solveLtX(this.lS, Psi);
-//        }
-//        return processNoCollapsing(endpos);
-//    }
-//
     public ISmoothingResults getResults() {
         return srslts;
     }
 
     private void initSmoother(ISsf ssf) {
+        this.ssf=ssf;
         ISsfInitialization initialization = ssf.initialization();
         int dim = initialization.getStateDim();
         int nd = initialization.getDiffuseDim();
         state = new State(dim);
         A = FastMatrix.make(dim, nd);
-        R = DataBlock.make(dim);
-        M = DataBlock.make(dim);
-        K = DataBlock.make(dim);
+        r = DataBlock.make(dim);
+        rc = DataBlock.make(dim);
+        m = DataBlock.make(dim);
         E = DataBlock.make(nd);
-        U = DataBlock.make(nd);
         Rd = FastMatrix.make(dim, nd);
+        // auxiliary matrices
         B = FastMatrix.make(dim, nd);
+        RpNA = FastMatrix.make(dim, nd);
 
         if (calcvar) {
             N = FastMatrix.square(dim);
@@ -152,13 +135,7 @@ public class AugmentedSmoother {
             err = frslts.error(pos);
             errVariance = frslts.errorVariance(pos);
             E.copy(frslts.E(pos));
-            M.copy(frslts.M(pos));
-            // T*P*Z/f
-            if (errVariance != 0) {
-                K.copy(frslts.M(pos));
-                dynamics.TX(pos, K);
-                K.div(errVariance);
-            }
+            m.copy(frslts.M(pos));
         }
 
         state.a().copy(frslts.a(pos));
@@ -168,15 +145,14 @@ public class AugmentedSmoother {
 
     private void iterate(int pos, boolean collapsing) {
         loadInfo(pos);
-        iterateSmoothation();
         iterateR(pos);
         // B =A + PR
         calcB();
-        // a + P*r + (A+P*R)*d = a + Ad + P(r+Rd)
+        // a + P*r + (A+P*r)*d = a + Ad + P(r+Rd)
         updateA();
         if (calcvar) {
             // P = P-PNP
-            iterateN(pos);
+            iterateN(pos, collapsing);
             updateP(collapsing);
         }
     }
@@ -189,17 +165,23 @@ public class AugmentedSmoother {
         GeneralMatrix.addAB(state.P(), Rd, B);
     }
 
+    // R + NA is always 0 if no collapsing
+    private void calcRpNA() {
+        RpNA.copy(Rd);
+        GeneralMatrix.addAB(N, A, RpNA);
+    }
+
     private void updateA() {
-        // a(t) + P*r(t-1) + (A(t)+P*R(t-1))*d
+        // a(t) + P*r(t-1) + (A(t)+P*r(t-1))*d
         DataBlock a = state.a();
         // normal iteration
-        a.addProduct(R, state.P().columnsIterator());
+        a.addProduct(r, state.P().columnsIterator());
         // diffuse correction
         a.addProduct(B.rowsIterator(), delta);
     }
 
     private void updateP(boolean collapsing) {
-        // B=(A(t)+P*R(t-1)), C= R(t-1)+N(t-1)*A(t)
+        // B=(A(t)+P*r(t-1)), C= r(t-1)+N(t-1)*A(t)
         // S^-1 = (lS*lS')^-1 = lS'^-1 /lS^-1
         // P(t|y)=P(t)-P(t)N(t-1)P(t)+B*psi*B' - W - W' 
         // W =P * C * lS'^-1*lS^-1 * B't
@@ -211,10 +193,9 @@ public class AugmentedSmoother {
         // diffuse correction
         P.add(SymmetricMatrix.XSXt(Psi, B));
         if (collapsing) {
+            calcRpNA();
             // C
-            FastMatrix C = Rd.deepClone();
-            GeneralMatrix.addAB(N, A, C);
-            FastMatrix PC = GeneralMatrix.AB(P0, C);
+            FastMatrix PC = GeneralMatrix.AB(P0, RpNA);
             // PC*L'^-1 = Y <=> PC = X L' 
             LowerTriangularMatrix.solveXLt(lS, PC);
             // L^-1 B' = X <=> B' = LX 
@@ -229,11 +210,11 @@ public class AugmentedSmoother {
     }
 
     private void xL(int pos, DataBlock x) {
-        // xL = x(T-KZ) = x(T-Tc/f*Z) = xT - ((xT)*c)/f * Z
+        // xL = x(T-KZ) = x(T-Tm/f*Z) = xT - ((xT)*m)/f * Z
         // compute xT
         dynamics.XT(pos, x);
         // compute q=xT*c
-        double q = x.dot(M);
+        double q = x.dot(m);
         // remove q/f*Z
         loading.XpZd(pos, x, -q / errVariance);
     }
@@ -247,10 +228,8 @@ public class AugmentedSmoother {
     /**
      *
      */
-    private void iterateN(int pos) {
+    private void iterateN(int pos, boolean collapsing) {
         if (!missing) {
-            // rc(t-1)=r(t-1)+d*R(t-1) 
-            // Nc(t-1)=
             // N(t-1) = Z'(t)*Z(t)/f(t) + L'(t)*N(t)*L(t)
             XL(pos, N.rowsIterator());
             XL(pos, N.columnsIterator());
@@ -259,71 +238,28 @@ public class AugmentedSmoother {
             dynamics.MT(pos, N);
             dynamics.TtM(pos, N);
         }
-        SymmetricMatrix.reenforceSymmetry(N);
     }
 
     /**
      *
      */
     private void iterateR(int pos) {
-        // r(t-1)=u(t)Z(t)+r(t)T(t)
-        // R(t-1)=U(t)Z(t)+R(t)T(t)
-        // rc(t-1)=r(t-1)+d*R(t-1) [=uc(t)Z(t)+rc(t)T(t)]
-        dynamics.XT(pos, R);
-        dynamics.MT(pos, Rd.columnsIterator());
         if (!missing && errVariance != 0) {
-            // RT
-            loading.XpZd(pos, R, u);
+            ssf.xL(pos, r, m, errVariance);
+            ssf.XtL(pos, Rd, m, errVariance);
+            loading.XpZd(pos, r, err/errVariance);
             DataBlockIterator rcols = Rd.columnsIterator();
-            DoubleSeqCursor ucur = U.cursor();
+            DoubleSeqCursor ecur = E.cursor();
             while (rcols.hasNext()) {
-                loading.XpZd(pos, rcols.next(), ucur.getAndNext());
+                loading.XpZd(pos, rcols.next(), ecur.getAndNext()/errVariance);
             }
+        } else {
+            dynamics.XT(pos, r);
+            dynamics.MT(pos, Rd.columnsIterator());
         }
-//        R.addProduct(Rd.rowsIterator(), delta);
-//        Rc.apply(z -> Math.abs(z) < State.ZERO ? 0 : z);
-    }
-
-    private void iterateSmoothation() {
-        // u = v(t)/f(t)-K'(t)*R(t)
-        if (missing) {
-            u = Double.NaN;
-            U.set(Double.NaN);
-            uVariance = Double.NaN;
-            return;
-        }
-
-        if (errVariance != 0) {
-            u = err / errVariance - R.dot(K);
-            // apply the same to the colums of Rd
-            U.setAY(1 / errVariance, E);
-            U.subProduct(K, Rd.columnsIterator());
-//            u+= U.dot(delta);
-            // TODO
-//            if (calcvar) {
-//                // N*A
-//                FastMatrix NA = GeneralMatrix.AB(N, A);
-//                NA.add(Rd);
-//                DataBlock C = DataBlock.make(U.length());
-//                C.product(K, NA.columnsIterator());
-//                C.chs();
-//                ucVariance = 1 / errVariance + QuadraticForm.apply(N, K) - vcorrection(U.deepClone(), C);
-//                if (ucVariance < Constants.MACHEP) {
-//                    ucVariance = 0;
-//                }
-//                if (ucVariance == 0) {
-//                    if (Math.abs(uc) < Constants.getEpsilon()) {
-//                        uc = 0;
-
-        
-    
-
-    ////                    } else {
-////                        throw new SsfException(SsfException.INCONSISTENT);
-//                    }
-//                }
-//            }
-        }
+        rc.copy(r);
+        rc.addProduct(Rd.rowsIterator(), delta);
+        rc.apply(z -> Math.abs(z) < State.ZERO ? 0 : z);
     }
 
     private void initFilter(ISsf ssf) {
@@ -345,8 +281,9 @@ public class AugmentedSmoother {
                 .calcVariance(calcvar)
                 .build();
         smoother.process(startpos, endpos, frslts, srslts);
-        // updates R, N
-        R.copy(smoother.getFinalR());
+        // updates r, N
+        r.copy(smoother.getFinalR());
+        rc.copy(r);
         if (calcvar) {
             N.copy(smoother.getFinalN());
         }
@@ -354,9 +291,9 @@ public class AugmentedSmoother {
 
     private void calcSmoothedDiffuseEffects() {
         // We must add to delta the correction factor
-        // SA'R
+        // SA'r
         FastMatrix SA = GeneralMatrix.ABt(Psi, A);
-        delta.addProduct(SA.rowsIterator(), R);
+        delta.addProduct(SA.rowsIterator(), r);
 
         // We must remove SA'NAS from Psi
         Psi.sub(SymmetricMatrix.XSXt(N, SA));
@@ -370,8 +307,6 @@ public class AugmentedSmoother {
         int t = endpos;
         while (--t >= 0) {
             iterate(t, false);
-            srslts.saveSmoothation(t, u, uVariance);
-            srslts.saveR(t, R, N);
             srslts.save(t, state, StateInfo.Smoothed);
         }
         return true;
