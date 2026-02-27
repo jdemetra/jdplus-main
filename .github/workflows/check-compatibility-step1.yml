@@ -30,7 +30,7 @@ jobs:
 
       - if: ${{ hashFiles('continue') != '' }}
         name: ⬆️ Upload compatibility report and PR number
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           path: |
             report.md
