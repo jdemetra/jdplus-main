@@ -52,7 +52,7 @@
         <!-- annotations & processors -->
         <lombok.version>1.18.42</lombok.version>
         <java-service.version>1.9.0</java-service.version>
-        <java-design.version>1.8.0</java-design.version>
+        <java-design.version>1.9.0</java-design.version>
         <jspecify.version>1.0.0</jspecify.version>
 
         <!-- test frameworks -->
