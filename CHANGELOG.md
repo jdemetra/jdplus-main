@@ -9,6 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- ![IO] Add arrays output in the cruncher [#874](https://github.com/jdemetra/jdplus-main/issues/874)
 - ![OTHER] Add option to retrieve desktop application version in headless environment [#556](https://github.com/jdemetra/jdplus-main/issues/556)
 
 ### Fixed
