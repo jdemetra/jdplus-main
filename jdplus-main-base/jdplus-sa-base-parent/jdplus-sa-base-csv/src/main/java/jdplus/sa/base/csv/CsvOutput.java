@@ -22,8 +22,6 @@ import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.util.Paths;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -47,7 +45,7 @@ public class CsvOutput implements Output<SaDocument> {
     @Override
     public void process(SaDocument document) {
         List<String> series = config_.getSeries();
-        summary_.add(series.toArray(new String[series.size()]), document);
+        summary_.add(series.toArray(String[]::new), document);
     }
 
     @Override
