@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.components;
 
-import internal.ui.components.DemoTsBuilder;
+import internal.toolkit.desktop.plugin.components.DemoTsBuilder;
 import jdplus.main.desktop.design.SwingAction;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;

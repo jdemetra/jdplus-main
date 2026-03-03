@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
-import internal.ui.components.ExceptionUtil;
+import internal.toolkit.desktop.plugin.components.ExceptionUtil;
 import jdplus.toolkit.desktop.plugin.DemetraIcons;
 import lombok.NonNull;
 import org.openide.nodes.AbstractNode;

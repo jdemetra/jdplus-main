@@ -1,7 +1,7 @@
 package jdplus.toolkit.desktop.plugin.completion;
 
 import ec.util.completion.swing.JAutoCompletion;
-import internal.uihelpers.FixmeCollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;

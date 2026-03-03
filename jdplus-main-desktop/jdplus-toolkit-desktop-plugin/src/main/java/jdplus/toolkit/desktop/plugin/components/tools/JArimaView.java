@@ -12,7 +12,7 @@ import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 import jdplus.toolkit.desktop.plugin.html.HtmlUtil;
 import jdplus.toolkit.desktop.plugin.html.modelling.HtmlArima;
 import jdplus.toolkit.desktop.plugin.html.modelling.HtmlSarimaPolynomials;
-import internal.uihelpers.ModelInformationProvider;
+import jdplus.toolkit.desktop.plugin.ui.ModelInformationProvider;
 import nbbrd.design.SkipProcessing;
 
 import javax.swing.*;

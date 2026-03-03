@@ -25,7 +25,7 @@ import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.concurrent.ThreadPriority;
 import jdplus.toolkit.desktop.plugin.concurrent.UIExecutors;
-import jdplus.toolkit.desktop.plugin.core.star.StarStep;
+import internal.toolkit.desktop.plugin.star.StarStep;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruProvidersStep;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruWorkspacesStep;
