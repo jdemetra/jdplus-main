@@ -189,7 +189,7 @@
                 <plugin>
                     <groupId>io.github.ascopes</groupId>
                     <artifactId>protobuf-maven-plugin</artifactId>
-                    <version>4.1.3</version>
+                    <version>5.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>com.amashchenko.maven.plugin</groupId>
@@ -286,7 +286,7 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <configuration>
                     <!-- 1.4 Configure protoc -->
-                    <protocVersion>${protobuf.version}</protocVersion>
+                    <protoc>${protobuf.version}</protoc>
                     <!-- 1.5 Embed proto definitions in jars and don't fail on missing sources -->
                     <embedSourcesInClassOutputs>true</embedSourcesInClassOutputs>
                     <failOnMissingSources>false</failOnMissingSources>
