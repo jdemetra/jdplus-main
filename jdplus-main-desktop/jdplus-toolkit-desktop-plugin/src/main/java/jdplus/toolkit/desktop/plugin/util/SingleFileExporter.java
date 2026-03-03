@@ -39,7 +39,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static internal.ui.components.ExceptionUtil.unwrapException;
+import static internal.toolkit.desktop.plugin.components.ExceptionUtil.unwrapException;
 import static java.util.Arrays.asList;
 
 /**

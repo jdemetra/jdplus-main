@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
-import internal.uihelpers.FixmeCollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;

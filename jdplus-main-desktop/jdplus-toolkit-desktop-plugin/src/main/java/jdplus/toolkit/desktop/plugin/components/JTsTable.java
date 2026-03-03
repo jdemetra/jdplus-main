@@ -18,7 +18,7 @@ package jdplus.toolkit.desktop.plugin.components;
 
 import ec.util.table.swing.JTables;
 import ec.util.various.swing.StandardSwingColor;
-import internal.ui.components.DemoTsBuilder;
+import internal.toolkit.desktop.plugin.components.DemoTsBuilder;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.*;

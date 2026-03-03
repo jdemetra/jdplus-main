@@ -51,8 +51,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
-import static internal.ui.components.ExceptionUtil.showException;
-import static internal.ui.components.ExceptionUtil.unwrapException;
+import static internal.toolkit.desktop.plugin.components.ExceptionUtil.showException;
+import static internal.toolkit.desktop.plugin.components.ExceptionUtil.unwrapException;
 
 /**
  *
