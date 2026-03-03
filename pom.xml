@@ -286,7 +286,7 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <configuration>
                     <!-- 1.4 Configure protoc -->
-                    <protocVersion>${protobuf.version}</protocVersion>
+                    <protoc>${protobuf.version}</protoc>
                     <!-- 1.5 Embed proto definitions in jars and don't fail on missing sources -->
                     <embedSourcesInClassOutputs>true</embedSourcesInClassOutputs>
                     <failOnMissingSources>false</failOnMissingSources>
