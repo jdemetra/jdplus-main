@@ -1,18 +1,18 @@
+#set( $year = $package.getClass().forName("java.util.Calendar").getInstance().get(1) )
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>eu.europa.ec.joinup.sat</groupId>
-    <artifactId>jdplus-main</artifactId>
-    <version>3.6.1-SNAPSHOT</version>
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
-    <description>JDemetra+ v3</description>
-    <url>https://github.com/${x.github.user}/${x.github.repo}</url>
-    <inceptionYear>2013</inceptionYear>
+    <description>JDemetra+ v3 - ${topic} extensions</description>
+    <url>${forgeUrl}</url>
+    <inceptionYear>${year}</inceptionYear>
 
     <licenses>
         <license>
@@ -23,91 +23,68 @@
 
     <developers>
         <developer>
-            <name>Philippe Charles</name>
-            <email>philippe.charles@nbb.be</email>
-            <organization>National Bank of Belgium</organization>
-            <organizationUrl>https://www.nbb.be</organizationUrl>
+            <name>${devName}</name>
+            <email>${devEmail}</email>
+            <organization>${devOrg}</organization>
+            <organizationUrl>${devOrgUrl}</organizationUrl>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/${x.github.user}/${x.github.repo}.git</connection>
-        <developerConnection>scm:git:ssh://github.com:${x.github.user}/${x.github.repo}.git</developerConnection>
-        <url>https://github.com/${x.github.user}/${x.github.repo}/tree/master</url>
+        <connection>scm:git:${forgeUrl}.git</connection>
+        <developerConnection>scm:git:${forgeUrl}.git</developerConnection>
+        <url>${forgeUrl}</url>
     </scm>
 
     <properties>
         <!-- Java config -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2025-11-20T14:21:32Z</project.build.outputTimestamp>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.release>21</maven.compiler.release>
-        <requiredMavenVersion>3.9.11</requiredMavenVersion>
-
-        <!-- GitHub hosting -->
-        <x.github.user>jdemetra</x.github.user>
-        <x.github.repo>${project.artifactId}</x.github.repo>
+        <project.build.sourceEncoding>@project.build.sourceEncoding@</project.build.sourceEncoding>
+        <project.build.outputTimestamp>@project.build.outputTimestamp@</project.build.outputTimestamp>
+        <maven.compiler.target>@maven.compiler.target@</maven.compiler.target>
+        <maven.compiler.source>@maven.compiler.source@</maven.compiler.source>
+        <maven.compiler.release>@maven.compiler.release@</maven.compiler.release>
+        <requiredMavenVersion>@requiredMavenVersion@</requiredMavenVersion>
 
         <!-- annotations & processors -->
-        <lombok.version>1.18.42</lombok.version>
-        <java-service.version>1.9.0</java-service.version>
-        <java-design.version>1.9.0</java-design.version>
-        <jspecify.version>1.0.0</jspecify.version>
+        <lombok.version>@lombok.version@</lombok.version>
+        <java-service.version>@java-service.version@</java-service.version>
+        <java-design.version>@java-design.version@</java-design.version>
+        <jspecify.version>@jspecify.version@</jspecify.version>
 
         <!-- test frameworks -->
-        <junit.version>6.0.3</junit.version>
-        <assertj-core.version>3.27.7</assertj-core.version>
+        <junit.version>@junit.version@</junit.version>
+        <assertj-core.version>@assertj-core.version@</assertj-core.version>
 
         <!-- dependencies -->
-        <jd2.version>2.2.6</jd2.version>
-        <protobuf.version>4.34.0</protobuf.version>
-        <java-io-util.version>0.0.35</java-io-util.version>
-        <java-sql-util.version>1.0.7</java-sql-util.version>
-        <spreadsheet4j.version>2.5.10</spreadsheet4j.version>
-        <netbeans.version>RELEASE290</netbeans.version>
+        <jdplus-main.version>@project.version@</jdplus-main.version>
+        <jdplus-main-netbeans.version>@netbeans.version@</jdplus-main-netbeans.version>
 
         <!-- plugins -->
-        <appassembler-maven-plugin.version>2.1.0</appassembler-maven-plugin.version>
-        <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
-        <compatibility-maven-plugin.version>1.1.1</compatibility-maven-plugin.version>
-        <extra-enforcer-rules.version>1.11.0</extra-enforcer-rules.version>
-        <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
-        <forbiddenapis.version>3.10</forbiddenapis.version>
-        <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
-        <heylogs-maven-plugin.version>0.14.1</heylogs-maven-plugin.version>
-        <jdks-maven-plugin.version>1.23.0</jdks-maven-plugin.version>
-        <jreleaser-maven-plugin.version>1.23.0</jreleaser-maven-plugin.version>
-        <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
-        <maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
-        <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
-        <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
-        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.10.0</maven-dependency-plugin.version>
-        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
-        <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
-        <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
-        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
-        <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
-        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
-        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
-        <modernizer-maven-plugin.version>3.2.0</modernizer-maven-plugin.version>
-        <nbm-maven-plugin.version>14.4</nbm-maven-plugin.version>
-        <pomchecker-enforcer-rules.version>1.15.0</pomchecker-enforcer-rules.version>
-        <protobuf-maven-plugin.version>5.0.1</protobuf-maven-plugin.version>
-        <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
+        <central-publishing-maven-plugin.version>@central-publishing-maven-plugin.version@</central-publishing-maven-plugin.version>
+        <compatibility-maven-plugin.version>@compatibility-maven-plugin.version@</compatibility-maven-plugin.version>
+        <extra-enforcer-rules.version>@extra-enforcer-rules.version@</extra-enforcer-rules.version>
+        <flatten-maven-plugin.version>@flatten-maven-plugin.version@</flatten-maven-plugin.version>
+        <forbiddenapis.version>@forbiddenapis.version@</forbiddenapis.version>
+        <gitflow-maven-plugin.version>@gitflow-maven-plugin.version@</gitflow-maven-plugin.version>
+        <heylogs-maven-plugin.version>@heylogs-maven-plugin.version@</heylogs-maven-plugin.version>
+        <jreleaser-maven-plugin.version>@jreleaser-maven-plugin.version@</jreleaser-maven-plugin.version>
+        <maven-clean-plugin.version>@maven-clean-plugin.version@</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>@maven-compiler-plugin.version@</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>@maven-dependency-plugin.version@</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>@maven-deploy-plugin.version@</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>@maven-enforcer-plugin.version@</maven-enforcer-plugin.version>
+        <maven-install-plugin.version>@maven-install-plugin.version@</maven-install-plugin.version>
+        <maven-jar-plugin.version>@maven-jar-plugin.version@</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>@maven-javadoc-plugin.version@</maven-javadoc-plugin.version>
+        <maven-resources-plugin.version>@maven-resources-plugin.version@</maven-resources-plugin.version>
+        <maven-site-plugin.version>@maven-site-plugin.version@</maven-site-plugin.version>
+        <maven-source-plugin.version>@maven-source-plugin.version@</maven-source-plugin.version>
+        <maven-surefire-plugin.version>@maven-surefire-plugin.version@</maven-surefire-plugin.version>
+        <modernizer-maven-plugin.version>@modernizer-maven-plugin.version@</modernizer-maven-plugin.version>
+        <nbm-maven-plugin.version>@nbm-maven-plugin.version@</nbm-maven-plugin.version>
+        <pomchecker-enforcer-rules.version>@pomchecker-enforcer-rules.version@</pomchecker-enforcer-rules.version>
+        <sign-maven-plugin.version>@sign-maven-plugin.version@</sign-maven-plugin.version>
     </properties>
-
-    <modules>
-        <module>jdplus-main-base</module>
-        <module>jdplus-main-cli</module>
-        <module>jdplus-main-desktop</module>
-        <module>jdplus-main-bom</module>
-        <module>jdplus-main-archetype</module>
-    </modules>
 
     <dependencies>
         <!-- annotations & processors -->
@@ -222,11 +199,6 @@
                     <version>${heylogs-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>io.github.ascopes</groupId>
-                    <artifactId>protobuf-maven-plugin</artifactId>
-                    <version>${protobuf-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>com.amashchenko.maven.plugin</groupId>
                     <artifactId>gitflow-maven-plugin</artifactId>
                     <version>${gitflow-maven-plugin.version}</version>
@@ -256,26 +228,6 @@
                     <artifactId>jreleaser-maven-plugin</artifactId>
                     <version>${jreleaser-maven-plugin.version}</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.jreleaser</groupId>
-                    <artifactId>jdks-maven-plugin</artifactId>
-                    <version>${jdks-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${maven-assembly-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>${maven-antrun-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-archetype-plugin</artifactId>
-                    <version>${maven-archetype-plugin.version}</version>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -285,7 +237,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <!-- 1.1 Enable annotation processors -->
-                    <annotationProcessorPaths combine.children="append">
+                    <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
@@ -319,17 +271,6 @@
                 <configuration>
                     <!-- 1.2 Disable module path for unit tests -->
                     <useModulePath>false</useModulePath>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>io.github.ascopes</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <configuration>
-                    <!-- 1.4 Configure protoc -->
-                    <protoc>${protobuf.version}</protoc>
-                    <!-- 1.5 Embed proto definitions in jars and don't fail on missing sources -->
-                    <embedSourcesInClassOutputs>true</embedSourcesInClassOutputs>
-                    <failOnMissingSources>false</failOnMissingSources>
                 </configuration>
             </plugin>
             <plugin>
@@ -368,29 +309,29 @@
                         <configuration>
                             <rules>
                                 <!-- 2.1 Built-In Rules -->
-                                <banDuplicatePomDependencyVersions/>
-                                <dependencyConvergence/>
-                                <reactorModuleConvergence/>
+                                <banDuplicatePomDependencyVersions />
+                                <dependencyConvergence />
+                                <reactorModuleConvergence />
                                 <requireMavenVersion>
                                     <version>${requiredMavenVersion}</version>
                                 </requireMavenVersion>
-                                <requireNoRepositories/>
-                                <requirePluginVersions/>
+                                <requireNoRepositories>
+                                    <allowedRepositories>central</allowedRepositories>
+                                    <allowSnapshotRepositories>true</allowSnapshotRepositories>
+                                </requireNoRepositories>
+                                <requirePluginVersions />
                                 <requireProperty>
                                     <property>project.artifactId</property>
                                     <message>Project artifactId must follow JD3 pattern</message>
-                                    <regex>^(jdplus)-(\w+)(?:-(archetype|base|cli|desktop|bom)(?:-(\w+))?)?$</regex>
+                                    <regex>^(jdplus)-(\w+)(?:-(base|cli|desktop|bom)(?:-(\w+))?)?$</regex>
                                 </requireProperty>
                                 <requireReleaseDeps>
                                     <onlyWhenRelease>true</onlyWhenRelease>
                                 </requireReleaseDeps>
-                                <requireUpperBoundDeps/>
+                                <requireUpperBoundDeps />
                                 <!-- 2.2 extra-enforcer-rules -->
-                                <banCircularDependencies/>
-                                <banDuplicateClasses>
-                                    <!-- Fix org.netbeans.external:net-java-html-boot:jar duplicate classes -->
-                                    <ignoreWhenIdentical>true</ignoreWhenIdentical>
-                                </banDuplicateClasses>
+                                <banCircularDependencies />
+                                <banDuplicateClasses />
                                 <enforceBytecodeVersion>
                                     <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
                                     <ignoredScopes>
@@ -398,8 +339,7 @@
                                     </ignoredScopes>
                                 </enforceBytecodeVersion>
                                 <!-- 2.3 pomchecker-enforcer-rules -->
-                                <checkMavenCentral
-                                        implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
+                                <checkMavenCentral implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
                                     <release>false</release>
                                     <strict>false</strict>
                                 </checkMavenCentral>
@@ -441,9 +381,7 @@
                             <!-- 2.5 upgradable source code -->
                             <javaVersion>${maven.compiler.release}</javaVersion>
                             <!-- 2.6 forbidden source code -->
-                            <exclusionPatterns>
-                                <!--<exclusionPattern>com/google/common/base/Optional.*</exclusionPattern>-->
-                            </exclusionPatterns>
+                            <exclusionPatterns></exclusionPatterns>
                         </configuration>
                     </execution>
                 </executions>
@@ -495,16 +433,6 @@
     </build>
 
     <profiles>
-        <!-- Disable some plugins to accelerate the build -->
-        <profile>
-            <id>fast-build</id>
-            <properties>
-                <enforcer.skip>true</enforcer.skip>
-                <modernizer.skip>true</modernizer.skip>
-                <heylogs.skip>true</heylogs.skip>
-            </properties>
-        </profile>
-
         <!-- Base deploy -->
         <profile>
             <id>base-deploy</id>
@@ -603,4 +531,34 @@
             </properties>
         </profile>
     </profiles>
+
+    <!-- Custom repositories: order matters! -->
+    <!-- Maven Central is enforced at top to prevent dependabot to use snapshots as releases -->
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>central-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>old-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+    </repositories>
 </project>

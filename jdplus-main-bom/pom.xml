@@ -44,7 +44,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.7.3</version>
+                <version>${flatten-maven-plugin.version}</version>
                 <configuration>
                     <flattenMode>bom</flattenMode>
                     <outputDirectory>${project.build.directory}</outputDirectory>
@@ -421,7 +421,7 @@
                     <plugin>
                         <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
                         <artifactId>compatibility-maven-plugin</artifactId>
-                        <version>1.1.1</version>
+                        <version>${compatibility-maven-plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
