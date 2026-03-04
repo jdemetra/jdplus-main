@@ -28,7 +28,7 @@ public class PreliminaryChecks {
     public final static int MAX_REPEAT_COUNT = 80, MAX_MISSING_COUNT = 33;
 
     public static void testSeries(final TsData y) {
-        if (y == null) {
+        if (y == null || y.isEmpty()) {
             throw new SaException(SaDictionaries.NO_DATA);
         }
         int nz = y.length();

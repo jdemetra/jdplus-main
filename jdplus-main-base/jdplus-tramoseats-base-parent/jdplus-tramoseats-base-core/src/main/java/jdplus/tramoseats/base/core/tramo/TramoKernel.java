@@ -58,7 +58,8 @@ public class TramoKernel implements RegSarimaProcessor {
     private static final String LAST_CHANCE = "last chance model",
             OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection",
             AMI = "automatic model identification", ROUND = "round ",
-            LOGNEG = "can't apply log transformation 'some obs. are <= 0";
+            LOGNEG = "can't apply log transformation 'some obs. are <= 0",
+            FULLSPEC = "fully specified model";    
 
     private static final String TRAMO = "tramo";
 
@@ -307,6 +308,7 @@ public class TramoKernel implements RegSarimaProcessor {
     private RegSarimaModel ami(RegSarimaModelling modelling) {
 
         if (isFullySpecified()) {
+            modelling.getLog().info(FULLSPEC);
             modelling.estimate(options.precision);
             return modelling.build();
         }
