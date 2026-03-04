@@ -29,7 +29,7 @@ import jdplus.toolkit.desktop.plugin.actions.Actions;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
-import jdplus.toolkit.desktop.plugin.core.tools.JTsChartTopComponent;
+import internal.toolkit.desktop.plugin.tools.JTsChartTopComponent;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
 import jdplus.toolkit.desktop.plugin.datatransfer.LocalObjectDataTransfer;

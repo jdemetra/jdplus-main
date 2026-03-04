@@ -253,9 +253,6 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>jdplus.toolkit.*</publicPackage>
-                        <!-- tmp -->
-                        <publicPackage>internal.ui</publicPackage>
-                        <publicPackage>internal.ui.*</publicPackage>
                         <!-- desktop libs -->
                         <publicPackage>ec.util.chart.*</publicPackage>
                         <publicPackage>ec.util.completion.*</publicPackage>
@@ -272,15 +269,6 @@
                         <publicPackage>org.jdesktop.layout.*</publicPackage>
                         <publicPackage>nbbrd.*</publicPackage>
                         <publicPackage>javax.*</publicPackage>
-                        <!-- TO FIX -->
-                        <publicPackage>internal.*</publicPackage>
-                        <!-- FIXME: demetra-desktop-util -->
-                        <publicPackage>org.apache.commons.*</publicPackage>
-                        <publicPackage>nbbrd.io.*</publicPackage>
-                        <publicPackage>internal.io.*</publicPackage>
-                        <publicPackage>javax.*</publicPackage>
-                        <publicPackage>com.sun.xml.bind.*</publicPackage>
-                        <publicPackage>demetra.desktop.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

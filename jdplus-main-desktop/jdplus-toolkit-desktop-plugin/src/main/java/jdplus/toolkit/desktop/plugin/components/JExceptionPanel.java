@@ -24,7 +24,7 @@ import ec.util.chart.impl.TangoColorScheme;
 import ec.util.desktop.Desktop;
 import ec.util.desktop.DesktopManager;
 import ec.util.various.swing.JCommand;
-import internal.ui.components.StackTracePrinter;
+import internal.toolkit.desktop.plugin.components.StackTracePrinter;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;

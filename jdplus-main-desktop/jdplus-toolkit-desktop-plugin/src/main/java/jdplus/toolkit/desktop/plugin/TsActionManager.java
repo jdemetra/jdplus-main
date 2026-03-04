@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin;
 
-import internal.uihelpers.FixmeCollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;

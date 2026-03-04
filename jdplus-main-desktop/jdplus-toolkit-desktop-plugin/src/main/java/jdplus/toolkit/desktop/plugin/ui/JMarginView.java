@@ -29,7 +29,7 @@ import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
 import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
 import jdplus.toolkit.desktop.plugin.components.parts.*;
-import jdplus.toolkit.desktop.plugin.core.components.InternalComponents;
+import internal.toolkit.desktop.plugin.components.InternalComponents;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
 import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;

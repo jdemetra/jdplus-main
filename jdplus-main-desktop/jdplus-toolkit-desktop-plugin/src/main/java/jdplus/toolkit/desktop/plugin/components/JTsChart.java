@@ -16,8 +16,8 @@
  */
 package jdplus.toolkit.desktop.plugin.components;
 
-import internal.ui.components.DemoTsBuilder;
-import internal.ui.components.JTsChartConfig;
+import internal.toolkit.desktop.plugin.components.DemoTsBuilder;
+import internal.toolkit.desktop.plugin.components.JTsChartConfig;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
