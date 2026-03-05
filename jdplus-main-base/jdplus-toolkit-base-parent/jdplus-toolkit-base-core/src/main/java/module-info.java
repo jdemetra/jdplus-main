@@ -47,6 +47,7 @@ module jdplus.toolkit.base.core {
     exports jdplus.toolkit.base.core.math.functions.analysis;
     exports jdplus.toolkit.base.core.math.functions.bfgs;
     exports jdplus.toolkit.base.core.math.functions.levmar;
+    exports jdplus.toolkit.base.core.math.functions.riso;
     exports jdplus.toolkit.base.core.math.functions.minpack;
     exports jdplus.toolkit.base.core.math.functions.ssq;
     exports jdplus.toolkit.base.core.math.highprecision;
@@ -105,9 +106,6 @@ module jdplus.toolkit.base.core {
     exports jdplus.toolkit.base.core.timeseries.simplets.analysis;
     exports jdplus.toolkit.base.core.ucarima;
     exports jdplus.toolkit.base.core.ucarima.estimation;
-
-    // FIXME:
-    exports internal.toolkit.base.core.math.functions.riso;
 
     uses ArimaForecasts;
     uses SymmetricMatrix.CholeskyProcessor;

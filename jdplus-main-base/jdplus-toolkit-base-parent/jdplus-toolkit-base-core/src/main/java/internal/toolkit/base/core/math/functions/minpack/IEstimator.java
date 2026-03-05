@@ -16,7 +16,7 @@
 */
 
 
-package jdplus.toolkit.base.core.math.functions.minpack;
+package internal.toolkit.base.core.math.functions.minpack;
 
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Development;

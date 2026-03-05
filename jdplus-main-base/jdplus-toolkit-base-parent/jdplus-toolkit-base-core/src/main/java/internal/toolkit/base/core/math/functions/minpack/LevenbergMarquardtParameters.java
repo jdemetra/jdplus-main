@@ -15,7 +15,7 @@
 * limitations under the Licence.
 */
 
-package jdplus.toolkit.base.core.math.functions.minpack;
+package internal.toolkit.base.core.math.functions.minpack;
 
 /**
  *
