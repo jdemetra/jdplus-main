@@ -16,8 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA, 02111-1307, USA,
  * or visit the GNU web site, www.gnu.org.
  */
-package internal.toolkit.base.core.math.functions.riso;
+package jdplus.toolkit.base.core.math.functions.riso;
 
+import internal.toolkit.base.core.math.functions.riso.Lbfgs;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.functions.IFunction;
 import jdplus.toolkit.base.core.math.functions.IFunctionDerivatives;

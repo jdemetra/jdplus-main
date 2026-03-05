@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-package jdplus.toolkit.base.core.math.functions.minpack;
+package internal.toolkit.base.core.math.functions.minpack;
 
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.math.functions.FunctionException;
