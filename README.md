@@ -57,7 +57,7 @@ This binary requires an external Java runtime.
 This project is written in Java and uses [Apache Maven](https://maven.apache.org/) as a build tool.  
 It requires [Java 21 as minimum version](https://whichjdk.com/) and all its dependencies are hosted on [Maven Central](https://search.maven.org/).
 
-The code can be build using any IDE or by just type-in the following commands in a terminal:
+The code can be built using any IDE or by just type-in the following commands in a terminal:
 ```shell
 git clone https://github.com/jdemetra/jdplus-main.git
 cd jdplus-main

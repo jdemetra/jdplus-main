@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.2.0 https://maven.apache.org/xsd/archetype-descriptor-1.2.0.xsd"
+        name="jdplus-full"
+        xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <requiredProperties>
+        <requiredProperty key="topic"/>
+        <requiredProperty key="forgeUrl">
+            <defaultValue>https://localhost/FIXME_FORGE_URL</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="devName">
+            <defaultValue>FIXME_NAME</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="devEmail">
+            <defaultValue>FIXME_EMAIL</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="devOrg">
+            <defaultValue>FIXME_ORG</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="devOrgUrl">
+            <defaultValue>https://localhost/FIXME_ORG_URL</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="artifactId">
+            <defaultValue>jdplus-${topic}</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="version">
+            <defaultValue>1.0.0-SNAPSHOT</defaultValue>
+        </requiredProperty>
+    </requiredProperties>
+    <fileSets>
+        <fileSet filtered="true" encoding="UTF-8">
+            <includes>
+                <include>.gitignore</include>
+                <include>CHANGELOG.md</include>
+                <include>LICENSE</include>
+                <include>lombok.config</include>
+                <include>README.md</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <modules>
+        <module id="${rootArtifactId}-base" dir="__rootArtifactId__-base" name="${rootArtifactId}-base">
+            <modules>
+                <module id="${rootArtifactId}-base-parent" dir="__rootArtifactId__-base-parent"
+                        name="${rootArtifactId}-base-parent">
+                    <modules>
+                        <module id="${rootArtifactId}-base-api" dir="__rootArtifactId__-base-api"
+                                name="${rootArtifactId}-base-api">
+                            <fileSets>
+                                <fileSet filtered="true" encoding="UTF-8">
+                                    <directory>src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet filtered="true" encoding="UTF-8">
+                                    <directory>src/main/javadoc</directory>
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet filtered="true" encoding="UTF-8">
+                                    <directory>src/test/java</directory>
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </module>
+                    </modules>
+                </module>
+            </modules>
+        </module>
+        <module id="${rootArtifactId}-cli" dir="__rootArtifactId__-cli" name="${rootArtifactId}-cli">
+            <modules>
+                <module id="${rootArtifactId}-cli-plugin" dir="__rootArtifactId__-cli-plugin"
+                        name="${rootArtifactId}-cli-plugin"/>
+            </modules>
+        </module>
+        <module id="${rootArtifactId}-desktop" dir="__rootArtifactId__-desktop" name="${rootArtifactId}-desktop">
+            <modules>
+                <module id="${rootArtifactId}-desktop-plugin" dir="__rootArtifactId__-desktop-plugin"
+                        name="${rootArtifactId}-desktop-plugin">
+                    <fileSets>
+                        <fileSet filtered="true" encoding="UTF-8">
+                            <directory>src/main/java</directory>
+                            <includes>
+                                <include>**/*.java</include>
+                            </includes>
+                        </fileSet>
+                        <fileSet filtered="true" encoding="UTF-8">
+                            <directory>src/main/javadoc</directory>
+                            <includes>
+                                <include>**/*.java</include>
+                            </includes>
+                        </fileSet>
+                        <fileSet filtered="true" encoding="UTF-8">
+                            <directory>src/main/resources</directory>
+                            <includes>
+                                <include>**/*.properties</include>
+                            </includes>
+                        </fileSet>
+                        <fileSet filtered="true" encoding="UTF-8">
+                            <directory>src/main/nbm</directory>
+                            <includes>
+                                <include>**/*.mf</include>
+                            </includes>
+                        </fileSet>
+                        <fileSet filtered="true" encoding="UTF-8">
+                            <directory>src/test/java</directory>
+                            <includes>
+                                <include>**/*.java</include>
+                            </includes>
+                        </fileSet>
+                    </fileSets>
+                </module>
+            </modules>
+        </module>
+        <module id="${rootArtifactId}-bom" dir="__rootArtifactId__-bom" name="${rootArtifactId}-bom"/>
+    </modules>
+</archetype-descriptor>

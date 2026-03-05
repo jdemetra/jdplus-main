@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![IO] Add arrays output in the cruncher [#874](https://github.com/jdemetra/jdplus-main/issues/874)
 - ![UI] Add logging of the automatic model identification (TRAMO-SEATS, X13)
 - ![OTHER] Add option to retrieve desktop application version in headless environment [#556](https://github.com/jdemetra/jdplus-main/issues/556)
+- ![OTHER] Add basic Maven archetype module [#916](https://github.com/jdemetra/jdplus-main/issues/916)
 
 ### Fixed
 
