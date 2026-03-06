@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![OTHER] Fix Maven phase in build-and-test workflow
+
 ## [3.7.0] - 2026-03-06
 
 ### Added
