@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.7.0] - 2026-03-06
+
 ### Added
 
 - ![IO] Add arrays output in the cruncher [#874](https://github.com/jdemetra/jdplus-main/issues/874)
@@ -309,7 +311,8 @@ This is the **initial release** of JDemetra+ v3.0.0.
 
 - Initial release
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.7.0...HEAD
+[3.7.0]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...v3.7.0
 [3.6.0]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...v3.6.0
 [3.5.1]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...v3.5.0
