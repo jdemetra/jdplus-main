@@ -57,8 +57,8 @@ public class NamedParametersEditor extends AbstractPropertyEditor {
     @Override
     public void setValue(Object value) {
 
-        if (null != value && value instanceof NamedParameters) {
-            nparameters = (NamedParameters) value;
+        if (null != value && value instanceof NamedParameters parameters) {
+            nparameters = parameters;
         }
     }
 

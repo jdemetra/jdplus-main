@@ -166,25 +166,19 @@ public class BayesRegularizedRegressionProcessor {
     }
 
     private double tauA() {
-        switch (model.getTau2Prior()) {
-            case HC:
-                return .5;
-            case SB:
-                return .5;
-            default:
-                return 1;
-        }
+        return switch (model.getTau2Prior()) {
+            case HC -> .5;
+            case SB -> .5;
+            default -> 1;
+        };
     }
 
     private double tauB() {
-        switch (model.getTau2Prior()) {
-            case HC:
-                return .5;
-            case SB:
-                return 1;
-            default:
-                return 1;
-        }
+        return switch (model.getTau2Prior()) {
+            case HC -> .5;
+            case SB -> 1;
+            default -> 1;
+        };
     }
 
 }

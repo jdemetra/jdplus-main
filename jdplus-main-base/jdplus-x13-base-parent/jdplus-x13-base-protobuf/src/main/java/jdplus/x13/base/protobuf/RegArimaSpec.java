@@ -5,6 +5,8 @@
 
 package jdplus.x13.base.protobuf;
 
+import java.io.Serial;
+
 /**
  * Protobuf type {@code x13.RegArimaSpec}
  */
@@ -12,7 +14,8 @@ public final class RegArimaSpec extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:x13.RegArimaSpec)
     RegArimaSpecOrBuilder {
-private static final long serialVersionUID = 0L;
+    @Serial
+    private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -80,7 +83,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.BasicSpec)
       BasicSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -443,8 +447,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.BasicSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.BasicSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.BasicSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -803,7 +807,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.TransformSpec)
       TransformSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -1171,8 +1176,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.TransformSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.TransformSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.TransformSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1562,7 +1567,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.OutlierSpec)
       OutlierSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -1623,7 +1629,8 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.GeneratedMessage implements
         // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.OutlierSpec.Type)
         TypeOrBuilder {
-    private static final long serialVersionUID = 0L;
+        @Serial
+        private static final long serialVersionUID = 0L;
       static {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
           com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -1664,8 +1671,8 @@ private static final long serialVersionUID = 0L;
       @java.lang.Override
       public java.lang.String getCode() {
         java.lang.Object ref = code_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
+        if (ref instanceof java.lang.String string) {
+          return string;
         } else {
           com.google.protobuf.ByteString bs = 
               (com.google.protobuf.ByteString) ref;
@@ -1682,10 +1689,10 @@ private static final long serialVersionUID = 0L;
       public com.google.protobuf.ByteString
           getCodeBytes() {
         java.lang.Object ref = code_;
-        if (ref instanceof java.lang.String) {
+        if (ref instanceof java.lang.String string) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  string);
           code_ = b;
           return b;
         } else {
@@ -1952,8 +1959,8 @@ private static final long serialVersionUID = 0L;
 
         @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec.Type) {
-            return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec.Type)other);
+          if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec.Type type) {
+            return mergeFrom(type);
           } else {
             super.mergeFrom(other);
             return this;
@@ -2047,10 +2054,10 @@ private static final long serialVersionUID = 0L;
         public com.google.protobuf.ByteString
             getCodeBytes() {
           java.lang.Object ref = code_;
-          if (ref instanceof String) {
+          if (ref instanceof java.lang.String string) {
             com.google.protobuf.ByteString b = 
                 com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
+                    string);
             code_ = b;
             return b;
           } else {
@@ -2672,8 +2679,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -3490,7 +3497,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.AutoModelSpec)
       AutoModelSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -4069,8 +4077,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.AutoModelSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.AutoModelSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.AutoModelSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -4707,7 +4715,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.EasterSpec)
       EasterSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -5108,8 +5117,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.EasterSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.EasterSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.EasterSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -5660,7 +5669,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.TradingDaysSpec)
       TradingDaysSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -5745,8 +5755,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public java.lang.String getHolidays() {
       java.lang.Object ref = holidays_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+      if (ref instanceof java.lang.String string) {
+        return string;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
@@ -5763,10 +5773,10 @@ private static final long serialVersionUID = 0L;
     public com.google.protobuf.ByteString
         getHolidaysBytes() {
       java.lang.Object ref = holidays_;
-      if (ref instanceof java.lang.String) {
+      if (ref instanceof java.lang.String string) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                string);
         holidays_ = b;
         return b;
       } else {
@@ -6402,8 +6412,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.TradingDaysSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.TradingDaysSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.TradingDaysSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -6724,10 +6734,10 @@ private static final long serialVersionUID = 0L;
       public com.google.protobuf.ByteString
           getHolidaysBytes() {
         java.lang.Object ref = holidays_;
-        if (ref instanceof String) {
+        if (ref instanceof java.lang.String string) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  string);
           holidays_ = b;
           return b;
         } else {
@@ -6863,7 +6873,7 @@ private static final long serialVersionUID = 0L;
       public Builder clearUsers() {
         users_ =
           com.google.protobuf.LazyStringArrayList.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000008);;
+        bitField0_ = (bitField0_ & ~0x00000008);
         onChanged();
         return this;
       }
@@ -7687,7 +7697,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.RegressionSpec)
       RegressionSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -8423,8 +8434,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.RegressionSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.RegressionSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.RegressionSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -10108,7 +10119,8 @@ private static final long serialVersionUID = 0L;
       com.google.protobuf.GeneratedMessage implements
       // @@protoc_insertion_point(message_implements:x13.RegArimaSpec.EstimateSpec)
       EstimateSpecOrBuilder {
-  private static final long serialVersionUID = 0L;
+      @Serial
+      private static final long serialVersionUID = 0L;
     static {
       com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
         com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -10445,8 +10457,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.EstimateSpec) {
-          return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec.EstimateSpec)other);
+        if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec.EstimateSpec spec) {
+          return mergeFrom(spec);
         } else {
           super.mergeFrom(other);
           return this;
@@ -11323,8 +11335,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec) {
-        return mergeFrom((jdplus.x13.base.protobuf.RegArimaSpec)other);
+      if (other instanceof jdplus.x13.base.protobuf.RegArimaSpec spec) {
+        return mergeFrom(spec);
       } else {
         super.mergeFrom(other);
         return this;

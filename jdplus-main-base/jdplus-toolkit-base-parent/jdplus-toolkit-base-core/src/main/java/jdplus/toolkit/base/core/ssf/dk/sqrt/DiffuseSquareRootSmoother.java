@@ -94,8 +94,6 @@ public class DiffuseSquareRootSmoother extends BaseDiffuseSmoother {
             iterate(t);
             if (srslts != null) {
                 srslts.save(t, state, StateInfo.Smoothed);
-                srslts.saveSmoothation(t, u, uVariance);
-                srslts.saveR(t, Rf, N0);
             }
         }
         if (rescalevar) {
@@ -154,7 +152,7 @@ public class DiffuseSquareRootSmoother extends BaseDiffuseSmoother {
                 loading.Z(pos, Z);
             }
             state.P().copy(frslts.P(pos));
-            state.restoreB(frslts.B(pos));
+            state.restoreA(frslts.A(pos));
         }
     }
 
@@ -163,24 +161,24 @@ public class DiffuseSquareRootSmoother extends BaseDiffuseSmoother {
     protected void updateA(int pos) {
         DataBlock a = state.a();
         a.addProduct(Rf, frslts.P(pos).columnsIterator());
-        FastMatrix B = frslts.B(pos);
-        DataBlock tmp = DataBlock.make(B.getColumnsCount());
-        tmp.product(Ri, B.columnsIterator());
-        a.addProduct(tmp, B.rowsIterator());
+        FastMatrix A = frslts.A(pos);
+        DataBlock tmp = DataBlock.make(A.getColumnsCount());
+        tmp.product(Ri, A.columnsIterator());
+        a.addProduct(tmp, A.rowsIterator());
     }
 
     @Override
     protected void updateP(int pos) {
         // V = Pf - Pf * N0 * Pf - < Pi * N1 * Pf > - Pi * N2 * Pi
-        // Pi = B*B'
+        // Pi = A*A'
         // ! N1 is not a symmetric matrix
         FastMatrix P = state.P();
         FastMatrix PN0P = SymmetricMatrix.XtSX(N0, P);
-        FastMatrix BN2B = SymmetricMatrix.XtSX(N2, state.B());
-        FastMatrix PN2P = SymmetricMatrix.XSXt(BN2B, state.B());
-        FastMatrix N1B = GeneralMatrix.AB(N1, state.B());
+        FastMatrix BN2B = SymmetricMatrix.XtSX(N2, state.A());
+        FastMatrix PN2P = SymmetricMatrix.XSXt(BN2B, state.A());
+        FastMatrix N1B = GeneralMatrix.AB(N1, state.A());
         FastMatrix PN1B = GeneralMatrix.AB(P, N1B);
-        FastMatrix PN1Pi = GeneralMatrix.ABt(PN1B, state.B());
+        FastMatrix PN1Pi = GeneralMatrix.ABt(PN1B, state.A());
 //        FastMatrix PN2P = SymmetricMatrix.quadraticForm(N2, Pi);
 //        FastMatrix PN1 = P.times(N1);
 //        FastMatrix PN1Pi = PN1.times(Pi);

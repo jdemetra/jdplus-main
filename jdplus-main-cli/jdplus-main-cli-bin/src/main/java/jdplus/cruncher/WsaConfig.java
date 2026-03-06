@@ -41,6 +41,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import nbbrd.io.WrappedIOException;
 import nbbrd.io.xml.bind.Jaxb;
 import lombok.NonNull;
@@ -64,6 +66,9 @@ public class WsaConfig {
     @XmlElementWrapper(name = "tsmatrix")
     @XmlElement(name = "series")
     public String[] TSMatrix = new String[0];
+    @XmlElementWrapper(name = "arrays")
+    @XmlElement(name = "array")
+    public String[] Arrays = new String[0];
     @XmlElementWrapper(name = "paths")
     @XmlElement(name = "path")
     public String[] Paths;
@@ -167,6 +172,7 @@ public class WsaConfig {
         loadAll();
         List<String> mlist = new ArrayList<>();
         List<String> tlist = new ArrayList<>();
+        List<String> alist = new ArrayList<>();
 
         Map<String, Class> dic = new LinkedHashMap<>();
         // for TramoSeats
@@ -180,11 +186,14 @@ public class WsaConfig {
         dic.entrySet().forEach(entry -> {
             if (entry.getValue() == TsData.class) {
                 tlist.add(entry.getKey());
+            } else if (Matrix.class.isAssignableFrom(entry.getValue()) || entry.getValue() == double[].class || DoubleSeq.class.isAssignableFrom(entry.getValue())) {
+                alist.add(entry.getKey());
             } else if (types.contains(entry.getValue())) {
                 mlist.add(entry.getKey());
             }
         });
         result.TSMatrix = tlist.toArray(result.TSMatrix);
+        result.Arrays = alist.toArray(result.Arrays);
         result.Matrix = mlist.toArray(result.Matrix);
         return result;
     }

@@ -136,14 +136,11 @@ public class XmlDefaultTradingDaysSpec {
     private TradingDaysType tdOf(String str){
         if (str == null)
             return TradingDaysType.NONE;
-        switch (str){
-            case "TradingDays":
-                return TradingDaysType.TD7;
-            case "WorkingDays":
-                return TradingDaysType.TD2;
-            default: 
-                return TradingDaysType.NONE;
-        }
+        return switch (str){
+            case "TradingDays" -> TradingDaysType.TD7;
+            case "WorkingDays" -> TradingDaysType.TD2;
+            default -> TradingDaysType.NONE;
+        };
     }
 
     private String tdToString(TradingDaysType type){

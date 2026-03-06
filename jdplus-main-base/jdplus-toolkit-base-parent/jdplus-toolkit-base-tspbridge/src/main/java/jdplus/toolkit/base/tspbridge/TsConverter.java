@@ -458,30 +458,30 @@ public class TsConverter {
 
     //<editor-fold defaultstate="collapsed" desc="ITsProvider">
     public ec.tss.@NonNull ITsProvider fromTsProvider(@NonNull TsProvider o) {
-        if (o instanceof ToTsProvider) {
-            return ((ToTsProvider) o).getDelegate();
+        if (o instanceof ToTsProvider provider) {
+            return provider.getDelegate();
         }
         // order matters !
-        if (o instanceof FileLoader)
-            return FromFileLoader.fromFileLoader((FileLoader) o);
-        if (o instanceof DataSourceLoader)
-            return FromDataSourceLoader.fromDataSourceLoader((DataSourceLoader) o);
-        if (o instanceof DataSourceProvider)
-            return FromDataSourceProvider.fromDataSourceProvider((DataSourceProvider) o);
+        if (o instanceof FileLoader loader)
+            return FromFileLoader.fromFileLoader(loader);
+        if (o instanceof DataSourceLoader loader)
+            return FromDataSourceLoader.fromDataSourceLoader(loader);
+        if (o instanceof DataSourceProvider provider)
+            return FromDataSourceProvider.fromDataSourceProvider(provider);
         return FromTsProvider.fromTsProvider(o);
     }
 
     public @NonNull TsProvider toTsProvider(ec.tss.@NonNull ITsProvider o) {
-        if (o instanceof FromTsProvider) {
-            return ((FromTsProvider) o).getDelegate();
+        if (o instanceof FromTsProvider provider) {
+            return provider.getDelegate();
         }
         // order matters !
-        if (o instanceof ec.tss.tsproviders.IFileLoader)
-            return ToFileLoader.toFileLoader((ec.tss.tsproviders.IFileLoader) o);
-        if (o instanceof ec.tss.tsproviders.IDataSourceLoader)
-            return ToDataSourceLoader.toDataSourceLoader((ec.tss.tsproviders.IDataSourceLoader) o);
-        if (o instanceof ec.tss.tsproviders.IDataSourceProvider)
-            return ToDataSourceProvider.toDataSourceProvider((ec.tss.tsproviders.IDataSourceProvider) o);
+        if (o instanceof ec.tss.tsproviders.IFileLoader loader)
+            return ToFileLoader.toFileLoader(loader);
+        if (o instanceof ec.tss.tsproviders.IDataSourceLoader loader)
+            return ToDataSourceLoader.toDataSourceLoader(loader);
+        if (o instanceof ec.tss.tsproviders.IDataSourceProvider provider)
+            return ToDataSourceProvider.toDataSourceProvider(provider);
         return ToTsProvider.toTsProvider(o);
     }
     //</editor-fold>

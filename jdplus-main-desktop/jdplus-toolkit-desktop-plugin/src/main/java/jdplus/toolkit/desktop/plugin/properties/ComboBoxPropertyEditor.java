@@ -61,8 +61,8 @@ public class ComboBoxPropertyEditor extends AbstractExPropertyEditor {
             Object values = env.getFeatureDescriptor().getValue(VALUES_ATTRIBUTE);
             DefaultComboBoxModel cbModel = (DefaultComboBoxModel) component.getModel();
             cbModel.removeAllElements();
-            if (values instanceof Object[]) {
-                for (Object o : (Object[]) values) {
+            if (values instanceof Object[] objects) {
+                for (Object o : objects) {
                     cbModel.addElement(o);
                 }
             }

@@ -21,7 +21,7 @@ import jdplus.main.desktop.design.SwingEditorAttribute;
 import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.swing.JAutoCompletion;
 import ec.util.various.swing.TextPrompt;
-import internal.ui.properties.JAutoCompletedComponent;
+import internal.toolkit.desktop.plugin.properties.JAutoCompletedComponent;
 import org.openide.explorer.propertysheet.InplaceEditor;
 import org.openide.explorer.propertysheet.PropertyEnv;
 

@@ -63,10 +63,7 @@ public class FastFilter {
     // temporaries
     private DataBlock tmp;
     private DataBlockIterator scols;
-
-    ;
-    // temporaries// temporaries
-
+ 
 
     public FastFilter(ISsf ssf, DefaultFilteringResults frslts) {
         this.ssf = ssf;

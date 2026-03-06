@@ -86,7 +86,7 @@ public final class SheetGridInput implements GridInput {
         @Override
         public Object getCell() {
             Object result = sheet.getCellValue(row, col);
-            return result instanceof Date ? toDateTime((Date) result) : result;
+            return result instanceof Date d ? toDateTime(d) : result;
         }
 
         @Override

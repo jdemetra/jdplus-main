@@ -16,7 +16,7 @@
  */
 package jdplus.tramoseats.desktop.plugin.anomalydetection.report;
 
-import internal.uihelpers.FixmeCollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;

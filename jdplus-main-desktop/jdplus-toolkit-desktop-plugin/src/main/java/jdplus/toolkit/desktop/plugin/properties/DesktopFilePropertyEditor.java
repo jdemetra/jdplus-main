@@ -81,12 +81,12 @@ public final class DesktopFilePropertyEditor extends ForwardingPropertyEditor im
             Object tmp = AbstractExPropertyEditor.attr(env, FILTER_ATTRIBUTE, Object.class).orElse(null);
             File[] paths = AbstractExPropertyEditor.attr(env, PATHS_ATTRIBUTE, File[].class).orElse(new File[0]);
             java.io.FileFilter filter = null;
-            if (tmp instanceof java.io.FileFilter) {
-                filter = (java.io.FileFilter) tmp;
-            } else if (tmp instanceof javax.swing.filechooser.FileFilter) {
-                filter = toFileFilter((javax.swing.filechooser.FileFilter) tmp);
-            } else if (tmp instanceof java.io.FilenameFilter) {
-                filter = toFileFilter((java.io.FilenameFilter) tmp);
+            if (tmp instanceof java.io.FileFilter fileFilter1) {
+                filter = fileFilter1;
+            } else if (tmp instanceof javax.swing.filechooser.FileFilter fileFilter) {
+                filter = toFileFilter(fileFilter);
+            } else if (tmp instanceof java.io.FilenameFilter filenameFilter) {
+                filter = toFileFilter(filenameFilter);
             }
             autoCompletion.setSource(new DesktopFileAutoCompletionSource(filter, paths));
             autoCompletion.getList().setCellRenderer(new FileListCellRenderer(null, ICON_EXECUTOR, paths));

@@ -90,8 +90,6 @@ public class DiffuseSmoother extends BaseDiffuseSmoother {
             iterate(t);
             if (hasinfo) {
                 srslts.save(t, state, StateInfo.Smoothed);
-                srslts.saveSmoothation(t, u, uVariance);
-                srslts.saveR(t, Rf, N0);
             }
         }
         if (rescalevar) {

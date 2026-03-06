@@ -7,6 +7,31 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.7.0] - 2026-03-06
+
+### Added
+
+- ![IO] Add arrays output in the cruncher [#874](https://github.com/jdemetra/jdplus-main/issues/874)
+- ![UI] Add logging of the automatic model identification (TRAMO-SEATS, X13)
+- ![OTHER] Add option to retrieve desktop application version in headless environment [#556](https://github.com/jdemetra/jdplus-main/issues/556)
+- ![OTHER] Add basic Maven archetype module [#916](https://github.com/jdemetra/jdplus-main/issues/916)
+
+### Fixed
+
+- ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
+- ![UI] Fix slow charts when displaying lots of observations [#844](https://github.com/jdemetra/jdplus-main/issues/844)
+- ![UI] Fix DateSelectorUI showing "from"/"to" default values without setting them [#856](https://github.com/jdemetra/jdplus-main/issues/856)
+- ![STAT] Fix errors in the dynamics of some state space forms (seasonal component, composite models, ARMA models (second form))
+
+### Changed
+
+- ![UI] Desktop package cleanup [#911](https://github.com/jdemetra/jdplus-main/issues/911)
+- ![IO] Improve data collector to include any multiple of ChronoUnit [#825](https://github.com/jdemetra/jdplus-main/issues/825)
+- ![IO] Fix missing results in the SA multi-processing matrix view
+- ![STAT] Change seasonality tests for SA series (use of the differencing order of the regarima model when it is available to avoid misleading results)
+- ![STAT] Improve the implementation of the augmented Kalman filter
+- ![OTHER] Migrate to Java 21 [#160](https://github.com/jdemetra/jdplus-main/issues/160)
+
 ## [3.6.0] - 2025-11-20
 
 ### Added
@@ -23,11 +48,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix SaItem duplication in SaBatchUI [#761](https://github.com/jdemetra/jdplus-main/issues/761) and [#689](https://github.com/jdemetra/jdplus-main/issues/689)
 - ![UI] Fix InvalidPathException when displaying exceptions [#806](https://github.com/jdemetra/jdplus-main/issues/806)
 - ![UI] Fix select all menu item behavior [#607](https://github.com/jdemetra/jdplus-main/issues/607)
-- ![UI] Fix missing meta data in details view and properties in SaBatchUI
+- ![UI] Fix missing metadata in details view and properties in SaBatchUI
 
 ### Changed
 
 - ![STAT] Change the definition of the deterministic component in the preadjustment phase (exclude trend constant as in version 2)  [#756](https://github.com/jdemetra/jdplus-main/issues/756)
+- ![STAT] Fail the modeling of a series with negative values if a log-transformation is specified in the parameters (X13, Tramo-Seats) [#894](https://github.com/jdemetra/jdplus-main/issues/894)
 - ![UI] Unify period display in GUI [#489](https://github.com/jdemetra/jdplus-main/issues/489)
 - ![UI] Improve workspace feedback [#661](https://github.com/jdemetra/jdplus-main/issues/661), [#802](https://github.com/jdemetra/jdplus-main/issues/802), [#420](https://github.com/jdemetra/jdplus-main/issues/420)
 - ![UI] Update reset zoom menu item text to improve clarity [#601](https://github.com/jdemetra/jdplus-main/issues/601)
@@ -285,7 +311,8 @@ This is the **initial release** of JDemetra+ v3.0.0.
 
 - Initial release
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.7.0...HEAD
+[3.7.0]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...v3.7.0
 [3.6.0]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...v3.6.0
 [3.5.1]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...v3.5.1
 [3.5.0]: https://github.com/jdemetra/jd3-main/compare/v3.4.0...v3.5.0

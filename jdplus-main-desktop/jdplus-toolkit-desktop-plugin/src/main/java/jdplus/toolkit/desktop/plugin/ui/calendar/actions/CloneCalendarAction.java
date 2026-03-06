@@ -45,12 +45,12 @@ public final class CloneCalendarAction extends SingleNodeAction<ItemWsNode> {
     protected void performAction(ItemWsNode activatedNode) {
         CalendarManager manager = ModellingContext.getActiveContext().getCalendars();
         CalendarDefinition o = AddCalendarAction.getProvider(activatedNode);
-        if (o instanceof Calendar) {
-            cloneNationalCalendar(manager, (Calendar) o, activatedNode);
-        } else if (o instanceof ChainedCalendar) {
-            cloneChainedCalendar(manager, (ChainedCalendar) o, activatedNode);
-        } else if (o instanceof CompositeCalendar) {
-            cloneCompositeCalendar(manager, (CompositeCalendar) o, activatedNode);
+        if (o instanceof Calendar calendar2) {
+            cloneNationalCalendar(manager, calendar2, activatedNode);
+        } else if (o instanceof ChainedCalendar calendar1) {
+            cloneChainedCalendar(manager, calendar1, activatedNode);
+        } else if (o instanceof CompositeCalendar calendar) {
+            cloneCompositeCalendar(manager, calendar, activatedNode);
         }
     }
 

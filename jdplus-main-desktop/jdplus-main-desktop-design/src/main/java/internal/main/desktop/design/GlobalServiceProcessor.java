@@ -55,7 +55,7 @@ public final class GlobalServiceProcessor extends CustomProcessor {
         }
 
         Optional<ExecutableElement> defaultMethod = getDefaultMethod(globalService);
-        if (!defaultMethod.isPresent()) {
+        if (defaultMethod.isEmpty()) {
             error("Missing method getDefault()", globalService);
         } else {
             checkDefaultMethod(globalService, defaultMethod.orElseThrow());

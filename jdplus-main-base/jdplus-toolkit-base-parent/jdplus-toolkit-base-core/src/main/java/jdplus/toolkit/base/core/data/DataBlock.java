@@ -1065,6 +1065,23 @@ public final class DataBlock implements DoubleSeq.Mutable {
         }
     }
 
+    public void subProduct(DataBlock row, Iterator<DataBlock> cols) {
+        int idx = beg;
+        while (cols.hasNext()) {
+            data[idx] -= cols.next().dot(row);
+            idx += inc;
+        }
+    }
+
+    public void subProduct(Iterator<DataBlock> rows, DataBlock column) {
+        int idx = beg;
+        while (rows.hasNext()) {
+            data[idx] -= column.dot(rows.next());
+            idx += inc;
+        }
+    }
+
+
     /**
      * Checks that all the src in the block are (nearly) 0.
      *

@@ -23,6 +23,7 @@ import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.information.GenericExplorable;
+import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.core.regsarima.RegSarimaComputer;
 import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
 import jdplus.toolkit.base.api.timeseries.regression.MissingValueEstimation;
@@ -30,9 +31,6 @@ import jdplus.toolkit.base.api.data.ParametersEstimation;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.stats.ProbabilityType;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
@@ -49,7 +47,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
-import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
 import jdplus.toolkit.base.api.timeseries.regression.HolidaysCorrectedTradingDays;
@@ -91,7 +88,7 @@ import jdplus.toolkit.base.core.stats.tests.NiidTests;
  */
 @lombok.Value
 @lombok.Builder
-public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericExplorable {
+public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericExplorable, HasAnnualFrequency {
 
     private static final MissingValueEstimation[] NOMISSING = new MissingValueEstimation[0];
 
@@ -296,6 +293,7 @@ public class RegSarimaModel implements GeneralLinearModel<SarimaSpec>, GenericEx
     TsResiduals residuals;
     Details details;
 
+    @Override
     public int getAnnualFrequency() {
         return description.getSeries().getAnnualFrequency();
     }

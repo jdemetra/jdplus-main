@@ -44,10 +44,10 @@ public final class JTextComponents {
     public static void enableDecimalMappingOnNumpad(JFormattedTextField component) {
         enableDecimalMappingOnNumpad(component, () -> {
             JFormattedTextField.AbstractFormatter af = component.getFormatter();
-            if (af instanceof NumberFormatter) {
-                Format format = ((NumberFormatter) af).getFormat();
-                if (format instanceof DecimalFormat) {
-                    return ((DecimalFormat) format).getDecimalFormatSymbols().getDecimalSeparator();
+            if (af instanceof NumberFormatter formatter) {
+                Format format = formatter.getFormat();
+                if (format instanceof DecimalFormat decimalFormat) {
+                    return decimalFormat.getDecimalFormatSymbols().getDecimalSeparator();
                 }
             }
             return '.';

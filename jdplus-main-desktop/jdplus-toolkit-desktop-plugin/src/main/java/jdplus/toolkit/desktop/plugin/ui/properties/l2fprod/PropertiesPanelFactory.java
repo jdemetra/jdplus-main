@@ -94,12 +94,12 @@ public enum PropertiesPanelFactory {
         List<Property> result = new ArrayList<>();
 
         // try first propertyDescriptors
-        if (o instanceof IPropertyDescriptors) {
-            createRoots((IPropertyDescriptors) o, result);
+        if (o instanceof IPropertyDescriptors descriptors) {
+            createRoots(descriptors, result);
 
             //BAYENSK: Added because one-level IPropertyDescriptors were never taken into account.
             if (result.isEmpty()) {
-                createRootProperties((IPropertyDescriptors) o, result, ((IPropertyDescriptors) o).getDisplayName());
+                createRootProperties(descriptors, result, descriptors.getDisplayName());
             }
         } else {
             try {
@@ -120,8 +120,8 @@ public enum PropertiesPanelFactory {
         for (EnhancedPropertyDescriptor epd : eprops) {
             try {
                 Object inner = epd.getDescriptor().getReadMethod().invoke(iprops);
-                if (inner instanceof IPropertyDescriptors) {
-                    createRootProperties((IPropertyDescriptors) inner, props, epd.getDescriptor().getDisplayName());
+                if (inner instanceof IPropertyDescriptors descriptors) {
+                    createRootProperties(descriptors, props, epd.getDescriptor().getDisplayName());
                 }
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 log.log(Level.SEVERE, "", ex);
@@ -135,8 +135,8 @@ public enum PropertiesPanelFactory {
             try {
                 Object inner = epd.getDescriptor().getReadMethod().invoke(iprops);
                 DefaultProperty root = createProperty(iprops, inner, epd);
-                if (inner instanceof IPropertyDescriptors) {
-                    createProperties((IPropertyDescriptors) inner, root);
+                if (inner instanceof IPropertyDescriptors descriptors) {
+                    createProperties(descriptors, root);
                 }
                 root.setCategory(category);//epd.getCategory());
                 props.add(root);
@@ -154,8 +154,8 @@ public enum PropertiesPanelFactory {
                 Object inner = epd.getDescriptor().getReadMethod().invoke(desc);
                 DefaultProperty subProp = createProperty(desc, inner, epd);
                 parent.addSubProperty(subProp);
-                if (inner instanceof IPropertyDescriptors) {
-                    createProperties((IPropertyDescriptors) inner, subProp);
+                if (inner instanceof IPropertyDescriptors descriptors) {
+                    createProperties(descriptors, subProp);
                 }
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 log.log(Level.SEVERE, "", ex);
@@ -251,8 +251,8 @@ public enum PropertiesPanelFactory {
             try {
                 Object inner = pd.getReadMethod().invoke(o);
                 DefaultProperty root = createProperty(o, inner, new EnhancedPropertyDescriptor(pd, 0));
-                if (inner instanceof IPropertyDescriptors) {
-                    createProperties((IPropertyDescriptors) inner, root);
+                if (inner instanceof IPropertyDescriptors descriptors) {
+                    createProperties(descriptors, root);
                 }
                 props.add(root);
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {

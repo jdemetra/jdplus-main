@@ -16,6 +16,7 @@
 */
 package jdplus.toolkit.base.core.arima;
 
+import jdplus.toolkit.base.api.information.GenericExplorable;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
 import jdplus.toolkit.base.core.math.linearfilters.RationalBackFilter;
@@ -31,7 +32,7 @@ import jdplus.toolkit.base.core.math.linearfilters.RationalBackFilter;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Alpha)
-public interface IArimaModel extends ILinearProcess
+public interface IArimaModel extends ILinearProcess, GenericExplorable
 {
 
     /**

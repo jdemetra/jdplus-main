@@ -104,7 +104,7 @@ public class SpreadSheetProviderTest {
             assertThat(p.getDisplayName(dataSource)).isEqualTo(bean.getFile().getPath());
             assertThat(p.children(dataSource)).hasSize(3);
 
-            DataSet node = p.children(dataSource).get(0);
+            DataSet node = p.children(dataSource).getFirst();
             assertThat(p.getDisplayName(node)).isEqualTo("Monthly");
             assertThat(p.getDisplayNodeName(node)).isEqualTo("Monthly");
             assertThat(p.children(node)).hasSize(6);

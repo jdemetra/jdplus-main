@@ -18,28 +18,31 @@ package internal.toolkit.base.api.timeseries.util;
 
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.util.TsDataBuilder;
+import lombok.NonNull;
 
 /**
  *
  * @author Philippe Charles
  */
 @lombok.AllArgsConstructor
-final class NoOpDataBuilder<T> implements TsDataBuilder<T> {
+public final class NoOpDataBuilder<T> implements TsDataBuilder<T> {
+
+    public static final TsData INVALID_AGGREGATION = TsData.empty("Invalid aggregation mode");
 
     private final TsData data;
 
     @Override
-    public TsDataBuilder<T> clear() {
+    public @NonNull TsDataBuilder<T> clear() {
         return this;
     }
 
     @Override
-    public TsDataBuilder<T> add(T date, Number value) {
+    public @NonNull TsDataBuilder<T> add(T date, Number value) {
         return this;
     }
 
     @Override
-    public TsData build() {
+    public @NonNull TsData build() {
         return data;
     }
 }

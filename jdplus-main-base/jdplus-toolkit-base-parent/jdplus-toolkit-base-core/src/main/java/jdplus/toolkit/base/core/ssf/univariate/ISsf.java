@@ -16,6 +16,7 @@
  */
 package jdplus.toolkit.base.core.ssf.univariate;
 
+import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
@@ -36,16 +37,14 @@ public interface ISsf extends ISsfState {
     default boolean isTimeInvariant() {
         return dynamics().isTimeInvariant() && measurement().isTimeInvariant();
     }
-    
-    default ISsfLoading loading(){
+
+    default ISsfLoading loading() {
         return measurement().loading();
     }
-    
-    default ISsfError measurementError(){
+
+    default ISsfError measurementError() {
         return measurement().error();
     }
-    
-    
 
 //<editor-fold defaultstate="collapsed" desc="auxiliary operations">
     /**
@@ -57,40 +56,37 @@ public interface ISsf extends ISsfState {
      * @param f The divisor of m (usually ZPZ'+ H)
      */
     default void xL(int pos, DataBlock x, DataBlock m, double f) {
-        // XT - [(XT)*m]/f * z 
+        // xT - (xT)*m /f * z 
         dynamics().XT(pos, x);
         loading().XpZd(pos, x, -x.dot(m) / f);
     }
 
-    default void XL(int pos, FastMatrix X, DataBlock m, double f) {
+    default void XL(int pos, DataBlockIterator X, DataBlock m, double f) {
         // XT - [(XT)*m]/f * z
         ISsfDynamics dynamics = dynamics();
         ISsfLoading loading = loading();
         // Apply XL on each row of X
-        DataBlockIterator rows = X.rowsIterator();
-        while (rows.hasNext()){
-            DataBlock row=rows.next();
-            dynamics.XT(pos, row);
-            loading.XpZd(pos, row, -row.dot(m) / f);
+        while (X.hasNext()) {
+            DataBlock x = X.next();
+            dynamics.XT(pos, x);
+            loading.XpZd(pos, x, -x.dot(m) / f);
         }
-       
     }
 
+    default void XL(int pos, FastMatrix X, DataBlock m, double f) {
+        XL(pos, X.rowsIterator(), m, f);
+     }
+
     default void XtL(int pos, FastMatrix X, DataBlock m, double f) {
-        // XT - [(XT)*m]/f * z
-        ISsfDynamics dynamics = dynamics();
-        ISsfLoading loading = loading();
-        // Apply XL on each column of M
-        DataBlockIterator cols = X.columnsIterator();
-        while (cols.hasNext()){
-            DataBlock col=cols.next();
-            dynamics.XT(pos, col);
-            loading.XpZd(pos, col, -col.dot(m) / f);
-        }
-       
+        XL(pos, X.columnsIterator(), m, f);
+    }
+
+    default void LtX(int pos, FastMatrix X, DataBlock m, double f) {
+        XL(pos, X.columnsIterator(), m, f);
     }
     /**
      * L is defined by T-KZ = T - Tm/f Z
+     *
      * @param pos
      * @param x The column array being modified
      * @param m A Colunm array (usually P*Z')
@@ -115,6 +111,30 @@ public interface ISsf extends ISsfState {
             col.addAY(-loading.ZX(pos, col) / f, m);
             dynamics.TX(pos, col);
         });
+    }
+
+    default boolean initialEffect(DataBlock effect) {
+        ISsfDynamics dynamics = dynamics();
+        ISsfLoading loading = loading();
+        ISsfInitialization initializer = initialization();
+        int n = initializer.getStateDim();
+        // initialization
+        DataBlock E = DataBlock.make(n);
+        initializer.a0(E);
+        int m=effect.length();
+        if (m == 0 || E.isZero(0)) {
+            return false;
+        }
+
+        int pos = 0;
+        DoubleSeqCursor.OnMutable cursor = effect.cursor();
+        cursor.setAndNext(loading.ZX(pos, E));
+        while (pos < effect.length()) {
+            // Apply T on array
+            dynamics.TX(pos++, E);
+            cursor.setAndNext(loading.ZX(pos, E));
+        }
+        return true;
     }
 
     default boolean diffuseEffects(FastMatrix effects) {

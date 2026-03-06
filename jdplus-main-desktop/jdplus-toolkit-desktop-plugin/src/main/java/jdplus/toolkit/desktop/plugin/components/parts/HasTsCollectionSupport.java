@@ -29,7 +29,7 @@ import jdplus.toolkit.desktop.plugin.actions.Actions;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
 import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
-import jdplus.toolkit.desktop.plugin.core.tools.JTsChartTopComponent;
+import internal.toolkit.desktop.plugin.tools.JTsChartTopComponent;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
 import jdplus.toolkit.desktop.plugin.datatransfer.LocalObjectDataTransfer;
@@ -154,7 +154,7 @@ public class HasTsCollectionSupport {
         result.setText("Open");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_FOLDER_OPEN_O));
         Actions.hideWhenDisabled(result);
-        result.setAccelerator(KeyStrokes.OPEN.get(0));
+        result.setAccelerator(KeyStrokes.OPEN.getFirst());
         result.setFont(result.getFont().deriveFont(Font.BOLD));
         return result;
     }
@@ -206,7 +206,7 @@ public class HasTsCollectionSupport {
         JMenuItem result = new JMenuItem(component.getActionMap().get(COPY_ACTION));
         result.setText("Copy");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_FILES_O));
-        result.setAccelerator(KeyStrokes.COPY.get(0));
+        result.setAccelerator(KeyStrokes.COPY.getFirst());
         Actions.hideWhenDisabled(result);
         return result;
     }
@@ -215,7 +215,7 @@ public class HasTsCollectionSupport {
         JMenuItem result = new JMenuItem(component.getActionMap().get(PASTE_ACTION));
         result.setText("Paste");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_CLIPBOARD));
-        result.setAccelerator(KeyStrokes.PASTE.get(0));
+        result.setAccelerator(KeyStrokes.PASTE.getFirst());
 //        ExtAction.hideWhenDisabled(item);
         return result;
     }
@@ -224,7 +224,7 @@ public class HasTsCollectionSupport {
         JMenuItem result = new JMenuItem(component.getActionMap().get(DELETE_ACTION));
         result.setText("Remove");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_TRASH_O));
-        result.setAccelerator(KeyStrokes.DELETE.get(0));
+        result.setAccelerator(KeyStrokes.DELETE.getFirst());
         Actions.hideWhenDisabled(result);
         return result;
     }
@@ -233,7 +233,7 @@ public class HasTsCollectionSupport {
         JMenuItem result = new JMenuItem(component.getActionMap().get(CLEAR_ACTION));
         result.setText("Clear");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_ERASER));
-        result.setAccelerator(KeyStrokes.CLEAR.get(0));
+        result.setAccelerator(KeyStrokes.CLEAR.getFirst());
         return result;
     }
 
@@ -241,7 +241,7 @@ public class HasTsCollectionSupport {
         JMenuItem result = new JMenuItem(component.getActionMap().get(SELECT_ALL_ACTION));
         result.setText("Select all");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_ASTERISK));
-        result.setAccelerator(KeyStrokes.SELECT_ALL.get(0));
+        result.setAccelerator(KeyStrokes.SELECT_ALL.getFirst());
         return result;
     }
 
@@ -370,8 +370,8 @@ public class HasTsCollectionSupport {
 
         @Override
         public void execute(@NonNull HasTsCollection c) {
-            if (c instanceof HasTsAction) {
-                String actionName = ((HasTsAction) c).getTsAction();
+            if (c instanceof HasTsAction action) {
+                String actionName = action.getTsAction();
                 TsActionManager.get().openWith(getSingle(c), actionName != null ? actionName : DemetraBehaviour.get().getTsActionName());
             }
         }
@@ -448,8 +448,8 @@ public class HasTsCollectionSupport {
         public @NonNull
         ActionAdapter toAction(@NonNull HasTsCollection c) {
             final ActionAdapter result = super.toAction(c);
-            if (c instanceof Component) {
-                result.withWeakPropertyChangeListener((Component) c, HasTsCollection.TS_UPDATE_MODE_PROPERTY);
+            if (c instanceof Component component) {
+                result.withWeakPropertyChangeListener(component, HasTsCollection.TS_UPDATE_MODE_PROPERTY);
             }
             PropertyChangeListener realListener = evt -> result.refreshActionState();
             DataTransferManager.get().addWeakPropertyChangeListener(DataTransferManager.VALID_CLIPBOARD_PROPERTY, realListener);
@@ -561,7 +561,9 @@ public class HasTsCollectionSupport {
         }
 
         private static boolean isValid(TsData data) {
-            return !data.isEmpty() && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365;
+            return !data.isEmpty()
+                    && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365
+                    && data.getTsUnit().ratioOf(TsUnit.P1Y) >= 1;
         }
 
         @Override
@@ -662,7 +664,7 @@ public class HasTsCollectionSupport {
                     case 0:
                         return false;
                     case 1:
-                        importData(view, all.get(0));
+                        importData(view, all.getFirst());
                         return true;
                     default:
                         TsCollection.Builder builder = TsCollection.builder();

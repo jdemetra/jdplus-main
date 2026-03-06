@@ -72,8 +72,7 @@ public abstract class AChartView extends JComponent implements HasColorScheme {
             @Override
             public void chartMouseClicked(ChartMouseEvent cme) {
                 ChartEntity entity = cme.getEntity();
-                if (entity != null && entity instanceof LegendItemEntity) {
-                    LegendItemEntity ent = (LegendItemEntity) entity;
+                if (entity != null && entity instanceof LegendItemEntity ent) {
                     setFocus(ent.getSeriesKey());
                 }
             }

@@ -97,7 +97,7 @@ public final class DbExplorerUtil {
 
     public static void importConnection(@NonNull DriverBasedConfig config) {
         Optional<JDBCDriver> driver = getDriverByClass(config.getDriverClass());
-        if (!driver.isPresent()) {
+        if (driver.isEmpty()) {
             String msg = "Cannot find driver '" + config.getDriverClass() + "'";
             DialogDisplayer.getDefault().notify(new DialogDescriptor.Message(msg, DialogDescriptor.ERROR_MESSAGE));
             return;

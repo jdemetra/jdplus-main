@@ -31,8 +31,8 @@ import java.util.Objects;
 public class FromTsProvider extends ec.tss.tsproviders.utils.AbstractTsProvider implements ec.tss.ITsProvider {
 
     public static ec.tss.@NonNull ITsProvider fromTsProvider(@NonNull TsProvider delegate) {
-        return delegate instanceof ToTsProvider
-                ? ((ToTsProvider) delegate).getDelegate()
+        return delegate instanceof ToTsProvider ttp
+                ? ttp.getDelegate()
                 : new FromTsProvider(delegate);
     }
 

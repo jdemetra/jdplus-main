@@ -184,8 +184,8 @@ private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         factories.clear();
         Node rootContext = em.getRootContext();
         for (Node child : rootContext.getChildren().getNodes()) {
-            if (child instanceof AbstractOutputNode) {
-                factories.add(((AbstractOutputNode) child).getFactory());
+            if (child instanceof AbstractOutputNode node) {
+                factories.add(node.getFactory());
             }
         }
     }

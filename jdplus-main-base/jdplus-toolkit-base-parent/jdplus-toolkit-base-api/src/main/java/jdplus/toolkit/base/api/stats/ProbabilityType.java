@@ -29,5 +29,5 @@ public enum ProbabilityType {
     /** prob_Lower : the probability of x .LE. value */
     Lower,
     /** prob_Upper : the probability of x .GE. value */
-    Upper;
+    Upper
 }

@@ -45,7 +45,7 @@ public class HasCrosshairSupport {
         @Override
         public JCommand.ActionAdapter toAction(HasCrosshair c) {
             JCommand.ActionAdapter result = super.toAction(c);
-            return c instanceof Component ? result.withWeakPropertyChangeListener((Component) c, HasCrosshair.CROSSHAIR_VISIBLE_PROPERTY) : result;
+            return c instanceof Component c1 ? result.withWeakPropertyChangeListener(c1, HasCrosshair.CROSSHAIR_VISIBLE_PROPERTY) : result;
         }
     }
 

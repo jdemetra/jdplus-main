@@ -76,23 +76,17 @@ public class DickeyFullerTable {
 
     private double[][] adfTable(DickeyFuller.DickeyFullerType type, boolean z) {
         if (z) {
-            switch (type) {
-                case NC:
-                    return Z_NC;
-                case C:
-                    return Z_C;
-                default:
-                    return Z_CT;
-            }
+            return switch (type) {
+                case NC -> Z_NC;
+                case C -> Z_C;
+                default -> Z_CT;
+            };
         } else {
-            switch (type) {
-                case NC:
-                    return T_NC;
-                case C:
-                    return T_C;
-                default:
-                    return T_CT;
-            }
+            return switch (type) {
+                case NC -> T_NC;
+                case C -> T_C;
+                default -> T_CT;
+            };
         }
     }
 

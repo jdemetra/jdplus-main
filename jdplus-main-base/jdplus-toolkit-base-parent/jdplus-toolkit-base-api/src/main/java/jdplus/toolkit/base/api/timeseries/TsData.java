@@ -42,7 +42,7 @@ import java.util.function.DoubleUnaryOperator;
 @Development(status = Development.Status.Alpha)
 @lombok.Value
 @lombok.AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCause {
+public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCause, HasAnnualFrequency {
 
     /**
      * Creates a random time series
@@ -147,6 +147,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
      * @return The number of periods in 1 year or -1 if the unit is not
      * compatible with years
      */
+    @Override
     public int getAnnualFrequency() {
         return domain.getTsUnit().getAnnualFrequency();
     }
@@ -629,7 +630,7 @@ public final class TsData implements TimeSeriesData<TsPeriod, TsObs>, HasEmptyCa
 
     @Override
     public boolean equals(Object that) {
-        return this == that || (that instanceof TsData && equals((TsData) that));
+        return this == that || (that instanceof TsData td && equals(td));
     }
 
     private boolean equals(TsData that) {

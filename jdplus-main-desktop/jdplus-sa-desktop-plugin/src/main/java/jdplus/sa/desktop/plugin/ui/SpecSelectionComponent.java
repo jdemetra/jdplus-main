@@ -94,7 +94,7 @@ public class SpecSelectionComponent extends JComponent implements IPropertyChang
     }
 
     boolean isCurrentSpecificationNode(Node o) {
-        return o instanceof ItemWsNode && ((ItemWsNode) o).getItem().getElement().equals(specification);
+        return o instanceof ItemWsNode iwn && iwn.getItem().getElement().equals(specification);
     }
 
     class SelectionListener implements VetoableChangeListener {

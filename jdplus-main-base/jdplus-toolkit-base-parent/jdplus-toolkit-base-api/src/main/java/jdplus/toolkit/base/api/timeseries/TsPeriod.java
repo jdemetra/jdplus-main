@@ -77,7 +77,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * Year of the start of this period
      *
-     * @return
+     * @return the year
      */
     public int year() {
         return start().getYear();
@@ -86,7 +86,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     /**
      * 0-based position of this period in the year
      *
-     * @return
+     * @return the position
      */
     public int annualPosition() {
         TsPeriod p = withUnit(TsUnit.P1Y);
@@ -244,7 +244,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      *
      * @param year    Year of the period
      * @param quarter Quarter of the period (in 1-4)
-     * @return
+     * @return a new quarterly instance
      */
     @StaticFactoryMethod
     public static @NonNull TsPeriod quarterly(int year, int quarter) {
@@ -256,7 +256,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      *
      * @param year  Year of the period
      * @param month Month of the period (in 1-12)
-     * @return
+     * @return a new monthly instance
      */
     @StaticFactoryMethod
     public static @NonNull TsPeriod monthly(int year, int month) {
@@ -269,7 +269,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @param year       Year of the day
      * @param month      Month of the day (in 1-12)
      * @param dayOfMonth Day of month of the day (1-31)
-     * @return
+     * @return a new daily instance
      */
     @StaticFactoryMethod
     public static @NonNull TsPeriod daily(int year, int month, int dayOfMonth) {
@@ -282,7 +282,7 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
      * @param year       Year of the first day
      * @param month      Month of the first day (in 1-12)
      * @param dayOfMonth Day of month of the first day (1-31)
-     * @return
+     * @return a new weekly instance
      */
     @StaticFactoryMethod
     public static @NonNull TsPeriod weekly(int year, int month, int dayOfMonth) {
@@ -328,12 +328,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
     }
 
     public static long idAt(LocalDateTime epoch, TsUnit unit, LocalDateTime date) {
-        if (date.compareTo(epoch) >= 0) {
-            return (unit.getChronoUnit().between(epoch, date)) / unit.getAmount();
-        } else {
-            long result = (unit.getChronoUnit().between(epoch, date)) / unit.getAmount();
-            return dateAt(epoch, unit, result).compareTo(date) <= 0 ? result : result - 1;
-        }
+        long periodCount = (unit.getChronoUnit().between(epoch, date)) / unit.getAmount();
+        return !date.isBefore(epoch) || !dateAt(epoch, unit, periodCount).isAfter(date) ? periodCount : periodCount - 1;
     }
 
     public static LocalDateTime dateAt(LocalDateTime epoch, TsUnit unit, long id) {
@@ -381,8 +377,8 @@ public class TsPeriod implements TimeSeriesInterval<TsUnit>, Comparable<TsPeriod
         private TsUnit unit = TsUnit.P1M;
         private long id;
 
-        private void refreshId(LocalDateTime oldref, TsUnit oldUnit, LocalDateTime newref, TsUnit newUnit) {
-            this.id = TsPeriod.idAt(newref, newUnit, dateAt(oldref, oldUnit, id));
+        private void refreshId(LocalDateTime oldRef, TsUnit oldUnit, LocalDateTime newRef, TsUnit newUnit) {
+            this.id = TsPeriod.idAt(newRef, newUnit, dateAt(oldRef, oldUnit, id));
         }
 
         public Builder epoch(LocalDateTime epoch) {

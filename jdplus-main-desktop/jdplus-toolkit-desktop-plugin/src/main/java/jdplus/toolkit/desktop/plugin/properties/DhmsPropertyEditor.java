@@ -41,7 +41,7 @@ public final class DhmsPropertyEditor extends PropertyEditorSupport {
     @Override
     public String getAsText() {
         Object value = getValue();
-        return value instanceof Long ? millisToShortDhms((Long) value) : super.getAsText();
+        return value instanceof Long l ? millisToShortDhms(l) : super.getAsText();
     }
 
     @Override

@@ -79,13 +79,13 @@ public enum CalendarSigma
    * @return The enum associated with the given numeric wire value.
    */
   public static CalendarSigma forNumber(int value) {
-    switch (value) {
-      case 0: return SIGMA_NONE;
-      case 1: return SIGMA_SIGNIF;
-      case 2: return SIGMA_ALL;
-      case 3: return SIGMA_SELECT;
-      default: return null;
-    }
+    return switch (value) {
+      case 0 -> SIGMA_NONE;
+      case 1 -> SIGMA_SIGNIF;
+      case 2 -> SIGMA_ALL;
+      case 3 -> SIGMA_SELECT;
+      default -> null;
+    };
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<CalendarSigma>

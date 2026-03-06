@@ -18,6 +18,8 @@ package jdplus.toolkit.base.api.timeseries;
 
 import nbbrd.design.Development;
 
+import java.io.Serial;
+
 /**
  *
  * @author Jean Palate
@@ -28,6 +30,7 @@ public class TsException extends RuntimeException {
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = -1747718409573441163L;
 
     /**

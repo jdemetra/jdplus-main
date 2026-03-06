@@ -56,7 +56,7 @@ public final class XmlProviderBuddy implements DataSourceProviderBuddy {
 
     @Override
     public List<Sheet.Set> getSheetOfBeanOrNull(@NonNull Object bean) throws IntrospectionException {
-        return bean instanceof XmlBean ? createSheetSets((XmlBean) bean) : null;
+        return bean instanceof XmlBean xb ? createSheetSets(xb) : null;
     }
 
     private List<Sheet.Set> createSheetSets(XmlBean bean) {

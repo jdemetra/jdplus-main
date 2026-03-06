@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main-desktop</artifactId>
-        <version>3.6.0</version>
+        <version>3.7.0</version>
     </parent>
 
     <artifactId>jdplus-toolkit-desktop-plugin</artifactId>
@@ -17,7 +17,7 @@
     <url>${project.parent.url}</url>
 
     <properties>
-        <java-desktop-util.version>2.5.0</java-desktop-util.version>
+        <java-desktop-util.version>2.6.1</java-desktop-util.version>
     </properties>
 
     <dependencies>
@@ -112,6 +112,11 @@
             <artifactId>org-netbeans-core-multiview</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-sendopts</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
 
         <!-- 2. JD3 Desktop -->
         <dependency>
@@ -183,7 +188,7 @@
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
-            <version>11.4.2</version>
+            <version>11.4.3</version>
         </dependency>
         <dependency>
             <groupId>org.tros</groupId>
@@ -248,9 +253,6 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>jdplus.toolkit.*</publicPackage>
-                        <!-- tmp -->
-                        <publicPackage>internal.ui</publicPackage>
-                        <publicPackage>internal.ui.*</publicPackage>
                         <!-- desktop libs -->
                         <publicPackage>ec.util.chart.*</publicPackage>
                         <publicPackage>ec.util.completion.*</publicPackage>
@@ -267,15 +269,6 @@
                         <publicPackage>org.jdesktop.layout.*</publicPackage>
                         <publicPackage>nbbrd.*</publicPackage>
                         <publicPackage>javax.*</publicPackage>
-                        <!-- TO FIX -->
-                        <publicPackage>internal.*</publicPackage>
-                        <!-- FIXME: demetra-desktop-util -->
-                        <publicPackage>org.apache.commons.*</publicPackage>
-                        <publicPackage>nbbrd.io.*</publicPackage>
-                        <publicPackage>internal.io.*</publicPackage>
-                        <publicPackage>javax.*</publicPackage>
-                        <publicPackage>com.sun.xml.bind.*</publicPackage>
-                        <publicPackage>demetra.desktop.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

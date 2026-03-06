@@ -52,7 +52,8 @@ public class RegArimaKernel implements RegSarimaProcessor {
     private static final String LAST_CHANCE = "last chance model",
             OUTLIERS_VA_REDUCED = "reduction of the critical value for outliers detection",
             AMI = "automatic model identification", ROUND = "round ",
-            LOGNEG = "can't apply log transformation 'some obs. are <= 0";
+            LOGNEG = "can't apply log transformation 'some obs. are <= 0",
+            FULLSPEC = "fully specified model";    
 
     @lombok.Value
     @lombok.Builder(builderClassName = "AmiBuilder")
@@ -269,6 +270,7 @@ public class RegArimaKernel implements RegSarimaProcessor {
         }
         try {
             if (isFullySpecified()) {
+                context.getLog().info(FULLSPEC);
                 finalEstimator.estimate(context);
                 return context.build();
             }

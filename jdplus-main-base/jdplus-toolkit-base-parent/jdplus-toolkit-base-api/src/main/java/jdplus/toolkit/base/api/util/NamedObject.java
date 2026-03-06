@@ -17,8 +17,8 @@ public class NamedObject<T> implements Comparable<NamedObject<T>> {
         if (result != 0) {
             return result;
         }
-        if (object instanceof Comparable) {
-            return ((Comparable) object).compareTo(o.object);
+        if (object instanceof Comparable comparable) {
+            return comparable.compareTo(o.object);
         }
         return Objects.equals(object, o.object) ? 0 : 1;
     }

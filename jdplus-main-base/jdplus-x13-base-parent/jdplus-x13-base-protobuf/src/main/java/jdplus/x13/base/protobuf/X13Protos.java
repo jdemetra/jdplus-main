@@ -306,7 +306,7 @@ public final class X13Protos {
           jdplus.sa.base.protobuf.SaProtos.getDescriptor(),
         });
     internal_static_x13_X11Spec_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+      getDescriptor().getMessageTypes().getFirst();
     internal_static_x13_X11Spec_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_x13_X11Spec_descriptor,
@@ -318,7 +318,7 @@ public final class X13Protos {
         internal_static_x13_RegArimaSpec_descriptor,
         new java.lang.String[] { "Basic", "Transform", "Outlier", "Arima", "Automodel", "Regression", "Estimate", });
     internal_static_x13_RegArimaSpec_BasicSpec_descriptor =
-      internal_static_x13_RegArimaSpec_descriptor.getNestedTypes().get(0);
+      internal_static_x13_RegArimaSpec_descriptor.getNestedTypes().getFirst();
     internal_static_x13_RegArimaSpec_BasicSpec_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_x13_RegArimaSpec_BasicSpec_descriptor,
@@ -336,7 +336,7 @@ public final class X13Protos {
         internal_static_x13_RegArimaSpec_OutlierSpec_descriptor,
         new java.lang.String[] { "Outliers", "Span", "Defva", "Method", "MonthlyTcRate", "Maxiter", "Lsrun", });
     internal_static_x13_RegArimaSpec_OutlierSpec_Type_descriptor =
-      internal_static_x13_RegArimaSpec_OutlierSpec_descriptor.getNestedTypes().get(0);
+      internal_static_x13_RegArimaSpec_OutlierSpec_descriptor.getNestedTypes().getFirst();
     internal_static_x13_RegArimaSpec_OutlierSpec_Type_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_x13_RegArimaSpec_OutlierSpec_Type_descriptor,
@@ -420,7 +420,7 @@ public final class X13Protos {
         internal_static_x13_RegArimaOutput_descriptor,
         new java.lang.String[] { "Result", "EstimationSpec", "ResultSpec", "Log", "Details", });
     internal_static_x13_RegArimaOutput_DetailsEntry_descriptor =
-      internal_static_x13_RegArimaOutput_descriptor.getNestedTypes().get(0);
+      internal_static_x13_RegArimaOutput_descriptor.getNestedTypes().getFirst();
     internal_static_x13_RegArimaOutput_DetailsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_x13_RegArimaOutput_DetailsEntry_descriptor,
@@ -432,7 +432,7 @@ public final class X13Protos {
         internal_static_x13_X13Output_descriptor,
         new java.lang.String[] { "Result", "EstimationSpec", "ResultSpec", "Log", "Details", });
     internal_static_x13_X13Output_DetailsEntry_descriptor =
-      internal_static_x13_X13Output_descriptor.getNestedTypes().get(0);
+      internal_static_x13_X13Output_descriptor.getNestedTypes().getFirst();
     internal_static_x13_X13Output_DetailsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_x13_X13Output_DetailsEntry_descriptor,

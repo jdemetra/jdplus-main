@@ -35,7 +35,7 @@ public class QRSmoother {
 
     public SmoothingOutput process(final ISsf ssf, final ISsfData data, boolean var, boolean rescale) {
 
-        DefaultAugmentedFilteringResults fr = new DefaultAugmentedFilteringResults(true);
+        DefaultAugmentedFilteringResults fr = DefaultAugmentedFilteringResults.full(null);
         fr.prepare(ssf, 0, data.length());
         AugmentedFilter filter = new AugmentedFilter();
         if (!filter.process(ssf, data, fr)) {
@@ -67,10 +67,10 @@ public class QRSmoother {
         smoother.setCalcVariances(var);
         DefaultSmoothingResults rslts = var ? DefaultSmoothingResults.full() : DefaultSmoothingResults.light();
         rslts.prepare(ssf.getStateDim(), 0, len);
-        smoother.process(ssf, len, fr, psi, delta, rslts);
-        if (rescale) {
-            rslts.rescaleVariances(sig2);
-        }
+//        smoother.process(ssf, len, fr, psi, delta, rslts);
+//        if (rescale) {
+//            rslts.rescaleVariances(sig2);
+//        }
         return new SmoothingOutput(fr, sig2, rslts);
     }
 }

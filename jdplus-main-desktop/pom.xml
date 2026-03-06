@@ -6,7 +6,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.6.0</version>
+        <version>3.7.0</version>
     </parent>
 
     <artifactId>jdplus-main-desktop</artifactId>
@@ -19,9 +19,6 @@
     <properties>
         <!-- NetBeans config -->
         <brandingToken>nbdemetra</brandingToken>
-
-        <!-- dependencies -->
-        <netbeans.version>RELEASE280</netbeans.version>
     </properties>
 
     <modules>
@@ -42,7 +39,7 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>3.6.2</version>
+            <version>3.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -54,7 +51,7 @@
                 <plugin>
                     <groupId>org.apache.netbeans.utilities</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
-                    <version>14.4</version>
+                    <version>${nbm-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

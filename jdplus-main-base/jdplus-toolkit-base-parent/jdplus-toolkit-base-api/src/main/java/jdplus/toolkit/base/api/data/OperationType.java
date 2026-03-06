@@ -48,33 +48,23 @@ public enum OperationType {
     Product;
 
     public OperationType reverse() {
-        switch (this) {
-            case Diff:
-                return Sum;
-            case Sum:
-                return Diff;
-            case Ratio:
-                return Product;
-            case Product:
-                return Ratio;
-            default:
-                return None;
-        }
+        return switch (this) {
+            case Diff -> Sum;
+            case Sum -> Diff;
+            case Ratio -> Product;
+            case Product -> Ratio;
+            default -> None;
+        };
     }
     
     public DoubleUnaryOperator asOperator(final double c){
-       switch (this) {
-            case Diff:
-                return x->x-c;
-            case Sum:
-                return x->x+c;
-            case Ratio:
-                return x->x*c;
-            case Product:
-                return x->x/c;
-            default:
-                return x->x;
-        }
+       return switch (this) {
+            case Diff -> x->x-c;
+            case Sum -> x->x+c;
+            case Ratio -> x->x*c;
+            case Product -> x->x/c;
+            default -> x->x;
+        };
         
     }
 }

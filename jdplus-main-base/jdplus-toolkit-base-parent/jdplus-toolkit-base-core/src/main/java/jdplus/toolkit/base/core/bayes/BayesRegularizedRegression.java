@@ -343,16 +343,12 @@ public class BayesRegularizedRegression {
 
     private double nllLinearRegression() {
         errLinearRegression();
-        switch (model) {
-            case GAUSSIAN:
-                return glr();
-            case LAPLACE:
-                return llr();
-            case T:
-                return tlr();
-            default:
-                return Double.NaN;
-        }
+        return switch (model) {
+            case GAUSSIAN -> glr();
+            case LAPLACE -> llr();
+            case T -> tlr();
+            default -> Double.NaN;
+        };
     }
 
     /**

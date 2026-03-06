@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.DemetraVersion;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.information.formatters.BasicConfiguration;
 import jdplus.sa.base.api.EstimationPolicy;
-import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaDiagnosticsFactory;
 import jdplus.sa.base.api.SaItem;
 import jdplus.sa.base.api.SaItems;
@@ -52,6 +51,8 @@ import java.util.stream.Stream;
 import jdplus.cruncher.batch.SaBatchInformation;
 import jdplus.cruncher.batch.SaBatchProcessor;
 import jdplus.cruncher.core.FileRepository;
+import jdplus.sa.base.csv.CsvArrayOutputConfiguration;
+import jdplus.sa.base.csv.CsvArrayOutputFactory;
 import lombok.NonNull;
 import picocli.CommandLine;
 
@@ -99,12 +100,13 @@ public final class App {
         List<SaOutputFactory> output = new ArrayList<>();
         output.add(new CsvMatrixOutputFactory(getCsvMatrixOutputConfiguration(config)));
         output.add(new CsvOutputFactory(getCsvOutputConfiguration(config)));
+        output.add(new CsvArrayOutputFactory(getCsvArrayOutputConfiguration(config)));
         return output;
     }
 
     static void process(@NonNull File workspace, @NonNull WsaConfig config) throws IllegalArgumentException, IOException {
 
-        try ( FileWorkspace ws = FileWorkspace.open(workspace.toPath(),
+        try (FileWorkspace ws = FileWorkspace.open(workspace.toPath(),
                 config.format.equalsIgnoreCase("JD2") ? DemetraVersion.JD2 : DemetraVersion.JD3)) {
             ModellingContext cxt = WorkspaceUtility.context(ws, config.refresh);
             loadResources();
@@ -137,7 +139,7 @@ public final class App {
     }
 
     private static void process(FileWorkspace ws, WorkspaceItemDescriptor item, SaItems processing, ModellingContext context,
-                                List<SaOutputFactory> output, int bundleSize, EstimationPolicy policy, TsInformationType type) throws IOException {
+            List<SaOutputFactory> output, int bundleSize, EstimationPolicy policy, TsInformationType type) throws IOException {
 
         if (type != TsInformationType.None) {
             System.out.println("Refreshing data");
@@ -148,7 +150,7 @@ public final class App {
         info.setItems(all);
         SaBatchProcessor processor = new SaBatchProcessor(info, context, output, new ConsoleFeedback());
         processor.process();
-        
+
         SaItems nprocessing = processing.toBuilder()
                 .clearItems()
                 .items(all)
@@ -170,7 +172,7 @@ public final class App {
         String basedir = System.getProperty("basedir");
         if (basedir != null) {
             Path file = java.nio.file.Path.of(basedir, "etc", "system.properties");
-            try ( InputStream stream = Files.newInputStream(file)) {
+            try (InputStream stream = Files.newInputStream(file)) {
                 Properties properties = new Properties();
                 properties.load(stream);
                 System.getProperties().putAll(properties);
@@ -212,7 +214,9 @@ public final class App {
         CsvOutputConfiguration result = new CsvOutputConfiguration();
         result.setFolder(Path.of(config.Output).toFile());
         result.setPresentation(config.getLayout());
-        result.setSeries(Arrays.asList(config.TSMatrix));
+        if (config.TSMatrix != null) {
+            result.setSeries(Arrays.asList(config.TSMatrix));
+        }
         return result;
     }
 
@@ -223,6 +227,16 @@ public final class App {
             result.setItems(Arrays.asList(config.Matrix));
         }
         result.setShortColumnName(config.shortColumnHeaders);
+        return result;
+    }
+
+    private static CsvArrayOutputConfiguration getCsvArrayOutputConfiguration(WsaConfig config) {
+        CsvArrayOutputConfiguration result = new CsvArrayOutputConfiguration();
+        result.setFolder(Path.of(config.Output).toFile());
+        if (config.Arrays != null) {
+            result.setArrays(Arrays.asList(config.Arrays));
+        }
+        result.setPresentation(config.getLayout());
         return result;
     }
 

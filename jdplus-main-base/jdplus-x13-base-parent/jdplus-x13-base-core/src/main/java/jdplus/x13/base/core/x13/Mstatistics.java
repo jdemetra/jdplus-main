@@ -261,7 +261,6 @@ public final class Mstatistics {
         return minNumberOfYears;
     }
 
-    ;
     /**
      * Gets the average duration of run of CI
      *

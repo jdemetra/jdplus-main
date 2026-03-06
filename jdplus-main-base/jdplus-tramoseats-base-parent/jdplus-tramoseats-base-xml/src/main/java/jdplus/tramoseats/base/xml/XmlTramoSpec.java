@@ -284,6 +284,5 @@ public class XmlTramoSpec
         }
         return true;
     }
-;
 
 }

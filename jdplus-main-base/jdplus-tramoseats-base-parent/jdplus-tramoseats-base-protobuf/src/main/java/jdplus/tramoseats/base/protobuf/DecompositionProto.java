@@ -48,42 +48,32 @@ public class DecompositionProto {
     }
 
     SeatsApproximation convert(jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode app) {
-        switch (app) {
-            case Legacy:
-                return SeatsApproximation.SEATS_APP_LEGACY;
-            case Noisy:
-                return SeatsApproximation.SEATS_APP_NOISY;
-            default:
-                return SeatsApproximation.SEATS_APP_NONE;
-        }
+        return switch (app) {
+            case Legacy -> SeatsApproximation.SEATS_APP_LEGACY;
+            case Noisy -> SeatsApproximation.SEATS_APP_NOISY;
+            default -> SeatsApproximation.SEATS_APP_NONE;
+        };
     }
 
     SeatsAlgorithm convert(jdplus.tramoseats.base.api.seats.DecompositionSpec.ComponentsEstimationMethod method) {
-        switch (method) {
-            case KalmanSmoother:
-                return SeatsAlgorithm.SEATS_ALG_KALMANSMOOTHER;
-            default:
-                return SeatsAlgorithm.SEATS_ALG_BURMAN;
-        }
+        return switch (method) {
+            case KalmanSmoother -> SeatsAlgorithm.SEATS_ALG_KALMANSMOOTHER;
+            default -> SeatsAlgorithm.SEATS_ALG_BURMAN;
+        };
     }
 
     jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode convert(SeatsApproximation app) {
-        switch (app) {
-            case SEATS_APP_LEGACY:
-                return jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode.Legacy;
-            case SEATS_APP_NOISY:
-                return jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode.Noisy;
-            default:
-                return jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode.None;
-        }
+        return switch (app) {
+            case SEATS_APP_LEGACY -> jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode.Legacy;
+            case SEATS_APP_NOISY -> jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode.Noisy;
+            default -> jdplus.tramoseats.base.api.seats.DecompositionSpec.ModelApproximationMode.None;
+        };
     }
 
     jdplus.tramoseats.base.api.seats.DecompositionSpec.ComponentsEstimationMethod convert(SeatsAlgorithm method) {
-        switch (method) {
-            case SEATS_ALG_KALMANSMOOTHER:
-                return jdplus.tramoseats.base.api.seats.DecompositionSpec.ComponentsEstimationMethod.KalmanSmoother;
-            default:
-                return jdplus.tramoseats.base.api.seats.DecompositionSpec.ComponentsEstimationMethod.Burman;
-        }
+        return switch (method) {
+            case SEATS_ALG_KALMANSMOOTHER -> jdplus.tramoseats.base.api.seats.DecompositionSpec.ComponentsEstimationMethod.KalmanSmoother;
+            default -> jdplus.tramoseats.base.api.seats.DecompositionSpec.ComponentsEstimationMethod.Burman;
+        };
     }
 }

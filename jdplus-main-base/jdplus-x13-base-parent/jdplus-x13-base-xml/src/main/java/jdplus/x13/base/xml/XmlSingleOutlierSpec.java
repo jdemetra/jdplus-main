@@ -76,5 +76,5 @@ public class XmlSingleOutlierSpec {
         xml.setCriticalValue(v.getCriticalValue());
         xml.setType(v.getType());
         return xml;
-    };
+    }
 }

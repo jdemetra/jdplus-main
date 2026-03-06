@@ -30,8 +30,8 @@ public class LinearId implements Id {
 
     @NonNull
     public static LinearId of(@NonNull Id id) {
-        if (id instanceof LinearId) {
-            return (LinearId) id;
+        if (id instanceof LinearId linearId) {
+            return linearId;
         }
         if (id.getCount() == 0) {
             return new LinearId(null, DEFAULT_AGGREGATOR, null);
@@ -102,7 +102,7 @@ public class LinearId implements Id {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof LinearId && equals((LinearId) obj));
+        return this == obj || (obj instanceof LinearId li && equals(li));
     }
 
     private boolean equals(LinearId other) {

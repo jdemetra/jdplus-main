@@ -17,6 +17,8 @@
 
 package jdplus.toolkit.base.core.math.functions.minpack;
 
+import internal.toolkit.base.core.math.functions.minpack.LevenbergMarquardtEstimator;
+import internal.toolkit.base.core.math.functions.minpack.SsqEstimationProblem;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.math.functions.ssq.ISsqFunctionPoint;

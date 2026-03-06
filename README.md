@@ -47,7 +47,7 @@ This binary provides its own Java runtime.
 
 This binary requires an external Java runtime.
 
-1. **Install** [Java version 17 or later](https://whichjdk.com/)
+1. **Install** [Java version 21 or later](https://whichjdk.com/)
 2. **Download** the [platform-independent package](https://github.com/jdemetra/jdplus-main/releases) (`jdemetra-VERSION.zip`)
 3. **Extract** it to any folder on your system (i.e. `DEMETRA_PATH`)
 4. **Run** the executable file located in the `DEMETRA_PATH/bin` directory
@@ -55,9 +55,9 @@ This binary requires an external Java runtime.
 ## Developing
 
 This project is written in Java and uses [Apache Maven](https://maven.apache.org/) as a build tool.  
-It requires [Java 17 as minimum version](https://whichjdk.com/) and all its dependencies are hosted on [Maven Central](https://search.maven.org/).
+It requires [Java 21 as minimum version](https://whichjdk.com/) and all its dependencies are hosted on [Maven Central](https://search.maven.org/).
 
-The code can be build using any IDE or by just type-in the following commands in a terminal:
+The code can be built using any IDE or by just type-in the following commands in a terminal:
 ```shell
 git clone https://github.com/jdemetra/jdplus-main.git
 cd jdplus-main

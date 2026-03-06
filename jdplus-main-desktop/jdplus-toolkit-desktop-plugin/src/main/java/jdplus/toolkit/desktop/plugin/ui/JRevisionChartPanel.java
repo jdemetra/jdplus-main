@@ -178,7 +178,7 @@ public final class JRevisionChartPanel extends JComponent implements TimeSeriesC
 
         item = new JMenuItem(am.get(HasTsCollection.COPY_ACTION));
         item.setText("Copy All");
-        item.setAccelerator(KeyStrokes.COPY.get(0));
+        item.setAccelerator(KeyStrokes.COPY.getFirst());
         Actions.hideWhenDisabled(item);
         result.add(item);
 

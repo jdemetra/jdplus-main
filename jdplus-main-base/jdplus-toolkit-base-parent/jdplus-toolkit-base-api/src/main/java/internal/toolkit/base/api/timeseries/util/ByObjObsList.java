@@ -1,55 +1,70 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package internal.toolkit.base.api.timeseries.util;
 
-import nbbrd.design.VisibleForTesting;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
+import nbbrd.design.StaticFactoryMethod;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.IntUnaryOperator;
-import jdplus.toolkit.base.api.data.Doubles;
 
 /**
  *
  * @author Philippe Charles
  */
-interface ByObjObsList<T> extends ObsList {
+sealed interface ByObjObsList<DATE> extends ObsList permits ByObjObsList.Sortable, ByObjObsList.PreSorted {
 
-    void clear();
+    void add(DATE period, double value);
 
-    void add(T period, double value);
+    DATE getPeriodAt(int index);
 
-    interface ToPeriodIdFunc<T> {
+    PeriodIdFactory<DATE> getPeriodIdFactory();
 
-        int apply(TsUnit unit, LocalDateTime reference, T value);
+    @Override
+    default long getPeriodIdAt(int index, LocalDateTime epoch, TsUnit unit) {
+        return getPeriodIdFactory().getPeriodIdOf(epoch, unit, getPeriodAt(index));
     }
 
-    static final class PreSorted<T> implements ByObjObsList<T> {
+    @FunctionalInterface
+    interface PeriodIdFactory<DATE> {
 
-        private final ToPeriodIdFunc<T> tsPeriodIdFunc;
+        long getPeriodIdOf(LocalDateTime epoch, TsUnit unit, DATE value);
+    }
+
+    @StaticFactoryMethod
+    static <DATE> ByObjObsList<DATE> of(boolean preSorted, PeriodIdFactory<DATE> periodIdFactory, int initialCapacity, Comparator<DATE> comparator) {
+        return preSorted
+                ? new PreSorted<>(periodIdFactory, initialCapacity)
+                : new Sortable<>(periodIdFactory, initialCapacity, comparator);
+    }
+
+    final class PreSorted<DATE> implements ByObjObsList<DATE> {
+
+        @lombok.Getter
+        private final PeriodIdFactory<DATE> periodIdFactory;
         private Object[] periods;
         private double[] values;
         private int size;
 
-        PreSorted(ToPeriodIdFunc<T> tsPeriodIdFunc, int initialCapacity) {
-            this.tsPeriodIdFunc = tsPeriodIdFunc;
+        PreSorted(PeriodIdFactory<DATE> periodIdFactory, int initialCapacity) {
+            this.periodIdFactory = periodIdFactory;
             this.periods = new Object[initialCapacity];
             this.values = new double[initialCapacity];
             this.size = 0;
@@ -68,7 +83,7 @@ interface ByObjObsList<T> extends ObsList {
         }
 
         @Override
-        public void add(T period, double value) {
+        public void add(DATE period, double value) {
             if (size + 1 == periods.length) {
                 grow();
             }
@@ -78,7 +93,7 @@ interface ByObjObsList<T> extends ObsList {
         }
 
         @Override
-        public int size() {
+        public int length() {
             return size;
         }
 
@@ -88,40 +103,36 @@ interface ByObjObsList<T> extends ObsList {
         }
 
         @Override
-        public IntUnaryOperator getPeriodIdFunc(TsUnit unit, LocalDateTime reference) {
-            return o -> tsPeriodIdFunc.apply(unit, reference, (T) periods[o]);
+        public DATE getPeriodAt(int index) {
+            return (DATE) periods[index];
         }
 
         @Override
-        public double getValue(int index) throws IndexOutOfBoundsException {
+        public double getValueAt(int index) throws IndexOutOfBoundsException {
             return values[index];
         }
 
         @Override
-        public Doubles getValues() {
-            return Doubles.ofInternal(Arrays.copyOf(values, size));
+        public double[] getValues() {
+            return Arrays.copyOf(values, size);
         }
     }
 
-    static final class Sortable<T> implements ByObjObsList<T> {
+    final class Sortable<DATE> implements ByObjObsList<DATE> {
 
-        private final ToPeriodIdFunc<T> tsPeriodIdFunc;
-        private final Comparator<T> comparator;
-        private final List<Obs<T>> list;
+        @lombok.Getter
+        private final PeriodIdFactory<DATE> periodIdFactory;
+        private final Comparator<DATE> comparator;
+        private final List<Obs<DATE>> list;
         private boolean sorted;
-        private T latestPeriod;
+        private DATE latestPeriod;
 
-        Sortable(ToPeriodIdFunc<T> tsPeriodIdFunc, Comparator<T> comparator) {
-            this.tsPeriodIdFunc = tsPeriodIdFunc;
+        Sortable(PeriodIdFactory<DATE> periodIdFactory, int initialCapacity, Comparator<DATE> comparator) {
+            this.periodIdFactory = periodIdFactory;
             this.comparator = comparator;
-            this.list = new ArrayList<>();
+            this.list = new ArrayList<>(initialCapacity);
             this.sorted = true;
             this.latestPeriod = null;
-        }
-
-        @VisibleForTesting
-        boolean isSorted() {
-            return sorted;
         }
 
         @Override
@@ -132,25 +143,25 @@ interface ByObjObsList<T> extends ObsList {
         }
 
         @Override
-        public void add(T period, double value) {
-            list.add(new Obs(period, value));
+        public void add(DATE period, double value) {
+            list.add(new Obs<>(period, value));
             sorted = sorted && (latestPeriod == null || comparator.compare(latestPeriod, period) <= 0);
             latestPeriod = period;
         }
 
         @Override
-        public int size() {
+        public int length() {
             return list.size();
         }
 
         @Override
-        public double getValue(int index) {
-            return list.get(index).value;
+        public DATE getPeriodAt(int index) {
+            return list.get(index).period;
         }
 
         @Override
-        public IntUnaryOperator getPeriodIdFunc(TsUnit unit, LocalDateTime reference) {
-            return o -> tsPeriodIdFunc.apply(unit, reference, list.get(o).period);
+        public double getValueAt(int index) {
+            return list.get(index).value;
         }
 
         @Override
@@ -158,15 +169,11 @@ interface ByObjObsList<T> extends ObsList {
             if (!sorted) {
                 list.sort(Comparator.comparing(o -> o.period, comparator));
                 sorted = true;
-                latestPeriod = list.get(list.size() - 1).period;
+                latestPeriod = getPeriodAt(list.size() - 1);
             }
         }
 
-        @lombok.AllArgsConstructor
-        private static final class Obs<T> {
-
-            final T period;
-            final double value;
+        private record Obs<T>(T period, double value) {
         }
     }
 }

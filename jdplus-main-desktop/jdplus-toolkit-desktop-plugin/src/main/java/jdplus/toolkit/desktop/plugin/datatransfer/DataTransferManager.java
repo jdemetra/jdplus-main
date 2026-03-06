@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
-import internal.uihelpers.FixmeCollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
@@ -209,7 +209,7 @@ public final class DataTransferManager implements PropertyChangeSource.WithWeakL
         return toTsCollection(transferable)
                 .map(TsCollection::getItems)
                 .filter(o -> !o.isEmpty())
-                .map(o -> o.get(0));
+                .map(o -> o.getFirst());
     }
 
     /**

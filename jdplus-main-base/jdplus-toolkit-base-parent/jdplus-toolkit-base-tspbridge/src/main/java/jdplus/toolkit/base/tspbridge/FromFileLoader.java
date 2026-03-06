@@ -30,8 +30,8 @@ import java.util.Objects;
 public class FromFileLoader extends FromDataSourceLoader implements ec.tss.tsproviders.IFileLoader {
 
     public static ec.tss.tsproviders.@NonNull IFileLoader fromFileLoader(@NonNull FileLoader<? extends FileBean> delegate) {
-        return delegate instanceof ToFileLoader
-                ? ((ToFileLoader) delegate).getDelegate()
+        return delegate instanceof ToFileLoader tfl
+                ? tfl.getDelegate()
                 : new FromFileLoader(delegate);
     }
 

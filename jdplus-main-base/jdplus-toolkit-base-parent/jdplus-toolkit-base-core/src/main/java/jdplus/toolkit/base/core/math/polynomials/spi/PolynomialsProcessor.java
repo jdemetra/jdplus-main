@@ -38,23 +38,13 @@ public class PolynomialsProcessor implements Polynomials.Processor {
 
     @Override
     public Complex[] rootsOf(DoubleSeq polynomial, Solver solver) {
-        RootsSolver alg;
-        switch (solver) {
-            case MullerNewton:
-                alg = new MullerNewtonSolver();
-                break;
-            case EigenValues:
-                alg = new EigenValuesSolver();
-                break;
-            case FastEigenValues:
-                alg = new FastEigenValuesSolver();
-                break;
-            case Robust:
-                alg = new RobustMullerNewtonSolver();
-                break;
-            default:
-                alg = new MullerNewtonSolver();
-        }
+        RootsSolver alg = switch (solver) {
+            case MullerNewton -> new MullerNewtonSolver();
+            case EigenValues -> new EigenValuesSolver();
+            case FastEigenValues -> new FastEigenValuesSolver();
+            case Robust -> new RobustMullerNewtonSolver();
+            default -> new MullerNewtonSolver();
+        };
         return Polynomial.ofInternal(polynomial.toArray()).roots(alg);
 
     }

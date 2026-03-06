@@ -90,8 +90,6 @@ public class UpdateInformation {
         this.stde = Math.sqrt(f);
     }
 
-    ;
-    
     public void setStandardDeviation(final double e) {
         this.f = e * e;
         this.stde = e;
@@ -113,7 +111,7 @@ public class UpdateInformation {
     public void setMissing() {
         e = Double.NaN;
         status = Status.MISSING;
-        M.set(() -> Double.NaN);
+        M.set(Double.NaN);
     }
 
     public Status getStatus() {

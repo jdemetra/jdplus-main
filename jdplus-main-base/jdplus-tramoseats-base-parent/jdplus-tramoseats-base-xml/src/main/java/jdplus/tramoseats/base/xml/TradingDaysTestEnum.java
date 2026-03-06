@@ -61,26 +61,20 @@ public enum TradingDaysTestEnum {
             if (v == null) {
                 return RegressionTestType.None;
             }
-            switch (v) {
-                case JOINT_F:
-                    return RegressionTestType.Joint_F;
-                case T:
-                    return RegressionTestType.Separate_T;
-                default:
-                    return RegressionTestType.None;
-            }
+            return switch (v) {
+                case JOINT_F -> RegressionTestType.Joint_F;
+                case T -> RegressionTestType.Separate_T;
+                default -> RegressionTestType.None;
+            };
         }
 
         @Override
         public TradingDaysTestEnum marshal(RegressionTestType v) throws Exception {
-            switch (v) {
-                case Joint_F:
-                    return TradingDaysTestEnum.JOINT_F;
-                case Separate_T:
-                    return TradingDaysTestEnum.T;
-                default:
-                    return null;
-            }
+            return switch (v) {
+                case Joint_F -> TradingDaysTestEnum.JOINT_F;
+                case Separate_T -> TradingDaysTestEnum.T;
+                default -> null;
+            };
 
         }
     }

@@ -16,10 +16,10 @@
  */
 package jdplus.toolkit.base.api.timeseries;
 
-import internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil;
+import internal.toolkit.base.api.timeseries.util.TsDataCollector;
+import lombok.NonNull;
 import nbbrd.design.LombokWorkaround;
 import nbbrd.design.StaticFactoryMethod;
-import lombok.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.time.Clock;
@@ -62,7 +62,7 @@ public class Ts {
                 .moniker(TsMoniker.NULL)
                 .type(TsInformationType.UserDefined)
                 .name("")
-                .data(TsDataBuilderUtil.NO_DATA);
+                .data(TsDataCollector.NO_DATA);
     }
 
     @StaticFactoryMethod

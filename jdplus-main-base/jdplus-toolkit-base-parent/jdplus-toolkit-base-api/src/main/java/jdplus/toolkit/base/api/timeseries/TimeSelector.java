@@ -68,7 +68,7 @@ public class TimeSelector {
         /**
          *
          */
-        Excluding;
+        Excluding
     }
     
     public static Builder builder(){

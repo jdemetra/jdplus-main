@@ -6,11 +6,11 @@ package jdplus.sa.desktop.plugin.ui;
 
 import jdplus.toolkit.base.api.math.Complex;
 import jdplus.sa.base.api.ComponentDescriptor;
-import internal.uihelpers.ContinuousDisplayDomain;
-import internal.uihelpers.ContinuousInformationProvider;
-import internal.uihelpers.DiscreteDisplayDomain;
-import internal.uihelpers.DiscreteInformationProvider;
-import internal.uihelpers.FrequencyInformationProvider;
+import jdplus.toolkit.desktop.plugin.ui.ContinuousDisplayDomain;
+import jdplus.toolkit.desktop.plugin.ui.ContinuousInformationProvider;
+import jdplus.toolkit.desktop.plugin.ui.DiscreteDisplayDomain;
+import jdplus.toolkit.desktop.plugin.ui.DiscreteInformationProvider;
+import jdplus.toolkit.desktop.plugin.ui.FrequencyInformationProvider;
 import jdplus.toolkit.base.core.arima.AutoCovarianceFunction;
 import jdplus.toolkit.base.core.arima.Spectrum;
 import jdplus.toolkit.base.core.math.linearfilters.RationalFilter;

@@ -19,7 +19,6 @@ package jdplus.toolkit.base.api.timeseries;
 import org.junit.jupiter.api.Test;
 
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.UnsupportedTemporalTypeException;
 
 import static java.time.temporal.ChronoUnit.*;
@@ -99,6 +98,22 @@ public class TsUnitTest {
         assertThat(P1D.ratioOf(P1Y)).isEqualTo(NO_STRICT_RATIO);
     }
 
+    @Test
+    public void testGetEstimatedDurationRatio() {
+        assertThat(P1M.getEstimatedDurationRatio(P1Y)).isEqualTo(12d);
+        assertThat(P12M.getEstimatedDurationRatio(P1Y)).isEqualTo(1d);
+        assertThat(P1M.getEstimatedDurationRatio(parse("P4W"))).isLessThan(1);
+        assertThat(P1M.getEstimatedDurationRatio(parse("P31D"))).isGreaterThan(1);
+        assertThat(parse("P13M").getEstimatedDurationRatio(P1Y)).isLessThan(1);
+    }
+
+    @Test
+    public void testMultipliedBy() {
+        assertThat(P1M.multipliedBy(1)).isEqualTo(P1M);
+        assertThat(P1M.multipliedBy(12)).isEqualTo(P12M);
+        assertThat(P12M.multipliedBy(3)).hasToString("P36M");
+    }
+
     @SuppressWarnings("DataFlowIssue")
     @Test
     public void testRepresentableAsString() {
@@ -107,7 +122,7 @@ public class TsUnitTest {
 
         var inputs = new String[]{"",
                 "P1000Y", "P100Y", "P10Y", "P1Y", "P6M", "P3M", "P1M", "P7D",
-                "P1D", "PT1H", "PT1M", "PT1S"
+                "P1D", "PT1H", "PT1M", "PT1S", "P1W"
         };
 
         for (String input : inputs) {

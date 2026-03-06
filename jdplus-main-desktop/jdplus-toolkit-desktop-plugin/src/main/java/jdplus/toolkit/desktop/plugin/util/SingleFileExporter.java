@@ -39,7 +39,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static internal.ui.components.ExceptionUtil.unwrapException;
+import static internal.toolkit.desktop.plugin.components.ExceptionUtil.unwrapException;
 import static java.util.Arrays.asList;
 
 /**
@@ -158,7 +158,7 @@ public final class SingleFileExporter {
         FileChooserBuilder result = new FileChooserBuilder(preferencesKey);
         if (!filters.isEmpty()) {
             filters.forEach(result::addFileFilter);
-            result.setFileFilter(filters.get(0));
+            result.setFileFilter(filters.getFirst());
             result.setSelectionApprover(new AndThenApprover(new FileFilterApprover(filters), overwriteApprover()));
         } else {
             result.setSelectionApprover(overwriteApprover());

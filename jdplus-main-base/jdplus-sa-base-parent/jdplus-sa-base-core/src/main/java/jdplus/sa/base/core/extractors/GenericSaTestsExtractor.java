@@ -14,7 +14,7 @@ import java.util.function.IntToDoubleFunction;
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
 import jdplus.sa.base.core.diagnostics.CombinedSeasonalityTests;
 import jdplus.sa.base.core.diagnostics.GenericSaTests;
-import jdplus.sa.base.core.diagnostics.ResidualSeasonalityTests;
+import jdplus.sa.base.core.diagnostics.GenericSeasonalityTests;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysTests;
 import jdplus.sa.base.core.tests.SpectralPeaks;
 import jdplus.toolkit.base.api.stats.AutoCovariances;
@@ -46,7 +46,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
 
         //////////  Residuals 
         set(SaDictionaries.SEAS_RES_F, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
             if (test != null) {
                 return test.fTest();
             }
@@ -54,7 +54,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_RES_QS, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
             if (test != null) {
                 return test.qsTest();
             }
@@ -62,7 +62,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_RES_KW, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
             if (test != null) {
                 return test.kruskalWallisTest();
             }
@@ -70,7 +70,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_RES_FRIEDMAN, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
             if (test != null) {
                 return test.friedmanTest();
             }
@@ -78,7 +78,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_RES_PERIODOGRAM, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
             if (test != null) {
                 return test.periodogramTest();
             }
@@ -86,7 +86,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_RES_SP, String.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnResiduals();
             if (test != null) {
                 SpectralPeaks[] p = test.spectralPeaks();
                 if (p != null) {
@@ -98,7 +98,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
 
         /////////////////// Irregular
         set(SaDictionaries.SEAS_I_F, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
             if (test != null) {
                 return test.fTest();
             }
@@ -106,7 +106,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_I_QS, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
             if (test != null) {
                 return test.qsTest();
             }
@@ -114,7 +114,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_I_KW, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
             if (test != null) {
                 return test.kruskalWallisTest();
             }
@@ -122,7 +122,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_I_PERIODOGRAM, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
             if (test != null) {
                 return test.periodogramTest();
             }
@@ -130,7 +130,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_I_FRIEDMAN, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
             if (test != null) {
                 return test.friedmanTest();
             }
@@ -138,7 +138,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_I_SP, String.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnIrregular();
             if (test != null) {
                 SpectralPeaks[] p = test.spectralPeaks();
                 if (p != null) {
@@ -150,7 +150,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
 
         /////////////////////// SA
         set(SaDictionaries.SEAS_SA_F, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnSa();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnSa();
             if (test != null) {
                 return test.fTest();
             }
@@ -158,7 +158,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_SA_QS, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnSa();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnSa();
             if (test != null) {
                 return test.qsTest();
             }
@@ -166,7 +166,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_SA_KW, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnSa();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnSa();
             if (test != null) {
                 return test.kruskalWallisTest();
             }
@@ -174,7 +174,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_SA_FRIEDMAN, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnSa();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnSa();
             if (test != null) {
                 return test.friedmanTest();
             }
@@ -182,7 +182,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_SA_PERIODOGRAM, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnSa();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnSa();
             if (test != null) {
                 return test.periodogramTest();
             }
@@ -190,7 +190,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_SA_SP, String.class, source -> {
-            ResidualSeasonalityTests test = source.residualSeasonalityTestsOnSa();
+            GenericSeasonalityTests test = source.residualSeasonalityTestsOnSa();
             if (test != null) {
                 SpectralPeaks[] p = test.spectralPeaks();
                 if (p != null) {
@@ -203,7 +203,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         /////////////////////// Linearized
 
         set(SaDictionaries.SEAS_LIN_F, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.seasonalityTestsOnLinearized();
+            GenericSeasonalityTests test = source.seasonalityTestsOnLinearized();
             if (test != null) {
                 return test.fTest();
             }
@@ -211,7 +211,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_LIN_QS, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.seasonalityTestsOnLinearized();
+            GenericSeasonalityTests test = source.seasonalityTestsOnLinearized();
             if (test != null) {
                 return test.qsTest();
             }
@@ -219,7 +219,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_LIN_KW, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.seasonalityTestsOnLinearized();
+            GenericSeasonalityTests test = source.seasonalityTestsOnLinearized();
             if (test != null) {
                 return test.kruskalWallisTest();
             }
@@ -227,7 +227,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_LIN_FRIEDMAN, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.seasonalityTestsOnLinearized();
+            GenericSeasonalityTests test = source.seasonalityTestsOnLinearized();
             if (test != null) {
                 return test.friedmanTest();
             }
@@ -235,7 +235,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_LIN_PERIODOGRAM, StatisticalTest.class, source -> {
-            ResidualSeasonalityTests test = source.seasonalityTestsOnLinearized();
+            GenericSeasonalityTests test = source.seasonalityTestsOnLinearized();
             if (test != null) {
                 return test.periodogramTest();
             }
@@ -243,7 +243,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
         });
 
         set(SaDictionaries.SEAS_LIN_SP, String.class, source -> {
-            ResidualSeasonalityTests test = source.seasonalityTestsOnLinearized();
+            GenericSeasonalityTests test = source.seasonalityTestsOnLinearized();
             if (test != null) {
                 SpectralPeaks[] p = test.spectralPeaks();
                 if (p != null) {

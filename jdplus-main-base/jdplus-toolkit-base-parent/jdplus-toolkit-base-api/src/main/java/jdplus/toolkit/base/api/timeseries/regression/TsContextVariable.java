@@ -117,7 +117,7 @@ public class TsContextVariable implements ITsVariable {
             return new TsContextVariable(user.getId(), 0);
         } else if (var instanceof ModifiedTsVariable mvar) {
             List<ModifiedTsVariable.Modifier> modifiers = mvar.getModifiers();
-            if (modifiers.size() == 1 && modifiers.get(0) instanceof TsLag lag && mvar.getVariable() instanceof UserVariable user) {
+            if (modifiers.size() == 1 && modifiers.getFirst() instanceof TsLag lag && mvar.getVariable() instanceof UserVariable user) {
                 return new TsContextVariable(user.getId(), lag.getLag());
             }
         }

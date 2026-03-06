@@ -16,7 +16,7 @@
  */
 package jdplus.toolkit.desktop.plugin.tsproviders;
 
-import internal.uihelpers.FixmeCollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.*;
@@ -276,14 +276,11 @@ public final class DataSourceManager {
             if (result != null) {
                 return result;
             }
-            switch (dataSet.getKind()) {
-                case COLLECTION:
-                    return ImageUtilities.loadImage("jdplus/toolkit/desktop/plugin/icons/folder.png", true);
-                case SERIES:
-                    return ImageUtilities.loadImage("jdplus/toolkit/desktop/plugin/icons/chart_line.png", true);
-                default:
-                    return getDataSourceImage(buddy, dataSet.getDataSource(), type, opened);
-            }
+            return switch (dataSet.getKind()) {
+                case COLLECTION -> ImageUtilities.loadImage("jdplus/toolkit/desktop/plugin/icons/folder.png", true);
+                case SERIES -> ImageUtilities.loadImage("jdplus/toolkit/desktop/plugin/icons/chart_line.png", true);
+                default -> getDataSourceImage(buddy, dataSet.getDataSource(), type, opened);
+            };
         }
 
         @Override

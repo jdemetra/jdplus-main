@@ -281,7 +281,7 @@ public final class JStabilityView extends JComponent implements HasColorScheme {
         BasicXYDataset pointsDataset = new BasicXYDataset();
         BasicXYDataset meanDataset = new BasicXYDataset();
         BasicXYDataset smoothDataset = new BasicXYDataset();
-        int np = items.get(0).getDataArray().length - 1;
+        int np = items.getFirst().getDataArray().length - 1;
         double xstart = -0.4;
         double xend = 0.4;
         final double xstep = 0.8 / np;

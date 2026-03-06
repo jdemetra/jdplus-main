@@ -5,18 +5,25 @@
  */
 package jdplus.toolkit.base.core.ssf.akf;
 
+import java.util.Random;
 import jdplus.toolkit.base.core.ssf.arima.SsfArima;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoublesMath;
+import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
 import jdplus.toolkit.base.core.ssf.likelihood.MarginalLikelihood;
 import jdplus.toolkit.base.core.ssf.likelihood.ProfileLikelihood;
+import jdplus.toolkit.base.core.ssf.univariate.DefaultFilteringResults;
+import jdplus.toolkit.base.core.ssf.univariate.OrdinaryFilter;
 import jdplus.toolkit.base.core.ssf.univariate.Ssf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -55,5 +62,57 @@ public class QRFilterTest {
         DiffuseLikelihood ll3 = AkfToolkit.likelihoodComputer(true, true, true).compute(ssf, ssfData);
         assertEquals(ll1.logLikelihood(), ll2.logLikelihood(), 1e-6);
         assertEquals(ll1.logLikelihood(), ll3.logLikelihood(), 1e-6);
+    }
+
+    @Test
+    public void testLF() {
+
+        DataBlock A = DataBlock.make(100);
+        DataBlock B = DataBlock.make(100);
+        Random rnd = new Random(0);
+        A.apply(i -> rnd.nextDouble());
+        B.apply(i -> rnd.nextDouble());
+
+        DataBlock C = A.deepClone();
+        C.addAY(3.5, B);
+
+        Ssf ssf = Ssf.of(SsfArima.stateComponent(arima1), SsfArima.defaultLoading());
+        QRFilter filter = new QRFilter();
+        filter.process(ssf, new SsfData(A));
+        DoubleSeq AL = filter.diffuseLikelihood(false, true).e();
+        filter.process(ssf, new SsfData(B));
+        DoubleSeq BL = filter.diffuseLikelihood(false, true).e();
+        filter.process(ssf, new SsfData(C));
+        DoubleSeq CL = filter.diffuseLikelihood(false, true).e();
+//        System.out.println(AL);
+//        System.out.println(BL);
+//        System.out.println(CL);
+
+        DoubleSeq cl = DoublesMath.add(AL, BL.times(3.5));
+//        System.out.println(cl);
+        assertTrue(cl.distance(CL) < 1e-13);
+
+        SarimaModel sarima1 = arima1.stationaryTransformation().getStationaryModel();
+        ssf = Ssf.of(SsfArima.stateComponent(sarima1), SsfArima.defaultLoading());
+        OrdinaryFilter of = new OrdinaryFilter();
+        DefaultFilteringResults r = DefaultFilteringResults.light();
+        r.prepare(ssf, 0, A.length());
+        of.process(ssf, new SsfData(A), r);
+        AL = r.errors();
+        r = DefaultFilteringResults.light();
+        r.prepare(ssf, 0, A.length());
+        of.process(ssf, new SsfData(B), r);
+        BL = r.errors();
+        r = DefaultFilteringResults.light();
+        r.prepare(ssf, 0, A.length());
+        of.process(ssf, new SsfData(C), r);
+        CL = r.errors();
+//        System.out.println(AL);
+//        System.out.println(BL);
+//        System.out.println(CL);
+
+        cl = DoublesMath.add(AL, BL.times(3.5));
+//        System.out.println(cl);
+        assertTrue(cl.distance(CL) < 1e-13);
     }
 }

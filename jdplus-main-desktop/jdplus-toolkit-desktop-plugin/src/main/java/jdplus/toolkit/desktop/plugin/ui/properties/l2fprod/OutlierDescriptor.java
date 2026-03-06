@@ -40,7 +40,7 @@ import java.util.List;
 public class OutlierDescriptor implements IPropertyDescriptors {
     
     public static enum OutlierType {
-        AO, LS, TC, SO;
+        AO, LS, TC, SO
     }
     
     private static final int NAME_ID = 0, POSITION_ID = 1, TYPE_ID = 2, FIXEDPARAMETER_ID = 3, PARAMETER_ID = 4;

@@ -263,7 +263,7 @@ public final class OldParameter implements Cloneable, Comparable<OldParameter> {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof OldParameter && equals((OldParameter) obj));
+        return this == obj || (obj instanceof OldParameter op && equals(op));
     }
     
     public boolean equals(OldParameter other) {

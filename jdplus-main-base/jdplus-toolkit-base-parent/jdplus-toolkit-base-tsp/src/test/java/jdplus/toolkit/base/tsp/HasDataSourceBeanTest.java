@@ -59,9 +59,9 @@ public class HasDataSourceBeanTest {
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof CustomBean
-                    && ((CustomBean) obj).file.equals(file)
-                    && ((CustomBean) obj).details.equals(details);
+            return obj instanceof CustomBean cb
+                    && cb.file.equals(file)
+                    && cb.details.equals(details);
         }
     }
 

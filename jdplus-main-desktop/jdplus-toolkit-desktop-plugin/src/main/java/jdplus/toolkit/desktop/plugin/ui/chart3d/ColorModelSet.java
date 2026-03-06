@@ -127,20 +127,14 @@ public class ColorModelSet implements SurfaceColor {
             }
         }
 
-        switch (color_mode) {
-            case OPAQUE:
-                return opaque.getPolygonColor(z);
-            case GRAYSCALE:
-                return grayscale.getPolygonColor(z);
-            case SPECTRUM:
-                return spectrum.getPolygonColor(z);
-            case DUALSHADE:
-                return dualshade.getPolygonColor(z);
-            case FOG:
-                return fog.getPolygonColor(z);
-            default:
-                return Color.blue;
-        }
+        return switch (color_mode) {
+            case OPAQUE -> opaque.getPolygonColor(z);
+            case GRAYSCALE -> grayscale.getPolygonColor(z);
+            case SPECTRUM -> spectrum.getPolygonColor(z);
+            case DUALSHADE -> dualshade.getPolygonColor(z);
+            case FOG -> fog.getPolygonColor(z);
+            default -> Color.blue;
+        };
     }
 
     @Override
@@ -151,19 +145,13 @@ public class ColorModelSet implements SurfaceColor {
                 return alt_dualshade.getPolygonColor(z);
             }
         }
-        switch (color_mode) {
-            case OPAQUE:
-                return alt_opaque.getPolygonColor(z);
-            case GRAYSCALE:
-                return alt_grayscale.getPolygonColor(z);
-            case SPECTRUM:
-                return alt_spectrum.getPolygonColor(z);
-            case DUALSHADE:
-                return alt_dualshade.getPolygonColor(z);
-            case FOG:
-                return alt_fog.getPolygonColor(z);
-            default:
-                return Color.blue;
-        }
+        return switch (color_mode) {
+            case OPAQUE -> alt_opaque.getPolygonColor(z);
+            case GRAYSCALE -> alt_grayscale.getPolygonColor(z);
+            case SPECTRUM -> alt_spectrum.getPolygonColor(z);
+            case DUALSHADE -> alt_dualshade.getPolygonColor(z);
+            case FOG -> alt_fog.getPolygonColor(z);
+            default -> Color.blue;
+        };
     }
 }

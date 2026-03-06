@@ -306,18 +306,11 @@ public class HannanRissanen {
     }
 
     private void initialize() {
-        AutoRegressiveEstimation ar;
-        switch (initialization) {
-            case Ols:
-                ar=AutoRegressiveEstimation.ols();
-                break;
-            case Burg:
-                ar=AutoRegressiveEstimation.burg();
-                break;
-            default:
-                ar=AutoRegressiveEstimation.levinson();
-                break;
-        }
+        AutoRegressiveEstimation ar = switch (initialization) {
+            case Ols -> AutoRegressiveEstimation.ols();
+            case Burg -> AutoRegressiveEstimation.burg();
+            default -> AutoRegressiveEstimation.levinson();
+        };
         ar.estimate(Doubles.of(m_data), npi());
         m_a=ar.residuals().toArray();
     }

@@ -95,7 +95,7 @@ public class XmlCholetteSpec
         if (xml.target != null)
             builder.target(xml.target);
         return builder.build();
-    };
+    }
     
     public static final XmlCholetteSpec marshal(SaBenchmarkingSpec v) {
         if (!v.isEnabled()) {
@@ -109,5 +109,5 @@ public class XmlCholetteSpec
         xml.setMethod(xc);
         xml.setTarget(v.getTarget());
         return xml;
-    };
+    }
 }

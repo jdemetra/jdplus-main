@@ -157,8 +157,8 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component result = delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (result instanceof JLabel) {
-                    ((JLabel) result).setHorizontalAlignment(JLabel.CENTER);
+                if (result instanceof JLabel label) {
+                    label.setHorizontalAlignment(JLabel.CENTER);
                 }
                 return result;
             }
@@ -415,15 +415,15 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
     };
 
     private static final String[] TESTS_TITLE = new String[]{
-        "Skewness", "Kurtosis", "Ljung-Box", "LB. on Seas", "LB on sq."
+        "Skewness", "P-value", "Kurtosis", "P-value", "Ljung-Box", "P-value", "LB. on Seas", "P-value", "LB on sq.", "P-value"
     };
 
     private static final String[] TESTS = new String[]{
-        parameterItem(residualsItem(ResidualsDictionaries.SKEW), 0, -4),
-        parameterItem(residualsItem(ResidualsDictionaries.KURT), 0, -4),
-        parameterItem(residualsItem(ResidualsDictionaries.LB), 0, -4),
-        parameterItem(residualsItem(ResidualsDictionaries.LB2), 0, -4),
-        parameterItem(residualsItem(ResidualsDictionaries.SEASLB), 0, -4)
+        parameterItem(residualsItem(ResidualsDictionaries.SKEW), 0, 2),
+        parameterItem(residualsItem(ResidualsDictionaries.KURT), 0, 2),
+        parameterItem(residualsItem(ResidualsDictionaries.LB), 0, 2),
+        parameterItem(residualsItem(ResidualsDictionaries.LB2), 0, 2),
+        parameterItem(residualsItem(ResidualsDictionaries.SEASLB), 0, 2)
     };
 
     private static final class TableModelAdapter extends AbstractGridModel {

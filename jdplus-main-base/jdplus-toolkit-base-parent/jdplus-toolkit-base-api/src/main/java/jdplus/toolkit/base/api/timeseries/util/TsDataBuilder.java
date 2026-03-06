@@ -1,34 +1,41 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries.util;
 
-import jdplus.toolkit.base.api.timeseries.TsData;
-import nbbrd.design.BuilderPattern;
 import internal.toolkit.base.api.timeseries.util.ByLongDataBuilder;
 import internal.toolkit.base.api.timeseries.util.ByObjDataBuilder;
+import internal.toolkit.base.api.timeseries.util.NoOpDataBuilder;
+import internal.toolkit.base.api.timeseries.util.ObsListDataBuilder;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import lombok.NonNull;
+import nbbrd.design.BuilderPattern;
+import nbbrd.design.NotThreadSafe;
+import nbbrd.design.StaticFactoryMethod;
+import org.jspecify.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import lombok.NonNull;
-import org.jspecify.annotations.Nullable;
-import nbbrd.design.NotThreadSafe;
+
+import static internal.toolkit.base.api.timeseries.util.NoOpDataBuilder.INVALID_AGGREGATION;
+import static internal.toolkit.base.api.timeseries.util.ObsListDataBuilder.isValid;
 
 /**
  * Builder that collects observations in order to create an OptionalTsData.
@@ -55,7 +62,7 @@ public interface TsDataBuilder<DATE> {
      * An observation with <code>null</code> date is ignored and
      * <code>null</code> value is considered as missing.
      *
-     * @param date an optional date
+     * @param date  an optional date
      * @param value an optional value
      * @return this builder
      */
@@ -65,12 +72,12 @@ public interface TsDataBuilder<DATE> {
     /**
      * Adds an observation by using a date.
      *
-     * @param <X> the observation type
-     * @param obs the non-null observation to add
-     * @param dateFunc a non-null function that retrieves a date from an
-     * observation
+     * @param <X>       the observation type
+     * @param obs       the non-null observation to add
+     * @param dateFunc  a non-null function that retrieves a date from an
+     *                  observation
      * @param valueFunc a non-null function that retrieves a value from an
-     * observation
+     *                  observation
      * @return this builder
      */
     @NonNull
@@ -85,12 +92,12 @@ public interface TsDataBuilder<DATE> {
     /**
      * Adds a stream of observations by using a date.
      *
-     * @param <X> the observation type
-     * @param stream the non-null stream to add
-     * @param dateFunc a non-null function that retrieves a date from an
-     * observation
+     * @param <X>       the observation type
+     * @param stream    the non-null stream to add
+     * @param dateFunc  a non-null function that retrieves a date from an
+     *                  observation
      * @param valueFunc a non-null function that retrieves a value from an
-     * observation
+     *                  observation
      * @return this builder
      */
     @NonNull
@@ -113,38 +120,44 @@ public interface TsDataBuilder<DATE> {
     /**
      * Creates an TsData builder that collects {@link Date} values.
      *
-     * @param resource non-null resource used to handle dates quirks such as
-     * time zones
-     * @param gathering non-null observation collection parameters
+     * @param resource        non-null resource used to handle dates quirks such as
+     *                        time zones
+     * @param gathering       non-null observation collection parameters
      * @param characteristics non-null observations characteristics
      * @return non-null builder
      */
-    @NonNull
-    static TsDataBuilder<Date> byCalendar(@NonNull Calendar resource, @NonNull ObsGathering gathering, @NonNull ObsCharacteristics... characteristics) {
-        return ByLongDataBuilder.fromCalendar(resource, gathering, characteristics);
+    @StaticFactoryMethod
+    static @NonNull TsDataBuilder<Date> byCalendar(@NonNull Calendar resource, @NonNull ObsGathering gathering, @NonNull ObsCharacteristics... characteristics) {
+        return isValid(gathering)
+                ? ByLongDataBuilder.fromCalendar(gathering, characteristics, ObsListDataBuilder.DEFAULT_INITIAL_CAPACITY, resource)
+                : new NoOpDataBuilder<>(INVALID_AGGREGATION);
     }
 
     /**
      * Creates an TsData builder that collects {@link LocalDate} values.
      *
-     * @param gathering non-null observation collection parameters
+     * @param gathering       non-null observation collection parameters
      * @param characteristics non-null observations characteristics
      * @return non-null builder
      */
-    @NonNull
-    static TsDataBuilder<LocalDate> byDate(@NonNull ObsGathering gathering, @NonNull ObsCharacteristics... characteristics) {
-        return ByLongDataBuilder.fromDate(gathering, characteristics);
+    @StaticFactoryMethod
+    static @NonNull TsDataBuilder<LocalDate> byDate(@NonNull ObsGathering gathering, @NonNull ObsCharacteristics... characteristics) {
+        return isValid(gathering)
+                ? ByLongDataBuilder.fromDate(gathering, characteristics, ObsListDataBuilder.DEFAULT_INITIAL_CAPACITY)
+                : new NoOpDataBuilder<>(INVALID_AGGREGATION);
     }
 
     /**
      * Creates an TsData builder that collects {@link LocalDateTime} values.
      *
-     * @param gathering non-null observation collection parameters
+     * @param gathering       non-null observation collection parameters
      * @param characteristics non-null observations characteristics
      * @return non-null builder
      */
-    @NonNull
-    static TsDataBuilder<LocalDateTime> byDateTime(@NonNull ObsGathering gathering, @NonNull ObsCharacteristics... characteristics) {
-        return ByObjDataBuilder.fromDateTime(gathering, characteristics);
+    @StaticFactoryMethod
+    static @NonNull TsDataBuilder<LocalDateTime> byDateTime(@NonNull ObsGathering gathering, @NonNull ObsCharacteristics... characteristics) {
+        return isValid(gathering)
+                ? ByObjDataBuilder.fromDateTime(gathering, characteristics, ObsListDataBuilder.DEFAULT_INITIAL_CAPACITY)
+                : new NoOpDataBuilder<>(INVALID_AGGREGATION);
     }
 }

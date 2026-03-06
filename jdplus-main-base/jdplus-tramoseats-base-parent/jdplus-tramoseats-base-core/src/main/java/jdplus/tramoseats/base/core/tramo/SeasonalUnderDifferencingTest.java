@@ -16,7 +16,6 @@
  */
 package jdplus.tramoseats.base.core.tramo;
 
-import jdplus.sa.base.core.tests.SeasonalityTests;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;

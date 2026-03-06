@@ -176,7 +176,7 @@ public class XmlParameters {
             XmlParameters.marshal(v, x);
             return x;
         }
-    };
+    }
 
     private static final XmlAdapter<XmlParameters, Parameter[]> ADAPTER = new Adapter();
 

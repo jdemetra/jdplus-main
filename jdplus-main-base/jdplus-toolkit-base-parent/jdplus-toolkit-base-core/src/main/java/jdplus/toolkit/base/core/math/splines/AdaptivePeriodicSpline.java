@@ -307,7 +307,7 @@ public class AdaptivePeriodicSpline {
     }
 
     public Step result() {
-        return steps.get(steps.size() - 1);
+        return steps.getLast();
     }
 
     public int selectedKnotsCount(int pos) {

@@ -49,7 +49,7 @@ public class DickeyFuller {
 
     public static enum DickeyFullerType {
 
-        NC, C, CT;
+        NC, C, CT
     }
 
     double rho, ser, test, pvalue;

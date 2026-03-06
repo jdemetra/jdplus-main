@@ -17,11 +17,11 @@
 package jdplus.toolkit.base.tsp.stream;
 
 import _test.tsproviders.FailingTsCursorSupport;
+import internal.toolkit.base.api.timeseries.util.TsDataCollector;
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.HasDataMoniker;
-import internal.toolkit.base.api.timeseries.util.TsDataBuilderUtil;
 import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
@@ -128,16 +128,16 @@ public class TsStreamAsProviderTest {
 
         assertThat(p.getTsCollection(goodSource, None)).isEqualTo(TsCollection.builder()
                 .moniker(goodSource).type(None)
-                .item(s1.toBuilder().type(None).data(TsDataBuilderUtil.NO_DATA).clearMeta().build())
-                .item(s2.toBuilder().type(None).data(TsDataBuilderUtil.NO_DATA).clearMeta().build())
-                .item(s3.toBuilder().type(None).data(TsDataBuilderUtil.NO_DATA).clearMeta().build())
+                .item(s1.toBuilder().type(None).data(TsDataCollector.NO_DATA).clearMeta().build())
+                .item(s2.toBuilder().type(None).data(TsDataCollector.NO_DATA).clearMeta().build())
+                .item(s3.toBuilder().type(None).data(TsDataCollector.NO_DATA).clearMeta().build())
                 .build());
 
         assertThat(p.getTsCollection(goodSource, MetaData)).isEqualTo(TsCollection.builder()
                 .moniker(goodSource).type(MetaData)
-                .item(s1.toBuilder().type(MetaData).data(TsDataBuilderUtil.NO_DATA).build())
-                .item(s2.toBuilder().type(MetaData).data(TsDataBuilderUtil.NO_DATA).build())
-                .item(s3.toBuilder().type(MetaData).data(TsDataBuilderUtil.NO_DATA).build())
+                .item(s1.toBuilder().type(MetaData).data(TsDataCollector.NO_DATA).build())
+                .item(s2.toBuilder().type(MetaData).data(TsDataCollector.NO_DATA).build())
+                .item(s3.toBuilder().type(MetaData).data(TsDataCollector.NO_DATA).build())
                 .build());
 
         assertThat(p.getTsCollection(goodSource, All)).isEqualTo(TsCollection.builder()
@@ -152,14 +152,14 @@ public class TsStreamAsProviderTest {
 
         assertThat(p.getTsCollection(goodCollection, None)).isEqualTo(TsCollection.builder()
                 .moniker(goodCollection).type(None)
-                .item(s1.toBuilder().type(None).data(TsDataBuilderUtil.NO_DATA).clearMeta().build())
-                .item(s2.toBuilder().type(None).data(TsDataBuilderUtil.NO_DATA).clearMeta().build())
+                .item(s1.toBuilder().type(None).data(TsDataCollector.NO_DATA).clearMeta().build())
+                .item(s2.toBuilder().type(None).data(TsDataCollector.NO_DATA).clearMeta().build())
                 .build());
 
         assertThat(p.getTsCollection(goodCollection, MetaData)).isEqualTo(TsCollection.builder()
                 .moniker(goodCollection).type(MetaData)
-                .item(s1.toBuilder().type(MetaData).data(TsDataBuilderUtil.NO_DATA).build())
-                .item(s2.toBuilder().type(MetaData).data(TsDataBuilderUtil.NO_DATA).build())
+                .item(s1.toBuilder().type(MetaData).data(TsDataCollector.NO_DATA).build())
+                .item(s2.toBuilder().type(MetaData).data(TsDataCollector.NO_DATA).build())
                 .build());
 
         assertThat(p.getTsCollection(goodCollection, All)).isEqualTo(TsCollection.builder()
@@ -193,9 +193,9 @@ public class TsStreamAsProviderTest {
     public void testSeriesFill() throws IOException {
         TsProvider p = TsStreamAsProvider.of(provider, goodCursor, monikers, doNothing);
 
-        assertThat(p.getTs(goodSeries, None)).isEqualTo(s3.toBuilder().type(None).data(TsDataBuilderUtil.NO_DATA).clearMeta().build());
+        assertThat(p.getTs(goodSeries, None)).isEqualTo(s3.toBuilder().type(None).data(TsDataCollector.NO_DATA).clearMeta().build());
 
-        assertThat(p.getTs(goodSeries, MetaData)).isEqualTo(s3.toBuilder().type(MetaData).data(TsDataBuilderUtil.NO_DATA).build());
+        assertThat(p.getTs(goodSeries, MetaData)).isEqualTo(s3.toBuilder().type(MetaData).data(TsDataCollector.NO_DATA).build());
 
         assertThat(p.getTs(goodSeries, All)).isEqualTo(s3);
     }

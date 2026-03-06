@@ -38,7 +38,7 @@ public class DefaultProcessingLog implements ProcessingLog{
     private String context(){
         StringBuilder builder=new StringBuilder();
         if (!context.isEmpty()){
-            builder.append(context.get(0));
+            builder.append(context.getFirst());
             for (int i=1; i<context.size(); ++i){
                 builder.append(SEP).append(context.get(i));
             }

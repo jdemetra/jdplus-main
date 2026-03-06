@@ -35,7 +35,7 @@ public final class SourceId {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof SourceId && equals((SourceId) obj));
+        return this == obj || (obj instanceof SourceId si && equals(si));
     }
 
     private boolean equals(SourceId that) {

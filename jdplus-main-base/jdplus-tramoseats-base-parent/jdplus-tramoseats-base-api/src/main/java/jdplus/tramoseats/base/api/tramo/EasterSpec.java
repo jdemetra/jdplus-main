@@ -40,7 +40,7 @@ public final class EasterSpec implements Validatable<EasterSpec> {
         public boolean containsEasterMonday() {
             return this == IncludeEasterMonday;
         }
-    };
+    }
 
     public static final int DEF_IDUR = 6;
     public static final boolean DEF_JULIAN = false;

@@ -108,7 +108,7 @@ public final class TemporalFormatter {
                     (month < 10 ? "-0" : "-") + month +
                     (day < 10 ? "-0" : "-") + day +
                     (hour < 10 ? "T0" : "T") + hour;
-            case DAYS -> year +
+            case WEEKS, DAYS -> year +
                     (month < 10 ? "-0" : "-") + month +
                     (day < 10 ? "-0" : "-") + day;
             case MONTHS -> year +

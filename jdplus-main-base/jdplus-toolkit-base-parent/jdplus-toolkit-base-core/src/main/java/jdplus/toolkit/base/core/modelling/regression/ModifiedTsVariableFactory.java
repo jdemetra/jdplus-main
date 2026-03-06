@@ -75,7 +75,7 @@ class ModifiedTsVariableFactory implements RegressionVariableFactory<ModifiedTsV
             input = output;
         }
 
-        ModifiedTsVariable.Modifier modifier = modifiers.get(0);
+        ModifiedTsVariable.Modifier modifier = modifiers.getFirst();
         ModifierFactory factory = Modifiers.factoryFor(modifier);
         factory.fill(modifier, start, input, buffer);
 

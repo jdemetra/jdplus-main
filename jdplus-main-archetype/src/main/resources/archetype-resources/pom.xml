@@ -1,0 +1,564 @@
+#set( $year = $package.getClass().forName("java.util.Calendar").getInstance().get(1) )
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>pom</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>JDemetra+ v3 - ${topic} extensions</description>
+    <url>${forgeUrl}</url>
+    <inceptionYear>${year}</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>European Union Public Licence (EUPL)</name>
+            <url>https://joinup.ec.europa.eu/page/eupl-text-11-12</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>${devName}</name>
+            <email>${devEmail}</email>
+            <organization>${devOrg}</organization>
+            <organizationUrl>${devOrgUrl}</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:${forgeUrl}.git</connection>
+        <developerConnection>scm:git:${forgeUrl}.git</developerConnection>
+        <url>${forgeUrl}</url>
+    </scm>
+
+    <properties>
+        <!-- Java config -->
+        <project.build.sourceEncoding>@project.build.sourceEncoding@</project.build.sourceEncoding>
+        <project.build.outputTimestamp>@project.build.outputTimestamp@</project.build.outputTimestamp>
+        <maven.compiler.target>@maven.compiler.target@</maven.compiler.target>
+        <maven.compiler.source>@maven.compiler.source@</maven.compiler.source>
+        <maven.compiler.release>@maven.compiler.release@</maven.compiler.release>
+        <requiredMavenVersion>@requiredMavenVersion@</requiredMavenVersion>
+
+        <!-- annotations & processors -->
+        <lombok.version>@lombok.version@</lombok.version>
+        <java-service.version>@java-service.version@</java-service.version>
+        <java-design.version>@java-design.version@</java-design.version>
+        <jspecify.version>@jspecify.version@</jspecify.version>
+
+        <!-- test frameworks -->
+        <junit.version>@junit.version@</junit.version>
+        <assertj-core.version>@assertj-core.version@</assertj-core.version>
+
+        <!-- dependencies -->
+        <jdplus-main.version>@project.version@</jdplus-main.version>
+        <jdplus-main-netbeans.version>@netbeans.version@</jdplus-main-netbeans.version>
+
+        <!-- plugins -->
+        <central-publishing-maven-plugin.version>@central-publishing-maven-plugin.version@</central-publishing-maven-plugin.version>
+        <compatibility-maven-plugin.version>@compatibility-maven-plugin.version@</compatibility-maven-plugin.version>
+        <extra-enforcer-rules.version>@extra-enforcer-rules.version@</extra-enforcer-rules.version>
+        <flatten-maven-plugin.version>@flatten-maven-plugin.version@</flatten-maven-plugin.version>
+        <forbiddenapis.version>@forbiddenapis.version@</forbiddenapis.version>
+        <gitflow-maven-plugin.version>@gitflow-maven-plugin.version@</gitflow-maven-plugin.version>
+        <heylogs-maven-plugin.version>@heylogs-maven-plugin.version@</heylogs-maven-plugin.version>
+        <jreleaser-maven-plugin.version>@jreleaser-maven-plugin.version@</jreleaser-maven-plugin.version>
+        <maven-clean-plugin.version>@maven-clean-plugin.version@</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>@maven-compiler-plugin.version@</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>@maven-dependency-plugin.version@</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>@maven-deploy-plugin.version@</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>@maven-enforcer-plugin.version@</maven-enforcer-plugin.version>
+        <maven-install-plugin.version>@maven-install-plugin.version@</maven-install-plugin.version>
+        <maven-jar-plugin.version>@maven-jar-plugin.version@</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>@maven-javadoc-plugin.version@</maven-javadoc-plugin.version>
+        <maven-resources-plugin.version>@maven-resources-plugin.version@</maven-resources-plugin.version>
+        <maven-site-plugin.version>@maven-site-plugin.version@</maven-site-plugin.version>
+        <maven-source-plugin.version>@maven-source-plugin.version@</maven-source-plugin.version>
+        <maven-surefire-plugin.version>@maven-surefire-plugin.version@</maven-surefire-plugin.version>
+        <modernizer-maven-plugin.version>@modernizer-maven-plugin.version@</modernizer-maven-plugin.version>
+        <nbm-maven-plugin.version>@nbm-maven-plugin.version@</nbm-maven-plugin.version>
+        <pomchecker-enforcer-rules.version>@pomchecker-enforcer-rules.version@</pomchecker-enforcer-rules.version>
+        <sign-maven-plugin.version>@sign-maven-plugin.version@</sign-maven-plugin.version>
+    </properties>
+
+    <dependencies>
+        <!-- annotations & processors -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nbbrd.java-design-util</groupId>
+            <artifactId>java-design-processor</artifactId>
+            <version>${java-design.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nbbrd.java-service-util</groupId>
+            <artifactId>java-service-processor</artifactId>
+            <version>${java-service.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>${jspecify.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- test frameworks -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Enforce reproducible builds -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <!-- Other plugins -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.gaul</groupId>
+                    <artifactId>modernizer-maven-plugin</artifactId>
+                    <version>${modernizer-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>de.thetaphi</groupId>
+                    <artifactId>forbiddenapis</artifactId>
+                    <version>${forbiddenapis.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.nbbrd.heylogs</groupId>
+                    <artifactId>heylogs-maven-plugin</artifactId>
+                    <version>${heylogs-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.amashchenko.maven.plugin</groupId>
+                    <artifactId>gitflow-maven-plugin</artifactId>
+                    <version>${gitflow-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.simplify4u.plugins</groupId>
+                    <artifactId>sign-maven-plugin</artifactId>
+                    <version>${sign-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jreleaser</groupId>
+                    <artifactId>jreleaser-maven-plugin</artifactId>
+                    <version>${jreleaser-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!-- 1 Configure basics -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- 1.1 Enable annotation processors -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.github.nbbrd.java-service-util</groupId>
+                            <artifactId>java-service-processor</artifactId>
+                            <version>${java-service.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.github.nbbrd.java-design-util</groupId>
+                            <artifactId>java-design-processor</artifactId>
+                            <version>${java-design.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <configuration>
+                            <!-- 1.2 Disable module path for unit tests -->
+                            <useModulePath>false</useModulePath>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- 1.2 Disable module path for unit tests -->
+                    <useModulePath>false</useModulePath>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 1.6 Configure Git branching model -->
+                    <gitFlowConfig>
+                        <productionBranch>main</productionBranch>
+                        <versionTagPrefix>v</versionTagPrefix>
+                    </gitFlowConfig>
+                </configuration>
+            </plugin>
+
+            <!-- 2 Enforce rules -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>extra-enforcer-rules</artifactId>
+                        <version>${extra-enforcer-rules.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.kordamp.maven</groupId>
+                        <artifactId>pomchecker-enforcer-rules</artifactId>
+                        <version>${pomchecker-enforcer-rules.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <!-- 2.1 Built-In Rules -->
+                                <banDuplicatePomDependencyVersions />
+                                <dependencyConvergence />
+                                <reactorModuleConvergence />
+                                <requireMavenVersion>
+                                    <version>${requiredMavenVersion}</version>
+                                </requireMavenVersion>
+                                <requireNoRepositories>
+                                    <allowedRepositories>central</allowedRepositories>
+                                    <allowSnapshotRepositories>true</allowSnapshotRepositories>
+                                </requireNoRepositories>
+                                <requirePluginVersions />
+                                <requireProperty>
+                                    <property>project.artifactId</property>
+                                    <message>Project artifactId must follow JD3 pattern</message>
+                                    <regex>^(jdplus)-(\w+)(?:-(base|cli|desktop|bom)(?:-(\w+))?)?$</regex>
+                                </requireProperty>
+                                <requireReleaseDeps>
+                                    <onlyWhenRelease>true</onlyWhenRelease>
+                                </requireReleaseDeps>
+                                <requireUpperBoundDeps />
+                                <!-- 2.2 extra-enforcer-rules -->
+                                <banCircularDependencies />
+                                <banDuplicateClasses />
+                                <enforceBytecodeVersion>
+                                    <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
+                                    <ignoredScopes>
+                                        <ignoreScope>test</ignoreScope>
+                                    </ignoredScopes>
+                                </enforceBytecodeVersion>
+                                <!-- 2.3 pomchecker-enforcer-rules -->
+                                <checkMavenCentral implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
+                                    <release>false</release>
+                                    <strict>false</strict>
+                                </checkMavenCentral>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>check-project</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <rules>
+                                <!-- 2.4 required project files -->
+                                <requireFilesExist>
+                                    <files>
+                                        <file>${project.basedir}/.gitignore</file>
+                                        <file>${project.basedir}/CHANGELOG.md</file>
+                                        <file>${project.basedir}/LICENSE</file>
+                                        <file>${project.basedir}/lombok.config</file>
+                                        <file>${project.basedir}/README.md</file>
+                                    </files>
+                                </requireFilesExist>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.gaul</groupId>
+                <artifactId>modernizer-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>modernizer</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 2.5 upgradable source code -->
+                            <javaVersion>${maven.compiler.release}</javaVersion>
+                            <!-- 2.6 forbidden source code -->
+                            <exclusionPatterns></exclusionPatterns>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>de.thetaphi</groupId>
+                <artifactId>forbiddenapis</artifactId>
+                <configuration>
+                    <failOnUnsupportedJava>false</failOnUnsupportedJava>
+                    <bundledSignatures>
+                        <!-- 2.7 forbidden APIs -->
+                        <bundledSignature>jdk-unsafe</bundledSignature>
+                        <bundledSignature>jdk-deprecated</bundledSignature>
+                        <bundledSignature>jdk-internal</bundledSignature>
+                        <bundledSignature>jdk-non-portable</bundledSignature>
+                        <bundledSignature>jdk-reflection</bundledSignature>
+                    </bundledSignatures>
+                    <suppressAnnotations>
+                        <suppressAnnotation>javax.annotation.processing.Generated</suppressAnnotation>
+                        <suppressAnnotation>lombok.Generated</suppressAnnotation>
+                    </suppressAnnotations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>testCheck</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.nbbrd.heylogs</groupId>
+                <artifactId>heylogs-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                    </execution>
+                </executions>
+                <configuration>
+                    <versioning>semver</versioning>
+                    <tagging>prefix:v</tagging>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Base deploy -->
+        <profile>
+            <id>base-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-empty-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <sourcepath>${project.build.directory}/no-source</sourcepath>
+                            <quiet>true</quiet>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.simplify4u.plugins</groupId>
+                        <artifactId>sign-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Deploy SNAPSHOTS to Central Portal -->
+        <profile>
+            <id>snapshot-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                            <centralSnapshotsUrl>https://central.sonatype.com/repository/maven-snapshots/</centralSnapshotsUrl>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Deploy RELEASES to Central Portal -->
+        <profile>
+            <id>release-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Skip all checks for local builds -->
+        <profile>
+            <id>yolo</id>
+            <properties>
+                <enforcer.skip>true</enforcer.skip>
+                <modernizer.skip>true</modernizer.skip>
+                <forbiddenapis.skip>true</forbiddenapis.skip>
+                <jacoco.skip>true</jacoco.skip>
+                <heylogs.skip>true</heylogs.skip>
+            </properties>
+        </profile>
+    </profiles>
+
+    <!-- Custom repositories: order matters! -->
+    <!-- Maven Central is enforced at top to prevent dependabot to use snapshots as releases -->
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>central-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>old-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>

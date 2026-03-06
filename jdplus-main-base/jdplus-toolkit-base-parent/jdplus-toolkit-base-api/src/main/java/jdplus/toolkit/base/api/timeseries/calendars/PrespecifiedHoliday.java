@@ -45,63 +45,44 @@ public class PrespecifiedHoliday implements Holiday {
     }
     
     public Holiday rawHoliday() {
-        switch (event) {
-            case ShroveMonday:
-                return julian ? EasterRelatedDay.JULIAN_SHROVEMONDAY.reweight(weight).plus(offset)
+        return switch (event) {
+            case ShroveMonday -> julian ? EasterRelatedDay.JULIAN_SHROVEMONDAY.reweight(weight).plus(offset)
                         : EasterRelatedDay.SHROVEMONDAY.reweight(weight).plus(offset);
-            case ShroveTuesday:
-                return julian ? EasterRelatedDay.JULIAN_SHROVETUESDAY.reweight(weight).plus(offset)
+            case ShroveTuesday -> julian ? EasterRelatedDay.JULIAN_SHROVETUESDAY.reweight(weight).plus(offset)
                         : EasterRelatedDay.SHROVETUESDAY.reweight(weight).plus(offset);
-            case AshWednesday:
-                return julian ? EasterRelatedDay.JULIAN_ASHWEDNESDAY.reweight(weight).plus(offset)
+            case AshWednesday -> julian ? EasterRelatedDay.JULIAN_ASHWEDNESDAY.reweight(weight).plus(offset)
                         : EasterRelatedDay.ASHWEDNESDAY.reweight(weight).plus(offset);
-            case Easter:
-                return julian ? EasterRelatedDay.JULIAN_EASTER.reweight(weight).plus(offset)
+            case Easter -> julian ? EasterRelatedDay.JULIAN_EASTER.reweight(weight).plus(offset)
                         : EasterRelatedDay.EASTER.reweight(weight).plus(offset);
-            case MaundyThursday:
-                return julian ? EasterRelatedDay.JULIAN_EASTERTHURSDAY.reweight(weight).plus(offset)
+            case MaundyThursday -> julian ? EasterRelatedDay.JULIAN_EASTERTHURSDAY.reweight(weight).plus(offset)
                         : EasterRelatedDay.EASTERTHURSDAY.reweight(weight).plus(offset);
-            case GoodFriday:
-                return julian ? EasterRelatedDay.JULIAN_EASTERFRIDAY.reweight(weight).plus(offset)
+            case GoodFriday -> julian ? EasterRelatedDay.JULIAN_EASTERFRIDAY.reweight(weight).plus(offset)
                         : EasterRelatedDay.EASTERFRIDAY.reweight(weight).plus(offset);
-            case EasterMonday:
-                return julian ? EasterRelatedDay.JULIAN_EASTERMONDAY.reweight(weight).plus(offset)
+            case EasterMonday -> julian ? EasterRelatedDay.JULIAN_EASTERMONDAY.reweight(weight).plus(offset)
                         : EasterRelatedDay.EASTERMONDAY.reweight(weight).plus(offset);
-            case Ascension:
-                return julian ? EasterRelatedDay.JULIAN_ASCENSION.reweight(weight).plus(offset)
+            case Ascension -> julian ? EasterRelatedDay.JULIAN_ASCENSION.reweight(weight).plus(offset)
                         : EasterRelatedDay.ASCENSION.reweight(weight).plus(offset);
-            case Pentecost:
-                return julian ? EasterRelatedDay.JULIAN_PENTECOST.reweight(weight).plus(offset)
+            case Pentecost -> julian ? EasterRelatedDay.JULIAN_PENTECOST.reweight(weight).plus(offset)
                         : EasterRelatedDay.PENTECOST.reweight(weight).plus(offset);
-            case WhitMonday:
-                return julian ? EasterRelatedDay.JULIAN_WHITMONDAY.reweight(weight).plus(offset)
+            case WhitMonday -> julian ? EasterRelatedDay.JULIAN_WHITMONDAY.reweight(weight).plus(offset)
                         : EasterRelatedDay.WHITMONDAY.reweight(weight).plus(offset);
-            case CorpusChristi:
-                return julian ? EasterRelatedDay.JULIAN_CORPUSCHRISTI.reweight(weight).plus(offset)
+            case CorpusChristi -> julian ? EasterRelatedDay.JULIAN_CORPUSCHRISTI.reweight(weight).plus(offset)
                         : EasterRelatedDay.CORPUSCHRISTI.reweight(weight).plus(offset);
-            case Assumption:
-                return FixedDay.ASSUMPTION.reweight(weight).plus(offset);
-            case Christmas:
-                return FixedDay.CHRISTMAS.reweight(weight).plus(offset);
-            case NewYear:
-                return FixedDay.NEWYEAR.reweight(weight).plus(offset);
-            case MayDay:
-                return FixedDay.MAYDAY.reweight(weight).plus(offset);
-            case AllSaintsDay:
-                return FixedDay.ALLSAINTSDAY.reweight(weight).plus(offset);
-            case Armistice:
-                return FixedDay.ARMISTICE.reweight(weight).plus(offset);
-            case Halloween:
-                return FixedDay.HALLOWEEN.reweight(weight).plus(offset);
+            case Assumption -> FixedDay.ASSUMPTION.reweight(weight).plus(offset);
+            case Christmas -> FixedDay.CHRISTMAS.reweight(weight).plus(offset);
+            case NewYear -> FixedDay.NEWYEAR.reweight(weight).plus(offset);
+            case MayDay -> FixedDay.MAYDAY.reweight(weight).plus(offset);
+            case AllSaintsDay -> FixedDay.ALLSAINTSDAY.reweight(weight).plus(offset);
+            case Armistice -> FixedDay.ARMISTICE.reweight(weight).plus(offset);
+            case Halloween -> FixedDay.HALLOWEEN.reweight(weight).plus(offset);
 
 //            case LaborDay:
 //                return FixedWeekDay.LaborDay.plus(offset);
 //            case ThanksGiving:
 //                return FixedWeekDay.ThanksGiving.plus(Offset);
 
-            default:
-                return null;
-        }
+            default -> null;
+        };
     }
 
     @Override

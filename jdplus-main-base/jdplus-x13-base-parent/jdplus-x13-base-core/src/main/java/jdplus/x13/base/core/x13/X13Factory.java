@@ -204,8 +204,8 @@ public class X13Factory implements SaProcessingFactory<X13Spec, X13Results> {
 
     @Override
     public X13Spec decode(SaSpecification spec) {
-        if (spec instanceof X13Spec) {
-            return (X13Spec) spec;
+        if (spec instanceof X13Spec x13Spec) {
+            return x13Spec;
         } else {
             return null;
         }

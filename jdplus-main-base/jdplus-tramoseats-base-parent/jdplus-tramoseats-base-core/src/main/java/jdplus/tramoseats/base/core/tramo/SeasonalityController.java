@@ -5,7 +5,6 @@
  */
 package jdplus.tramoseats.base.core.tramo;
 
-import jdplus.sa.base.core.tests.SeasonalityTests;
 import jdplus.sa.base.core.tests.SpectralPeaks;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
@@ -15,8 +14,6 @@ import jdplus.toolkit.base.core.regsarima.regular.SeasonalFTest;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
-import static jdplus.sa.base.core.tests.SeasonalityTests.MSHORT;
-import static jdplus.sa.base.core.tests.SeasonalityTests.SHORT;
 
 /**
  *
@@ -79,7 +76,7 @@ class SeasonalityController extends ModelController {
             ++score;
         }
         int n = stests.getDifferencing().getDifferenced().length();
-        if (n >= MSHORT || (period != 12 && n >= SHORT)) {
+        if (n >= SeasonalityTests.MSHORT || (period != 12 && n >= SeasonalityTests.SHORT)) {
             if (SpectralPeaks.hasSeasonalPeaks(stests.getSpectralPeaks())) {
                 ++score;
             }

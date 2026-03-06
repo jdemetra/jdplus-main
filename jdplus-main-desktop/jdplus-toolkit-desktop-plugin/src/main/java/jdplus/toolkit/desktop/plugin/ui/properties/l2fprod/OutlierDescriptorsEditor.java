@@ -241,8 +241,8 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
     @Override
     public void setValue(Object value) {
         definitions_ = new HashMap<>();
-        if (value instanceof OutlierDescriptor[]) {
-            OutlierDescriptor[] outs = ((OutlierDescriptor[]) value);
+        if (value instanceof OutlierDescriptor[] descriptors) {
+            OutlierDescriptor[] outs = descriptors;
             for (OutlierDescriptor out : outs) {
                 LocalDate key = out.getPosition();
                 if (!definitions_.containsKey(key) || definitions_.get(key) == null) {

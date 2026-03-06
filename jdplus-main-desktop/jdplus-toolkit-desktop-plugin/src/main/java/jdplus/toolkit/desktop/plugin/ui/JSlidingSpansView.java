@@ -4,21 +4,27 @@
  */
 package jdplus.toolkit.desktop.plugin.ui;
 
+import ec.util.chart.ColorScheme.KnownColor;
+import ec.util.chart.swing.ChartCommand;
+import ec.util.chart.swing.Charts;
+import ec.util.chart.swing.SwingColorSchemeSupport;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
+import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
 import jdplus.toolkit.desktop.plugin.components.parts.HasColorScheme;
 import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeResolver;
 import jdplus.toolkit.desktop.plugin.components.parts.HasColorSchemeSupport;
 import jdplus.toolkit.desktop.plugin.components.tools.JChartPanel;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
-import jdplus.toolkit.desktop.plugin.util.NbComponents;
-import jdplus.toolkit.desktop.plugin.jfreechart.MatrixChartCommand;
-import jdplus.toolkit.desktop.plugin.ui.processing.TsViewToolkit;
 import jdplus.toolkit.desktop.plugin.html.processing.HtmlSlidingSpanDocument;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import ec.util.chart.ColorScheme.KnownColor;
-import ec.util.chart.swing.Charts;
+import jdplus.toolkit.desktop.plugin.jfreechart.MatrixChartCommand;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset;
+import jdplus.toolkit.desktop.plugin.ui.processing.TsViewToolkit;
+import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -35,13 +41,8 @@ import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
-import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
-import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
-import ec.util.chart.swing.ChartCommand;
-import ec.util.chart.swing.SwingColorSchemeSupport;
-
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -264,7 +265,7 @@ public final class JSlidingSpansView<I> extends JComponent implements HasColorSc
         seriesPanel.putClientProperty("TS_DATA", data);
 
         XYPlot plot = seriesPanel.getChart().getXYPlot();
-        plot.setDataset(TsXYDatasets.from(infoName, data));
+        plot.setDataset(TsXYDataset.ofTsData(Map.of(infoName, data)));
     }
 
     private void clear() {

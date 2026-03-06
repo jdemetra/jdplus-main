@@ -16,17 +16,17 @@ package jdplus.toolkit.base.core.ssf.arima;
  * See the Licence for the specific language governing permissions and 
  * limitations under the Licence.
  */
-
-
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.data.DataBlockStorage;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
+import jdplus.toolkit.base.core.ssf.StateComponent;
 import jdplus.toolkit.base.core.ssf.akf.AkfToolkit;
 import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.composite.CompositeSsf;
 import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
+import jdplus.toolkit.base.core.ssf.utility.DynamicsCoherence;
 import jdplus.toolkit.base.core.ucarima.ModelDecomposer;
 import jdplus.toolkit.base.core.ucarima.SeasonalSelector;
 import jdplus.toolkit.base.core.ucarima.TrendCycleSelector;
@@ -45,24 +45,34 @@ public class SsfUcarimaTest {
     }
 
     @Test
+    public void testDynamics() {
+        UcarimaModel ucm = ucmAirline(-.6, -.8);
+        ucm = ucm.simplify();
+        CompositeSsf ssf = SsfUcarima.of(ucm);
+        StateComponent cmp = ssf.asComponent();
+        DynamicsCoherence.check(cmp.dynamics(), cmp.dim());
+    }
+
+    @Test
     public void testDkSmoother() {
         UcarimaModel ucm = ucmAirline(-.6, -.8);
         ucm = ucm.simplify();
         CompositeSsf ssf = SsfUcarima.of(ucm);
         SsfData data = new SsfData(Data.RETAIL_BOOKSTORES);
-        DefaultSmoothingResults sd = AkfToolkit.smooth(ssf, data, true, true, false);
-        DataBlockStorage ds = DkToolkit.fastSmooth(ssf, data);
+        DefaultSmoothingResults sd = AkfToolkit.smooth(ssf, data, true, true, true);
+        DefaultSmoothingResults ds = DkToolkit.smooth(ssf, data, true, true);
         int[] pos = ssf.componentsPosition();
         for (int i = 0; i < 3; ++i) {
-            System.out.println(sd.getComponent(pos[i]));
-            System.out.println(ds.item(pos[i]));
- //           assertTrue(ds.item(pos[i]).distance(sd.getComponent(pos[i])) < 1e-9);
+//            System.out.println(sd.getComponentVariance(pos[i]));
+//            System.out.println(ds.getComponentVariance(pos[i]));
+            assertTrue(ds.getComponent(pos[i]).distance(sd.getComponent(pos[i])) < 1e-6);
+            assertTrue(ds.getComponentVariance(pos[i]).distance(sd.getComponentVariance(pos[i])) < 1e-6);
         }
 //       System.out.println(sd.getComponentVariance(0));
     }
 
     public static UcarimaModel ucmAirline(double th, double bth) {
-        SarimaOrders spec=SarimaOrders.airline(12);
+        SarimaOrders spec = SarimaOrders.airline(12);
         SarimaModel sarima = SarimaModel.builder(spec)
                 .theta(1, th)
                 .btheta(1, bth)
@@ -78,5 +88,18 @@ public class SsfUcarimaTest {
         UcarimaModel ucm = decomposer.decompose(sarima);
         ucm = ucm.setVarianceMax(-1, false);
         return ucm;
+    }
+
+    public static void main(String[] args) {
+        UcarimaModel ucm = ucmAirline(-.6, -.8);
+        ucm = ucm.simplify();
+        CompositeSsf ssf = SsfUcarima.of(ucm);
+        SsfData data = new SsfData(Data.RETAIL_BOOKSTORES);
+        long t0= System.currentTimeMillis();
+        for (int i = 0; i < 5000; ++i) {
+            DefaultSmoothingResults sd = AkfToolkit.smooth(ssf, data, true, true, true);
+        }
+        long t1= System.currentTimeMillis();
+        System.out.println(t1-t0);
     }
 }

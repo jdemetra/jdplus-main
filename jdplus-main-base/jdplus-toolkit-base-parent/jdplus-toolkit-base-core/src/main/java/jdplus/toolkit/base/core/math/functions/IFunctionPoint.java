@@ -43,9 +43,10 @@ public interface IFunctionPoint {
      * @return Returns the derivatives of the function. May be numerical or
      * analytical derivatives
      */
-    default IFunctionDerivatives derivatives(){
+    default IFunctionDerivatives derivatives() {
         return new NumericalDerivatives(this, false);
-    };
+    }
+
     /**
      * Gets the parameters of the evaluation
      * @return A read only set of parameters.

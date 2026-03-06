@@ -30,17 +30,18 @@ public class DifferencingResult {
 
     private static boolean checkStationarity(DoubleSeq data, int period) {
         IntToDoubleFunction cov = AutoCovariances.autoCovarianceFunction(data, 0);
+        if (cov.applyAsDouble(period) <= 0) {
+            return true;
+        }
         if (period <= 4) {
             double var = cov.applyAsDouble(0);
-            for (int i = 1; i <= period; ++i) {
-                if (cov.applyAsDouble(i) / var <= 0.2) {
+            for (int i = 1; i < period; ++i) {
+                double c = cov.applyAsDouble(i) / var;
+                if (c <= 0.1) {
                     return true;
                 }
             }
         } else {
-            if (cov.applyAsDouble(period) <= 0) {
-                return true;
-            }
             for (int i = 1; i <= 4; ++i) {
                 if (cov.applyAsDouble(i) <= 0) {
                     return true;
@@ -88,6 +89,7 @@ public class DifferencingResult {
         return original.length() - differenced.length();
     }
 
+    @Deprecated
     public DoubleSeq getRestrictedOriginal() {
         return original.drop(getDifferencingOrder(), 0);
     }

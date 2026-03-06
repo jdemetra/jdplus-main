@@ -33,7 +33,9 @@ import org.jfree.data.xy.IntervalXYDataset;
  * time series.
  *
  * @author Philippe Charles
+ * @deprecated Use {@link jdplus.toolkit.desktop.plugin.jfreechart.TsXYDataset} instead.
  */
+@Deprecated
 public final class TsXYDatasets {
 
     private TsXYDatasets() {
@@ -137,14 +139,11 @@ public final class TsXYDatasets {
         }
 
         public IntervalXYDataset build() {
-            switch (list.size()) {
-                case 0:
-                    return Charts.emptyXYDataset();
-                case 1:
-                    return new SingleTsXYDataset(list.get(0));
-                default:
-                    return new MultiTsXYDataset(Collections.unmodifiableList(list));
-            }
+            return switch (list.size()) {
+                case 0 -> Charts.emptyXYDataset();
+                case 1 -> new SingleTsXYDataset(list.getFirst());
+                default -> new MultiTsXYDataset(Collections.unmodifiableList(list));
+            };
         }
     }
 

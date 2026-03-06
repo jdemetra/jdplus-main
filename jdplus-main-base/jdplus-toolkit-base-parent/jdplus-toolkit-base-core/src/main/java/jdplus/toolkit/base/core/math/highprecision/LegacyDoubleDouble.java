@@ -1,5 +1,6 @@
 package jdplus.toolkit.base.core.math.highprecision;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -63,8 +64,9 @@ import java.io.Serializable;
 public class LegacyDoubleDouble implements Serializable,
         Comparable<LegacyDoubleDouble>, Cloneable {
     /**
-	 * 
-	 */
+     * 
+     */
+    @Serial
     private static final long         serialVersionUID      = 1L;
 
     /**

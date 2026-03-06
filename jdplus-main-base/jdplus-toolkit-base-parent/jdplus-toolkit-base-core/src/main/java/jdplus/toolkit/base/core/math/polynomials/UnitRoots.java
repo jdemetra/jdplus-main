@@ -605,7 +605,7 @@ public class UnitRoots implements Cloneable {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof UnitRoots && equals((UnitRoots) obj));
+        return this == obj || (obj instanceof UnitRoots ur && equals(ur));
     }
 
     private boolean equals(UnitRoots other) {

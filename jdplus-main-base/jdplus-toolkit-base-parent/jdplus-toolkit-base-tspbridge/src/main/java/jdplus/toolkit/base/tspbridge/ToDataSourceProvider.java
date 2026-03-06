@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 public class ToDataSourceProvider extends ToTsProvider implements DataSourceProvider {
 
     public static @NonNull DataSourceProvider toDataSourceProvider(ec.tss.tsproviders.@NonNull IDataSourceProvider delegate) {
-        return delegate instanceof FromDataSourceProvider
-                ? ((FromDataSourceProvider) delegate).getDelegate()
+        return delegate instanceof FromDataSourceProvider fdsp
+                ? fdsp.getDelegate()
                 : new ToDataSourceProvider(delegate);
     }
 

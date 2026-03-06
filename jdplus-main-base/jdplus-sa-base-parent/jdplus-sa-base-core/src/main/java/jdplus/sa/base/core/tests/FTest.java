@@ -60,14 +60,16 @@ public class FTest {
             throw new IllegalArgumentException("Invalid periodicity");
         }
         switch (model) {
-            case AR:
+            case AR -> {
                 return processAr();
-            case D1:
+            }
+            case D1 -> {
                 return processDiff();
-            case WN:
-               return process();
-             default:
-         throw new UnsupportedOperationException("Not supported yet."); 
+            }
+            case WN -> {
+                return process();
+            } 
+             default -> throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 
