@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.7.1] - 2026-03-06
+
 ### Fixed
 
 - ![OTHER] Fix Maven phase in build-and-test workflow
@@ -315,7 +317,8 @@ This is the **initial release** of JDemetra+ v3.0.0.
 
 - Initial release
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.7.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.7.1...HEAD
+[3.7.1]: https://github.com/jdemetra/jd3-main/compare/v3.7.0...v3.7.1
 [3.7.0]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...v3.7.0
 [3.6.0]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...v3.6.0
 [3.5.1]: https://github.com/jdemetra/jd3-main/compare/v3.5.0...v3.5.1
