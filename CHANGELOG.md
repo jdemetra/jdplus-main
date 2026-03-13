@@ -260,7 +260,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- ![OTHER] DeepSelect instead of Select to read MetaData with "." in key
 - ![UI] Modify menus for reference specifications
 
 ### Fixed
