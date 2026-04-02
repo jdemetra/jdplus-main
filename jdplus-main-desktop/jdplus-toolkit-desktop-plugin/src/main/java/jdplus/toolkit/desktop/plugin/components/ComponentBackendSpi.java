@@ -16,10 +16,9 @@
  */
 package jdplus.toolkit.desktop.plugin.components;
 
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
+import lombok.NonNull;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import lombok.NonNull;
 
 import javax.swing.*;
 
@@ -28,8 +27,7 @@ import javax.swing.*;
  * @author Philippe Charles
  */
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface ComponentBackendSpi {
 

@@ -30,6 +30,7 @@ import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.FallbackDataMoniker;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
+import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
 import lombok.NonNull;
 import nbbrd.design.DirectImpl;
@@ -101,7 +102,7 @@ public final class OdbcProvider implements DataSourceLoader<OdbcBean>, HasSqlPro
                 .build();
 
         CubeConnection result = TableAsCubeConnection.of(sqlResource);
-        return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCachingLoader.get());
+        return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCaching.FIXME);
     }
 
     private static CubeId toRoot(OdbcBean bean) {

@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -39,7 +38,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class X13 {
 
-    private final X13Loader.Processor ENGINE = new X13Loader.Processor();
+    private final AtomicReference<Processor> ENGINE = new AtomicReference<>(X13Loader.Processor.load());
     private final AtomicReference<Processor> LEGACYENGINE=new AtomicReference<Processor>();
 
     public void setEngine(Processor algorithm) {
@@ -90,7 +89,7 @@ public class X13 {
 
     @InterchangeableProcessor
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback = DefProcessor.class)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, fallback = DefProcessor.class)
     public static interface Processor {
 
         public ProcResults process(TsData series, X13Spec spec, ModellingContext context, List<String> items);

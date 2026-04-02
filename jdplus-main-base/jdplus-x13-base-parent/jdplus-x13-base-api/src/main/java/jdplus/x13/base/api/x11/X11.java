@@ -13,7 +13,8 @@ import nbbrd.design.Development;
 import nbbrd.service.ServiceDefinition;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.List;
-import nbbrd.service.Mutability;
+import java.util.concurrent.atomic.AtomicReference;
+
 import nbbrd.service.Quantifier;
 
 /**
@@ -25,7 +26,7 @@ import nbbrd.service.Quantifier;
 public class X11 {
 
  
-    private final X11Loader.Processor PROCESSOR = new X11Loader.Processor();
+    private final AtomicReference<Processor> PROCESSOR = new AtomicReference<>(X11Loader.Processor.load());
 
     public void setProcessor(Processor algorithm) {
         PROCESSOR.set(algorithm);
@@ -50,7 +51,7 @@ public class X11 {
 
     @InterchangeableProcessor
    @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, fallback=DefProcessor.class)
     public static interface Processor {
 
         ProcResults process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec, @lombok.NonNull List<String> items);

@@ -1,13 +1,16 @@
 package jdplus.toolkit.desktop.plugin.nodes;
 
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 import org.openide.nodes.Node;
 
 import java.awt.*;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 @GlobalService
 public final class NodeAnnotatorManager {
@@ -20,7 +23,12 @@ public final class NodeAnnotatorManager {
     private NodeAnnotatorManager() {
     }
 
-    private final CollectionSupplier<NodeAnnotatorSpi> providers = FixmeCollectionSupplier.of(NodeAnnotatorSpi.class, NodeAnnotatorSpiLoader::load);
+    private final CollectionSupplier<NodeAnnotatorSpi> providers = FixmeCollectionSupplier.of(NodeAnnotatorSpi.class, buildServiceLoader()::get);
+
+    @MightBeGenerated
+    private static NodeAnnotatorSpiLoader buildServiceLoader() {
+        return NodeAnnotatorSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
+    }
 
     public Image annotateIcon(Node node, Image image) {
         Image result = image;

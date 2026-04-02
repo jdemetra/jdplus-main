@@ -31,8 +31,7 @@ import lombok.NonNull;
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface TsActionOpenSpi extends NamedService {
 

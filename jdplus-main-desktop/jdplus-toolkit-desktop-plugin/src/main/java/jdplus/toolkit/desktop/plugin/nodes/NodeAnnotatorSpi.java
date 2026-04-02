@@ -5,10 +5,9 @@
 package jdplus.toolkit.desktop.plugin.nodes;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
+import lombok.NonNull;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import lombok.NonNull;
 import org.openide.nodes.Node;
 
 import java.awt.*;
@@ -19,8 +18,7 @@ import java.awt.*;
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface NodeAnnotatorSpi {
 

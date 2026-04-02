@@ -48,22 +48,22 @@ public interface FileWorkspace extends WorkspaceDescriptor {
 
     @NonNull
     static FileWorkspace create(@NonNull Path file) throws IOException {
-        return FileWorkspaceImpl.create(file, DemetraVersion.JD3, new FamilyHandlerLoader()::get);
+        return FileWorkspaceImpl.create(file, DemetraVersion.JD3, FamilyHandlerLoader.builder().build()::get);
     }
 
     @NonNull
     static FileWorkspace open(@NonNull Path file) throws IOException {
-        return FileWorkspaceImpl.open(file, DemetraVersion.JD3, new FamilyHandlerLoader()::get);
+        return FileWorkspaceImpl.open(file, DemetraVersion.JD3, FamilyHandlerLoader.builder().build()::get);
     }
 
     @NonNull
     static FileWorkspace create(@NonNull Path file, @NonNull DemetraVersion version) throws IOException {
-        return FileWorkspaceImpl.create(file, version, new FamilyHandlerLoader()::get);
+        return FileWorkspaceImpl.create(file, version, FamilyHandlerLoader.builder().build()::get);
     }
 
     @NonNull
     static FileWorkspace open(@NonNull Path file, @NonNull DemetraVersion version) throws IOException {
-        return FileWorkspaceImpl.open(file, version, new FamilyHandlerLoader()::get);
+        return FileWorkspaceImpl.open(file, version, FamilyHandlerLoader.builder().build()::get);
     }
 
 }

@@ -19,9 +19,10 @@ package jdplus.toolkit.base.api.advanced.arima;
 import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.service.ServiceDefinition;
+
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleUnaryOperator;
 import java.util.function.IntToDoubleFunction;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 
 /**
@@ -31,7 +32,7 @@ import nbbrd.service.Quantifier;
 @lombok.experimental.UtilityClass
 public class Arima {
 
-    private final ArimaLoader.Processor PROCESSOR = new ArimaLoader.Processor();
+    private final AtomicReference<Arima.Processor> PROCESSOR = new AtomicReference<>(ArimaLoader.Processor.load());
 
     public void setProcessor(Processor processor) {
         PROCESSOR.set(processor);
@@ -79,7 +80,7 @@ public class Arima {
 
     @InterchangeableProcessor
     @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE)
     @Algorithm
     public static interface Processor {
 

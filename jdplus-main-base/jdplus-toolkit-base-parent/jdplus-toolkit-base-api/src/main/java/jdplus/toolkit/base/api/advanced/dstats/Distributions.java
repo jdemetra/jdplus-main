@@ -20,8 +20,9 @@ import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.service.ServiceDefinition;
 import jdplus.toolkit.base.api.stats.ProbabilityType;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -30,7 +31,7 @@ import nbbrd.service.Quantifier;
 @lombok.experimental.UtilityClass
 public class Distributions {
 
-    private final DistributionsLoader.Processor PROCESSOR = new DistributionsLoader.Processor();
+    private final AtomicReference<Processor> PROCESSOR = new AtomicReference<>(DistributionsLoader.Processor.load());
 
     public void setProcessor(Processor processor) {
         PROCESSOR.set(processor);
@@ -66,7 +67,7 @@ public class Distributions {
 
     @InterchangeableProcessor
     @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE)
     @Algorithm
     public static interface Processor {
 
