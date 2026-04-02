@@ -26,7 +26,6 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -38,7 +37,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class Tramo {
 
-    private final TramoLoader.Processor ENGINE = new TramoLoader.Processor();
+    private final AtomicReference<Tramo.Processor> ENGINE = new AtomicReference<>(TramoLoader.Processor.load());
     private final AtomicReference<Processor> LEGACYENGINE=new AtomicReference<Processor>();
 
     public void setEngine(Processor algorithm) {
@@ -78,7 +77,7 @@ public class Tramo {
 
     @InterchangeableProcessor
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, fallback=DefProcessor.class)
     @FunctionalInterface
     public static interface Processor {
 

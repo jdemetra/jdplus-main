@@ -19,7 +19,7 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 
 @ThreadSafe
 @Algorithm
-@ServiceDefinition(singleton = true)
+@ServiceDefinition()
 @Development(status = Development.Status.Beta)
 public interface ArimaForecasts {
     

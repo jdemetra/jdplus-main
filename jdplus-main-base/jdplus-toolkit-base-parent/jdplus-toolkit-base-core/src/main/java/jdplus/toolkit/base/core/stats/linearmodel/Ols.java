@@ -19,9 +19,10 @@ package jdplus.toolkit.base.core.stats.linearmodel;
 import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.design.Development;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -31,7 +32,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class Ols {
 
-    private final OlsLoader.Processor PROCESSOR = new OlsLoader.Processor();
+    private final AtomicReference<Processor> PROCESSOR = new AtomicReference<>(OlsLoader.Processor.load());
 
     public void setProcessor(Processor algorithm) {
         PROCESSOR.set(algorithm);
@@ -48,7 +49,6 @@ public class Ols {
     @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE, 
-            mutability = Mutability.CONCURRENT,
             fallback = OlsComputer.class)
     @FunctionalInterface
     public static interface Processor {

@@ -18,23 +18,22 @@ package jdplus.toolkit.desktop.plugin.datatransfer;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.tsp.DataSource;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
-import java.awt.datatransfer.Transferable;
-import java.util.Optional;
+import lombok.NonNull;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import lombok.NonNull;
+
+import java.awt.datatransfer.Transferable;
+import java.util.Optional;
 
 /**
  * Class that can produce a DataSource from a Transferable. To be used through
- * {@link DataSourceTransfer}.
+ * {@link DataSourceTransferManager}.
  *
  * @author Philippe Charles
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface DataSourceTransferSpi {
 

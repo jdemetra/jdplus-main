@@ -7,11 +7,25 @@ import org.openide.util.LookupListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public enum NetBeansServiceBackend implements Function<Class, Iterable> {
 
     INSTANCE;
+
+    public static Function<Class<?>, Lookup.Result<?>> lookupFactory() {
+        return Lookup.getDefault()::lookupResult;
+    }
+
+    public static Function<Lookup.Result<?>, Iterable<?>> lookupStreamer() {
+        return Lookup.Result::allInstances;
+    }
+
+    public static Consumer<Lookup.Result<?>> lookupReloader() {
+        return ignore -> {
+        };
+    }
 
     @Override
     public Iterable apply(Class type) {

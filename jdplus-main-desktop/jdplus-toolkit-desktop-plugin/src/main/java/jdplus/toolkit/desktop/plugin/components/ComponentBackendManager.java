@@ -16,14 +16,18 @@
  */
 package jdplus.toolkit.desktop.plugin.components;
 
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpiLoader;
 import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 
 import javax.swing.*;
 import java.util.Objects;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 /**
  * @author Philippe Charles
@@ -38,7 +42,12 @@ public final class ComponentBackendManager {
     private ComponentBackendManager() {
     }
 
-    private final CollectionSupplier<ComponentBackendSpi> providers = FixmeCollectionSupplier.of(ComponentBackendSpi.class, ComponentBackendSpiLoader::load);
+    private final CollectionSupplier<ComponentBackendSpi> providers = FixmeCollectionSupplier.of(ComponentBackendSpi.class, buildServiceLoader()::get);
+
+    @MightBeGenerated
+    private static ComponentBackendSpiLoader buildServiceLoader() {
+        return ComponentBackendSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
+    }
 
     public <T extends JComponent> void install(@NonNull T component) {
         Objects.requireNonNull(component);

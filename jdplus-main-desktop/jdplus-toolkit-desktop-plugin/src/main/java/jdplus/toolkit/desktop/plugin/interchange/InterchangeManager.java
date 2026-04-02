@@ -1,10 +1,11 @@
 package jdplus.toolkit.desktop.plugin.interchange;
 
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 import nbbrd.design.VisibleForTesting;
 import org.openide.util.Exceptions;
 
@@ -13,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 @GlobalService
 public final class InterchangeManager {
@@ -25,7 +28,12 @@ public final class InterchangeManager {
     private final CollectionSupplier<InterchangeSpi> providers;
 
     private InterchangeManager() {
-        this(FixmeCollectionSupplier.of(InterchangeSpi.class, InterchangeSpiLoader::load));
+        this(FixmeCollectionSupplier.of(InterchangeSpi.class, buildServiceLoader()::get));
+    }
+
+    @MightBeGenerated
+    private static InterchangeSpiLoader buildServiceLoader() {
+        return InterchangeSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
     }
 
     @VisibleForTesting

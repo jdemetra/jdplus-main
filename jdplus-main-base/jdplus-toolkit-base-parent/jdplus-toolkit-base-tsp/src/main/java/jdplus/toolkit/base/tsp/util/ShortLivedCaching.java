@@ -14,7 +14,6 @@ import java.time.Duration;
 @InterchangeableProcessor
 @ServiceDefinition(
         quantifier = Quantifier.SINGLE,
-        singleton = true,
         fallback = MapCaching.class
 )
 @ThreadSafe
@@ -26,4 +25,6 @@ public interface ShortLivedCaching {
     <K, V> @NonNull ShortLivedCache<K, V> ofTtl(@NonNull Duration ttl);
 
     <K, V> @NonNull ShortLivedCache<K, V> ofFile(@NonNull File file);
+
+    ShortLivedCaching FIXME = ShortLivedCachingLoader.load();
 }

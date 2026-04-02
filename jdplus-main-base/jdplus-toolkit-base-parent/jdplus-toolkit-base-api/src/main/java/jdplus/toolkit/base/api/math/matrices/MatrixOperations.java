@@ -19,9 +19,10 @@ package jdplus.toolkit.base.api.math.matrices;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -30,7 +31,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class MatrixOperations {
 
-    private final MatrixOperationsLoader.Computer COMPUTER = new MatrixOperationsLoader.Computer();
+    private final AtomicReference<MatrixOperations.Computer> COMPUTER = new AtomicReference<>(MatrixOperationsLoader.Computer.load());
 
     public void setComputer(Computer computer) {
         COMPUTER.set(computer);
@@ -59,7 +60,7 @@ public class MatrixOperations {
     @InterchangeableProcessor
     @Algorithm
     @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE)
     public static interface Computer {
 
         Matrix At(Matrix A);
@@ -74,7 +75,7 @@ public class MatrixOperations {
     @lombok.experimental.UtilityClass
     public static class Symmetric {
 
-        private final MatrixOperationsLoader.SymmetricComputer COMPUTER = new MatrixOperationsLoader.SymmetricComputer();
+        private final AtomicReference<MatrixOperations.Symmetric.SymmetricComputer> COMPUTER = new AtomicReference<>(MatrixOperationsLoader.SymmetricComputer.load());
 
         public void setComputer(SymmetricComputer computer) {
             COMPUTER.set(computer);
@@ -123,7 +124,7 @@ public class MatrixOperations {
         @InterchangeableProcessor
         @Algorithm
         @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE)
         public static interface SymmetricComputer {
 
             Matrix t(Matrix M);
@@ -150,7 +151,7 @@ public class MatrixOperations {
     @lombok.experimental.UtilityClass
     public static class LowerTriangular {
 
-        private final MatrixOperationsLoader.LowerTriangularComputer COMPUTER = new MatrixOperationsLoader.LowerTriangularComputer();
+        private final AtomicReference<MatrixOperations.LowerTriangular.LowerTriangularComputer> COMPUTER = new AtomicReference<>(MatrixOperationsLoader.LowerTriangularComputer.load());
 
         public void setComputer(LowerTriangularComputer computer) {
             COMPUTER.set(computer);
@@ -179,7 +180,7 @@ public class MatrixOperations {
         @InterchangeableProcessor
         @Algorithm
         @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE)
         public static interface LowerTriangularComputer {
 
             Matrix t(Matrix L);
@@ -209,7 +210,7 @@ public class MatrixOperations {
     @lombok.experimental.UtilityClass
     public static class UpperTriangular {
 
-        private final MatrixOperationsLoader.UpperTriangularComputer COMPUTER = new MatrixOperationsLoader.UpperTriangularComputer();
+        private final AtomicReference<MatrixOperations.UpperTriangular.UpperTriangularComputer> COMPUTER = new AtomicReference<>(MatrixOperationsLoader.UpperTriangularComputer.load());
 
         public void setComputer(UpperTriangularComputer computer) {
             COMPUTER.set(computer);
@@ -238,7 +239,7 @@ public class MatrixOperations {
         @InterchangeableProcessor
         @Algorithm
         @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-        @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+        @ServiceDefinition(quantifier = Quantifier.SINGLE)
         public static interface UpperTriangularComputer {
 
             Matrix inverse(Matrix M);

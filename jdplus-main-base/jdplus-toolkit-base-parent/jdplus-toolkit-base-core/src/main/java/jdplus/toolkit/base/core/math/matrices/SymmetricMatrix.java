@@ -17,9 +17,10 @@ import jdplus.toolkit.base.core.math.matrices.decomposition.CroutDoolittle;
 import jdplus.toolkit.base.core.math.matrices.decomposition.LUDecomposition;
 import jdplus.toolkit.base.core.random.MersenneTwister;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -32,12 +33,11 @@ public class SymmetricMatrix {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private final SymmetricMatrixLoader.CholeskyProcessor CHOLESKY = new SymmetricMatrixLoader.CholeskyProcessor();
+    private final AtomicReference<CholeskyProcessor> CHOLESKY = new AtomicReference<>(SymmetricMatrixLoader.CholeskyProcessor.load());
 
     @InterchangeableProcessor
     @Algorithm
     @ServiceDefinition(quantifier = Quantifier.SINGLE,
-            mutability = Mutability.CONCURRENT,
             fallback = Cholesky.class)
     public static interface CholeskyProcessor {
 

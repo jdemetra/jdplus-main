@@ -11,7 +11,6 @@ import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.sa.base.api.SaSpecification;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.util.List;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -20,14 +19,13 @@ import nbbrd.service.ServiceDefinition;
  * @author PALATEJ
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface SaSpecificationMapping{
     SaSpecification read(InformationSet info, TsDomain context);
     InformationSet write(SaSpecification spec, TsDomain context, boolean verbose, DemetraVersion version);
     
     public static SaSpecification of(InformationSet info, TsDomain context){
-        List<SaSpecificationMapping> all = SaSpecificationMappingLoader.get();
-        for (SaSpecificationMapping mapping : all){
+        for (SaSpecificationMapping mapping : FIXME){
             SaSpecification spec=mapping.read(info, context);
             if (spec != null)
                 return spec;
@@ -36,8 +34,7 @@ public interface SaSpecificationMapping{
     }
     
     public static InformationSet toInformationSet(SaSpecification spec, TsDomain context, boolean verbose, DemetraVersion version){
-        List<SaSpecificationMapping> all = SaSpecificationMappingLoader.get();
-        for (SaSpecificationMapping mapping : all){
+        for (SaSpecificationMapping mapping : FIXME){
             InformationSet info=mapping.write(spec, context, verbose, version);
             if (info != null)
                 return info;
@@ -45,4 +42,5 @@ public interface SaSpecificationMapping{
         return null;
     }
 
+    List<SaSpecificationMapping> FIXME = SaSpecificationMappingLoader.load();
 }

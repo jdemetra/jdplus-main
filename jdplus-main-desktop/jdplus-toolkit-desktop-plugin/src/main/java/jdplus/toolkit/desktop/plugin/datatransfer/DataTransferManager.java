@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
@@ -25,8 +24,10 @@ import jdplus.toolkit.base.api.util.Table;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.beans.PropertyChangeSource;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 import nbbrd.design.VisibleForTesting;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.io.function.IOFunction;
@@ -35,8 +36,8 @@ import java.awt.*;
 import java.awt.datatransfer.*;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 /**
  * A support class that deals with the clipboard. It allows the user to get/set
@@ -73,8 +75,13 @@ public final class DataTransferManager implements PropertyChangeSource.WithWeakL
     private boolean validClipboard;
 
     private DataTransferManager() {
-        this(FixmeCollectionSupplier.of(DataTransferSpi.class, DataTransferSpiLoader::load), log, false);
+        this(FixmeCollectionSupplier.of(DataTransferSpi.class, buildServiceLoader()::get), log, false);
         clipboardValidator.register(Toolkit.getDefaultToolkit().getSystemClipboard());
+    }
+
+    @MightBeGenerated
+    private static DataTransferSpiLoader buildServiceLoader() {
+        return DataTransferSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
     }
 
     @VisibleForTesting

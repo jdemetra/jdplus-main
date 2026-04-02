@@ -30,14 +30,14 @@ import java.util.Collections;
 @lombok.experimental.UtilityClass
 public class TsModifierAdapters {
 
-    private final AtomicReference<TsModifierAdapterLoader> ADAPTERS = new AtomicReference<>(new TsModifierAdapterLoader());
+    private final AtomicReference<List<TsModifierAdapter>> ADAPTERS = new AtomicReference<>(TsModifierAdapterLoader.load());
 
     private List<TsModifierAdapter> adapters() {
-        return ADAPTERS.get().get();
+        return ADAPTERS.get();
     }
 
     public void reload() {
-        ADAPTERS.set(new TsModifierAdapterLoader());
+        ADAPTERS.set(TsModifierAdapterLoader.load());
     }
 
     public List<Class> getXmlClasses() {

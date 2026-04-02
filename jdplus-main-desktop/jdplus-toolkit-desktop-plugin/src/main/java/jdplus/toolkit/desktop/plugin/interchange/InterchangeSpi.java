@@ -18,12 +18,11 @@ package jdplus.toolkit.desktop.plugin.interchange;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.desktop.plugin.NamedService;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
+import lombok.NonNull;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.ServiceSorter;
-import lombok.NonNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,8 +35,7 @@ import java.util.List;
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface InterchangeSpi extends NamedService {
 
