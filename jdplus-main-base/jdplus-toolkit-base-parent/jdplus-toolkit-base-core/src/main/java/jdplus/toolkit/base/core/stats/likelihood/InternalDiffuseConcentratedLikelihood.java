@@ -77,7 +77,7 @@ final class InternalDiffuseConcentratedLikelihood implements DiffuseConcentrated
         return nxd;
     }
     /**
-     * Number ofFunction regression variables
+     * Number of regression variables
      *
      * @return
      */

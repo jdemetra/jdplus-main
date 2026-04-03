@@ -35,6 +35,7 @@ import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolver;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.Householder2;
 import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
+import jdplus.toolkit.base.core.stats.likelihood.DiffuseConcentratedLikelihood;
 
 /**
  * QR variant of the augmented Kalman filter. See for instance Gomez-Maravall.
@@ -47,8 +48,11 @@ public class QRFilter {
     private ISsfData o;
     private FastMatrix X, Xl;
     private DataBlock yl;
-    private double ldet;
-
+    private int n;
+    // result of the regression yl=Xl*b+mu
+    private QRLeastSquaresSolution ls;
+    private DoubleSeq b, e;
+    private double ldet, ssq;
     private static final double EPS = 1e-12;
 
     /**
@@ -87,11 +91,18 @@ public class QRFilter {
         ssf.diffuseEffects(X);
         yl = DataBlock.of(fr.errors(true, true));
         FastFilter ffilter = new FastFilter(ssf, fr);
-        int n = ffilter.getOutputLength(X.getRowsCount());
+        n = ffilter.getOutputLength(X.getRowsCount());
         Xl = FastMatrix.make(n, X.getColumnsCount());
         for (int i = 0; i < X.getColumnsCount(); ++i) {
             ffilter.apply(X.column(i), Xl.column(i));
         }
+
+        Householder2 hous = new Householder2();
+        QRDecomposition qr = hous.decompose(Xl.deepClone());
+        ls = QRLeastSquaresSolver.leastSquares(qr, yl, 1e-12);
+        b = ls.getB();
+        e = ls.getE();
+        ssq = ls.getSsqErr();
         return true;
     }
 
@@ -108,7 +119,7 @@ public class QRFilter {
         }
         QRDecomposition qrx = new Householder2().decompose(Q);
         double mcorr = 2 * LogSign.of(qrx.rawRdiagonal()).getValue();
-        int nd = UpperTriangularMatrix.rank(qrx.rawR(), EPS), n = Xl.getRowsCount();
+        int nd = UpperTriangularMatrix.rank(qrx.rawR(), EPS);
 
         return MarginalLikelihood.builder(n, nd)
                 .ssqErr(dll.ssq())
@@ -122,13 +133,7 @@ public class QRFilter {
     }
 
     public DiffuseLikelihood diffuseLikelihood(boolean scalingFactor, boolean res) {
-        Householder2 hous = new Householder2();
-        QRDecomposition qr = hous.decompose(Xl.deepClone());
-        QRLeastSquaresSolution ls = QRLeastSquaresSolver.leastSquares(qr, yl, 1e-12);
-        DataBlock b = DataBlock.of(ls.getB());
-        DataBlock e = DataBlock.of(ls.getE());
-        int nd = b.length(), n = Xl.getRowsCount();
-        double ssq = ls.getSsqErr();
+        int nd = b.length();
         double dcorr = 2 * LogSign.of(ls.rawRDiagonal()).getValue();
         return DiffuseLikelihood.builder(n, nd)
                 .ssqErr(ssq)
@@ -140,20 +145,39 @@ public class QRFilter {
 
     }
 
+    /**
+     * @param ndiffuse Number of diffuse effects that are actually considered as
+     * diffuse, the other ones being considered as fixed unknown; The diffuse
+     * elements must be the first ones in the diffuse constraints matrix. Not
+     * used in the profile likelihood.
+     * @param scalingFactor
+     * @param res
+     * @return
+     */
+    public DiffuseConcentratedLikelihood mixedLikelihood(int ndiffuse, boolean scalingFactor, boolean res) {
+
+        double dcorr = ndiffuse == 0 ? 0 : 2 * LogSign.of(ls.rawRDiagonal().extract(0, ndiffuse)).getValue();
+        FastMatrix bvar = SymmetricMatrix.UUt(UpperTriangularMatrix
+                .inverse(ls.rawR()));
+        return DiffuseConcentratedLikelihood.builder(n, ndiffuse, 0)
+                .coefficients(b)
+                .unscaledCovariance(bvar.dropTopLeft(ndiffuse, ndiffuse))
+                .ssqErr(ssq)
+                .logDeterminant(ldet)
+                .logDiffuseDeterminant(dcorr)
+                .scalingFactor(scalingFactor)
+                .residuals(res ? e : null)
+                .build();
+    }
+
     public ProfileLikelihood profileLikelihood() {
-        Householder2 hous = new Householder2();
-        QRDecomposition qr = hous.decompose(Xl.deepClone());
-        QRLeastSquaresSolution ls = QRLeastSquaresSolver.leastSquares(qr, yl, 1e-12);
-        DataBlock b = DataBlock.of(ls.getB());
-        int n = Xl.getRowsCount();
-        double ssq = ls.getSsqErr();
         FastMatrix R = ls.rawR();
         FastMatrix bvar = SymmetricMatrix.UUt(UpperTriangularMatrix
                 .inverse(R));
         bvar.mul(ssq / n);
         ProfileLikelihood pll = new ProfileLikelihood();
         pll.set(ssq, ldet, b, bvar, n);
-        pll.set(ls.getE());
+        pll.set(e);
         return pll;
     }
 
@@ -163,6 +187,11 @@ public class QRFilter {
         X = null;
         Xl = null;
         yl = null;
+        b = null;
+        e = null;
+        ls = null;
+        ssq = 0;
+        n = 0;
     }
 
 }

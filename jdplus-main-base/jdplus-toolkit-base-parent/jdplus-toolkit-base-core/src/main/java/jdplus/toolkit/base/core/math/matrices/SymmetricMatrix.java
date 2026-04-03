@@ -5,6 +5,7 @@
  */
 package jdplus.toolkit.base.core.math.matrices;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
@@ -203,20 +204,21 @@ public class SymmetricMatrix {
             return I;
         }
     }
-    
+
     /**
      * Solve Sx =y using Cholesky decomposition
+     *
      * @param S A symmetric matrix. On exit, it contains the cholesky factor
      * @param y On entry y; on exit x
      * @param clone Clone the S matrix, so that it is not modified
      */
-    public void solve(final FastMatrix S, DataBlock y, boolean clone){
+    public void solve(final FastMatrix S, DataBlock y, boolean clone) {
         FastMatrix lower = clone ? S.deepClone() : S;
         lcholesky(lower);
         LowerTriangularMatrix.solveLx(lower, y);
         LowerTriangularMatrix.solvexL(lower, y);
     }
-    
+
     /**
      * Solves SX=B, where S is a symmetric positive definite matrix.
      *
@@ -262,7 +264,6 @@ public class SymmetricMatrix {
         // B contains Y'=(XL)' or Y = XL
         LowerTriangularMatrix.solveXL(Q, B);
     }
-     
 
     public FastMatrix XXt(final FastMatrix X) {
         int nr = X.getRowsCount();
@@ -398,16 +399,16 @@ public class SymmetricMatrix {
         if (!S.isSquare()) {
             throw new MatrixException(MatrixException.SQUARE);
         }
-        int n = S.getRowsCount(), lda=S.getColumnIncrement(), start=S.start;
+        int n = S.getRowsCount(), lda = S.getColumnIncrement(), start = S.start;
         if (n == 1) {
             return;
         }
         double[] x = S.getStorage();
         int del = lda + 1;
-        int max = start+lda*n;
+        int max = start + lda * n;
         for (int id = start; id < max; id += del) {
             for (int il = id + 1, iu = id + lda; iu < max; il++, iu += lda) {
-                double q=(x[iu]+ x[il])/2;
+                double q = (x[iu] + x[il]) / 2;
                 x[il] = q;
                 x[iu] = q;
             }
@@ -434,16 +435,58 @@ public class SymmetricMatrix {
         if (!S.isSquare()) {
             throw new MatrixException(MatrixException.SQUARE);
         }
-        int n = S.getRowsCount(), lda=S.getColumnIncrement(), start=S.start;
+        int n = S.getRowsCount(), lda = S.getColumnIncrement(), start = S.start;
         if (n == 1) {
             return;
         }
         double[] x = S.getStorage();
         int del = lda + 1;
-        int max = start+lda*n;
+        int max = start + lda * n;
         for (int id = start; id < max; id += del) {
             for (int il = id + 1, iu = id + lda; iu < max; il++, iu += lda) {
                 x[iu] = x[il];
+            }
+        }
+    }
+
+    public void addXaXt(FastMatrix S, double a, DataBlock x) {
+        if (!S.isSquare()) {
+            throw new MatrixException(MatrixException.SQUARE);
+        }
+        if (a == 0) {
+            return;
+        }
+        double[] ps = S.getStorage(), px = x.getStorage();
+        int n = S.getRowsCount(), lda = S.getColumnIncrement(), start = S.start;
+        int del = lda + 1;
+        int max = start + lda * n;
+        int xstart = x.getStartPosition();
+        int xend = x.getEndPosition(), xinc = x.getIncrement();
+        if (xinc == 1) {
+            for (int id = start; id < max; id += del, ++xstart) {
+                double cur = px[xstart];
+                if (cur != 0) {
+                    double tmp = cur * a;
+                    ps[id] += cur * tmp;
+                    for (int si = id + 1, su = id + lda, xi = xstart + 1; xi != xend; ++si, ++xi, su += lda) {
+                        double z = ps[si] + px[xi] * tmp;
+                        ps[si] = z;
+                        ps[su] = z;
+                    }
+                }
+            }
+        } else {
+            for (int id = start; id < max; id += del, xstart += xinc) {
+                double cur = px[xstart];
+                if (cur != 0) {
+                    double tmp = cur * a;
+                    ps[id] += cur * tmp;
+                    for (int si = id + 1, su = id + lda, xi = xstart + xinc; xi != xend; ++si, xi += xinc, su += lda) {
+                        double z = ps[si] + px[xi] * tmp;
+                        ps[si] = z;
+                        ps[su] = z;
+                    }
+                }
             }
         }
     }
@@ -452,13 +495,13 @@ public class SymmetricMatrix {
         if (!S.isSquare()) {
             throw new MatrixException(MatrixException.SQUARE);
         }
-        int n = S.getRowsCount(), lda=S.getColumnIncrement(), start=S.start;
+        int n = S.getRowsCount(), lda = S.getColumnIncrement(), start = S.start;
         if (n == 1) {
             return;
         }
         double[] x = S.getStorage();
         int del = lda + 1;
-        int max = start+lda*n;
+        int max = start + lda * n;
         for (int id = start; id < max; id += del) {
             for (int il = id + 1, iu = id + lda; iu < max; il++, iu += lda) {
                 x[il] = x[iu];
@@ -587,7 +630,7 @@ public class SymmetricMatrix {
         SYRK.lapply(false, 1, X, 0, M);
         fromLower(M);
     }
-    
+
 //    /**
 //     * Apply permutations on the given symmetric matrix.
 //     * The permutation matrix is defined by P[i, j] = P[pvt[j], j]=1
@@ -599,5 +642,4 @@ public class SymmetricMatrix {
 //        // not optimized !
 //        
 //    }
-
 }

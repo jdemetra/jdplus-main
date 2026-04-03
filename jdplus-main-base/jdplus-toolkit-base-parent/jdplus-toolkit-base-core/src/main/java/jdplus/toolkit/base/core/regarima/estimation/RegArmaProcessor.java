@@ -48,7 +48,7 @@ public class RegArmaProcessor {
                 .missingCount(model.getMissingCount())
                 .mapping(mapping)
                 .maximumLikelihood(ml)
-                .parallelProcessing(mt)
+                .parallelProcessing(false)
                 .build();
 
         boolean ok = minimizer.minimize(fn.ssqEvaluate(start));

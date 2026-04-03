@@ -20,6 +20,7 @@ import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.ISsfDynamics;
 import jdplus.toolkit.base.core.ssf.ISsfInitialization;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
@@ -168,12 +169,15 @@ public class AugmentedFilter {
             }
             state.next(t++, dynamics);
         }
+        collapsingPos=t;
         return true;
     }
 
     // P -= c*r
     private void update(FastMatrix P, double v, DataBlock C) {
-        P.addXaXt(-1 / v, C);
+        SymmetricMatrix.addXaXt(P, -1/v, C);
+//        P.addXaXt(-1 / v, C);
+//        SymmetricMatrix.reenforceSymmetry(P);
     }
 
     private boolean collapse(int t, IAugmentedFilteringResults decomp) {
@@ -184,11 +188,7 @@ public class AugmentedFilter {
             return false;
         }
         // update the state vector
-        if (!decomp.collapse(t, state)) {
-            return false;
-        }
-        collapsingPos = t;
-        return true;
+        return decomp.collapse(t, state);
     }
 
 }
