@@ -30,6 +30,7 @@ import jdplus.toolkit.base.core.ssf.univariate.ISsfData;
  *
  * @author PALATEJ
  */
+@Deprecated
 @lombok.experimental.UtilityClass
 public class QRSmoother {
 

@@ -12,15 +12,25 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoublesMath;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
+import jdplus.toolkit.base.api.timeseries.calendars.GenericTradingDays;
+import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
 import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.modelling.regression.Regression;
+import jdplus.toolkit.base.core.ssf.basic.RegSsf;
 import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.likelihood.DiffuseLikelihood;
 import jdplus.toolkit.base.core.ssf.likelihood.MarginalLikelihood;
 import jdplus.toolkit.base.core.ssf.likelihood.ProfileLikelihood;
 import jdplus.toolkit.base.core.ssf.univariate.DefaultFilteringResults;
+import jdplus.toolkit.base.core.ssf.univariate.IConcentratedLikelihoodComputer;
 import jdplus.toolkit.base.core.ssf.univariate.OrdinaryFilter;
 import jdplus.toolkit.base.core.ssf.univariate.Ssf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
+import jdplus.toolkit.base.core.ssf.univariate.SsfRegressionModel;
+import jdplus.toolkit.base.core.stats.likelihood.DiffuseConcentratedLikelihood;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,6 +72,7 @@ public class QRFilterTest {
         DiffuseLikelihood ll3 = AkfToolkit.likelihoodComputer(true, true, true).compute(ssf, ssfData);
         assertEquals(ll1.logLikelihood(), ll2.logLikelihood(), 1e-6);
         assertEquals(ll1.logLikelihood(), ll3.logLikelihood(), 1e-6);
+
     }
 
     @Test
@@ -114,5 +125,36 @@ public class QRFilterTest {
         cl = DoublesMath.add(AL, BL.times(3.5));
 //        System.out.println(cl);
         assertTrue(cl.distance(CL) < 1e-13);
+    }
+
+    public static void main(String[] args) {
+        SarimaOrders spec = SarimaOrders.airline(12);
+        TsData s = Data.TS_PROD;
+        GenericTradingDays td = GenericTradingDays.contrasts(DayClustering.TD7);
+        FastMatrix regs = Regression.matrix(s.getDomain(), new GenericTradingDaysVariable(td));
+        IConcentratedLikelihoodComputer<DiffuseConcentratedLikelihood> computer = DkToolkit.concentratedLikelihoodComputer(true, true, true);
+        for (double i = -.3; i > -.60; i-=.001) {
+            SarimaModel model = SarimaModel.builder(spec).theta(i).btheta(-.8).build();
+            Ssf ssf = SsfArima.ssf(model);
+            Ssf rssf = RegSsf.ssf(ssf, regs);
+            SsfData data = new SsfData(s.getValues());
+            SsfRegressionModel ssfregs=new SsfRegressionModel(ssf, data, regs, 0);
+            
+            QRFilter filter=new QRFilter();
+            filter.process(rssf, data);
+            System.out.print(filter.profileLikelihood().logLikelihood());
+            System.out.print('\t');
+            System.out.print(filter.diffuseLikelihood(true, true).logLikelihood());
+            System.out.print('\t');
+            System.out.print(filter.marginalLikelihood(true, true).logLikelihood());
+            System.out.print('\t');
+            System.out.print(filter.mixedLikelihood(0, true, true).logLikelihood());
+            System.out.print('\t');
+            System.out.print(filter.mixedLikelihood(rssf.getDiffuseDim(), true, true).logLikelihood());
+            System.out.print('\t');
+            System.out.print(filter.mixedLikelihood(ssf.getDiffuseDim(), true, true).logLikelihood());
+            System.out.print('\t');
+            System.out.println(computer.compute(ssfregs).logLikelihood());
+        }
     }
 }

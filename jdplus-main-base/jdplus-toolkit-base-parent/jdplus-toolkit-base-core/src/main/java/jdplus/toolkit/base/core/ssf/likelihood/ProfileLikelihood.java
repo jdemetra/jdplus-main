@@ -43,7 +43,7 @@ public class ProfileLikelihood implements Likelihood {
              */
             ldet;
     private int n;
-    private DataBlock b;
+    private DoubleSeq b;
     private FastMatrix varB;
 
     private double[] res;
@@ -146,7 +146,7 @@ public class ProfileLikelihood implements Likelihood {
      * @param n The number of observations
      * @return
      */
-    public boolean set(final double ssqerr, final double ldet, final DataBlock b, final FastMatrix varB,
+    public boolean set(final double ssqerr, final double ldet, final DoubleSeq b, final FastMatrix varB,
             final int n) {
         this.ssqerr = ssqerr;
         this.ldet = ldet;

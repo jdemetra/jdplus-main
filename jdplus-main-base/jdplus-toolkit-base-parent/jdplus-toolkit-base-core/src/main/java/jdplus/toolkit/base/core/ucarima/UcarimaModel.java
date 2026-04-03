@@ -45,6 +45,7 @@ public class UcarimaModel {
         private IArimaModel model;
         private ArrayList<ArimaModel> components = new ArrayList<>();
         private boolean verify = false;
+        private double eps = EPS;
 
         private Builder() {
         }
@@ -53,15 +54,21 @@ public class UcarimaModel {
 
             if (verify && model != null) {
                 ArimaModel sum = sum();
-                if (!ArimaModel.same(model, sum, EPS)) {
+                if (!ArimaModel.same(model, sum, eps)) {
                     throw new UcarimaException();
                 }
             }
-            return new UcarimaModel(model == null ? sum() : model, components.toArray(new ArimaModel[components.size()]));
+            return new UcarimaModel(model == null ? sum() : model, components.toArray(ArimaModel[]::new));
         }
 
         public Builder verify(boolean verify) {
             this.verify = verify;
+            return this;
+        }
+
+        public Builder verify(double precision) {
+            this.verify = true;
+            this.eps=precision;
             return this;
         }
 

@@ -31,18 +31,20 @@ public class EstimateSpec {
     public static final EstimateSpec DEFAULT=builder().build();
 
     public static final boolean DEF_APP_HESSIAN = false;
-    public static final double EPS = 1e-7;
+    public static final double EPS = 1e-7, DEPS=1e-4;
 
     @lombok.NonNull
     private TimeSelector span;
     // operational
     private double precision;
+    private double deltaDerivatives;
     private boolean approximateHessian;
 
     public static Builder builder() {
         return new Builder()
                 .span(TimeSelector.all())
                 .precision(EPS)
+                .deltaDerivatives(DEPS)
                 .approximateHessian(DEF_APP_HESSIAN);
     }
     

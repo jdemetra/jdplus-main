@@ -31,12 +31,8 @@ public class DefaultSmoothingResults extends StateStorage implements ISmoothingR
     }
     
     @Override
-    public void prepare(int dim, int start, int end) {
-        super.prepare(dim, start, end);
-    }
-
-    @Override
     public void rescaleVariances(double factor) {
+        super.rescaleVariances(factor);
     }
 
     public static DefaultSmoothingResults full() {

@@ -21,6 +21,7 @@ import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.ssf.akf.AkfToolkit;
 import jdplus.toolkit.base.core.ssf.akf.SmoothingOutput;
 import jdplus.toolkit.base.core.ssf.composite.CompositeSsf;
+import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 
 /**
@@ -41,15 +42,16 @@ public class SplineComponentTest {
                 .add(RegularSplineComponent.stateComponent(sd,1), RegularSplineComponent.loading(sd, 0))
                 .build();
         
-        SmoothingOutput rslt = AkfToolkit.robustSmooth(ssf, new SsfData(Data.PROD), true, true);
-//        System.out.println(rslt.getSmoothing().getComponent(ssf.componentsPosition()[0]));
-//        System.out.println(rslt.getSmoothing().getComponent(ssf.componentsPosition()[1]));
+        DefaultSmoothingResults rslt = AkfToolkit.smooth(ssf, new SsfData(Data.PROD), true, true, true);
+        System.out.println(rslt.getComponent(ssf.componentsPosition()[0]));
+        System.out.println(rslt.getComponent(ssf.componentsPosition()[1]));
+        System.out.println(rslt.getComponentVariance(ssf.componentsPosition()[0]));
         
         ISsfLoading loading = RegularSplineComponent.loading(sd, 0);
-        for (int i=0; i<rslt.getSmoothing().size(); ++i){
-            double z=loading.ZX(i, rslt.getSmoothing().a(i).extract(ssf.componentsPosition()[2], ssf.componentsDimension()[2]));
-//            System.out.print(z);
-//            System.out.print('\t');
+        for (int i=0; i<rslt.size(); ++i){
+            double z=loading.ZX(i, rslt.a(i).extract(ssf.componentsPosition()[2], ssf.componentsDimension()[2]));
+            System.out.print(z);
+            System.out.print('\t');
         }
         
      }
