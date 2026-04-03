@@ -9,8 +9,9 @@ import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.design.Development;
 import internal.toolkit.base.core.math.functions.gsl.integration.NumericalIntegrationProcessor;
+
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleUnaryOperator;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -22,7 +23,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class NumericalIntegration {
 
-    private final NumericalIntegrationLoader.Processor PROCESSOR = new NumericalIntegrationLoader.Processor();
+    private final AtomicReference<Processor> PROCESSOR = new AtomicReference<>(NumericalIntegrationLoader.Processor.load());
 
     public void setProcessor(Processor algorithm) {
         PROCESSOR.set(algorithm);
@@ -38,7 +39,7 @@ public class NumericalIntegration {
 
     @InterchangeableProcessor
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT
+    @ServiceDefinition(quantifier = Quantifier.SINGLE
       , fallback = NumericalIntegrationProcessor.class)
     @FunctionalInterface
     public static interface Processor {

@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.util.List;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import jdplus.toolkit.base.api.information.Explorable;
@@ -34,7 +33,7 @@ import jdplus.toolkit.base.api.dictionaries.Dictionary;
  * @param <R> Output
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.CONCURRENT, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface SaProcessingFactory<I extends SaSpecification, R extends Explorable> {
 
     AlgorithmDescriptor descriptor();

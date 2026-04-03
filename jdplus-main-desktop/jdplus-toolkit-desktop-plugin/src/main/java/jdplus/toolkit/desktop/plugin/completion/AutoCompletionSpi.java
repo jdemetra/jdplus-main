@@ -16,12 +16,11 @@
  */
 package jdplus.toolkit.desktop.plugin.completion;
 
-import jdplus.toolkit.base.api.design.ExtensionPoint;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import ec.util.completion.swing.JAutoCompletion;
+import jdplus.toolkit.base.api.design.ExtensionPoint;
+import lombok.NonNull;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import lombok.NonNull;
 
 import javax.swing.text.JTextComponent;
 
@@ -32,8 +31,7 @@ import javax.swing.text.JTextComponent;
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface AutoCompletionSpi {
     

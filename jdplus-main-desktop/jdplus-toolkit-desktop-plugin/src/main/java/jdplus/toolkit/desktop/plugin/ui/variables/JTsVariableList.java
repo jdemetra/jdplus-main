@@ -27,7 +27,7 @@ import jdplus.toolkit.base.api.util.DefaultNameValidator;
 import jdplus.toolkit.base.api.util.INameValidator;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.tsp.util.ShortLivedCache;
-import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
+import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
 import jdplus.toolkit.desktop.plugin.NamedService;
 import jdplus.toolkit.desktop.plugin.TsActionManager;
@@ -229,7 +229,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         ((CustomTableModel) table.getModel()).fireTableStructureChanged();
     }
 
-    private static final ShortLivedCache<TsMoniker, String> DESCRIPTION_CACHE = ShortLivedCachingLoader.get().ofTtl(Duration.ofMinutes(5));
+    private static final ShortLivedCache<TsMoniker, String> DESCRIPTION_CACHE = ShortLivedCaching.FIXME.ofTtl(Duration.ofMinutes(5));
 
     // FIXME: this is a quick&dirty fix; should be replaced by a proper cache+async solution
     private static String getDescription(TsMoniker moniker) {

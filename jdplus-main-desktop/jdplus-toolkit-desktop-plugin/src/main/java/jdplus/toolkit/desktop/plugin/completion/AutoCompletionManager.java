@@ -1,13 +1,16 @@
 package jdplus.toolkit.desktop.plugin.completion;
 
 import ec.util.completion.swing.JAutoCompletion;
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 
 import javax.swing.text.JTextComponent;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 /**
  *
@@ -23,7 +26,12 @@ public final class AutoCompletionManager {
     private AutoCompletionManager() {
     }
 
-    private final CollectionSupplier<AutoCompletionSpi> providers = FixmeCollectionSupplier.of(AutoCompletionSpi.class, AutoCompletionSpiLoader::load);
+    private final CollectionSupplier<AutoCompletionSpi> providers = FixmeCollectionSupplier.of(AutoCompletionSpi.class, buildServiceLoader()::get);
+
+    @MightBeGenerated
+    private static AutoCompletionSpiLoader buildServiceLoader() {
+        return AutoCompletionSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
+    }
 
     @NonNull
     public JAutoCompletion bind(@NonNull Class<?> path, @NonNull JTextComponent textComponent) {

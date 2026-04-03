@@ -157,9 +157,9 @@ public class SsfUcarimaTest {
         }
         return ssq / m;
     }
-    
-    public static void rescaleVariances(DefaultSmoothingResults r, double v){
-        for (int i=0; i<r.size(); ++i){
+
+    public static void rescaleVariances(DefaultSmoothingResults r, double v) {
+        for (int i = 0; i < r.size(); ++i) {
             r.P(i).mul(v);
         }
     }

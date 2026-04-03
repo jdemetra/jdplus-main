@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -39,7 +38,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class TramoSeats {
 
-    private final TramoSeatsLoader.Processor ENGINE = new TramoSeatsLoader.Processor();
+    private final AtomicReference<TramoSeats.Processor> ENGINE = new AtomicReference<>(TramoSeatsLoader.Processor.load());
     private final AtomicReference<Processor> LEGACYENGINE = new AtomicReference<Processor>();
 
     public void setEngine(Processor algorithm) {
@@ -90,7 +89,7 @@ public class TramoSeats {
 
     @InterchangeableProcessor
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback = DefProcessor.class)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, fallback = DefProcessor.class)
     public static interface Processor {
 
         public ProcResults process(TsData series, TramoSeatsSpec spec, ModellingContext context, List<String> addtionalItems);

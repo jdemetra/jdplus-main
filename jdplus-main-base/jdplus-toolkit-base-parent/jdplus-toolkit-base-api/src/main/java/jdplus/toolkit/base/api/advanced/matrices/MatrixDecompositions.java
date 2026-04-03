@@ -18,9 +18,10 @@ package jdplus.toolkit.base.api.advanced.matrices;
 
 import jdplus.toolkit.base.api.design.Algorithm;
 import nbbrd.service.ServiceDefinition;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -29,7 +30,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 @lombok.experimental.UtilityClass
 public class MatrixDecompositions {
 
-    private final MatrixDecompositionsLoader.Processor PROCESSOR = new MatrixDecompositionsLoader.Processor();
+    private final AtomicReference<MatrixDecompositions.Processor> PROCESSOR = new AtomicReference<>(MatrixDecompositionsLoader.Processor.load());
 
     public void setProcessor(Processor processor) {
         PROCESSOR.set(processor);
@@ -44,7 +45,7 @@ public class MatrixDecompositions {
     }
 
     @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE)
     @Algorithm
     public static interface Processor {
 

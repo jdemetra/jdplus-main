@@ -16,13 +16,14 @@
  */
 package jdplus.toolkit.desktop.plugin;
 
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 import nbbrd.design.MightBePromoted;
 import nbbrd.design.swing.OnEDT;
 import org.jspecify.annotations.Nullable;
@@ -33,6 +34,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 /**
  * @author Philippe Charles
@@ -50,8 +53,17 @@ public final class TsActionManager {
 
     public static final String NO_ACTION = "";
 
-    private final CollectionSupplier<TsActionOpenSpi> openActions = FixmeCollectionSupplier.of(TsActionOpenSpi.class, TsActionOpenSpiLoader::load);
-    private final CollectionSupplier<TsActionSaveSpi> saveActions = FixmeCollectionSupplier.of(TsActionSaveSpi.class, TsActionSaveSpiLoader::load);
+    private final CollectionSupplier<TsActionOpenSpi> openActions = FixmeCollectionSupplier.of(TsActionOpenSpi.class, buildOpenServiceLoader()::get);
+    private final CollectionSupplier<TsActionSaveSpi> saveActions = FixmeCollectionSupplier.of(TsActionSaveSpi.class, buildSaveServiceLoader()::get);
+
+    private static TsActionOpenSpiLoader buildOpenServiceLoader() {
+        return TsActionOpenSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
+    }
+
+    @MightBeGenerated
+    private static TsActionSaveSpiLoader buildSaveServiceLoader() {
+        return TsActionSaveSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
+    }
 
     @NonNull
     public Collection<? extends NamedService> getOpenActions() {

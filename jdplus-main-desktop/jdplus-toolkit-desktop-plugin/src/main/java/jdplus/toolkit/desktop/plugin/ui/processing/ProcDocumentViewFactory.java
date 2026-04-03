@@ -6,13 +6,17 @@ package jdplus.toolkit.desktop.plugin.ui.processing;
 
 import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.base.api.util.Id;
+import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Function;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 /**
  * @author Jean Palate
@@ -86,12 +90,17 @@ public abstract class ProcDocumentViewFactory<D extends ProcDocument> implements
      * @param documentType
      */
     protected void registerFromLookup(Class<D> documentType) {
-        for (IProcDocumentItemFactory o : IProcDocumentItemFactoryLoader.get()) {
-            if (o.getDocumentType().isAssignableFrom(documentType)) {
-                itemFactories.put(o.getItemId(), o);
+        synchronized (FIXME) {
+            for (IProcDocumentItemFactory o : FIXME.get()) {
+                if (o.getDocumentType().isAssignableFrom(documentType)) {
+                    itemFactories.put(o.getItemId(), o);
+                }
             }
         }
     }
+
+    @MightBeGenerated
+    private static final IProcDocumentItemFactoryLoader FIXME = IProcDocumentItemFactoryLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
 
     public Icon getIcon(Id id) {
         IProcDocumentItemFactory o = itemFactories.get(id);

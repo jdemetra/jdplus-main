@@ -19,7 +19,6 @@ package jdplus.sa.base.api;
 import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.OutputFactory;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -29,7 +28,7 @@ import nbbrd.service.ServiceDefinition;
  * @param <R> Output
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.CONCURRENT, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface SaOutputFactory<R extends Explorable> extends OutputFactory<R> {
 
     Object getConfiguration();

@@ -9,9 +9,10 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.advanced.algebra.Ring;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.math.Complex;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -28,7 +29,7 @@ public class Polynomials {
         Robust
     }
      
-    private final PolynomialsLoader.Processor PROCESSOR = new PolynomialsLoader.Processor();
+    private final AtomicReference<Polynomials.Processor> PROCESSOR = new AtomicReference<>(PolynomialsLoader.Processor.load());
 
     public void setProcessor(Processor processor) {
         PROCESSOR.set(processor);
@@ -52,7 +53,7 @@ public class Polynomials {
 
     @InterchangeableProcessor
     @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE)
     public static interface Processor extends Ring<DoubleSeq> {
 
         Complex[] rootsOf(DoubleSeq polynomial, Solver solver);

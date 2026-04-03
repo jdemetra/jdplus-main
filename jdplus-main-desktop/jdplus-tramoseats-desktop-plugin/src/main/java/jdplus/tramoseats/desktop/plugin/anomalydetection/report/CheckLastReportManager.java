@@ -16,13 +16,16 @@
  */
 package jdplus.tramoseats.desktop.plugin.anomalydetection.report;
 
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
+import nbbrd.design.MightBeGenerated;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 /**
  * @author Mats Maggi
@@ -37,7 +40,12 @@ public final class CheckLastReportManager {
     private final CollectionSupplier<CheckLastReportFactory> factories;
 
     private CheckLastReportManager() {
-        factories = FixmeCollectionSupplier.of(CheckLastReportFactory.class, CheckLastReportFactoryLoader::load);
+        factories = FixmeCollectionSupplier.of(CheckLastReportFactory.class, buildServiceLoader()::get);
+    }
+
+    @MightBeGenerated
+    private static CheckLastReportFactoryLoader buildServiceLoader() {
+        return CheckLastReportFactoryLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
     }
 
     public List<CheckLastReportFactory> getFactories() {

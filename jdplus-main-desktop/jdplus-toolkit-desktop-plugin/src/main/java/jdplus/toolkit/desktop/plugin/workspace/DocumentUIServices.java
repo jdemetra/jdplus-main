@@ -11,7 +11,6 @@ import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.desktop.plugin.descriptors.IObjectDescriptor;
 import jdplus.toolkit.desktop.plugin.ui.processing.IProcDocumentView;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.PropertiesPanelFactory;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import org.openide.util.Lookup;
@@ -27,7 +26,7 @@ import java.util.Optional;
  * @param <D>
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface DocumentUIServices<S extends ProcSpecification, D extends ProcDocument<S, ?, ?>> {
 
     public final String SPEC_PROPERTY = "specification";

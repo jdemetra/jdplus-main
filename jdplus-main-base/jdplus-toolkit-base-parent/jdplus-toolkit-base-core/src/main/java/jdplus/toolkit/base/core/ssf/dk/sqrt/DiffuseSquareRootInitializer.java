@@ -18,6 +18,7 @@ package jdplus.toolkit.base.core.ssf.dk.sqrt;
 
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.ElementaryTransformations;
 import jdplus.toolkit.base.core.ssf.akf.AugmentedState;
 import jdplus.toolkit.base.core.ssf.univariate.ISsf;
@@ -184,7 +185,8 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
             double e = updateInfo.get();
             DataBlock C = updateInfo.M();
             FastMatrix P = astate.P();
-            P.addXaXt(-1 / f, C);
+            SymmetricMatrix.addXaXt(P, -1 / f, C);
+//            P.addXaXt(-1 / f, C);
             // state
             // a0 = a0 + f1*Mi*v0.
             double c = e / f;
@@ -201,10 +203,12 @@ public class DiffuseSquareRootInitializer implements OrdinaryFilter.Initializer 
         DataBlock C = updateInfo.M(), Ci = updateInfo.Mi();
         // P = T P T' - 1/f*(TMf)(TMf)'+RQR'+f*(TMf/f-TMi/fi)(TMf/f-TMi/fi)'
         if (f != 0) {
-            astate.P().addXaXt(-1 / f, C);
+//            astate.P().addXaXt(-1 / f, C);
+            SymmetricMatrix.addXaXt(astate.P(), -1 / f, C);
             DataBlock tmp = DataBlock.of(C);
             tmp.addAY(-f / fi, Ci);
-            astate.P().addXaXt(1 / f, tmp);
+//            astate.P().addXaXt(1 / f, tmp);
+            SymmetricMatrix.addXaXt(astate.P(), 1 / f, tmp);
         }
 
         // a0 = a0 + f1*Mi*v0. Reuse Mf as temporary buffer

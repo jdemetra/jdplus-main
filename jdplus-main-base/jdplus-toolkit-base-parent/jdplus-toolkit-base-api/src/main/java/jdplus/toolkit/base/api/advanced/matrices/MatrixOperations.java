@@ -19,9 +19,10 @@ package jdplus.toolkit.base.api.advanced.matrices;
 import jdplus.toolkit.base.api.advanced.algebra.Ring;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import nbbrd.service.ServiceDefinition;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -30,7 +31,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 @lombok.experimental.UtilityClass
 public class MatrixOperations {
 
-    private final MatrixOperationsLoader.Processor PROCESSOR = new MatrixOperationsLoader.Processor();
+    private final AtomicReference<MatrixOperations.Processor> PROCESSOR = new AtomicReference<>(MatrixOperationsLoader.Processor.load());
 
     public void setProcessor(Processor processor) {
         PROCESSOR.set(processor);
@@ -87,7 +88,7 @@ public class MatrixOperations {
 
     @InterchangeableProcessor
     @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE)
     public static interface Processor extends Ring<Matrix> {
         // Use the Ring definition to normalize the names. To get an actual ring, we should consider square matrices 
         // of size n.

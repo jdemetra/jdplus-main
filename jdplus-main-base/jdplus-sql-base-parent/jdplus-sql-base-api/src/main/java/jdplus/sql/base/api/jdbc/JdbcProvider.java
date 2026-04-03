@@ -28,6 +28,7 @@ import jdplus.toolkit.base.tsp.cube.*;
 import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
+import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
 import lombok.NonNull;
 import nbbrd.design.DirectImpl;
@@ -92,7 +93,7 @@ public final class JdbcProvider implements DataSourceLoader<JdbcBean>, HasSqlPro
                 .build();
 
         CubeConnection result = TableAsCubeConnection.of(sqlResource);
-        return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCachingLoader.get());
+        return BulkCubeConnection.of(result, bean.getCache(), ShortLivedCaching.FIXME);
     }
 
     private static CubeId toRoot(JdbcBean bean) {

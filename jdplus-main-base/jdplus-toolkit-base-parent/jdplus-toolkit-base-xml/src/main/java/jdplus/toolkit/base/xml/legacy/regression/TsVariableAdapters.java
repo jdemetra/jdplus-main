@@ -28,14 +28,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @lombok.experimental.UtilityClass
 public class TsVariableAdapters {
 
-    private final AtomicReference<TsVariableAdapterLoader> ADAPTERS = new AtomicReference<>(new TsVariableAdapterLoader());
+    private final AtomicReference<List<TsVariableAdapter>> ADAPTERS = new AtomicReference<>(TsVariableAdapterLoader.load());
 
     private List<TsVariableAdapter> adapters() {
-        return ADAPTERS.get().get();
+        return ADAPTERS.get();
     }
 
     public void reload() {
-        ADAPTERS.set(new TsVariableAdapterLoader());
+        ADAPTERS.set(TsVariableAdapterLoader.load());
     }
 
     public List<Class> getXmlClasses() {
