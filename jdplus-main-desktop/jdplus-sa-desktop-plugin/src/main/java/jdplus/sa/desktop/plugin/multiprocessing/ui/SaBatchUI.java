@@ -855,15 +855,15 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                     }
                 }
             }
+            updateUserInterfaceContext(ts);
             detail.onDocumentChanged();
             buttonCollapse.setEnabled(true);
             detail.setSpecificationsVisible(buttonCollapse.isSelected());
-            updateUserInterfaceContext(ts);
         }
     }
 
     private void updateUserInterfaceContext(Ts s) {
-        if (s == null) {
+        if (s == null || s.getData().length() == 0) {
             UserInterfaceContext.INSTANCE.setDomain(null);
         } else {
             UserInterfaceContext.INSTANCE.setDomain(s.getData().getDomain());
