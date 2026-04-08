@@ -486,10 +486,6 @@
                         <inherited>false</inherited>
                     </execution>
                 </executions>
-                <configuration>
-                    <versioning>semver</versioning>
-                    <tagging>prefix:v</tagging>
-                </configuration>
             </plugin>
         </plugins>
     </build>
