@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - ![OTHER] Fix Maven phase in build-and-test workflow
+- ![UI] Fix Specification view when switching between SaItems with different frequencies [#938](https://github.com/jdemetra/jdplus-main/pull/938)
 
 ## [3.7.0] - 2026-03-06
 
