@@ -1,3 +1,3 @@
 exclude_path = [
-    "**/archetype-resources/CHANGELOG.md"
+    "jdplus-main-archetype/src/main/resources/archetype-resources/CHANGELOG.md"
 ]
