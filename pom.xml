@@ -320,14 +320,14 @@
                     <!-- 1.2 Disable module path for unit tests -->
                     <useModulePath>false</useModulePath>
                     <properties>
-                        <!-- Enable parallel execution of junit tests -->
-                        <configurationParameters>
-                            junit.jupiter.execution.parallel.enabled=true
-                            junit.jupiter.execution.parallel.mode.default=concurrent
-                            junit.jupiter.execution.parallel.mode.classes.default=concurrent
-                            junit.jupiter.execution.parallel.config.strategy=dynamic
-                            junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor=4
-                        </configurationParameters>
+                        <!-- FIXME: Enable parallel execution of junit tests -->
+<!--                        <configurationParameters>-->
+<!--                            junit.jupiter.execution.parallel.enabled=true-->
+<!--                            junit.jupiter.execution.parallel.mode.default=concurrent-->
+<!--                            junit.jupiter.execution.parallel.mode.classes.default=concurrent-->
+<!--                            junit.jupiter.execution.parallel.config.strategy=dynamic-->
+<!--                            junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor=4-->
+<!--                        </configurationParameters>-->
                     </properties>
                 </configuration>
             </plugin>
