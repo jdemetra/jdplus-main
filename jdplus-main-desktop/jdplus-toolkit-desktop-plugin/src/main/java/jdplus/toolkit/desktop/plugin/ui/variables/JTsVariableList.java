@@ -229,7 +229,7 @@ public final class JTsVariableList extends JComponent implements HasTsAction {
         ((CustomTableModel) table.getModel()).fireTableStructureChanged();
     }
 
-    private static final ShortLivedCache<TsMoniker, String> DESCRIPTION_CACHE = ShortLivedCaching.FIXME.ofTtl(Duration.ofMinutes(5));
+    private static final ShortLivedCache<TsMoniker, String> DESCRIPTION_CACHE = ShortLivedCaching.FIXME_DO_NOT_USE.ofTtl(Duration.ofMinutes(5));
 
     // FIXME: this is a quick&dirty fix; should be replaced by a proper cache+async solution
     private static String getDescription(TsMoniker moniker) {
