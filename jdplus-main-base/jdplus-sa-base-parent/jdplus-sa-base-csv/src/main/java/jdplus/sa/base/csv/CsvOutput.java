@@ -16,14 +16,14 @@
  */
 package jdplus.sa.base.csv;
 
+import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.information.formatters.StringFormatter;
 import jdplus.toolkit.base.api.processing.Output;
-import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.util.Paths;
+
 import java.io.File;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
@@ -82,7 +82,7 @@ public class CsvOutput implements Output<SaDocument> {
     }
 
     private void write(File file, List<String> names, List<TsData> s) throws Exception {
-        try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.ISO_8859_1)) {
+        try (Writer writer = Files.newBufferedWriter(file.toPath(), config_.getCharset())) {
             TsCollectionCsvFormatter fmt = new TsCollectionCsvFormatter();
             fmt.setFullName(config_.isFullName());
             fmt.setPresentation(config_.getPresentation());

@@ -45,10 +45,11 @@ import org.openide.util.lookup.ServiceProvider;
 
 import java.beans.IntrospectionException;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static jdplus.sa.base.csv.CsvOutputConfiguration.*;
 import static jdplus.toolkit.base.tsp.fixme.Strings.nullToEmpty;
 import static jdplus.toolkit.base.tsp.fixme.Strings.splitToStream;
 
@@ -125,7 +126,7 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
     private static final class CsvOutputBeanEditor implements BeanEditor {
 
         @Override
-        public boolean editBean(Object bean) throws IntrospectionException {
+        public boolean editBean(@NonNull Object bean) throws IntrospectionException {
             return new PropertySheetDialogBuilder()
                     .title("Edit csv output config")
                     .editNode(new CsvNode((CsvOutputConfiguration) bean));
@@ -134,11 +135,12 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
 
     private static final class CsvOutputConverter implements Converter<CsvOutputConfiguration, Config> {
 
-        private final Property<CsvLayout> presentationParam = Property.of("presentation", CsvLayout.List, Parser.onEnum(CsvLayout.class), Formatter.onEnum());
+        private final Property<CsvLayout> presentationParam = Property.of("presentation", DEFAULT_PRESENTATION, Parser.onEnum(CsvLayout.class), Formatter.onEnum());
         private final Property<File> folderParam = Property.of("folder", Path.of("").toFile(), Parser.onFile(), Formatter.onFile());
-        private final Property<String> filePrefixParam = Property.of("filePrefix", "series", Parser.onString(), Formatter.onString());
+        private final Property<String> filePrefixParam = Property.of("filePrefix", DEFAULT_FILE_PREFIX, Parser.onString(), Formatter.onString());
         private final Property<String> seriesParam = Property.of("series", "y,t,sa,s,i,ycal", Parser.onString(), Formatter.onString());
-        private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", true);
+        private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", DEFAULT_FULL_NAME);
+        private final Property<Charset> charsetParam = Property.of("charset", DEFAULT_CHARSET, Parser.onCharset(), Formatter.onCharset());
 
         @Override
         public Config doForward(CsvOutputConfiguration a) {
@@ -146,8 +148,9 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
             presentationParam.set(result::parameter, a.getPresentation());
             folderParam.set(result::parameter, a.getFolder());
             filePrefixParam.set(result::parameter, a.getFilePrefix());
-            seriesParam.set(result::parameter, a.getSeries().stream().collect(Collectors.joining(",")));
+            seriesParam.set(result::parameter, String.join(",", a.getSeries()));
             fullNameParam.set(result::parameter, a.isFullName());
+            charsetParam.set(result::parameter, a.getCharset());
             return result.build();
         }
 
@@ -159,6 +162,7 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
             result.setFilePrefix(filePrefixParam.get(b::getParameter));
             result.setSeries(splitToStream(",", nullToEmpty(seriesParam.get(b::getParameter))).map(String::trim).toList());
             result.setFullName(fullNameParam.get(b::getParameter));
+            result.setCharset(charsetParam.get(b::getParameter));
             return result;
         }
     }
@@ -191,6 +195,7 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
             builder.reset("Location");
             builder.withFile().select(config, "Folder").directories(true).description("Base output folder. Will be extended by the workspace and processing names").add();
             builder.with(String.class).select(config, "filePrefix").display("File Prefix").add();
+            builder.with(Charset.class).select(config, "charset").display("Charset").add();
             sheet.put(builder.build());
 
             builder.reset("Layout");
