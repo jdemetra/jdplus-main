@@ -17,67 +17,29 @@
 package jdplus.sa.base.csv;
 
 import java.io.File;
-import java.util.Arrays;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
  *
  * @author Jean Palate
  */
+@lombok.Data
 public final class CsvArrayOutputConfiguration implements Cloneable {
 
-    public static final String NAME = "v";
+    public static final CsvLayout DEFAULT_PRESENTATION = CsvLayout.List;
+    public static final String DEFAULT_FILE_PREFIX = "v";
+    public static final List<String> DEFAULT_ARRAYS = List.of();
+    public static final boolean DEFAULT_FULL_NAME = true;
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
 
-    private CsvLayout layout = CsvLayout.List;
+    private CsvLayout presentation = DEFAULT_PRESENTATION;
     private File folder;
-    private String name = NAME;
-    private String[] arrays;
-    private boolean fullName;
-
-    public CsvArrayOutputConfiguration() {
-        fullName = true;
-        arrays = new String[0];
-    }
-
-    public CsvLayout getPresentation() {
-        return layout;
-    }
-
-    public void setPresentation(CsvLayout value) {
-        layout = value;
-    }
-
-    public File getFolder() {
-        return folder;
-    }
-
-    public void setFolder(File value) {
-        folder = value;
-    }
-
-    public String getFilePrefix() {
-        return name;
-    }
-
-    public void setFilePrefix(String value) {
-        name = value;
-    }
-
-    public List<String> getArrays() {
-        return Arrays.asList(arrays);
-    }
-
-    public void setArrays(List<String> value) {
-        arrays = value.toArray(String[]::new);
-    }
-
-    public boolean isFullName() {
-        return fullName;
-    }
-
-    public void setFullName(boolean fullName) {
-        this.fullName = fullName;
-    }
+    private String filePrefix = DEFAULT_FILE_PREFIX;
+    private List<String> arrays = DEFAULT_ARRAYS;
+    private boolean fullName = DEFAULT_FULL_NAME;
+    private Charset charset = DEFAULT_CHARSET;
 
     @Override
     public CsvArrayOutputConfiguration clone() {

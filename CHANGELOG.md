@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- ![IO] Improve I/O of CSV files [#163](https://github.com/jdemetra/jd3-main/issues/163)
+
 ### Fixed
 
 - ![UI] Fix Specification view when switching between SaItems with different frequencies [#938](https://github.com/jdemetra/jdplus-main/pull/938)

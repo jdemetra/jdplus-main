@@ -38,28 +38,32 @@ import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
  */
 public final class CsvInformationFormatter {
 
-    private static final HashMap<Type, InformationFormatter> DICTIONARY = new HashMap<>();
-    private static final String NEWLINE = System.lineSeparator();
-    private static volatile Character CSV_SEPARATOR;
-    private static Locale LOCALE;
+    private CsvInformationFormatter() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
-    static {
-        LOCALE = Locale.getDefault();
-        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance(LOCALE);
+    private static final HashMap<Type, InformationFormatter> DICTIONARY = new HashMap<>();
+    private static final AtomicReference<Character> CSV_SEPARATOR = new AtomicReference<>();
+    private static final AtomicReference<Locale> LOCALE = new AtomicReference<>();
+
+    private static Character getDefaultCsvSeparator(Locale locale) {
+        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance(locale);
         fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
         fmt.setGroupingUsed(false);
         char sep = fmt.getDecimalFormatSymbols().getDecimalSeparator();
-        if (sep == ',') {
-            CSV_SEPARATOR = ';';
-        } else {
-            CSV_SEPARATOR = ',';
-        }
+        return sep == ',' ? ';' : ',';
+    }
+
+    static {
+        LOCALE.set(Locale.getDefault());
+        CSV_SEPARATOR.set(getDefaultCsvSeparator(Locale.getDefault()));
 
         DICTIONARY.put(double.class, new DoubleFormatter());
         DICTIONARY.put(int.class, new IntegerFormatter());
@@ -80,24 +84,20 @@ public final class CsvInformationFormatter {
         DICTIONARY.put(ProcDiagnostic.class, new DiagnosticFormatter());
     }
 
-    private CsvInformationFormatter() {
-        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
-    }
-
     public static char getCsvSeparator() {
-        return CSV_SEPARATOR;
+        return CSV_SEPARATOR.get();
     }
 
     public static void setCsvSeparator(Character c) {
-        CSV_SEPARATOR = c;
+        CSV_SEPARATOR.set(c);
     }
 
     public static Locale getLocale() {
-        return LOCALE;
+        return LOCALE.get();
     }
 
     public static void setLocale(Locale locale) {
-        CsvInformationFormatter.LOCALE = locale;
+        LOCALE.set(locale);
     }
 
     public static Set<Type> formattedTypes() {
@@ -132,12 +132,12 @@ public final class CsvInformationFormatter {
             if (results.length <= 1) {
                 return true;
             }
-            Class c = null;
-            for (int i = 0; i < results.length; ++i) {
-                if (results[i] != null) {
+            Class<?> c = null;
+            for (Object result : results) {
+                if (result != null) {
                     if (c == null) {
-                        c = results[i].getClass();
-                    } else if (!results[i].getClass().equals(c)) {
+                        c = result.getClass();
+                    } else if (!result.getClass().equals(c)) {
                         return false;
                     }
                 }
@@ -329,7 +329,12 @@ public final class CsvInformationFormatter {
             wnames.add(map);
         }
         // STEP 3: write the output
-        Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder().separator(NEWLINE).delimiter(CSV_SEPARATOR).build();
+        Locale locale = LOCALE.get();
+        Csv.Format csvFormat = Csv.Format.DEFAULT
+                .toBuilder()
+                .separator(System.lineSeparator())
+                .delimiter(CSV_SEPARATOR.get())
+                .build();
         try (Csv.Writer csv = Csv.Writer.of(csvFormat, Csv.WriterOptions.DEFAULT, writer, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
             // columns headers
             if (rowHeaders != null) {
@@ -340,30 +345,30 @@ public final class CsvInformationFormatter {
                 if (rowHeaders != null) {
                     writeRowHeader(csv, rowHeaders.get(rowIndex), fullRowName);
                 }
-                writeRow(csv, rows.get(rowIndex), wnames);
+                writeRow(csv, rows.get(rowIndex), wnames, locale);
             }
         } catch (IOException ex) {
             String msg = ex.getMessage();
         }
     }
 
-    private static void writeRow(Csv.Writer writer, List<MatrixItem> row, List<LinkedHashMap<String, Integer>> wnames) throws IOException {
+    private static void writeRow(Csv.Writer writer, List<MatrixItem> row, List<LinkedHashMap<String, Integer>> wnames, Locale locale) throws IOException {
         for (int nameIndex = 0; nameIndex < row.size(); nameIndex++) {
-            writeRowCells(writer, row.get(nameIndex), wnames.get(nameIndex));
+            writeRowCells(writer, row.get(nameIndex), wnames.get(nameIndex), locale);
         }
         writer.writeEndOfLine();
     }
 
-    private static void writeRowCells(Csv.Writer writer, MatrixItem item, LinkedHashMap<String, Integer> map) throws IOException {
+    private static void writeRowCells(Csv.Writer writer, MatrixItem item, LinkedHashMap<String, Integer> map, Locale locale) throws IOException {
         for (Entry<String, Integer> cellGroup : map.entrySet()) {
             int length = cellGroup.getValue();
             Object obj = item.search(cellGroup.getKey());
             if (obj != null) {
                 if (length == 1) {
-                    writer.writeField(format(obj, InformationFormatter.NO_INDEX));
+                    writer.writeField(format(obj, InformationFormatter.NO_INDEX, locale));
                 } else {
                     for (int j = 1; j <= length; ++j) {
-                        writer.writeField(format(obj, j));
+                        writer.writeField(format(obj, j, locale));
                     }
                 }
             } else {
@@ -390,12 +395,12 @@ public final class CsvInformationFormatter {
         writer.writeEndOfLine();
     }
 
-    private static String format(Object obj, int item) {
+    private static String format(Object obj, int item, Locale locale) {
 
         try {
             InformationFormatter fmt = DICTIONARY.get(obj.getClass());
             if (fmt != null) {
-                return fmt.format(obj, item, LOCALE);
+                return fmt.format(obj, item, locale);
             } else if (item == InformationFormatter.NO_INDEX) {
                 return obj.toString();
             } else {
