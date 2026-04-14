@@ -29,6 +29,7 @@ import nbbrd.service.ServiceProvider;
 public final class SpreadsheetOutputFactory implements SaOutputFactory {
 
     public static final String NAME = "Excel";
+
     private final SpreadsheetOutputConfiguration configuration;
     private boolean enabled = true;
 

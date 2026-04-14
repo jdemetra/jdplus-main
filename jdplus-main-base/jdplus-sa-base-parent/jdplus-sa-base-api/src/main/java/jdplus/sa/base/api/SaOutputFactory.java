@@ -25,11 +25,10 @@ import nbbrd.service.ServiceDefinition;
 /**
  *
  * @author PALATEJ
- * @param <R> Output
  */
 @ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE)
-public interface SaOutputFactory<R extends Explorable> extends OutputFactory<R> {
+public interface SaOutputFactory extends OutputFactory<SaDocument> {
 
     Object getConfiguration();
 }
