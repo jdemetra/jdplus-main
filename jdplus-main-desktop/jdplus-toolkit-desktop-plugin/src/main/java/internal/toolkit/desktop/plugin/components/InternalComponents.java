@@ -30,6 +30,7 @@ import jdplus.toolkit.desktop.plugin.actions.PrintableWithPreview;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
 import lombok.NonNull;
+import nbbrd.design.SystemDependent;
 import nbbrd.io.text.Formatter;
 
 import javax.swing.*;
@@ -147,6 +148,7 @@ public class InternalComponents {
 
         private final Supplier<TsDomain> domainSupplier;
 
+        @SystemDependent
         public TsDomainDateFormat(Supplier<TsDomain> domainSupplier) {
             this.domainSupplier = domainSupplier;
 

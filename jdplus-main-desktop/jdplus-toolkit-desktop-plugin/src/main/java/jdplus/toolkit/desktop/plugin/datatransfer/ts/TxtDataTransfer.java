@@ -29,6 +29,7 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import lombok.NonNull;
+import nbbrd.design.SystemDependent;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Parser;
 import org.openide.nodes.Sheet;
@@ -56,6 +57,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
 
     static final int POSITION = 2000;
     private static final char DELIMITOR = '\t';
+    @SystemDependent
     private static final String NEWLINE = System.lineSeparator();
     private static final int MINDATES = 2;
     // PROPERTIES
@@ -64,6 +66,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     private final BeanConfigurator<InternalConfig, TxtDataTransfer> configurator;
     private InternalConfig config;
 
+    @SystemDependent
     public TxtDataTransfer() {
         this.numberFormat = NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.FORMAT));
         this.dateFormat = DateTimeFormatter.ISO_DATE;

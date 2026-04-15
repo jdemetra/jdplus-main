@@ -3,6 +3,7 @@ package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import com.l2fprod.common.swing.LookAndFeelTweaks;
 import jdplus.toolkit.base.api.data.Parameter;
+import nbbrd.design.SystemDependent;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -34,6 +35,7 @@ public class ParameterEditor extends AbstractPropertyEditor {
         Resource.INSTANCE.setValue((JFormattedTextField) editor, (Parameter) o);
     }
 
+    @SystemDependent
     private static JFormattedTextField createEditor() {
         JFormattedTextField editor = new JFormattedTextField(){
             
