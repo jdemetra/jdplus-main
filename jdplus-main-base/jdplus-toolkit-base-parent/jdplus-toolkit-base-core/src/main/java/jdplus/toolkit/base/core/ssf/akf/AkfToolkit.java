@@ -83,9 +83,8 @@ public class AkfToolkit {
         };
     }
 
-    public DefaultAugmentedFilteringResults filter(ISsf ssf, ISsfData data, boolean all, boolean collapsing) {
-        QAugmentation Q = collapsing ? QAugmentation.of(QAugmentation.DEFAULT_COLLAPSING)
-                : QAugmentation.of(QAugmentation.DEFAULT_NOCOLLAPSING);
+    public DefaultAugmentedFilteringResults filter(ISsf ssf, ISsfData data, boolean all, boolean collapsing, QAugmentation.QType type) {
+        QAugmentation Q = QAugmentation.of(type);
         DefaultAugmentedFilteringResults frslts = all
                 ? DefaultAugmentedFilteringResults.full(Q) : DefaultAugmentedFilteringResults.light(Q);
         frslts.prepare(ssf, 0, data.length());
@@ -100,13 +99,27 @@ public class AkfToolkit {
         return frslts;
     }
 
+    @Deprecated
+    public DefaultAugmentedFilteringResults filter(ISsf ssf, ISsfData data, boolean all, boolean collapsing) {
+        QAugmentation.QType qtype = collapsing ? QAugmentation.DEFAULT_COLLAPSING
+                : QAugmentation.DEFAULT_NOCOLLAPSING;
+        return filter(ssf, data, all, collapsing, qtype);
+    }
+
+    @Deprecated
     public DefaultSmoothingResults smooth(ISsf ssf, ISsfData data, boolean all, boolean rescaleVariance, boolean collapsing) {
+        QAugmentation.QType qtype = collapsing ? QAugmentation.DEFAULT_COLLAPSING
+                : QAugmentation.DEFAULT_NOCOLLAPSING;
+        return smooth(ssf, data, all, rescaleVariance, collapsing, qtype);
+    }
+
+    public DefaultSmoothingResults smooth(ISsf ssf, ISsfData data, boolean all, boolean rescaleVariance, boolean collapsing, QAugmentation.QType type) {
         AugmentedSmoother smoother = new AugmentedSmoother();
         smoother.setCalcVariances(all);
         DefaultSmoothingResults sresults = all ? DefaultSmoothingResults.full()
                 : DefaultSmoothingResults.light();
         sresults.prepare(ssf.getStateDim(), 0, data.length());
-        DefaultAugmentedFilteringResults fresults = filter(ssf, data, true, collapsing);
+        DefaultAugmentedFilteringResults fresults = filter(ssf, data, all, collapsing, type);
         if (smoother.process(ssf, data.length(), fresults, sresults)) {
             if (rescaleVariance) {
                 sresults.rescaleVariances(var(data.length(), fresults));
@@ -117,14 +130,22 @@ public class AkfToolkit {
         }
     }
 
-    public SmoothingOutput robustSmooth(ISsf ssf, ISsfData data, boolean all, boolean rescaleVariance) {
-        return QRSmoother.process(ssf, data, all, rescaleVariance);
+    @Deprecated
+    public DefaultSmoothingResults robustSmooth(ISsf ssf, ISsfData data, boolean all, boolean rescaleVariance) {
+        return smooth(ssf, data, all, rescaleVariance, true, QAugmentation.DEFAULT_COLLAPSING);
     }
 
+    @Deprecated
     public StateStorage smooth(IMultivariateSsf ssf, IMultivariateSsfData data, boolean all, boolean rescaleVariance, boolean collapsing) {
+        QAugmentation.QType qtype = collapsing ? QAugmentation.DEFAULT_COLLAPSING
+                : QAugmentation.DEFAULT_NOCOLLAPSING;
+        return smooth(ssf, data, all, rescaleVariance, collapsing, qtype);
+    }
+
+    public StateStorage smooth(IMultivariateSsf ssf, IMultivariateSsfData data, boolean all, boolean rescaleVariance, boolean collapsing, QAugmentation.QType qtype) {
         ISsf ussf = M2uAdapter.of(ssf);
         ISsfData udata = M2uAdapter.of(data);
-        DefaultSmoothingResults sr = smooth(ussf, udata, all, false, collapsing);
+        DefaultSmoothingResults sr = smooth(ussf, udata, all, false, collapsing, qtype);
         StateStorage ss = all ? StateStorage.full(StateInfo.Smoothed) : StateStorage.light(StateInfo.Smoothed);
         int m = data.getVarsCount(), n = data.getObsCount();
         ss.prepare(ussf.getStateDim(), 0, n);
@@ -140,23 +161,9 @@ public class AkfToolkit {
         return ss;
     }
 
+    @Deprecated
     public StateStorage robustSmooth(IMultivariateSsf ssf, IMultivariateSsfData data, boolean all, boolean rescaleVariance) {
-        ISsf ussf = M2uAdapter.of(ssf);
-        ISsfData udata = M2uAdapter.of(data);
-        StateStorage sr = robustSmooth(ussf, udata, all, rescaleVariance).getSmoothing();
-        StateStorage ss = all ? StateStorage.full(StateInfo.Smoothed) : StateStorage.light(StateInfo.Smoothed);
-        int m = data.getVarsCount(), n = data.getObsCount();
-        ss.prepare(ussf.getStateDim(), 0, n);
-        if (all) {
-            for (int i = 0; i < n; ++i) {
-                ss.save(i, sr.a(i * m), sr.P(i * m));
-            }
-        } else {
-            for (int i = 0; i < n; ++i) {
-                ss.save(i, sr.a(i * m), null);
-            }
-        }
-        return ss;
+        return smooth(ssf, data, all, rescaleVariance, false, QAugmentation.DEFAULT_NOCOLLAPSING);
     }
 
     private static class LLComputer1 implements ILikelihoodComputer<DiffuseLikelihood> {
