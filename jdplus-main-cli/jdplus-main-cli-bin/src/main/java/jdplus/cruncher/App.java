@@ -54,6 +54,7 @@ import jdplus.cruncher.core.FileRepository;
 import jdplus.sa.base.csv.CsvArrayOutputConfiguration;
 import jdplus.sa.base.csv.CsvArrayOutputFactory;
 import lombok.NonNull;
+import nbbrd.design.SystemDependent;
 import picocli.CommandLine;
 
 /**
@@ -168,6 +169,7 @@ public final class App {
 //        ServiceLoader.load(ISaDiagnosticsFactory.class).forEach(SaManager.instance::add);
     }
 
+    @SystemDependent
     private static void loadFileProperties() {
         String basedir = System.getProperty("basedir");
         if (basedir != null) {

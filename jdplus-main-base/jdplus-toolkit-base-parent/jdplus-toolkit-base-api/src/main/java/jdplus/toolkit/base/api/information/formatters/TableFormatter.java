@@ -1,18 +1,18 @@
 /*
-* Copyright 2013 National Bank of Belgium
-*
-* Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
-* by the European Commission - subsequent versions of the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
-* limitations under the Licence.
+ * Copyright 2013 National Bank of Belgium
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.information.formatters;
 
@@ -26,6 +26,7 @@ import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
 import jdplus.toolkit.base.api.util.Table;
+import nbbrd.design.SystemDependent;
 
 import java.util.*;
 
@@ -36,30 +37,36 @@ import java.util.*;
 @lombok.experimental.UtilityClass
 public class TableFormatter {
 
-    private final HashMap<Class, InformationFormatter> DICTIONARY = new HashMap<>();
-    private static Locale LOCALE;
+    private static final Map<Class<?>, InformationFormatter> DICTIONARY = initDictionary();
+    private static final Locale LOCALE = initLocale();
 
-    static{
-        DICTIONARY.put(double.class, new DoubleFormatter());
-        DICTIONARY.put(int.class, new IntegerFormatter());
-        DICTIONARY.put(long.class, new LongFormatter());
-        DICTIONARY.put(boolean.class, new BooleanFormatter("1", "0"));
-        DICTIONARY.put(Double.class, new DoubleFormatter());
-        DICTIONARY.put(Integer.class, new IntegerFormatter());
-        DICTIONARY.put(Long.class, new LongFormatter());
-        DICTIONARY.put(Boolean.class, new BooleanFormatter("1", "0"));
-        DICTIONARY.put(Complex.class, new ComplexFormatter());
-        DICTIONARY.put(String.class, new StringFormatter());
-        DICTIONARY.put(String[].class, new StringArrayFormatter());
-        DICTIONARY.put(SarimaOrders.class, new SarimaFormatter());
-        DICTIONARY.put(Parameter.class, new ParameterFormatter());
-//        DICTIONARY.put(ParameterInfo.class, new ParameterInfoFormatter());
-//        DICTIONARY.put(TsMoniker.class, new MonikerFormatter());
-        DICTIONARY.put(TsPeriod.class, new PeriodFormatter());
-        DICTIONARY.put(RegressionItem.class, new RegressionItemFormatter());
-        DICTIONARY.put(StatisticalTest.class, new StatisticalTestFormatter());
-        DICTIONARY.put(ProcDiagnostic.class, new DiagnosticFormatter());
-        LOCALE = Locale.getDefault();
+    private static Map<Class<?>, InformationFormatter> initDictionary() {
+        Map<Class<?>, InformationFormatter> result = new HashMap<>();
+        result.put(double.class, new DoubleFormatter());
+        result.put(int.class, new IntegerFormatter());
+        result.put(long.class, new LongFormatter());
+        result.put(boolean.class, new BooleanFormatter("1", "0"));
+        result.put(Double.class, new DoubleFormatter());
+        result.put(Integer.class, new IntegerFormatter());
+        result.put(Long.class, new LongFormatter());
+        result.put(Boolean.class, new BooleanFormatter("1", "0"));
+        result.put(Complex.class, new ComplexFormatter());
+        result.put(String.class, new StringFormatter());
+        result.put(String[].class, new StringArrayFormatter());
+        result.put(SarimaOrders.class, new SarimaFormatter());
+        result.put(Parameter.class, new ParameterFormatter());
+//        result.put(ParameterInfo.class, new ParameterInfoFormatter());
+//        result.put(TsMoniker.class, new MonikerFormatter());
+        result.put(TsPeriod.class, new PeriodFormatter());
+        result.put(RegressionItem.class, new RegressionItemFormatter());
+        result.put(StatisticalTest.class, new StatisticalTestFormatter());
+        result.put(ProcDiagnostic.class, new DiagnosticFormatter());
+        return result;
+    }
+
+    @SystemDependent
+    private static Locale initLocale() {
+        return Locale.getDefault();
     }
 
     public Table<String> formatInformation(List<InformationSet> records, List<String> names, boolean shortname) {

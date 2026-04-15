@@ -20,6 +20,7 @@ import jdplus.toolkit.desktop.plugin.completion.AutoCompletionManager;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
 import ec.util.various.swing.TextPrompt;
+import nbbrd.design.SystemDependent;
 import nbbrd.io.text.Parser;
 import org.jspecify.annotations.Nullable;
 
@@ -54,6 +55,7 @@ public final class JCharsetField extends JComponent {
         enableProperties();
     }
 
+    @SystemDependent
     private void initComponents() {
         AutoCompletionManager.get().bind(Charset.class, textField);
 

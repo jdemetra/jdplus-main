@@ -4,6 +4,8 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 
+import nbbrd.design.SystemDependent;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.DefaultCellEditor;
@@ -17,6 +19,7 @@ import javax.swing.text.NumberFormatter;
  */
 public class CustomNumberEditor extends DefaultCellEditor {
 
+    @SystemDependent
     public CustomNumberEditor() {
         super(new JFormattedTextField());
         final JFormattedTextField editor = (JFormattedTextField) super.getComponent();

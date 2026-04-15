@@ -257,5 +257,6 @@ public class CalendarUtility {
         return cal.getTime();
     }
 
+    @nbbrd.design.SystemDependent
     private static final ThreadLocal<GregorianCalendar> CALENDAR_THREAD_LOCAL = ThreadLocal.withInitial(() -> new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault()));
 }

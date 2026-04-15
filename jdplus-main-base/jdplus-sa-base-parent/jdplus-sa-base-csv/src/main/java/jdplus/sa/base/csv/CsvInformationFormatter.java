@@ -30,6 +30,7 @@ import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.api.util.NamedObject;
 import jdplus.toolkit.base.api.util.WildCards;
+import nbbrd.design.SystemDependent;
 import nbbrd.picocsv.Csv;
 
 import java.io.IOException;
@@ -49,39 +50,44 @@ public final class CsvInformationFormatter {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    private static final HashMap<Type, InformationFormatter> DICTIONARY = new HashMap<>();
-    private static final AtomicReference<Character> CSV_SEPARATOR = new AtomicReference<>();
-    private static final AtomicReference<Locale> LOCALE = new AtomicReference<>();
+    private static final Map<Type, InformationFormatter> DICTIONARY = initDictionary();
+    private static final AtomicReference<Character> CSV_SEPARATOR = new AtomicReference<>(initDefaultCsvSeparator());
+    private static final AtomicReference<Locale> LOCALE = new AtomicReference<>(initLocale());
 
-    private static Character getDefaultCsvSeparator(Locale locale) {
-        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance(locale);
+    private static Map<Type, InformationFormatter> initDictionary() {
+        Map<Type, InformationFormatter> result = new HashMap<>();
+        result.put(double.class, new DoubleFormatter());
+        result.put(int.class, new IntegerFormatter());
+        result.put(long.class, new LongFormatter());
+        result.put(boolean.class, new BooleanFormatter("1", "0"));
+        result.put(Double.class, new DoubleFormatter());
+        result.put(Integer.class, new IntegerFormatter());
+        result.put(Long.class, new LongFormatter());
+        result.put(Boolean.class, new BooleanFormatter("1", "0"));
+        result.put(Complex.class, new ComplexFormatter());
+        result.put(String.class, new StringFormatter());
+        result.put(String[].class, new StringArrayFormatter());
+        result.put(SarimaOrders.class, new SarimaFormatter());
+        result.put(Parameter.class, new ParameterFormatter());
+        result.put(TsPeriod.class, new PeriodFormatter());
+        result.put(RegressionItem.class, new RegressionItemFormatter(true));
+        result.put(StatisticalTest.class, new StatisticalTestFormatter());
+        result.put(ProcDiagnostic.class, new DiagnosticFormatter());
+        return result;
+    }
+
+    @SystemDependent
+    private static Character initDefaultCsvSeparator() {
+        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.getDefault());
         fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
         fmt.setGroupingUsed(false);
         char sep = fmt.getDecimalFormatSymbols().getDecimalSeparator();
         return sep == ',' ? ';' : ',';
     }
 
-    static {
-        LOCALE.set(Locale.getDefault());
-        CSV_SEPARATOR.set(getDefaultCsvSeparator(Locale.getDefault()));
-
-        DICTIONARY.put(double.class, new DoubleFormatter());
-        DICTIONARY.put(int.class, new IntegerFormatter());
-        DICTIONARY.put(long.class, new LongFormatter());
-        DICTIONARY.put(boolean.class, new BooleanFormatter("1", "0"));
-        DICTIONARY.put(Double.class, new DoubleFormatter());
-        DICTIONARY.put(Integer.class, new IntegerFormatter());
-        DICTIONARY.put(Long.class, new LongFormatter());
-        DICTIONARY.put(Boolean.class, new BooleanFormatter("1", "0"));
-        DICTIONARY.put(Complex.class, new ComplexFormatter());
-        DICTIONARY.put(String.class, new StringFormatter());
-        DICTIONARY.put(String[].class, new StringArrayFormatter());
-        DICTIONARY.put(SarimaOrders.class, new SarimaFormatter());
-        DICTIONARY.put(Parameter.class, new ParameterFormatter());
-        DICTIONARY.put(TsPeriod.class, new PeriodFormatter());
-        DICTIONARY.put(RegressionItem.class, new RegressionItemFormatter(true));
-        DICTIONARY.put(StatisticalTest.class, new StatisticalTestFormatter());
-        DICTIONARY.put(ProcDiagnostic.class, new DiagnosticFormatter());
+    @SystemDependent
+    private static Locale initLocale() {
+        return Locale.getDefault();
     }
 
     public static char getCsvSeparator() {
@@ -310,6 +316,7 @@ public final class CsvInformationFormatter {
         format(writer, rows, items.size(), rowHeaders, fullRowName);
     }
 
+    @SystemDependent
     private static void format(Writer writer, List<List<MatrixItem>> rows, int nameCount, List<String> rowHeaders, boolean fullRowName) {
         // STEP 2: for each name, we find the set of items/length
         List<LinkedHashMap<String, Integer>> wnames = new ArrayList<>();
