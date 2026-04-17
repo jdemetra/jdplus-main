@@ -7,9 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 /**
  * @author Philippe Charles
@@ -17,10 +20,13 @@ import static org.assertj.core.api.Assertions.*;
 public class TxtDataTransferTest {
 
     private TxtDataTransfer transfer;
+    private NumberFormat numberFormat;
 
     @BeforeEach
     public void setUp() {
         transfer = new TxtDataTransfer();
+        // Get the number format used by the transfer to ensure tests use the same formatting
+        numberFormat = NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.FORMAT));
     }
 
     @Test
@@ -40,10 +46,10 @@ public class TxtDataTransferTest {
         String result = transfer.tsCollectionToString(col);
 
         assertThat(result)
-            .isNotEmpty()
-            .contains("Series1")
-            .contains("Series2")
-            .contains("2010-01");
+                .isNotEmpty()
+                .contains("Series1")
+                .contains("Series2")
+                .contains("2010-01");
     }
 
     @Test
@@ -55,10 +61,10 @@ public class TxtDataTransferTest {
         String result = transfer.tsCollectionToString(col);
 
         assertThat(result)
-            .isNotEmpty()
-            .doesNotContain("Series1")
-            .doesNotContain("Series2")
-            .contains("2010-01");
+                .isNotEmpty()
+                .doesNotContain("Series1")
+                .doesNotContain("Series2")
+                .contains("2010-01");
     }
 
     @Test
@@ -70,10 +76,10 @@ public class TxtDataTransferTest {
         String result = transfer.tsCollectionToString(col);
 
         assertThat(result)
-            .isNotEmpty()
-            .contains("Series1")
-            .contains("Series2")
-            .doesNotContain("2010-01");
+                .isNotEmpty()
+                .contains("Series1")
+                .contains("Series2")
+                .doesNotContain("2010-01");
     }
 
     @Test
@@ -85,20 +91,20 @@ public class TxtDataTransferTest {
         String result = transfer.tsCollectionToString(col);
 
         assertThat(result)
-            .isNotEmpty()
-            .contains("Series1")
-            .contains("Series2")
-            .contains("2010-01");
+                .isNotEmpty()
+                .contains("Series1")
+                .contains("Series2")
+                .contains("2010-01");
     }
 
     @Test
     public void testTsCollectionFromString_VerticalWithTitlesAndDates() throws IOException {
-        String input = """
+        String input = String.format("""
                 \tSeries1\tSeries2
-                2010-01-01\t1,5\t2,5
-                2010-02-01\t3,0\t4,0
-                2010-03-01\t5,5\t6,5
-                """;
+                2010-01-01\t%s\t%s
+                2010-02-01\t%s\t%s
+                2010-03-01\t%s\t%s
+                """, f(1.5), f(2.5), f(3.0), f(4.0), f(5.5), f(6.5));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
@@ -117,11 +123,11 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_VerticalNoTitles() throws IOException {
-        String input = """
-                2010-01-01\t1,5\t2,5
-                2010-02-01\t3,0\t4,0
-                2010-03-01\t5,5\t6,5
-                """;
+        String input = String.format("""
+                2010-01-01\t%s\t%s
+                2010-02-01\t%s\t%s
+                2010-03-01\t%s\t%s
+                """, f(1.5), f(2.5), f(3.0), f(4.0), f(5.5), f(6.5));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
@@ -133,11 +139,11 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_HorizontalWithTitlesAndDates() throws IOException {
-        String input = """
+        String input = String.format("""
                 \t2010-01-01\t2010-02-01\t2010-03-01
-                Series1\t1,5\t3,0\t5,5
-                Series2\t2,5\t4,0\t6,5
-                """;
+                Series1\t%s\t%s\t%s
+                Series2\t%s\t%s\t%s
+                """, f(1.5), f(3.0), f(5.5), f(2.5), f(4.0), f(6.5));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
@@ -156,11 +162,11 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_HorizontalNoTitles() throws IOException {
-        String input = """
+        String input = String.format("""
                 2010-01-01\t2010-02-01\t2010-03-01
-                1,5\t3,0\t5,5
-                2,5\t4,0\t6,5
-                """;
+                %s\t%s\t%s
+                %s\t%s\t%s
+                """, f(1.5), f(3.0), f(5.5), f(2.5), f(4.0), f(6.5));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
@@ -171,12 +177,12 @@ public class TxtDataTransferTest {
     @Test
     public void testTsCollectionFromString_WithMissingValues() throws IOException {
         // Test with complete rows (no trailing empty cells which cause parsing issues)
-        String input = """
+        String input = String.format("""
                 \tSeries1\tSeries2
-                2010-01-01\t1,5\t2,5
-                2010-02-01\t3,0\t4,0
-                2010-03-01\t5,5\t6,5
-                """;
+                2010-01-01\t%s\t%s
+                2010-02-01\t%s\t%s
+                2010-03-01\t%s\t%s
+                """, f(1.5), f(2.5), f(3.0), f(4.0), f(5.5), f(6.5));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
@@ -192,22 +198,22 @@ public class TxtDataTransferTest {
     @Test
     public void testTsCollectionFromString_WithDifferentDateFormats() throws IOException {
         // Test with yyyy-MM-dd format
-        String input1 = """
+        String input1 = String.format("""
                 \tSeries1
-                2010-01-01\t1,5
-                2010-02-01\t3,0
-                """;
+                2010-01-01\t%s
+                2010-02-01\t%s
+                """, f(1.5), f(3.0));
 
         TsCollection result1 = transfer.tsCollectionFromString(input1);
         assertThat(result1).isNotNull();
         assertThat(result1.size()).isEqualTo(1);
 
         // Test with dd/MM/yyyy format
-        String input2 = """
+        String input2 = String.format("""
                 \tSeries1
-                01/01/2010\t1,5
-                01/02/2010\t3,0
-                """;
+                01/01/2010\t%s
+                01/02/2010\t%s
+                """, f(1.5), f(3.0));
 
         TsCollection result2 = transfer.tsCollectionFromString(input2);
         assertThat(result2).isNotNull();
@@ -217,10 +223,10 @@ public class TxtDataTransferTest {
     @Test
     public void testTsCollectionFromString_InvalidInput_TooFewDates() throws IOException {
         // Only one date - should return null (less than MINDATES=2)
-        String input = """
+        String input = String.format("""
                 \tSeries1
-                2010-01-01\t1,5
-                """;
+                2010-01-01\t%s
+                """, f(1.5));
 
         TsCollection result = transfer.tsCollectionFromString(input);
         assertThat(result).isNull();
@@ -236,11 +242,11 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_InvalidInput_NoDates() throws IOException {
-        String input = """
+        String input = String.format("""
                 Series1\tSeries2
-                1,5\t2,5
-                3,0\t4,0
-                """;
+                %s\t%s
+                %s\t%s
+                """, f(1.5), f(2.5), f(3.0), f(4.0));
 
         TsCollection result = transfer.tsCollectionFromString(input);
         assertThat(result).isNull();
@@ -289,11 +295,11 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_WithMultiLineName() throws IOException {
-        String input = """
+        String input = String.format("""
                 \tMulti\\nLine\\nName\tSeries2
-                2010-01-01\t1,5\t2,5
-                2010-02-01\t3,0\t4,0
-                """;
+                2010-01-01\t%s\t%s
+                2010-02-01\t%s\t%s
+                """, f(1.5), f(2.5), f(3.0), f(4.0));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
@@ -334,12 +340,12 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_SingleColumn() throws IOException {
-        String input = """
+        String input = String.format("""
                 \tSeries1
-                2010-01-01\t1,5
-                2010-02-01\t3,0
-                2010-03-01\t5,5
-                """;
+                2010-01-01\t%s
+                2010-02-01\t%s
+                2010-03-01\t%s
+                """, f(1.5), f(3.0), f(5.5));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
@@ -351,16 +357,22 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_ManyColumns() throws IOException {
-        String input = """
-                \tS1\tS2\tS3\tS4\tS5
-                2010-01-01\t1\t2\t3\t4\t5
-                2010-02-01\t6\t7\t8\t9\t10
-                """;
+        String input = String.format("""
+                        \tS1\tS2\tS3\tS4\tS5
+                        2010-01-01\t%s\t%s\t%s\t%s\t%s
+                        2010-02-01\t%s\t%s\t%s\t%s\t%s
+                        """, f(1), f(2), f(3), f(4), f(5),
+                f(6), f(7), f(8), f(9), f(10));
 
         TsCollection result = transfer.tsCollectionFromString(input);
 
         assertThat(result).isNotNull();
         assertThat(result.size()).isEqualTo(5);
+    }
+
+    // Helper method to format a number using the system's number format
+    private String f(double value) {
+        return numberFormat.format(value);
     }
 
     // Helper method to create a simple test collection
