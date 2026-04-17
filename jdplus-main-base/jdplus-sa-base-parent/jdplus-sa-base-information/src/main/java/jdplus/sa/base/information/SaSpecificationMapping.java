@@ -21,10 +21,12 @@ import nbbrd.service.ServiceDefinition;
 @ExtensionPoint
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface SaSpecificationMapping{
+
     SaSpecification read(InformationSet info, TsDomain context);
+
     InformationSet write(SaSpecification spec, TsDomain context, boolean verbose, DemetraVersion version);
     
-    public static SaSpecification of(InformationSet info, TsDomain context){
+    static SaSpecification of(InformationSet info, TsDomain context){
         for (SaSpecificationMapping mapping : FIXME){
             SaSpecification spec=mapping.read(info, context);
             if (spec != null)
@@ -33,7 +35,7 @@ public interface SaSpecificationMapping{
         return null;
     }
     
-    public static InformationSet toInformationSet(SaSpecification spec, TsDomain context, boolean verbose, DemetraVersion version){
+    static InformationSet toInformationSet(SaSpecification spec, TsDomain context, boolean verbose, DemetraVersion version){
         for (SaSpecificationMapping mapping : FIXME){
             InformationSet info=mapping.write(spec, context, verbose, version);
             if (info != null)

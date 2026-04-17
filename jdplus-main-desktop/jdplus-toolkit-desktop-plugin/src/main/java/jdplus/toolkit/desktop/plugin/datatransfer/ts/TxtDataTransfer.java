@@ -32,9 +32,9 @@ import lombok.NonNull;
 import nbbrd.design.SystemDependent;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Parser;
+import org.jspecify.annotations.Nullable;
 import org.openide.nodes.Sheet;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.lookup.ServiceProviders;
 
 import java.awt.datatransfer.DataFlavor;
 import java.beans.IntrospectionException;
@@ -50,9 +50,7 @@ import java.util.Locale;
 /**
  * @author Jean Palate
  */
-@ServiceProviders({
-        @ServiceProvider(service = DataTransferSpi.class, position = TxtDataTransfer.POSITION)
-})
+@ServiceProvider(service = DataTransferSpi.class, position = TxtDataTransfer.POSITION)
 public final class TxtDataTransfer implements DataTransferSpi, Configurable, Persistable, ConfigEditor {
 
     static final int POSITION = 2000;
@@ -81,40 +79,40 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
 
     //<editor-fold defaultstate="collapsed" desc="INamedService">
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "TXT";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Tab-delimited values";
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="TssTransferHandler">
     @Override
-    public DataFlavor getDataFlavor() {
+    public @NonNull DataFlavor getDataFlavor() {
         return DataFlavor.stringFlavor;
     }
 
     @Override
-    public boolean canExportTsCollection(TsCollection col) {
+    public boolean canExportTsCollection(@NonNull TsCollection col) {
         return config.exportTimeSeries && !col.isEmpty();
     }
 
     @Override
-    public Object exportTsCollection(TsCollection col) throws IOException {
+    public @NonNull Object exportTsCollection(@NonNull TsCollection col) throws IOException {
         TsCollection loaded = col.load(TsInformationType.Data, TsFactory.getDefault());
         return tsCollectionToString(loaded);
     }
 
     @Override
-    public boolean canImportTsCollection(Object obj) {
+    public boolean canImportTsCollection(@NonNull Object obj) {
         return config.importTimeSeries && obj instanceof String;
     }
 
     @Override
-    public TsCollection importTsCollection(Object obj) throws IOException {
+    public @NonNull TsCollection importTsCollection(@NonNull Object obj) throws IOException {
         TsCollection col = tsCollectionFromString((String) obj);
         if (col == null) {
             throw new IOException("Cannot parse collection");
@@ -123,12 +121,12 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public boolean canExportMatrix(Matrix matrix) {
+    public boolean canExportMatrix(@NonNull Matrix matrix) {
         return config.exportMatrix && !matrix.isEmpty();
     }
 
     @Override
-    public Object exportMatrix(Matrix matrix) throws IOException {
+    public @NonNull Object exportMatrix(@NonNull Matrix matrix) throws IOException {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < matrix.getRowsCount(); i++) {
             result.append(numberFormat.format(matrix.get(i, 0)));
@@ -141,22 +139,22 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public boolean canImportMatrix(Object obj) {
+    public boolean canImportMatrix(@NonNull Object obj) {
         return false;
     }
 
     @Override
-    public Matrix importMatrix(Object obj) throws IOException, ClassCastException {
+    public @NonNull Matrix importMatrix(@NonNull Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean canExportTable(jdplus.toolkit.base.api.util.Table<?> table) {
+    public boolean canExportTable(jdplus.toolkit.base.api.util.@NonNull Table<?> table) {
         return config.exportTable && !table.isEmpty();
     }
 
     @Override
-    public Object exportTable(jdplus.toolkit.base.api.util.Table<?> table) throws IOException {
+    public @NonNull Object exportTable(jdplus.toolkit.base.api.util.@NonNull Table<?> table) throws IOException {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < table.getRowsCount(); i++) {
             result.append(valueToString(table.get(i, 0)));
@@ -169,12 +167,12 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public boolean canImportTable(Object obj) {
+    public boolean canImportTable(@NonNull Object obj) {
         return false;
     }
 
     @Override
-    public jdplus.toolkit.base.api.util.Table<?> importTable(Object obj) throws IOException, ClassCastException {
+    public jdplus.toolkit.base.api.util.@NonNull Table<?> importTable(@NonNull Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     //</editor-fold>
@@ -202,19 +200,15 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     //</editor-fold>
 
     private String valueToString(Object value) {
-        if (value == null) {
-            return "";
-        }
-        if (value instanceof LocalDate date) {
-            return date.format(dateFormat);
-        }
-        if (value instanceof Number) {
-            return numberFormat.format(value);
-        }
-        return value.toString();
+        return switch (value) {
+            case null -> "";
+            case LocalDate date -> date.format(dateFormat);
+            case Number number -> numberFormat.format(number);
+            default -> value.toString();
+        };
     }
 
-    public String tsCollectionToString(TsCollection col) throws IOException {
+    public @NonNull String tsCollectionToString(@NonNull TsCollection col) throws IOException {
         if (col.isEmpty()) {
             return "";
         }
@@ -294,7 +288,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
         return result.toString();
     }
 
-    public TsCollection tsCollectionFromString(String text) throws IOException {
+    public @Nullable TsCollection tsCollectionFromString(@NonNull String text) throws IOException {
         Parser<Number> valueParser = Parser.onNumberFormat(numberFormat);
 
         try {
@@ -413,28 +407,17 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     private static LocalDate parseDate(String sd) {
         try {
             return LocalDate.parse(sd, DateTimeFormatter.ISO_DATE);
-        } catch (DateTimeParseException ex) {
+        } catch (DateTimeParseException ignore) {
         }
-        for (int i = 0; i < FALLBACK_FORMATS.length; ++i) {
+        for (String fallbackFormat : FALLBACK_FORMATS) {
             try {
-                return LocalDate.parse(sd, DateTimeFormatter.ofPattern(FALLBACK_FORMATS[i], Locale.getDefault()));
-            } catch (DateTimeParseException ex) {
+                return LocalDate.parse(sd, DateTimeFormatter.ofPattern(fallbackFormat, Locale.getDefault()));
+            } catch (DateTimeParseException ignore) {
             }
         }
         return null;
     }
 
-    //    private static final ThreadLocal<Parser<LocalDate>> FALLBACK_PARSER = new ThreadLocal<Parser<LocalDate>>() {
-//        @Override
-//        protected Parser<LocalDate> initialValue() {
-//            ImmutableList.Builder<Parser<Date>> list = ImmutableList.builder();
-//            for (String o : FALLBACK_FORMATS) {
-//                DateFormat fmt;
-//                list.add(Parser.onDateFormat(DateFormat(o)));
-//            }
-//            return Parsers  ..firstNotNull(list.build());
-//        }
-//    };
     // fallback formats; order matters!
     private static final String[] FALLBACK_FORMATS = {
             "yyyy-MM-dd",
@@ -519,7 +502,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     private static final class InternalConfigEditor implements BeanEditor {
 
         @Override
-        public boolean editBean(Object bean) throws IntrospectionException {
+        public boolean editBean(@NonNull Object bean) throws IntrospectionException {
             Sheet sheet = new Sheet();
             NodePropertySetBuilder b = new NodePropertySetBuilder();
 

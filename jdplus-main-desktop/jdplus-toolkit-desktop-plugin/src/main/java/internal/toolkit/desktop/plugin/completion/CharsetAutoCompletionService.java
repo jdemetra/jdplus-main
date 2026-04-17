@@ -5,6 +5,7 @@ import ec.util.completion.AutoCompletionSource;
 import ec.util.completion.ExtAutoCompletionSource;
 import ec.util.completion.swing.CustomListCellRenderer;
 import ec.util.completion.swing.JAutoCompletion;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -28,12 +29,12 @@ public final class CharsetAutoCompletionService implements AutoCompletionSpi {
     private final ListCellRenderer renderer = new CharsetRenderer();
 
     @Override
-    public String getPath() {
+    public @NonNull String getPath() {
         return Charset.class.getName();
     }
     
     @Override
-    public JAutoCompletion bind(JTextComponent textComponent) {
+    public @NonNull JAutoCompletion bind(@NonNull JTextComponent textComponent) {
         JAutoCompletion result = new JAutoCompletion(textComponent);
         result.setMinLength(0);
         result.setSource(source);

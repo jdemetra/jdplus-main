@@ -63,22 +63,22 @@ public final class FileBroker implements InterchangeSpi {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "File";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "File...";
     }
 
     @Override
-    public boolean canImport(List<? extends Importable> importables) {
+    public boolean canImport(@NonNull List<? extends Importable> importables) {
         return true;
     }
 
     @Override
-    public void performImport(List<? extends Importable> importables) throws IOException {
+    public void performImport(@NonNull List<? extends Importable> importables) throws IOException {
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             Configs configs = load(fileChooser.getSelectedFile().toPath());
             configs.performImport(importables);
@@ -86,12 +86,12 @@ public final class FileBroker implements InterchangeSpi {
     }
 
     @Override
-    public boolean canExport(List<? extends Exportable> exportables) {
+    public boolean canExport(@NonNull List<? extends Exportable> exportables) {
         return !exportables.isEmpty();
     }
 
     @Override
-    public void performExport(List<? extends Exportable> exportables) throws IOException {
+    public void performExport(@NonNull List<? extends Exportable> exportables) throws IOException {
         if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             Configs configs = Configs.fromExportables(exportables);
             store(enforceExtension(fileChooser.getSelectedFile()).toPath(), configs);

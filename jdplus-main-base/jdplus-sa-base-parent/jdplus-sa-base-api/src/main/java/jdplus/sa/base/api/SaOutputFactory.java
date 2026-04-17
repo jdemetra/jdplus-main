@@ -17,7 +17,6 @@
 package jdplus.sa.base.api;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
-import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.OutputFactory;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;

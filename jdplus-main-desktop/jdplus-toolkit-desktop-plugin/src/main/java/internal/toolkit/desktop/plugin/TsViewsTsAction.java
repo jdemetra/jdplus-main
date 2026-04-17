@@ -20,6 +20,7 @@ import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTs;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.api.timeseries.Ts;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.openide.windows.TopComponent;
@@ -33,17 +34,17 @@ import jdplus.toolkit.desktop.plugin.TsActionOpenSpi;
 public final class TsViewsTsAction implements TsActionOpenSpi {
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "TsViewsTs";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "All ts views";
     }
 
     @Override
-    public void open(Ts ts) {
+    public void open(@NonNull Ts ts) {
        TsManager.get().loadAsync(ts, TsInformationType.Data, this::dispatch);
     }
     

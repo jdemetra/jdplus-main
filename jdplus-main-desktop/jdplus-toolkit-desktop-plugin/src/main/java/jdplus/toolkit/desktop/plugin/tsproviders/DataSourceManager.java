@@ -430,7 +430,7 @@ public final class DataSourceManager {
         INSTANCE;
 
         @Override
-        public String getProviderName() {
+        public @NonNull String getProviderName() {
             return "NoOp";
         }
     }

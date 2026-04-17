@@ -18,6 +18,7 @@ package jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.impl;
 
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import jdplus.toolkit.desktop.plugin.Converter;
@@ -80,7 +81,7 @@ public final class SeatsDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBud
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return SeatsDiagnosticsFactory.NAME;
     }
 

@@ -5,6 +5,7 @@
 package jdplus.text.desktop.plugin;
 
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -19,7 +20,7 @@ public final class UscbProviderBuddy implements DataSourceProviderBuddy {
     private static final String SOURCE = "USCB";
 
     @Override
-    public String getProviderName() {
+    public @NonNull String getProviderName() {
         return SOURCE;
     }
 }

@@ -71,7 +71,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return CsvArrayOutputFactory.NAME;
     }
 

@@ -28,6 +28,7 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.netbeans.core.spi.multiview.MultiViewDescription;
@@ -48,17 +49,17 @@ import jdplus.toolkit.desktop.plugin.TsActionOpenSpi;
 public final class ChartGridTsAction implements TsActionOpenSpi {
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "ChartGridTsAction";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Chart & grid";
     }
 
     @Override
-    public void open(Ts ts) {
+    public void open(@NonNull Ts ts) {
         String topComponentName = getTopComponentName(ts);
         NbComponents.findTopComponentByName(topComponentName)
                 .orElseGet(() -> createComponent(topComponentName, ts))

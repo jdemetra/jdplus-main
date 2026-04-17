@@ -19,6 +19,8 @@ package internal.toolkit.base.workspace.file.util;
 import jdplus.toolkit.base.workspace.WorkspaceFamily;
 import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
 import jdplus.toolkit.base.workspace.file.util.FileSupport;
+import lombok.NonNull;
+
 import java.util.Objects;
 
 /**
@@ -38,7 +40,7 @@ public final class QuickHandler implements FamilyHandler {
     }
 
     @Override
-    public WorkspaceFamily getFamily() {
+    public @NonNull WorkspaceFamily getFamily() {
         return family;
     }
 

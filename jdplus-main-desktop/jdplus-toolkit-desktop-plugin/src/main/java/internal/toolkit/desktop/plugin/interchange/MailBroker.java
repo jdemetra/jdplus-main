@@ -43,7 +43,7 @@ public final class MailBroker implements InterchangeSpi {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Mail";
     }
 
@@ -52,12 +52,12 @@ public final class MailBroker implements InterchangeSpi {
     }
 
     @Override
-    public boolean canExport(List<? extends Exportable> exportables) {
+    public boolean canExport(@NonNull List<? extends Exportable> exportables) {
         return !exportables.isEmpty() && getDesktop().isSupported(Desktop.Action.MAIL);
     }
 
     @Override
-    public void performExport(List<? extends Exportable> exportables) throws IOException {
+    public void performExport(@NonNull List<? extends Exportable> exportables) throws IOException {
         Configs configs = Configs.fromExportables(exportables);
         store(getDesktop(), configs);
     }
@@ -69,12 +69,12 @@ public final class MailBroker implements InterchangeSpi {
     }
 
     @Override
-    public boolean canImport(List<? extends Importable> importables) {
+    public boolean canImport(@NonNull List<? extends Importable> importables) {
         return false;
     }
 
     @Override
-    public void performImport(List<? extends Importable> importables) throws IOException, IllegalArgumentException {
+    public void performImport(@NonNull List<? extends Importable> importables) throws IOException, IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

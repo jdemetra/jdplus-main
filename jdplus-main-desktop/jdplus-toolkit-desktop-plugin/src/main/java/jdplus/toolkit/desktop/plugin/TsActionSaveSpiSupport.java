@@ -5,6 +5,7 @@ import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import lombok.NonNull;
 import nbbrd.design.swing.OnEDT;
 import java.beans.IntrospectionException;
 import java.io.File;
@@ -42,7 +43,7 @@ public final class TsActionSaveSpiSupport implements TsActionSaveSpi {
     }
 
     @Override
-    public void save(List<TsCollection> input) {
+    public void save(@NonNull List<TsCollection> input) {
         SingleFileExporter.saveToFile(
                 fileChooser,
                 file -> editor.editBean(bean, this::reportError),

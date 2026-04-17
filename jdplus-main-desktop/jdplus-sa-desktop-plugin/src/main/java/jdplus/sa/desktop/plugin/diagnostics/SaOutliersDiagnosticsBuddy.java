@@ -18,6 +18,7 @@ package jdplus.sa.desktop.plugin.diagnostics;
 
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import jdplus.toolkit.desktop.plugin.Converter;
@@ -70,7 +71,7 @@ public class SaOutliersDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBudd
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return SaOutliersDiagnosticsFactory.NAME;
     }
 

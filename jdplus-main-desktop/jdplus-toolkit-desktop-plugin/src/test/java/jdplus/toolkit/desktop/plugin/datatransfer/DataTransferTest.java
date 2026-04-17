@@ -22,6 +22,7 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.api.util.Table;
+import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 import org.openide.util.datatransfer.ExTransferable;
 
@@ -43,7 +44,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 public class DataTransferTest {
 
     @Test
-    @SuppressWarnings("null")
+    @SuppressWarnings({"null", "DataFlowIssue"})
     public void testEmpty() {
         DataTransferManager empty = of();
 
@@ -109,52 +110,52 @@ public class DataTransferTest {
 
         assertThat(of(new CustomHandler(DataFlavor.stringFlavor) {
             @Override
-            public boolean canExportTsCollection(TsCollection o) {
+            public boolean canExportTsCollection(@NonNull TsCollection o) {
                 return true;
             }
         }).toTsCollection(t)).isEmpty();
 
         assertThat(of(new CustomHandler(DataFlavor.stringFlavor) {
             @Override
-            public boolean canExportTsCollection(TsCollection o) {
+            public boolean canExportTsCollection(@NonNull TsCollection o) {
                 return true;
             }
 
             @Override
-            public String getName() {
+            public @NonNull String getName() {
                 throw new RuntimeException();
             }
         }).toTsCollection(t)).isEmpty();
 
         assertThat(of(new CustomHandler(DataFlavor.stringFlavor) {
             @Override
-            public DataFlavor getDataFlavor() {
+            public @NonNull DataFlavor getDataFlavor() {
                 throw new RuntimeException();
             }
         }).toTsCollection(t)).isEmpty();
 
         assertThat(of(new CustomHandler(DataFlavor.stringFlavor) {
             @Override
-            public boolean canExportMatrix(Matrix matrix) {
+            public boolean canExportMatrix(@NonNull Matrix matrix) {
                 return true;
             }
         }).toMatrix(t)).isEmpty();
 
         assertThat(of(new CustomHandler(DataFlavor.stringFlavor) {
             @Override
-            public boolean canExportMatrix(Matrix matrix) {
+            public boolean canExportMatrix(@NonNull Matrix matrix) {
                 return true;
             }
 
             @Override
-            public String getName() {
+            public @NonNull String getName() {
                 throw new RuntimeException();
             }
         }).toMatrix(t)).isEmpty();
 
         assertThat(of(new CustomHandler(DataFlavor.stringFlavor) {
             @Override
-            public DataFlavor getDataFlavor() {
+            public @NonNull DataFlavor getDataFlavor() {
                 throw new RuntimeException();
             }
         }).toMatrix(t)).isEmpty();
@@ -178,72 +179,72 @@ public class DataTransferTest {
         }
 
         @Override
-        public DataFlavor getDataFlavor() {
+        public @NonNull DataFlavor getDataFlavor() {
             return df;
         }
 
         @Override
-        public String getName() {
+        public @NonNull String getName() {
             return "xxx";
         }
 
         @Override
-        public boolean canExportTsCollection(TsCollection col) {
+        public boolean canExportTsCollection(@NonNull TsCollection col) {
             return false;
         }
 
         @Override
-        public Object exportTsCollection(TsCollection col) throws IOException {
+        public @NonNull Object exportTsCollection(@NonNull TsCollection col) throws IOException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public boolean canImportTsCollection(Object obj) {
+        public boolean canImportTsCollection(@NonNull Object obj) {
             return false;
         }
 
         @Override
-        public TsCollection importTsCollection(Object obj) throws IOException, ClassCastException {
+        public @NonNull TsCollection importTsCollection(@NonNull Object obj) throws IOException, ClassCastException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public boolean canExportMatrix(Matrix matrix) {
+        public boolean canExportMatrix(@NonNull Matrix matrix) {
             return false;
         }
 
         @Override
-        public Object exportMatrix(Matrix matrix) throws IOException {
+        public @NonNull Object exportMatrix(@NonNull Matrix matrix) throws IOException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public boolean canImportMatrix(Object obj) {
+        public boolean canImportMatrix(@NonNull Object obj) {
             return false;
         }
 
         @Override
-        public Matrix importMatrix(Object obj) throws IOException, ClassCastException {
+        public @NonNull Matrix importMatrix(@NonNull Object obj) throws IOException, ClassCastException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public boolean canExportTable(Table<?> table) {
+        public boolean canExportTable(@NonNull Table<?> table) {
             return false;
         }
 
         @Override
-        public Object exportTable(Table<?> table) throws IOException {
+        public @NonNull Object exportTable(@NonNull Table<?> table) throws IOException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public boolean canImportTable(Object obj) {
+        public boolean canImportTable(@NonNull Object obj) {
             return false;
         }
 
         @Override
-        public Table<?> importTable(Object obj) throws IOException, ClassCastException {
+        public @NonNull Table<?> importTable(@NonNull Object obj) throws IOException, ClassCastException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     }
