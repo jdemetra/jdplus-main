@@ -65,7 +65,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return CsvMatrixOutputFactory.NAME;
     }
 

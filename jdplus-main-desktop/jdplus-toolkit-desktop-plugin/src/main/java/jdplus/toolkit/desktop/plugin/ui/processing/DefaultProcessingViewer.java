@@ -21,6 +21,7 @@ import java.beans.PropertyVetoException;
 import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
 
+import nbbrd.desktop.swing.JMasterDetail;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.Node;
@@ -32,7 +33,8 @@ import org.openide.util.Exceptions;
  * @param <S>
  * @param <D>
  */
-public class DefaultProcessingViewer<S extends ProcSpecification, D extends ProcDocument<S, ?, ?>> extends JComponent implements Disposable, ExplorerManager.Provider {
+public class DefaultProcessingViewer<S extends ProcSpecification, D extends ProcDocument<S, ?, ?>>
+        extends JComponent implements Disposable, ExplorerManager.Provider {
 
     public static final String BUTTONS = "Buttons", BUTTON_APPLY = "Apply", BUTTON_RESTORE = "Restore", BUTTON_SAVE = "Save",
             DIRTY_SPEC_PROPERTY = "dirtySpecProperty";
@@ -47,7 +49,7 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
     private DocumentUIServices<S, D> factory;
     private final Type type_;
     // visual components
-    private final JSplitPane splitter;
+    private final JMasterDetail main;
     private final JPanel specPanel;
     private final BeanTreeView tree;
     private final transient ExplorerManager explorerManager;
@@ -75,22 +77,22 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
         tree.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         this.explorerManager = new ExplorerManager();
         explorerManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
-            switch (evt.getPropertyName()) {
-                case ExplorerManager.PROP_SELECTED_NODES -> {
-                    Node[] nodes = (Node[]) evt.getNewValue();
-                    if (nodes.length > 0) {
-                        Id id = nodes[0].getLookup().lookup(Id.class);
-                        showComponent(id);
-                    }
+            if (evt.getPropertyName().equals(ExplorerManager.PROP_SELECTED_NODES)) {
+                Node[] nodes = (Node[]) evt.getNewValue();
+                if (nodes.length > 0) {
+                    Id id = nodes[0].getLookup().lookup(Id.class);
+                    showComponent(id);
                 }
             }
         });
 
         this.emptyView = new JPanel(new BorderLayout());
 
-        this.splitter = NbComponents.newJSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree, emptyView);
-        splitter.setDividerLocation(200);
-        splitter.setResizeWeight(.20);
+        this.main = new JMasterDetail();
+        main.setMasterNode(tree);
+        main.setDetailNode(emptyView);
+        main.setDetailSide(JMasterDetail.DetailSide.RIGHT);
+        main.setDividerPosition(.20);
 
         this.toolBar = NbComponents.newInnerToolbar();
         toolBar.add(Box.createHorizontalGlue());
@@ -104,7 +106,7 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
 
         setLayout(new BorderLayout());
         add(toolBar, BorderLayout.NORTH);
-        add(splitter, BorderLayout.CENTER);
+        add(main, BorderLayout.CENTER);
         add(specPanel, BorderLayout.EAST);
     }
 
@@ -211,7 +213,7 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
 
     public void initSpecView() {
         // initialize all items
-        ProcDocument doc = getDocument();
+        ProcDocument<S, ?, ?> doc = getDocument();
         if (doc == null) {
             return;
         }
@@ -383,7 +385,7 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
     }
 
     private void showComponent(Id id) {
-        Component oldView = splitter.getBottomComponent();
+        Component oldView = main.getDetailNode();
         if (oldView instanceof Disposable disposable) {
             disposable.dispose();
         }
@@ -395,9 +397,7 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
             newView = JExceptionPanel.create(ex);
         }
 
-        int sep = splitter.getDividerLocation();
-        splitter.setBottomComponent(newView != null ? newView : emptyView);
-        splitter.setDividerLocation(sep);
+        main.setDetailNode(newView != null ? newView : emptyView);
     }
 
     private void selectPreferredView() {
@@ -422,19 +422,19 @@ public class DefaultProcessingViewer<S extends ProcSpecification, D extends Proc
             procView.dispose();
         }
         tree.setTransferHandler(null);
-        Component old = splitter.getBottomComponent();
+        Component old = main.getDetailNode();
         if (old instanceof Disposable disposable) {
             disposable.dispose();
         }
-        splitter.setBottomComponent(emptyView);
+        main.setDetailNode(emptyView);
         removeAll();
     }
 
     public void removeListeners() {
         PropertyChangeListener[] listeners = this.getPropertyChangeListeners();
         if (listeners != null) {
-            for (int i = 0; i < listeners.length; ++i) {
-                this.removePropertyChangeListener(listeners[i]);
+            for (PropertyChangeListener listener : listeners) {
+                this.removePropertyChangeListener(listener);
             }
         }
     }

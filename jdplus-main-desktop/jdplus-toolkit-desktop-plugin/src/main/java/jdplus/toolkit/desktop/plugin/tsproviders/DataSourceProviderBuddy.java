@@ -21,10 +21,9 @@ import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
+import lombok.NonNull;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import lombok.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.openide.nodes.Sheet;
 

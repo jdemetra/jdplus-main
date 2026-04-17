@@ -28,16 +28,13 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
 import lombok.NonNull;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.lookup.ServiceProviders;
 
 import java.awt.datatransfer.DataFlavor;
 
 /**
  * @author Philippe Charles
  */
-@ServiceProviders({
-        @ServiceProvider(service = DataTransferSpi.class, position = HtmlDataTransfer.POSITION)
-})
+@ServiceProvider(service = DataTransferSpi.class, position = HtmlDataTransfer.POSITION)
 public final class HtmlDataTransfer implements DataTransferSpi, Configurable, Persistable, ConfigEditor {
 
     static final int POSITION = 1500;
@@ -65,17 +62,17 @@ public final class HtmlDataTransfer implements DataTransferSpi, Configurable, Pe
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "HTML";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "HTML tables";
     }
 
     @Override
-    public DataFlavor getDataFlavor() {
+    public @NonNull DataFlavor getDataFlavor() {
         return dataFlavor;
     }
 

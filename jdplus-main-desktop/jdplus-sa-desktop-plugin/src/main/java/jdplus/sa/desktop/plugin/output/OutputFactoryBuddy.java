@@ -21,6 +21,7 @@ import jdplus.toolkit.desktop.plugin.Persistable;
 
 import java.awt.Image;
 
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 
 /**
@@ -30,6 +31,7 @@ import org.openide.nodes.Sheet;
 public interface OutputFactoryBuddy extends NamedService, Persistable {
 
     @Override
+    @NonNull
     String getName();
     
     AbstractOutputNode createNode();
@@ -37,7 +39,7 @@ public interface OutputFactoryBuddy extends NamedService, Persistable {
     AbstractOutputNode createNodeFor(Object properties);
 
     @Override
-    default String getDisplayName() {
+    default @NonNull String getDisplayName() {
         return getName();
     }
 
@@ -47,7 +49,7 @@ public interface OutputFactoryBuddy extends NamedService, Persistable {
     }
 
     @Override
-    default Sheet createSheet() {
+    default @NonNull Sheet createSheet() {
         return new Sheet();
     }
 }
