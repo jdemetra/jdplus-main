@@ -51,7 +51,7 @@
 
         <!-- annotations & processors -->
         <lombok.version>1.18.44</lombok.version>
-        <java-service.version>2.0.0</java-service.version>
+        <java-service.version>2.1.0</java-service.version>
         <java-design.version>1.10.1</java-design.version>
         <jspecify.version>1.0.0</jspecify.version>
 
