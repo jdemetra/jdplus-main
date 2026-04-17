@@ -11,6 +11,7 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static java.util.Locale.ROOT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
@@ -99,7 +100,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_VerticalWithTitlesAndDates() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 \tSeries1\tSeries2
                 2010-01-01\t%s\t%s
                 2010-02-01\t%s\t%s
@@ -123,7 +124,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_VerticalNoTitles() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 2010-01-01\t%s\t%s
                 2010-02-01\t%s\t%s
                 2010-03-01\t%s\t%s
@@ -139,7 +140,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_HorizontalWithTitlesAndDates() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 \t2010-01-01\t2010-02-01\t2010-03-01
                 Series1\t%s\t%s\t%s
                 Series2\t%s\t%s\t%s
@@ -162,7 +163,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_HorizontalNoTitles() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 2010-01-01\t2010-02-01\t2010-03-01
                 %s\t%s\t%s
                 %s\t%s\t%s
@@ -177,7 +178,7 @@ public class TxtDataTransferTest {
     @Test
     public void testTsCollectionFromString_WithMissingValues() throws IOException {
         // Test with complete rows (no trailing empty cells which cause parsing issues)
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 \tSeries1\tSeries2
                 2010-01-01\t%s\t%s
                 2010-02-01\t%s\t%s
@@ -198,7 +199,7 @@ public class TxtDataTransferTest {
     @Test
     public void testTsCollectionFromString_WithDifferentDateFormats() throws IOException {
         // Test with yyyy-MM-dd format
-        String input1 = String.format("""
+        String input1 = String.format(ROOT,"""
                 \tSeries1
                 2010-01-01\t%s
                 2010-02-01\t%s
@@ -209,7 +210,7 @@ public class TxtDataTransferTest {
         assertThat(result1.size()).isEqualTo(1);
 
         // Test with dd/MM/yyyy format
-        String input2 = String.format("""
+        String input2 = String.format(ROOT,"""
                 \tSeries1
                 01/01/2010\t%s
                 01/02/2010\t%s
@@ -223,7 +224,7 @@ public class TxtDataTransferTest {
     @Test
     public void testTsCollectionFromString_InvalidInput_TooFewDates() throws IOException {
         // Only one date - should return null (less than MINDATES=2)
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 \tSeries1
                 2010-01-01\t%s
                 """, f(1.5));
@@ -242,7 +243,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_InvalidInput_NoDates() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 Series1\tSeries2
                 %s\t%s
                 %s\t%s
@@ -295,7 +296,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_WithMultiLineName() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT, """
                 \tMulti\\nLine\\nName\tSeries2
                 2010-01-01\t%s\t%s
                 2010-02-01\t%s\t%s
@@ -340,7 +341,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_SingleColumn() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                 \tSeries1
                 2010-01-01\t%s
                 2010-02-01\t%s
@@ -357,7 +358,7 @@ public class TxtDataTransferTest {
 
     @Test
     public void testTsCollectionFromString_ManyColumns() throws IOException {
-        String input = String.format("""
+        String input = String.format(ROOT,"""
                         \tS1\tS2\tS3\tS4\tS5
                         2010-01-01\t%s\t%s\t%s\t%s\t%s
                         2010-02-01\t%s\t%s\t%s\t%s\t%s
