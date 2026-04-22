@@ -16,6 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix Specification view when switching between SaItems with different frequencies [#938](https://github.com/jdemetra/jdplus-main/pull/938)
 - ![UI] Fix JGrid blank color name on FlatLaf [#840](https://github.com/jdemetra/jdplus-main/issues/840)
 - ![UI] Fix JGrid focus [#617](https://github.com/jdemetra/jdplus-main/issues/617)
+- ![OTHER] Fix missing ARM-based packages in releases [#958](https://github.com/jdemetra/jd3-main/issues/958)
 
 ## [3.7.1] - 2026-03-06
 
