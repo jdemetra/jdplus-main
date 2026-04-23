@@ -25,6 +25,8 @@ import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.TsActionSaveSpi;
 import jdplus.toolkit.desktop.plugin.TsActionSaveSpiSupport;
 import static jdplus.toolkit.desktop.plugin.TsActionSaveSpiSupport.newEditor;
+
+import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import ec.util.spreadsheet.Book;
@@ -62,6 +64,11 @@ import nbbrd.service.ServiceProvider;
  */
 @ServiceProvider(TsActionSaveSpi.class)
 public final class SpreadsheetTsSave implements TsActionSaveSpi, Persistable {
+
+    private final static BookFactoryLoader LOADER = BookFactoryLoader
+            .builder()
+            .backend(NetBeansServiceBackend.lookupFactory(), NetBeansServiceBackend.lookupStreamer())
+            .build();
 
     @lombok.experimental.Delegate(types = Persistable.class)
     private final Configuration configuration = new Configuration();
@@ -107,7 +114,7 @@ public final class SpreadsheetTsSave implements TsActionSaveSpi, Persistable {
     }
 
     private static Stream<Book.Factory> getFactories() {
-        return BookFactoryLoader.get().stream().filter(Book.Factory::canStore);
+        return LOADER.get().stream().filter(Book.Factory::canStore);
     }
 
     private static List<FileFilter> getFileFilters() {

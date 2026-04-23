@@ -34,7 +34,7 @@ public final class SpreadsheetManager {
 
     @StaticFactoryMethod
     public static @NonNull SpreadsheetManager ofServiceLoader() {
-        return SpreadsheetManager.builder().factories(BookFactoryLoader.get()).build();
+        return SpreadsheetManager.builder().factories(BookFactoryLoader.load()).build();
     }
 
     @lombok.Singular

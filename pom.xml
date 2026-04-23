@@ -64,7 +64,7 @@
         <protobuf.version>4.34.1</protobuf.version>
         <java-io-util.version>0.0.36</java-io-util.version>
         <java-sql-util.version>1.0.7</java-sql-util.version>
-        <spreadsheet4j.version>2.5.10</spreadsheet4j.version>
+        <spreadsheet4j.version>2.6.0</spreadsheet4j.version>
         <netbeans.version>RELEASE290</netbeans.version>
 
         <!-- plugins -->
