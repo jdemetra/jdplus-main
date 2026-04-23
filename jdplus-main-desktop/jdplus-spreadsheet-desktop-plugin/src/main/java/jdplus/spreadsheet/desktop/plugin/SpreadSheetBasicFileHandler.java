@@ -62,7 +62,7 @@ public final class SpreadSheetBasicFileHandler implements BasicFileViewer.BasicF
     private final View uniqueView;
 
     public SpreadSheetBasicFileHandler() {
-        this.factories = BookFactoryLoader.get();
+        this.factories = BookFactoryLoader.load();
         this.uniqueView = new View();
     }
 
