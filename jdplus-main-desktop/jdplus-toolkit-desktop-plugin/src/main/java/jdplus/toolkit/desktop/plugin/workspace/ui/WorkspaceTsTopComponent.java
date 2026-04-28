@@ -59,6 +59,12 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
         updateUserInterfaceContext();
     }
 
+     @Override
+    public void componentDeactivated() {
+        super.componentActivated();
+        UserInterfaceContext.INSTANCE.setDomain(null);
+    }
+
     @Override
     public Action[] getActions() {
         return Menus.createActions(super.getActions(), WorkspaceFactory.TSCONTEXTPATH, getContextPath());

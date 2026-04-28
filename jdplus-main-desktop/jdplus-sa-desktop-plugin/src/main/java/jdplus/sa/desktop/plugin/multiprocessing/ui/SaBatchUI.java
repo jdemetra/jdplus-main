@@ -12,8 +12,6 @@ import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
 import jdplus.sa.desktop.plugin.util.ActionsHelper;
 import jdplus.sa.desktop.plugin.util.ActionsHelpers;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
-import jdplus.toolkit.base.api.processing.ProcessingLog.InformationType;
 import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
@@ -138,12 +136,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     public void componentActivated() {
         super.componentActivated();
         active = true;
+        updateUserInterfaceContext(getSelectedSeries());
     }
 
     @Override
     public void componentDeactivated() {
         super.componentDeactivated();
         active = false;
+        UserInterfaceContext.INSTANCE.setDomain(null);
     }
 
     @Override
@@ -453,6 +453,16 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     public SaNode[] getSelection() {
         return selection.clone();
     }
+    
+    public Ts getSelectedSeries() {
+        if (selection == null || selection.length == 0)
+            return null;
+        SaItem output = selection[0].getOutput();
+        if (output == null)
+            return null;
+        return output.getDefinition().getTs();
+    }
+    
     // < GETTERS/SETTERS
 
     public boolean start(boolean all) {
