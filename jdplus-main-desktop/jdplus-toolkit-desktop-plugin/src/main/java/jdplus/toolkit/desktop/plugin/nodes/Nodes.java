@@ -1,29 +1,33 @@
 /*
  * Copyright 2013 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
 import jdplus.toolkit.base.api.util.TreeTraverser;
 import lombok.NonNull;
+import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
 import org.openide.util.Utilities;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -36,7 +40,7 @@ public class Nodes {
 
     @NonNull
     public Action[] actionsForPath(@NonNull String path) {
-        return Utilities.actionsForPath(path).stream().toArray(Action[]::new);
+        return Utilities.actionsForPath(path).toArray(Action[]::new);
     }
 
     @NonNull
@@ -61,5 +65,12 @@ public class Nodes {
     @NonNull
     public Stream<Node> depthFirstStream(@NonNull Node root) {
         return TreeTraverser.of(root, Nodes::children).depthFirstStream();
+    }
+
+    public static @NonNull Optional<Node> findTopComponentRootContext(@NonNull String tcID) {
+        TopComponent component = WindowManager.getDefault().findTopComponent(tcID);
+        return component instanceof ExplorerManager.Provider provider
+                ? Optional.ofNullable(provider.getExplorerManager().getRootContext())
+                : Optional.empty();
     }
 }

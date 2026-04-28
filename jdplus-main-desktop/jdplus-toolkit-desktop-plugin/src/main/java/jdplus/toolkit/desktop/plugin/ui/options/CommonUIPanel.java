@@ -23,6 +23,8 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
+
+import lombok.NonNull;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
@@ -282,12 +284,12 @@ final class CommonUIPanel extends javax.swing.JPanel implements VetoableChangeLi
         private final ColorScheme colorScheme;
 
         @Override
-        public String getName() {
+        public @NonNull String getName() {
             return colorScheme.getName();
         }
 
         @Override
-        public String getDisplayName() {
+        public @NonNull String getDisplayName() {
             return colorScheme.getDisplayName();
         }
 

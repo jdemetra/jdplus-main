@@ -13,6 +13,7 @@ import jdplus.toolkit.base.tsp.FileBean;
 import jdplus.toolkit.base.tsp.FileLoader;
 import ec.util.list.swing.JLists;
 import jdplus.toolkit.base.tsp.DataSource;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.openide.DialogDescriptor;
@@ -36,13 +37,13 @@ import java.util.stream.Collectors;
 public final class FileDataSourceTransfer implements DataSourceTransferSpi {
 
     @Override
-    public boolean canHandle(Transferable t) {
+    public boolean canHandle(@NonNull Transferable t) {
         Optional<File> file = DataTransfers.getSingleFile(t);
         return file.isPresent() && !getLoaders(file.orElseThrow()).isEmpty();
     }
 
     @Override
-    public boolean canHandle(Transferable t, String providerName) {
+    public boolean canHandle(@NonNull Transferable t, @NonNull String providerName) {
         Optional<File> file = DataTransfers.getSingleFile(t);
         if (file.isPresent()) {
             Optional<FileLoader> loader = TsManager.get().getProvider(FileLoader.class, providerName);
@@ -52,7 +53,7 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
     }
 
     @Override
-    public Optional<DataSource> getDataSource(Transferable t) {
+    public @NonNull Optional<DataSource> getDataSource(@NonNull Transferable t) {
         File file = DataTransfers.getSingleFile(t).orElseThrow();
         List<FileLoader> loaders = getLoaders(file);
         Optional<FileLoader> loader = chooseLoader(loaders);
@@ -67,7 +68,7 @@ public final class FileDataSourceTransfer implements DataSourceTransferSpi {
     }
 
     @Override
-    public Optional<DataSource> getDataSource(Transferable t, String providerName) {
+    public @NonNull Optional<DataSource> getDataSource(@NonNull Transferable t, @NonNull String providerName) {
         File file = DataTransfers.getSingleFile(t).orElseThrow();
         FileLoader loader = TsManager.get().getProvider(FileLoader.class, providerName).orElseThrow();
         FileBean bean = loader.newBean();

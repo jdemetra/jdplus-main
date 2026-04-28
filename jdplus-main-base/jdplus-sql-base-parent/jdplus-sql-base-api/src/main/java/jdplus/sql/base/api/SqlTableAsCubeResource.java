@@ -31,6 +31,7 @@ import jdplus.toolkit.base.tsp.cube.TableAsCubeUtil;
 import jdplus.toolkit.base.tsp.cube.TableDataParams;
 import lombok.NonNull;
 import nbbrd.design.NotThreadSafe;
+import nbbrd.design.SystemDependent;
 import nbbrd.design.VisibleForTesting;
 import nbbrd.sql.jdbc.SqlIdentifierQuoter;
 import org.jspecify.annotations.Nullable;
@@ -116,6 +117,7 @@ public final class SqlTableAsCubeResource implements TableAsCubeConnection.Resou
         return new ChildrenQuery(checkNode(id), table).call(source, onCall);
     }
 
+    @SystemDependent
     @Override
     public @NonNull TsDataBuilder<java.util.Date> newBuilder() {
         return TsDataBuilder.byCalendar(new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault()), gathering, ObsCharacteristics.ORDERED);

@@ -6,6 +6,7 @@ import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.NbBundle;
 
@@ -64,7 +65,7 @@ final class SpreadSheetDataTransferEditor implements BeanEditor {
     }
 
     @Override
-    public final boolean editBean(Object bean) throws IntrospectionException {
+    public final boolean editBean(@NonNull Object bean) throws IntrospectionException {
         SpreadSheetDataTransferBean config = (SpreadSheetDataTransferBean) bean;
         return new PropertySheetDialogBuilder()
                 .title(title)

@@ -18,6 +18,7 @@ package jdplus.sa.desktop.plugin.diagnostics;
 
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import jdplus.toolkit.desktop.plugin.Converter;
@@ -78,7 +79,7 @@ public class AdvancedResidualSeasonalityDiagnosticsBuddy
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return AdvancedResidualSeasonalityDiagnosticsFactory.NAME;
     }
 

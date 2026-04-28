@@ -8,6 +8,7 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataSourceTransferSpi;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
 import jdplus.toolkit.base.tsp.DataSource;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -23,23 +24,23 @@ import nbbrd.io.text.Parser;
 public final class UriDataSourceTransfer implements DataSourceTransferSpi {
 
     @Override
-    public boolean canHandle(Transferable t) {
+    public boolean canHandle(@NonNull Transferable t) {
         return getDataSource(t).isPresent();
     }
 
     @Override
-    public boolean canHandle(Transferable t, String providerName) {
+    public boolean canHandle(@NonNull Transferable t, @NonNull String providerName) {
         Optional<DataSource> dataSource = getDataSource(t);
         return dataSource.isPresent() && dataSource.orElseThrow().getProviderName().equals(providerName);
     }
 
     @Override
-    public Optional<DataSource> getDataSource(Transferable t) {
+    public @NonNull Optional<DataSource> getDataSource(@NonNull Transferable t) {
         return !DataTransferManager.get().isTssTransferable(t) ? DataTransfers.tryParse(t, Parser.of(DataSource::parse)) : Optional.empty();
     }
 
     @Override
-    public Optional<DataSource> getDataSource(Transferable t, String providerName) {
+    public @NonNull Optional<DataSource> getDataSource(@NonNull Transferable t, @NonNull String providerName) {
         Optional<DataSource> result = getDataSource(t);
         return result.isPresent() && result.orElseThrow().getProviderName().equals(providerName) ? result : Optional.empty();
     }

@@ -29,15 +29,19 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import lombok.NonNull;
+import nbbrd.design.SystemDependent;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Parser;
+import nbbrd.picocsv.Csv;
+import org.jspecify.annotations.Nullable;
 import org.openide.nodes.Sheet;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.lookup.ServiceProviders;
 
 import java.awt.datatransfer.DataFlavor;
 import java.beans.IntrospectionException;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,21 +53,29 @@ import java.util.Locale;
 /**
  * @author Jean Palate
  */
-@ServiceProviders({
-        @ServiceProvider(service = DataTransferSpi.class, position = TxtDataTransfer.POSITION)
-})
+// FIXME: should move to jdplus-text-desktop-plugin
+// FIXME: should use jdplus.toolkit.base.tsp.grid API
+@ServiceProvider(service = DataTransferSpi.class, position = TxtDataTransfer.POSITION)
 public final class TxtDataTransfer implements DataTransferSpi, Configurable, Persistable, ConfigEditor {
 
     static final int POSITION = 2000;
-    private static final char DELIMITOR = '\t';
-    private static final String NEWLINE = System.lineSeparator();
-    private static final int MINDATES = 2;
+
+    @SystemDependent
+    public static final Csv.Format CSV_FORMAT = Csv.Format.DEFAULT
+            .toBuilder()
+            .separator(System.lineSeparator())
+            .delimiter('\t')
+            .build();
+
+    private static final int MIN_DATES = 2;
+
     // PROPERTIES
     private final NumberFormat numberFormat;
     private final DateTimeFormatter dateFormat;
     private final BeanConfigurator<InternalConfig, TxtDataTransfer> configurator;
     private InternalConfig config;
 
+    @SystemDependent
     public TxtDataTransfer() {
         this.numberFormat = NumberFormat.getNumberInstance(Locale.getDefault(Locale.Category.FORMAT));
         this.dateFormat = DateTimeFormatter.ISO_DATE;
@@ -78,40 +90,40 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
 
     //<editor-fold defaultstate="collapsed" desc="INamedService">
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "TXT";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Tab-delimited values";
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="TssTransferHandler">
     @Override
-    public DataFlavor getDataFlavor() {
+    public @NonNull DataFlavor getDataFlavor() {
         return DataFlavor.stringFlavor;
     }
 
     @Override
-    public boolean canExportTsCollection(TsCollection col) {
+    public boolean canExportTsCollection(@NonNull TsCollection col) {
         return config.exportTimeSeries && !col.isEmpty();
     }
 
     @Override
-    public Object exportTsCollection(TsCollection col) throws IOException {
+    public @NonNull Object exportTsCollection(@NonNull TsCollection col) throws IOException {
         TsCollection loaded = col.load(TsInformationType.Data, TsFactory.getDefault());
         return tsCollectionToString(loaded);
     }
 
     @Override
-    public boolean canImportTsCollection(Object obj) {
+    public boolean canImportTsCollection(@NonNull Object obj) {
         return config.importTimeSeries && obj instanceof String;
     }
 
     @Override
-    public TsCollection importTsCollection(Object obj) throws IOException {
+    public @NonNull TsCollection importTsCollection(@NonNull Object obj) throws IOException {
         TsCollection col = tsCollectionFromString((String) obj);
         if (col == null) {
             throw new IOException("Cannot parse collection");
@@ -120,58 +132,62 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     }
 
     @Override
-    public boolean canExportMatrix(Matrix matrix) {
+    public boolean canExportMatrix(@NonNull Matrix matrix) {
         return config.exportMatrix && !matrix.isEmpty();
     }
 
     @Override
-    public Object exportMatrix(Matrix matrix) throws IOException {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < matrix.getRowsCount(); i++) {
-            result.append(numberFormat.format(matrix.get(i, 0)));
-            for (int j = 1; j < matrix.getColumnsCount(); j++) {
-                result.append(DELIMITOR).append(numberFormat.format(matrix.get(i, j)));
+    public @NonNull Object exportMatrix(@NonNull Matrix matrix) throws IOException {
+        StringWriter stringWriter = new StringWriter();
+
+        try (Csv.Writer csv = Csv.Writer.of(CSV_FORMAT, Csv.WriterOptions.DEFAULT, stringWriter, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
+            for (int i = 0; i < matrix.getRowsCount(); i++) {
+                for (int j = 0; j < matrix.getColumnsCount(); j++) {
+                    csv.writeField(numberFormat.format(matrix.get(i, j)));
+                }
+                csv.writeEndOfLine();
             }
-            result.append(NEWLINE);
         }
-        return result.toString();
+        return stringWriter.toString();
     }
 
     @Override
-    public boolean canImportMatrix(Object obj) {
+    public boolean canImportMatrix(@NonNull Object obj) {
         return false;
     }
 
     @Override
-    public Matrix importMatrix(Object obj) throws IOException, ClassCastException {
+    public @NonNull Matrix importMatrix(@NonNull Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean canExportTable(jdplus.toolkit.base.api.util.Table<?> table) {
+    public boolean canExportTable(jdplus.toolkit.base.api.util.@NonNull Table<?> table) {
         return config.exportTable && !table.isEmpty();
     }
 
     @Override
-    public Object exportTable(jdplus.toolkit.base.api.util.Table<?> table) throws IOException {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < table.getRowsCount(); i++) {
-            result.append(valueToString(table.get(i, 0)));
-            for (int j = 1; j < table.getColumnsCount(); j++) {
-                result.append(DELIMITOR).append(valueToString(table.get(i, j)));
+    public @NonNull Object exportTable(jdplus.toolkit.base.api.util.@NonNull Table<?> table) throws IOException {
+        StringWriter stringWriter = new StringWriter();
+
+        try (Csv.Writer csv = Csv.Writer.of(CSV_FORMAT, Csv.WriterOptions.DEFAULT, stringWriter, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
+            for (int i = 0; i < table.getRowsCount(); i++) {
+                for (int j = 0; j < table.getColumnsCount(); j++) {
+                    csv.writeField(valueToString(table.get(i, j)));
+                }
+                csv.writeEndOfLine();
             }
-            result.append(NEWLINE);
         }
-        return result.toString();
+        return stringWriter.toString();
     }
 
     @Override
-    public boolean canImportTable(Object obj) {
+    public boolean canImportTable(@NonNull Object obj) {
         return false;
     }
 
     @Override
-    public jdplus.toolkit.base.api.util.Table<?> importTable(Object obj) throws IOException, ClassCastException {
+    public jdplus.toolkit.base.api.util.@NonNull Table<?> importTable(@NonNull Object obj) throws IOException, ClassCastException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     //</editor-fold>
@@ -199,123 +215,125 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     //</editor-fold>
 
     private String valueToString(Object value) {
-        if (value == null) {
-            return "";
-        }
-        if (value instanceof LocalDate date) {
-            return date.format(dateFormat);
-        }
-        if (value instanceof Number) {
-            return numberFormat.format(value);
-        }
-        return value.toString();
+        return switch (value) {
+            case null -> "";
+            case LocalDate date -> date.format(dateFormat);
+            case Number number -> numberFormat.format(number);
+            default -> value.toString();
+        };
     }
 
-    public String tsCollectionToString(TsCollection col) throws IOException {
+    public @NonNull String tsCollectionToString(@NonNull TsCollection col) throws IOException {
         if (col.isEmpty()) {
             return "";
         }
-        StringBuilder result = new StringBuilder();
+
+        StringWriter stringWriter = new StringWriter();
         TsCollectionAnalyser analyser = new TsCollectionAnalyser();
         analyser.set(col, config.beginPeriod);
         int nbdates = analyser.dates.length;
         int nseries = analyser.titles.length;
-        if (config.vertical) // une série par colonne
-        {
-            // écriture des titres des séries
-            if (config.showTitle) {
+
+        try (Csv.Writer csv = Csv.Writer.of(CSV_FORMAT, Csv.WriterOptions.DEFAULT, stringWriter, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
+            if (config.vertical) // une série par colonne
+            {
+                // écriture des titres des séries
+                if (config.showTitle) {
+                    if (config.showDates) {
+                        csv.writeField(null);
+                    }
+                    for (int i = 0; i < nseries; i++) {
+                        csv.writeField(MultiLineNameUtil.join(analyser.titles[i]));
+                    }
+                    csv.writeEndOfLine();
+                }
+
+                for (int i = 0; i < nbdates; i++) {
+                    if (config.showDates) {
+                        csv.writeField(dateFormat.format(analyser.dates[i]));
+                    }
+                    for (int j = 0; j < nseries; j++) {
+                        double val = analyser.data.get(i, j);
+                        if (!Double.isNaN(val)) {
+                            csv.writeField(numberFormat.format(val));
+                        } else {
+                            csv.writeField(null);
+                        }
+                    }
+                    csv.writeEndOfLine();
+                }
+
+            } // une série par ligne
+            else {
                 if (config.showDates) {
-                    result.append(DELIMITOR);
+                    if (config.showTitle) {
+                        csv.writeField(null);
+                    }
+                    for (int i = 0; i < nbdates; i++) {
+                        csv.writeField(dateFormat.format(analyser.dates[i]));
+                    }
+                    csv.writeEndOfLine();
                 }
                 for (int i = 0; i < nseries; i++) {
-                    result.append(MultiLineNameUtil.join(analyser.titles[i]));
-                    if (i == nseries - 1) {
-                        result.append(NEWLINE);
-                    } else {
-                        result.append(DELIMITOR);
+                    if (config.showTitle) {
+                        csv.writeField(MultiLineNameUtil.join(analyser.titles[i]));
                     }
-                }
-            }
-
-            for (int i = 0; i < nbdates; i++) {
-                if (config.showDates) {
-                    result.append(dateFormat.format(analyser.dates[i])).append(DELIMITOR);
-                }
-                for (int j = 0; j < nseries; j++) {
-                    double val = analyser.data.get(i, j);
-                    if (!Double.isNaN(val)) {
-                        result.append(numberFormat.format(val));
+                    for (int j = 0; j < nbdates; j++) {
+                        double val = analyser.data.get(j, i);
+                        if (!Double.isNaN(val)) {
+                            csv.writeField(numberFormat.format(val));
+                        } else {
+                            csv.writeField(null);
+                        }
                     }
-                    if (j == nseries - 1) {
-                        result.append(NEWLINE);
-                    } else {
-                        result.append(DELIMITOR);
-                    }
-                }
-            }
-
-        } // une série par ligne
-        else {
-            if (config.showDates) {
-                if (config.showTitle) {
-                    result.append(DELIMITOR);
-                }
-                for (int i = 0; i < nbdates; i++) {
-                    result.append(dateFormat.format(analyser.dates[i]));
-                    result.append(DELIMITOR);
-                    if (i == nbdates - 1) {
-                        result.append(NEWLINE);
-                    } else {
-                        result.append(DELIMITOR);
-                    }
-                }
-            }
-            for (int i = 0; i < nseries; i++) {
-                if (config.showTitle) {
-                    result.append(MultiLineNameUtil.join(analyser.titles[i]));
-                    result.append(DELIMITOR);
-                }
-                for (int j = 0; j < nbdates; j++) {
-                    double val = analyser.data.get(j, i);
-                    if (!Double.isNaN(val)) {
-                        result.append(numberFormat.format(val));
-                    }
-                    if (j == nbdates - 1) {
-                        result.append(NEWLINE);
-                    } else {
-                        result.append(DELIMITOR);
-                    }
+                    csv.writeEndOfLine();
                 }
             }
         }
-        return result.toString();
+        return stringWriter.toString();
     }
 
-    public TsCollection tsCollectionFromString(String text) throws IOException {
+    public @Nullable TsCollection tsCollectionFromString(@NonNull String text) throws IOException {
         Parser<Number> valueParser = Parser.onNumberFormat(numberFormat);
 
         try {
-            int nrows = 0;
+            List<List<String>> rowsList = new ArrayList<>();
             int ncols = 0;
 
-            String[] rowarray = text.split("\\r?\\n");
-            List<String[]> rows = new ArrayList<>();
-            nrows = rowarray.length;
-            for (int i = 0; i < nrows; i++) {
-                String[] colarray = rowarray[i].split("\\t");
-                rows.add(colarray);
-                if (ncols < colarray.length) {
-                    ncols = colarray.length;
+            Csv.ReaderOptions options = Csv.ReaderOptions.builder()
+                    .lenientSeparator(true)  // Allow flexible line endings
+                    .build();
+
+            // Read all rows using picocsv
+            try (Csv.Reader csv = Csv.Reader.of(CSV_FORMAT, options, new StringReader(text), Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
+                while (csv.readLine()) {
+                    List<String> fields = new ArrayList<>();
+                    while (csv.readField()) {
+                        fields.add(csv.toString());
+                    }
+                    rowsList.add(fields);
+                    if (ncols < fields.size()) {
+                        ncols = fields.size();
+                    }
                 }
             }
+
+            int nrows = rowsList.size();
             if (ncols < 1 || nrows < 1) {
                 return null;
             }
+
+            // Convert to array format for compatibility with existing logic
+            List<String[]> rows = new ArrayList<>();
+            for (List<String> row : rowsList) {
+                rows.add(row.toArray(new String[0]));
+            }
+
             // Search for the orientation, the titles and the dates
             // if vertical, m(1,0) is a date. Otherwise m(0,1)
-            boolean datesAreVertical = null != parseDate(rows.get(1)[0]);
-            boolean hasTitles = null == parseDate(rows.getFirst()[0]);
-            boolean datesAreHorizontal = null != parseDate(rows.getFirst()[1]);
+            boolean datesAreVertical = nrows > 1 && rows.get(1).length > 0 && null != parseDate(rows.get(1)[0]);
+            boolean hasTitles = rows.getFirst().length > 0 && null == parseDate(rows.getFirst()[0]);
+            boolean datesAreHorizontal = rows.getFirst().length > 1 && null != parseDate(rows.getFirst()[1]);
             if (!datesAreVertical && !datesAreHorizontal) {
                 return null;
             }
@@ -364,12 +382,14 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
             for (int i = 0, j = (datesAreHorizontal || hasTitles) ? 1 : 0; i < nr; ++i, ++j) {
                 String[] cols = rows.get(j);
                 for (int k = 0, l = (datesAreVertical || hasTitles) ? 1 : 0; k < nc; ++k, ++l) {
-                    Number value = valueParser.parse(cols[l]);
-                    if (value != null) {
-                        if (datesAreVertical)
-                            data.set(i, k, value.doubleValue());
-                        else
-                            data.set(k, i, value.doubleValue());
+                    if (l < cols.length) {
+                        Number value = valueParser.parse(cols[l]);
+                        if (value != null) {
+                            if (datesAreVertical)
+                                data.set(i, k, value.doubleValue());
+                            else
+                                data.set(k, i, value.doubleValue());
+                        }
                     }
                 }
             }
@@ -380,7 +400,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
                 }
             }
 
-            if (ndates < MINDATES) {
+            if (ndates < MIN_DATES) {
                 return null;
             }
             TsCollectionAnalyser analyser = new TsCollectionAnalyser();
@@ -410,28 +430,17 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     private static LocalDate parseDate(String sd) {
         try {
             return LocalDate.parse(sd, DateTimeFormatter.ISO_DATE);
-        } catch (DateTimeParseException ex) {
+        } catch (DateTimeParseException ignore) {
         }
-        for (int i = 0; i < FALLBACK_FORMATS.length; ++i) {
+        for (String fallbackFormat : FALLBACK_FORMATS) {
             try {
-                return LocalDate.parse(sd, DateTimeFormatter.ofPattern(FALLBACK_FORMATS[i], Locale.getDefault()));
-            } catch (DateTimeParseException ex) {
+                return LocalDate.parse(sd, DateTimeFormatter.ofPattern(fallbackFormat, Locale.getDefault()));
+            } catch (DateTimeParseException ignore) {
             }
         }
         return null;
     }
 
-    //    private static final ThreadLocal<Parser<LocalDate>> FALLBACK_PARSER = new ThreadLocal<Parser<LocalDate>>() {
-//        @Override
-//        protected Parser<LocalDate> initialValue() {
-//            ImmutableList.Builder<Parser<Date>> list = ImmutableList.builder();
-//            for (String o : FALLBACK_FORMATS) {
-//                DateFormat fmt;
-//                list.add(Parser.onDateFormat(DateFormat(o)));
-//            }
-//            return Parsers  ..firstNotNull(list.build());
-//        }
-//    };
     // fallback formats; order matters!
     private static final String[] FALLBACK_FORMATS = {
             "yyyy-MM-dd",
@@ -516,7 +525,7 @@ public final class TxtDataTransfer implements DataTransferSpi, Configurable, Per
     private static final class InternalConfigEditor implements BeanEditor {
 
         @Override
-        public boolean editBean(Object bean) throws IntrospectionException {
+        public boolean editBean(@NonNull Object bean) throws IntrospectionException {
             Sheet sheet = new Sheet();
             NodePropertySetBuilder b = new NodePropertySetBuilder();
 

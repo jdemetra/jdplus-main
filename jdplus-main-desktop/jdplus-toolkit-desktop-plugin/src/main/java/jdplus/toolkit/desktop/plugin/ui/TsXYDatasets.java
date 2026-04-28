@@ -24,6 +24,7 @@ import ec.util.chart.swing.Charts;
 import java.util.*;
 
 import lombok.NonNull;
+import nbbrd.design.SystemDependent;
 import org.jfree.data.DomainOrder;
 import org.jfree.data.general.AbstractSeriesDataset;
 import org.jfree.data.xy.IntervalXYDataset;
@@ -307,6 +308,7 @@ public final class TsXYDatasets {
     private static final class FastTs implements TsFacade {
 
         // a shared calendar used in the event dispatch thread
+        @SystemDependent
         private static final Calendar EDT_CALENDAR = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault(Locale.Category.FORMAT));
 
         // FACTORY METHODS

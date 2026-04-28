@@ -45,7 +45,7 @@ public final class ClipboardBroker implements InterchangeSpi {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "Clipboard";
     }
 
@@ -54,7 +54,7 @@ public final class ClipboardBroker implements InterchangeSpi {
     }
 
     @Override
-    public boolean canImport(List<? extends Importable> importables) {
+    public boolean canImport(@NonNull List<? extends Importable> importables) {
         try {
             String xml = readString(getClipboard());
             if (xml == null) {
@@ -68,18 +68,18 @@ public final class ClipboardBroker implements InterchangeSpi {
     }
 
     @Override
-    public void performImport(List<? extends Importable> importables) throws IOException, IllegalArgumentException {
+    public void performImport(@NonNull List<? extends Importable> importables) throws IOException, IllegalArgumentException {
         Configs configs = load(getClipboard());
         configs.performImport(importables);
     }
 
     @Override
-    public boolean canExport(List<? extends Exportable> exportables) {
+    public boolean canExport(@NonNull List<? extends Exportable> exportables) {
         return !exportables.isEmpty();
     }
 
     @Override
-    public void performExport(List<? extends Exportable> exportables) throws IOException {
+    public void performExport(@NonNull List<? extends Exportable> exportables) throws IOException {
         Configs configs = Configs.fromExportables(exportables);
         store(getClipboard(), configs);
     }

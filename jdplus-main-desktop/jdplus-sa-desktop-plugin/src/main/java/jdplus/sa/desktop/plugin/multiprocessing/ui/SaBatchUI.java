@@ -42,6 +42,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
 import jdplus.toolkit.desktop.plugin.workspace.ui.JSpecSelectionComponent;
+import nbbrd.desktop.swing.JMasterDetail;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -52,6 +53,9 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.DropDownButtonFactory;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -70,15 +74,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeListener;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
 
 /**
  * @author Philippe Charles
@@ -113,7 +114,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     @Override
     public void componentClosed() {
         if (detail.getDocument() != null) {
-            TsDynamicProvider.onDocumentClosing((TsDocument) detail.getDocument());
+            TsDynamicProvider.onDocumentClosing(detail.getDocument());
         }
         stop();
         detail.dispose();
@@ -192,7 +193,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     private SaSpecification defaultSpecification;
     private SaNode[] selection = new SaNode[0];
     // main components
-    private final JSplitPane visualRepresentation;
+    private final JMasterDetail visualRepresentation;
     private final JToolBar toolBarRepresentation;
     // toolBar stuff
     private final JButton runButton;
@@ -282,23 +283,23 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         detail.setHeaderVisible(false);
         detail.addPropertyChangeListener(DefaultProcessingViewer.SPEC_SAVED, evt -> save((TsDocument) detail.getDocument()));
         detail.addPropertyChangeListener(DefaultProcessingViewer.SPEC_CHANGED, evt -> detail.onDocumentChanged());
-        visualRepresentation = NbComponents.newJSplitPane(JSplitPane.VERTICAL_SPLIT, NbComponents.newJScrollPane(master), detail);
-        visualRepresentation.setResizeWeight(.40d);
-        visualRepresentation.setOneTouchExpandable(true);
+        visualRepresentation = new JMasterDetail();
+        visualRepresentation.setMasterNode(NbComponents.newJScrollPane(master));
+        visualRepresentation.setDetailNode(detail);
+        visualRepresentation.setDetailSide(JMasterDetail.DetailSide.BOTTOM);
+        visualRepresentation.setDividerPosition(.40d);
 
         setLayout(new BorderLayout());
         add(toolBarRepresentation, BorderLayout.NORTH);
         add(visualRepresentation, BorderLayout.CENTER);
         addPropertyChangeListener(evt -> {
             switch (evt.getPropertyName()) {
-                case HasTsCollection.DROP_CONTENT_PROPERTY, HasTsCollection.FREEZE_ON_IMPORT_PROPERTY, HasTsCollection.TS_COLLECTION_PROPERTY, HasTsCollection.TS_SELECTION_MODEL_PROPERTY, HasTsCollection.TS_UPDATE_MODE_PROPERTY ->
-                    onCollectionChange();
-                case DEFAULT_SPECIFICATION_PROPERTY ->
-                    onDefaultSpecificationChange();
-                case PROCESSING_PROPERTY ->
-                    onProcessingChange();
-                case SELECTION_PROPERTY ->
-                    onSelectionChange();
+                case HasTsCollection.DROP_CONTENT_PROPERTY, HasTsCollection.FREEZE_ON_IMPORT_PROPERTY,
+                     HasTsCollection.TS_COLLECTION_PROPERTY, HasTsCollection.TS_SELECTION_MODEL_PROPERTY,
+                     HasTsCollection.TS_UPDATE_MODE_PROPERTY -> onCollectionChange();
+                case DEFAULT_SPECIFICATION_PROPERTY -> onDefaultSpecificationChange();
+                case PROCESSING_PROPERTY -> onProcessingChange();
+                case SELECTION_PROPERTY -> onSelectionChange();
             }
         });
         master.addMouseListener(new DynamicPopup(MultiProcessingManager.LOCALPATH));
@@ -314,13 +315,10 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     @NbBundle.Messages({
-        "undefinedspec.dialog.title=Undefined specification"
+            "undefinedspec.dialog.title=Undefined specification"
     })
     private void onCollectionChange() {
         TsCollection coll = getTsCollection();
-        if (coll == null) {
-            return;
-        }
 
         Set<TsMoniker> existingMonikers = getElement().getCurrent()
                 .stream()
@@ -333,7 +331,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                 .filter(ts -> ts.getType().encompass(TsInformationType.Data))
                 .filter(ts -> !existingMonikers.contains(ts.getMoniker()))
                 .map(Ts::freeze)
-                .toArray(n -> new Ts[n]);
+                .toArray(Ts[]::new);
 
         if (newTimeSeries.length > 0) {
             if (defaultSpecification == null) {
@@ -388,8 +386,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                 }
                 controller.getDocument().setDirty();
             }
-            case PENDING ->
-                runButton.setEnabled(true);
+            case PENDING -> runButton.setEnabled(true);
             case STARTED -> {
                 runButton.setEnabled(false);
                 progressHandle = ProgressHandle.createHandle(controller.getDocument().getDisplayName(), () -> worker.cancel(true));
@@ -476,10 +473,8 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
                     }
                     controller.setSaProcessingState(MultiProcessingController.SaProcessingState.DONE);
                 }
-                case PENDING ->
-                    controller.setSaProcessingState(MultiProcessingController.SaProcessingState.PENDING);
-                case STARTED ->
-                    controller.setSaProcessingState(MultiProcessingController.SaProcessingState.STARTED);
+                case PENDING -> controller.setSaProcessingState(MultiProcessingController.SaProcessingState.PENDING);
+                case STARTED -> controller.setSaProcessingState(MultiProcessingController.SaProcessingState.STARTED);
             }
         });
         worker.execute();
@@ -515,7 +510,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         } else {
             Set<SaNode> sel = Arrays.stream(selection).collect(Collectors.toSet());
             sel.forEach(n -> n.setOutput(n.getOutput().copy()));
-            controller.getDocument().getElement().refresh(policy, nback, item -> sel.contains(item));
+            controller.getDocument().getElement().refresh(policy, nback, sel::contains);
         }
         showDetails(null);
         controller.getDocument().setDirty();
@@ -550,12 +545,12 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         long count = DataTransferManager.get()
                 .toTsCollectionStream(dataobj)
                 .map(col -> col
-                .load(TsInformationType.All, TsManager.get())
-                .stream()
-                .map(Ts::freeze)
-                .collect(TsCollection.toTsCollection())
+                        .load(TsInformationType.All, TsManager.get())
+                        .stream()
+                        .map(Ts::freeze)
+                        .collect(TsCollection.toTsCollection())
                 )
-                .peek(col -> getElement().add(defaultSpecification, col.toArray(n -> new Ts[n])))
+                .peek(col -> getElement().add(defaultSpecification, col.toArray(Ts[]::new)))
                 .count();
         if (count > 0) {
             controller.setSaProcessingState(MultiProcessingController.SaProcessingState.READY);
@@ -678,9 +673,9 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     public void copy(Collection<SaNode> litems) {
-        litems.forEach(cur -> cur.prepare());
+        litems.forEach(SaNode::prepare);
         SaItems items = SaItems.builder()
-                .items(litems.stream().map(node -> node.getOutput()).collect(Collectors.toList()))
+                .items(litems.stream().map(SaNode::getOutput).toList())
                 .build();
 
         TransferableXmlInformation<SaItems> transferable = new TransferableXmlInformation<>(items, SaItemsMapping.SERIALIZER_V3, null, null);
@@ -708,7 +703,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         List<Ts> col = new java.util.ArrayList<>();
         for (SaNode item : getSelection()) {
             item.getOutput().compute(ModellingContext.getActiveContext(), false);
-            components.stream().forEach((comp) -> {
+            components.forEach((comp) -> {
                 TsData tsData = item.getOutput().getEstimation().getResults().getData(comp, TsData.class);
                 if (tsData != null) {
                     col.add(Ts.of(item.getName() + "[" + comp + "] ", tsData));
@@ -730,7 +725,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             if (helper != null) {
                 item.getOutput().compute(ModellingContext.getActiveContext(), false);
                 List<String> components = helper.selectedSeries();
-                components.stream().forEach((comp) -> {
+                components.forEach((comp) -> {
                     TsData tsData = item.getOutput().getEstimation().getResults().getData(comp, TsData.class);
                     if (tsData != null) {
                         col.add(Ts.of(item.getName() + "[" + comp + "] ", tsData));
@@ -873,7 +868,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     }
 
     private void updateUserInterfaceContext(Ts s) {
-        if (s == null || s.getData().length() == 0) {
+        if (s == null || s.getData().isEmpty()) {
             UserInterfaceContext.INSTANCE.setDomain(null);
         } else {
             UserInterfaceContext.INSTANCE.setDomain(s.getData().getDomain());
@@ -1047,11 +1042,8 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
 
     private class ListTableSelectionListener implements ListSelectionListener {
 
+        @lombok.Setter
         boolean enabled = true;
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
 
         @Override
         public void valueChanged(ListSelectionEvent e) {
@@ -1110,18 +1102,13 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
 
         @Override
         protected String getText(SaNode item) {
-            String name = item.getName();
-
-            return MultiLineNameUtil.join(name);
+            return MultiLineNameUtil.join(item.getName());
         }
 
         @Override
         protected String getToolTipText(SaNode item) {
             String name = item.getName();
-            if (item.isFrozen()) {
-                name = "[Frozen] " + name;
-            }
-            return name;
+            return item.isFrozen() ? "[Frozen] " + name : name;
         }
 
         @Override
@@ -1167,22 +1154,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             }
             EstimationPolicyType policy = item.getOutput().getDefinition().getPolicy();
             return switch (policy) {
-                case Fixed ->
-                    "Fixed model";
-                case FixedParameters ->
-                    "Reg. coefficients";
-                case FreeParameters ->
-                    "Arima parameters";
-                case LastOutliers ->
-                    "Last outliers";
-                case Outliers_StochasticComponent ->
-                    "Arima model";
-                case Complete ->
-                    "Concurrent";
-                case None ->
-                    "New";
-                default ->
-                    policy.name();
+                case Fixed -> "Fixed model";
+                case FixedParameters -> "Reg. coefficients";
+                case FreeParameters -> "Arima parameters";
+                case LastOutliers -> "Last outliers";
+                case Outliers_StochasticComponent -> "Arima model";
+                case Complete -> "Concurrent";
+                case None -> "New";
+                default -> policy.name();
             };
         }
     }
@@ -1197,14 +1176,10 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         @Override
         protected Color getColor(SaNode item) {
             return switch (item.getStatus()) {
-                case Unprocessed ->
-                    Color.GRAY;
-                case Pending ->
-                    Color.ORANGE;
-                case Valid ->
-                    null;
-                default ->
-                    Color.RED;
+                case Unprocessed -> Color.GRAY;
+                case Pending -> Color.ORANGE;
+                case Valid -> null;
+                default -> Color.RED;
             };
         }
     }
@@ -1357,18 +1332,15 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         @Override
         protected Void doInBackground() {
             List<Callable<String>> tasks = createTasks();
-            if (tasks == null) {
-                return null;
-            }
 
             DemetraBehaviour options = DemetraBehaviour.get();
             ThreadPoolSize nThread = options.getBatchPoolSize();
             ThreadPriority priority = options.getBatchPriority();
 
-            ExecutorService executorService = UIExecutors.newFixedThreadPool(nThread, priority);
             Stopwatch stopwatch = Stopwatch.createStarted();
-            try {
-                executorService.invokeAll(tasks);
+
+            try (ExecutorService executor = UIExecutors.newFixedThreadPool(nThread, priority)) {
+                executor.invokeAll(tasks);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 log.log(Level.INFO, "While processing SaItems", ex);
@@ -1385,20 +1357,18 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             }
 
             log.log(Level.INFO, String.format(Locale.ROOT, "Task: %s items in %s by %s executors with priority %s", tasks.size(), stopwatch.stop(), nThread, priority));
-            executorService.shutdown();
             return null;
 
         }
 
         private List<Callable<String>> createTasks() {
-            List<Callable<String>> result = new ArrayList(items.length);
+            List<Callable<String>> result = new ArrayList<>(items.length);
             for (final SaNode o : items) {
-                result.add((Callable<String>) () -> {
+                result.add(() -> {
                     o.process(context, true);
                     publish(o);
                     SaEstimation result1 = o.getOutput().getEstimation();
-                    String rslt = result1 == null ? " failed" : " processed";
-                    return rslt;
+                    return result1 == null ? " failed" : " processed";
                 });
             }
             return result;
@@ -1419,5 +1389,4 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             }
         }
     }
-
 }

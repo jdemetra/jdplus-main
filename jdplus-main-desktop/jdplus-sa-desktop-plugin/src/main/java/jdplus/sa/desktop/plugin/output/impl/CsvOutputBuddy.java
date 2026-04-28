@@ -71,7 +71,7 @@ public final class CsvOutputBuddy implements OutputFactoryBuddy, Configurable, C
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return CsvOutputFactory.NAME;
     }
 

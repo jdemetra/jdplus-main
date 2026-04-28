@@ -1,24 +1,27 @@
 package jdplus.toolkit.desktop.plugin;
 
+import jdplus.toolkit.base.api.timeseries.TsCollection;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import lombok.NonNull;
+import nbbrd.design.LombokWorkaround;
 import nbbrd.design.swing.OnEDT;
+import org.jspecify.annotations.Nullable;
+import org.openide.filesystems.FileChooserBuilder;
+import org.openide.nodes.Sheet;
+
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.util.List;
 import java.util.function.Function;
-import javax.swing.filechooser.FileFilter;
-import nbbrd.design.LombokWorkaround;
-import org.openide.filesystems.FileChooserBuilder;
-import org.openide.nodes.Sheet;
 
 @lombok.Builder
 public final class TsActionSaveSpiSupport implements TsActionSaveSpi {
 
-    @lombok.experimental.Delegate
     @lombok.NonNull
     private final NamedService name;
 
@@ -42,7 +45,7 @@ public final class TsActionSaveSpiSupport implements TsActionSaveSpi {
     }
 
     @Override
-    public void save(List<TsCollection> input) {
+    public void save(@NonNull List<TsCollection> input) {
         SingleFileExporter.saveToFile(
                 fileChooser,
                 file -> editor.editBean(bean, this::reportError),
@@ -93,6 +96,22 @@ public final class TsActionSaveSpiSupport implements TsActionSaveSpi {
                 .map(col -> col.load(TsInformationType.All, TsManager.get()))
                 .flatMap(TsCollection::stream)
                 .collect(TsCollection.toTsCollection());
+    }
+
+    public @NonNull String getName() {
+        return name.getName();
+    }
+
+    public @NonNull String getDisplayName() {
+        return name.getDisplayName();
+    }
+
+    public @Nullable Image getIcon(int type, boolean opened) {
+        return name.getIcon(type, opened);
+    }
+
+    public @NonNull Sheet createSheet() {
+        return name.createSheet();
     }
 
     @FunctionalInterface

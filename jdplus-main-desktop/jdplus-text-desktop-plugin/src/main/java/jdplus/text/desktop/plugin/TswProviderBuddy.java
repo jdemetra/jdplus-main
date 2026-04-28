@@ -18,6 +18,8 @@ package jdplus.text.desktop.plugin;
 
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import java.awt.Image;
+
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import org.openide.util.ImageUtilities;
@@ -33,7 +35,7 @@ public final class TswProviderBuddy implements DataSourceProviderBuddy {
     private static final String SOURCE = "TSW";
 
     @Override
-    public String getProviderName() {
+    public @NonNull String getProviderName() {
         return SOURCE;
     }
 

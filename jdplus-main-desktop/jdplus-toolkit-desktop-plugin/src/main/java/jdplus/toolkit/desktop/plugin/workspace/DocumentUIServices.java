@@ -29,7 +29,7 @@ import java.util.Optional;
 @ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface DocumentUIServices<S extends ProcSpecification, D extends ProcDocument<S, ?, ?>> {
 
-    public final String SPEC_PROPERTY = "specification";
+    String SPEC_PROPERTY = "specification";
 
     Class<D> getDocumentType();
 
@@ -55,14 +55,14 @@ public interface DocumentUIServices<S extends ProcSpecification, D extends ProcD
 
     void showDocument(WorkspaceItem<D> doc);
 
-    public static DocumentUIServices forSpec(Class sclass) {
+    static DocumentUIServices forSpec(Class<?> sclass) {
         Optional<? extends DocumentUIServices> s = Lookup.getDefault().lookupAll(DocumentUIServices.class).stream()
                 .filter(ui->ui.getSpecType().equals(sclass)).findFirst();
       
         return s.orElse(null);
     }
 
-    public static DocumentUIServices forDocument(Class dclass) {
+    static DocumentUIServices forDocument(Class<?> dclass) {
         Optional<? extends DocumentUIServices> s = Lookup.getDefault().lookupAll(DocumentUIServices.class).stream()
                 .filter(ui->ui.getDocumentType().equals(dclass)).findFirst();
       

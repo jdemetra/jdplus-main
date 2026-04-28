@@ -36,15 +36,14 @@ import java.util.Optional;
  * @param <D>
  */
 public class TsProcessingViewer<S extends ProcSpecification, D extends TsDocument<S, ?>> extends DefaultProcessingViewer<S, D> {
-    
 
     // FACTORY METHODS >
-    public static <S extends ProcSpecification, D extends TsDocument<S, ?>> TsProcessingViewer create(D doc, DocumentUIServices<S, D> uifac) {
-        TsProcessingViewer viewer = new TsProcessingViewer(uifac, Type.APPLY);
+    public static <S extends ProcSpecification, D extends TsDocument<S, ?>> TsProcessingViewer<S, D> create(D doc, DocumentUIServices<S, D> factory) {
+        TsProcessingViewer<S, D> result = new TsProcessingViewer<>(factory, Type.APPLY);
         if (doc != null) {
-            viewer.setDocument(doc);
+            result.setDocument(doc);
         }
-        return viewer;
+        return result;
     }
 
     // CONSTANTS
@@ -54,8 +53,8 @@ public class TsProcessingViewer<S extends ProcSpecification, D extends TsDocumen
     private final JLabel tsLabel;
     private final JLabel specLabel;
 
-    public TsProcessingViewer(DocumentUIServices<S, D> uifac, Type type) {
-        super(uifac, type);
+    public TsProcessingViewer(DocumentUIServices<S, D> factory, Type type) {
+        super(factory, type);
         this.dropDataLabel = new JLabel("Drop data here");
         dropDataLabel.setFont(DROP_DATA_FONT);
         this.tsLabel = new JLabel();
@@ -74,7 +73,7 @@ public class TsProcessingViewer<S extends ProcSpecification, D extends TsDocumen
 
     @Override
     public void refreshHeader() {
-        TsDocument doc = getDocument();
+        TsDocument<S, ?> doc = getDocument();
         if (doc == null || doc.getInput() == null) {
             dropDataLabel.setVisible(true);
             tsLabel.setVisible(false);

@@ -45,7 +45,7 @@ public final class XmlProviderBuddy implements DataSourceProviderBuddy {
     private static final String SOURCE = "Xml";
 
     @Override
-    public String getProviderName() {
+    public @NonNull String getProviderName() {
         return SOURCE;
     }
 

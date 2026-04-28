@@ -29,7 +29,6 @@ import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpi;
 import lombok.NonNull;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.lookup.ServiceProviders;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.SystemFlavorMap;
@@ -40,9 +39,7 @@ import java.awt.datatransfer.SystemFlavorMap;
  * @author Jean Palate
  * @see http://msdn.microsoft.com/en-us/library/aa140066(v=office.10).aspx
  */
-@ServiceProviders({
-        @ServiceProvider(service = DataTransferSpi.class, position = XmlssDataTransfer.POSITION)
-})
+@ServiceProvider(service = DataTransferSpi.class, position = XmlssDataTransfer.POSITION)
 public final class XmlssDataTransfer implements DataTransferSpi, Configurable, Persistable, ConfigEditor {
 
     static final int POSITION = 1000;
@@ -70,17 +67,17 @@ public final class XmlssDataTransfer implements DataTransferSpi, Configurable, P
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "XMLSS";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "XML Spreadsheet (XMLSS)";
     }
 
     @Override
-    public DataFlavor getDataFlavor() {
+    public @NonNull DataFlavor getDataFlavor() {
         return dataFlavor;
     }
 
@@ -108,7 +105,7 @@ public final class XmlssDataTransfer implements DataTransferSpi, Configurable, P
         DataFlavor result = null;
         try {
             result = SystemFlavorMap.decodeDataFlavor("XML Spreadsheet");
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ignore) {
         }
         if (result == null) {
             result = new DataFlavor("xml/x;class=\"[B\"", "XML Spreadsheet");

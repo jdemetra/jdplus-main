@@ -47,7 +47,7 @@ public final class SpreadsheetProviderBuddy implements DataSourceProviderBuddy {
     private static final String SOURCE = "XCLPRVDR";
 
     @Override
-    public String getProviderName() {
+    public @NonNull String getProviderName() {
         return SOURCE;
     }
 
@@ -57,12 +57,12 @@ public final class SpreadsheetProviderBuddy implements DataSourceProviderBuddy {
     }
 
     @Override
-    public Image getIconOrNull(DataSource dataSource, int type, boolean opened) {
+    public Image getIconOrNull(@NonNull DataSource dataSource, int type, boolean opened) {
         return ImageUtilities.loadImage("jdplus/spreadsheet/desktop/plugin/tables.png", true);
     }
 
     @Override
-    public Image getIconOrNull(DataSet dataSet, int type, boolean opened) {
+    public Image getIconOrNull(@NonNull DataSet dataSet, int type, boolean opened) {
         switch (dataSet.getKind()) {
             case COLLECTION:
                 return ImageUtilities.loadImage("jdplus/spreadsheet/desktop/plugin/table-sheet.png", true);

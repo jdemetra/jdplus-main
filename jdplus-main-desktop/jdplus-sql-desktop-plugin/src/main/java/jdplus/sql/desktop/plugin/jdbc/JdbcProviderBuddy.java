@@ -109,7 +109,7 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @Override
-    public String getProviderName() {
+    public @NonNull String getProviderName() {
         return SOURCE;
     }
 
@@ -119,7 +119,7 @@ public final class JdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @Override
-    public Image getIconOrNull(DataSource dataSource, int type, boolean opened) {
+    public Image getIconOrNull(@NonNull DataSource dataSource, int type, boolean opened) {
         Image image = getIconOrNull(type, opened);
         return switch (getStatus(dataSource)) {
             case DISCONNECTED -> ImageUtilities.mergeImages(image, warningBadge, 8, 8);

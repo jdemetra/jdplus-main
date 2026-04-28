@@ -24,6 +24,7 @@ import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
+import org.junit.jupiter.api.Disabled;
 import tck.demetra.tsp.FileLoaderAssert;
 import internal.spreadsheet.base.api.SpreadSheetSupport;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SpreadSheetProviderTest {
 
+    @Disabled("java.lang.IncompatibleClassChangeError as the 2 providers uses 2 incompatible versions of the same lib")
     @Test
     public void testEquivalence() throws IOException {
         try (SpreadSheetProvider p = SpreadSheetSamples.TOP5.getProvider3()) {

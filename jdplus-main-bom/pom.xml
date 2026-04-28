@@ -339,6 +339,12 @@
                                                     </artifact>
                                                     <artifact>
                                                         <path>
+                                                            ${project.build.directory}/jwsacruncher-standalone-${project.version}-windows-aarch_64.zip
+                                                        </path>
+                                                        <platform>windows-aarch_64</platform>
+                                                    </artifact>
+                                                    <artifact>
+                                                        <path>
                                                             ${project.build.directory}/jwsacruncher-standalone-${project.version}-linux-x86_64.zip
                                                         </path>
                                                         <platform>linux-x86_64</platform>
@@ -377,6 +383,12 @@
                                                             ${project.build.directory}/jdemetra-standalone-${project.version}-windows-x86_64.zip
                                                         </path>
                                                         <platform>windows-x86_64</platform>
+                                                    </artifact>
+                                                    <artifact>
+                                                        <path>
+                                                            ${project.build.directory}/jdemetra-standalone-${project.version}-windows-aarch_64.zip
+                                                        </path>
+                                                        <platform>windows-aarch_64</platform>
                                                     </artifact>
                                                     <artifact>
                                                         <path>

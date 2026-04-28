@@ -129,7 +129,7 @@ public abstract class AbstractSaDiagnosticsFactoryBuddy<C extends DiagnosticsCon
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return getName();
     }
 
@@ -139,7 +139,7 @@ public abstract class AbstractSaDiagnosticsFactoryBuddy<C extends DiagnosticsCon
     }
 
     @Override
-    public Sheet createSheet() {
+    public @NonNull Sheet createSheet() {
         return new Sheet();
     }
 }

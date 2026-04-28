@@ -4,6 +4,7 @@ import jdplus.toolkit.base.tsp.util.ObsFormat;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import nbbrd.design.StaticFactoryMethod;
+import nbbrd.design.SystemDependent;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 
@@ -26,6 +27,7 @@ public final class DateFormatAdapter extends DateFormat {
         return result;
     }
 
+    @SystemDependent
     private static void fixClone(DateFormatAdapter result) {
         result.setCalendar(Calendar.getInstance(TimeZone.getDefault(), Locale.ROOT));
         result.setNumberFormat(NumberFormat.getInstance(Locale.ROOT));

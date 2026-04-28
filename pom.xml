@@ -50,9 +50,9 @@
         <x.github.repo>${project.artifactId}</x.github.repo>
 
         <!-- annotations & processors -->
-        <lombok.version>1.18.44</lombok.version>
-        <java-service.version>2.0.0</java-service.version>
-        <java-design.version>1.10.0</java-design.version>
+        <lombok.version>1.18.46</lombok.version>
+        <java-service.version>2.1.0</java-service.version>
+        <java-design.version>1.10.2</java-design.version>
         <jspecify.version>1.0.0</jspecify.version>
 
         <!-- test frameworks -->
@@ -64,13 +64,13 @@
         <protobuf.version>4.34.1</protobuf.version>
         <java-io-util.version>0.0.36</java-io-util.version>
         <java-sql-util.version>1.0.7</java-sql-util.version>
-        <spreadsheet4j.version>2.5.10</spreadsheet4j.version>
+        <spreadsheet4j.version>2.6.0</spreadsheet4j.version>
         <netbeans.version>RELEASE290</netbeans.version>
 
         <!-- plugins -->
         <appassembler-maven-plugin.version>2.1.0</appassembler-maven-plugin.version>
         <central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
-        <compatibility-maven-plugin.version>1.1.1</compatibility-maven-plugin.version>
+        <compatibility-maven-plugin.version>1.2.0</compatibility-maven-plugin.version>
         <extra-enforcer-rules.version>1.12.0</extra-enforcer-rules.version>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <forbiddenapis.version>3.10</forbiddenapis.version>

@@ -19,6 +19,7 @@ package jdplus.sa.base.csv;
 import jdplus.toolkit.base.api.information.formatters.BasicConfiguration;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import lombok.Setter;
+import nbbrd.design.SystemDependent;
 import nbbrd.picocsv.Csv;
 
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class ArraysCsvFormatter {
         return writeList(coll, names, writer);
     }
 
+    @SystemDependent
     private boolean writeList(List<DoubleArray> coll, List<String> names, Writer writer) throws IOException {
         Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder()
                 .separator(System.lineSeparator())
