@@ -137,12 +137,14 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     public void componentActivated() {
         super.componentActivated();
         active = true;
+        updateUserInterfaceContext(getSelectedSeries());
     }
 
     @Override
     public void componentDeactivated() {
         super.componentDeactivated();
         active = false;
+        UserInterfaceContext.INSTANCE.setDomain(null);
     }
 
     @Override
@@ -448,6 +450,16 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
     public SaNode[] getSelection() {
         return selection.clone();
     }
+    
+    public Ts getSelectedSeries() {
+        if (selection == null || selection.length == 0)
+            return null;
+        SaItem output = selection[0].getOutput();
+        if (output == null)
+            return null;
+        return output.getDefinition().getTs();
+    }
+    
     // < GETTERS/SETTERS
 
     public boolean start(boolean all) {

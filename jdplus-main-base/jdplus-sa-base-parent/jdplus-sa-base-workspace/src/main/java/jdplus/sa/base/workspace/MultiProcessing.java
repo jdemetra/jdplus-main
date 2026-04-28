@@ -66,7 +66,7 @@ public class MultiProcessing {
      }
 
      public void compute(ModellingContext context) {
-        items.parallelStream().forEach(v -> v.compute(context, false));
+        items.parallelStream().forEach(v -> v.compute(context, true));
     }
 
     public void process(ModellingContext context) {

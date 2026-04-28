@@ -76,6 +76,7 @@ public class AkfToolkit {
     public ILikelihoodComputer<DiffuseLikelihood> fastLikelihoodComputer(boolean scalingfactor, boolean res) {
         return (ISsf ssf, ISsfData data) -> {
             QPredictionErrorDecomposition decomp = new QPredictionErrorDecomposition(res);
+            decomp.prepare(ssf, data.length());
             CkmsDiffuseInitializer ff = new CkmsDiffuseInitializer(new AugmentedFilterInitializer(decomp));
             CkmsFilter ffilter = new CkmsFilter(ff);
             ffilter.process(ssf, data, decomp);
