@@ -16,6 +16,7 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.toolkit.desktop.plugin.DemetraUI;
 
 /**
  *
@@ -160,6 +161,16 @@ public class X11SpecUI extends BaseX13SpecUI {
         if (desc != null) {
             descs.add(desc);
         }
+
+        desc = crossvalidationselectiontableDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        desc = crossvalidationseasonalfilteroptionsDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+
         return descs;
     }
 
@@ -167,6 +178,23 @@ public class X11SpecUI extends BaseX13SpecUI {
     @Override
     public String getDisplayName() {
         return Bundle.x11SpecUI_getDisplayName();
+    }
+
+    public CrossValidationTable getCrossValidationSelectionTable() {
+        return x11().getCrossValidationSelectionTable();
+    }
+
+    public void setCrossValidationSelectionTable(CrossValidationTable value) {
+        update(x11().toBuilder().crossValidationSelectionTable(value).build());
+    }
+
+    public CrossValidationSeasonalFilterOptions getCrossValidationSeasonalFilterOptions() {
+        return x11().getCrossValidationSeasonalFilterOptions();
+    }
+
+    public void setCrossValidationSeasonalFilterOptions(CrossValidationSeasonalFilterOptions value) {
+
+        update(x11().toBuilder().crossValidationSeasonalFilterOptions(value).build());
     }
 
     public X11Mode getMode() {
@@ -336,7 +364,8 @@ public class X11SpecUI extends BaseX13SpecUI {
     }
 
     private static final int MODE_ID = 0, SEAS_ID = 1, FORECAST_ID = 2, BACKCAST_ID = 12, LSIGMA_ID = 3, USIGMA_ID = 4, AUTOTREND_ID = 5,
-            TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11, BIAS_ID = 12;
+            TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11, BIAS_ID = 13,
+            CROSSVALIDATIONSELECTIONTABLE_ID = 14, CROSSVALIDATIONSEASONALFILTEROPTIONS_ID = 15;
 
     @Messages({
         "x11SpecUI.calendarsigmaDesc.name=Calendarsigma",
@@ -352,6 +381,56 @@ public class X11SpecUI extends BaseX13SpecUI {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.x11SpecUI_calendarsigmaDesc_name());
             desc.setShortDescription(Bundle.x11SpecUI_calendarsigmaDesc_desc());
+            edesc.setReadOnly(isRo());
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    @Messages({
+        "x11SpecUI.crossvalidationseasonalfilteroptionsDesc.name=Cross validation seasonal filter options",
+        "x11SpecUI.crossvalidationseasonalfilteroptionsDesc.desc=The filters which are checked with cross validation if they are the best. DEFAULT={S3X3, S3X5, S3X9, S3X15}, ALL = {S3X1, S3X3, 3X5, S3X9, S3X15}, SHORT= {S3X3, S3X5, S3X9};"
+    })
+    private EnhancedPropertyDescriptor crossvalidationseasonalfilteroptionsDesc() {
+        if (!DemetraUI.get().isLowLevelOptions()) {
+            return null;
+        }
+
+        if (!x11().getFilters()[0].equals(SeasonalFilterOption.CrossValidation)) {
+            return null;
+        }
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("CrossValidationSeasonalFilterOptions", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, CROSSVALIDATIONSEASONALFILTEROPTIONS_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.x11SpecUI_crossvalidationseasonalfilteroptionsDesc_name());
+            desc.setShortDescription(Bundle.x11SpecUI_crossvalidationseasonalfilteroptionsDesc_desc());
+            edesc.setReadOnly(isRo());
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
+
+    @Messages({
+        "x11SpecUI.crossvalidationselectiontableDesc.name=Cross validation selection table",
+        "x11SpecUI.crossvalidationselectiontableDesc.desc=The table which is used to calculate the best sa filter with cross validation."
+    })
+    private EnhancedPropertyDescriptor crossvalidationselectiontableDesc() {
+        if (!DemetraUI.get().isLowLevelOptions()) {
+            return null;
+        }
+
+        if (!x11().getFilters()[0].equals(SeasonalFilterOption.CrossValidation)) {
+            return null;
+        }
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("CrossValidationSelectionTable", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, CROSSVALIDATIONSELECTIONTABLE_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setDisplayName(Bundle.x11SpecUI_crossvalidationselectiontableDesc_name());
+            desc.setShortDescription(Bundle.x11SpecUI_crossvalidationselectiontableDesc_desc());
             edesc.setReadOnly(isRo());
             return edesc;
         } catch (IntrospectionException ex) {

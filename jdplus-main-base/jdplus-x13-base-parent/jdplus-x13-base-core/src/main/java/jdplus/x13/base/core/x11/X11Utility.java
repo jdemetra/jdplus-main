@@ -5,6 +5,7 @@
  */
 package jdplus.x13.base.core.x11;
 
+import java.util.Map;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.data.DoublesMath;
@@ -12,6 +13,9 @@ import jdplus.sa.base.api.DecompositionMode;
 import jdplus.x13.base.api.x11.MsrTable;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.x13.base.api.x11.CrossValidationTable;
+import jdplus.x13.base.api.x11.SeasonalFilterOption;
+import jdplus.x13.base.core.x11.extremevaluecorrector.CrossValidation;
 import jdplus.x13.base.core.x11.filter.X11FilterFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.FilteredMeanEndPoints;
 
@@ -33,11 +37,11 @@ public class X11Utility {
      */
     public DoubleSeq correctSeries(DoubleSeq sorig, DoubleSeq sweights,
             DoubleSeq salternative) {
-        double[] ns=sorig.toArray();
+        double[] ns = sorig.toArray();
         for (int i = 0; i < ns.length; ++i) {
             double x = sweights.get(i);
             if (x == 0) {
-                ns[i]=salternative.get(i);
+                ns[i] = salternative.get(i);
             }
         }
         return DoubleSeq.of(ns);
@@ -54,11 +58,11 @@ public class X11Utility {
      */
     public DoubleSeq correctSeries(DoubleSeq sorig, DoubleSeq sweights,
             double alternative) {
-        double[] ns=sorig.toArray();
+        double[] ns = sorig.toArray();
         for (int i = 0; i < ns.length; ++i) {
             double x = sweights.get(i);
             if (x == 0) {
-                ns[i]=alternative;
+                ns[i] = alternative;
             }
         }
         return DoubleSeq.of(ns);
@@ -66,9 +70,8 @@ public class X11Utility {
 
     /**
      * Generates default MsrTable. The series is split in seas and irr.
-     * component
-     * using the default seasonal filter on 7 periods (S3x5) and stable handling
-     * of end-points
+     * component using the default seasonal filter on 7 periods (S3x5) and
+     * stable handling of end-points
      *
      * @param s
      * @param period
@@ -224,8 +227,8 @@ public class X11Utility {
     public static double[][] calcVariations(DoubleSeq s, int nlags, boolean mul, boolean[] valid) {
         double[] mean = new double[nlags];
         double[] std = new double[nlags];
-        int iend=s.length();
-         for (int l = 1; l <= nlags; ++l) {
+        int iend = s.length();
+        for (int l = 1; l <= nlags; ++l) {
             double sum = 0, sum2 = 0;
             for (int i = l; i < iend; ++i) {
                 if (valid == null || valid[i - l]) {
@@ -244,6 +247,7 @@ public class X11Utility {
         }
         return new double[][]{mean, std};
     }
+
     /**
      * average duration of run for MStatistics
      *
@@ -295,5 +299,15 @@ public class X11Utility {
         } else {
             return 0;
         }
+    }
+
+    public SeasonalFilterOption[] getCrossvalidationFilter(X11Context context, CrossValidationTable table, DoubleSeq series, Map<CrossValidationTable, Map<String, String>> resultCV) {
+        if (!context.isCrossValidation() || !context.isCrossValidationTable(table)) {
+            return null;
+        }
+        CrossValidation cv = new CrossValidation();
+        cv.calculatedSF_CrossValidation(series, context);
+        resultCV.put(table, cv.getResult());
+        return cv.getSeasonalfilterOptionsCV();
     }
 }

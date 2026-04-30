@@ -67,9 +67,9 @@ import jdplus.x13.base.information.X13SpecMapping;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import jdplus.sa.base.api.diagnostics.SeasonalityTests;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.sa.base.core.SaBenchmarkingResults;
 import jdplus.sa.base.core.diagnostics.GenericSaTests;
@@ -81,9 +81,15 @@ import jdplus.toolkit.base.core.timeseries.simplets.analysis.DiagnosticInfo;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.MovingProcessing;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.RevisionHistory;
 import jdplus.toolkit.base.core.timeseries.simplets.analysis.SlidingSpans;
+import jdplus.toolkit.desktop.plugin.html.Bootstrap4;
+import jdplus.toolkit.desktop.plugin.html.HtmlTable;
+import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
+import jdplus.toolkit.desktop.plugin.html.HtmlTableHeader;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlProcessingLog;
 import jdplus.x13.base.api.regarima.BasicSpec;
+import jdplus.x13.base.api.x11.CrossValidationTable;
 import jdplus.x13.base.core.x11.X11Results;
+import jdplus.x13.base.core.x11.extremevaluecorrector.CrossValidation;
 import jdplus.x13.base.core.x13.X13Diagnostics;
 import jdplus.x13.base.core.x13.X13Document;
 import jdplus.x13.base.core.x13.X13Factory;
@@ -764,7 +770,8 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                         if (sfilters != null) {
                             SeasonalFilterOption sfilter = simplify(sfilters);
                             if (sfilter != null) {
-                                stream.write("Seasonal filter: ").write(sfilter.name()).newLine();
+                                stream.write(HtmlTag.HEADER3, "Seasonal filter: ").write(sfilter.name()).newLine();
+                                writeCrossValidationInformation(stream);
                             } else {
                                 stream.write("Composite seasonal filter: ").newLine();
                                 for (int i = 0; i < sfilters.length; i++) {
@@ -773,9 +780,49 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                             }
                         }
                         stream.newLine();
-                        stream.write("Trend filter: ");
+                        stream.write(HtmlTag.HEADER3, "Trend filter: ");
                         stream.write(rslt.getDecomposition().getFinalHendersonFilterLength());
                         stream.write(" terms Henderson moving average").newLine();
+                    }
+
+                    private void writeCrossValidationInformation(HtmlStream stream) throws NumberFormatException, IOException {
+                        Map<CrossValidationTable, Map<String, String>> resultCV = rslt.getDecomposition().getResultCV();
+                        if (resultCV == null || resultCV.isEmpty()) {
+                            return;
+                        }
+
+                        stream.newLine();
+                        stream.write("Cross Validation Results: ").newLine();
+                        for (Map.Entry<CrossValidationTable, Map<String, String>> entry : resultCV.entrySet()) {
+                            stream.write("Table for filter selection: " + entry.getKey()).newLine();
+                            Map<String, String> information = entry.getValue();
+                            stream.write("Selected Filter" + ": " + information.get(CrossValidation.CV)).newLines(2);
+
+                            stream.open(new HtmlTable());
+                            stream.open(HtmlTag.TABLEROW);
+                            stream.write(new HtmlTableHeader("Filter").withClass(Bootstrap4.TEXT_LEFT));
+                            stream.write(new HtmlTableHeader(information.get(CrossValidation.CV_CRITERIA)).withClass(Bootstrap4.TEXT_LEFT));
+                            stream.close(HtmlTag.TABLEROW);
+
+                            writeSeasonalFilterRow(information, stream, SeasonalFilterOption.S3X1.name());
+                            writeSeasonalFilterRow(information, stream, SeasonalFilterOption.S3X3.name());
+                            writeSeasonalFilterRow(information, stream, SeasonalFilterOption.S3X5.name());
+                            writeSeasonalFilterRow(information, stream, SeasonalFilterOption.S3X9.name());
+                            writeSeasonalFilterRow(information, stream, SeasonalFilterOption.S3X15.name());
+
+                            stream.close(HtmlTag.TABLE);
+
+                        }
+
+                    }
+
+                    private void writeSeasonalFilterRow(Map<String, String> information, HtmlStream stream, String name) throws IOException, NumberFormatException {
+                        if (information.containsKey(name)) {
+                            stream.open(HtmlTag.TABLEROW);
+                            stream.write(new HtmlTableCell(name).withClass(Bootstrap4.TEXT_LEFT));
+                            stream.write(new HtmlTableCell(df4.format(Double.parseDouble(information.get(name)))).withClass(Bootstrap4.TEXT_LEFT));
+                            stream.close(HtmlTag.TABLEROW);
+                        }
                     }
                 };
 
@@ -1095,7 +1142,7 @@ public class X13ViewFactory extends ProcDocumentViewFactory<X13Document> {
                     return null;
                 }
                 StringBuilder header = new StringBuilder().append("[Linearized] irregular component");
-                  GenericSeasonalityTests tests = diags.residualSeasonalityTestsOnLastIrregular();
+                GenericSeasonalityTests tests = diags.residualSeasonalityTestsOnLastIrregular();
                 if (tests.getNcycles() > 0) {
                     header.append(" (last ").append(tests.getNcycles()).append(" years)");
                 }

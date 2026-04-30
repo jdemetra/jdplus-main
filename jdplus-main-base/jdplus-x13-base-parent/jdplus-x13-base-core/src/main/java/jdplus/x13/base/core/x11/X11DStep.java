@@ -20,9 +20,13 @@ import jdplus.x13.base.core.x11.filter.X11SeasonalFilterProcessor;
 import jdplus.x13.base.core.x11.filter.X11SeasonalFiltersFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.AsymmetricEndPoints;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.x13.base.api.x11.CrossValidationTable;
+import jdplus.x13.base.core.x11.extremevaluecorrector.CrossValidation;
 import jdplus.x13.base.core.x11.filter.DummyFilter;
 import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 
@@ -44,8 +48,16 @@ public class X11DStep {
     private double iCRatio;
     private SeasonalFilterOption[] seasFilter;
     private DoubleSeq refSeries;
+    private SeasonalFilterOption[] cvSeasonalFilter;
+    private final Map<CrossValidationTable, Map<String, String>> resultCV = new EnumMap<>(CrossValidationTable.class);
 
     public void process(DoubleSeq refSeries, DoubleSeq input, X11Context context) {
+        SeasonalFilterOption[] sfocv = null;
+        process(refSeries, input, context, sfocv);
+    }
+
+    public void process(DoubleSeq refSeries, DoubleSeq input, X11Context context, SeasonalFilterOption[] sfocv) {
+        this.cvSeasonalFilter = sfocv;
         this.refSeries = refSeries;
         d1Step(context, input);
         d2Step(context);
@@ -82,7 +94,25 @@ public class X11DStep {
 
     private void d5Step(X11Context context) {
         if (context.isSeasonal()) {
-            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+            X11SeasonalFilterProcessor processor;
+
+            if (context.isCrossValidation()) {
+                if (context.isCrossValidationTable(CrossValidationTable.D4)) {
+                    CrossValidation cv = new CrossValidation();
+                    cv.calculatedSF_CrossValidation(d4, context);
+                    resultCV.put(CrossValidationTable.D4, cv.getResult());
+                    cvSeasonalFilter = cv.getSeasonalfilterOptionsCV();
+                    processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), cv.getSeasonalfilterOptionsCV());
+
+                } else if (cvSeasonalFilter != null) {
+                    processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), cvSeasonalFilter);
+                } else {
+                    processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+                }
+            } else {
+                processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+            }
+
             DoubleSeq d5a = processor.process(d4, context.getPosition(d2drop));
             d5 = DefaultSeasonalNormalizer.normalize(d5a, d2drop, context);
         } else {
@@ -133,6 +163,9 @@ public class X11DStep {
     }
 
     private void d9Step(X11Context context) {
+        if (cvSeasonalFilter == null) {
+            cvSeasonalFilter = X11Utility.getCrossvalidationFilter(context, CrossValidationTable.D8, d8, resultCV);
+        }
         IExtremeValuesCorrector ecorr = context.getExtremeValuesCorrector();
         if (ecorr instanceof PeriodSpecificExtremeValuesCorrector && context.getCalendarSigma() != CalendarSigmaOption.Signif) {
             //compute corrections without backcast/forecast but keep the length
@@ -149,7 +182,10 @@ public class X11DStep {
 
     private void dFinalStep(X11Context context) {
         if (context.isSeasonal()) {
-            seasFilter = context.getFinalSeasonalFilter();
+            if (cvSeasonalFilter == null) {
+                cvSeasonalFilter = X11Utility.getCrossvalidationFilter(context, CrossValidationTable.D9, d9_g_bis, resultCV);
+            }
+            seasFilter = cvSeasonalFilter != null ? cvSeasonalFilter : context.getFinalSeasonalFilter();
             if (context.isMSR()) {
                 MsrFilterSelection msr = getMsrFilterSelection();
                 SeasonalFilterOption msrFilter = msr.doMSR(d9_g_bis, context);
@@ -157,6 +193,7 @@ public class X11DStep {
                 d9filter = msrFilter;
                 Arrays.fill(seasFilter, msrFilter);
             }
+
             d9msr = X11Utility.defaultMsrTable(d9_g_bis.drop(context.getBackcastHorizon(), context.getForecastHorizon()), context.getPeriod(), context.getPosition(context.getBackcastHorizon()), context.getMode());
             X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), seasFilter);
             d10bis = processor.process(d9_g_bis, context.getPosition(0));
