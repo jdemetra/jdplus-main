@@ -77,7 +77,7 @@
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <heylogs-maven-plugin.version>0.17.1</heylogs-maven-plugin.version>
         <jdks-maven-plugin.version>1.24.0</jdks-maven-plugin.version>
-        <jreleaser-maven-plugin.version>1.23.0</jreleaser-maven-plugin.version>
+        <jreleaser-maven-plugin.version>1.24.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
         <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
