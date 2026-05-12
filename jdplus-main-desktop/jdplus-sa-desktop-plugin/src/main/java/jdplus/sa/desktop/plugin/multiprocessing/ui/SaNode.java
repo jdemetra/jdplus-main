@@ -93,7 +93,7 @@ public class SaNode {
 
     public static SaNode of(int id, SaItem item) {
         SaDefinition definition = item.getDefinition();
-        SaNode node = new SaNode(id, definition.getTs().getMoniker(), definition.activeSpecification());
+        SaNode node = new SaNode(id, definition.getTs().getMoniker(), definition.getEstimationSpec());
         node.output = item;
         node.status = status(item);
         return node;

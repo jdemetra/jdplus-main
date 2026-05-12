@@ -69,6 +69,10 @@ abstract class BaseTramoSpecUI implements IPropertyDescriptors{
         root.core = root.core.toBuilder().transform(spec).build();
     }
 
+    void update(int freq) {
+        root.core = root.core.setFrequency(freq);
+    }
+
     void update(CalendarSpec spec) {
         update(root.core.getRegression()
                 .toBuilder()

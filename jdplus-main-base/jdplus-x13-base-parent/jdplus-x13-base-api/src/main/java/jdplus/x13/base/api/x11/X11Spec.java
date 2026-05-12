@@ -147,6 +147,23 @@ public final class X11Spec implements Validatable<X11Spec> {
         return this;
     }
 
+    public X11Spec checkAnnualFrequency(int period) {
+        if ((sigmaVec == null || sigmaVec.length == period) && (filters == null || filters.length == period)) {
+            return this;
+        }
+        Builder builder = toBuilder();
+
+        if (sigmaVec != null) {
+            builder.calendarSigma(CalendarSigmaOption.None)
+                    .sigmaVec(null);
+        }
+        if (filters != null) {
+            builder.filters(MSR);
+        }
+
+        return builder.build();
+    }
+
     public static class Builder implements Validatable.Builder<X11Spec> {
     }
 

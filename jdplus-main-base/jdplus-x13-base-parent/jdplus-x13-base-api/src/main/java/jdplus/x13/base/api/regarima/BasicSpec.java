@@ -37,6 +37,7 @@ public final class BasicSpec implements Validatable<BasicSpec> {
 
     @lombok.NonNull
     private TimeSelector span;
+    private int frequency;
     private boolean preprocessing;
     private boolean preliminaryCheck;
 
@@ -44,6 +45,7 @@ public final class BasicSpec implements Validatable<BasicSpec> {
     public static Builder builder() {
         return new Builder()
                 .span(TimeSelector.all())
+                .frequency(0)
                 .preprocessing(DEF_PREPROCESSING)
                 .preliminaryCheck(DEF_PRELIMINARYCHECK);
     }

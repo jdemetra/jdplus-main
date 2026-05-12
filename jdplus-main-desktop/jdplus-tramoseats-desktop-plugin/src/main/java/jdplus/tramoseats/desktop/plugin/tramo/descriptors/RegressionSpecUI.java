@@ -214,6 +214,9 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         "regressionSpecUI.prespecDesc.desc=Pre-specified outliers"
     })
     private EnhancedPropertyDescriptor prespecDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("PreSpecifiedOutliers", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, PRESPEC_ID);
@@ -232,6 +235,9 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         "regressionSpecUI.interventionDesc.desc=Intervention variables"
     })
     private EnhancedPropertyDescriptor interventionDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("InterventionVariables", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, INTERV_ID);
@@ -250,6 +256,9 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         "regressionSpecUI.rampsDesc.desc=Ramps"
     })
     private EnhancedPropertyDescriptor rampsDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Ramps", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, RAMPS_ID);
@@ -268,6 +277,9 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         "regressionSpecUI.userdefinedDesc.desc=User-defined variables"
     })
     private EnhancedPropertyDescriptor userdefinedDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("UserDefinedVariables", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, USERDEF_ID);

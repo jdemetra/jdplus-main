@@ -1,6 +1,17 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Copyright 2026 JDemetra+.
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ *      https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.x13.desktop.plugin.x13.descriptors;
 
@@ -243,13 +254,21 @@ public class X11SpecUI extends BaseX13SpecUI {
     public SeasonalFilterOption[] getFullSeasonalMA() {
         SeasonalFilterOption[] filters = x11().getFilters();
         int len = period();
-        if (filters != null && filters.length == len) {
-            return filters;
+        boolean update = false;
+        if (filters != null) {
+            if (filters.length == len) {
+                return filters;
+            } else {
+                update = true;
+            }
         }
         SeasonalFilterOption option = filters == null ? SeasonalFilterOption.Msr : filters[0];
         filters = new SeasonalFilterOption[len];
         for (int i = 0; i < len; ++i) {
             filters[i] = option;
+        }
+        if (update) {
+            update(x11().toBuilder().filters(filters).build());
         }
         return filters;
 
@@ -302,17 +321,22 @@ public class X11SpecUI extends BaseX13SpecUI {
     public SigmaVecOption[] getSigmavec() {
         SigmaVecOption[] groups = x11().getSigmaVec();
         int len = period();
-        if (groups != null && groups.length == len) {
-            return groups;
+        boolean update = false;
+        if (groups != null) {
+            if (groups.length == len) {
+                return groups;
+            } else {
+                update = true;
+            }
         }
-        //Sigmavec option = groups == null ? Sigmavec.group1 : groups[0];
-        //   Sigmavec option = Sigmavec.group1;
         groups = new SigmaVecOption[len];
         for (int i = 0; i < len; ++i) {
             groups[i] = SigmaVecOption.Group1;
         }
+        if (update) {
+            update(x11().toBuilder().sigmaVec(groups).build());
+        }
         return groups;
-
     }
 
     public void setSigmavec(SigmaVecOption[] sigmavec) {

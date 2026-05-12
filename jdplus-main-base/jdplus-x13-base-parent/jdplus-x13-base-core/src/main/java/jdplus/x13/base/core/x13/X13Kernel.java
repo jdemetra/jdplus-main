@@ -75,7 +75,7 @@ public class X13Kernel {
 //                spec.getRegArima().getOutliers().isUsed() || spec.getRegArima().getRegression().isUsed());
         RegArimaKernel regarima = RegArimaKernel.of(spec.getRegArima(), context);
         SaVariablesMapping mapping = new SaVariablesMapping();
-        // TO DO: fill maping with existing information in TramoSpec (section Regression)
+        // TO DO: fill maping with existing information in RegArimaSpec (section Regression)
         return new X13Kernel(check, regarima, mapping, spec.getX11(), blPreprop, CholetteProcessor.of(spec.getBenchmarking()));
     }
 
@@ -121,11 +121,16 @@ public class X13Kernel {
             // Step 3. X11
             X11Kernel x11 = new X11Kernel();
             X11Spec nspec = updateSpec(spec, preprocessing);
-            X11Results xr = x11.process(alin, nspec);
-            X13Finals finals = finals(nspec.getMode(), preadjustment, xr);
+            X11Results xr = x11.process(alin, nspec, log);
+            X13Finals finals = null;
             SaBenchmarkingResults bench = null;
-            if (cholette != null) {
-                bench = cholette.process(s, TsData.concatenate(finals.getD11final(), finals.getD11a()), preprocessing);
+            X13Diagnostics diags = null;
+            if (xr != null) {
+                finals = finals(nspec.getMode(), preadjustment, xr);
+                if (cholette != null) {
+                    bench = cholette.process(s, TsData.concatenate(finals.getD11final(), finals.getD11a()), preprocessing);
+                }
+                diags = X13Diagnostics.of(preprocessing, preadjustment, xr, finals);
             }
             return X13Results.builder()
                     .preprocessing(preprocessing)
@@ -133,7 +138,7 @@ public class X13Kernel {
                     .decomposition(xr)
                     .finals(finals)
                     .benchmarking(bench)
-                    .diagnostics(X13Diagnostics.of(preprocessing, preadjustment, xr, finals))
+                    .diagnostics(diags)
                     .log(log)
                     .build();
         } catch (Exception err) {

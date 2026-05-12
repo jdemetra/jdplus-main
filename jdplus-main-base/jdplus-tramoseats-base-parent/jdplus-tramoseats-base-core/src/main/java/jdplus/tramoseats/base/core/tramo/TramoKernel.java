@@ -274,6 +274,11 @@ public class TramoKernel implements RegSarimaProcessor {
         }
         log.push(TRAMO);
         try {
+            int frequency = spec.getFrequency();
+            if (frequency != 0 && frequency != originalTs.getAnnualFrequency()){
+                log.error("frequency not allowed for this spec.");
+                return null;
+            }
             ModelDescription desc = build(originalTs, log);
             if (desc == null) {
                 log.error("initialization failed");

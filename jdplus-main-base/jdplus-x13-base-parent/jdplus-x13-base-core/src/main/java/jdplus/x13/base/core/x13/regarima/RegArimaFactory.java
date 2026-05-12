@@ -45,6 +45,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
+import jdplus.x13.base.api.regarima.BasicSpec;
 
 /**
  *
@@ -58,7 +59,8 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
     public static RegArimaFactory getInstance(){return INSTANCE;}
 
     public RegArimaSpec generateSpec(RegArimaSpec spec, GeneralLinearModel.Description<SarimaSpec> desc) {
-        RegArimaSpec.Builder builder = spec.toBuilder();
+        BasicSpec basic = spec.getBasic().toBuilder().frequency(desc.getDomain().getAnnualFrequency()).build();
+        RegArimaSpec.Builder builder = spec.toBuilder().basic(basic);
         update(spec.getTransform(), desc, builder);
         update(spec.getArima(), desc, builder);
         update(spec.getAutoModel(), desc, builder);

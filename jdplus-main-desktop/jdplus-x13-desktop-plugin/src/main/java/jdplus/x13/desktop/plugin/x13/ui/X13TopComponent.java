@@ -1,15 +1,30 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2026 JDemetra+.
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ *      https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.x13.desktop.plugin.x13.ui;
 
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.x13.desktop.plugin.x13.documents.X13DocumentManager;
 import jdplus.toolkit.desktop.plugin.ui.processing.TsProcessingViewer;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
+import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.core.x13.X13Document;
 import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -102,4 +117,19 @@ public final class X13TopComponent extends WorkspaceTsTopComponent<X13Document> 
     protected String getContextPath() {
         return X13DocumentManager.CONTEXTPATH;
     }
+    
+        @Override
+    public boolean update(X13Document element, Ts s) {
+        if (s != null) {
+            TsDomain domain = s.getData().getDomain();
+            UserInterfaceContext.INSTANCE.setDomain(domain);
+            X13Spec nspec = element.getSpecification().setFrequency(domain.getAnnualFrequency());
+            element.set(nspec, s);
+        } else {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+            element.set(s);
+        }
+        return true;
+    }
+
 }

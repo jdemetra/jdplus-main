@@ -831,7 +831,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
             }
         } else {
             SaItem output = item.getOutput();
-            SaSpecification cspec = output.getDefinition().activeSpecification();
+            SaSpecification cspec = output.getDefinition().getEstimationSpec();
             Ts ts = output.getDefinition().getTs();
             TsDocument doc = (TsDocument) detail.getDocument();
             if (doc != null && cspec.getClass().isInstance(doc.getSpecification())) {

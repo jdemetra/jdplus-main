@@ -60,7 +60,7 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
     }
 
     public TramoSpec generateSpec(TramoSpec spec, GeneralLinearModel.Description<SarimaSpec> desc) {
-        TramoSpec.Builder builder = spec.toBuilder();
+        TramoSpec.Builder builder = spec.toBuilder().frequency(desc.getDomain().getAnnualFrequency());
         update(spec.getTransform(), desc, builder);
         update(spec.getArima(), desc, builder);
         update(spec.getAutoModel(), desc, builder);
