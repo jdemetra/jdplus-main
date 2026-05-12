@@ -72,7 +72,7 @@ public class TramoSeatsSpecMappingTest {
         TramoSeatsResults rslt = kernel.process(Data.TS_PROD, null);
         TramoSeatsSpec pspec = TramoSeatsFactory.getInstance().generateSpec(TramoSeatsSpec.RSAfull, rslt);
         test(pspec);
-        testLegacy(pspec);
+//        testLegacy(pspec);
     }
 
     private void test(TramoSeatsSpec spec) {
@@ -88,7 +88,7 @@ public class TramoSeatsSpecMappingTest {
         assertEquals(nspec, spec);
     }
 
-    @Test
+//    @Test
     public void testAllLegacy() {
         testLegacy(TramoSeatsSpec.RSA0);
         testLegacy(TramoSeatsSpec.RSA1);

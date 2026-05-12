@@ -63,12 +63,12 @@ public class TramoSpecMapping {
         }
 
         @Override
-        public boolean match(DemetraVersion version){
+        public boolean match(DemetraVersion version) {
             return version == DemetraVersion.JD2;
         }
     };
 
-    public static final String TRANSFORM = "transform",
+    public static final String FREQUENCY = "frequency", TRANSFORM = "transform",
             AUTOMDL = "automdl", ARIMA = "arima",
             REGRESSION = "regression", OUTLIER = "outlier", ESTIMATE_OLD = "esimate", ESTIMATE = "estimate";
 
@@ -98,9 +98,15 @@ public class TramoSpecMapping {
             return TramoSpec.DEFAULT;
         }
         InformationSet estimate = info.getSubSet(ESTIMATE);
-        if (estimate == null)
+
+        Integer freq = info.get(FREQUENCY, Integer.class);
+        int ifreq = freq == null ? 0 : freq;
+
+        if (estimate == null) {
             estimate = info.getSubSet(ESTIMATE_OLD);
+        }
         return TramoSpec.builder()
+                .frequency(ifreq)
                 .transform(TransformSpecMapping.read(info.getSubSet(TRANSFORM)))
                 .arima(ArimaSpecMapping.read(info.getSubSet(ARIMA)))
                 .autoModel(AutoModelSpecMapping.read(info.getSubSet(AUTOMDL)))
@@ -113,6 +119,7 @@ public class TramoSpecMapping {
     public InformationSet write(TramoSpec spec, TsDomain context, boolean verbose) {
         InformationSet specInfo = new InformationSet();
         specInfo.set(ProcSpecification.ALGORITHM, TramoSpec.DESCRIPTOR_V3);
+        specInfo.set(FREQUENCY, spec.getFrequency());
         InformationSet tinfo = TransformSpecMapping.write(spec.getTransform(), verbose);
         if (tinfo != null) {
             specInfo.set(TRANSFORM, tinfo);
@@ -142,13 +149,19 @@ public class TramoSpecMapping {
 
     public TramoSpec readLegacy(InformationSet info, TsDomain context) {
         TramoSpec.Builder builder = TramoSpec.builder();
+        int ifreq = 0;
+        if (context != null) {
+            ifreq = context.getAnnualFrequency();
+        }
+        builder.frequency(ifreq);
         InformationSet tinfo = info.getSubSet(TRANSFORM);
         InformationSet oinfo = info.getSubSet(OUTLIER);
         InformationSet ainfo = info.getSubSet(ARIMA);
         InformationSet amiinfo = info.getSubSet(AUTOMDL);
         InformationSet einfo = info.getSubSet(ESTIMATE_OLD);
-        if (einfo == null)
+        if (einfo == null) {
             einfo = info.getSubSet(ESTIMATE);
+        }
         InformationSet rinfo = info.getSubSet(REGRESSION);
         if (tinfo != null) {
             builder.transform(TransformSpecMapping.read(tinfo));
@@ -176,7 +189,7 @@ public class TramoSpecMapping {
         return builder.build();
     }
 
-    public InformationSet writeLegacy(TramoSpec spec, TsDomain context,boolean verbose) {
+    public InformationSet writeLegacy(TramoSpec spec, TsDomain context, boolean verbose) {
         InformationSet specInfo = new InformationSet();
         specInfo.set(ProcSpecification.ALGORITHM, TramoSpec.DESCRIPTOR_LEGACY);
         InformationSet tinfo = TransformSpecMapping.write(spec.getTransform(), verbose);

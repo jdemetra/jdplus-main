@@ -28,7 +28,7 @@ import java.util.Map;
 @lombok.experimental.UtilityClass
 class BasicSpecMapping {
 
-    final String SPAN = "span", PREPROCESS = "preprocess", PRELIMINARYCHECK = "preliminarycheck";
+    final String SPAN = "span", PREPROCESS = "preprocess", PRELIMINARYCHECK = "preliminarycheck", FREQUENCY = "frequency";
 
     void fillDictionary(String prefix, Map<String, Class> dic) {
         dic.put(InformationSet.item(prefix, SPAN), TimeSelector.class);
@@ -41,6 +41,9 @@ class BasicSpecMapping {
             return null;
         }
         InformationSet info = new InformationSet();
+        if (verbose || spec.getFrequency() != 0) {
+            info.add(FREQUENCY, spec.getFrequency());
+        }
         if (verbose || spec.getSpan().getType() != TimeSelector.SelectionType.All) {
             info.add(SPAN, spec.getSpan());
         }
@@ -60,6 +63,10 @@ class BasicSpecMapping {
         }
 
         BasicSpec.Builder builder = BasicSpec.builder();
+        Integer freq = info.get(FREQUENCY, Integer.class);
+        if (freq != null) {
+            builder.frequency(freq);
+        }
         TimeSelector span = info.get(SPAN, TimeSelector.class);
         if (span != null) {
             builder.span(span);
