@@ -95,7 +95,7 @@
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <modernizer-maven-plugin.version>3.3.0</modernizer-maven-plugin.version>
-        <nbm-maven-plugin.version>14.4</nbm-maven-plugin.version>
+        <nbm-maven-plugin.version>14.5</nbm-maven-plugin.version>
         <pomchecker-enforcer-rules.version>1.15.0</pomchecker-enforcer-rules.version>
         <protobuf-maven-plugin.version>5.1.4</protobuf-maven-plugin.version>
         <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
