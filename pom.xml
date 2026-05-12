@@ -76,8 +76,8 @@
         <forbiddenapis.version>3.10</forbiddenapis.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <heylogs-maven-plugin.version>0.17.1</heylogs-maven-plugin.version>
-        <jdks-maven-plugin.version>1.23.0</jdks-maven-plugin.version>
-        <jreleaser-maven-plugin.version>1.23.0</jreleaser-maven-plugin.version>
+        <jdks-maven-plugin.version>1.24.0</jdks-maven-plugin.version>
+        <jreleaser-maven-plugin.version>1.24.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
         <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
@@ -95,9 +95,9 @@
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <modernizer-maven-plugin.version>3.3.0</modernizer-maven-plugin.version>
-        <nbm-maven-plugin.version>14.4</nbm-maven-plugin.version>
+        <nbm-maven-plugin.version>14.5</nbm-maven-plugin.version>
         <pomchecker-enforcer-rules.version>1.15.0</pomchecker-enforcer-rules.version>
-        <protobuf-maven-plugin.version>5.1.3</protobuf-maven-plugin.version>
+        <protobuf-maven-plugin.version>5.1.4</protobuf-maven-plugin.version>
         <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
     </properties>
 
