@@ -14,7 +14,7 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
-package jdplus.x13.base.api.regarima;
+package jdplus.tramoseats.base.api.tramo;
 
 import lombok.NonNull;
 import nbbrd.design.Development;
@@ -29,7 +29,7 @@ import nbbrd.design.StaticFactoryMethod;
  */
 @RepresentableAsInt
 @Development(status = Development.Status.Release)
-public enum X13Frequency {
+public enum TramoFrequency {
     /**
      * Undefined frequency. For legacy purposes
      */
@@ -47,15 +47,23 @@ public enum X13Frequency {
      */
     HalfYearly(2),
     /**
+     * One event every four months
+     */
+    QuadriMonthly(3),
+    /*
      * One event every quarter
      */
     Quarterly(4),
+    /*
+     * One event every two months
+     */
+    BiMonthly(6),
     /**
      * One event every month
      */
     Monthly(12);
 
-    private static final X13Frequency[] ENUMS = X13Frequency.values();
+    private static final TramoFrequency[] ENUMS = TramoFrequency.values();
 
     /**
      * Enum correspondence to an integer
@@ -65,7 +73,7 @@ public enum X13Frequency {
      */
     @StaticFactoryMethod
     public static @NonNull
-    X13Frequency parse(int value) throws IllegalArgumentException {
+    TramoFrequency parse(int value) throws IllegalArgumentException {
 
         switch (value) {
             case -1 -> {
@@ -80,8 +88,14 @@ public enum X13Frequency {
             case 2 -> {
                 return HalfYearly;
             }
+            case 3 -> {
+                return QuadriMonthly;
+            }
             case 4 -> {
                 return Quarterly;
+            }
+            case 6 -> {
+                return BiMonthly;
             }
             case 12 -> {
                 return Monthly;
@@ -94,7 +108,7 @@ public enum X13Frequency {
 
     private final int value;
 
-    X13Frequency(final int value) {
+    TramoFrequency(final int value) {
         this.value = value;
     }
 

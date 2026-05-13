@@ -17,7 +17,7 @@ public class TramoProto {
 
     public TramoSpec convert(jdplus.tramoseats.base.api.tramo.TramoSpec spec) {
         return TramoSpec.newBuilder()
-                .setBasic(BasicProto.convert(spec.getTransform()))
+                .setBasic(BasicProto.convert(spec.getTransform(), spec.getFrequency()))
                 .setTransform(TransformProto.convert(spec.getTransform()))
                 .setOutlier(OutlierProto.convert(spec.getOutliers()))
                 .setArima(RegArimaProtosUtility.convert(spec.getArima()))
@@ -29,13 +29,14 @@ public class TramoProto {
 
     public jdplus.tramoseats.base.api.tramo.TramoSpec convert(TramoSpec spec) {
         return jdplus.tramoseats.base.api.tramo.TramoSpec.builder()
+                .frequency(spec.getBasic().getAnnualFrequency())
                 .transform(TransformProto.convert(spec.getBasic(), spec.getTransform()))
                 .outliers(OutlierProto.convert(spec.getOutlier()))
                 .arima(RegArimaProtosUtility.convert(spec.getArima()))
                 .autoModel(AutoModelProto.convert(spec.getAutomodel()))
                 .regression(RegressionProto.convert(spec.getRegression(), spec.getOutlier().getTcrate()))
                 .estimate(EstimateProto.convert(spec.getEstimate()))
-                .build();
+                .buildWithoutValidation();
     }
     
         public TramoOutput convert(jdplus.tramoseats.base.core.tramo.TramoOutput output){

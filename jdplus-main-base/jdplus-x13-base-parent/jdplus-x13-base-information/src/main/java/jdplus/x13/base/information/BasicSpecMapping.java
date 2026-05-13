@@ -41,7 +41,7 @@ class BasicSpecMapping {
             return null;
         }
         InformationSet info = new InformationSet();
-        if (verbose || spec.getFrequency() != 0) {
+        if (spec.getFrequency() != 0) {
             info.add(FREQUENCY, spec.getFrequency());
         }
         if (verbose || spec.getSpan().getType() != TimeSelector.SelectionType.All) {
@@ -66,7 +66,8 @@ class BasicSpecMapping {
         Integer freq = info.get(FREQUENCY, Integer.class);
         if (freq != null) {
             builder.frequency(freq);
-        }
+        }else
+            builder.frequency(-1);
         TimeSelector span = info.get(SPAN, TimeSelector.class);
         if (span != null) {
             builder.span(span);

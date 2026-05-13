@@ -56,12 +56,15 @@ public class SaDefinition {
     public static class Builder {
 
         public SaDefinition build() {
+            boolean hasData = ts.getType().encompass(TsInformationType.Data);
+            if (hasData && domainSpec.getFrequency() <= 0) {
+                domainSpec = domainSpec.setFrequency(ts.getData().getAnnualFrequency());
+            }
             if (estimationSpec == null) {
-                if (ts.getType().encompass(TsInformationType.Data)) {
-                    estimationSpec = domainSpec.setFrequency(ts.getData().getAnnualFrequency());
-                } else {
-                    estimationSpec = domainSpec;
-                }
+                estimationSpec = domainSpec;
+            } else {
+                // necessary for legacy spec
+                estimationSpec = estimationSpec.setFrequency(ts.getData().getAnnualFrequency());
             }
             return new SaDefinition(domainSpec, estimationSpec, policy, ts);
         }

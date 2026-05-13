@@ -64,7 +64,7 @@ public class TramoSpecMappingTest {
         RegSarimaModel rslt = kernel.process(Data.TS_PROD, null);
         TramoSpec pspec = TramoFactory.getInstance().generateSpec(TramoSpec.TRfull, rslt.getDescription());
         test(pspec);
-//        testLegacy(pspec);
+        testLegacy(pspec);
     }
 
     private void test(TramoSpec spec) {
@@ -72,6 +72,7 @@ public class TramoSpecMappingTest {
         TramoSpec nspec = TramoSpecMapping.readV3(info, null);
 //        System.out.println(spec);
 //        System.out.println(nspec);
+        boolean equals = spec.equals(nspec);
         assertEquals(nspec, spec);
         info = TramoSpecMapping.write(spec, null, false);
         nspec = TramoSpecMapping.readV3(info, null);
@@ -80,7 +81,7 @@ public class TramoSpecMappingTest {
         assertEquals(nspec, spec);
     }
 
-//    @Test
+    @Test
     public void testAllLegacy() {
         testLegacy(TramoSpec.TR0);
         testLegacy(TramoSpec.TR1);
@@ -93,22 +94,16 @@ public class TramoSpecMappingTest {
 
     private void testLegacy(TramoSpec spec) {
         InformationSet info = TramoSpecMapping.writeLegacy(spec, null, true);
-        TsDomain domain = null;
-        if (spec.getFrequency() != 0) {
-            domain = TsDomain.of(TsPeriod.of(TsUnit.ofAnnualFrequency(spec.getFrequency()), 0), 0);
-        }
-        TramoSpec nspec = TramoSpecMapping.readLegacy(info, domain);
+        TramoSpec nspec = TramoSpecMapping.readLegacy(info, null);
 //        System.out.println(spec);
 //        System.out.println(nspec);
+        boolean equals = spec.equals(nspec);
         assertEquals(nspec, spec);
         info = TramoSpecMapping.writeLegacy(spec, null, false);
-        domain=null;
-        if (spec.getFrequency() != 0) {
-            domain = TsDomain.of(TsPeriod.of(TsUnit.ofAnnualFrequency(spec.getFrequency()), 0), 0);
-        }
-        nspec = TramoSpecMapping.readLegacy(info, domain);
+        nspec = TramoSpecMapping.readLegacy(info, null);
 //        System.out.println(spec);
 //        System.out.println(nspec);
+        equals = spec.equals(nspec);
         assertEquals(nspec, spec);
     }
 

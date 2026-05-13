@@ -37,6 +37,7 @@ public final class BasicSpec implements Validatable<BasicSpec> {
 
     @lombok.NonNull
     private TimeSelector span;
+    @lombok.EqualsAndHashCode.Exclude
     private int frequency;
     private boolean preprocessing;
     private boolean preliminaryCheck;

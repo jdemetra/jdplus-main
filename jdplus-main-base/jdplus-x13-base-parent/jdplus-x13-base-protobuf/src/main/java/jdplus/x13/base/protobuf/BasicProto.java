@@ -29,7 +29,8 @@ public class BasicProto {
     public void fill(BasicSpec spec, RegArimaSpec.BasicSpec.Builder builder) {
         builder.setSpan(ToolkitProtosUtility.convert(spec.getSpan()))
                 .setPreliminaryCheck(spec.isPreliminaryCheck())
-                .setPreprocessing(spec.isPreprocessing());
+                .setPreprocessing(spec.isPreprocessing())
+                .setAnnualFrequency(spec.getFrequency());
     }
 
     public RegArimaSpec.BasicSpec convert(BasicSpec spec) {
@@ -43,6 +44,7 @@ public class BasicProto {
                 .span(ToolkitProtosUtility.convert(spec.getSpan()))
                 .preprocessing(spec.getPreprocessing())
                 .preliminaryCheck(spec.getPreliminaryCheck())
+                .frequency(spec.getAnnualFrequency())
                 .build();
 
     }

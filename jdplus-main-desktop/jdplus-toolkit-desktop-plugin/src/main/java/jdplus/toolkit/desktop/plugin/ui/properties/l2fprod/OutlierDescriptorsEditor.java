@@ -72,8 +72,9 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
                             first = 1980;
                             last = Year.now(Clock.systemDefaultZone()).getValue();
                             frequency = UserInterfaceContext.INSTANCE.getAnnualFrequency();
-                            if (frequency == 0)
+                            if (frequency == 0) {
                                 frequency = 12;
+                            }
                         }
 
                         final JPanel pane = new JPanel(new BorderLayout());
@@ -129,15 +130,15 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
 //                            final JComboBox comboFreq = new JComboBox(new Integer[]{1, 4, 12});
 //                            comboFreq.setSelectedItem(frequency);
 //                            topPane.add(comboFreq);
-                               final int AnnualFrequency=frequency;
+                            final int AnnualFrequency = frequency;
                             spinnerFirst.addChangeListener((ChangeEvent e1) -> {
                                 if ((Integer) spinnerFirst.getValue() > (Integer) spinnerLast.getValue()) {
                                     spinnerLast.setValue(spinnerFirst.getValue());
                                 } else {
                                     table.setModel(new OutliersModel((Integer) spinnerFirst.getValue(),
                                             (Integer) spinnerLast.getValue(),
-                                            AnnualFrequency, 
-//                                            (Integer) comboFreq.getSelectedItem(),
+                                            AnnualFrequency,
+                                            //                                            (Integer) comboFreq.getSelectedItem(),
                                             definitions_ != null ? definitions_ : new HashMap<>()));
                                 }
                             });
@@ -148,8 +149,8 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
                                 } else {
                                     table.setModel(new OutliersModel((Integer) spinnerFirst.getValue(),
                                             (Integer) spinnerLast.getValue(),
-                                            AnnualFrequency, 
-//                                            (Integer) comboFreq.getSelectedItem(),
+                                            AnnualFrequency,
+                                            //                                            (Integer) comboFreq.getSelectedItem(),
                                             definitions_ != null ? definitions_ : new HashMap<>()));
                                 }
                             });
@@ -162,7 +163,6 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
 //                                            definitions_ != null ? definitions_ : new HashMap<>()));
 //                                }
 //                            });
-
                             pane.add(topPane, BorderLayout.NORTH);
                         }
 
@@ -188,7 +188,7 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
 
                     case LIST: {
                         final ArrayEditorDialog<OutlierDescriptor> arrayEditorDialog = new ArrayEditorDialog<>(ancestor,
-                                null != definitions_ ? getDescriptors() : new OutlierDescriptor[]{}, 
+                                null != definitions_ ? getDescriptors() : new OutlierDescriptor[]{},
                                 OutlierDescriptor::new, OutlierDescriptor::duplicate);
                         arrayEditorDialog.setTitle("Pre-specified outliers");
                         arrayEditorDialog.setLocationRelativeTo(ancestor);
@@ -238,7 +238,7 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
                 .values()
                 .stream().flatMap(Collection::stream)
                 .map(OutlierDescriptor::new)
-                .sorted((o1, o2)->o1.getPosition().compareTo(o2.getPosition()))
+                .sorted((o1, o2) -> o1.getPosition().compareTo(o2.getPosition()))
                 .toArray(OutlierDescriptor[]::new);
     }
 
@@ -307,27 +307,19 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
         @Override
         public String getColumnName(int column) {
             switch (freq_) {
-                case 12:
+                case 12 -> {
                     if (column > 0) {
                         return months[column - 1];
                     } else {
                         return "";
                     }
-                case 4:
-                    switch (column) {
-                        case 1:
-                            return "I";
-                        case 2:
-                            return "II";
-                        case 3:
-                            return "III";
-                        case 4:
-                            return "IV";
-                        default:
-                            return "";
-                    }
-                default:
-                    return "";
+                }
+                case 4 -> {
+                    return "Q" + column;
+                }
+                default -> {
+                    return Integer.toString(column);
+                }
             }
         }
 

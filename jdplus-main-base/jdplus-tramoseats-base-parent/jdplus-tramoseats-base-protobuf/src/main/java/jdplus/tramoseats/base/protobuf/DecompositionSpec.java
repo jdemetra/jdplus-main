@@ -5,8 +5,6 @@
 
 package jdplus.tramoseats.base.protobuf;
 
-import java.io.Serial;
-
 /**
  * Protobuf type {@code tramoseats.DecompositionSpec}
  */
@@ -14,8 +12,7 @@ public final class DecompositionSpec extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:tramoseats.DecompositionSpec)
     DecompositionSpecOrBuilder {
-    @Serial
-    private static final long serialVersionUID = 0L;
+private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -547,8 +544,8 @@ public final class DecompositionSpec extends
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.tramoseats.base.protobuf.DecompositionSpec spec) {
-        return mergeFrom(spec);
+      if (other instanceof jdplus.tramoseats.base.protobuf.DecompositionSpec) {
+        return mergeFrom((jdplus.tramoseats.base.protobuf.DecompositionSpec)other);
       } else {
         super.mergeFrom(other);
         return this;

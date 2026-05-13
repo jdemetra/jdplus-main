@@ -5,8 +5,6 @@
 
 package jdplus.x13.base.protobuf;
 
-import java.io.Serial;
-
 /**
  * Protobuf type {@code x13.MStatistics}
  */
@@ -14,8 +12,7 @@ public final class MStatistics extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:x13.MStatistics)
     MStatisticsOrBuilder {
-    @Serial
-    private static final long serialVersionUID = 0L;
+private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -626,8 +623,8 @@ public final class MStatistics extends
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.x13.base.protobuf.MStatistics statistics) {
-        return mergeFrom(statistics);
+      if (other instanceof jdplus.x13.base.protobuf.MStatistics) {
+        return mergeFrom((jdplus.x13.base.protobuf.MStatistics)other);
       } else {
         super.mergeFrom(other);
         return this;

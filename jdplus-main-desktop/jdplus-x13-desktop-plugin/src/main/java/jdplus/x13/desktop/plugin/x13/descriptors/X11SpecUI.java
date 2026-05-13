@@ -97,8 +97,7 @@ public class X11SpecUI extends BaseX13SpecUI {
     }
 
     int period() {
-        TsDomain domain = UserInterfaceContext.INSTANCE.getDomain();
-        return domain == null ? 12 : domain.getAnnualFrequency();
+        return UserInterfaceContext.INSTANCE.getAnnualFrequency();
     }
 
     boolean isPreprocessing() {
@@ -361,13 +360,17 @@ public class X11SpecUI extends BaseX13SpecUI {
 
     private static final int MODE_ID = 0, SEAS_ID = 1, FORECAST_ID = 2, BACKCAST_ID = 12, LSIGMA_ID = 3, USIGMA_ID = 4, AUTOTREND_ID = 5,
             TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11, BIAS_ID = 12;
+    
+    public boolean hasFrequency(){
+        return regarima().getBasic().getFrequency()>1;
+    }
 
     @Messages({
         "x11SpecUI.calendarsigmaDesc.name=Calendarsigma",
-        "x11SpecUI.calendarsigmaDesc.desc=[calendarsigma] Specifies if the standard errors used for extreme value detection and adjustment are computed separately for each calendar month (quarter), or separately for two complementary sets of calendar months (quarters)."
+        "x11SpecUI.calendarsigmaDesc.desc=[calendarsigma] Specifies if the standard errors used for extreme value detection and adjustment are computed separately for each calendar period, or separately for two complementary sets of calendar periods."
     })
     private EnhancedPropertyDescriptor calendarsigmaDesc() {
-        if (!x11().isSeasonal()) {
+        if (!x11().isSeasonal() || ! hasFrequency()) {
             return null;
         }
         try {
@@ -406,7 +409,7 @@ public class X11SpecUI extends BaseX13SpecUI {
         "x11SpecUI.sigmavecDesc.desc=[sigmavec] Specifies the two groups of periods (month or quarters) for whose irregulars a group standard error will be calculated under the calendarsigma=select option."
     })
     private EnhancedPropertyDescriptor sigmavecDesc() {
-        if (!x11().isSeasonal() || !x11().getCalendarSigma().equals(CalendarSigmaOption.Select)) {
+        if (!x11().isSeasonal() || !x11().getCalendarSigma().equals(CalendarSigmaOption.Select) || ! hasFrequency()) {
             return null;
         }
         try {
@@ -605,7 +608,7 @@ public class X11SpecUI extends BaseX13SpecUI {
         "x11SpecUI.fullseasonmaDesc.desc=[seasonalma] Details on specifc seasonalma for the different periods."
     })
     private EnhancedPropertyDescriptor fullseasonmaDesc() {
-        if (!x11().isSeasonal()) {
+        if (!x11().isSeasonal() || ! hasFrequency()) {
             return null;
         }
         try {

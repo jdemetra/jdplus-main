@@ -47,6 +47,7 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
     public static final TramoSpec DEFAULT = TramoSpec.builder().build();
 
+    @lombok.EqualsAndHashCode.Exclude
     private int frequency;
     /**
      * Gets the predefined Arima specification. The AutoModel and the Arima
@@ -190,6 +191,15 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
             return this;
         }
     }
+    
+    public boolean checkFrequency(int freq) {
+        // Legacy specs have frequency set to -1 !!
+        if (frequency <= 0)
+            return true;
+        // Could be improved...
+        return regression.getInterventionVariables().isEmpty() && regression.getOutliers().isEmpty()
+                && regression.getRamps().isEmpty() && regression.getRamps().isEmpty();
+    }
 
     public TramoSpec setFrequency(int freq) {
         if (freq == frequency) {
@@ -197,7 +207,7 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
             return this;
         }
         Builder builder = toBuilder().frequency(freq);
-        if (frequency == 0) {
+        if (frequency <= 0) {
             // Nothing to check
             return builder.buildWithoutValidation();
         }

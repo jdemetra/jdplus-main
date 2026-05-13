@@ -14,7 +14,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
-import jdplus.toolkit.base.api.timeseries.calendars.RegularFrequency;
+import jdplus.tramoseats.base.api.tramo.TramoFrequency;
 
 /**
  *
@@ -26,12 +26,14 @@ public class BasicSpecUI extends BaseTramoSpecUI {
         super(root);
     }
 
-    public RegularFrequency getFrequency() {
-        return RegularFrequency.parse(core().getFrequency());
+    public TramoFrequency getFrequency() {
+        return TramoFrequency.parse(core().getFrequency());
     }
 
-    public void setFrequency(RegularFrequency freq) {
+    public void setFrequency(TramoFrequency freq) {
         int ifreq = freq.toInt();
+        if (ifreq < 0)
+            throw new IllegalArgumentException("Can't be used. For legacy purposes only");
         update(ifreq);
         UserInterfaceContext.INSTANCE.setAnnualFrequency(ifreq);
     }
@@ -83,6 +85,7 @@ public class BasicSpecUI extends BaseTramoSpecUI {
     }
     ///////////////////////////////////////////////////////////////////////////
     private static final int SPAN_ID = 1, AUTOMDL_ID = 2, PRELIMINARYCHECK_ID = 3, FREQ_ID = 0;
+    
 
     @Messages({
         "basicSpecUI.freqDesc.name=Frequency",

@@ -100,7 +100,7 @@ public class TramoSpecMapping {
         InformationSet estimate = info.getSubSet(ESTIMATE);
 
         Integer freq = info.get(FREQUENCY, Integer.class);
-        int ifreq = freq == null ? 0 : freq;
+        int ifreq = freq == null ? -1 : freq;   // Legacy format
 
         if (estimate == null) {
             estimate = info.getSubSet(ESTIMATE_OLD);
@@ -113,7 +113,7 @@ public class TramoSpecMapping {
                 .outliers(OutlierSpecMapping.read(info.getSubSet(OUTLIER)))
                 .regression(RegressionSpecMapping.read(info.getSubSet(REGRESSION)))
                 .estimate(EstimateSpecMapping.read(estimate))
-                .build();
+                .buildWithoutValidation();
     }
 
     public InformationSet write(TramoSpec spec, TsDomain context, boolean verbose) {

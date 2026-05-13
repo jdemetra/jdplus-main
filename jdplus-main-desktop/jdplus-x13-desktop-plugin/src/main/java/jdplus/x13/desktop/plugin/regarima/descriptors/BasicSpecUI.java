@@ -32,6 +32,8 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
 
     public void setFrequency(X13Frequency freq) {
         int ifreq = freq.toInt();
+        if (ifreq < 0)
+            throw new IllegalArgumentException("Can't be used. For legacy purposes only");
         update(ifreq);
         UserInterfaceContext.INSTANCE.setAnnualFrequency(ifreq);
     }
@@ -107,7 +109,7 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setShortDescription(Bundle.basicSpecUI_freqDesc_desc());
             desc.setDisplayName(Bundle.basicSpecUI_freqDesc_name());
-            edesc.setReadOnly(isRo() || UserInterfaceContext.INSTANCE.getDomain() != null);
+            edesc.setReadOnly(isRo() || (UserInterfaceContext.INSTANCE.getDomain() != null && core().getFrequency() == 0));
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
