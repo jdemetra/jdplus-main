@@ -115,7 +115,7 @@ public final class SaItem {
         SaDefinition ndef = SaDefinition.builder()
                 .ts(definition.getTs())
                 .domainSpec(dspec)
-                .estimationSpec(definition.activeSpecification())
+                .estimationSpec(definition.getEstimationSpec())
                 .policy(EstimationPolicyType.None)
                 .build();
         return new SaItem(name, ndef, meta, priority, estimation, processed);
@@ -214,7 +214,7 @@ public final class SaItem {
                     // Unoptimized solution
                     // SaSpecification pointSpec = estimation.getPointSpec();
                     //if (pointSpec == null)
-                    SaSpecification pointSpec = definition.activeSpecification();
+                    SaSpecification pointSpec = definition.getEstimationSpec();
                     SaDefinition pdef = SaDefinition.builder()
                             .ts(definition.getTs())
                             .domainSpec(pointSpec)
@@ -261,10 +261,10 @@ public final class SaItem {
     public SaDocument asDocument() {
         SaEstimation e = getEstimation();
         if (e == null) {
-            return new SaDocument(name, definition.getTs(), definition.activeSpecification(),
+            return new SaDocument(name, definition.getTs(), definition.getEstimationSpec(),
                     null, null, ProcQuality.Undefined);
         } else {
-            return new SaDocument(name, definition.getTs(), definition.activeSpecification(),
+            return new SaDocument(name, definition.getTs(), definition.getEstimationSpec(),
                     e.getResults(), e.getDiagnostics(), e.getQuality());
         }
     }
@@ -283,14 +283,14 @@ public final class SaItem {
             SaDefinition ndef = SaDefinition.builder()
                     .ts(nts)
                     .domainSpec(dspec)
-                    .estimationSpec(definition.activeSpecification())
+                    .estimationSpec(definition.getEstimationSpec())
                     .policy(policy.getPolicy())
                     .build();
             return new SaItem(name, ndef, meta, priority, null, false);
         } else {
             SaSpecification pspec = estimation.getPointSpec();
             SaProcessingFactory fac = SaManager.factoryFor(dspec);
-            SaSpecification espec = definition.activeSpecification();
+            SaSpecification espec = definition.getEstimationSpec();
             if (fac != null) {
                 if (pspec != null) {
                     TsDomain frozenSpan = policy.getFrozenSpan();

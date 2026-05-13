@@ -32,7 +32,8 @@ public class X11Exception extends SaException {
      *
      */
     public static final String ERR_NEG = "Multiplicative decomposition of non positive series",
-            ERR_FREQ = "Invalid frequency", ERR_LENGTH = "Not enough observations", ERR_MISSING = "Missing values are not allowed";
+            ERR_FREQ = "Invalid frequency", ERR_LENGTH = "Not enough observations", ERR_MISSING = "Missing values are not allowed",
+            ERR_FILTERS = "Filters incompatible with the periodicity", ERR_SIGMAVEC = "Sigma vector incompatible with the periodicity";
 
     /**
      *

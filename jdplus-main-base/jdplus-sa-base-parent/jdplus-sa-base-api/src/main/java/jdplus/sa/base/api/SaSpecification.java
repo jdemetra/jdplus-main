@@ -25,4 +25,6 @@ import jdplus.toolkit.base.api.processing.ProcSpecification;
 public interface SaSpecification extends ProcSpecification{
     public static final String FAMILY = "Seasonal adjustment";
     
+    int getFrequency();
+    SaSpecification setFrequency(int nfreq);
 }

@@ -79,13 +79,13 @@ public enum EasterType
    * @return The enum associated with the given numeric wire value.
    */
   public static EasterType forNumber(int value) {
-    return switch (value) {
-      case 0 -> EASTER_UNUSED;
-      case 1 -> EASTER_STANDARD;
-      case 2 -> EASTER_INCLUDEEASTER;
-      case 3 -> EASTER_INCLUDEEASTERMONDAY;
-      default -> null;
-    };
+    switch (value) {
+      case 0: return EASTER_UNUSED;
+      case 1: return EASTER_STANDARD;
+      case 2: return EASTER_INCLUDEEASTER;
+      case 3: return EASTER_INCLUDEEASTERMONDAY;
+      default: return null;
+    }
   }
 
   public static com.google.protobuf.Internal.EnumLiteMap<EasterType>

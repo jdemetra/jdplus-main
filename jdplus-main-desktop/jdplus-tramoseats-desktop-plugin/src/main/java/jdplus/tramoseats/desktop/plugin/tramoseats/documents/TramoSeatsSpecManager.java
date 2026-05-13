@@ -20,6 +20,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.tramoseats.base.workspace.TramoSeatsHandlers;
 
 import org.openide.util.ImageUtilities;
@@ -111,12 +112,14 @@ public class TramoSeatsSpecManager extends AbstractWorkspaceItemManager<TramoSea
         }
         final TramoSeatsSpecUI ui = new TramoSeatsSpecUI(xdoc.getElement(), xdoc.isReadOnly());
         Frame owner = WindowManager.getDefault().getMainWindow();
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(xdoc.getElement().getTramo().getFrequency());
         PropertiesDialog propDialog
                 = new PropertiesDialog(owner, true, ui,
                         new AbstractAction("OK") {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         xdoc.setElement(ui.getCore());
+                        UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
                     }
                 });
         propDialog.setTitle(xdoc.getDisplayName());

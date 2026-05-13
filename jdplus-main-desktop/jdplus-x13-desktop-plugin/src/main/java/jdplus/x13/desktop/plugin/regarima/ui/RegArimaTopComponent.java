@@ -4,12 +4,16 @@
  */
 package jdplus.x13.desktop.plugin.regarima.ui;
 
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.x13.desktop.plugin.regarima.documents.RegArimaDocumentManager;
 import jdplus.toolkit.desktop.plugin.ui.processing.TsProcessingViewer;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
 import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
 import nbbrd.design.ClassNameConstant;
 import org.openide.windows.TopComponent;
@@ -101,4 +105,19 @@ public final class RegArimaTopComponent extends WorkspaceTsTopComponent<RegArima
     protected String getContextPath() {
         return RegArimaDocumentManager.CONTEXTPATH;
     }
+    
+        @Override
+    public boolean update(RegArimaDocument element, Ts s) {
+        if (s != null) {
+            TsDomain domain = s.getData().getDomain();
+            UserInterfaceContext.INSTANCE.setDomain(domain);
+            RegArimaSpec nspec = element.getSpecification().setFrequency(domain.getAnnualFrequency());
+            element.set(nspec, s);
+        } else {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+            element.set(s);
+        }
+        return true;
+    }
+
 }

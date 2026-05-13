@@ -4,13 +4,19 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramo.ui;
 
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.tramoseats.desktop.plugin.tramo.documents.TramoDocumentManager;
 import jdplus.tramoseats.base.core.tramo.TramoDocument;
 import jdplus.toolkit.desktop.plugin.ui.processing.TsProcessingViewer;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
+import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
 import nbbrd.design.ClassNameConstant;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -59,6 +65,23 @@ public final class TramoTopComponent extends WorkspaceTsTopComponent<TramoDocume
         associateLookup(ExplorerUtils.createLookup(mgr, getActionMap()));
     }
 
+    private void updateUserInterfaceContext() {
+        if (getDocument() == null) {
+            return;
+        }
+        TramoDocument element = getElement();
+        if (element == null) {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+        } else {
+            TramoSpec s = element.getSpecification();
+            if (s == null) {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+            } else {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(s.getFrequency());
+            }
+        }
+    }
+
     @Override
     public ExplorerManager getExplorerManager() {
         return mgr;
@@ -72,6 +95,18 @@ public final class TramoTopComponent extends WorkspaceTsTopComponent<TramoDocume
     @Override
     public WorkspaceItem<TramoDocument> newDocument() {
         return manager().create(WorkspaceFactory.getInstance().getActiveWorkspace());
+    }
+
+    @Override
+    public void componentActivated() {
+        super.componentActivated();
+        updateUserInterfaceContext();
+    }
+
+    @Override
+    public void componentDeactivated() {
+        super.componentDeactivated();
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
     }
 
     /**
@@ -101,4 +136,19 @@ public final class TramoTopComponent extends WorkspaceTsTopComponent<TramoDocume
     protected String getContextPath() {
         return TramoDocumentManager.CONTEXTPATH;
     }
+
+    @Override
+    public boolean update(TramoDocument element, Ts s) {
+        if (s != null) {
+            TsDomain domain = s.getData().getDomain();
+            UserInterfaceContext.INSTANCE.setDomain(domain);
+            TramoSpec nspec = element.getSpecification().setFrequency(domain.getAnnualFrequency());
+            element.set(nspec, s);
+        } else {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+            element.set(s);
+        }
+        return true;
+    }
+
 }

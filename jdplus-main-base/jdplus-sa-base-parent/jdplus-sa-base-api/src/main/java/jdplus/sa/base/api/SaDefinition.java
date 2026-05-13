@@ -17,15 +17,15 @@
 package jdplus.sa.base.api;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsInformationType;
 
 /**
- * 
+ *
  * @author PALATEJ
  */
 @lombok.Value
-@lombok.Builder(builderClassName="Builder", toBuilder = true)
+@lombok.Builder(builderClassName = "Builder", toBuilder = true)
 public class SaDefinition {
-    
 
     /**
      * Initial specification. Reference for any relaxing of some elements of the
@@ -35,8 +35,10 @@ public class SaDefinition {
     SaSpecification domainSpec;
 
     /**
-     * Specification used for the current estimation. The domainSpec is used if the estimationSpec is missing (see activeSpecification)
+     * Specification used for the current estimation. The domainSpec is used if
+     * the estimationSpec is missing (see activeSpecification)
      */
+    @lombok.NonNull
     SaSpecification estimationSpec;
 
     /**
@@ -45,18 +47,30 @@ public class SaDefinition {
     @lombok.EqualsAndHashCode.Exclude
     EstimationPolicyType policy;
 
-   
     /**
      * Time series
      */
     @lombok.NonNull
     Ts ts;
 
-    public SaSpecification activeSpecification() {
-        return estimationSpec == null ? domainSpec : estimationSpec;
+    public static class Builder {
+
+        public SaDefinition build() {
+            boolean hasData = ts.getType().encompass(TsInformationType.Data);
+            if (hasData && domainSpec.getFrequency() <= 0) {
+                domainSpec = domainSpec.setFrequency(ts.getData().getAnnualFrequency());
+            }
+            if (estimationSpec == null) {
+                estimationSpec = domainSpec;
+            } else {
+                // necessary for legacy spec
+                estimationSpec = estimationSpec.setFrequency(ts.getData().getAnnualFrequency());
+            }
+            return new SaDefinition(domainSpec, estimationSpec, policy, ts);
+        }
     }
-    
-    public static Builder builder(){
+
+    public static Builder builder() {
         return new Builder()
                 .policy(EstimationPolicyType.None);
     }

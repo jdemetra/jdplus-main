@@ -21,6 +21,7 @@ import jdplus.x13.base.api.x11.BiasCorrection;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -132,8 +133,7 @@ public class X11KernelTest {
         X11Kernel instanceKernel = new X11Kernel();
         X11Spec spec = X11Spec.builder().build();
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.daily(1990, 1, 1), WU5636);
-        assertThrows(IllegalArgumentException.class, () ->
-            instanceKernel.process(tsData, spec));
+        assertNull(instanceKernel.process(tsData, spec));
     }
 
     @org.junit.jupiter.api.Test
@@ -142,8 +142,7 @@ public class X11KernelTest {
         X11Spec spec = X11Spec.builder().build();
         double[] copy = Arrays.copyOf(WU5636, 35);
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        assertThrows(X11Exception.class, () ->
-            instanceKernel.process(tsData, spec));
+        assertNull(instanceKernel.process(tsData, spec));
     }
 
     @org.junit.jupiter.api.Test
@@ -153,8 +152,7 @@ public class X11KernelTest {
         double[] copy = Arrays.copyOf(WU5636, 36);
         copy[0] = Double.NaN;
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        assertThrows(X11Exception.class, () ->
-            instanceKernel.process(tsData, spec));
+        assertNull(instanceKernel.process(tsData, spec));
     }
 
     @org.junit.jupiter.api.Test
@@ -164,8 +162,7 @@ public class X11KernelTest {
         double[] copy = Arrays.copyOf(WU5636, 36);
         copy[0] = -1;
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        assertThrows(X11Exception.class, () ->
-            instanceKernel.process(tsData, spec));
+        assertNull(instanceKernel.process(tsData, spec));
     }
 
     @org.junit.jupiter.api.Test
@@ -175,8 +172,7 @@ public class X11KernelTest {
         double[] copy = Arrays.copyOf(WU5636, 36);
         copy[0] = -1;
         jdplus.toolkit.base.api.timeseries.TsData tsData = jdplus.toolkit.base.api.timeseries.TsData.ofInternal(TsPeriod.monthly(1990, 1), copy);
-        assertThrows(X11Exception.class, () ->
-            instanceKernel.process(tsData, spec));
+        assertNull(instanceKernel.process(tsData, spec));
     }
 
     @Test

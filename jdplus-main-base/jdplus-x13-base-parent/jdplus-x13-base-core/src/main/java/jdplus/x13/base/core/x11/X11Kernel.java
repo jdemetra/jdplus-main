@@ -18,10 +18,12 @@ import jdplus.x13.base.core.x11.pseudoadd.X11CStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11DStepPseudoAdd;
 import java.util.Arrays;
 import jdplus.toolkit.base.api.data.DoublesMath;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.x13.base.api.x11.BiasCorrection;
+import jdplus.x13.base.api.x11.CalendarSigmaOption;
 import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.CopyEndPoints;
 
@@ -44,15 +46,22 @@ public class X11Kernel {
         return x;
     }
 
+    public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec) {
+        return process(timeSeries, spec, ProcessingLog.dummy());
+    }
+
     /**
      *
      * @param timeSeries Time series including forecasts/backcasts
      * @param spec
+     * @param log
      * @return
      */
-    public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec) {
+    public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec, ProcessingLog log) {
         clear();
-        check(timeSeries, spec);
+        if (!check(timeSeries, spec, log)) {
+            return null;
+        }
 
         input = timeSeries;
         DoubleSeq data = input.getValues();
@@ -79,20 +88,41 @@ public class X11Kernel {
         return buildResults(timeSeries.getStart(), spec);
     }
 
-    private void check(TsData timeSeries, X11Spec spec) throws X11Exception, IllegalArgumentException {
+    private final String X11 = "x11";
+
+    private boolean check(TsData timeSeries, X11Spec spec, ProcessingLog log) {
+        log.push(X11);
         int frequency = timeSeries.getAnnualFrequency();
-        if (frequency == -1) {
-            throw new IllegalArgumentException("Frequency of the time series must be compatible with years");
-        }
-        if (timeSeries.getValues().length() < 3 * frequency) {
-            throw new X11Exception(X11Exception.ERR_LENGTH);
-        }
-        if (!timeSeries.getValues().allMatch(Double::isFinite)) {
-            throw new X11Exception(X11Exception.ERR_MISSING);
-        }
-        if ((spec.getMode() == DecompositionMode.Multiplicative || spec.getMode() == DecompositionMode.LogAdditive)
-                && timeSeries.getValues().anyMatch(x -> x <= 0)) {
-            throw new X11Exception(X11Exception.ERR_NEG);
+        try {
+            boolean ok = true;
+            if (frequency == -1) {
+                log.error("Frequency of the time series must be compatible with years");
+                ok = false;
+            }
+            if (timeSeries.getValues().length() < 3 * frequency) {
+                log.error(X11Exception.ERR_LENGTH);
+                ok = false;
+            }
+            if (!timeSeries.getValues().allMatch(Double::isFinite)) {
+                log.error(X11Exception.ERR_MISSING);
+                ok = false;
+            }
+            if ((spec.getMode() == DecompositionMode.Multiplicative || spec.getMode() == DecompositionMode.LogAdditive)
+                    && timeSeries.getValues().anyMatch(x -> x <= 0)) {
+                log.error(X11Exception.ERR_NEG);
+                ok = false;
+            }
+            if ((spec.getFilters().length > 1 && spec.getFilters().length != frequency)) {
+                log.error(X11Exception.ERR_FILTERS);
+                ok = false;
+            }
+            if (spec.getCalendarSigma() == CalendarSigmaOption.Select && spec.getSigmaVec().length != frequency) {
+                log.error(X11Exception.ERR_SIGMAVEC);
+                ok = false;
+            }
+            return ok;
+        } finally {
+            log.pop();
         }
     }
 

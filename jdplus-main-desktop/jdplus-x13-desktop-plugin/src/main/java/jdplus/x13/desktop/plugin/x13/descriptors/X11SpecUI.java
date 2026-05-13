@@ -1,6 +1,17 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Copyright 2026 JDemetra+.
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ *      https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.x13.desktop.plugin.x13.descriptors;
 
@@ -86,8 +97,7 @@ public class X11SpecUI extends BaseX13SpecUI {
     }
 
     int period() {
-        TsDomain domain = UserInterfaceContext.INSTANCE.getDomain();
-        return domain == null ? 12 : domain.getAnnualFrequency();
+        return UserInterfaceContext.INSTANCE.getAnnualFrequency();
     }
 
     boolean isPreprocessing() {
@@ -243,13 +253,21 @@ public class X11SpecUI extends BaseX13SpecUI {
     public SeasonalFilterOption[] getFullSeasonalMA() {
         SeasonalFilterOption[] filters = x11().getFilters();
         int len = period();
-        if (filters != null && filters.length == len) {
-            return filters;
+        boolean update = false;
+        if (filters != null) {
+            if (filters.length == len) {
+                return filters;
+            } else {
+                update = true;
+            }
         }
         SeasonalFilterOption option = filters == null ? SeasonalFilterOption.Msr : filters[0];
         filters = new SeasonalFilterOption[len];
         for (int i = 0; i < len; ++i) {
             filters[i] = option;
+        }
+        if (update) {
+            update(x11().toBuilder().filters(filters).build());
         }
         return filters;
 
@@ -302,17 +320,22 @@ public class X11SpecUI extends BaseX13SpecUI {
     public SigmaVecOption[] getSigmavec() {
         SigmaVecOption[] groups = x11().getSigmaVec();
         int len = period();
-        if (groups != null && groups.length == len) {
-            return groups;
+        boolean update = false;
+        if (groups != null) {
+            if (groups.length == len) {
+                return groups;
+            } else {
+                update = true;
+            }
         }
-        //Sigmavec option = groups == null ? Sigmavec.group1 : groups[0];
-        //   Sigmavec option = Sigmavec.group1;
         groups = new SigmaVecOption[len];
         for (int i = 0; i < len; ++i) {
             groups[i] = SigmaVecOption.Group1;
         }
+        if (update) {
+            update(x11().toBuilder().sigmaVec(groups).build());
+        }
         return groups;
-
     }
 
     public void setSigmavec(SigmaVecOption[] sigmavec) {
@@ -337,13 +360,17 @@ public class X11SpecUI extends BaseX13SpecUI {
 
     private static final int MODE_ID = 0, SEAS_ID = 1, FORECAST_ID = 2, BACKCAST_ID = 12, LSIGMA_ID = 3, USIGMA_ID = 4, AUTOTREND_ID = 5,
             TREND_ID = 6, SEASONMA_ID = 7, FULLSEASONMA_ID = 8, CALENDARSIGMA_ID = 9, SIGMAVEC_ID = 10, EXCLUDEFCST_ID = 11, BIAS_ID = 12;
+    
+    public boolean hasFrequency(){
+        return regarima().getBasic().getFrequency()>1;
+    }
 
     @Messages({
         "x11SpecUI.calendarsigmaDesc.name=Calendarsigma",
-        "x11SpecUI.calendarsigmaDesc.desc=[calendarsigma] Specifies if the standard errors used for extreme value detection and adjustment are computed separately for each calendar month (quarter), or separately for two complementary sets of calendar months (quarters)."
+        "x11SpecUI.calendarsigmaDesc.desc=[calendarsigma] Specifies if the standard errors used for extreme value detection and adjustment are computed separately for each calendar period, or separately for two complementary sets of calendar periods."
     })
     private EnhancedPropertyDescriptor calendarsigmaDesc() {
-        if (!x11().isSeasonal()) {
+        if (!x11().isSeasonal() || ! hasFrequency()) {
             return null;
         }
         try {
@@ -382,7 +409,7 @@ public class X11SpecUI extends BaseX13SpecUI {
         "x11SpecUI.sigmavecDesc.desc=[sigmavec] Specifies the two groups of periods (month or quarters) for whose irregulars a group standard error will be calculated under the calendarsigma=select option."
     })
     private EnhancedPropertyDescriptor sigmavecDesc() {
-        if (!x11().isSeasonal() || !x11().getCalendarSigma().equals(CalendarSigmaOption.Select)) {
+        if (!x11().isSeasonal() || !x11().getCalendarSigma().equals(CalendarSigmaOption.Select) || ! hasFrequency()) {
             return null;
         }
         try {
@@ -581,7 +608,7 @@ public class X11SpecUI extends BaseX13SpecUI {
         "x11SpecUI.fullseasonmaDesc.desc=[seasonalma] Details on specifc seasonalma for the different periods."
     })
     private EnhancedPropertyDescriptor fullseasonmaDesc() {
-        if (!x11().isSeasonal()) {
+        if (!x11().isSeasonal() || ! hasFrequency()) {
             return null;
         }
         try {

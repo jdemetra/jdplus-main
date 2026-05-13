@@ -32,6 +32,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.x13.base.workspace.X13Handlers;
 
 import org.openide.util.ImageUtilities;
@@ -83,7 +84,7 @@ public class RegArimaSpecManager extends AbstractWorkspaceItemManager<RegArimaSp
 
     @Override
     public Action getPreferredItemAction(Id child) {
-         final WorkspaceItem<RegArimaSpec> xdoc = WorkspaceFactory.getInstance().getActiveWorkspace().searchDocument(child, RegArimaSpec.class);
+        final WorkspaceItem<RegArimaSpec> xdoc = WorkspaceFactory.getInstance().getActiveWorkspace().searchDocument(child, RegArimaSpec.class);
         if (xdoc == null || xdoc.getElement() == null) {
             return null;
         }
@@ -98,7 +99,7 @@ public class RegArimaSpecManager extends AbstractWorkspaceItemManager<RegArimaSp
     @Override
     public Icon getManagerIcon() {
         return ImageUtilities.loadImageIcon("jdplus/x13/desktop/plugin/x13/api/blog_16x16.png", false);
-   }
+    }
 
     @Override
     public Icon getItemIcon(WorkspaceItem<RegArimaSpec> doc) {
@@ -124,14 +125,16 @@ public class RegArimaSpecManager extends AbstractWorkspaceItemManager<RegArimaSp
         }
         final RegArimaSpecUI ui = new RegArimaSpecUI(xdoc.getElement(), xdoc.isReadOnly());
         Frame owner = WindowManager.getDefault().getMainWindow();
-        PropertiesDialog propDialog =
-                new PropertiesDialog(owner, true, ui,
-                new AbstractAction("OK") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                xdoc.setElement(ui.getCore());
-            }
-        });
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(xdoc.getElement().getFrequency());
+        PropertiesDialog propDialog
+                = new PropertiesDialog(owner, true, ui,
+                        new AbstractAction("OK") {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        xdoc.setElement(ui.getCore());
+                        UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+                    }
+                });
         propDialog.setTitle(xdoc.getDisplayName());
         propDialog.setLocationRelativeTo(owner);
         propDialog.setVisible(true);

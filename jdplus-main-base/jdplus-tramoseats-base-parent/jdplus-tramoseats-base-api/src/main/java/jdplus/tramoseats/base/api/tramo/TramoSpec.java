@@ -34,7 +34,7 @@ import lombok.NonNull;
  */
 @Development(status = Development.Status.Beta)
 @lombok.Value
-@lombok.Builder(toBuilder = true,  buildMethodName = "buildWithoutValidation")
+@lombok.Builder(toBuilder = true, buildMethodName = "buildWithoutValidation")
 public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecification {
 
     public static final String METHOD = "tramo";
@@ -47,6 +47,8 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
     public static final TramoSpec DEFAULT = TramoSpec.builder().build();
 
+    @lombok.EqualsAndHashCode.Exclude
+    private int frequency;
     /**
      * Gets the predefined Arima specification. The AutoModel and the Arima
      * properties are mutually exclusive specifications: Related TRAMO options:
@@ -59,10 +61,8 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
     /**
      * Gets the specifications related to the transformation of the original
-     * series. Related TRAMO options: LAM, FCT, UNITS.
-     * -- SETTER --
-     * Sets the specifications related to the transformation of the original
-     * series.
+     * series. Related TRAMO options: LAM, FCT, UNITS. -- SETTER -- Sets the
+     * specifications related to the transformation of the original series.
      *
      * @return The transform specifications
      * @param transform The new transform specifications. Should not be null
@@ -83,9 +83,7 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
     /**
      * Gets options related to the estimation routine Related TRAMO options:
-     * TOL, TYPE.
-     * -- SETTER --
-     * Sets new options for the estimation routine.
+     * TOL, TYPE. -- SETTER -- Sets new options for the estimation routine.
      *
      * @param estimate The new options
      * @return
@@ -95,9 +93,8 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
     /**
      * Gets the options for the automatic outliers detection Related TRAMO
-     * options: IATIP, AIO, TC, VA
-     * -- SETTER --
-     * Sets the options for the automatic outliers detection.
+     * options: IATIP, AIO, TC, VA -- SETTER -- Sets the options for the
+     * automatic outliers detection.
      *
      * @return the options for automatic outliers detection.
      * @param outliers The new specifications.
@@ -107,9 +104,7 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
     /**
      * Gets the specifications for the regression model (including calendar
-     * effects).
-     * -- SETTER --
-     * Sets the specifications for the regression model.
+     * effects). -- SETTER -- Sets the specifications for the regression model.
      *
      * @param regression The new regression specifications.
      * @return The specifications for the regression model.
@@ -119,14 +114,15 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
     /**
      * Creates a new default specification builder. No transformation, no
-     * regression
-     * variables, no outliers detection, default airline model (without mean).
+     * regression variables, no outliers detection, default airline model
+     * (without mean).
      *
      * @return the builder initialized with default parameters
      */
     @LombokWorkaround
     public static Builder builder() {
         return new Builder()
+                .frequency(0)
                 .transform(TransformSpec.DEFAULT_UNUSED)
                 .estimate(EstimateSpec.DEFAULT)
                 .autoModel(AutoModelSpec.DEFAULT_DISABLED)
@@ -146,9 +142,10 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
     }
 
     @Override
-    public AlgorithmDescriptor getAlgorithmDescriptor(){
+    public AlgorithmDescriptor getAlgorithmDescriptor() {
         return DESCRIPTOR_V3;
     }
+
     /**
      * Checks that the AMI is enabled
      *
@@ -168,7 +165,7 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
          * Enables/disables the AMI.
          *
          * @param enableAutoModel
-         * @return 
+         * @return
          */
         public Builder usingAutoModel(boolean enableAutoModel) {
             if (autoModel.isEnabled() != enableAutoModel) {
@@ -193,6 +190,36 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
 
             return this;
         }
+    }
+    
+    public boolean checkFrequency(int freq) {
+        // Legacy specs have frequency set to -1 !!
+        if (frequency <= 0)
+            return true;
+        // Could be improved...
+        return regression.getInterventionVariables().isEmpty() && regression.getOutliers().isEmpty()
+                && regression.getRamps().isEmpty() && regression.getRamps().isEmpty();
+    }
+
+    public TramoSpec setFrequency(int freq) {
+        if (freq == frequency) {
+            // Nothing to do
+            return this;
+        }
+        Builder builder = toBuilder().frequency(freq);
+        if (frequency <= 0) {
+            // Nothing to check
+            return builder.buildWithoutValidation();
+        }
+        // Remove pre-specified variables (keeping them would mean a lot of checks/conversions/hypotheses...)
+        // We should perhaps change the calendar effects
+        builder.regression(regression.toBuilder()
+                .clearOutliers()
+                .clearInterventionVariables()
+                .clearRamps()
+                .clearUserDefinedVariables()
+                .build());
+        return builder.buildWithoutValidation();
     }
 
     //<editor-fold defaultstate="collapsed" desc="Default Specifications">
@@ -267,7 +294,6 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
                 .usingAutoModel(true)
                 .build();
 
-
         TR5 = TramoSpec.builder()
                 .transform(TransformSpec.DEFAULT_AUTO)
                 .outliers(o)
@@ -315,7 +341,8 @@ public final class TramoSpec implements Validatable<TramoSpec>, ProcSpecificatio
             case "TRfull", "trfull" -> {
                 return TRfull;
             }
-            default -> throw new TramoException();
+            default ->
+                throw new TramoException();
         }
     }
     //</editor-fold>

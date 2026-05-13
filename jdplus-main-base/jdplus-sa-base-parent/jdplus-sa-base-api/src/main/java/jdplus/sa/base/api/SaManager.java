@@ -58,7 +58,7 @@ public class SaManager {
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
-                return fac.processor(dspec).process(series, context, log);
+                return fac.processor(dspec.setFrequency(series.getAnnualFrequency())).process(series, context, log);
             }
         }
         return null;
@@ -66,13 +66,14 @@ public class SaManager {
 
     public SaEstimation process(SaDefinition def, ModellingContext context, boolean verbose) {
         List<SaProcessingFactory> all = processors();
-        SaSpecification spec = def.activeSpecification();
+        SaSpecification spec = def.getEstimationSpec();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
                 ProcessingLog log = verbose ? new DefaultProcessingLog() : ProcessingLog.dummy();
-                SaProcessor processor = fac.processor(dspec);
-                GenericExplorable rslt = processor.process(def.getTs().getData(), context, log);
+                TsData data = def.getTs().getData();
+                SaProcessor processor = fac.processor(spec);
+                GenericExplorable rslt = processor.process(data, context, log);
                 if (rslt.isValid()) {
                     List<String> warnings = new ArrayList<>();
                     List<ProcDiagnostic> tests = new ArrayList<>();

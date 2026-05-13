@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2026 JDemetra+.
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ *      https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.x13.desktop.plugin.x13.documents;
 
@@ -20,6 +31,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.x13.base.workspace.X13Handlers;
 
 import org.openide.util.ImageUtilities;
@@ -69,7 +81,7 @@ public class X13SpecManager extends AbstractWorkspaceItemManager<X13Spec> {
 
     @Override
     public Action getPreferredItemAction(final Id child) {
-         final WorkspaceItem<X13Spec> xdoc = WorkspaceFactory.getInstance().getActiveWorkspace().searchDocument(child, X13Spec.class);
+        final WorkspaceItem<X13Spec> xdoc = WorkspaceFactory.getInstance().getActiveWorkspace().searchDocument(child, X13Spec.class);
         if (xdoc == null || xdoc.getElement() == null) {
             return null;
         }
@@ -84,7 +96,7 @@ public class X13SpecManager extends AbstractWorkspaceItemManager<X13Spec> {
     @Override
     public Icon getManagerIcon() {
         return ImageUtilities.loadImageIcon("jdplus/x13/desktop/plugin/x13/api/blog_16x16.png", false);
-   }
+    }
 
     @Override
     public Icon getItemIcon(WorkspaceItem<X13Spec> doc) {
@@ -111,19 +123,21 @@ public class X13SpecManager extends AbstractWorkspaceItemManager<X13Spec> {
         }
         final X13SpecUI ui = new X13SpecUI(xdoc.getElement(), xdoc.isReadOnly());
         Frame owner = WindowManager.getDefault().getMainWindow();
-        PropertiesDialog propDialog =
-                new PropertiesDialog(owner, true, ui,
-                new AbstractAction("OK") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                xdoc.setElement(ui.getCore());
-            }
-        });
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(xdoc.getElement().getFrequency());
+        PropertiesDialog propDialog
+                = new PropertiesDialog(owner, true, ui,
+                        new AbstractAction("OK") {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        xdoc.setElement(ui.getCore());
+                        UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+                    }
+                });
         propDialog.setTitle(xdoc.getDisplayName());
         propDialog.setLocationRelativeTo(owner);
         propDialog.setVisible(true);
     }
-    
+
     @Override
     public Class<X13Spec> getItemClass() {
         return X13Spec.class;

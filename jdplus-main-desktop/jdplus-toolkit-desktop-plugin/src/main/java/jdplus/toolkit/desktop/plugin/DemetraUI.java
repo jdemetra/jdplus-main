@@ -122,7 +122,7 @@ public final class DemetraUI implements PropertyChangeSource.WithWeakListeners, 
 
     @SwingProperty
     public static final String PRESPECIFIED_OUTLIERS_EDITOR_PROPERTY = "prespecifiedOutliersEditor";
-    private static final OutlierDescriptorsEditor.PrespecificiedOutliersEditor DEFAULT_PRESPECIFIED_OUTLIERS_EDITOR = OutlierDescriptorsEditor.PrespecificiedOutliersEditor.LIST;
+    private static final OutlierDescriptorsEditor.PrespecificiedOutliersEditor DEFAULT_PRESPECIFIED_OUTLIERS_EDITOR = OutlierDescriptorsEditor.PrespecificiedOutliersEditor.CALENDAR_GRID;
     private OutlierDescriptorsEditor.PrespecificiedOutliersEditor prespecifiedOutliersEditor = DEFAULT_PRESPECIFIED_OUTLIERS_EDITOR;
 
     public OutlierDescriptorsEditor.PrespecificiedOutliersEditor getPrespecifiedOutliersEditor() {

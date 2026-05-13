@@ -31,9 +31,9 @@ import jdplus.toolkit.base.api.util.Validatable;
  */
 @Development(status = Development.Status.Beta)
 @lombok.Value
-@lombok.Builder(toBuilder = true,  buildMethodName = "buildWithoutValidation")
-public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpecification{
-    
+@lombok.Builder(toBuilder = true, buildMethodName = "buildWithoutValidation")
+public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpecification {
+
     public static final String METHOD = "tramoseats";
     public static final String VERSION_LEGACY = "0.1.0.0";
     public static final String VERSION_V3 = "3.0.0";
@@ -49,7 +49,7 @@ public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpec
 
     @lombok.NonNull
     private TramoSpec tramo;
-    
+
     @lombok.NonNull
     private DecompositionSpec seats;
     @lombok.NonNull
@@ -75,6 +75,20 @@ public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpec
         return this.equals(DEFAULT);
     }
 
+    @Override
+    public TramoSeatsSpec setFrequency(int freq) {
+        if (freq == tramo.getFrequency()) {
+            return this;
+        }
+        if (tramo.checkFrequency(freq))
+                    return toBuilder().tramo(tramo.toBuilder().frequency(freq).buildWithoutValidation()).buildWithoutValidation();
+else        return toBuilder().tramo(tramo.setFrequency(freq)).buildWithoutValidation();
+   }
+    
+    @Override
+    public int getFrequency(){
+        return tramo.getFrequency();
+    }
 
     public static class Builder implements Validatable.Builder<TramoSeatsSpec> {
     }
@@ -88,7 +102,7 @@ public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpec
 
     static {
         RSA0 = TramoSeatsSpec.DEFAULT;
- 
+
         RSA1 = TramoSeatsSpec.builder()
                 .tramo(TramoSpec.TR1)
                 .seats(DecompositionSpec.DEFAULT)
@@ -148,7 +162,7 @@ public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpec
         }
     }
     //</editor-fold>
-    
+
     @Override
     public String display() {
         if (this == RSA0) {
@@ -197,5 +211,5 @@ public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpec
     }
 
     private static final String SMETHOD = "TS";
-    
+
 }
