@@ -18,7 +18,6 @@ package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import java.util.function.IntFunction;
-import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 
 /**
  *

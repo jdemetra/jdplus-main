@@ -20,6 +20,8 @@ import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.x13.base.api.x11.BiasCorrection;
 import jdplus.x13.base.api.x11.CalendarSigmaOption;
+import jdplus.x13.base.api.x11.CrossValidationSeasonalFilterOptions;
+import jdplus.x13.base.api.x11.CrossValidationTable;
 import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import jdplus.x13.base.api.x11.SigmaVecOption;
 import jdplus.x13.base.api.x11.X11Spec;
@@ -42,6 +44,8 @@ public class X11SpecMapping {
             CALENDARSIGMA = "calendarsigma",
             SIGMAVEC = "sigmavec",
             EXCLUDEFCAST = "excludeforcast",
+            CROSS_VALIDATION_SELECTION_TABLE = "crossvalidationselectiontable",
+            CROSS_VALIDATION_SEASONAL_FILTER_OPTIONS = "crossvalidationseasonalfilteroptions",
             BIAS = "bias";
 
     public InformationSet write(X11Spec spec, boolean verbose) {
@@ -94,6 +98,11 @@ public class X11SpecMapping {
         if (verbose || spec.isExcludeForecast()) {
             info.add(EXCLUDEFCAST, spec.isExcludeForecast());
         }
+        if (verbose || spec.getFilters()[0].equals(SeasonalFilterOption.CrossValidation)) {
+            info.add(CROSS_VALIDATION_SELECTION_TABLE, spec.getCrossValidationSelectionTable().toString());
+            info.add(CROSS_VALIDATION_SEASONAL_FILTER_OPTIONS, spec.getCrossValidationSeasonalFilterOptions());
+        }
+
         if (verbose
                 || (spec.getMode() == DecompositionMode.LogAdditive
                 && spec.getBias() != BiasCorrection.Legacy)) {
@@ -161,6 +170,16 @@ public class X11SpecMapping {
         Boolean excludefcst = info.get(EXCLUDEFCAST, Boolean.class);
         if (excludefcst != null) {
             builder.excludeForecast(excludefcst);
+        }
+
+        String crossvalidationselectiontable = info.get(CROSS_VALIDATION_SELECTION_TABLE, String.class);
+        if (crossvalidationselectiontable != null) {
+            builder.crossValidationSelectionTable(CrossValidationTable.valueOf(crossvalidationselectiontable));
+        }
+
+        String crossvalidationseasonalfilteroptions = info.get(CROSS_VALIDATION_SEASONAL_FILTER_OPTIONS, String.class);
+        if (crossvalidationseasonalfilteroptions != null) {
+            builder.crossValidationSeasonalFilterOptions(CrossValidationSeasonalFilterOptions.valueOf(crossvalidationseasonalfilteroptions));
         }
 
         String sbias = info.get(BIAS, String.class);

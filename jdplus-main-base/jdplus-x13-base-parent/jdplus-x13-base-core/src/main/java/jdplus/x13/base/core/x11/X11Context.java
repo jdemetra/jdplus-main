@@ -27,6 +27,8 @@ import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.LocalPolynomialFilters;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.x13.base.api.x11.BiasCorrection;
+import jdplus.x13.base.api.x11.CrossValidationQualityCriteria;
+import jdplus.x13.base.api.x11.CrossValidationTable;
 import lombok.experimental.NonFinal;
 
 /**
@@ -65,6 +67,12 @@ public class X11Context {
     @NonFinal
     IExtremeValuesCorrector extremeValuesCorrector;
 
+    /*Cross validation seasonal filter options*/
+    SeasonalFilterOption[] cvsfo;
+    CrossValidationTable[] cvts;
+    CrossValidationTable cvt;
+    CrossValidationQualityCriteria cvqc;
+
     public static Builder builder() {
         Builder builder = new Builder();
         builder.mode = DecompositionMode.Multiplicative;
@@ -79,6 +87,17 @@ public class X11Context {
         builder.upperSigma = 2.5;
         builder.firstPeriod = 0;
         builder.bias = BiasCorrection.Legacy;
+        builder.cvsfo = new SeasonalFilterOption[]{SeasonalFilterOption.S3X1, SeasonalFilterOption.S3X3, SeasonalFilterOption.S3X5, SeasonalFilterOption.S3X9, SeasonalFilterOption.S3X15};
+        builder.cvts = new CrossValidationTable[]{CrossValidationTable.B3,
+            CrossValidationTable.B4,
+            CrossValidationTable.B8,
+            CrossValidationTable.C4,
+            CrossValidationTable.C9,
+            CrossValidationTable.D4,
+            CrossValidationTable.D8,
+            CrossValidationTable.D9}; //all, that can be selected
+        builder.cvt = CrossValidationTable.B3;
+        builder.cvqc = CrossValidationQualityCriteria.RMSE;
         return builder;
     }
 
@@ -105,11 +124,14 @@ public class X11Context {
         if (nf < 0) {
             nf = -nf * p;
         }
+
+        SeasonalFilterOption[] cvsfo = spec.getCrossValidationSeasonalFilterOptions().getValue();
+
         return builder().mode(spec.getMode())
                 .seasonal(spec.isSeasonal())
                 .trendFilterLength(spec.getHendersonFilterLength())
                 .period(p)
-                .firstPeriod(data.getStart().annualPosition()) 
+                .firstPeriod(data.getStart().annualPosition())
                 .lowerSigma(spec.getLowerSigma())
                 .upperSigma(spec.getUpperSigma())
                 .calendarSigma(spec.getCalendarSigma())
@@ -120,6 +142,10 @@ public class X11Context {
                 .initialSeasonalFilter(filters)
                 .finalSeasonalFilter(filters)
                 .bias(spec.getBias())
+                .cvts(spec.getCrossValidationTables())
+                .cvt(spec.getCrossValidationSelectionTable())
+                .cvqc(spec.getCrossValidationQualityCriteria())
+                .cvsfo(cvsfo)
                 .build();
     }
 
@@ -141,12 +167,14 @@ public class X11Context {
 
     /**
      * position in the period of the idx-th data
+     *
      * @param idx
-     * @return 
+     * @return
      */
-    public int getPosition(int idx){
-        return idx == 0 ? firstPeriod : (firstPeriod+idx)%period;
+    public int getPosition(int idx) {
+        return idx == 0 ? firstPeriod : (firstPeriod + idx) % period;
     }
+
     public DoubleSeq remove(DoubleSeq l, DoubleSeq r) {
         if (isMultiplicative()) {
             return DoubleSeq.onMapping(l.length(), i -> l.get(i) / r.get(i));
@@ -261,13 +289,35 @@ public class X11Context {
         return true;
     }
 
+    /**
+     * CrossValidation calculation is just for all periods.
+     */
+    public boolean isCrossValidation() {
+
+        for (SeasonalFilterOption option : finalSeasonalFilter) {
+            if (!SeasonalFilterOption.CrossValidation.equals(option)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //Is this the table where the CV caluculation ist done to select the filter
+    public boolean isCrossValidationTable(CrossValidationTable t) {
+
+        return cvt.equals(t);
+    }
+
     public SeasonalFilterOption[] getInitialSeasonalFilter() {
 
         SeasonalFilterOption[] result = new SeasonalFilterOption[period];
         for (int i = 0; i < period; i++) {
             result[i] = initialSeasonalFilter[i];
+            if (SeasonalFilterOption.CrossValidation.equals(initialSeasonalFilter[i])) {
+                result[i] = SeasonalFilterOption.S3X9;
+            }
             if (SeasonalFilterOption.Msr.equals(initialSeasonalFilter[i]) || SeasonalFilterOption.X11Default.equals(initialSeasonalFilter[i])) {
-                result[i] = SeasonalFilterOption.S3X3;
+                result[i] = SeasonalFilterOption.S3X3; 
             }
         }
         return result;
@@ -280,8 +330,10 @@ public class X11Context {
         SeasonalFilterOption[] result = new SeasonalFilterOption[period];
         for (int i = 0; i < period; i++) {
             result[i] = finalSeasonalFilter[i];
-            if (SeasonalFilterOption.Msr.equals(finalSeasonalFilter[i]) || SeasonalFilterOption.X11Default.equals(finalSeasonalFilter[i])) {
-                result[i] = SeasonalFilterOption.S3X5;
+            if (SeasonalFilterOption.CrossValidation.equals(initialSeasonalFilter[i])) {
+                result[i] = SeasonalFilterOption.S3X9;
+            } else if (SeasonalFilterOption.Msr.equals(finalSeasonalFilter[i]) || SeasonalFilterOption.X11Default.equals(finalSeasonalFilter[i])) {
+                result[i] = SeasonalFilterOption.S3X5; 
             }
         }
         return result;
