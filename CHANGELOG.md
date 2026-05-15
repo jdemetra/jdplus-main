@@ -10,7 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - ![STAT] ![UI] Add cross-validation algorithm for seasonal filter selection in the X-11 algorithm, including updates to core routines and the user interface
-- ![STAT] Add frequency in SA specifications
+- ![STAT] ![UI] Add frequency in SA specifications
 
 ### Changed
 
