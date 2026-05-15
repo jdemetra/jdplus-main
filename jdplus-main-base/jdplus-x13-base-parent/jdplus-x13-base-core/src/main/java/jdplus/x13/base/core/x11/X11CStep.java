@@ -5,6 +5,8 @@
  */
 package jdplus.x13.base.core.x11;
 
+import java.util.EnumMap;
+import java.util.Map;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
@@ -16,6 +18,8 @@ import jdplus.x13.base.core.x11.filter.X11SeasonalFilterProcessor;
 import jdplus.x13.base.core.x11.filter.X11SeasonalFiltersFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.AsymmetricEndPoints;
 import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.x13.base.api.x11.CrossValidationTable;
+import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import jdplus.x13.base.core.x11.filter.DummyFilter;
 import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 
@@ -30,9 +34,17 @@ public class X11CStep {
 
     private DoubleSeq refSeries;
     private int c2drop;
+    private SeasonalFilterOption[] cvSeasonalFilter;
+    private final Map<CrossValidationTable, Map<String, String>> resultCV = new EnumMap<>(CrossValidationTable.class);
 
     public void process(DoubleSeq refSeries, DoubleSeq input, X11Context context) {
+        SeasonalFilterOption[] sfocv = null;
+        process(refSeries, input, context, sfocv);
+    }
+
+    public void process(DoubleSeq refSeries, DoubleSeq input, X11Context context, SeasonalFilterOption[] sfocv) {
         this.refSeries = refSeries;
+        this.cvSeasonalFilter = sfocv;
         c1Step(context, input);
         c2Step(context);
         c4Step(context);
@@ -67,7 +79,11 @@ public class X11CStep {
 
     private void c5Step(X11Context context) {
         if (context.isSeasonal()) {
-            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+            if (cvSeasonalFilter == null) {
+                cvSeasonalFilter = X11Utility.getCrossvalidationFilter(context, CrossValidationTable.C4, c4, resultCV);
+            }
+            SeasonalFilterOption[] filters = cvSeasonalFilter != null ? cvSeasonalFilter : context.getInitialSeasonalFilter();
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), filters);
             c5a = processor.process(c4, context.getPosition(c2drop));
             c5 = DefaultSeasonalNormalizer.normalize(c5a, c2drop, context);
         } else {
@@ -117,7 +133,11 @@ public class X11CStep {
 
     private void cFinalStep(X11Context context) {
         if (context.isSeasonal()) {
-            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
+            if (cvSeasonalFilter == null) {
+                cvSeasonalFilter = X11Utility.getCrossvalidationFilter(context, CrossValidationTable.C9, c9, resultCV);
+            }
+            SeasonalFilterOption[] filters = cvSeasonalFilter != null ? cvSeasonalFilter : context.getFinalSeasonalFilter();
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), filters);
             c10a = processor.process(c9, context.getPosition(0));
             c10 = DefaultSeasonalNormalizer.normalize(c10a, 0, context);
         } else {

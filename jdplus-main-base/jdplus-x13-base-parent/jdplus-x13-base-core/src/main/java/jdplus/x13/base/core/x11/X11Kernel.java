@@ -17,6 +17,8 @@ import jdplus.x13.base.core.x11.pseudoadd.X11BStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11CStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11DStepPseudoAdd;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
 import jdplus.toolkit.base.api.data.DoublesMath;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
@@ -24,6 +26,7 @@ import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.x13.base.api.x11.BiasCorrection;
 import jdplus.x13.base.api.x11.CalendarSigmaOption;
+import jdplus.x13.base.api.x11.CrossValidationTable;
 import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.CopyEndPoints;
 
@@ -67,13 +70,13 @@ public class X11Kernel {
         DoubleSeq data = input.getValues();
         context = X11Context.of(spec, input);
 
-        if (context.isPseudoAdd()) {
+        if (context.isPseudoAdd()) { 
             bstep = new X11BStepPseudoAdd();
             bstep.process(data, context);
             cstep = new X11CStepPseudoAdd(bstep.getB7(), bstep.getB13());
-            cstep.process(data, bstep.getB20(), context);
+            cstep.process(data, bstep.getB20(), context, bstep.getCvSeasonalFilter());
             dstep = new X11DStepPseudoAdd(cstep.getC7(), cstep.getC13(), cstep.getC20());
-            dstep.process(data, cstep.getC20(), context);
+            dstep.process(data, cstep.getC20(), context, cstep.getCvSeasonalFilter());
         } else {
             if (context.isLogAdd()) {
                 data = data.log();
@@ -81,9 +84,9 @@ public class X11Kernel {
             bstep = new X11BStep();
             bstep.process(data, context);
             cstep = new X11CStep();
-            cstep.process(data, bstep.getB20(), context);
+            cstep.process(data, bstep.getB20(), context, bstep.getCvSeasonalFilter());
             dstep = new X11DStep();
-            dstep.process(data, cstep.getC20(), context);
+            dstep.process(data, cstep.getC20(), context,cstep.getCvSeasonalFilter());
         }
         return buildResults(timeSeries.getStart(), spec);
     }
@@ -138,6 +141,12 @@ public class X11Kernel {
         int nb = spec.getBackcastHorizon() >= 0 ? spec.getBackcastHorizon() : -spec.getBackcastHorizon() * start.annualFrequency();
         int nf = spec.getForecastHorizon() >= 0 ? spec.getForecastHorizon() : -spec.getForecastHorizon() * start.annualFrequency();
 
+        Map<CrossValidationTable, Map<String, String>> resultCV = new EnumMap<>(CrossValidationTable.class);
+
+        resultCV.putAll(bstep.getResultCV());
+        resultCV.putAll(cstep.getResultCV());
+        resultCV.putAll(dstep.getResultCV());
+
         // bias correction for s // sa // t // i
         X11Results.Builder builder = X11Results.builder()
                 .nbackcasts(nb)
@@ -187,7 +196,8 @@ public class X11Kernel {
                 .iCRatio(dstep.getICRatio())
                 .finalHendersonFilterLength(dstep.getFinalHendersonFilterLength())
                 .finalSeasonalFilter(dstep.getSeasFilter())
-                .mode(spec.getMode());
+                .mode(spec.getMode())
+                .resultCV(resultCV);
 
         return finalResults(builder, start, spec).build();
     }

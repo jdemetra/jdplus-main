@@ -70,6 +70,10 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
     protected int forecastHorizon, backcastHorizon;
     protected boolean excludeFcast;
 
+     public void setSweights(DoubleSeq sweights) {
+        this.sweights = sweights;
+    }
+    
     /**
      * Searches the extreme values in a given series
      *
@@ -469,4 +473,37 @@ public class DefaultExtremeValuesCorrector implements IExtremeValuesCorrector {
         lsigma = lsig;
         usigma = usig;
     }
+    
+      public DoubleSeq computeCVCorrections(DoubleSeq s, int period) {
+        this.period = period;
+
+        int n = s.length();
+        double[] ns = new double[n];
+        int beg = start;
+        double[] avgs = null;
+        for (int i = 0; i < n; i++) {
+        
+                // correct value
+                double x = 0 ;
+                int[] pos;
+                pos = searchPositionsForOutlierCorrection(i, period);
+                if (pos != null) {
+                    for (int k = 0; k < 4; k++) {
+                        x += s.get(pos[k]);
+                    }
+                    x *= 1.0 / (4.0);
+                    ns[i] = x;
+                } else {
+                    if (avgs == null) {
+                        avgs = periodAverages(s.drop(start, n), period);
+                    }
+                    ns[i] = avgs[(beg + i) % period];
+                }
+            
+        }
+        return DoubleSeq.of(ns);
+        
+       
+    }
+    
 }

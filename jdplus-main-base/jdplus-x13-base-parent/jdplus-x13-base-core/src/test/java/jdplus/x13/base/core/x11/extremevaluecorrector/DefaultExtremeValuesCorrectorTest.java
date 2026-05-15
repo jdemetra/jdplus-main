@@ -4,13 +4,9 @@
  */
 package jdplus.x13.base.core.x11.extremevaluecorrector;
 
-import java.util.Arrays;
-import jdplus.sa.base.api.DecompositionMode;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.x13.base.core.x11.X11Context;
 
 /**
  *
@@ -27,7 +23,7 @@ public class DefaultExtremeValuesCorrectorTest {
         DoubleSeq s = DoubleSeq.of(data);
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation = {11.40175425099138};
-        assertArrayEquals(expectedStandardDeviation, actualStandardDeviation, 0.00000001);
+    Assert.assertArrayEquals(expectedStandardDeviation, actualStandardDeviation, 0.00000001);
     }
 
     @Test
@@ -40,7 +36,7 @@ public class DefaultExtremeValuesCorrectorTest {
         double[] actualStandardDeviation = dEV.calcStdev(s);
 
         double[] expectedStandardDeviation_new = {11.979148550710939, 11.979148550710939, 11.979148550710939, 11.979148550710939, 11.979148550710939};
-        assertArrayEquals(expectedStandardDeviation_new, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_new, actualStandardDeviation, 0.00000001);
     }
 
     @Test
@@ -53,7 +49,7 @@ public class DefaultExtremeValuesCorrectorTest {
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation_old = {11.979148550710939, 11.979148550710939, 11.979148550710939, 12.556538801224908, 12.556538801224908, 12.55653880122490};
         // if the last year is not complet it is used in addtion to the five complete years
-        assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
     }
 
 
@@ -66,7 +62,7 @@ public class DefaultExtremeValuesCorrectorTest {
         DoubleSeq s = DoubleSeq.of(data);
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation_old = {11.979148550710939, 11.979148550710939, 11.979148550710939, 13.133925536563698, 13.133925536563698, 13.133925536563698};
-        assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
     }
 
     @Test
@@ -78,7 +74,7 @@ public class DefaultExtremeValuesCorrectorTest {
         DoubleSeq s = DoubleSeq.of(data);
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation_old = {11.979148550710939, 11.979148550710939, 11.979148550710939, 13.711309200802088, 13.711309200802088, 13.711309200802088};
-        assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
     }
 
     @Test
@@ -93,7 +89,7 @@ public class DefaultExtremeValuesCorrectorTest {
         DoubleSeq s = DoubleSeq.of(data);
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation_newnew = {11.979148550710939, 11.979148550710939, 11.979148550710939, 15.604486534327235, 15.604486534327235, 15.604486534327235};
-        assertArrayEquals(expectedStandardDeviation_newnew, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_newnew, actualStandardDeviation, 0.00000001);
     }
 
 
@@ -110,7 +106,7 @@ public class DefaultExtremeValuesCorrectorTest {
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation_new = {12.556538801224908, 12.556538801224908, 12.556538801224908, 12.864680330268607, 12.864680330268607, 12.86468033026860};
         // if the last year is not complet it is used in addtion to the five complete years
-        assertArrayEquals(expectedStandardDeviation_new, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_new, actualStandardDeviation, 0.00000001);
     }
 
     @Test
@@ -127,7 +123,7 @@ public class DefaultExtremeValuesCorrectorTest {
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation_old = {12.556538801224908};
         // if the last year is not complet it is used in addtion to the five complete years
-        assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_old, actualStandardDeviation, 0.00000001);
     }
 
     @Test
@@ -144,7 +140,7 @@ public class DefaultExtremeValuesCorrectorTest {
         double[] actualStandardDeviation = dEV.calcStdev(s);
         double[] expectedStandardDeviation_new = {11.979148550710939};//broken
         // if the last year is not complet it is used in addtion to the five complete years
-        assertArrayEquals(expectedStandardDeviation_new, actualStandardDeviation, 0.00000001);
+        org.junit.Assert.assertArrayEquals(expectedStandardDeviation_new, actualStandardDeviation, 0.00000001);
     }
 
 }

@@ -5,10 +5,12 @@
  */
 package jdplus.x13.base.core.x11;
 
+import java.util.Map;
 import jdplus.toolkit.base.api.information.GenericExplorable;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.x13.base.api.x11.CrossValidationTable;
 import jdplus.x13.base.api.x11.MsrTable;
 import jdplus.x13.base.api.x11.SeasonalFilterOption;
 
@@ -41,6 +43,8 @@ public class X11Results implements GenericExplorable {
     MsrTable d9Msr;
     SeasonalFilterOption d9filter;
     boolean d9default;
+
+    Map<CrossValidationTable, Map<String, String>> resultCV;
 
     public TsDomain getFullDomain() {
         return b1.getDomain();
