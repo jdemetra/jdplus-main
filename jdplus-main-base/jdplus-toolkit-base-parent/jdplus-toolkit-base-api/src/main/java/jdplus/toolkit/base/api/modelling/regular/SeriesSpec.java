@@ -34,14 +34,16 @@ public final class SeriesSpec {
     @lombok.NonNull
     private TimeSelector span;
     private boolean preliminaryCheck;
- 
+    private int frequency;
+    
     public static final SeriesSpec DEFAULT = SeriesSpec.builder().build();
 
     @LombokWorkaround
     public static Builder builder() {
         return new Builder()
                 .span(TimeSelector.all())
-                .preliminaryCheck(DEF_CHECK);
+                .preliminaryCheck(DEF_CHECK)
+                .frequency(0);
     }
 
     public boolean isDefault() {

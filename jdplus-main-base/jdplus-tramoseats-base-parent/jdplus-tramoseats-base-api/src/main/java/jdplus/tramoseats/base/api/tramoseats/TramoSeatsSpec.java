@@ -80,13 +80,15 @@ public final class TramoSeatsSpec implements Validatable<TramoSeatsSpec>, SaSpec
         if (freq == tramo.getFrequency()) {
             return this;
         }
-        if (tramo.checkFrequency(freq))
-                    return toBuilder().tramo(tramo.toBuilder().frequency(freq).buildWithoutValidation()).buildWithoutValidation();
-else        return toBuilder().tramo(tramo.setFrequency(freq)).buildWithoutValidation();
-   }
-    
+        if (tramo.checkFrequency(freq)) {
+            return toBuilder().tramo(tramo.toBuilder().frequency(freq).buildWithoutValidation()).buildWithoutValidation();
+        } else {
+            return toBuilder().tramo(tramo.setFrequency(freq)).buildWithoutValidation();
+        }
+    }
+
     @Override
-    public int getFrequency(){
+    public int getFrequency() {
         return tramo.getFrequency();
     }
 
