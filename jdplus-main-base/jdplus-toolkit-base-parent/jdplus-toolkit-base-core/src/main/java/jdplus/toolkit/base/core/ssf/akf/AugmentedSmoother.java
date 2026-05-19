@@ -107,7 +107,7 @@ public class AugmentedSmoother {
     }
 
     private void initSmoother(ISsf ssf) {
-        this.ssf=ssf;
+        this.ssf = ssf;
         ISsfInitialization initialization = ssf.initialization();
         int dim = initialization.getStateDim();
         int nd = initialization.getDiffuseDim();
@@ -140,7 +140,9 @@ public class AugmentedSmoother {
 
         state.a().copy(frslts.a(pos));
         A.copy(frslts.A(pos));
-        state.P().copy(frslts.P(pos));
+        if (calcvar) {
+            state.P().copy(frslts.P(pos));
+        }
     }
 
     private void iterate(int pos, boolean collapsing) {
@@ -247,11 +249,11 @@ public class AugmentedSmoother {
         if (!missing && errVariance != 0) {
             ssf.xL(pos, r, m, errVariance);
             ssf.XtL(pos, Rd, m, errVariance);
-            loading.XpZd(pos, r, err/errVariance);
+            loading.XpZd(pos, r, err / errVariance);
             DataBlockIterator rcols = Rd.columnsIterator();
             DoubleSeqCursor ecur = E.cursor();
             while (rcols.hasNext()) {
-                loading.XpZd(pos, rcols.next(), ecur.getAndNext()/errVariance);
+                loading.XpZd(pos, rcols.next(), ecur.getAndNext() / errVariance);
             }
         } else {
             dynamics.XT(pos, r);
