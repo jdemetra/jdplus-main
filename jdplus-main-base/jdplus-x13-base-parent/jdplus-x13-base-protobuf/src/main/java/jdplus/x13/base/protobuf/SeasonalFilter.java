@@ -42,6 +42,10 @@ public enum SeasonalFilter
    * <code>SEASONAL_FILTER_X11DEFAULT = 7;</code>
    */
   SEASONAL_FILTER_X11DEFAULT(7),
+  /**
+   * <code>SEASONAL_FILTER_CROSSVALIDATION = 8;</code>
+   */
+  SEASONAL_FILTER_CROSSVALIDATION(8),
   UNRECOGNIZED(-1),
   ;
 
@@ -86,6 +90,10 @@ public enum SeasonalFilter
    * <code>SEASONAL_FILTER_X11DEFAULT = 7;</code>
    */
   public static final int SEASONAL_FILTER_X11DEFAULT_VALUE = 7;
+  /**
+   * <code>SEASONAL_FILTER_CROSSVALIDATION = 8;</code>
+   */
+  public static final int SEASONAL_FILTER_CROSSVALIDATION_VALUE = 8;
 
 
   public final int getNumber() {
@@ -120,6 +128,7 @@ public enum SeasonalFilter
       case 5: return SEASONAL_FILTER_S3X15;
       case 6: return SEASONAL_FILTER_STABLE;
       case 7: return SEASONAL_FILTER_X11DEFAULT;
+      case 8: return SEASONAL_FILTER_CROSSVALIDATION;
       default: return null;
     }
   }
