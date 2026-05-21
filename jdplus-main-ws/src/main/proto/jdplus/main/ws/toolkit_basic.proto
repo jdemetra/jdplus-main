@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package jdplus.main.ws;
+
+import "jdplus/main/ws/toolkit_messages.proto";
+
+service TsFunctions {
+
+  /* Compute (y-mean(y))/stdev(y) */
+  rpc Normalize(TsFunctionInput) returns (TsFunctionOutput);
+  rpc NormalizeStream(stream TsFunctionInput) returns (stream TsFunctionOutput);
+
+  /* Basic descriptive statistics */
+  rpc Statistics(TsFunctionInput) returns (DescriptiveStatistics);
+  rpc StatisticsStream(stream TsFunctionInput) returns (stream DescriptiveStatistics);
+
+  rpc Pct(PctInput) returns (TsFunctionOutput);
+  rpc PctStream(stream PctInput) returns (stream TsFunctionOutput);
+
+  rpc Delta(DeltaInput) returns (TsFunctionOutput);
+  rpc DeltaStream(stream DeltaInput) returns (stream TsFunctionOutput);
+
+  rpc Aggregate(AggregationInput) returns (TsFunctionOutput);
+  rpc AggregateStream(stream AggregationInput) returns (stream TsFunctionOutput);
+
+  rpc HodrickPrescott(HodrickPrescottInput) returns (HodrickPrescottOutput);
+  rpc HodrickPrescottStream(stream HodrickPrescottInput) returns (stream HodrickPrescottOutput);
+
+  rpc BuildTsData(BuildTsDataInput) returns (TsFunctionOutput);
+  rpc BuildTsDataStream(stream BuildTsDataInput) returns (stream TsFunctionOutput);
+
+  rpc BuildTsDataTable(BuildTsDataTableInput) returns (BuildTsDataTableOutput);
+}
