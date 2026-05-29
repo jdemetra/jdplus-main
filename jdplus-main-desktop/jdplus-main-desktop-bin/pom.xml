@@ -105,6 +105,36 @@
             <artifactId>jdplus-x13-desktop-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.bundesbank.jdemetra.v3</groupId>
+            <artifactId>JDCompareWS</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>de.bundesbank.jdemetra.v3</groupId>
+            <artifactId>JDGit</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.bundesbank.jdemetra.v3</groupId>
+            <artifactId>CompRes</artifactId>
+            <version>0.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>de.bundesbank.jdemetra</groupId>
+            <artifactId>webservice</artifactId>
+            <version>0.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>de.bundesbank.jdemetra.v3</groupId>
+            <artifactId>OutputAdapter</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>de.bundesbank.jdemetra.v3</groupId>
+            <artifactId>TransReg</artifactId>
+            <version>0.2.4</version>
+        </dependency>
     </dependencies>
 
     <build>

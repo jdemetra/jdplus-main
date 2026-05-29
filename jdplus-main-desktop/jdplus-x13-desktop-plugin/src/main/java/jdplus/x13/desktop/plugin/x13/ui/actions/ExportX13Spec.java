@@ -103,15 +103,15 @@ public class ExportX13Spec extends NodeAction implements Presenter.Popup {
         return Stream.of(activatedNodes)
                 .filter(ExportX13Spec::isExportable)
                 .map(ItemWsNode.class::cast)
-                .map(ExportableTramoSpec::new)
+                .map(ExportableX13Spec::new)
                 .collect(Collectors.toList());
     }
 
-    private static final class ExportableTramoSpec implements Exportable {
+    private static final class ExportableX13Spec implements Exportable {
 
         private final ItemWsNode input;
 
-        public ExportableTramoSpec(ItemWsNode input) {
+        public ExportableX13Spec(ItemWsNode input) {
             this.input = input;
         }
 

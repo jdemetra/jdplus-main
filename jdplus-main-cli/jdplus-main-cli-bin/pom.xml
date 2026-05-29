@@ -196,7 +196,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>appassembler-maven-plugin</artifactId>
                 <version>${appassembler-maven-plugin.version}</version>
-                <executions>
+<!--                <executions>
                     <execution>
                         <id>assemble-step-1</id>
                         <phase>package</phase>
@@ -204,7 +204,7 @@
                             <goal>assemble</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions>-->
                 <configuration>
                     <repositoryLayout>flat</repositoryLayout>
                     <repositoryName>lib</repositoryName>
