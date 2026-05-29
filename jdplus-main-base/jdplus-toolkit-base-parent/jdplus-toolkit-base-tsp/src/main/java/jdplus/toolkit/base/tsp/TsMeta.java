@@ -73,7 +73,7 @@ public interface TsMeta<T> {
     @NonNull
     static TsMeta<LocalDateTime> onTimestamp() {
         DateTimeFormatter main = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        ObsFormat legacy = ObsFormat.builder().dateTimePattern("EEE MMM dd HH:mm:ss zzz yyyy").build();
+        ObsFormat legacy = ObsFormat.builder().dateTimePattern("EEE MMM dd HH:mm:ss zzz yyyy").locale(Locale.US).build();
         return new DefaultTsMeta<>("@timestamp",
                 Parser.onDateTimeFormatter(main, LocalDateTime::from).orElse(legacy.dateTimeParser()),
                 Formatter.onDateTimeFormatter(main));
