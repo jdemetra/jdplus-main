@@ -62,6 +62,7 @@ public class X13ProtosUtility {
             case S3X5 -> SeasonalFilter.SEASONAL_FILTER_S3X5;
             case S3X9 -> SeasonalFilter.SEASONAL_FILTER_S3X9;
             case S3X15 -> SeasonalFilter.SEASONAL_FILTER_S3X15;
+            case CrossValidation -> SeasonalFilter.SEASONAL_FILTER_CROSSVALIDATION;
             default -> SeasonalFilter.SEASONAL_FILTER_MSR;
         };
     }
@@ -75,6 +76,7 @@ public class X13ProtosUtility {
             case SEASONAL_FILTER_S3X9 -> SeasonalFilterOption.S3X9;
             case SEASONAL_FILTER_S3X15 -> SeasonalFilterOption.S3X15;
             case SEASONAL_FILTER_X11DEFAULT -> SeasonalFilterOption.X11Default;
+            case SEASONAL_FILTER_CROSSVALIDATION -> SeasonalFilterOption.CrossValidation;
             default -> SeasonalFilterOption.Msr;
         };
     }
