@@ -56,12 +56,12 @@
         <jspecify.version>1.0.0</jspecify.version>
 
         <!-- test frameworks -->
-        <junit.version>6.0.3</junit.version>
+        <junit.version>6.1.0</junit.version>
         <assertj-core.version>3.27.7</assertj-core.version>
 
         <!-- dependencies -->
         <jd2.version>2.2.6</jd2.version>
-        <protobuf.version>4.34.1</protobuf.version>
+        <protobuf.version>4.35.0</protobuf.version>
         <java-io-util.version>0.0.36</java-io-util.version>
         <java-sql-util.version>1.0.7</java-sql-util.version>
         <spreadsheet4j.version>2.6.0</spreadsheet4j.version>
@@ -75,15 +75,15 @@
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <forbiddenapis.version>3.10</forbiddenapis.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
-        <heylogs-maven-plugin.version>0.17.1</heylogs-maven-plugin.version>
-        <jdks-maven-plugin.version>1.24.0</jdks-maven-plugin.version>
+        <heylogs-maven-plugin.version>0.18.1</heylogs-maven-plugin.version>
+        <jdks-maven-plugin.version>1.23.0</jdks-maven-plugin.version>
         <jreleaser-maven-plugin.version>1.24.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
         <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-        <maven-dependency-plugin.version>3.10.0</maven-dependency-plugin.version>
+        <maven-dependency-plugin.version>3.11.0</maven-dependency-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
         <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
@@ -91,9 +91,10 @@
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
         <maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
-        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
+        <maven-site-plugin.version>3.22.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.5.6</maven-failsafe-plugin.version>
         <modernizer-maven-plugin.version>3.3.0</modernizer-maven-plugin.version>
         <nbm-maven-plugin.version>14.5</nbm-maven-plugin.version>
         <pomchecker-enforcer-rules.version>1.15.0</pomchecker-enforcer-rules.version>
@@ -319,6 +320,16 @@
                 <configuration>
                     <!-- 1.2 Disable module path for unit tests -->
                     <useModulePath>false</useModulePath>
+                    <properties>
+                        <!-- FIXME: Enable parallel execution of junit tests -->
+                        <!--                        <configurationParameters>-->
+                        <!--                            junit.jupiter.execution.parallel.enabled=true-->
+                        <!--                            junit.jupiter.execution.parallel.mode.default=concurrent-->
+                        <!--                            junit.jupiter.execution.parallel.mode.classes.default=concurrent-->
+                        <!--                            junit.jupiter.execution.parallel.config.strategy=dynamic-->
+                        <!--                            junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor=4-->
+                        <!--                        </configurationParameters>-->
+                    </properties>
                 </configuration>
             </plugin>
             <plugin>
@@ -399,7 +410,7 @@
                                 </enforceBytecodeVersion>
                                 <!-- 2.3 pomchecker-enforcer-rules -->
                                 <checkMavenCentral
-                                        implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
+                                    implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
                                     <release>false</release>
                                     <strict>false</strict>
                                 </checkMavenCentral>
@@ -486,10 +497,6 @@
                         <inherited>false</inherited>
                     </execution>
                 </executions>
-                <configuration>
-                    <versioning>semver</versioning>
-                    <tagging>prefix:v</tagging>
-                </configuration>
             </plugin>
         </plugins>
     </build>
