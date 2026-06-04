@@ -18,7 +18,9 @@ package jdplus.sa.base.core.diagnostics;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import jdplus.toolkit.base.api.information.GenericExplorable;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.core.modelling.regular.tests.TradingDaysTest;
 import jdplus.toolkit.base.core.regarima.diagnostics.RegArimaDiagnostics;
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
@@ -78,6 +80,8 @@ public class GenericSaTests implements GenericExplorable {
     private volatile ResidualTradingDaysTests tdTests;
     @lombok.Getter(lombok.AccessLevel.PRIVATE)
     private volatile OneStepAheadForecastingTest outOfSampleTest;
+    @lombok.Getter(lombok.AccessLevel.PRIVATE)
+    private volatile StatisticalTest tdMaFTest, tdOlsFTest;
 
     public int annualFrequency() {
         return linearized.getAnnualFrequency();
@@ -316,4 +320,49 @@ public class GenericSaTests implements GenericExplorable {
         return os;
     }
 
+    public StatisticalTest tradingDaysMaFTest(){
+         if (regarima == null) {
+            return null;
+        }
+        StatisticalTest t = tdMaFTest;
+        if (t == null) {
+            synchronized (this) {
+                t = tdMaFTest;
+                if (t == null) {
+                    try {
+                        TsData s = regarima.interpolatedSeries(true);
+                        t= TradingDaysTest.maTest(s, true);
+                        tdMaFTest = t;
+                    } catch (Exception err) {
+
+                    }
+                }
+            }
+        }
+        return t;
+       
+    }
+
+    public StatisticalTest tradingDaysOlsFTest(){
+         if (regarima == null) {
+            return null;
+        }
+        StatisticalTest t = tdOlsFTest;
+        if (t == null) {
+            synchronized (this) {
+                t = tdOlsFTest;
+                if (t == null) {
+                    try {
+                        TsData s = regarima.interpolatedSeries(true);
+                        t= TradingDaysTest.olsTest(s, 1, s.getAnnualFrequency());
+                        tdOlsFTest = t;
+                    } catch (Exception err) {
+
+                    }
+                }
+            }
+        }
+        return t;
+       
+    }
 }

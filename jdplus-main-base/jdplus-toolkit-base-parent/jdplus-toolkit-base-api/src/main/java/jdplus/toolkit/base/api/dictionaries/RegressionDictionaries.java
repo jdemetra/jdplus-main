@@ -72,7 +72,7 @@ public class RegressionDictionaries {
             .item(AtomicDictionary.Item.builder().name(LP).description("leap year effect").outputClass(RegressionItem.class).build())
             .item(AtomicDictionary.Item.builder().name(TD).description("trading days effect").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())
             .item(AtomicDictionary.Item.builder().name(TDDERIVED).description("derived trading day effect (contrast)").outputClass(RegressionItem.class).build())
-            .item(AtomicDictionary.Item.builder().name(TDF).description("derived trading day effect (contrast)").outputClass(StatisticalTest.class).build())
+            .item(AtomicDictionary.Item.builder().name(TDF).description("joint F-test on the trading days variables").outputClass(StatisticalTest.class).build())
             .item(AtomicDictionary.Item.builder().name(EASTER).description("easter effect").outputClass(RegressionItem.class).build())
             .item(AtomicDictionary.Item.builder().name(OUTLIERS).description("outliers").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())
             .item(AtomicDictionary.Item.builder().name(USER).description("user variables").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())

@@ -28,6 +28,8 @@ import jdplus.x13.base.api.x13.X13;
 import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.x13.base.api.x13.X13Spec;
 import java.util.Map;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.stats.StatisticalTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -77,6 +79,10 @@ public class X13FactoryTest {
                 .build();
         item.process(null, false);
         assertSame(item.getEstimation().getQuality(), ProcQuality.Good);
+//        
+//        Explorable results = item.asDocument().getResults();
+//        System.out.println(results.getData("regression.td-ftest", StatisticalTest.class));
+//        System.out.println(results.getData("adjust", String.class));
     }
     
     public static void main(String[] args){
