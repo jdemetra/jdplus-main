@@ -88,7 +88,7 @@ public class X11Dictionaries {
             .item(AtomicDictionary.Item.builder().name(D13).outputClass(TsData.class).build())
             .build();
     
-    public final String X11_ALL="x11-all", ICRATIO = "icratio", TRENDFILTER="trend-filter", SEASONALFILTERS="seasonal-filters",
+    public final String X11_ALL="x11-all", ICRATIO = "icratio", TRENDFILTER="trend-filter", D7_TRENDFILTER="d7-trend-filter", SEASONALFILTERS="seasonal-filters",
             D9_GLOBALMSR="d9-global-msr", D9_MSR = "d9-msr", D9_MSRTABLE ="d9-msr-table" ;
 
     public final Dictionary ADVANCED = AtomicDictionary.builder()
@@ -96,7 +96,8 @@ public class X11Dictionaries {
             .item(AtomicDictionary.Item.builder().name(X11_ALL).description("all X11 tables").outputClass(Matrix.class).build())
             .item(AtomicDictionary.Item.builder().name(ICRATIO).description("ic-ratio").outputClass(Double.class).build())
             .item(AtomicDictionary.Item.builder().name(TRENDFILTER).description("final henderson filter length").outputClass(Integer.class).build())
-            .item(AtomicDictionary.Item.builder().name(SEASONALFILTERS).description("final seasonal filters").outputClass(Integer.class).build())
+            .item(AtomicDictionary.Item.builder().name(D7_TRENDFILTER).description("henderson filter length computed in D7").outputClass(Integer.class).build())
+            .item(AtomicDictionary.Item.builder().name(SEASONALFILTERS).description("final seasonal filters").outputClass(String[].class).build())
             .item(AtomicDictionary.Item.builder().name(D9_GLOBALMSR).description("global moving seasonality ratio on d9").outputClass(Double.class).build())
             .item(AtomicDictionary.Item.builder().name(D9_MSR).description("moving seasonality ratio on d9").outputClass(double[].class).build())
             .item(AtomicDictionary.Item.builder().name(D9_MSRTABLE).description("moving seasonality on d9 (details)").outputClass(Matrix.class).build())

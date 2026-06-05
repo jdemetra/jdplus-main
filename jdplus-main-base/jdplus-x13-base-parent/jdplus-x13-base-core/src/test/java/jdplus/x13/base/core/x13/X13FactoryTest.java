@@ -16,6 +16,9 @@
  */
 package jdplus.x13.base.core.x13;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.processing.DefaultProcessingLog;
 import jdplus.toolkit.base.api.processing.ProcQuality;
@@ -30,6 +33,8 @@ import jdplus.x13.base.api.x13.X13Spec;
 import java.util.Map;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
+import jdplus.x13.base.api.regarima.OutlierSpec;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -79,13 +84,10 @@ public class X13FactoryTest {
                 .build();
         item.process(null, false);
         assertSame(item.getEstimation().getQuality(), ProcQuality.Good);
-//        
-//        Explorable results = item.asDocument().getResults();
-//        System.out.println(results.getData("regression.td-ftest", StatisticalTest.class));
-//        System.out.println(results.getData("adjust", String.class));
+//        Integer data = item.asDocument().getResults().getData("decomposition.d7-trend-filter", Integer.class);System.out.println(data);
     }
-    
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         testDictionaries();
     }
 

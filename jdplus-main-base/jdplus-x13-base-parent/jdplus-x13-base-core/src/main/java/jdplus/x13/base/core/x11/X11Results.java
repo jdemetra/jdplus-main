@@ -29,7 +29,7 @@ public class X11Results implements GenericExplorable {
     TsData d1, d2, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13;
 
     SeasonalFilterOption[] finalSeasonalFilter;
-    int finalHendersonFilterLength;
+    int finalHendersonFilterLength, d7HendersonFilterLength;
     DecompositionMode mode;
 
     /**
