@@ -1,0 +1,72 @@
+publiccodeYmlVersion: '0.4'
+
+name: JDemetra+
+url: https://github.com/jdemetra/jdplus-main
+landingURL: https://jdemetra.org/
+softwareType: standalone/desktop
+developmentStatus: stable
+
+platforms:
+  - windows
+  - mac
+  - linux
+
+categories:
+  - data-analytics
+  - business-intelligence
+
+description:
+  en:
+    shortDescription: >-
+      Seasonal adjustment and time series analysis tool implementing the
+      TRAMO/SEATS and X-13ARIMA-SEATS methods.
+
+    longDescription: |
+      JDemetra+ is a seasonal adjustment and time series analysis tool
+      developed by the National Bank of Belgium in collaboration with the
+      Deutsche Bundesbank, Insee and Eurostat in accordance with the
+      Guidelines of the European Statistical System (ESS).
+
+      Since 2015, JDemetra+ has been officially recommended to the members
+      of the ESS and the European System of Central Banks as the software
+      for seasonal and calendar adjustment of official statistics.
+
+      JDemetra+ implements the concepts and algorithms used in the two
+      leading seasonal adjustment methods: TRAMO/SEATS and X-13ARIMA-SEATS.
+      These methods have been re-engineered using an object-oriented
+      approach, which makes them easier to use, extend and modify.
+
+      In addition to seasonal adjustment, JDemetra+ bundles other time
+      series models useful for the production or analysis of economic
+      statistics, such as outlier detection, nowcasting, temporal
+      disaggregation or benchmarking. Version 3 offers enhanced seasonal
+      adjustment and trend estimation capabilities, including for high
+      frequency data.
+
+      Technically, JDemetra+ is a collection of reusable and extensible
+      Java components, easily accessed through a rich graphical interface.
+
+    features:
+      - Seasonal adjustment (TRAMO/SEATS and X-13ARIMA-SEATS)
+      - Outlier detection
+      - Nowcasting
+      - Temporal disaggregation
+      - Benchmarking
+      - High frequency time series analysis
+
+legal:
+  license: EUPL-1.2
+  mainCopyrightOwner: National Bank of Belgium
+
+maintenance:
+  type: internal
+
+  contacts:
+    - name: National Bank of Belgium
+      email: philippe.charles@nbb.be
+
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
+
