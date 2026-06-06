@@ -45,12 +45,15 @@ public class RegArimaDictionaries {
     
      public static final String FCAST_INSAMPLE_MEAN = "fcast-insample-mean",
             FCAST_OUTSAMPLE_MEAN = "fcast-outsample-mean",
-            FCAST_OUTSAMPLE_VARIANCE = "fcast-outsample-variance";
+            FCAST_OUTSAMPLE_VARIANCE = "fcast-outsample-variance",
+            TD_F_MA = "td_f_ma", TD_F_OLS = "td_f_ols" ;
     
     public final Dictionary REGSARIMA_DIAGNOSTICS = AtomicDictionary.builder()
             .name("regarima diagnostics")
             .item(Item.builder().name(FCAST_INSAMPLE_MEAN).description("in sample forecast mean test").outputClass(StatisticalTest.class).build())
             .item(Item.builder().name(FCAST_OUTSAMPLE_MEAN).description("out of sample forecast mean test").outputClass(StatisticalTest.class).build())
             .item(Item.builder().name(FCAST_OUTSAMPLE_VARIANCE).description("out of sample forecast variance test").outputClass(StatisticalTest.class).build())
+            .item(Item.builder().name(TD_F_MA).description("f-test on trading days, using an airline model").outputClass(StatisticalTest.class).build())
+            .item(Item.builder().name(TD_F_OLS).description("f-test on trading days, using an ols model").outputClass(StatisticalTest.class).build())
             .build();
 }

@@ -194,6 +194,7 @@ public class X11Kernel {
                 .d9filter(dstep.getD9filter())
                 // trend selection
                 .iCRatio(dstep.getICRatio())
+                .d7HendersonFilterLength(dstep.getD7HendersonFilterLength())
                 .finalHendersonFilterLength(dstep.getFinalHendersonFilterLength())
                 .finalSeasonalFilter(dstep.getSeasFilter())
                 .mode(spec.getMode())

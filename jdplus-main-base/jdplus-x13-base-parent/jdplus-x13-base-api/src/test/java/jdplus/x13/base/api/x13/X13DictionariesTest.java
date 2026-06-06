@@ -4,8 +4,6 @@
  */
 package jdplus.x13.base.api.x13;
 
-import jdplus.x13.base.api.x13.X13Dictionaries;
-
 /**
  *
  * @author PALATEJ

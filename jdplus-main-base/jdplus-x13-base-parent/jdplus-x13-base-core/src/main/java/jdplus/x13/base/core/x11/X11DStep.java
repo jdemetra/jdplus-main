@@ -44,7 +44,7 @@ public class X11DStep {
     private SeasonalFilterOption d9filter;
     private boolean d9default;
     private MsrTable d9msr;
-    private int d2drop, finalHendersonFilterLength;
+    private int d2drop, finalHendersonFilterLength, d7HendersonFilterLength;
     private double iCRatio;
     private SeasonalFilterOption[] seasFilter;
     private DoubleSeq refSeries;
@@ -137,6 +137,7 @@ public class X11DStep {
         } else {
             filter = context.trendFilter();
         }
+        d7HendersonFilterLength=filter.length();
         int ndrop = filter.length() / 2;
 
         double[] x = table(d6.length(), Double.NaN);
