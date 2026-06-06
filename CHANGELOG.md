@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![STAT] ![UI] Add cross-validation algorithm for seasonal filter selection in the X-11 algorithm, including updates to core routines and the user interface
 - ![STAT] ![UI] Add frequency in SA specifications
 - ![STAT] Add preliminary tests for the presence of trading days effects in Tramo-Seats and X13 
+- ![OTHER] Add JDemetra+ to the EU Open Source Solutions Catalogue [#912](https://github.com/jdemetra/jd3-main/issues/912)
 
 ### Changed
 
