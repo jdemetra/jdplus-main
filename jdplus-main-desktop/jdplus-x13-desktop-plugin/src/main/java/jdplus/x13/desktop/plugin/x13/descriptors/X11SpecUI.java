@@ -683,7 +683,7 @@ public class X11SpecUI extends BaseX13SpecUI {
 
     @Messages({
         "x11SpecUI.fullseasonmaDesc.name=Details on seasonal filters",
-        "x11SpecUI.fullseasonmaDesc.desc=[seasonalma] Details on specifc seasonalma for the different periods."
+        "x11SpecUI.fullseasonmaDesc.desc=[seasonalma] Details on specific seasonalma for the different periods."
     })
     private EnhancedPropertyDescriptor fullseasonmaDesc() {
         if (!x11().isSeasonal() || ! hasFrequency()) {

@@ -328,13 +328,13 @@
                     <useModulePath>false</useModulePath>
                     <properties>
                         <!-- FIXME: Enable parallel execution of junit tests -->
-<!--                        <configurationParameters>-->
-<!--                            junit.jupiter.execution.parallel.enabled=true-->
-<!--                            junit.jupiter.execution.parallel.mode.default=concurrent-->
-<!--                            junit.jupiter.execution.parallel.mode.classes.default=concurrent-->
-<!--                            junit.jupiter.execution.parallel.config.strategy=dynamic-->
-<!--                            junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor=4-->
-<!--                        </configurationParameters>-->
+                        <!--                        <configurationParameters>-->
+                        <!--                            junit.jupiter.execution.parallel.enabled=true-->
+                        <!--                            junit.jupiter.execution.parallel.mode.default=concurrent-->
+                        <!--                            junit.jupiter.execution.parallel.mode.classes.default=concurrent-->
+                        <!--                            junit.jupiter.execution.parallel.config.strategy=dynamic-->
+                        <!--                            junit.jupiter.execution.parallel.config.dynamic.max-pool-size-factor=4-->
+                        <!--                        </configurationParameters>-->
                     </properties>
                 </configuration>
             </plugin>
@@ -416,7 +416,7 @@
                                 </enforceBytecodeVersion>
                                 <!-- 2.3 pomchecker-enforcer-rules -->
                                 <checkMavenCentral
-                                        implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
+                                    implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
                                     <release>false</release>
                                     <strict>false</strict>
                                 </checkMavenCentral>
