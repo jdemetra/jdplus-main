@@ -197,13 +197,13 @@
                 <artifactId>appassembler-maven-plugin</artifactId>
                 <version>${appassembler-maven-plugin.version}</version>
                 <executions>
-<!--                    <execution>
+                    <execution>
                         <id>assemble-step-1</id>
                         <phase>package</phase>
                         <goals>
                             <goal>assemble</goal>
                         </goals>
-                    </execution>-->
+                    </execution>
                 </executions>
                 <configuration>
                     <repositoryLayout>flat</repositoryLayout>
