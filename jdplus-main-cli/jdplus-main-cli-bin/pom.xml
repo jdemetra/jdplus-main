@@ -171,6 +171,19 @@
 
     <build>
         <plugins>
+            <!-- Run integration tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Fix error on duplicated classes that are not duplicated in the assembly -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -210,7 +223,7 @@
                     <repositoryName>lib</repositoryName>
                     <endorsedDir>lib/ext</endorsedDir>
                     <copyConfigurationDirectory>true</copyConfigurationDirectory>
-                    <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties
+                    <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties --enable-native-access=ALL-UNNAMED
                     </extraJvmArguments>
                     <programs>
                         <program>

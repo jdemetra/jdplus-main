@@ -11,7 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![STAT] ![UI] Add cross-validation algorithm for seasonal filter selection in the X-11 algorithm, including updates to core routines and the user interface
 - ![STAT] ![UI] Add frequency in SA specifications
-- ![STAT] Add preliminary tests for the presence of trading days effects in Tramo-Seats and X13 
+- ![STAT] Add preliminary tests for the presence of trading days effects in Tramo-Seats and X13
 - ![OTHER] Add JDemetra+ to the EU Open Source Solutions Catalogue [#912](https://github.com/jdemetra/jd3-main/issues/912)
 
 ### Changed
@@ -26,6 +26,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix config import in ProvidersTopComponent [#963](https://github.com/jdemetra/jd3-main/issues/963)
 - ![IO] Fix parsing of legacy TS meta [#989](https://github.com/jdemetra/jd3-main/issues/989)
 - ![OTHER] Fix missing ARM-based packages in releases [#958](https://github.com/jdemetra/jd3-main/issues/958)
+- ![OTHER] Fix warnings when running CLI with Java25+ [#1002](https://github.com/jdemetra/jd3-main/issues/1002)
 
 ## [3.7.1] - 2026-03-06
 
