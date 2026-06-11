@@ -46,7 +46,7 @@ public class NbUtilities {
         NodePropertySetBuilder b = new NodePropertySetBuilder().name("Data source");
         b.with(String.class).select(dataSource, "getProviderName", null).display("Source").add();
         b.with(String.class).select(dataSource, "getVersion", null).display("Version").add();
-//        dataSource.forEach((k, v) -> b.with(String.class).selectConst(k, v).add());
+        dataSource.getParameters().forEach((k, v) -> b.with(String.class).selectConst(k, v).add());
         return b.build();
     }
 
