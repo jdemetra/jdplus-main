@@ -13,6 +13,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![STAT] ![UI] Add frequency in SA specifications
 - ![STAT] Add preliminary tests for the presence of trading days effects in Tramo-Seats and X13
 - ![OTHER] Add JDemetra+ to the EU Open Source Solutions Catalogue [#912](https://github.com/jdemetra/jd3-main/issues/912)
+- ![STAT] ![UI] Add copy spec to workspace, export spec to file and import spec from file for SA-Items in multi-docs. [#776](https://github.com/jdemetra/jdplus-main/issues/776)
+- ![STAT] ![UI] Add automatic display of additional workspace parameters like filename in Properties panel.
 
 ### Changed
 
