@@ -59,7 +59,7 @@ public class ArimaDictionaries {
             .item(Item.builder().name(BPHI).description("seasonal autoregressive parameters").outputClass(double[].class).build())
             .item(Item.builder().name(BTHETA).description("seasonal moving-average parameters").outputClass(double[].class).build())
             .item(Item.builder().name(THETA).description("regular moving-average parameter").outputClass(Double.class).type(Dictionary.EntryType.Array).build())
-            .item(Item.builder().name(PHI).description("seasonal autoregressive parameter").outputClass(Double.class).type(Dictionary.EntryType.Array).build())
+            .item(Item.builder().name(PHI).description("regular autoregressive parameter").outputClass(Double.class).type(Dictionary.EntryType.Array).build())
             .item(Item.builder().name(BTHETA).description("seasonal moving-average parameter").outputClass(Double.class).type(Dictionary.EntryType.Array).build())
             .item(Item.builder().name(BPHI).description("seasonal autoregressive parameter").outputClass(Double.class).type(Dictionary.EntryType.Array).build())
             .item(Item.builder().name(PARAMETERS).description("phi, bphi, theta, btheta").outputClass(double[].class).build())
@@ -75,7 +75,7 @@ public class ArimaDictionaries {
             .item(Item.builder().name(BD).description("seasonal differencing order").outputClass(Integer.class).build())
             .item(Item.builder().name(BQ).description("seasonal moving-average order").outputClass(Integer.class).build())
             .item(Item.builder().name(THETA).description("regular moving-average parameter").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())
-            .item(Item.builder().name(PHI).description("seasonal autoregressive parameter").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())
+            .item(Item.builder().name(PHI).description("regular autoregressive parameter").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())
             .item(Item.builder().name(BTHETA).description("seasonal moving-average parameter").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())
             .item(Item.builder().name(BPHI).description("seasonal autoregressive parameter").outputClass(RegressionItem.class).type(Dictionary.EntryType.Array).build())
             .build();
