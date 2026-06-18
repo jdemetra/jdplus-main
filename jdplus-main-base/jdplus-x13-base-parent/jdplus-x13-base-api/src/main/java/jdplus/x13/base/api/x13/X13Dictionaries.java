@@ -97,12 +97,12 @@ public class X13Dictionaries {
     
     public final Dictionary ETABLES = AtomicDictionary.builder()
             .name(E_TABLES)
-            .item(AtomicDictionary.Item.builder().name(E1).outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E2).outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E3).outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E11).outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E1).description("original series corrected for most important outliers").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E2).description("final seasonally adjusted series corrected for most important outliers").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E3).description("final Irregular corrected for most important outliers").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E11).description("robust estimation of final seasonally adjusted series").outputClass(TsData.class).build())
             .build();
-    
+
     public static final String MSTATISTICS = "m-statistics";
 
     public final String M1 = "m1", M2 = "m2", M3 = "m3", M4 = "m4";
