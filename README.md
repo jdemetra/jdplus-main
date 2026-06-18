@@ -17,7 +17,7 @@ Version 3 offers enhanced seasonal adjustment and trend estimation capabilities,
 
 Technically, JDemetra+ is a collection of reusable and extensible Java components, easily accessed through a rich graphical interface. The software is Free and Open Source Software (FOSS) developed under the EUPL licence.
 
-Its main **documentation** is available at https://jdemetra-new-documentation.netlify.app.
+Its main **documentation** is available at https://doc.jdemetra.org.
 
 [ [Installing](#installing) | [Developing](#developing) | [Contributing](#contributing) | [Licensing](#licensing) ]
 
