@@ -75,7 +75,6 @@
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <forbiddenapis.version>3.10</forbiddenapis.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
-        <heylogs-maven-plugin.version>0.18.1</heylogs-maven-plugin.version>
         <jdks-maven-plugin.version>1.23.0</jdks-maven-plugin.version>
         <jreleaser-maven-plugin.version>1.24.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
@@ -100,6 +99,7 @@
         <pomchecker-enforcer-rules.version>1.15.0</pomchecker-enforcer-rules.version>
         <protobuf-maven-plugin.version>5.1.4</protobuf-maven-plugin.version>
         <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
+        <heylogs.version>0.19.1</heylogs.version>
     </properties>
 
     <modules>
@@ -226,7 +226,7 @@
                 <plugin>
                     <groupId>com.github.nbbrd.heylogs</groupId>
                     <artifactId>heylogs-maven-plugin</artifactId>
-                    <version>${heylogs-maven-plugin.version}</version>
+                    <version>${heylogs.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>io.github.ascopes</groupId>
@@ -376,6 +376,11 @@
                         <artifactId>pomchecker-enforcer-rules</artifactId>
                         <version>${pomchecker-enforcer-rules.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>com.github.nbbrd.heylogs</groupId>
+                        <artifactId>heylogs-enforcer-rules</artifactId>
+                        <version>${heylogs.version}</version>
+                    </dependency>
                 </dependencies>
                 <executions>
                     <execution>
@@ -420,6 +425,9 @@
                                     <release>false</release>
                                     <strict>false</strict>
                                 </checkMavenCentral>
+                                <!-- heylogs-enforcer-rules -->
+                                <checkChangelog/>
+                                <formatChangelog/>
                             </rules>
                         </configuration>
                     </execution>
@@ -489,18 +497,6 @@
                             <goal>check</goal>
                             <goal>testCheck</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.nbbrd.heylogs</groupId>
-                <artifactId>heylogs-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <inherited>false</inherited>
                     </execution>
                 </executions>
             </plugin>

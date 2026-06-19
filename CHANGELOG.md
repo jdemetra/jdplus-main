@@ -45,13 +45,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![OTHER] Add option to retrieve desktop application version in headless environment [#556](https://github.com/jdemetra/jdplus-main/issues/556)
 - ![OTHER] Add basic Maven archetype module [#916](https://github.com/jdemetra/jdplus-main/issues/916)
 
-### Fixed
-
-- ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
-- ![UI] Fix slow charts when displaying lots of observations [#844](https://github.com/jdemetra/jdplus-main/issues/844)
-- ![UI] Fix DateSelectorUI showing "from"/"to" default values without setting them [#856](https://github.com/jdemetra/jdplus-main/issues/856)
-- ![STAT] Fix errors in the dynamics of some state space forms (seasonal component, composite models, ARMA models (second form))
-
 ### Changed
 
 - ![UI] Desktop package cleanup [#911](https://github.com/jdemetra/jdplus-main/issues/911)
@@ -61,12 +54,27 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![STAT] Improve the implementation of the augmented Kalman filter
 - ![OTHER] Migrate to Java 21 [#160](https://github.com/jdemetra/jdplus-main/issues/160)
 
+### Fixed
+
+- ![UI] Fix split-into-yearly-components on daily data [#839](https://github.com/jdemetra/jdplus-main/pull/839)
+- ![UI] Fix slow charts when displaying lots of observations [#844](https://github.com/jdemetra/jdplus-main/issues/844)
+- ![UI] Fix DateSelectorUI showing "from"/"to" default values without setting them [#856](https://github.com/jdemetra/jdplus-main/issues/856)
+- ![STAT] Fix errors in the dynamics of some state space forms (seasonal component, composite models, ARMA models (second form))
+
 ## [3.6.0] - 2025-11-20
 
 ### Added
 
 - ![STAT] Add support of compact notation in ISO 8601 time interval [#159](https://github.com/jdemetra/jdplus-main/issues/159)
 - ![OTHER] Add Windows aarch_64 to standalone binaries [#659](https://github.com/jdemetra/jdplus-main/issues/659)
+
+### Changed
+
+- ![STAT] Change the definition of the deterministic component in the preadjustment phase (exclude trend constant as in version 2)  [#756](https://github.com/jdemetra/jdplus-main/issues/756)
+- ![STAT] Fail the modeling of a series with negative values if a log-transformation is specified in the parameters (X13, Tramo-Seats) [#894](https://github.com/jdemetra/jdplus-main/issues/894)
+- ![UI] Unify period display in GUI [#489](https://github.com/jdemetra/jdplus-main/issues/489)
+- ![UI] Improve workspace feedback [#661](https://github.com/jdemetra/jdplus-main/issues/661), [#802](https://github.com/jdemetra/jdplus-main/issues/802), [#420](https://github.com/jdemetra/jdplus-main/issues/420)
+- ![UI] Update reset zoom menu item text to improve clarity [#601](https://github.com/jdemetra/jdplus-main/issues/601)
 
 ### Fixed
 
@@ -79,22 +87,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix select all menu item behavior [#607](https://github.com/jdemetra/jdplus-main/issues/607)
 - ![UI] Fix missing metadata in details view and properties in SaBatchUI
 
-### Changed
-
-- ![STAT] Change the definition of the deterministic component in the preadjustment phase (exclude trend constant as in version 2)  [#756](https://github.com/jdemetra/jdplus-main/issues/756)
-- ![STAT] Fail the modeling of a series with negative values if a log-transformation is specified in the parameters (X13, Tramo-Seats) [#894](https://github.com/jdemetra/jdplus-main/issues/894)
-- ![UI] Unify period display in GUI [#489](https://github.com/jdemetra/jdplus-main/issues/489)
-- ![UI] Improve workspace feedback [#661](https://github.com/jdemetra/jdplus-main/issues/661), [#802](https://github.com/jdemetra/jdplus-main/issues/802), [#420](https://github.com/jdemetra/jdplus-main/issues/420)
-- ![UI] Update reset zoom menu item text to improve clarity [#601](https://github.com/jdemetra/jdplus-main/issues/601)
-
 ## [3.5.1] - 2025-06-12
-
-### Fixed
-
-- ![UI] Fix missing handling of workspace events (save/saveas) [#602](https://github.com/jdemetra/jdplus-main/issues/602)
-- ![UI] Fix flaky clipboard on Windows [#632](https://github.com/jdemetra/jdplus-main/issues/632)
-- ![UI] Fix removal of single dates from calendars [#624](https://github.com/jdemetra/jdplus-main/issues/624)
-- ![UI] Fix handling of SA specifications [#639](https://github.com/jdemetra/jdplus-main/issues/639)
 
 ### Added
 
@@ -106,7 +99,25 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![OTHER] Migrate OSSRH to Central Portal [#641](https://github.com/jdemetra/jdplus-main/issues/641)
 - ![OTHER] Migrate protobuf-maven-plugin from org.xolstice.maven.plugins to io.github.ascopes [#658](https://github.com/jdemetra/jdplus-main/issues/658)
 
+### Fixed
+
+- ![UI] Fix missing handling of workspace events (save/saveas) [#602](https://github.com/jdemetra/jdplus-main/issues/602)
+- ![UI] Fix flaky clipboard on Windows [#632](https://github.com/jdemetra/jdplus-main/issues/632)
+- ![UI] Fix removal of single dates from calendars [#624](https://github.com/jdemetra/jdplus-main/issues/624)
+- ![UI] Fix handling of SA specifications [#639](https://github.com/jdemetra/jdplus-main/issues/639)
+
 ## [3.5.0] - 2025-04-09
+
+### Added
+
+- ![IO] Add missing items in the dictionaries (partim) [#564](https://github.com/jdemetra/jdplus-main/issues/564)
+- ![IO] Add (partial) reset of SA-Processing [#572](https://github.com/jdemetra/jdplus-main/issues/572)
+
+### Changed
+
+- ![UI] Change "error" message for large differences between sa and raw annual totals to "severe" [#567](https://github.com/jdemetra/jdplus-main/issues/567)
+- ![UI] Display more series in the details of the pre-processing panel (REGARIMA models) [#561](https://github.com/jdemetra/jdplus-main/issues/561)
+- ![OTHER] Upgrade to last protobuf libraries
 
 ### Fixed
 
@@ -120,18 +131,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix incompatibility with plug-ins of Incubator
 - ![UI] Fix a bug in the restore of specifications in multi-saprocessing [#565](https://github.com/jdemetra/jdplus-main/issues/565)
 
-### Changed
-
-- ![UI] Change "error" message for large differences between sa and raw annual totals to "severe" [#567](https://github.com/jdemetra/jdplus-main/issues/567)
-- ![UI] Display more series in the details of the pre-processing panel (REGARIMA models) [#561](https://github.com/jdemetra/jdplus-main/issues/561)
-- ![OTHER] Upgrade to last protobuf libraries
+## [3.4.0] - 2025-02-13
 
 ### Added
 
-- ![IO] Add missing items in the dictionaries (partim) [#564](https://github.com/jdemetra/jdplus-main/issues/564)
-- ![IO] Add (partial) reset of SA-Processing [#572](https://github.com/jdemetra/jdplus-main/issues/572)
+- ![IO] Add option to CsvMatrixOutput to output the full column names instead of always outputting shortened ones [#394](https://github.com/jdemetra/jdplus-main/issues/394)
 
-## [3.4.0] - 2025-02-13
+### Changed
+
+- Modernize use of NIO API
+- ![UI] Display automatically the selection box of specifications in a multi-processing window when some series are added while the default specification is not defined.
 
 ### Fixed
 
@@ -144,20 +153,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Correct the "SI-Ratio" panel (last values not shown)  [#518](https://github.com/jdemetra/jdplus-main/issues/518)
 - ![OTHER] Fix Protobuf transfer of invalid statistical tests
 
-### Added
-
-- ![IO] Add option to CsvMatrixOutput to output the full column names instead of always outputting shortened ones [#394](https://github.com/jdemetra/jdplus-main/issues/394)
-
-### Changed
-
-- Modernize use of NIO API
-- ![UI] Display automatically the selection box of specifications in a multi-processing window when some series are added while the default specification is not defined.
-
 ## [3.3.0] - 2024-10-21
-
-### Fixed
-
-- ![UI] Remove unecessary parameters in xml (X11) [#399](https://github.com/jdemetra/jdplus-main/issues/399)
 
 ### Added
 
@@ -169,6 +165,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - ![STAT] Improve Canova-Hansen tests for trading days and for seasonality (add options and change R interface)
+
+### Fixed
+
+- ![UI] Remove unecessary parameters in xml (X11) [#399](https://github.com/jdemetra/jdplus-main/issues/399)
 
 ## [3.2.4] - 2024-07-11
 
@@ -183,6 +183,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Add link to online help documentation [#217](https://github.com/jdemetra/jdplus-main/issues/217)
 - ![UI] Add additional output in TramoSeats/X13 [#217](https://github.com/jdemetra/jdplus-main/issues/217)
 - ![UI] Add benchmarking results in TramoSeats/X13 output [#289](https://github.com/jdemetra/jdplus-main/issues/289)
+
+### Changed
+
+- ![UI] Replace splash screen with AI-generated image by [@jadoull](https://github.com/jadoull)
+- ![UI] Change the layout of SA summaries (TramoSeats/X13) [#262](https://github.com/jdemetra/jdplus-main/issues/262)
+- ![UI] Change the handling of the decomposition mode in X11 spec box
 
 ### Fixed
 
@@ -205,12 +211,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix numerical issues in canonical decomposition [#301](https://github.com/jdemetra/jdplus-main/issues/301)
 - ![UI] Fix a bug in protobuf translation of TramoSeats results
 
-### Changed
-
-- ![UI] Replace splash screen with AI-generated image by [@jadoull](https://github.com/jadoull)
-- ![UI] Change the layout of SA summaries (TramoSeats/X13) [#262](https://github.com/jdemetra/jdplus-main/issues/262)
-- ![UI] Change the handling of the decomposition mode in X11 spec box
-
 ## [3.2.2] - 2024-03-14
 
 ### Added
@@ -219,6 +219,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![STAT] Add output in X13
 - ![OTHER] Add more platform-specific packages [#226](https://github.com/jdemetra/jdplus-main/issues/226)
 - ![OTHER] Add methods to simplify the serialization of spec files from external tools (R)
+
+### Changed
+
+- ![STAT] Use exact forecasts in X12 (as in J+D 2.x), instead of conditional forecasts (as in FORTRAN)
+- ![UI] Modify branding to differentiate from v2
+- ![UI] Simplify action enablers [#247](https://github.com/jdemetra/jdplus-main/issues/247)
+- ![OTHER] Bump bundled runtime in platform-specific packages to JDK21
+- ![OTHER] Improve the output dictionaries for the main algorithms
 
 ### Fixed
 
@@ -232,15 +240,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix missing chart export to SVG [#238](https://github.com/jdemetra/jdplus-main/issues/238)
 - ![OTHER] Fix shifts in csv output
 
-### Changed
-
-- ![STAT] Use exact forecasts in X12 (as in J+D 2.x), instead of conditional forecasts (as in FORTRAN)
-- ![UI] Modify branding to differentiate from v2
-- ![UI] Simplify action enablers [#247](https://github.com/jdemetra/jdplus-main/issues/247)
-- ![OTHER] Bump bundled runtime in platform-specific packages to JDK21
-- ![OTHER] Improve the output dictionaries for the main algorithms
-
 ## [3.2.1] - 2023-12-07
+
+### Added
+
+- ![STAT] Provide additional bias correction in X11 (log-additive decomposition)
 
 ### Fixed
 
@@ -249,11 +253,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix missing default SA specification in the launching of the GUI
 - ![UI] Fix missing local menu actions
 
+## [3.2.0] - 2023-11-23
+
 ### Added
 
-- ![STAT] Provide additional bias correction in X11 (log-additive decomposition)
-
-## [3.2.0] - 2023-11-23
+- ![STAT] Generate forecasts in univariate state space models
+- ![OTHER] Add R facilities for time series providers
 
 ### Changed
 
@@ -268,11 +273,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix action IDs to prevent conflicts
 - ![IO] Fix date format in multi-document export to VTable CSV [#156](https://github.com/jdemetra/jdplus-main/issues/156)
 
-### Added
-
-- ![STAT] Generate forecasts in univariate state space models
-- ![OTHER] Add R facilities for time series providers
-
 ## [3.1.1] - 2023-10-11
 
 ### Fixed
@@ -280,6 +280,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Fix startup options that fail with bundled JRE
 
 ## [3.1.0] - 2023-10-11
+
+### Added
+
+- ![STAT] Add Poisson distribution
+- ![OTHER] Serialize High-frequency series (modelling part)
+- ![OTHER] Add auxiliary functions to simplify the use of JD+ from R
+- ![OTHER] Add specifications and auxiliary functions for linear filters
+- ![OTHER] Add default modelling for seasonal adjustment (STL...)
+- ![OTHER] Add handling of time varying trading days
+- ![UI] Add export of SA documents to Excel
 
 ### Changed
 
@@ -292,16 +302,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![UI] Save correctly modified multiprocessing
 - ![UI] Fix non-removable star on data source nodes
 - ![IO] Fix NPE in grid reader when header is null
-
-### Added
-
-- ![STAT] Add Poisson distribution
-- ![OTHER] Serialize High-frequency series (modelling part)
-- ![OTHER] Add auxiliary functions to simplify the use of JD+ from R
-- ![OTHER] Add specifications and auxiliary functions for linear filters
-- ![OTHER] Add default modelling for seasonal adjustment (STL...)
-- ![OTHER] Add handling of time varying trading days
-- ![UI] Add export of SA documents to Excel
 
 ## [3.0.2] - 2023-06-14
 
@@ -357,7 +357,7 @@ This is the **initial release** of JDemetra+ v3.0.0.
 [3.0.2]: https://github.com/jdemetra/jd3-main/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/jdemetra/jd3-main/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/jdemetra/jd3-main/releases/tag/v3.0.0
-[STAT]: https://img.shields.io/badge/-STAT-068C09
-[OTHER]: https://img.shields.io/badge/-OTHER-e4e669
 [IO]: https://img.shields.io/badge/-IO-F813F7
+[OTHER]: https://img.shields.io/badge/-OTHER-e4e669
+[STAT]: https://img.shields.io/badge/-STAT-068C09
 [UI]: https://img.shields.io/badge/-UI-5319E7

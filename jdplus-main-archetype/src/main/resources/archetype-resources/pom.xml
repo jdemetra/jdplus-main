@@ -66,7 +66,7 @@
         <flatten-maven-plugin.version>@flatten-maven-plugin.version@</flatten-maven-plugin.version>
         <forbiddenapis.version>@forbiddenapis.version@</forbiddenapis.version>
         <gitflow-maven-plugin.version>@gitflow-maven-plugin.version@</gitflow-maven-plugin.version>
-        <heylogs-maven-plugin.version>@heylogs-maven-plugin.version@</heylogs-maven-plugin.version>
+        <heylogs.version>@heylogs.version@</heylogs.version>
         <jreleaser-maven-plugin.version>@jreleaser-maven-plugin.version@</jreleaser-maven-plugin.version>
         <maven-clean-plugin.version>@maven-clean-plugin.version@</maven-clean-plugin.version>
         <maven-compiler-plugin.version>@maven-compiler-plugin.version@</maven-compiler-plugin.version>
@@ -196,7 +196,7 @@
                 <plugin>
                     <groupId>com.github.nbbrd.heylogs</groupId>
                     <artifactId>heylogs-maven-plugin</artifactId>
-                    <version>${heylogs-maven-plugin.version}</version>
+                    <version>${heylogs.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.amashchenko.maven.plugin</groupId>
