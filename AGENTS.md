@@ -41,7 +41,6 @@ jdplus-TOPIC-STEREOTYPE[-CLASSIFIER]
 | `jdplus-main-base`      | Platform-independent Java libraries — published to Maven Central |
 | `jdplus-main-cli`       | Command-line interface plugins and standalone binary             |
 | `jdplus-main-desktop`   | NetBeans Platform RCP plugins and desktop application            |
-| `jdplus-main-ws`        | Web service layer (Quarkus, gRPC + REST — proof of concept)      |
 | `jdplus-main-bom`       | Bill of Materials for dependency management                      |
 | `jdplus-main-archetype` | Maven archetype for bootstrapping extension projects             |
 

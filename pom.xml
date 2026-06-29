@@ -108,7 +108,6 @@
         <module>jdplus-main-desktop</module>
         <module>jdplus-main-bom</module>
         <module>jdplus-main-archetype</module>
-        <module>jdplus-main-ws</module>
     </modules>
 
     <dependencies>
