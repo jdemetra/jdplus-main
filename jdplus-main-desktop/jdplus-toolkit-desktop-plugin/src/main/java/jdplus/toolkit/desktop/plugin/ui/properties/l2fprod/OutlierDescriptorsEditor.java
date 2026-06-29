@@ -306,19 +306,18 @@ public class OutlierDescriptorsEditor extends AbstractPropertyEditor {
 
         @Override
         public String getColumnName(int column) {
+            if (column == 0) {
+                return "Year";
+            }
             switch (freq_) {
                 case 12 -> {
-                    if (column > 0) {
-                        return months[column - 1];
-                    } else {
-                        return "";
-                    }
+                    return months[column - 1];
                 }
                 case 4 -> {
                     return "Q" + column;
                 }
                 default -> {
-                    return Integer.toString(column);
+                    return "Period-"+Integer.toString(column);
                 }
             }
         }

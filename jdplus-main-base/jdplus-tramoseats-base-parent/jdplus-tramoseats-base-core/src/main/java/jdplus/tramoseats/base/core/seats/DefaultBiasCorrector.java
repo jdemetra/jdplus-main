@@ -34,7 +34,7 @@ public class DefaultBiasCorrector implements IBiasCorrector {
 
     /**
      *
-     */
+     * @param bias */
     public DefaultBiasCorrector(boolean bias) {
         this.bias = bias;
     }

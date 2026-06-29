@@ -29,6 +29,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - ![IO] Fix parsing of legacy TS meta [#989](https://github.com/jdemetra/jd3-main/issues/989)
 - ![OTHER] Fix missing ARM-based packages in releases [#958](https://github.com/jdemetra/jd3-main/issues/958)
 - ![OTHER] Fix warnings when running CLI with Java25+ [#1002](https://github.com/jdemetra/jd3-main/issues/1002)
+- ![STAT] Fix no bias correction in log-additive X11 decomposition
 
 ## [3.7.1] - 2026-03-06
 

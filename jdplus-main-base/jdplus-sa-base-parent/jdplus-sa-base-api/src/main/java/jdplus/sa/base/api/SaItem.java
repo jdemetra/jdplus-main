@@ -86,7 +86,7 @@ public final class SaItem {
         return SaItem.builder()
                 .name(s.getName())
                 .definition(SaDefinition.builder()
-                        .domainSpec(spec)
+                        .domainSpec(spec.setFrequency(s.getData().getAnnualFrequency()))
                         .ts(s)
                         .policy(EstimationPolicyType.None)
                         .build())
