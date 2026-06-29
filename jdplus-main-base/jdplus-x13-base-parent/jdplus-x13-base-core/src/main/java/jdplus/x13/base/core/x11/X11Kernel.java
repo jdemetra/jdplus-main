@@ -229,6 +229,8 @@ public class X11Kernel {
                 smoothBiasCorrection(builder, start);
             case Ratio ->
                 ratioBiasCorrection(builder, start);
+            default ->
+                noBiasCorrection(builder, start);
         }
     }
 
@@ -273,6 +275,12 @@ public class X11Kernel {
         d10 = d10.fn(x -> x / sbias);
         double tbias = sbias * ibias;
         d12 = d12.fn(x -> x * tbias);
+        fill(builder, start, d10, d12);
+    }
+
+    private void noBiasCorrection(X11Results.Builder builder, TsPeriod start) {
+        DoubleSeq d10 = dstep.getD10().exp();
+        DoubleSeq d12 = dstep.getD12().exp();
         fill(builder, start, d10, d12);
     }
 
