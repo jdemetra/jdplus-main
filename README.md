@@ -21,6 +21,8 @@ Its main **documentation** is available at https://doc.jdemetra.org.
 
 [ [Installing](#installing) | [Developing](#developing) | [Contributing](#contributing) | [Licensing](#licensing) ]
 
+![eu_co_funded](https://ec.europa.eu/regional_policy/images/information-sources/logo-download-center/eu_co_funded_en.jpg)
+
 ## Installing
 
 JDemetra+ v3 runs on any desktop operating system such as Microsoft **Windows**, **Solaris OS**, Apple **macOS**, **Ubuntu** and other various **Linux** distributions.
