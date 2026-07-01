@@ -75,7 +75,7 @@
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <forbiddenapis.version>3.10</forbiddenapis.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
-        <jdks-maven-plugin.version>1.23.0</jdks-maven-plugin.version>
+        <jdks-maven-plugin.version>1.25.0</jdks-maven-plugin.version>
         <jreleaser-maven-plugin.version>1.24.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
