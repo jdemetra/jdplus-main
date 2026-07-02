@@ -5,8 +5,6 @@
 
 package jdplus.x13.base.protobuf;
 
-import java.io.Serial;
-
 /**
  * Protobuf type {@code x13.X13Output}
  */
@@ -14,8 +12,7 @@ public final class X13Output extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:x13.X13Output)
     X13OutputOrBuilder {
-    @Serial
-    private static final long serialVersionUID = 0L;
+private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -625,8 +622,8 @@ jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail defaultValue
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.x13.base.protobuf.X13Output output) {
-        return mergeFrom(output);
+      if (other instanceof jdplus.x13.base.protobuf.X13Output) {
+        return mergeFrom((jdplus.x13.base.protobuf.X13Output)other);
       } else {
         super.mergeFrom(other);
         return this;
@@ -1217,7 +1214,7 @@ jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail defaultValue
     private static final class DetailsConverter implements com.google.protobuf.MapFieldBuilder.Converter<java.lang.String, jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetailOrBuilder, jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail> {
       @java.lang.Override
       public jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail build(jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetailOrBuilder val) {
-        if (val instanceof jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail detail) { return detail; }
+        if (val instanceof jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail) { return (jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail) val; }
         return ((jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail.Builder) val).build();
       }
 
@@ -1225,7 +1222,7 @@ jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail defaultValue
       public com.google.protobuf.MapEntry<java.lang.String, jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail> defaultEntry() {
         return DetailsDefaultEntryHolder.defaultEntry;
       }
-    }
+    };
     private static final DetailsConverter detailsConverter = new DetailsConverter();
 
     private com.google.protobuf.MapFieldBuilder<
@@ -1362,8 +1359,8 @@ jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail defaultValue
         entry = jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail.newBuilder();
         builderMap.put(key, entry);
       }
-      if (entry instanceof jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail detail) {
-        entry = detail.toBuilder();
+      if (entry instanceof jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail) {
+        entry = ((jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail) entry).toBuilder();
         builderMap.put(key, entry);
       }
       return (jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.ProcessingDetail.Builder) entry;

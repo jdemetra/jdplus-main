@@ -1,6 +1,7 @@
 package jdplus.toolkit.base.tsp.util;
 
 import internal.toolkit.base.tsp.util.MapCaching;
+import internal.toolkit.base.tsp.util.ShortLivedCachingLoader;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import lombok.NonNull;
 import nbbrd.design.ThreadSafe;
@@ -14,8 +15,8 @@ import java.time.Duration;
 @InterchangeableProcessor
 @ServiceDefinition(
         quantifier = Quantifier.SINGLE,
-        singleton = true,
-        fallback = MapCaching.class
+        fallback = MapCaching.class,
+        loaderName = "internal.toolkit.base.tsp.util.ShortLivedCachingLoader"
 )
 @ThreadSafe
 public interface ShortLivedCaching {
@@ -26,4 +27,6 @@ public interface ShortLivedCaching {
     <K, V> @NonNull ShortLivedCache<K, V> ofTtl(@NonNull Duration ttl);
 
     <K, V> @NonNull ShortLivedCache<K, V> ofFile(@NonNull File file);
+
+    ShortLivedCaching FIXME_DO_NOT_USE = ShortLivedCachingLoader.load();
 }

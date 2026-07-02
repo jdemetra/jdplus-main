@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.dstats.Normal;
+import jdplus.toolkit.base.core.random.MersenneTwister;
 import jdplus.toolkit.base.core.random.XorshiftRNG;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import org.junit.jupiter.api.Test;
@@ -37,25 +38,29 @@ public class ModifiedQsTest {
 
     public static void main(String[] args) {
         Normal N = new Normal();
-        int M = 10000000;
+        int M = 100000000;
         RandomNumberGenerator rng = XorshiftRNG.fromSystemNanoTime();
-        for (int i = 40; i < 600; i += 40) {
-            double[] a = new double[M];
+
+        double[] a = new double[M];
+        for (int i = 60; i <=600; i+=60) {
             for (int j = 0; j < M; ++j) {
                 double[] x = new double[i];
-                for (int k = 0; k < i; ++k) {
+                for (int k = 0; k < x.length; ++k) {
                     x[k] = N.random(rng);
                 }
-                a[j]=ModifiedQs.test(DoubleSeq.of(x), 4);
+                a[j] = ModifiedQs.test(DoubleSeq.of(x), 12);
             }
             Arrays.sort(a);
-            System.out.print(a[(int)(M*.9)]);
+            System.out.print(i);
             System.out.print('\t');
-            System.out.print(a[(int)(M*.95)]);
+            System.out.print(a[(int) (M * .9)]);
             System.out.print('\t');
-            System.out.print(a[(int)(M*.99)]);
+            System.out.print(a[(int) (M * .95)]);
             System.out.print('\t');
-            System.out.println(a[(int)(M*.999)]);
+            System.out.print(a[(int) (M * .99)]);
+            System.out.print('\t');
+            System.out.println(a[(int) (M * .999)]);
+
         }
     }
 }

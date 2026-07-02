@@ -18,6 +18,7 @@ package jdplus.x13.desktop.plugin.x13.diagnostics.impl;
 
 import jdplus.toolkit.desktop.plugin.Config;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import nbbrd.io.text.BooleanProperty;
 import jdplus.toolkit.desktop.plugin.Converter;
@@ -82,7 +83,7 @@ public class MDiagnosticsBuddy extends AbstractSaDiagnosticsFactoryBuddy<MDiagno
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return MDiagnosticsFactory.NAME;
     }
 

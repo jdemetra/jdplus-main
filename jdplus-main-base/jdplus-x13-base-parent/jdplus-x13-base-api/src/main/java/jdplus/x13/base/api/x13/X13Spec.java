@@ -25,6 +25,7 @@ import jdplus.sa.base.api.SaSpecification;
 import jdplus.sa.base.api.benchmarking.SaBenchmarkingSpec;
 import jdplus.toolkit.base.api.util.Validatable;
 import jdplus.x13.base.api.x11.X11Spec;
+import nbbrd.service.ServiceProvider;
 
 /**
  *
@@ -75,6 +76,23 @@ public class X13Spec implements Validatable<X13Spec>, SaSpecification {
     }
 
     public static class Builder implements Validatable.Builder<X13Spec> {
+    }
+
+    @Override
+    public int getFrequency() {
+        return regArima.getBasic().getFrequency();
+    }
+
+    @Override
+    public X13Spec setFrequency(int freq) {
+        if (getFrequency() == freq) {
+            return this;
+        }
+
+        return toBuilder()
+                .regArima(regArima.setFrequency(freq))
+                .x11(x11.checkAnnualFrequency(freq))
+                .buildWithoutValidation();
     }
 
     //<editor-fold defaultstate="collapsed" desc="Default specifications">

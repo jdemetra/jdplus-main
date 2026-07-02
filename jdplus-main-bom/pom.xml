@@ -7,7 +7,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main</artifactId>
-        <version>3.7.1</version>
+        <version>3.8.0</version>
     </parent>
 
     <artifactId>jdplus-main-bom</artifactId>
@@ -339,6 +339,12 @@
                                                     </artifact>
                                                     <artifact>
                                                         <path>
+                                                            ${project.build.directory}/jwsacruncher-standalone-${project.version}-windows-aarch_64.zip
+                                                        </path>
+                                                        <platform>windows-aarch_64</platform>
+                                                    </artifact>
+                                                    <artifact>
+                                                        <path>
                                                             ${project.build.directory}/jwsacruncher-standalone-${project.version}-linux-x86_64.zip
                                                         </path>
                                                         <platform>linux-x86_64</platform>
@@ -377,6 +383,12 @@
                                                             ${project.build.directory}/jdemetra-standalone-${project.version}-windows-x86_64.zip
                                                         </path>
                                                         <platform>windows-x86_64</platform>
+                                                    </artifact>
+                                                    <artifact>
+                                                        <path>
+                                                            ${project.build.directory}/jdemetra-standalone-${project.version}-windows-aarch_64.zip
+                                                        </path>
+                                                        <platform>windows-aarch_64</platform>
                                                     </artifact>
                                                     <artifact>
                                                         <path>

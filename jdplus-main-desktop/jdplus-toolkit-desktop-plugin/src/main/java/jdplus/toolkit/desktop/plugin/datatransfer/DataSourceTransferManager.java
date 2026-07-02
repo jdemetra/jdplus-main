@@ -16,16 +16,19 @@
  */
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 
 import java.awt.datatransfer.Transferable;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
 
 /**
  * A support class that deals with DataSource in Transferable.
@@ -43,7 +46,12 @@ public final class DataSourceTransferManager {
     private DataSourceTransferManager() {
     }
 
-    private final CollectionSupplier<DataSourceTransferSpi> providers = FixmeCollectionSupplier.of(DataSourceTransferSpi.class, DataSourceTransferSpiLoader::load);
+    private final CollectionSupplier<DataSourceTransferSpi> providers = FixmeCollectionSupplier.of(DataSourceTransferSpi.class, buildServiceLoader()::get);
+
+    @MightBeGenerated
+    private static DataSourceTransferSpiLoader buildServiceLoader() {
+        return DataSourceTransferSpiLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
+    }
 
     @NonNull
     public Stream<? extends DataSourceTransferSpi> all() {

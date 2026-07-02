@@ -17,11 +17,16 @@ import jdplus.x13.base.core.x11.pseudoadd.X11BStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11CStepPseudoAdd;
 import jdplus.x13.base.core.x11.pseudoadd.X11DStepPseudoAdd;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
 import jdplus.toolkit.base.api.data.DoublesMath;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.FiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.x13.base.api.x11.BiasCorrection;
+import jdplus.x13.base.api.x11.CalendarSigmaOption;
+import jdplus.x13.base.api.x11.CrossValidationTable;
 import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 import jdplus.x13.base.core.x11.filter.endpoints.CopyEndPoints;
 
@@ -44,27 +49,34 @@ public class X11Kernel {
         return x;
     }
 
+    public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec) {
+        return process(timeSeries, spec, ProcessingLog.dummy());
+    }
+
     /**
      *
      * @param timeSeries Time series including forecasts/backcasts
      * @param spec
+     * @param log
      * @return
      */
-    public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec) {
+    public X11Results process(@lombok.NonNull TsData timeSeries, @lombok.NonNull X11Spec spec, ProcessingLog log) {
         clear();
-        check(timeSeries, spec);
+        if (!check(timeSeries, spec, log)) {
+            return null;
+        }
 
         input = timeSeries;
         DoubleSeq data = input.getValues();
         context = X11Context.of(spec, input);
 
-        if (context.isPseudoAdd()) {
+        if (context.isPseudoAdd()) { 
             bstep = new X11BStepPseudoAdd();
             bstep.process(data, context);
             cstep = new X11CStepPseudoAdd(bstep.getB7(), bstep.getB13());
-            cstep.process(data, bstep.getB20(), context);
+            cstep.process(data, bstep.getB20(), context, bstep.getCvSeasonalFilter());
             dstep = new X11DStepPseudoAdd(cstep.getC7(), cstep.getC13(), cstep.getC20());
-            dstep.process(data, cstep.getC20(), context);
+            dstep.process(data, cstep.getC20(), context, cstep.getCvSeasonalFilter());
         } else {
             if (context.isLogAdd()) {
                 data = data.log();
@@ -72,27 +84,48 @@ public class X11Kernel {
             bstep = new X11BStep();
             bstep.process(data, context);
             cstep = new X11CStep();
-            cstep.process(data, bstep.getB20(), context);
+            cstep.process(data, bstep.getB20(), context, bstep.getCvSeasonalFilter());
             dstep = new X11DStep();
-            dstep.process(data, cstep.getC20(), context);
+            dstep.process(data, cstep.getC20(), context,cstep.getCvSeasonalFilter());
         }
         return buildResults(timeSeries.getStart(), spec);
     }
 
-    private void check(TsData timeSeries, X11Spec spec) throws X11Exception, IllegalArgumentException {
+    private final String X11 = "x11";
+
+    private boolean check(TsData timeSeries, X11Spec spec, ProcessingLog log) {
+        log.push(X11);
         int frequency = timeSeries.getAnnualFrequency();
-        if (frequency == -1) {
-            throw new IllegalArgumentException("Frequency of the time series must be compatible with years");
-        }
-        if (timeSeries.getValues().length() < 3 * frequency) {
-            throw new X11Exception(X11Exception.ERR_LENGTH);
-        }
-        if (!timeSeries.getValues().allMatch(Double::isFinite)) {
-            throw new X11Exception(X11Exception.ERR_MISSING);
-        }
-        if ((spec.getMode() == DecompositionMode.Multiplicative || spec.getMode() == DecompositionMode.LogAdditive)
-                && timeSeries.getValues().anyMatch(x -> x <= 0)) {
-            throw new X11Exception(X11Exception.ERR_NEG);
+        try {
+            boolean ok = true;
+            if (frequency == -1) {
+                log.error("Frequency of the time series must be compatible with years");
+                ok = false;
+            }
+            if (timeSeries.getValues().length() < 3 * frequency) {
+                log.error(X11Exception.ERR_LENGTH);
+                ok = false;
+            }
+            if (!timeSeries.getValues().allMatch(Double::isFinite)) {
+                log.error(X11Exception.ERR_MISSING);
+                ok = false;
+            }
+            if ((spec.getMode() == DecompositionMode.Multiplicative || spec.getMode() == DecompositionMode.LogAdditive)
+                    && timeSeries.getValues().anyMatch(x -> x <= 0)) {
+                log.error(X11Exception.ERR_NEG);
+                ok = false;
+            }
+            if ((spec.getFilters().length > 1 && spec.getFilters().length != frequency)) {
+                log.error(X11Exception.ERR_FILTERS);
+                ok = false;
+            }
+            if (spec.getCalendarSigma() == CalendarSigmaOption.Select && spec.getSigmaVec().length != frequency) {
+                log.error(X11Exception.ERR_SIGMAVEC);
+                ok = false;
+            }
+            return ok;
+        } finally {
+            log.pop();
         }
     }
 
@@ -107,6 +140,12 @@ public class X11Kernel {
     private X11Results buildResults(TsPeriod start, X11Spec spec) {
         int nb = spec.getBackcastHorizon() >= 0 ? spec.getBackcastHorizon() : -spec.getBackcastHorizon() * start.annualFrequency();
         int nf = spec.getForecastHorizon() >= 0 ? spec.getForecastHorizon() : -spec.getForecastHorizon() * start.annualFrequency();
+
+        Map<CrossValidationTable, Map<String, String>> resultCV = new EnumMap<>(CrossValidationTable.class);
+
+        resultCV.putAll(bstep.getResultCV());
+        resultCV.putAll(cstep.getResultCV());
+        resultCV.putAll(dstep.getResultCV());
 
         // bias correction for s // sa // t // i
         X11Results.Builder builder = X11Results.builder()
@@ -155,9 +194,11 @@ public class X11Kernel {
                 .d9filter(dstep.getD9filter())
                 // trend selection
                 .iCRatio(dstep.getICRatio())
+                .d7HendersonFilterLength(dstep.getD7HendersonFilterLength())
                 .finalHendersonFilterLength(dstep.getFinalHendersonFilterLength())
                 .finalSeasonalFilter(dstep.getSeasFilter())
-                .mode(spec.getMode());
+                .mode(spec.getMode())
+                .resultCV(resultCV);
 
         return finalResults(builder, start, spec).build();
     }
@@ -188,6 +229,8 @@ public class X11Kernel {
                 smoothBiasCorrection(builder, start);
             case Ratio ->
                 ratioBiasCorrection(builder, start);
+            default ->
+                noBiasCorrection(builder, start);
         }
     }
 
@@ -232,6 +275,12 @@ public class X11Kernel {
         d10 = d10.fn(x -> x / sbias);
         double tbias = sbias * ibias;
         d12 = d12.fn(x -> x * tbias);
+        fill(builder, start, d10, d12);
+    }
+
+    private void noBiasCorrection(X11Results.Builder builder, TsPeriod start) {
+        DoubleSeq d10 = dstep.getD10().exp();
+        DoubleSeq d12 = dstep.getD12().exp();
         fill(builder, start, d10, d12);
     }
 

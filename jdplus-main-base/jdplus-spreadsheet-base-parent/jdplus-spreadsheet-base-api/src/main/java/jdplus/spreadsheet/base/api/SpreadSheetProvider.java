@@ -27,7 +27,7 @@ import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.FallbackDataMoniker;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
-import jdplus.toolkit.base.tsp.util.ShortLivedCachingLoader;
+import jdplus.toolkit.base.tsp.util.ShortLivedCaching;
 import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
@@ -102,7 +102,7 @@ public final class SpreadSheetProvider implements FileLoader<SpreadSheetBean> {
         File file = paths.resolveFilePath(bean.getFile());
         Book.Factory factory = books.getReader(file).orElseThrow(() -> new IOException("File type not supported"));
         SheetGrid result = SheetGrid.of(file, factory, getReader(bean));
-        return CachedSpreadSheetConnection.of(result, file, ShortLivedCachingLoader.get());
+        return CachedSpreadSheetConnection.of(result, file, ShortLivedCaching.FIXME_DO_NOT_USE);
     }
 
     private static GridReader getReader(SpreadSheetBean bean) {

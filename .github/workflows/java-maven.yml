@@ -18,33 +18,18 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
+      - name: Checkout and Setup Maven
+        uses: s4u/setup-maven-action@v1.20.0
         with:
-          submodules: true
-          fetch-depth: 0
-
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
+          checkout-submodules: true
+          checkout-fetch-depth: 0
           java-version: ${{ matrix.java }}
-          cache: 'maven'
 
       - name: Pre-download dependencies with Maven
-        uses: nick-fields/retry@v3
-        with:
-          command: mvn -U dependency:go-offline
-          max_attempts: 3
-          timeout_minutes: 5
+        run: mvn -U dependency:go-offline
 
-      - name: Build and (headless) test with Maven (Linux)
-        if: ${{ runner.os == 'Linux' }}
-        run: xvfb-run mvn -U install
-
-      - name: Build and (headless) test with Maven (Windows and macOS)
-        if: ${{ runner.os != 'Linux' }}
-        run: mvn -U install
+      - name: Build and (headless) test with Maven
+        run: ${{ runner.os == 'Linux' && 'xvfb-run' || '' }} mvn install
 
   auto-merge-job:
     needs: build-and-test-job
@@ -58,7 +43,7 @@ jobs:
 
     steps:
       - name: Merge PR
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           command: gh pr merge --auto --rebase "$PR_URL"
           max_attempts: 3
@@ -79,18 +64,12 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
+      - name: Checkout and Setup Maven
+        uses: s4u/setup-maven-action@v1.20.0
         with:
-          submodules: true
-          fetch-depth: 0
-
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
+          checkout-submodules: true
+          checkout-fetch-depth: 0
           java-version: ${{ matrix.java }}
-          cache: 'maven'
 
       - name: Deploy snapshot with Maven if settings defined
         run: test ! -f ci.settings.xml || mvn deploy -DskipTests -s ci.settings.xml -P base-deploy,snapshot-deploy,!non-deployable-modules
@@ -129,18 +108,12 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v6
+      - name: Checkout and Setup Maven
+        uses: s4u/setup-maven-action@v1.20.0
         with:
-          submodules: true
-          fetch-depth: 0
-
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
+          checkout-submodules: true
+          checkout-fetch-depth: 0
           java-version: ${{ matrix.java }}
-          cache: 'maven'
 
       - name: Deploy with Maven if settings defined
         run: test ! -f ci.settings.xml || mvn deploy -DskipTests -s ci.settings.xml -P base-deploy,release-deploy,!non-deployable-modules

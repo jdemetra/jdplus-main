@@ -17,6 +17,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import jdplus.x13.base.api.x11.CrossValidationSeasonalFilterOptions;
+import jdplus.x13.base.api.x11.CrossValidationTable;
 
 /**
  * <p>
@@ -93,7 +95,9 @@ import javax.xml.bind.annotation.XmlType;
     "trendMA",
     "calendarSigma",
     "sigmaVec",
-    "excludeForecasts"
+    "excludeForecasts",
+    "crossValidationSelectionTable",
+    "crossValidationSeasonalFilterOptions"
 })
 public class XmlX11Spec {
 
@@ -122,6 +126,27 @@ public class XmlX11Spec {
     protected int[] sigmaVec;
     @XmlElement(name = "ExcludeForecasts", defaultValue = "false")
     protected Boolean excludeForecasts;
+    @XmlElement(name = "CrossValidationSelectionTable", defaultValue = "false")
+    protected CrossValidationTable crossValidationSelectionTable;
+
+    public CrossValidationTable getCrossvalidationSelectionTable() {
+        return crossValidationSelectionTable;
+    }
+
+    public void setCrossvalidationSelectionTable(CrossValidationTable value) {
+        this.crossValidationSelectionTable = value;
+    }
+
+    @XmlElement(name = "CrossValidationSeasonalFilterOptions", defaultValue = "false")
+    protected CrossValidationSeasonalFilterOptions crossValidationSeasonalFilterOptions;
+
+    public CrossValidationSeasonalFilterOptions getCrossvalidationSeasonalFilterOptions() {
+        return crossValidationSeasonalFilterOptions;
+    }
+
+    public void setCrossvalidationSeasonalFilterOptions(CrossValidationSeasonalFilterOptions value) {
+        this.crossValidationSeasonalFilterOptions = value;
+    }
 
     /**
      * Gets the value of the mode property.
@@ -483,6 +508,10 @@ public class XmlX11Spec {
                 xml.setSigmaVec(convert(v.getSigmaVec()));
             }
         }
+        if (v.getFilters()[0].equals(SeasonalFilterOption.CrossValidation)) {
+            xml.setCrossvalidationSelectionTable(v.getCrossValidationSelectionTable());
+            xml.setCrossvalidationSeasonalFilterOptions(v.getCrossValidationSeasonalFilterOptions());
+        }
         return true;
     }
 
@@ -524,6 +553,12 @@ public class XmlX11Spec {
             if (xml.sigmaVec != null) {
                 builder = builder.sigmaVec(convert(xml.sigmaVec));
             }
+        }
+        if (xml.crossValidationSelectionTable != null) {
+            builder = builder.crossValidationSelectionTable(xml.crossValidationSelectionTable);
+        }
+        if (xml.crossValidationSeasonalFilterOptions != null) {
+            builder = builder.crossValidationSeasonalFilterOptions(xml.crossValidationSeasonalFilterOptions);
         }
         return builder.build();
     }

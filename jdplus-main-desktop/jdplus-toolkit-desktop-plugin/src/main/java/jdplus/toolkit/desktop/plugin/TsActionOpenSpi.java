@@ -17,12 +17,11 @@
 package jdplus.toolkit.desktop.plugin;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.timeseries.Ts;
+import lombok.NonNull;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
-import lombok.NonNull;
 
 /**
  *
@@ -31,8 +30,7 @@ import lombok.NonNull;
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface TsActionOpenSpi extends NamedService {
 

@@ -82,7 +82,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
     }
 
     @Override
-    public String getProviderName() {
+    public @NonNull String getProviderName() {
         return SOURCE;
     }
 

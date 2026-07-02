@@ -44,7 +44,7 @@ public final class TxtProviderBuddy implements DataSourceProviderBuddy {
     private static final String SOURCE = "Txt";
 
     @Override
-    public String getProviderName() {
+    public @NonNull String getProviderName() {
         return SOURCE;
     }
 

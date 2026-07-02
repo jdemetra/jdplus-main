@@ -81,7 +81,7 @@ public class CsvArrayOutput implements Output<SaDocument> {
     }
 
     private void write(File file, List<String> names, List<DoubleArray> s) throws Exception {
-        try (Writer writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.ISO_8859_1)) {
+        try (Writer writer = Files.newBufferedWriter(file.toPath(), config.getCharset())) {
             ArraysCsvFormatter fmt = new ArraysCsvFormatter();
             fmt.setFullName(config.isFullName());
             fmt.setPresentation(config.getPresentation());

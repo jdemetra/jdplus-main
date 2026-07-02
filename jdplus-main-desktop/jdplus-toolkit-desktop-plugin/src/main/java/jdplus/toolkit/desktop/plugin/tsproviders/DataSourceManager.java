@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.desktop.plugin.tsproviders;
 
-import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
 import jdplus.toolkit.base.tsp.*;
@@ -28,9 +27,11 @@ import jdplus.toolkit.desktop.plugin.properties.ForwardingNodeProperty;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;
+import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.toolkit.desktop.plugin.util.FrozenTsHelper;
 import jdplus.toolkit.desktop.plugin.util.LazyGlobalService;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 import nbbrd.design.MightBePromoted;
 import org.openide.ErrorManager;
 import org.openide.nodes.BeanNode;
@@ -50,6 +51,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend.*;
+
 /**
  * @author Philippe Charles
  */
@@ -66,9 +69,14 @@ public final class DataSourceManager {
     private final SheetStrategy sheets;
 
     private DataSourceManager() {
-        this.providers = FixmeCollectionSupplier.of(DataSourceProviderBuddy.class, DataSourceProviderBuddyLoader::load);
+        this.providers = FixmeCollectionSupplier.of(DataSourceProviderBuddy.class, buildServiceLoader()::get);
         this.images = new DefaultImageStrategy();
         this.sheets = new DefaultSheetStrategy();
+    }
+
+    @MightBeGenerated
+    private static DataSourceProviderBuddyLoader buildServiceLoader() {
+        return DataSourceProviderBuddyLoader.builder().backend(lookupFactory(), lookupStreamer(), lookupReloader()).build();
     }
 
     private DataSourceProviderBuddy get(String providerName) {
@@ -422,7 +430,7 @@ public final class DataSourceManager {
         INSTANCE;
 
         @Override
-        public String getProviderName() {
+        public @NonNull String getProviderName() {
             return "NoOp";
         }
     }

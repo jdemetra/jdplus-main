@@ -4,12 +4,16 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramoseats.ui;
 
+import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.tramoseats.desktop.plugin.tramoseats.documents.TramoSeatsDocumentManager;
 import jdplus.toolkit.desktop.plugin.ui.processing.TsProcessingViewer;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
+import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
 import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
 import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
@@ -72,13 +76,56 @@ public final class TramoSeatsTopComponent extends WorkspaceTsTopComponent<TramoS
         return TsProcessingViewer.create(getElement(), DocumentUIServices.forDocument(TramoSeatsDocument.class));
     }
 
+    @Override
+    public void componentActivated() {
+        super.componentActivated();
+        updateUserInterfaceContext();
+    }
+
+    @Override
+    public void componentDeactivated() {
+        super.componentDeactivated();
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+    }
 
     private void initComponents() {
         setLayout(new java.awt.BorderLayout());
+    }
+
+    private void updateUserInterfaceContext() {
+        if (getDocument() == null) {
+            return;
+        }
+        TramoSeatsDocument element = getElement();
+        if (element == null) {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+        } else {
+            TramoSeatsSpec s = element.getSpecification();
+            if (s == null) {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+            } else {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(s.getTramo().getFrequency());
+            }
+        }
     }
 
     @Override
     protected String getContextPath() {
         return TramoSeatsDocumentManager.CONTEXTPATH;
     }
+
+    @Override
+    public boolean update(TramoSeatsDocument element, Ts s) {
+        if (s != null) {
+            TsDomain domain = s.getData().getDomain();
+            UserInterfaceContext.INSTANCE.setDomain(domain);
+            TramoSeatsSpec nspec = element.getSpecification().setFrequency(domain.getAnnualFrequency());
+            element.set(nspec, s);
+        } else {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+            element.set(s);
+        }
+        return true;
+    }
+
 }

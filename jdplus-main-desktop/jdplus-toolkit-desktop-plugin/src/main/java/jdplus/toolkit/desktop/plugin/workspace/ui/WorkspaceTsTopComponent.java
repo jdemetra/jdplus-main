@@ -36,7 +36,7 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
 
     protected abstract TsProcessingViewer initViewer();
 
-    public void updateUserInterfaceContext() {
+    private void updateUserInterfaceContext() {
         if (getDocument() == null) {
             return;
         }
@@ -57,6 +57,12 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
     public void componentActivated() {
         super.componentActivated();
         updateUserInterfaceContext();
+    }
+
+    @Override
+    public void componentDeactivated() {
+        super.componentDeactivated();
+        UserInterfaceContext.INSTANCE.setDomain(null);
     }
 
     @Override
@@ -131,12 +137,28 @@ public abstract class WorkspaceTsTopComponent<T extends TsDocument<?, ?>> extend
         } else {
             cts = ts.load(TsInformationType.All, TsManager.get()).freeze();
         }
-        panel.getDocument().set(cts);
-        panel.updateButtons(null);
-        getDocument().setDirty();
         WorkspaceItem<T> d = getDocument();
-        WorkspaceFactory.Event ev = new WorkspaceFactory.Event(d.getOwner(), d.getId(), WorkspaceFactory.Event.ITEMCHANGED, this);
-        WorkspaceFactory.getInstance().notifyEvent(ev);
+        if (update(d.getElement(), cts)) {
+            d.setDirty();
+            WorkspaceFactory.Event ev = new WorkspaceFactory.Event(d.getOwner(), d.getId(), WorkspaceFactory.Event.ITEMCHANGED, this);
+            WorkspaceFactory.getInstance().notifyEvent(ev);
+            panel.updateButtons(null);
 
+        }
+
+//        panel.getDocument().set(cts);
+//        panel.updateButtons(null);
+//        getDocument().setDirty();
+//        WorkspaceItem<T> d = getDocument();
+//        WorkspaceFactory.Event ev = new WorkspaceFactory.Event(d.getOwner(), d.getId(), WorkspaceFactory.Event.ITEMCHANGED, this);
+//        WorkspaceFactory.getInstance().notifyEvent(ev);
+    }
+
+    public boolean update(T element, Ts s) {
+        if (s != null) {
+            UserInterfaceContext.INSTANCE.setDomain(s.getData().getDomain());
+        }
+        element.set(s);
+        return true;
     }
 }

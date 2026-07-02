@@ -5,6 +5,8 @@
  */
 package jdplus.x13.base.core.x11;
 
+import java.util.EnumMap;
+import java.util.Map;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.x13.base.core.x11.extremevaluecorrector.IExtremeValuesCorrector;
 import jdplus.x13.base.core.x11.filter.AutomaticHenderson;
@@ -16,6 +18,8 @@ import jdplus.x13.base.core.x11.filter.endpoints.AsymmetricEndPoints;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.linearfilters.IFiniteFilter;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
+import jdplus.x13.base.api.x11.CrossValidationTable;
+import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import jdplus.x13.base.core.x11.filter.DummyFilter;
 import jdplus.x13.base.core.x11.filter.X11TrendCycleFilterFactory;
 
@@ -29,6 +33,8 @@ public class X11BStep {
     private DoubleSeq b1, b2, b3, b4, b4a, b4anorm, b4d, b4g, b5, b6,
             b7, b8, b9, b9g, b10, b11, b13, b17, b20;
     private int b2drop;
+    private final Map<CrossValidationTable, Map<String, String>> resultCV = new EnumMap<>(CrossValidationTable.class);
+    private SeasonalFilterOption[] cvSeasonalFilter;
 
     public X11BStep() {
     }
@@ -63,7 +69,11 @@ public class X11BStep {
 
     private void b4Step(X11Context context) {
         if (context.isSeasonal()) {
-            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+            if (cvSeasonalFilter == null) {
+                cvSeasonalFilter = X11Utility.getCrossvalidationFilter(context, CrossValidationTable.B3, b3, resultCV);
+            }
+            SeasonalFilterOption[] filters = cvSeasonalFilter != null ? cvSeasonalFilter : context.getInitialSeasonalFilter();
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), filters);
             b4a = processor.process(b3, context.getPosition(b2drop));
             b4anorm = DefaultSeasonalNormalizer.normalize(b4a, 0, context, b2drop);
         } else {
@@ -84,7 +94,11 @@ public class X11BStep {
 
     private void b5Step(X11Context context) {
         if (context.isSeasonal()) {
-            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getInitialSeasonalFilter());
+            if (cvSeasonalFilter == null) {
+                cvSeasonalFilter = X11Utility.getCrossvalidationFilter(context, CrossValidationTable.B4, b4g, resultCV);
+            }
+            SeasonalFilterOption[] filters = cvSeasonalFilter != null ? cvSeasonalFilter : context.getInitialSeasonalFilter();
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), filters);
             DoubleSeq b5a = processor.process(b4g, context.getPosition(b2drop));
             b5 = DefaultSeasonalNormalizer.normalize(b5a, b2drop, context);
         } else {
@@ -138,7 +152,11 @@ public class X11BStep {
     private void b9Step(X11Context context) {
         DoubleSeq b9c;
         if (context.isSeasonal()) {
-            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
+            if (cvSeasonalFilter == null) {
+                cvSeasonalFilter = X11Utility.getCrossvalidationFilter(context, CrossValidationTable.B8, b8, resultCV);
+            }
+            SeasonalFilterOption[] filters = cvSeasonalFilter != null ? cvSeasonalFilter : context.getFinalSeasonalFilter();
+            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), filters);
             DoubleSeq b9a = processor.process(b8, context.getPosition(0));
             b9c = DefaultSeasonalNormalizer.normalize(b9a, 0, context);
         } else {
@@ -147,7 +165,7 @@ public class X11BStep {
         DoubleSeq b9d = b9d(context, b9c);
         IExtremeValuesCorrector ecorr = context.getExtremeValuesCorrector();
         ecorr.analyse(b9d, context.getPosition(0), context);
-       b9 = ecorr.computeCorrections(b8, false);
+        b9 = ecorr.computeCorrections(b8, false);
         b9g = ecorr.applyCorrections(b8, b9);
     }
 
@@ -157,7 +175,13 @@ public class X11BStep {
 
     private void bFinalStep(X11Context context) {
         if (context.isSeasonal()) {
-            X11SeasonalFilterProcessor processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
+            X11SeasonalFilterProcessor processor;
+            if (context.isCrossValidation() && cvSeasonalFilter != null) {
+                processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), cvSeasonalFilter);
+            } else {
+                processor = X11SeasonalFiltersFactory.filter(context.getPeriod(), context.getFinalSeasonalFilter());
+            }
+
             DoubleSeq b10a = processor.process(b9g, context.getPosition(0));
             b10 = DefaultSeasonalNormalizer.normalize(b10a, 0, context);
         } else {

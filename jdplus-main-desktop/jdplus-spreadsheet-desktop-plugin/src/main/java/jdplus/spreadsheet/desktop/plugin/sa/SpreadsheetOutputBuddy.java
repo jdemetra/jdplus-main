@@ -60,7 +60,7 @@ public final class SpreadsheetOutputBuddy implements OutputFactoryBuddy, Configu
     private SpreadsheetOutputConfiguration config = new SpreadsheetOutputConfiguration();
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return SpreadsheetOutputFactory.NAME;
     }
 
@@ -119,7 +119,7 @@ public final class SpreadsheetOutputBuddy implements OutputFactoryBuddy, Configu
     private static final class SpreadsheetOutputBeanEditor implements BeanEditor {
 
         @Override
-        public boolean editBean(Object bean) throws IntrospectionException {
+        public boolean editBean(@NonNull Object bean) throws IntrospectionException {
             return new PropertySheetDialogBuilder()
                     .title("Edit spreadsheet output config")
                     .editNode(new SpreadsheetNode((SpreadsheetOutputConfiguration) bean));

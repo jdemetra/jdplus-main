@@ -19,6 +19,7 @@ package jdplus.toolkit.base.core.ssf.dk;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.MatrixNorms;
+import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.univariate.ISsf;
 import jdplus.toolkit.base.core.ssf.univariate.ISsfData;
 import jdplus.toolkit.base.core.ssf.univariate.ISsfError;
@@ -182,7 +183,8 @@ public class DurbinKoopmanInitializer implements OrdinaryFilter.Initializer {
 
         double f = pe.getVariance(), e = pe.get();
         DataBlock C = pe.M();
-        state.P().addXaXt(-1 / f, C);
+        SymmetricMatrix.addXaXt(state.P(), -1/f, C);
+//        state.P().addXaXt(-1 / f, C);
 
         // state
         // a0 = Ta0 + f1*TMi*v0. Reuse Mf as temporary buffer
@@ -201,16 +203,19 @@ public class DurbinKoopmanInitializer implements OrdinaryFilter.Initializer {
         DataBlock C = pe.M(), Ci = pe.Mi();
 
         // Pi = Pi - f1* (Ci)(Ci)'
-        state.Pi().addXaXt(-1 / fi, Ci);
+//        state.Pi().addXaXt(-1 / fi, Ci);
+        SymmetricMatrix.addXaXt(state.Pi(), -1/fi, Ci);
 
         // P = P - f2*(Ci)(Ci)'-f1(Ci*Cf' + Cf*Ci')
         // = P + f/(fi*fi)(Ci)(Ci)' - 1/fi(Ci*Cf' + Cf*Ci')
         // = P - 1/f (Cf)(Cf') + f/(fi*fi)(Ci)(Ci)'- 1/fi(Ci*Cf' + Cf*Ci')+ 1/f (Cf)(Cf')
         // = P  - 1/f (Cf)(Cf') + (1/f)(Cf - (f/fi)Ci)(Cf - (f/fi)Ci)'
-        state.P().addXaXt(-1 / f, C);
+//        state.P().addXaXt(-1 / f, C);
+        SymmetricMatrix.addXaXt(state.P(), -1/f, C);
         DataBlock tmp = DataBlock.of(C);
         tmp.addAY(-f / fi, Ci);
-        state.P().addXaXt(1 / f, tmp);
+//        state.P().addXaXt(1 / f, tmp);
+        SymmetricMatrix.addXaXt(state.P(), 1/f, tmp);
 
         // a0 = Ta0 + f1*TMi*v0. 
         state.a().addAY(e / fi, Ci);

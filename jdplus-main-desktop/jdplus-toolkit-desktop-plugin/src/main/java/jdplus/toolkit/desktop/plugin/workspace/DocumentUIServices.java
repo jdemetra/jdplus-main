@@ -11,7 +11,6 @@ import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.desktop.plugin.descriptors.IObjectDescriptor;
 import jdplus.toolkit.desktop.plugin.ui.processing.IProcDocumentView;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.PropertiesPanelFactory;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import org.openide.util.Lookup;
@@ -27,10 +26,10 @@ import java.util.Optional;
  * @param <D>
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface DocumentUIServices<S extends ProcSpecification, D extends ProcDocument<S, ?, ?>> {
 
-    public final String SPEC_PROPERTY = "specification";
+    String SPEC_PROPERTY = "specification";
 
     Class<D> getDocumentType();
 
@@ -56,14 +55,14 @@ public interface DocumentUIServices<S extends ProcSpecification, D extends ProcD
 
     void showDocument(WorkspaceItem<D> doc);
 
-    public static DocumentUIServices forSpec(Class sclass) {
+    static DocumentUIServices forSpec(Class<?> sclass) {
         Optional<? extends DocumentUIServices> s = Lookup.getDefault().lookupAll(DocumentUIServices.class).stream()
                 .filter(ui->ui.getSpecType().equals(sclass)).findFirst();
       
         return s.orElse(null);
     }
 
-    public static DocumentUIServices forDocument(Class dclass) {
+    static DocumentUIServices forDocument(Class<?> dclass) {
         Optional<? extends DocumentUIServices> s = Lookup.getDefault().lookupAll(DocumentUIServices.class).stream()
                 .filter(ui->ui.getDocumentType().equals(dclass)).findFirst();
       

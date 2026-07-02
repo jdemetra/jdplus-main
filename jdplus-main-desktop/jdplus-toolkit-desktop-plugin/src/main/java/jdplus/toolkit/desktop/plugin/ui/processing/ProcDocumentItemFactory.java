@@ -73,17 +73,17 @@ public abstract class ProcDocumentItemFactory<D extends ProcDocument, I> impleme
     }
 
     @Override
-    public Class<D> getDocumentType() {
+    public @NonNull Class<D> getDocumentType() {
         return documentType;
     }
 
     @Override
-    public Id getItemId() {
+    public @NonNull Id getItemId() {
         return itemId;
     }
 
     @Override
-    public JComponent getView(ProcDocument document) {
+    public @NonNull JComponent getView(@NonNull ProcDocument document) {
         if (!getDocumentType().isInstance(document)) {
             throw new IllegalArgumentException("Invalid document type");
         }

@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.design.ExtensionPoint;
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 import java.util.Comparator;
 import java.util.List;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import jdplus.toolkit.base.api.processing.DiagnosticsFactory;
@@ -34,7 +33,7 @@ import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
  * @param <R> Result
  */
 @ExtensionPoint
-@ServiceDefinition(quantifier = Quantifier.MULTIPLE, mutability = Mutability.NONE, singleton = true)
+@ServiceDefinition(quantifier = Quantifier.MULTIPLE)
 public interface SaDiagnosticsFactory<C extends DiagnosticsConfiguration, R> extends DiagnosticsFactory<C, R> {
 
     public static enum Scope {

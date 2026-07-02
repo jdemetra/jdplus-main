@@ -7,6 +7,7 @@ import org.openide.util.LookupListener;
 
 import java.util.Collection;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Fix design flaw in java-service-util loaders.
@@ -41,13 +42,15 @@ public final class FixmeCollectionSupplier<X> implements CollectionSupplier<X>, 
     }
 
     private Collection<? extends X> load() {
-        log.log(Level.INFO, "Loading lookup cache for {0}", type);
-        return delegate.get();
+        log.log(Level.INFO, "Loading lookup cache for {0}", type.getSimpleName());
+        Collection<? extends X> result = delegate.get();
+        log.log(Level.INFO, "Loaded {0}", result.stream().map(o -> o.getClass().getName()).collect(Collectors.joining(", ")));
+        return result;
     }
 
     @Override
     public synchronized void resultChanged(LookupEvent ev) {
-        log.log(Level.INFO, "Invalidating lookup cache for {0}", type);
+        log.log(Level.INFO, "Invalidating lookup cache for {0}", type.getSimpleName());
         cache = null;
     }
 }

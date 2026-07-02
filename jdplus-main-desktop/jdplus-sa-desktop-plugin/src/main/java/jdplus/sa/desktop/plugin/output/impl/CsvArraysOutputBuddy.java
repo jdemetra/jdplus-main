@@ -44,10 +44,12 @@ import org.openide.util.lookup.ServiceProvider;
 
 import java.beans.IntrospectionException;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static jdplus.sa.base.csv.CsvArrayOutputConfiguration.DEFAULT_CHARSET;
+import static jdplus.sa.base.csv.CsvArrayOutputConfiguration.DEFAULT_FULL_NAME;
 import static jdplus.toolkit.base.tsp.fixme.Strings.nullToEmpty;
 import static jdplus.toolkit.base.tsp.fixme.Strings.splitToStream;
 
@@ -69,7 +71,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return CsvArrayOutputFactory.NAME;
     }
 
@@ -124,7 +126,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
     private static final class CsvArraysOutputBeanEditor implements BeanEditor {
 
         @Override
-        public boolean editBean(Object bean) throws IntrospectionException {
+        public boolean editBean(@NonNull Object bean) throws IntrospectionException {
             return new PropertySheetDialogBuilder()
                     .title("Edit csv arrays output config")
                     .editNode(new CsvArraysNode((CsvArrayOutputConfiguration) bean));
@@ -137,7 +139,8 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
         private final Property<File> folderParam = Property.of("folder", Path.of("").toFile(), Parser.onFile(), Formatter.onFile());
         private final Property<String> filePrefixParam = Property.of("filePrefix", "series", Parser.onString(), Formatter.onString());
         private final Property<String> arraysParam = Property.of("arrays", null, Parser.onString(), Formatter.onString());
-        private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", true);
+        private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", DEFAULT_FULL_NAME);
+        private final Property<Charset> charsetParam = Property.of("charset", DEFAULT_CHARSET, Parser.onCharset(), Formatter.onCharset());
 
         @Override
         public Config doForward(CsvArrayOutputConfiguration a) {
@@ -145,8 +148,9 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
 //            presentationParam.set(result::parameter, a.getPresentation());
             folderParam.set(result::parameter, a.getFolder());
             filePrefixParam.set(result::parameter, a.getFilePrefix());
-            arraysParam.set(result::parameter, a.getArrays().stream().collect(Collectors.joining(",")));
+            arraysParam.set(result::parameter, String.join(",", a.getArrays()));
             fullNameParam.set(result::parameter, a.isFullName());
+            charsetParam.set(result::parameter, a.getCharset());
             return result.build();
         }
 
@@ -158,6 +162,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
             result.setFilePrefix(filePrefixParam.get(b::getParameter));
             result.setArrays(splitToStream(',', nullToEmpty(arraysParam.get(b::getParameter))).map(String::trim).toList());
             result.setFullName(fullNameParam.get(b::getParameter));
+            result.setCharset(charsetParam.get(b::getParameter));
             return result;
         }
     }
@@ -190,6 +195,7 @@ public final class CsvArraysOutputBuddy implements OutputFactoryBuddy, Configura
             builder.reset("Location");
             builder.withFile().select(config, "Folder").directories(true).description("Base output folder. Will be extended by the workspace and processing names").add();
             builder.with(String.class).select(config, "filePrefix").display("File Prefix").add();
+            builder.with(Charset.class).select(config, "charset").display("Charset").add();
             sheet.put(builder.build());
 
 //            builder.reset("Layout");

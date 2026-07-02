@@ -18,6 +18,7 @@ package jdplus.toolkit.base.core.ssf;
 
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import nbbrd.design.Development;
 
 /**
@@ -125,7 +126,8 @@ public class State {
         // PZ'(LL')^-1 ZP' =PZ'L'^-1*L^-1*ZP'
         // A = a + (M)* F^-1 * v
         a.addAY(e / v, M);
-        P.addXaXt(-1 / v, M);
-
+        SymmetricMatrix.addXaXt(P, -1/v, M);
+//        P.addXaXt(-1 / v, M);
+//        SymmetricMatrix.reenforceSymmetry(P);
     }
 }

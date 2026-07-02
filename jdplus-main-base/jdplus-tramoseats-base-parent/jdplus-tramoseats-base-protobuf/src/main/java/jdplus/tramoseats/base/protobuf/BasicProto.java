@@ -20,9 +20,10 @@ public class BasicProto {
                 .setPreliminaryCheck(spec.isPreliminaryCheck());
     }
 
-    public TramoSpec.BasicSpec convert(TransformSpec spec) {
+    public TramoSpec.BasicSpec convert(TransformSpec spec, int freq) {
         TramoSpec.BasicSpec.Builder builder = TramoSpec.BasicSpec.newBuilder();
         fill(spec, builder);
+        builder.setAnnualFrequency(freq);
         return builder.build();
     }
 

@@ -32,6 +32,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -54,21 +57,22 @@ public class TramoSpecMappingTest {
         test(TramoSpec.TR5);
         test(TramoSpec.TRfull);
     }
-    
+
     @Test
     public void testSpecific() {
         TramoKernel kernel = TramoKernel.of(TramoSpec.TRfull, null);
         RegSarimaModel rslt = kernel.process(Data.TS_PROD, null);
         TramoSpec pspec = TramoFactory.getInstance().generateSpec(TramoSpec.TRfull, rslt.getDescription());
-        test(pspec);        
-        testLegacy(pspec);        
-   }
+        test(pspec);
+        testLegacy(pspec);
+    }
 
     private void test(TramoSpec spec) {
         InformationSet info = TramoSpecMapping.write(spec, null, true);
         TramoSpec nspec = TramoSpecMapping.readV3(info, null);
 //        System.out.println(spec);
 //        System.out.println(nspec);
+        boolean equals = spec.equals(nspec);
         assertEquals(nspec, spec);
         info = TramoSpecMapping.write(spec, null, false);
         nspec = TramoSpecMapping.readV3(info, null);
@@ -93,17 +97,19 @@ public class TramoSpecMappingTest {
         TramoSpec nspec = TramoSpecMapping.readLegacy(info, null);
 //        System.out.println(spec);
 //        System.out.println(nspec);
+        boolean equals = spec.equals(nspec);
         assertEquals(nspec, spec);
         info = TramoSpecMapping.writeLegacy(spec, null, false);
         nspec = TramoSpecMapping.readLegacy(info, null);
 //        System.out.println(spec);
 //        System.out.println(nspec);
+        equals = spec.equals(nspec);
         assertEquals(nspec, spec);
     }
-    
+
     public static void testXmlSerialization() throws JAXBException, FileNotFoundException, IOException {
         InformationSet info = TramoSpecMapping.writeLegacy(TramoSpec.TRfull, null, true);
- 
+
         XmlInformationSet xmlinfo = new XmlInformationSet();
         xmlinfo.copy(info);
         String tmp = Files.temporaryFolderPath();
@@ -123,8 +129,8 @@ public class TramoSpecMappingTest {
         TramoSpec nspec = TramoSpecMapping.readLegacy(info, null);
         System.out.println(nspec.equals(TramoSpec.TRfull));
     }
-    
-    public static void main(String[] arg) throws JAXBException, IOException{
+
+    public static void main(String[] arg) throws JAXBException, IOException {
         testXmlSerialization();
         testXmlDeserialization();
     }

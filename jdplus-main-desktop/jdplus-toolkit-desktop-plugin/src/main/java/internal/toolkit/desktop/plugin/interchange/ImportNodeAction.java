@@ -16,11 +16,11 @@
  */
 package internal.toolkit.desktop.plugin.interchange;
 
+import internal.toolkit.desktop.plugin.tsproviders.ProvidersNode;
 import jdplus.toolkit.desktop.plugin.actions.AbilityNodeAction;
-import internal.toolkit.desktop.plugin.tsproviders.ProviderNode;
 import jdplus.toolkit.desktop.plugin.interchange.Importable;
 import jdplus.toolkit.desktop.plugin.interchange.InterchangeManager;
-import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
+import jdplus.toolkit.desktop.plugin.nodes.Nodes;
 import nbbrd.design.ClassNameConstant;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
@@ -31,6 +31,7 @@ import org.openide.util.actions.Presenter;
 import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,13 +41,11 @@ import java.util.stream.Stream;
 @ActionID(category = "File", id = ImportNodeAction.ID)
 @ActionRegistration(displayName = "#CTL_ImportNodeAction", lazy = false)
 @Messages("CTL_ImportNodeAction=Import from")
+@lombok.extern.java.Log
 public final class ImportNodeAction extends AbilityNodeAction<Importable> implements Presenter.Popup {
 
     @ClassNameConstant
     public static final String ID = "internal.toolkit.desktop.plugin.interchange.ImportNodeAction";
-
-    // FIXME: old code was "new ProvidersNode()" -> missing ability?
-    private final Node fakeProviderNode = new AbstractNodeBuilder().build();
 
     public ImportNodeAction() {
         super(Importable.class);
@@ -54,11 +53,13 @@ public final class ImportNodeAction extends AbilityNodeAction<Importable> implem
 
     @Override
     public JMenuItem getPopupPresenter() {
-        Node[] nodes = getActivatedNodes();
-        if (nodes == null || isProvidersNode(nodes)) {
-            nodes = new Node[]{fakeProviderNode};
+        Node[] activatedOrEmpty = getActivatedNodes();
+
+        if (activatedOrEmpty.length == 0) {
+            activatedOrEmpty = getProvidersNode().stream().toArray(Node[]::new);
         }
-        JMenuItem result = InterchangeManager.get().newImportMenu(getImportables(nodes));
+
+        JMenuItem result = InterchangeManager.get().newImportMenu(getImportables(activatedOrEmpty));
         result.setText(Bundle.CTL_ImportNodeAction());
         return result;
     }
@@ -79,8 +80,8 @@ public final class ImportNodeAction extends AbilityNodeAction<Importable> implem
                 .collect(Collectors.toList());
     }
 
-    private static boolean isProvidersNode(Node[] activatedNodes) {
-        return activatedNodes.length == 1 && activatedNodes[0] instanceof ProviderNode;
-//        return activatedNodes != null && activatedNodes.length == 0;
+    private static Optional<Node> getProvidersNode() {
+        return Nodes.findTopComponentRootContext("ProvidersTopComponent")
+                .filter(ProvidersNode.class::isInstance);
     }
 }

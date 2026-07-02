@@ -82,6 +82,38 @@ public final class ModellingSpec implements Validatable<ModellingSpec>, ProcSpec
         return this;
     }
 
+    public boolean checkFrequency(int freq) {
+        // Legacy specs have frequency set to -1 !!
+        if (freq <= 0)
+            return true;
+        // Could be improved...
+        return regression.getInterventionVariables().isEmpty() && regression.getOutliers().isEmpty()
+                && regression.getRamps().isEmpty() && regression.getRamps().isEmpty();
+    }
+
+    public ModellingSpec setFrequency(int nfreq) {
+        int frequency=series.getFrequency();
+        if (nfreq == frequency) {
+            // Nothing to do
+            return this;
+        }
+        SeriesSpec nseries = series.toBuilder().frequency(nfreq).build();
+        if (frequency <= 0) {
+            // Nothing to check
+            return toBuilder().series(nseries).buildWithoutValidation();
+        }
+        // Remove pre-specified variables (keeping them would mean a lot of checks/conversions/hypotheses...)
+        // We should perhaps change the calendar effects
+        return toBuilder().series(nseries)
+                .regression(regression.toBuilder()
+                .clearOutliers()
+                .clearInterventionVariables()
+                .clearRamps()
+                .clearUserDefinedVariables()
+                .build())
+                .buildWithoutValidation();
+    }
+
     @Override
     public AlgorithmDescriptor getAlgorithmDescriptor() {
         return DESCRIPTOR;

@@ -44,10 +44,11 @@ import org.openide.util.lookup.ServiceProvider;
 
 import java.beans.IntrospectionException;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static jdplus.sa.base.csv.CsvMatrixOutputConfiguration.*;
 import static jdplus.toolkit.base.tsp.fixme.Strings.nullToEmpty;
 import static jdplus.toolkit.base.tsp.fixme.Strings.splitToStream;
 
@@ -64,7 +65,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return CsvMatrixOutputFactory.NAME;
     }
 
@@ -125,7 +126,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
     private static final class CsvMatrixOutputBeanEditor implements BeanEditor {
 
         @Override
-        public boolean editBean(Object bean) throws IntrospectionException {
+        public boolean editBean(@NonNull Object bean) throws IntrospectionException {
             return new PropertySheetDialogBuilder()
                     .title("Edit Csv Matrix output config")
                     .editNode(new CsvMatrixNode((CsvMatrixOutputConfiguration) bean));
@@ -137,17 +138,19 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
         private final Property<File> folderParam = Property.of("folder", Path.of("").toFile(), Parser.onFile(), Formatter.onFile());
         private final Property<String> fileNameParam = Property.of("fileName", "series", Parser.onString(), Formatter.onString());
         private final Property<String> seriesParam = Property.of("items", "y,t,sa,s,i,ycal", Parser.onString(), Formatter.onString());
-        private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", true);
-        private final BooleanProperty shortNameParam = BooleanProperty.of("shortName", true);
+        private final BooleanProperty fullNameParam = BooleanProperty.of("fullName", DEFAULT_FULL_NAME);
+        private final BooleanProperty shortNameParam = BooleanProperty.of("shortName", DEFAULT_SHORT_COLUMN_NAME);
+        private final Property<Charset> charsetParam = Property.of("charset", DEFAULT_CHARSET, Parser.onCharset(), Formatter.onCharset());
 
         @Override
         public Config doForward(CsvMatrixOutputConfiguration a) {
             Config.Builder result = Config.builder("outputs", "csv_matrix", "3.0");
             folderParam.set(result::parameter, a.getFolder());
             fileNameParam.set(result::parameter, a.getFileName());
-            seriesParam.set(result::parameter, a.getItems().stream().collect(Collectors.joining(",")));
+            seriesParam.set(result::parameter, String.join(",", a.getItems()));
             fullNameParam.set(result::parameter, a.isFullName());
             shortNameParam.set(result::parameter, a.isShortColumnName());
+            charsetParam.set(result::parameter, a.getCharset());
             return result.build();
         }
 
@@ -159,6 +162,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
             result.setItems(splitToStream(",", nullToEmpty(seriesParam.get(b::getParameter))).map(String::trim).toList());
             result.setFullName(fullNameParam.get(b::getParameter));
             result.setShortColumnName(shortNameParam.get(b::getParameter));
+            result.setCharset(charsetParam.get(b::getParameter));
             return result;
         }
     }
@@ -190,6 +194,7 @@ public class CsvMatrixOutputBuddy implements OutputFactoryBuddy, Configurable, C
             builder.reset("Location");
             builder.withFile().select(config, "Folder").directories(true).description("Base output folder. Will be extended by the workspace and processing names").add();
             builder.with(String.class).select(config, "fileName").display("File Name").add();
+            builder.with(Charset.class).select(config, "charset").display("Charset").add();
             sheet.put(builder.build());
 
             builder.reset("Content");

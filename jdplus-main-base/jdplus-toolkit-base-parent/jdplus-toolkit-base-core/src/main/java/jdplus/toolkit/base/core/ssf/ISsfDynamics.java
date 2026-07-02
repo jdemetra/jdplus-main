@@ -115,10 +115,10 @@ public interface ISsfDynamics extends ISsfRoot {
         M.applyByRows(x->TX(pos, x));
     }
     /**
-     * Computes T V T'
+     * Computes T V T' for a symmetric V (not checked)
      *
      * @param pos The position of the model
-     * @param M
+     * @param M M is supposed to be symmetric. That property is reenforced in this routines
      */
     default void TVT(int pos, FastMatrix M) {
         TM(pos, M);

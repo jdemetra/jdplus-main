@@ -30,6 +30,7 @@ import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.api.util.NamedObject;
 import jdplus.toolkit.base.api.util.WildCards;
+import nbbrd.design.SystemDependent;
 import nbbrd.picocsv.Csv;
 
 import java.io.IOException;
@@ -38,66 +39,71 @@ import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
  */
 public final class CsvInformationFormatter {
 
-    private static final HashMap<Type, InformationFormatter> DICTIONARY = new HashMap<>();
-    private static final String NEWLINE = System.lineSeparator();
-    private static volatile Character CSV_SEPARATOR;
-    private static Locale LOCALE;
-
-    static {
-        LOCALE = Locale.getDefault();
-        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance(LOCALE);
-        fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
-        fmt.setGroupingUsed(false);
-        char sep = fmt.getDecimalFormatSymbols().getDecimalSeparator();
-        if (sep == ',') {
-            CSV_SEPARATOR = ';';
-        } else {
-            CSV_SEPARATOR = ',';
-        }
-
-        DICTIONARY.put(double.class, new DoubleFormatter());
-        DICTIONARY.put(int.class, new IntegerFormatter());
-        DICTIONARY.put(long.class, new LongFormatter());
-        DICTIONARY.put(boolean.class, new BooleanFormatter("1", "0"));
-        DICTIONARY.put(Double.class, new DoubleFormatter());
-        DICTIONARY.put(Integer.class, new IntegerFormatter());
-        DICTIONARY.put(Long.class, new LongFormatter());
-        DICTIONARY.put(Boolean.class, new BooleanFormatter("1", "0"));
-        DICTIONARY.put(Complex.class, new ComplexFormatter());
-        DICTIONARY.put(String.class, new StringFormatter());
-        DICTIONARY.put(String[].class, new StringArrayFormatter());
-        DICTIONARY.put(SarimaOrders.class, new SarimaFormatter());
-        DICTIONARY.put(Parameter.class, new ParameterFormatter());
-        DICTIONARY.put(TsPeriod.class, new PeriodFormatter());
-        DICTIONARY.put(RegressionItem.class, new RegressionItemFormatter(true));
-        DICTIONARY.put(StatisticalTest.class, new StatisticalTestFormatter());
-        DICTIONARY.put(ProcDiagnostic.class, new DiagnosticFormatter());
-    }
-
     private CsvInformationFormatter() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
+    private static final Map<Type, InformationFormatter> DICTIONARY = initDictionary();
+    private static final AtomicReference<Character> CSV_SEPARATOR = new AtomicReference<>(initDefaultCsvSeparator());
+    private static final AtomicReference<Locale> LOCALE = new AtomicReference<>(initLocale());
+
+    private static Map<Type, InformationFormatter> initDictionary() {
+        Map<Type, InformationFormatter> result = new HashMap<>();
+        result.put(double.class, new DoubleFormatter());
+        result.put(int.class, new IntegerFormatter());
+        result.put(long.class, new LongFormatter());
+        result.put(boolean.class, new BooleanFormatter("1", "0"));
+        result.put(Double.class, new DoubleFormatter());
+        result.put(Integer.class, new IntegerFormatter());
+        result.put(Long.class, new LongFormatter());
+        result.put(Boolean.class, new BooleanFormatter("1", "0"));
+        result.put(Complex.class, new ComplexFormatter());
+        result.put(String.class, new StringFormatter());
+        result.put(String[].class, new StringArrayFormatter());
+        result.put(SarimaOrders.class, new SarimaFormatter());
+        result.put(Parameter.class, new ParameterFormatter());
+        result.put(TsPeriod.class, new PeriodFormatter());
+        result.put(RegressionItem.class, new RegressionItemFormatter(true));
+        result.put(StatisticalTest.class, new StatisticalTestFormatter());
+        result.put(ProcDiagnostic.class, new DiagnosticFormatter());
+        return result;
+    }
+
+    @SystemDependent
+    private static Character initDefaultCsvSeparator() {
+        DecimalFormat fmt = (DecimalFormat) DecimalFormat.getNumberInstance(Locale.getDefault());
+        fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
+        fmt.setGroupingUsed(false);
+        char sep = fmt.getDecimalFormatSymbols().getDecimalSeparator();
+        return sep == ',' ? ';' : ',';
+    }
+
+    @SystemDependent
+    private static Locale initLocale() {
+        return Locale.getDefault();
+    }
+
     public static char getCsvSeparator() {
-        return CSV_SEPARATOR;
+        return CSV_SEPARATOR.get();
     }
 
     public static void setCsvSeparator(Character c) {
-        CSV_SEPARATOR = c;
+        CSV_SEPARATOR.set(c);
     }
 
     public static Locale getLocale() {
-        return LOCALE;
+        return LOCALE.get();
     }
 
     public static void setLocale(Locale locale) {
-        CsvInformationFormatter.LOCALE = locale;
+        LOCALE.set(locale);
     }
 
     public static Set<Type> formattedTypes() {
@@ -132,12 +138,12 @@ public final class CsvInformationFormatter {
             if (results.length <= 1) {
                 return true;
             }
-            Class c = null;
-            for (int i = 0; i < results.length; ++i) {
-                if (results[i] != null) {
+            Class<?> c = null;
+            for (Object result : results) {
+                if (result != null) {
                     if (c == null) {
-                        c = results[i].getClass();
-                    } else if (!results[i].getClass().equals(c)) {
+                        c = result.getClass();
+                    } else if (!result.getClass().equals(c)) {
                         return false;
                     }
                 }
@@ -310,6 +316,7 @@ public final class CsvInformationFormatter {
         format(writer, rows, items.size(), rowHeaders, fullRowName);
     }
 
+    @SystemDependent
     private static void format(Writer writer, List<List<MatrixItem>> rows, int nameCount, List<String> rowHeaders, boolean fullRowName) {
         // STEP 2: for each name, we find the set of items/length
         List<LinkedHashMap<String, Integer>> wnames = new ArrayList<>();
@@ -329,7 +336,12 @@ public final class CsvInformationFormatter {
             wnames.add(map);
         }
         // STEP 3: write the output
-        Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder().separator(NEWLINE).delimiter(CSV_SEPARATOR).build();
+        Locale locale = LOCALE.get();
+        Csv.Format csvFormat = Csv.Format.DEFAULT
+                .toBuilder()
+                .separator(System.lineSeparator())
+                .delimiter(CSV_SEPARATOR.get())
+                .build();
         try (Csv.Writer csv = Csv.Writer.of(csvFormat, Csv.WriterOptions.DEFAULT, writer, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
             // columns headers
             if (rowHeaders != null) {
@@ -340,30 +352,30 @@ public final class CsvInformationFormatter {
                 if (rowHeaders != null) {
                     writeRowHeader(csv, rowHeaders.get(rowIndex), fullRowName);
                 }
-                writeRow(csv, rows.get(rowIndex), wnames);
+                writeRow(csv, rows.get(rowIndex), wnames, locale);
             }
         } catch (IOException ex) {
             String msg = ex.getMessage();
         }
     }
 
-    private static void writeRow(Csv.Writer writer, List<MatrixItem> row, List<LinkedHashMap<String, Integer>> wnames) throws IOException {
+    private static void writeRow(Csv.Writer writer, List<MatrixItem> row, List<LinkedHashMap<String, Integer>> wnames, Locale locale) throws IOException {
         for (int nameIndex = 0; nameIndex < row.size(); nameIndex++) {
-            writeRowCells(writer, row.get(nameIndex), wnames.get(nameIndex));
+            writeRowCells(writer, row.get(nameIndex), wnames.get(nameIndex), locale);
         }
         writer.writeEndOfLine();
     }
 
-    private static void writeRowCells(Csv.Writer writer, MatrixItem item, LinkedHashMap<String, Integer> map) throws IOException {
+    private static void writeRowCells(Csv.Writer writer, MatrixItem item, LinkedHashMap<String, Integer> map, Locale locale) throws IOException {
         for (Entry<String, Integer> cellGroup : map.entrySet()) {
             int length = cellGroup.getValue();
             Object obj = item.search(cellGroup.getKey());
             if (obj != null) {
                 if (length == 1) {
-                    writer.writeField(format(obj, InformationFormatter.NO_INDEX));
+                    writer.writeField(format(obj, InformationFormatter.NO_INDEX, locale));
                 } else {
                     for (int j = 1; j <= length; ++j) {
-                        writer.writeField(format(obj, j));
+                        writer.writeField(format(obj, j, locale));
                     }
                 }
             } else {
@@ -390,12 +402,12 @@ public final class CsvInformationFormatter {
         writer.writeEndOfLine();
     }
 
-    private static String format(Object obj, int item) {
+    private static String format(Object obj, int item, Locale locale) {
 
         try {
             InformationFormatter fmt = DICTIONARY.get(obj.getClass());
             if (fmt != null) {
-                return fmt.format(obj, item, LOCALE);
+                return fmt.format(obj, item, locale);
             } else if (item == InformationFormatter.NO_INDEX) {
                 return obj.toString();
             } else {

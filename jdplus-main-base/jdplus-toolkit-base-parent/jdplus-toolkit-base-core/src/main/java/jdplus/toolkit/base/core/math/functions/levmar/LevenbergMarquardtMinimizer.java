@@ -509,6 +509,9 @@ public class LevenbergMarquardtMinimizer implements SsqFunctionMinimizer {
             if (!iterate()) {
                 break;
             }
+//            System.out.print(currentObjective);
+//            System.out.print("\t");
+//            System.out.println(currentPoint.getParameters());
         }
         //validate();
         return (stop != 7 && stop != 4 && iter < maxIter);

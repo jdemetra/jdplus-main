@@ -3,6 +3,8 @@ package jdplus.toolkit.desktop.plugin;
 import jdplus.toolkit.desktop.plugin.util.IconFactory;
 import java.awt.Image;
 import java.util.function.Supplier;
+
+import lombok.NonNull;
 import nbbrd.design.LombokWorkaround;
 import org.openide.nodes.Sheet;
 
@@ -32,12 +34,12 @@ public final class NamedServiceSupport implements NamedService {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return name;
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return displayName;
     }
 
@@ -47,7 +49,7 @@ public final class NamedServiceSupport implements NamedService {
     }
 
     @Override
-    public Sheet createSheet() {
+    public @NonNull Sheet createSheet() {
         return sheet.get();
     }
 }

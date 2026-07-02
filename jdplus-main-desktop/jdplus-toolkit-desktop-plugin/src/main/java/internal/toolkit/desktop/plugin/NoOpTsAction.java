@@ -5,6 +5,7 @@
 package internal.toolkit.desktop.plugin;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 import jdplus.toolkit.desktop.plugin.TsActionOpenSpi;
@@ -17,16 +18,16 @@ import jdplus.toolkit.desktop.plugin.TsActionOpenSpi;
 public final class NoOpTsAction implements TsActionOpenSpi {
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "NullTsAction";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Do nothing";
     }
 
     @Override
-    public void open(Ts ts) {
+    public void open(@NonNull Ts ts) {
     }
 }

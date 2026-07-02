@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import jdplus.sa.base.api.SaManager;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
 
@@ -110,8 +111,8 @@ public class Ws {
             // store variables
             String[] vars = context.getTsVariableManagers().getNames();
             for (int i = 0; i < vars.length; ++i) {
-                  StringBuilder name=new StringBuilder().append(FamilyHandler.VARS_PREFIX).append('-').append(i+1);
-              WorkspaceItemDescriptor cur
+                StringBuilder name = new StringBuilder().append(FamilyHandler.VARS_PREFIX).append('-').append(i + 1);
+                WorkspaceItemDescriptor cur
                         = new WorkspaceItemDescriptor(
                                 new WorkspaceItemDescriptor.Key(WorkspaceFamily.UTIL_VAR, name.toString()),
                                 new WorkspaceItemDescriptor.Attributes(vars[i], false, null));
@@ -120,7 +121,7 @@ public class Ws {
             // store multi-processing
             int j = 1;
             for (MultiProcessing mp : multiProcessing) {
-                StringBuilder name=new StringBuilder().append(SaHandlers.PREFIX).append('-').append(j++);
+                StringBuilder name = new StringBuilder().append(SaHandlers.PREFIX).append('-').append(j++);
                 WorkspaceItemDescriptor cur
                         = new WorkspaceItemDescriptor(
                                 new WorkspaceItemDescriptor.Key(SaHandlers.SA_MULTI, name.toString()),
@@ -218,16 +219,22 @@ public class Ws {
     public void refreshAll(String policy, TsDomain domain, String info) {
         multiProcessing.replaceAll(sap -> sap.refresh(policy, domain, info));
     }
-    
-    public Ws makeCopy(){
-        Ws copy=new Ws();
-        copy.context=context; // ? perhaps should it be changed  
+
+    public void refresh(int idx, String policy, TsDomain domain, String info) {
+        MultiProcessing oproc = getMultiProcessing(idx);
+        MultiProcessing nproc = oproc.refresh(policy, domain, info);
+        multiProcessing.set(idx, nproc);
+    }
+
+    public Ws makeCopy() {
+        Ws copy = new Ws();
+        copy.context = context; // ? perhaps should it be changed  
         copy.multiProcessing
                 .addAll(multiProcessing.stream()
-                        .map(p->p.makeCopy())
+                        .map(p -> p.makeCopy())
                         .toList());
         return copy;
-     }
+    }
 
 //    public boolean save(String fileName) {
 //        File file = new File(fileName);

@@ -16,13 +16,17 @@
  */
 package jdplus.toolkit.base.core.ssf.univariate;
 
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
+import jdplus.toolkit.base.core.math.matrices.MatrixNorms;
 import jdplus.toolkit.base.core.ssf.ISsfDynamics;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.ssf.SsfException;
 import jdplus.toolkit.base.core.ssf.State;
 import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.UpdateInformation;
+import jdplus.toolkit.base.core.stats.samples.Population;
+import jdplus.toolkit.base.core.stats.samples.Sample;
 
 /**
  * Ordinary Kalman filter for univariate time series
@@ -30,6 +34,13 @@ import jdplus.toolkit.base.core.ssf.UpdateInformation;
  * @author Jean Palate
  */
 public class OrdinaryFilter {
+
+    private static final double ZERO=1e-6, ZERO2=ZERO*ZERO;
+
+    private double scale(DoubleSeq data) {
+        Sample sample=Sample.build(data, true, Population.UNKNOWN);
+        return sample.standardDeviation();
+    }
 
     public static interface Initializer {
 
@@ -44,6 +55,7 @@ public class OrdinaryFilter {
     private ISsfDynamics dynamics;
     private boolean missing;
 
+    private double vscale, yscale;
     /**
      *
      * @param initializer
@@ -83,7 +95,7 @@ public class OrdinaryFilter {
 //            if (v < -Constants.getEpsilon()) {
 //                throw new SsfException();
 //            }
-            if (v < State.ZERO) {
+            if (v < vscale*ZERO2) {
                 v = 0;
             }
             if (error != null) {
@@ -93,7 +105,7 @@ public class OrdinaryFilter {
             double y = data.get(t);
             double e = y - loading.ZX(t, state.a());
             if (v == 0) {
-                if (Math.abs(e) < State.ZERO) {
+                if (Math.abs(e) < yscale*ZERO) {
                     e = 0;
                 } else {
                     throw new SsfException(SsfException.INCONSISTENT);
@@ -141,6 +153,8 @@ public class OrdinaryFilter {
             return false;
         }
         int end = data.length();
+        vscale=MatrixNorms.frobeniusNorm(state.P());
+        yscale=scale(data);
         while (t < end) {
             if (rslts != null) {
                 rslts.save(t, state, StateInfo.Forecast);

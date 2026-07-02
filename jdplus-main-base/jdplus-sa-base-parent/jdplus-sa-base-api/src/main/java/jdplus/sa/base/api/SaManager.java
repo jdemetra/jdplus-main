@@ -26,6 +26,8 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 import jdplus.toolkit.base.api.information.GenericExplorable;
 
 /**
@@ -34,18 +36,21 @@ import jdplus.toolkit.base.api.information.GenericExplorable;
  */
 @lombok.experimental.UtilityClass
 public class SaManager {
+
+    private static final AtomicReference<List<SaProcessingFactory>> PROCESSORS = new AtomicReference<>(SaProcessingFactoryLoader.load());
+    private static final AtomicReference<List<SaOutputFactory>> OUTPUT_FACTORIES = new AtomicReference<>(SaOutputFactoryLoader.load());
     
-    public List<SaProcessingFactory> processors() {
-        return SaProcessingFactoryLoader.get();
+    public synchronized List<SaProcessingFactory> processors() {
+        return PROCESSORS.get();
     }
 
-    public List<SaOutputFactory> outputFactories() {
-        return SaOutputFactoryLoader.get();
+    public synchronized List<SaOutputFactory> outputFactories() {
+        return OUTPUT_FACTORIES.get();
     }
     
-    public void reload(){
-        SaProcessingFactoryLoader.reload();
-        SaOutputFactoryLoader.reload();
+    public synchronized void reload(){
+        PROCESSORS.set(SaProcessingFactoryLoader.load());
+        OUTPUT_FACTORIES.set(SaOutputFactoryLoader.load());
     }
 
     public Explorable process(TsData series, SaSpecification spec, ModellingContext context, ProcessingLog log) {
@@ -53,7 +58,7 @@ public class SaManager {
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
-                return fac.processor(dspec).process(series, context, log);
+                return fac.processor(dspec.setFrequency(series.getAnnualFrequency())).process(series, context, log);
             }
         }
         return null;
@@ -61,13 +66,14 @@ public class SaManager {
 
     public SaEstimation process(SaDefinition def, ModellingContext context, boolean verbose) {
         List<SaProcessingFactory> all = processors();
-        SaSpecification spec = def.activeSpecification();
+        SaSpecification spec = def.getEstimationSpec();
         for (SaProcessingFactory fac : all) {
             SaSpecification dspec = fac.decode(spec);
             if (dspec != null) {
                 ProcessingLog log = verbose ? new DefaultProcessingLog() : ProcessingLog.dummy();
-                SaProcessor processor = fac.processor(dspec);
-                GenericExplorable rslt = processor.process(def.getTs().getData(), context, log);
+                TsData data = def.getTs().getData();
+                SaProcessor processor = fac.processor(spec);
+                GenericExplorable rslt = processor.process(data, context, log);
                 if (rslt.isValid()) {
                     List<String> warnings = new ArrayList<>();
                     List<ProcDiagnostic> tests = new ArrayList<>();

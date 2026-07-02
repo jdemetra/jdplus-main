@@ -16,14 +16,14 @@
  */
 package jdplus.sa.base.csv;
 
+import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.Output;
-import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.util.NamedObject;
 import jdplus.toolkit.base.api.util.Paths;
+
 import java.io.File;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,11 +38,9 @@ public class CsvMatrixOutput implements Output<SaDocument> {
     CsvMatrixOutputConfiguration config;
     List<NamedObject<Explorable>> infos;
     private File folder;
-    private boolean fullName;
 
     public CsvMatrixOutput(CsvMatrixOutputConfiguration config) {
         this.config = (CsvMatrixOutputConfiguration) config.clone();
-        this.fullName = this.config.isFullName();
     }
 
     @Override
@@ -65,8 +63,8 @@ public class CsvMatrixOutput implements Output<SaDocument> {
     public void end(Object context) throws Exception {
         String file = Paths.concatenate(folder.getAbsolutePath(), config.getFileName());
         file = Paths.changeExtension(file, "csv");
-        try (Writer writer = Files.newBufferedWriter(Path.of(file), StandardCharsets.ISO_8859_1)) {
-            CsvInformationFormatter.formatResults(writer, infos, config.getItems(), config.isShortColumnName(), fullName);
+        try (Writer writer = Files.newBufferedWriter(Path.of(file), config.getCharset())) {
+            CsvInformationFormatter.formatResults(writer, infos, config.getItems(), config.isShortColumnName(), config.isFullName());
         }
         infos = null;
     }

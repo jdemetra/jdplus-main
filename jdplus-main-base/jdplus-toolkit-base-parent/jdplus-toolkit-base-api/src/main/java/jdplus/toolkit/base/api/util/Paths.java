@@ -1,24 +1,28 @@
 /*
-* Copyright 2013 National Bank of Belgium
-*
-* Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
-* by the European Commission - subsequent versions of the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
-* limitations under the Licence.
+ * Copyright 2013 National Bank of Belgium
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.util;
+
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  *
@@ -52,19 +56,11 @@ public final class Paths {
         if (next == null) {
             return sfile;
         }
-        StringBuilder builder = new StringBuilder();
-        builder.append(sfile);
-        builder.append('.');
-        builder.append(next);
-        return builder.toString();
+        return sfile + '.' + next;
     }
 
-    public String addExtension(String file, String ext) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(file);
-        builder.append('.');
-        builder.append(ext);
-        return builder.toString();
+    public String addExtension(String file, String extension) {
+        return file + '.' + extension;
     }
 
     /**
@@ -139,11 +135,7 @@ public final class Paths {
             return parent;
         }
         parent = System.getenv("USERPROFILE");
-        if (parent != null) {
-            return parent;
-        } else {
-            return ".";
-        }
+        return Objects.requireNonNullElse(parent, ".");
     }
 
     private String fileFromId(Id id) {
@@ -177,47 +169,38 @@ public final class Paths {
         }
     }
 
-    public String folderFromContext(String folder, Object context) {
-        String nfolder = folder(folder);
-        if (context != null && context instanceof Id parent) {
+    public @NonNull String folderFromContext(@Nullable String folder, @Nullable Object context) {
+        String result = folder(folder);
+        if (context instanceof Id parent) {
             for (int i = 0; i < parent.getCount(); ++i) {
-                nfolder = concatenate(nfolder, parent.get(i));
+                result = concatenate(result, parent.get(i));
             }
         }
-        File Folder = Path.of(nfolder).toFile();
+        File Folder = Path.of(result).toFile();
         if (!Folder.exists()) {
             Folder.mkdirs();
         }
-        return nfolder;
+        return result;
     }
 
-    public File folderFromContext(File folder, Object context) {
-        File nfolder = folder(folder);
-        if (context != null && context instanceof Id parent) {
+    public @NonNull File folderFromContext(@Nullable File folder, @Nullable Object context) {
+        File result = folder(folder);
+        if (context instanceof Id parent) {
             for (int i = 0; i < parent.getCount(); ++i) {
-                nfolder = nfolder.toPath().resolve(parent.get(i)).toFile();
+                result = result.toPath().resolve(parent.get(i)).toFile();
             }
         }
-        if (!nfolder.exists()) {
-            nfolder.mkdirs();
+        if (!result.exists()) {
+            result.mkdirs();
         }
-        return nfolder;
+        return result;
     }
 
-    public String folder(String folder) {
-        if (folder == null || folder.length() == 0) {
-            return DEF_FOLDER;
-        } else {
-            return folder;
-        }
+    public @NonNull String folder(@Nullable String folder) {
+        return folder == null || folder.isEmpty() ? DEF_FOLDER : folder;
     }
 
-    public File folder(File folder) {
-        if (folder == null || !folder.isDirectory()) {
-            return Path.of(DEF_FOLDER).toFile();
-        } else {
-            return folder;
-        }
+    public @NonNull File folder(@Nullable File folder) {
+        return folder == null || !folder.isDirectory() ? Path.of(DEF_FOLDER).toFile() : folder;
     }
-
 }

@@ -5,8 +5,6 @@
 
 package jdplus.x13.base.protobuf;
 
-import java.io.Serial;
-
 /**
  * Protobuf type {@code x13.X13Finals}
  */
@@ -14,8 +12,7 @@ public final class X13Finals extends
     com.google.protobuf.GeneratedMessage implements
     // @@protoc_insertion_point(message_implements:x13.X13Finals)
     X13FinalsOrBuilder {
-    @Serial
-    private static final long serialVersionUID = 0L;
+private static final long serialVersionUID = 0L;
   static {
     com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
       com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
@@ -972,8 +969,8 @@ public final class X13Finals extends
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof jdplus.x13.base.protobuf.X13Finals finals) {
-        return mergeFrom(finals);
+      if (other instanceof jdplus.x13.base.protobuf.X13Finals) {
+        return mergeFrom((jdplus.x13.base.protobuf.X13Finals)other);
       } else {
         super.mergeFrom(other);
         return this;

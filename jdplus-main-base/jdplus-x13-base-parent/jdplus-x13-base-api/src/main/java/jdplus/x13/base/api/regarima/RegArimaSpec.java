@@ -108,6 +108,33 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
             return this;
         }
     }
+    
+    public int getFrequency(){
+        return basic.getFrequency();
+    }
+    
+    public RegArimaSpec setFrequency(int freq){
+        int frequency=basic.getFrequency();
+        if (freq == frequency) {
+            // Nothing to do
+            return this;
+        }
+        Builder builder = toBuilder()
+                .basic(basic.toBuilder().frequency(freq).buildWithoutValidation());
+        if (frequency == 0) {
+            // Nothing to check
+            return builder.buildWithoutValidation();
+        }
+        // Remove pre-specified variables (keeping them would mean a lot of checks/conversions/hypotheses...)
+        // We should perhaps change the calendar effects
+        builder.regression(regression.toBuilder()
+                .clearOutliers()
+                .clearInterventionVariables()
+                .clearRamps()
+                .clearUserDefinedVariables()
+                .build());
+        return builder.buildWithoutValidation();
+    }
 
     //<editor-fold defaultstate="collapsed" desc="Default specifications">
     public static final RegArimaSpec RGDISABLED, RG0, RG1, RG2, RG3, RG4, RG5;

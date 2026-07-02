@@ -97,12 +97,12 @@ public class X13Dictionaries {
     
     public final Dictionary ETABLES = AtomicDictionary.builder()
             .name(E_TABLES)
-            .item(AtomicDictionary.Item.builder().name(E1).outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E2).outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E3).outputClass(TsData.class).build())
-            .item(AtomicDictionary.Item.builder().name(E11).outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E1).description("original series corrected for most important outliers").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E2).description("final seasonally adjusted series corrected for most important outliers").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E3).description("final Irregular corrected for most important outliers").outputClass(TsData.class).build())
+            .item(AtomicDictionary.Item.builder().name(E11).description("robust estimation of final seasonally adjusted series").outputClass(TsData.class).build())
             .build();
-    
+
     public static final String MSTATISTICS = "m-statistics";
 
     public final String M1 = "m1", M2 = "m2", M3 = "m3", M4 = "m4";
@@ -112,19 +112,19 @@ public class X13Dictionaries {
     
     public final Dictionary MSTATS = AtomicDictionary.builder()
             .name(MSTATISTICS)
-            .item(AtomicDictionary.Item.builder().name(M1).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M2).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M3).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M4).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M5).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M6).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M7).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M8).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M9).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M10).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(M11).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(Q).outputClass(Double.class).build())
-            .item(AtomicDictionary.Item.builder().name(Q2).outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M1).description("M1 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M2).description("M2 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M3).description("M3 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M4).description("M4 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M5).description("M5 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M6).description("M6 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M7).description("M7 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M8).description("M8 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M9).description("M9 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M10).description("M10 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(M11).description("M11 Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(Q).description("Q Quality Control Statistic").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(Q2).description("Q2 Quality Control Statistic").outputClass(Double.class).build())
             .build();
     
     public final Dictionary X13DICTIONARY=ComplexDictionary.builder()

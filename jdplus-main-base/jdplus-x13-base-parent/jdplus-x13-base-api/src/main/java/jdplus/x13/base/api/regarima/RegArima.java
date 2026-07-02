@@ -25,7 +25,6 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import nbbrd.design.Development;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -37,7 +36,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class RegArima {
 
-    private final RegArimaLoader.Processor ENGINE = new RegArimaLoader.Processor();
+    private final AtomicReference<RegArima.Processor> ENGINE = new AtomicReference<>(RegArimaLoader.Processor.load());
     private final AtomicReference<Processor> LEGACYENGINE=new AtomicReference<Processor>();
 
     public void setEngine(Processor algorithm) {
@@ -77,7 +76,7 @@ public class RegArima {
 
     @InterchangeableProcessor
    @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, fallback=DefProcessor.class)
     public static interface Processor {
 
         public ProcResults process(TsData series, RegArimaSpec spec, ModellingContext context, List<String> addtionalItems);

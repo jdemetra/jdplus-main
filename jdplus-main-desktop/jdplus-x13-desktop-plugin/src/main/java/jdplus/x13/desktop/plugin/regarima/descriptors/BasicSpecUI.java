@@ -14,6 +14,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.x13.base.api.regarima.X13Frequency;
 
 /**
  *
@@ -23,6 +24,18 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
 
     public BasicSpecUI(RegArimaSpecRoot root) {
         super(root);
+    }
+
+    public X13Frequency getFrequency() {
+        return X13Frequency.parse(core().getFrequency());
+    }
+
+    public void setFrequency(X13Frequency freq) {
+        int ifreq = freq.toInt();
+        if (ifreq < 0)
+            throw new IllegalArgumentException("Can't be used. For legacy purposes only");
+        update(ifreq);
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(ifreq);
     }
 
     public DateSelectorUI getSpan() {
@@ -57,7 +70,11 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        EnhancedPropertyDescriptor desc = spanDesc();
+        EnhancedPropertyDescriptor desc = freqDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        desc = spanDesc();
         if (desc != null) {
             descs.add(desc);
         }
@@ -79,7 +96,25 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
         return Bundle.basicSpecUI_getDislayName();
     }
     ///////////////////////////////////////////////////////////////////////////
-    private static final int SPAN_ID = 1, AUTOMDL_ID = 2, PRELIMINARYCHECK_ID = 3;
+    private static final int SPAN_ID = 1, AUTOMDL_ID = 2, PRELIMINARYCHECK_ID = 3, FREQ_ID=0;
+
+   @Messages({
+        "basicSpecUI.freqDesc.name=Frequency",
+        "basicSpecUI.freqDesc.desc=Number of periods in one year"
+    })
+    private EnhancedPropertyDescriptor freqDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("frequency", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, FREQ_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setShortDescription(Bundle.basicSpecUI_freqDesc_desc());
+            desc.setDisplayName(Bundle.basicSpecUI_freqDesc_name());
+            edesc.setReadOnly(isRo() || (UserInterfaceContext.INSTANCE.getDomain() != null && core().getFrequency() == 0));
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
 
     @Messages({
         "basicSpecUI.spanDesc.name=Series span",

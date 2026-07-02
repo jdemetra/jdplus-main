@@ -28,6 +28,7 @@ import jdplus.toolkit.desktop.plugin.beans.BeanEditor;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.properties.PropertySheetDialogBuilder;
 import ec.util.chart.ColorScheme;
+import lombok.NonNull;
 import nbbrd.io.text.BooleanProperty;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
@@ -94,7 +95,7 @@ public final class JTsChartConfig {
     private static final class TsChartConfigEditor implements BeanEditor {
 
         @Override
-        public boolean editBean(Object bean) throws IntrospectionException {
+        public boolean editBean(@NonNull Object bean) throws IntrospectionException {
             Sheet sheet = new Sheet();
             NodePropertySetBuilder b = new NodePropertySetBuilder();
 

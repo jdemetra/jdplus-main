@@ -186,6 +186,11 @@ public class RegressionSpecUI extends BaseRegArimaSpecUI {
         return new MeanSpecUI(root);
     }
 
+    public boolean isRegressionRo(){
+        return root.isRo() || root.getCore().getFrequency() == -1;
+    }
+
+
     private static final int MEAN_ID = 0, CALENDAR_ID = 2, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6, FCOEFF_ID = 7;
 
     @Messages({
@@ -213,13 +218,16 @@ public class RegressionSpecUI extends BaseRegArimaSpecUI {
         "regressionSpecUI.prespecDesc.desc=Pre-specified outliers"
     })
     private EnhancedPropertyDescriptor prespecDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("PreSpecifiedOutliers", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, PRESPEC_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.regressionSpecUI_prespecDesc_name());
             desc.setShortDescription(Bundle.regressionSpecUI_prespecDesc_desc());
-            edesc.setReadOnly(isRo());
+            edesc.setReadOnly(isRegressionRo());
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -231,13 +239,16 @@ public class RegressionSpecUI extends BaseRegArimaSpecUI {
         "regressionSpecUI.interventionDesc.desc=Intervention variables"
     })
     private EnhancedPropertyDescriptor interventionDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("InterventionVariables", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, INTERV_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.regressionSpecUI_interventionDesc_name());
             desc.setShortDescription(Bundle.regressionSpecUI_interventionDesc_desc());
-            edesc.setReadOnly(isRo());
+            edesc.setReadOnly(isRegressionRo());
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -249,13 +260,16 @@ public class RegressionSpecUI extends BaseRegArimaSpecUI {
         "regressionSpecUI.rampsDesc.desc=Ramps"
     })
     private EnhancedPropertyDescriptor rampsDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Ramps", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, RAMPS_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.regressionSpecUI_rampsDesc_name());
             desc.setShortDescription(Bundle.regressionSpecUI_rampsDesc_desc());
-            edesc.setReadOnly(isRo());
+            edesc.setReadOnly(isRegressionRo());
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -267,13 +281,16 @@ public class RegressionSpecUI extends BaseRegArimaSpecUI {
         "regressionSpecUI.userdefinedDesc.desc=User-defined variables"
     })
     private EnhancedPropertyDescriptor userdefinedDesc() {
+        if (core().getFrequency() == 0) {
+            return null;
+        }
         try {
             PropertyDescriptor desc = new PropertyDescriptor("UserDefinedVariables", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, USERDEF_ID);
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setDisplayName(Bundle.regressionSpecUI_userdefinedDesc_name());
             desc.setShortDescription(Bundle.regressionSpecUI_userdefinedDesc_desc());
-            edesc.setReadOnly(isRo());
+            edesc.setReadOnly(isRegressionRo());
             return edesc;
         } catch (IntrospectionException ex) {
             return null;

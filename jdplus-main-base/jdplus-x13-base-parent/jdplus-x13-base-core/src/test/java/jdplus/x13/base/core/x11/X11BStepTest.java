@@ -277,6 +277,10 @@ public class X11BStepTest {
         double[] actual_B7 = prepareForCompare(instance.getB7(), context);
         assertArrayEquals(expected_B7, actual_B7, DELTA, "Error in B7");
 
+        double[] expected_B8 = old_Results.getData("b-tables.b8", TsData.class).internalStorage();
+        double[] actual_B8 = prepareForCompare(instance.getB8(), context);
+        org.junit.Assert.assertArrayEquals("Error in B8", expected_B8, actual_B8, DELTA);
+      
         double[] expected_B9 = old_Results.getData("b-tables.b9", TsData.class).internalStorage();
         double[] actual_B9 = prepareForCompare(instance.getB9(), context);
         assertArrayEquals(expected_B9, actual_B9, DELTA, "Error in B9");

@@ -22,6 +22,8 @@ import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.actions.Resetable;
 import jdplus.toolkit.base.api.processing.DiagnosticsConfiguration;
 import java.awt.Image;
+
+import lombok.NonNull;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 
@@ -55,7 +57,7 @@ public interface SaDiagnosticsFactoryBuddy<C extends DiagnosticsConfiguration>  
     boolean valid();
 
     @Override
-    default String getDisplayName() {
+    default @NonNull String getDisplayName() {
         return getName();
     }
 
@@ -65,7 +67,7 @@ public interface SaDiagnosticsFactoryBuddy<C extends DiagnosticsConfiguration>  
     }
 
     @Override
-    default Sheet createSheet() {
+    default @NonNull Sheet createSheet() {
         return new Sheet();
     }
 }

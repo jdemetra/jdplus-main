@@ -28,9 +28,10 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
  *
  * @author Jean Palate
  */
+@lombok.experimental.UtilityClass
 public class Loading {
 
-    public static ISsfLoading optimize(ISsfLoading l, int len) {
+    public ISsfLoading optimize(ISsfLoading l, int len) {
         if (!l.isTimeInvariant()) {
             return l;
         }
@@ -71,59 +72,59 @@ public class Loading {
 
     }
 
-    public static ISsfLoading fromPosition(final int mpos) {
+    public ISsfLoading fromPosition(final int mpos) {
         return mpos == 0 ? Loading1.L0 : new Loading1(mpos);
     }
 
-    public static ISsfLoading from(final int mpos, final double b) {
+    public ISsfLoading from(final int mpos, final double b) {
         return b == 1 ? fromPosition(mpos) : new Loading1l(mpos, b);
     }
 
-    public static ISsfLoading sum() {
+    public ISsfLoading sum() {
         return new SumLoading();
     }
 
-    public static ISsfLoading createPartialSum(final int n) {
+    public ISsfLoading createPartialSum(final int n) {
         return new PartialSumLoading(n);
     }
 
-    public static ISsfLoading fromPositions(final int[] mpos) {
+    public ISsfLoading fromPositions(final int[] mpos) {
         return new Loading2(mpos);
     }
 
-    public static ISsfLoading from(final int[] mpos, final double[] w) {
+    public ISsfLoading from(final int[] mpos, final double[] w) {
         return new Loading3(mpos, w);
     }
 
-    public static ISsfLoading circular(final int period) {
+    public ISsfLoading circular(final int period) {
         return new CircularLoading(period, 0);
     }
 
-    public static ISsfLoading circular(final int period, final int pstart) {
+    public ISsfLoading circular(final int period, final int pstart) {
         return new CircularLoading(period, pstart);
     }
 
-    public static ISsfLoading cyclical(final int period) {
+    public ISsfLoading cyclical(final int period) {
         return new CyclicalLoading(period, 0);
     }
 
-    public static ISsfLoading cyclical(final int period, final int pstart) {
+    public ISsfLoading cyclical(final int period, final int pstart) {
         return new CyclicalLoading(period, pstart);
     }
 
-    public static ISsfLoading periodic(final int period, final int start) {
+    public ISsfLoading periodic(final int period, final int start) {
         return new PeriodicLoading(period, start);
     }
 
-    public static ISsfLoading regression(final FastMatrix X) {
+    public ISsfLoading regression(final FastMatrix X) {
         return new RegressionLoading(X);
     }
 
-    public static ISsfLoading regression(final DoubleSeq x) {
+    public ISsfLoading regression(final DoubleSeq x) {
         return new SingleRegressionLoading(x);
     }
 
-    public static ISsfLoading rescale(ISsfLoading loading, double s) {
+    public ISsfLoading rescale(ISsfLoading loading, double s) {
         if (s == 1) {
             return loading;
         } else {
@@ -131,7 +132,7 @@ public class Loading {
         }
     }
 
-    public static ISsfLoading rescale(ISsfLoading loading, double[] s) {
+    public ISsfLoading rescale(ISsfLoading loading, double[] s) {
         if (s.length == 1) {
             return rescale(loading, s[0]);
         } else {
@@ -422,7 +423,7 @@ public class Loading {
 
     }
 
-    static class Loading2 implements ISsfLoading {
+    private static class Loading2 implements ISsfLoading {
 
         private final int[] mpos;
 
@@ -500,7 +501,7 @@ public class Loading {
 
     }
 
-    static class Loading3 implements ISsfLoading {
+    private static class Loading3 implements ISsfLoading {
 
         private final int[] mpos;
         private final double[] w;
@@ -584,7 +585,7 @@ public class Loading {
 
     }
 
-    static class CircularLoading implements ISsfLoading {
+    private static class CircularLoading implements ISsfLoading {
 
         private final int period, start;
 
@@ -667,7 +668,7 @@ public class Loading {
         }
     }
 
-    static class CyclicalLoading implements ISsfLoading {
+    private static class CyclicalLoading implements ISsfLoading {
 
         private final int period, start;
 
@@ -725,7 +726,7 @@ public class Loading {
 
     }
 
-    static class PeriodicLoading implements ISsfLoading {
+    private static class PeriodicLoading implements ISsfLoading {
 
         private final int period, pos;
 

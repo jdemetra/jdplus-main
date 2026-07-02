@@ -17,20 +17,19 @@
 package jdplus.toolkit.desktop.plugin.datatransfer;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
-import jdplus.toolkit.desktop.plugin.NamedService;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.util.Table;
+import jdplus.toolkit.desktop.plugin.NamedService;
+import lombok.NonNull;
 import nbbrd.design.swing.OnAnyThread;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.ServiceSorter;
-import lombok.NonNull;
 
 import java.awt.datatransfer.DataFlavor;
 import java.io.IOException;
-import jdplus.toolkit.base.api.math.matrices.Matrix;
 
 /**
  * SPI that allows to import/export specific data structures from/to the
@@ -41,8 +40,7 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class
+        quantifier = Quantifier.MULTIPLE
 )
 public interface DataTransferSpi extends NamedService {
 

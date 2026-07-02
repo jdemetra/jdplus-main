@@ -93,6 +93,7 @@ public class X11Extractor extends InformationMapping<X11Results> {
         set(X11Dictionaries.D13, TsData.class, source -> source.getD13());
         set(X11Dictionaries.ICRATIO, Double.class, source -> source.getICRatio());
         set(X11Dictionaries.TRENDFILTER, Integer.class, source -> source.getFinalHendersonFilterLength());
+        set(X11Dictionaries.D7_TRENDFILTER, Integer.class, source -> source.getD7HendersonFilterLength());
         set(X11Dictionaries.SEASONALFILTERS, String[].class, (X11Results source) -> {
             SeasonalFilterOption[] filters = source.getFinalSeasonalFilter();
             if (filters == null || filters.length == 0) {

@@ -16,6 +16,7 @@
  */
 package jdplus.x13.base.api.x11;
 
+import java.util.Arrays;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.toolkit.base.api.util.Validatable;
 import nbbrd.design.Development;
@@ -33,6 +34,22 @@ public final class X11Spec implements Validatable<X11Spec> {
     public static final double DEFAULT_LOWER_SIGMA = 1.5, DEFAULT_UPPER_SIGMA = 2.5;
     public static final int DEFAULT_FORECAST_HORIZON = 0, DEFAULT_BACKCAST_HORIZON = 0;
 
+    public static final CrossValidationSeasonalFilterOptions CVSFOS = CrossValidationSeasonalFilterOptions.Default;
+
+    public static final CrossValidationTable[] DEFAULT_CVTS = {
+        CrossValidationTable.B3,
+        CrossValidationTable.B4,
+        CrossValidationTable.B8,
+        CrossValidationTable.C4,
+        CrossValidationTable.C9,
+        CrossValidationTable.D4,
+        CrossValidationTable.D8,
+        CrossValidationTable.D9
+    };
+    public static final CrossValidationTable[] CVTS = DEFAULT_CVTS; //Not jet implented for selecting in the UI
+
+    public static final CrossValidationTable DEFAULT_CVT = CrossValidationTable.B3;
+    public static final CrossValidationQualityCriteria DEFAULT_CVQC = CrossValidationQualityCriteria.RMSE;
     private static final SeasonalFilterOption[] MSR = new SeasonalFilterOption[]{SeasonalFilterOption.Msr};
 
     /**
@@ -40,8 +57,27 @@ public final class X11Spec implements Validatable<X11Spec> {
      */
     private DecompositionMode mode;
     private boolean seasonal;
-
     private SeasonalFilterOption[] filters;
+
+    /*
+    Filters that are taken in to account, when selection the best seasonal filter for a given time serice
+     */
+    private CrossValidationSeasonalFilterOptions crossValidationSeasonalFilterOptions;
+
+    /*
+    Tables which are allowed for the optimal filter selected with CrossValidation by the user
+     */
+    private CrossValidationTable[] crossValidationTables;
+
+    /*
+    Table to calculate the seasonal filter Option with CV, then the table ist used for the next seasonal filter calculations 
+     */
+    private CrossValidationTable crossValidationSelectionTable;
+
+    /* Quality Criteria that is used to select the optimal filter
+    
+     */
+    private CrossValidationQualityCriteria crossValidationQualityCriteria;
 
     /**
      * Lower sigma value for extreme values detection [sigmalim option in
@@ -122,7 +158,11 @@ public final class X11Spec implements Validatable<X11Spec> {
                 .seasonal(true)
                 .lowerSigma(DEFAULT_LOWER_SIGMA)
                 .upperSigma(DEFAULT_UPPER_SIGMA)
-                .mode(DecompositionMode.Multiplicative);
+                .mode(DecompositionMode.Multiplicative)
+                .crossValidationQualityCriteria(DEFAULT_CVQC)
+                .crossValidationTables(CVTS)
+                .crossValidationSelectionTable(DEFAULT_CVT)
+                .crossValidationSeasonalFilterOptions(CVSFOS);
     }
 
     public boolean isDefault() {
@@ -144,7 +184,28 @@ public final class X11Spec implements Validatable<X11Spec> {
         if (calendarSigma.equals(CalendarSigmaOption.Select) && sigmaVec == null) {
             throw new X11Exception("SigmavecOptions not set for CalendarSigmaOption Select");
         }
+
+        if (!Arrays.stream(CVTS).anyMatch(x -> x == crossValidationSelectionTable)) {
+            throw new X11Exception("The selected table for estimation the seasonal filter with cross validation is not valid.");
+        }
         return this;
+    }
+
+    public X11Spec checkAnnualFrequency(int period) {
+        if ((sigmaVec == null || sigmaVec.length == period) && (filters == null || (filters.length == period || filters.length == 1))) {
+            return this;
+        }
+        Builder builder = toBuilder();
+
+        if (sigmaVec != null) {
+            builder.calendarSigma(CalendarSigmaOption.None)
+                    .sigmaVec(null);
+        }
+        if (filters != null) {
+            builder.filters(MSR);
+        }
+
+        return builder.build();
     }
 
     public static class Builder implements Validatable.Builder<X11Spec> {

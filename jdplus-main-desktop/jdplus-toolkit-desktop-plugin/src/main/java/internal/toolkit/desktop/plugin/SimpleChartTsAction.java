@@ -27,6 +27,7 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
+import lombok.NonNull;
 import nbbrd.design.DirectImpl;
 import nbbrd.service.ServiceProvider;
 
@@ -42,17 +43,17 @@ import jdplus.toolkit.desktop.plugin.TsActionOpenSpi;
 public final class SimpleChartTsAction implements TsActionOpenSpi {
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "SimpleChartTsAction";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Simple chart";
     }
 
     @Override
-    public void open(Ts ts) {
+    public void open(@NonNull Ts ts) {
         String topComponentName = getTopComponentName(ts);
         NbComponents.findTopComponentByNameAndClass(topComponentName, JTsChartTopComponent.class)
                 .orElseGet(() -> createComponent(topComponentName, ts))

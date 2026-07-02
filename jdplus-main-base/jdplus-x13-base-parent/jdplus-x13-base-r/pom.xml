@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-x13-base-parent</artifactId>
-        <version>3.7.1</version>
+        <version>3.8.0</version>
     </parent>
 
     <artifactId>jdplus-x13-base-r</artifactId>
@@ -17,16 +17,6 @@
 
     <dependencies>
         <!-- compile and runtime -->
-        <dependency>
-            <groupId>eu.europa.ec.joinup.sat</groupId>
-            <artifactId>jdplus-x13-base-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europa.ec.joinup.sat</groupId>
-            <artifactId>jdplus-x13-base-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-toolkit-base-r</artifactId>

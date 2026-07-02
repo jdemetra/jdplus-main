@@ -22,9 +22,10 @@ import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;
 import jdplus.toolkit.base.api.stats.OneWayAnova;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  *
@@ -32,7 +33,7 @@ import nbbrd.service.ServiceDefinition;
  */
 public class SeasonalityTests {
 
-    private final SeasonalityTestsLoader.Factory FACTORY = new SeasonalityTestsLoader.Factory();
+    private final AtomicReference<Factory> FACTORY = new AtomicReference<>(SeasonalityTestsLoader.Factory.load());
 
     public void seFactory(Factory factory) {
         FACTORY.set(factory);
@@ -73,7 +74,7 @@ public class SeasonalityTests {
     @InterchangeableProcessor
     @Algorithm
     @SuppressWarnings(ServiceDefinition.SINGLE_FALLBACK_NOT_EXPECTED)
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE)
     public static interface Factory {
 
         // Parametric tests. Should be applied on series corrected for trend

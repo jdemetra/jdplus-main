@@ -26,23 +26,14 @@ jobs:
 
     steps:
       - name: Checkout and Setup Maven
-        uses: s4u/setup-maven-action@v1.19.0
+        uses: s4u/setup-maven-action@v1.20.0
         with:
           checkout-submodules: true
           checkout-fetch-depth: 0
           java-version: ${{ matrix.java }}
 
       - name: Pre-download dependencies with Maven
-        uses: nick-fields/retry@v3
-        with:
-          command: mvn -U dependency:go-offline
-          max_attempts: 3
-          timeout_minutes: 5
+        run: mvn -U dependency:go-offline
 
-      - name: Build and (headless) test with Maven (Linux)
-        if: ${{ runner.os == 'Linux' }}
-        run: xvfb-run mvn install
-
-      - name: Build and (headless) test with Maven (Windows and macOS)
-        if: ${{ runner.os != 'Linux' }}
-        run: mvn install
+      - name: Build and (headless) test with Maven
+        run: ${{ runner.os == 'Linux' && 'xvfb-run' || '' }} mvn install

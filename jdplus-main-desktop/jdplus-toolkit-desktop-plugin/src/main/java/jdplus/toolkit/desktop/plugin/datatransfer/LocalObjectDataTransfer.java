@@ -36,37 +36,37 @@ public final class LocalObjectDataTransfer implements DataTransferSpi {
     }
 
     @Override
-    public String getName() {
+    public @NonNull String getName() {
         return "LocalObject";
     }
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Local Object";
     }
 
     @Override
-    public DataFlavor getDataFlavor() {
+    public @NonNull DataFlavor getDataFlavor() {
         return DATA_FLAVOR;
     }
 
     @Override
-    public boolean canExportTsCollection(TsCollection col) {
+    public boolean canExportTsCollection(@NonNull TsCollection col) {
         return true;
     }
 
     @Override
-    public Object exportTsCollection(TsCollection col) {
+    public @NonNull Object exportTsCollection(@NonNull TsCollection col) {
         return col;
     }
 
     @Override
-    public boolean canImportTsCollection(Object obj) {
+    public boolean canImportTsCollection(@NonNull Object obj) {
         return obj instanceof TsCollection;
     }
 
     @Override
-    public TsCollection importTsCollection(Object obj) throws IOException {
+    public @NonNull TsCollection importTsCollection(@NonNull Object obj) throws IOException {
         return (TsCollection) obj;
     }
 
@@ -86,42 +86,42 @@ public final class LocalObjectDataTransfer implements DataTransferSpi {
     }
 
     @Override
-    public boolean canExportMatrix(Matrix matrix) {
+    public boolean canExportMatrix(@NonNull Matrix matrix) {
         return true;
     }
 
     @Override
-    public Object exportMatrix(Matrix matrix) throws IOException {
+    public @NonNull Object exportMatrix(@NonNull Matrix matrix) throws IOException {
         return matrix;
     }
 
     @Override
-    public boolean canImportMatrix(Object obj) {
+    public boolean canImportMatrix(@NonNull Object obj) {
         return obj instanceof Matrix;
     }
 
     @Override
-    public Matrix importMatrix(Object obj) throws IOException, ClassCastException {
+    public @NonNull Matrix importMatrix(@NonNull Object obj) throws IOException, ClassCastException {
         return (Matrix) obj;
     }
 
     @Override
-    public boolean canExportTable(Table<?> table) {
+    public boolean canExportTable(@NonNull Table<?> table) {
         return true;
     }
 
     @Override
-    public Object exportTable(Table<?> table) throws IOException {
+    public @NonNull Object exportTable(@NonNull Table<?> table) throws IOException {
         return table;
     }
 
     @Override
-    public boolean canImportTable(Object obj) {
+    public boolean canImportTable(@NonNull Object obj) {
         return obj instanceof Table;
     }
 
     @Override
-    public Table<?> importTable(Object obj) throws IOException, ClassCastException {
+    public @NonNull Table<?> importTable(@NonNull Object obj) throws IOException, ClassCastException {
         return (Table<?>) obj;
     }
 }

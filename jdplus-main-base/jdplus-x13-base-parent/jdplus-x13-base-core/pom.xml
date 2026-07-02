@@ -5,7 +5,7 @@
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-x13-base-parent</artifactId>
-        <version>3.7.1</version>
+        <version>3.8.0</version>
     </parent>
 
     <artifactId>jdplus-x13-base-core</artifactId>
@@ -40,6 +40,13 @@
             <artifactId>demetra-tstoolkit</artifactId>
             <version>${jd2.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

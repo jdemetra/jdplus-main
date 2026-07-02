@@ -38,10 +38,10 @@ abstract class BaseRegArimaSpecUI implements IPropertyDescriptors {
         return root.ro;
     }
 
-    boolean isTransformationDefined(){
+    boolean isTransformationDefined() {
         return root.getCore().getTransform().getFunction() != TransformationType.Auto;
     }
-    
+
     void update(BasicSpec spec) {
         root.core = root.core.toBuilder().basic(spec).build();
     }
@@ -90,4 +90,9 @@ abstract class BaseRegArimaSpecUI implements IPropertyDescriptors {
                 .tradingDays(spec)
                 .build());
     }
+
+    void update(int freq) {
+        root.core = root.core.setFrequency(freq);
+    }
+
 }

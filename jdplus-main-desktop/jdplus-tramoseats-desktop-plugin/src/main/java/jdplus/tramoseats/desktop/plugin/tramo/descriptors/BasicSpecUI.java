@@ -14,6 +14,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.tramoseats.base.api.tramo.TramoFrequency;
 
 /**
  *
@@ -25,11 +26,23 @@ public class BasicSpecUI extends BaseTramoSpecUI {
         super(root);
     }
 
-    public DateSelectorUI getSpan() {
-        return new DateSelectorUI(core().getTransform().getSpan(), UserInterfaceContext.INSTANCE.getDomain(), isRo(), selector->updateSpan(selector));
+    public TramoFrequency getFrequency() {
+        return TramoFrequency.parse(core().getFrequency());
     }
-    
-    public void updateSpan(TimeSelector span){
+
+    public void setFrequency(TramoFrequency freq) {
+        int ifreq = freq.toInt();
+        if (ifreq < 0)
+            throw new IllegalArgumentException("Can't be used. For legacy purposes only");
+        update(ifreq);
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(ifreq);
+    }
+
+    public DateSelectorUI getSpan() {
+        return new DateSelectorUI(core().getTransform().getSpan(), UserInterfaceContext.INSTANCE.getDomain(), isRo(), selector -> updateSpan(selector));
+    }
+
+    public void updateSpan(TimeSelector span) {
         update(core().getTransform().toBuilder().span(span).build());
     }
 
@@ -46,7 +59,11 @@ public class BasicSpecUI extends BaseTramoSpecUI {
     @Override
     public List<EnhancedPropertyDescriptor> getProperties() {
         ArrayList<EnhancedPropertyDescriptor> descs = new ArrayList<>();
-        EnhancedPropertyDescriptor desc = spanDesc();
+        EnhancedPropertyDescriptor desc = freqDesc();
+        if (desc != null) {
+            descs.add(desc);
+        }
+        desc = spanDesc();
         if (desc != null) {
             descs.add(desc);
         }
@@ -67,7 +84,26 @@ public class BasicSpecUI extends BaseTramoSpecUI {
         return Bundle.basicSpecUI_getDislayName();
     }
     ///////////////////////////////////////////////////////////////////////////
-    private static final int SPAN_ID = 1, AUTOMDL_ID = 2, PRELIMINARYCHECK_ID = 3;
+    private static final int SPAN_ID = 1, AUTOMDL_ID = 2, PRELIMINARYCHECK_ID = 3, FREQ_ID = 0;
+    
+
+    @Messages({
+        "basicSpecUI.freqDesc.name=Frequency",
+        "basicSpecUI.freqDesc.desc=Number of periods in one year"
+    })
+    private EnhancedPropertyDescriptor freqDesc() {
+        try {
+            PropertyDescriptor desc = new PropertyDescriptor("frequency", this.getClass());
+            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, FREQ_ID);
+            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+            desc.setShortDescription(Bundle.basicSpecUI_freqDesc_desc());
+            desc.setDisplayName(Bundle.basicSpecUI_freqDesc_name());
+            edesc.setReadOnly(isRo() || UserInterfaceContext.INSTANCE.getDomain() != null);
+            return edesc;
+        } catch (IntrospectionException ex) {
+            return null;
+        }
+    }
 
     @Messages({
         "basicSpecUI.spanDesc.name=Series span",

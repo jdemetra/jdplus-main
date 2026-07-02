@@ -1,17 +1,17 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.base.csv;
@@ -22,6 +22,9 @@ import jdplus.toolkit.base.api.timeseries.TsDataTable;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import lombok.Setter;
+import nbbrd.picocsv.Csv;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DecimalFormat;
@@ -35,39 +38,28 @@ import java.util.List;
  */
 public class TsCollectionCsvFormatter {
 
-    private CsvLayout layout_ = CsvLayout.VTable;
-    private final char comma;
-    private static final String NEWLINE = System.lineSeparator();
     private final DecimalFormat fmt;
     private final NumberFormat ifmt;
-    private boolean fullName;
+
+    @Setter
+    private CsvLayout presentation = CsvLayout.VTable;
+
+    @Setter
+    private boolean fullName = false;
 
     public TsCollectionCsvFormatter() {
         ifmt = NumberFormat.getIntegerInstance(CsvInformationFormatter.getLocale());
         ifmt.setGroupingUsed(false);
-        comma = CsvInformationFormatter.getCsvSeparator();
         fmt = (DecimalFormat) DecimalFormat.getNumberInstance(CsvInformationFormatter.getLocale());
         fmt.setMaximumFractionDigits(BasicConfiguration.getFractionDigits());
         fmt.setGroupingUsed(false);
-    }
-
-    public CsvLayout getPresentation() {
-        return layout_;
-    }
-
-    public void setPresentation(CsvLayout layout) {
-        layout_ = layout;
-    }
-
-    public void setFullName(boolean fullName) {
-        this.fullName = fullName;
     }
 
     public boolean write(List<TsData> coll, List<String> names, Writer writer) throws IOException {
         if (coll.isEmpty() || names.size() != coll.size()) {
             return false;
         }
-        if (layout_ == CsvLayout.List) {
+        if (presentation == CsvLayout.List) {
             return writeList(coll, names, writer);
         }
 
@@ -79,112 +71,98 @@ public class TsCollectionCsvFormatter {
         int ndata = domain.getLength();
         int nseries = coll.size();
 
-        TsDataTable.Cursor cursor = table.cursor(TsDataTable.DistributionType.LAST);
-        if (layout_ == CsvLayout.VTable) {
-            writer.write(comma);
-            for (int i = 0; i < nseries; ++i) {
-                write(names.get(i), writer);
-                if (i != nseries - 1) {
-                    writer.write(comma);
-                } else {
-                    writer.write(NEWLINE);
-                }
-            }
+        Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder()
+                .separator(System.lineSeparator())
+                .delimiter(CsvInformationFormatter.getCsvSeparator())
+                .build();
 
-            for (int j = 0; j < ndata; ++j) {
-                writer.write(domain.get(j).start().toLocalDate().format(DateTimeFormatter.ISO_DATE));
+        try (Csv.Writer csv = Csv.Writer.of(csvFormat, Csv.WriterOptions.DEFAULT, writer, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
+            TsDataTable.Cursor cursor = table.cursor(TsDataTable.DistributionType.LAST);
+
+            if (presentation == CsvLayout.VTable) {
+                csv.writeField(null);
                 for (int i = 0; i < nseries; ++i) {
-                    writer.write(comma);
-                    cursor.moveTo(j, i);
-                    if (cursor.getStatus() == TsDataTable.ValueStatus.PRESENT) {
-                        write(fmt.format(cursor.getValue()), writer);
+                    csv.writeField(formatName(names.get(i)));
+                }
+                csv.writeEndOfLine();
+
+                for (int j = 0; j < ndata; ++j) {
+                    csv.writeField(domain.get(j).start().toLocalDate().format(DateTimeFormatter.ISO_DATE));
+                    for (int i = 0; i < nseries; ++i) {
+                        cursor.moveTo(j, i);
+                        if (cursor.getStatus() == TsDataTable.ValueStatus.PRESENT) {
+                            csv.writeField(fmt.format(cursor.getValue()));
+                        } else {
+                            csv.writeField(null);
+                        }
                     }
+                    csv.writeEndOfLine();
                 }
-                writer.write(NEWLINE);
-            }
-        } else {
-            writer.write(comma);
-            for (int i = 0; i < ndata; ++i) {
-                writer.write(domain.get(i).start().toLocalDate().format(DateTimeFormatter.ISO_DATE));
-                if (i != ndata - 1) {
-                    writer.write(comma);
-                } else {
-                    writer.write(NEWLINE);
-                }
-            }
-            for (int j = 0; j < nseries; ++j) {
-                write(names.get(j), writer);
+            } else {
+                csv.writeField(null);
                 for (int i = 0; i < ndata; ++i) {
-                    writer.write(comma);
-                    cursor.moveTo(i, j);
-                    if (cursor.getStatus() == TsDataTable.ValueStatus.PRESENT) {
-                        write(fmt.format(cursor.getValue()), writer);
-                    }
+                    csv.writeField(domain.get(i).start().toLocalDate().format(DateTimeFormatter.ISO_DATE));
                 }
-                writer.write(NEWLINE);
+                csv.writeEndOfLine();
+
+                for (int j = 0; j < nseries; ++j) {
+                    csv.writeField(formatName(names.get(j)));
+                    for (int i = 0; i < ndata; ++i) {
+                        cursor.moveTo(i, j);
+                        if (cursor.getStatus() == TsDataTable.ValueStatus.PRESENT) {
+                            csv.writeField(fmt.format(cursor.getValue()));
+                        } else {
+                            csv.writeField(null);
+                        }
+                    }
+                    csv.writeEndOfLine();
+                }
             }
         }
         return true;
     }
 
     private boolean writeList(List<TsData> coll, List<String> names, Writer writer) throws IOException {
-        int nseries = names.size();
-        for (int j = 0; j < nseries; ++j) {
-            write(names.get(j), writer);
-            writer.write(comma);
-            TsData cur = coll.get(j);
-            if (cur != null) {
-                // header: freq, start, pos, length
-                TsPeriod start = cur.getStart();
-                writer.write(ifmt.format(start.annualFrequency()));
-                writer.write(comma);
-                writer.write(ifmt.format(start.year()));
-                writer.write(comma);
-                writer.write(ifmt.format(start.annualPosition() + 1));
-                writer.write(comma);
-                writer.write(ifmt.format(cur.length()));
-                for (int i = 0; i < cur.length(); ++i) {
-                    writer.write(comma);
-                    double val = cur.getValue(i);
-                    if (!Double.isNaN(val)) {
-                        write(fmt.format(val), writer);
+        Csv.Format csvFormat = Csv.Format.DEFAULT.toBuilder()
+                .separator(System.lineSeparator())
+                .delimiter(CsvInformationFormatter.getCsvSeparator())
+                .build();
+
+        try (Csv.Writer csv = Csv.Writer.of(csvFormat, Csv.WriterOptions.DEFAULT, writer, Csv.DEFAULT_CHAR_BUFFER_SIZE)) {
+            int nseries = names.size();
+            for (int j = 0; j < nseries; ++j) {
+                csv.writeField(formatName(names.get(j)));
+                TsData cur = coll.get(j);
+                if (cur != null) {
+                    // header: freq, start, pos, length
+                    TsPeriod start = cur.getStart();
+                    csv.writeField(ifmt.format(start.annualFrequency()));
+                    csv.writeField(ifmt.format(start.year()));
+                    csv.writeField(ifmt.format(start.annualPosition() + 1));
+                    csv.writeField(ifmt.format(cur.length()));
+                    for (int i = 0; i < cur.length(); ++i) {
+                        double val = cur.getValue(i);
+                        if (!Double.isNaN(val)) {
+                            csv.writeField(fmt.format(val));
+                        } else {
+                            csv.writeField(null);
+                        }
                     }
                 }
+                csv.writeEndOfLine();
             }
-            writer.write(NEWLINE);
         }
         return true;
     }
 
-    private void write(String txt, Writer writer) throws IOException {
-
+    private String formatName(String txt) {
         if (txt == null) {
-            return;
+            return null;
         }
         if (fullName) {
-            txt = MultiLineNameUtil.join(txt, " * ");
+            return MultiLineNameUtil.join(txt, " * ");
         } else {
-            txt = MultiLineNameUtil.last(txt);
-        }
-
-        if (txt.indexOf(comma) >= 0) {
-            if (txt.indexOf('\"') >= 0) {
-                writer.write("\"\"");
-                writer.write(txt);
-                writer.write("\"\"");
-            } else {
-                writer.write('\"');
-                writer.write(txt);
-                writer.write('\"');
-            }
-        } else {
-            if (txt.indexOf('\"') >= 0) {
-                writer.write("\"\"");
-                writer.write(txt);
-                writer.write("\"\"");
-            } else {
-                writer.write(txt);
-            }
+            return MultiLineNameUtil.last(txt);
         }
     }
 }

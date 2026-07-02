@@ -23,7 +23,6 @@ import jdplus.toolkit.base.api.processing.ProcResults;
 import nbbrd.design.Development;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import nbbrd.service.Mutability;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 
@@ -35,7 +34,7 @@ import nbbrd.service.ServiceDefinition;
 @lombok.experimental.UtilityClass
 public class Seats {
 
-    private final SeatsLoader.Processor ENGINE = new SeatsLoader.Processor();
+    private final AtomicReference<Seats.Processor> ENGINE = new AtomicReference<>(SeatsLoader.Processor.load());
     private final AtomicReference<Processor> LEGACYENGINE=new AtomicReference<Processor>();
 
     public void setEngine(Processor algorithm) {
@@ -75,7 +74,7 @@ public class Seats {
 
     @InterchangeableProcessor
     @Algorithm
-    @ServiceDefinition(quantifier = Quantifier.SINGLE, mutability = Mutability.CONCURRENT, fallback=DefProcessor.class)
+    @ServiceDefinition(quantifier = Quantifier.SINGLE, fallback=DefProcessor.class)
     public static interface Processor {
 
         ProcResults process(SeatsSpec spec, List<String> items);

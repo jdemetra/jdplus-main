@@ -17,6 +17,7 @@ import jdplus.sa.base.core.diagnostics.GenericSaTests;
 import jdplus.sa.base.core.diagnostics.GenericSeasonalityTests;
 import jdplus.sa.base.core.diagnostics.ResidualTradingDaysTests;
 import jdplus.sa.base.core.tests.SpectralPeaks;
+import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.stats.AutoCovariances;
 import nbbrd.service.ServiceProvider;
 
@@ -199,7 +200,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
             }
             return null;
         });
-        
+
         /////////////////////// Linearized
 
         set(SaDictionaries.SEAS_LIN_F, StatisticalTest.class, source -> {
@@ -252,7 +253,7 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
             }
             return null;
         });
-        
+
         ////////////////////////////////////////////////////////
 
 
@@ -309,5 +310,9 @@ public class GenericSaTestsExtractor extends InformationMapping<GenericSaTests> 
             }
             return null;
         });
+
+        set(RegArimaDictionaries.TD_F_MA, StatisticalTest.class, source -> source.tradingDaysMaFTest());
+
+        set(RegArimaDictionaries.TD_F_OLS, StatisticalTest.class, source -> source.tradingDaysOlsFTest());
     }
 }

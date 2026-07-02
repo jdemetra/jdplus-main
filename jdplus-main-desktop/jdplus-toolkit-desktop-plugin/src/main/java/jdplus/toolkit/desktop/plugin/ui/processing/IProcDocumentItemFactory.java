@@ -5,17 +5,15 @@
 package jdplus.toolkit.desktop.plugin.ui.processing;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.base.api.util.Id;
 import lombok.NonNull;
-import org.jspecify.annotations.Nullable;
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.JComponent;
 import nbbrd.service.Quantifier;
 import nbbrd.service.ServiceDefinition;
 import nbbrd.service.ServiceSorter;
+import org.jspecify.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  *
@@ -23,9 +21,7 @@ import nbbrd.service.ServiceSorter;
  */
 @ExtensionPoint
 @ServiceDefinition(
-        quantifier = Quantifier.MULTIPLE,
-        backend = NetBeansServiceBackend.class,
-        singleton = true
+        quantifier = Quantifier.MULTIPLE
 )
 public interface IProcDocumentItemFactory {
 
