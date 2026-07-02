@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.8.0] - 2026-07-02
+
 ### Added
 
 - ![STAT] ![UI] Add cross-validation algorithm for seasonal filter selection in the X-11 algorithm, including updates to core routines and the user interface
@@ -340,7 +342,8 @@ This is the **initial release** of JDemetra+ v3.0.0.
 
 - Initial release
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.7.1...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.8.0...HEAD
+[3.8.0]: https://github.com/jdemetra/jd3-main/compare/v3.7.1...v3.8.0
 [3.7.1]: https://github.com/jdemetra/jd3-main/compare/v3.7.0...v3.7.1
 [3.7.0]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...v3.7.0
 [3.6.0]: https://github.com/jdemetra/jd3-main/compare/v3.5.1...v3.6.0
