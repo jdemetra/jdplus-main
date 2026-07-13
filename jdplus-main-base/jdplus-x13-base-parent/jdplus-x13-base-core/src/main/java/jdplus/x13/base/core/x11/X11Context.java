@@ -281,6 +281,10 @@ public class X11Context {
      * MSR, the MSR defaults will be used.
      */
     public boolean isMSR() {
+          if (finalSeasonalFilter == null) {
+            return false;
+        }
+
         for (SeasonalFilterOption option : finalSeasonalFilter) {
             if (!SeasonalFilterOption.Msr.equals(option)) {
                 return false;
@@ -293,6 +297,9 @@ public class X11Context {
      * CrossValidation calculation is just for all periods.
      */
     public boolean isCrossValidation() {
+            if (finalSeasonalFilter == null) {
+            return false;
+        }
 
         for (SeasonalFilterOption option : finalSeasonalFilter) {
             if (!SeasonalFilterOption.CrossValidation.equals(option)) {
