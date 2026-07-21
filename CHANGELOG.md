@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- ![STAT] Fix NPE for final filters [#1029](https://github.com/jdemetra/jdplus-main/issues/1029) 
+
 ## [3.8.0] - 2026-07-02
 
 ### Added
