@@ -383,44 +383,55 @@
                 </dependencies>
                 <executions>
                     <execution>
+                        <id>enforce-root-on-validate</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <rules>
+                                <!-- Required project files -->
+                                <requireFilesExist>
+                                    <files>
+                                        <file>${project.basedir}/.gitignore</file>
+                                        <file>${project.basedir}/CHANGELOG.md</file>
+                                        <file>${project.basedir}/LICENSE</file>
+                                        <file>${project.basedir}/lombok.config</file>
+                                        <file>${project.basedir}/README.md</file>
+                                    </files>
+                                </requireFilesExist>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>enforce-on-validate</id>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
                         <configuration>
                             <rules>
-                                <!-- 2.1 Built-In Rules -->
+                                <!-- Built-In Rules -->
                                 <banDuplicatePomDependencyVersions/>
                                 <dependencyConvergence/>
                                 <reactorModuleConvergence/>
                                 <requireMavenVersion>
                                     <version>${requiredMavenVersion}</version>
                                 </requireMavenVersion>
-                                <requireNoRepositories/>
+                                <requireNoRepositories>
+                                    <allowSnapshotRepositories>true</allowSnapshotRepositories>
+                                </requireNoRepositories>
                                 <requirePluginVersions/>
+                                <requireReleaseDeps>
+                                    <onlyWhenRelease>true</onlyWhenRelease>
+                                </requireReleaseDeps>
+                                <requireUpperBoundDeps/>
                                 <requireProperty>
                                     <property>project.artifactId</property>
                                     <message>Project artifactId must follow JD3 pattern</message>
                                     <regex>^(jdplus)-(\w+)(?:-(archetype|base|cli|desktop|bom)(?:-(\w+))?)?$</regex>
                                 </requireProperty>
-                                <requireReleaseDeps>
-                                    <onlyWhenRelease>true</onlyWhenRelease>
-                                </requireReleaseDeps>
-                                <requireUpperBoundDeps/>
-                                <!-- 2.2 extra-enforcer-rules -->
-                                <banCircularDependencies/>
-                                <banDuplicateClasses>
-                                    <!-- Fix org.netbeans.external:net-java-html-boot:jar duplicate classes -->
-                                    <ignoreWhenIdentical>true</ignoreWhenIdentical>
-                                </banDuplicateClasses>
-                                <enforceBytecodeVersion>
-                                    <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
-                                    <ignoredScopes>
-                                        <ignoreScope>test</ignoreScope>
-                                    </ignoredScopes>
-                                </enforceBytecodeVersion>
-                                <!-- 2.3 pomchecker-enforcer-rules -->
-                                <checkMavenCentral
-                                    implementation="org.kordamp.maven.enforcer.checker.CheckMavenCentral">
+                                <!-- pomchecker-enforcer-rules -->
+                                <checkMavenCentral>
                                     <release>false</release>
                                     <strict>false</strict>
                                 </checkMavenCentral>
@@ -431,23 +442,24 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>check-project</id>
+                        <id>enforce-on-verify</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
-                        <inherited>false</inherited>
                         <configuration>
                             <rules>
-                                <!-- 2.4 required project files -->
-                                <requireFilesExist>
-                                    <files>
-                                        <file>${project.basedir}/.gitignore</file>
-                                        <file>${project.basedir}/CHANGELOG.md</file>
-                                        <file>${project.basedir}/LICENSE</file>
-                                        <file>${project.basedir}/lombok.config</file>
-                                        <file>${project.basedir}/README.md</file>
-                                    </files>
-                                </requireFilesExist>
+                                <!-- extra-enforcer-rules -->
+                                <banCircularDependencies/>
+                                <banDuplicateClasses>
+                                    <ignoredScopes>test</ignoredScopes>
+                                </banDuplicateClasses>
+                                <enforceBytecodeVersion>
+                                    <maxJdkVersion>${maven.compiler.release}</maxJdkVersion>
+                                    <ignoredScopes>
+                                        <ignoreScope>test</ignoreScope>
+                                    </ignoredScopes>
+                                </enforceBytecodeVersion>
                             </rules>
                         </configuration>
                     </execution>
