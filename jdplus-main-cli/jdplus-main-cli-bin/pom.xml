@@ -188,20 +188,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <configuration combine.self="append">
-                            <rules combine.self="append">
-                                <banDuplicateClasses>
-                                    <scopes>
-                                        <scope>compile</scope>
-                                        <scope>runtime</scope>
-                                    </scopes>
-                                </banDuplicateClasses>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration combine.self="merge">
+                    <rules>
+                        <banDuplicateClasses>
+                            <scopes>
+                                <scope>compile</scope>
+                                <scope>runtime</scope>
+                            </scopes>
+                        </banDuplicateClasses>
+                    </rules>
+                </configuration>
             </plugin>
 
             <!-- Assemble the application and attach it to the project -->
@@ -223,7 +219,8 @@
                     <repositoryName>lib</repositoryName>
                     <endorsedDir>lib/ext</endorsedDir>
                     <copyConfigurationDirectory>true</copyConfigurationDirectory>
-                    <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties --enable-native-access=ALL-UNNAMED
+                    <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties
+                        --enable-native-access=ALL-UNNAMED
                     </extraJvmArguments>
                     <programs>
                         <program>
