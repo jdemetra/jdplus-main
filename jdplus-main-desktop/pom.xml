@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -13,13 +12,6 @@
     <packaging>pom</packaging>
 
     <name>jdplus-main-desktop</name>
-    <!--    <description>${project.parent.artifactId} - ${project.artifactId}</description>-->
-    <!--    <url>${project.parent.url}</url>-->
-
-    <properties>
-        <!-- NetBeans config -->
-        <brandingToken>nbdemetra</brandingToken>
-    </properties>
 
     <modules>
         <module>jdplus-main-desktop-design</module>
@@ -33,6 +25,13 @@
         <module>jdplus-main-desktop-branding</module>
         <module>jdplus-main-desktop-bin</module>
     </modules>
+
+    <!--    <description>${project.parent.artifactId} - ${project.artifactId}</description>-->
+    <!--    <url>${project.parent.url}</url>-->
+    <properties>
+        <!-- NetBeans config -->
+        <brandingToken>nbdemetra</brandingToken>
+    </properties>
 
     <dependencies>
         <!-- test only -->

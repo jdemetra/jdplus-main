@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.europa.ec.joinup.sat</groupId>
@@ -13,7 +11,6 @@
     <description>JDemetra+ v3</description>
     <url>https://github.com/${x.github.user}/${x.github.repo}</url>
     <inceptionYear>2013</inceptionYear>
-
     <licenses>
         <license>
             <name>European Union Public Licence (EUPL)</name>
@@ -29,6 +26,14 @@
             <organizationUrl>https://www.nbb.be</organizationUrl>
         </developer>
     </developers>
+
+    <modules>
+        <module>jdplus-main-base</module>
+        <module>jdplus-main-cli</module>
+        <module>jdplus-main-desktop</module>
+        <module>jdplus-main-bom</module>
+        <module>jdplus-main-archetype</module>
+    </modules>
 
     <scm>
         <connection>scm:git:git://github.com/${x.github.user}/${x.github.repo}.git</connection>
@@ -76,6 +81,7 @@
         <forbiddenapis.version>3.10</forbiddenapis.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <jdks-maven-plugin.version>1.25.0</jdks-maven-plugin.version>
+        <tidy-maven-plugin.version>1.4.0</tidy-maven-plugin.version>
         <jreleaser-maven-plugin.version>1.25.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
@@ -101,14 +107,6 @@
         <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
         <heylogs.version>0.19.1</heylogs.version>
     </properties>
-
-    <modules>
-        <module>jdplus-main-base</module>
-        <module>jdplus-main-cli</module>
-        <module>jdplus-main-desktop</module>
-        <module>jdplus-main-bom</module>
-        <module>jdplus-main-archetype</module>
-    </modules>
 
     <dependencies>
         <!-- annotations & processors -->
@@ -256,6 +254,11 @@
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
                     <version>${central-publishing-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>tidy-maven-plugin</artifactId>
+                    <version>${tidy-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jreleaser</groupId>
@@ -511,6 +514,18 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tidy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -620,6 +635,7 @@
                 <forbiddenapis.skip>true</forbiddenapis.skip>
                 <jacoco.skip>true</jacoco.skip>
                 <heylogs.skip>true</heylogs.skip>
+                <tidy.skip>true</tidy.skip>
             </properties>
         </profile>
     </profiles>

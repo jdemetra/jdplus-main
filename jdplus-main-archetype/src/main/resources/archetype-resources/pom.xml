@@ -67,6 +67,7 @@
         <forbiddenapis.version>@forbiddenapis.version@</forbiddenapis.version>
         <gitflow-maven-plugin.version>@gitflow-maven-plugin.version@</gitflow-maven-plugin.version>
         <heylogs.version>@heylogs.version@</heylogs.version>
+        <tidy-maven-plugin.version>@tidy-maven-plugin.version@</tidy-maven-plugin.version>
         <jreleaser-maven-plugin.version>@jreleaser-maven-plugin.version@</jreleaser-maven-plugin.version>
         <maven-clean-plugin.version>@maven-clean-plugin.version@</maven-clean-plugin.version>
         <maven-compiler-plugin.version>@maven-compiler-plugin.version@</maven-compiler-plugin.version>
@@ -127,6 +128,36 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <!-- Custom repositories: order matters! -->
+    <!-- Maven Central is enforced at top to prevent dependabot to use snapshots as releases -->
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>central-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>old-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <pluginManagement>
@@ -222,6 +253,11 @@
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
                     <version>${central-publishing-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>tidy-maven-plugin</artifactId>
+                    <version>${tidy-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jreleaser</groupId>
@@ -436,6 +472,18 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tidy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.github.nbbrd.heylogs</groupId>
                 <artifactId>heylogs-maven-plugin</artifactId>
                 <executions>
@@ -546,37 +594,8 @@
                 <forbiddenapis.skip>true</forbiddenapis.skip>
                 <jacoco.skip>true</jacoco.skip>
                 <heylogs.skip>true</heylogs.skip>
+                <tidy.skip>true</tidy.skip>
             </properties>
         </profile>
     </profiles>
-
-    <!-- Custom repositories: order matters! -->
-    <!-- Maven Central is enforced at top to prevent dependabot to use snapshots as releases -->
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>central-snapshots</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>old-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>
