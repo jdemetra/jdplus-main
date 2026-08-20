@@ -35,11 +35,13 @@ public class Moments {
     public double mean(DoubleSeq x) {
         int n = x.length();
         switch (n) {
-            case 0:
+            case 0 -> {
                 return Double.NaN;
-            case 1:
+            }
+            case 1 -> {
                 return x.get(0);
-            default:
+            }
+            default -> {
                 double m = 0;
                 DoubleSeqCursor cursor = x.cursor();
                 for (int i = 0; i < n; ++i) {
@@ -52,6 +54,7 @@ public class Moments {
                     e += cursor.getAndNext() - m;
                 }
                 return m + e / n;
+            }
         }
     }
 
@@ -59,25 +62,27 @@ public class Moments {
 
         int n = x.length();
         switch (n) {
-            case 0:
+            case 0 -> {
                 return Double.NaN;
-            case 1:
+            }
+            case 1 -> {
                 return 0;
-            default:
+            }
+            default -> {
                 DoubleSeqCursor cursor = x.cursor();
                 double v = 0,
-                 v2 = 0;
+                        v2 = 0;
                 for (int i = 0; i < n; ++i) {
                     double d = cursor.getAndNext() - mean;
                     v += d * d;
                     v2 += d;
                 }
-
                 if (unbiased) {
                     return (v - (v2 * v2 / n)) / (n - 1);
                 } else {
                     return (v - (v2 * v2 / n)) / n;
                 }
+            }
         }
     }
 

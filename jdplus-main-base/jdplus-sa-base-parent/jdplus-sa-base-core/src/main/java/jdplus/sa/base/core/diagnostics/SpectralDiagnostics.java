@@ -16,13 +16,10 @@
  */
 package jdplus.sa.base.core.diagnostics;
 
-import jdplus.toolkit.base.api.information.Explorable;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import jdplus.sa.base.api.SaDictionaries;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import java.util.Collections;
 import java.util.List;
 import jdplus.sa.base.api.DecompositionMode;
