@@ -19,9 +19,10 @@ package jdplus.toolkit.base.information;
 import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -76,17 +77,17 @@ public class TsContextVariableMapping {
             effect = "Undefined";
         }
         if (fl > ll) {
-            return Collections.emptyList();
+            return List.of();
         }
         if (ll == fl) {
             TsContextVariable var = new TsContextVariable(id, ll);
-            Variable v = Variable.variable(id, var, Collections.singletonMap("regeffect", effect));
-            return Collections.singletonList(v);
+            Variable v = Variable.variable(id, var, Map.of("regeffect", effect));
+            return List.of(v);
         }
         ArrayList<Variable<TsContextVariable>> list = new ArrayList<>();
         for (int i = fl; i < ll; ++i) {
             TsContextVariable var = new TsContextVariable(id, i);
-            list.add(Variable.<TsContextVariable>variable(id, var, Collections.singletonMap("regeffect", effect)));
+            list.add(Variable.<TsContextVariable>variable(id, var, Map.of("regeffect", effect)));
 
         }
         return list;

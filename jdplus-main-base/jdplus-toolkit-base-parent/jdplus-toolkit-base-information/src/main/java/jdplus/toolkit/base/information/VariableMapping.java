@@ -74,7 +74,7 @@ public class VariableMapping {
         List<Information<String[]>> attr = info.select(ATTRIBUTES, String[].class);
         Map<String, String> map;
         if (attr.isEmpty()) {
-            map = Collections.emptyMap();
+            map = Map.of();
         } else {
             map = new HashMap<>();
             attr.forEach(a -> {

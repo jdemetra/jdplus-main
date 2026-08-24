@@ -43,7 +43,7 @@ public class WorkspaceUtility {
                     .map(desc -> desc.getKey().getId())
                     .collect(Collectors.toList());
         } catch (IOException ex) {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 
@@ -53,7 +53,7 @@ public class WorkspaceUtility {
                     .filter(desc -> desc.getKey().getFamily().equals(family))
                     .collect(Collectors.toList());
         } catch (IOException ex) {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

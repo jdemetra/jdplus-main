@@ -202,7 +202,7 @@ public class ToolkitProtosUtility {
 
     public List<ToolkitProtos.Parameter> convert(Parameter[] p) {
         if (p == null || p.length == 0) {
-            return Collections.emptyList();
+            return List.of();
         }
         ArrayList<ToolkitProtos.Parameter> list = new ArrayList<>();
         for (int i = 0; i < p.length; ++i) {

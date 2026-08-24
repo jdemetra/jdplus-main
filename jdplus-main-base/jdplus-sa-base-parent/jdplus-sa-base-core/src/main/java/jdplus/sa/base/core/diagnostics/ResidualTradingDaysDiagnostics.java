@@ -115,7 +115,7 @@ public class ResidualTradingDaysDiagnostics implements Diagnostics {
 
     @Override
     public List<String> getWarnings() {
-        return Collections.emptyList();
+        return List.of();
     }
 
     private ProcQuality quality(StatisticalTest test) {

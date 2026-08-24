@@ -16,47 +16,26 @@
  */
 package jdplus.sa.desktop.plugin.processing;
 
-import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.desktop.plugin.DemetraUI;
-import jdplus.toolkit.desktop.plugin.components.parts.*;
-import jdplus.toolkit.desktop.plugin.jfreechart.BasicXYDataset;
-import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
-import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
-import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
-import jdplus.toolkit.desktop.plugin.components.tools.JChartPanel;
+import ec.util.chart.ColorScheme.KnownColor;
+import ec.util.chart.swing.ChartCommand;
+import ec.util.chart.swing.Charts;
+import ec.util.chart.swing.SwingColorSchemeSupport;
 import jdplus.main.desktop.design.SwingComponent;
-import jdplus.toolkit.desktop.plugin.ui.TsFrequencyTickUnit;
 import jdplus.sa.base.api.DecompositionMode;
+import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.calendars.CalendarUtility;
-import ec.util.chart.ColorScheme.KnownColor;
-import ec.util.chart.swing.ChartCommand;
-import ec.util.chart.swing.Charts;
-import ec.util.chart.swing.SwingColorSchemeSupport;
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import jdplus.toolkit.desktop.plugin.DemetraUI;
+import jdplus.toolkit.desktop.plugin.components.TimeSeriesComponent;
+import jdplus.toolkit.desktop.plugin.components.parts.HasChart.LinesThickness;
+import jdplus.toolkit.desktop.plugin.components.parts.*;
+import jdplus.toolkit.desktop.plugin.components.tools.JChartPanel;
+import jdplus.toolkit.desktop.plugin.jfreechart.BasicXYDataset;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
+import jdplus.toolkit.desktop.plugin.ui.TsFrequencyTickUnit;
 import nbbrd.io.text.Formatter;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
@@ -71,6 +50,17 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.AbstractRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  *
@@ -343,9 +333,9 @@ public final class JSIView extends JComponent implements TimeSeriesComponent, Ha
         xAxis.setRange(g.getMinYear() - 1, g.getMaxYear() + 1);
         plot.setDomainAxis(xAxis);
 
-        plot.setDataset(S_INDEX, new BasicXYDataset(Collections.singletonList(g.S2_)));
-        plot.setDataset(T_INDEX, new BasicXYDataset(Collections.singletonList(g.S1_)));
-        plot.setDataset(SI_INDEX, new BasicXYDataset(Collections.singletonList(g.S3_)));
+        plot.setDataset(S_INDEX, new BasicXYDataset(List.of(g.S2_)));
+        plot.setDataset(T_INDEX, new BasicXYDataset(List.of(g.S1_)));
+        plot.setDataset(SI_INDEX, new BasicXYDataset(List.of(g.S3_)));
 
         detailChart.setTitle(g.label_);
         chartPanel.setChart(detailChart);

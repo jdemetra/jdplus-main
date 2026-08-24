@@ -173,9 +173,9 @@ public class SpectralDiagnostics implements Diagnostics {
     @Override
     public List<String> getWarnings() {
         if (!sorig) {
-            return Collections.singletonList("No seasonal peak in the original differenced series");
+            return List.of("No seasonal peak in the original differenced series");
         } else {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 }

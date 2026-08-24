@@ -83,7 +83,7 @@ public class ImportTramoSpec extends SingleNodeAction<Node> implements Presenter
     }
 
     private List<Importable> getImportables() {
-        return Collections.singletonList(new Importable() {
+        return List.of(new Importable() {
 
             @Override
             public String getDomain() {

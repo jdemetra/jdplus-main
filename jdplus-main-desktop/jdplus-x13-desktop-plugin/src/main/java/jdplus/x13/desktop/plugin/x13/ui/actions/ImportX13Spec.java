@@ -87,7 +87,7 @@ public class ImportX13Spec extends SingleNodeAction<Node> implements Presenter.P
     }
 
     private List<Importable> getImportables() {
-        return Collections.singletonList(new Importable() {
+        return List.of(new Importable() {
 
             @Override
             public String getDomain() {

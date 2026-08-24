@@ -33,7 +33,7 @@ public class OutliersDiagnosticsFactory<R> implements DiagnosticsFactory<Outlier
     
     public static final String NUMBER = "number of outliers";
     public static final String NAME = "Outliers";
-    public static final List<String> ALL = Collections.singletonList(NUMBER);
+    public static final List<String> ALL = List.of(NUMBER);
     private final OutliersDiagnosticsConfiguration config;
     protected final Function<R, RegSarimaModel> extractor;
     

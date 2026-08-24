@@ -29,7 +29,7 @@ public class GAV {
         String items = manifest.getMainAttributes().getValue("Maven-Class-Path");
         return items != null
                 ? splitAsStream(items, ' ').map(GAV::parseNbmMavenClassPath).collect(Collectors.toList())
-                : Collections.emptyList();
+                : List.of();
     }
 
     private static GAV parseNbmMavenClassPath(CharSequence input) throws IllegalArgumentException {

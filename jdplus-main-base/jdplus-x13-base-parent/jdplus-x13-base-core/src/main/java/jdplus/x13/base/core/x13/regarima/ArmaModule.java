@@ -24,6 +24,7 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Collections;
 import jdplus.toolkit.base.api.data.DoubleSeq;
@@ -285,7 +286,7 @@ public class ArmaModule implements IArmaModule {
                     all.add(cur);
                 }
             }
-            Collections.sort(all);
+            all.sort(Comparator.naturalOrder());
             return all.toArray(new RegArmaBic[all.size()]);
         }
     }

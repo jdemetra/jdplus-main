@@ -4,19 +4,17 @@
  */
 package jdplus.toolkit.desktop.plugin.ui;
 
-import java.awt.Frame;
-import java.util.Collections;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
+
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import java.awt.*;
+import java.util.Set;
 
 /**
  * A hack simulating MDI documents (to be changed ?)
@@ -45,9 +43,9 @@ public class ActiveViewManager implements Lookup.Provider {
 
     public void set(ActiveView view) {
         if (view == null) {
-            content.set(Collections.emptySet(), null);
+            content.set(Set.of(), null);
         } else {
-            content.set(Collections.singleton(view), null);
+            content.set(Set.of(view), null);
         }
         updateMenu(view);
     }

@@ -62,7 +62,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     private final IntList savedSelection = new IntList();
     private final DualDispatcherListener dualDispatcherListener = new DualDispatcherListener();
 
-    private TsFeatureHelper tsFeatures = TsFeatureHelper.of(Collections.emptyList());
+    private TsFeatureHelper tsFeatures = TsFeatureHelper.of(List.of());
     private InternalTsSelectionAdapter selectionListener;
     private HasObsFormatResolver obsFormatResolver;
     private HasColorSchemeResolver colorSchemeResolver;

@@ -131,11 +131,11 @@ public class SeatsDiagnostics implements Diagnostics {
     @Override
     public List<String> getWarnings() {
         if (!same) {
-            return Collections.singletonList(SeatsDiagnosticsFactory.NOTSAME);
+            return List.of(SeatsDiagnosticsFactory.NOTSAME);
         } else if (cutoff){
-             return Collections.singletonList(SeatsDiagnosticsFactory.CUTOFF);
+             return List.of(SeatsDiagnosticsFactory.CUTOFF);
         }else{
-           return Collections.emptyList();
+           return List.of();
         }
     }
 }

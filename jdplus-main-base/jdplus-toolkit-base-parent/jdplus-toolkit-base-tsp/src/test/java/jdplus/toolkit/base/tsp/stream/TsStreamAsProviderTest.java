@@ -86,7 +86,7 @@ public class TsStreamAsProviderTest {
                             .map(ts -> new DataSetTs(
                                     toDataSet.apply(ts),
                                     ts.getName(),
-                                    type.encompass(MetaData) ? ts.getMeta() : Collections.emptyMap(),
+                                    type.encompass(MetaData) ? ts.getMeta() : Map.of(),
                                     type.encompass(Data) ? ts.getData() : DataSetTs.DATA_NOT_REQUESTED)
                             );
                 }

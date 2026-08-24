@@ -122,7 +122,7 @@ public class AdvancedResidualSeasonalityDiagnostics implements Diagnostics {
 
     @Override
     public List<String> getWarnings() {
-        return Collections.emptyList();
+        return List.of();
     }
     
     public StatisticalTest QsTestOnSa(){

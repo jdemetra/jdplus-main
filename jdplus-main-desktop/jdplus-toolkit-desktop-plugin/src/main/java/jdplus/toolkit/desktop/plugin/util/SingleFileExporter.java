@@ -150,7 +150,7 @@ public final class SingleFileExporter {
 
     @NonNull
     public static FileChooserBuilder newFileChooser(@NonNull Class<?> preferencesKey) {
-        return newFileChooser(preferencesKey, Collections.emptyList());
+        return newFileChooser(preferencesKey, List.of());
     }
 
     @NonNull

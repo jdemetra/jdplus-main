@@ -76,7 +76,7 @@ public class TsModifierAdapters {
 
     public List<ModifiedTsVariable.Modifier> unmarshal(List<XmlRegressionVariableModifier> ms) {
         if (ms.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
         List<ModifiedTsVariable.Modifier> mod = new ArrayList<>();
         for (XmlRegressionVariableModifier m : ms) {
@@ -87,7 +87,7 @@ public class TsModifierAdapters {
 
     public List<XmlRegressionVariableModifier> marshal(List<ModifiedTsVariable.Modifier> ms) {
         if (ms.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
         List<XmlRegressionVariableModifier> mod = new ArrayList<>();
         for (ModifiedTsVariable.Modifier m : ms) {

@@ -16,19 +16,18 @@
  */
 package jdplus.text.desktop.plugin;
 
-import jdplus.toolkit.desktop.plugin.Config;
-import jdplus.toolkit.desktop.plugin.ConfigBean;
-import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
-import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
+import internal.text.base.api.TxtFileFilter;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.toolkit.desktop.plugin.NamedServiceSupport;
-import jdplus.toolkit.desktop.plugin.Persistable;
+import jdplus.toolkit.base.tsp.util.PropertyHandler;
+import jdplus.toolkit.desktop.plugin.*;
 import jdplus.toolkit.desktop.plugin.datatransfer.ts.TxtDataTransfer;
+import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
+import jdplus.toolkit.desktop.plugin.util.Persistence;
+import jdplus.toolkit.desktop.plugin.util.SingleFileExporter;
 import lombok.NonNull;
+import nbbrd.design.MightBeGenerated;
 import nbbrd.design.swing.OnAnyThread;
 import nbbrd.design.swing.OnEDT;
-import internal.text.base.api.TxtFileFilter;
 import nbbrd.io.text.Formatter;
 import nbbrd.service.ServiceProvider;
 import org.netbeans.api.progress.ProgressHandle;
@@ -39,15 +38,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.List;
-import jdplus.toolkit.desktop.plugin.TsActionSaveSpi;
-import jdplus.toolkit.desktop.plugin.TsActionSaveSpiSupport;
+import java.util.Set;
+
 import static jdplus.toolkit.desktop.plugin.TsActionSaveSpiSupport.newEditor;
-import jdplus.toolkit.desktop.plugin.util.Persistence;
 import static jdplus.toolkit.desktop.plugin.util.SingleFileExporter.newFileChooser;
-import jdplus.toolkit.base.tsp.util.PropertyHandler;
-import nbbrd.design.MightBeGenerated;
 
 /**
  * @author Philippe Charles
@@ -89,7 +84,7 @@ public final class TxtTsSave implements TsActionSaveSpi, Persistable {
         String stringContent = writer.tsCollectionToString(content);
 
         ph.progress("Writing file");
-        Files.write(file.toPath(), Collections.singleton(stringContent), StandardCharsets.UTF_8);
+        Files.write(file.toPath(), Set.of(stringContent), StandardCharsets.UTF_8);
     }
 
     private static FileFilter getFilter() {

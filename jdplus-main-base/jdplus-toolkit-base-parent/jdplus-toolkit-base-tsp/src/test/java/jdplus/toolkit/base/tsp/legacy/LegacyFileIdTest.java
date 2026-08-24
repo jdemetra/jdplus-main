@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,8 +38,8 @@ public class LegacyFileIdTest {
 
     @BeforeAll
     public static void beforeClass() throws IOException {
-        FILE = File.createTempFile("123", "456");
-        OTHER = File.createTempFile("aaa", "bbb");
+        FILE = Files.createTempFile("123", "456").toFile();
+        OTHER = Files.createTempFile("aaa", "bbb").toFile();
     }
 
     @AfterAll

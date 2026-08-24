@@ -41,7 +41,7 @@ public final class TsFeatureHelper {
         Confidential
     }
 
-    public static final TsFeatureHelper EMPTY = of(Collections.emptyList());
+    public static final TsFeatureHelper EMPTY = of(List.of());
 
     @NonNull
     public static TsFeatureHelper of(@NonNull List<Ts> list) {

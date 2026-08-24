@@ -25,7 +25,7 @@ public class OutputSelection {
 
     public List<String> items(List<SaProcessingFactory> fac, Predicate<Class> selector) {
         if (fac.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
         if (fac.size() == 1) {
             return fac.getFirst().outputDictionary().entries().

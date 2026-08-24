@@ -57,7 +57,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
      */
     public NationalCalendarPanel() {
         this.calendarName = "";
-        this.holidays = Collections.emptyList();
+        this.holidays = List.of();
         this.meanCorrection = true;
 
         this.em = new ExplorerManager();
@@ -317,7 +317,7 @@ public class NationalCalendarPanel extends JPanel implements ExplorerManager.Pro
 
     public void setHolidays(List<Holiday> events) {
         List<Holiday> old = this.holidays;
-        this.holidays = events != null ? events : Collections.emptyList();
+        this.holidays = events != null ? events : List.of();
         firePropertyChange(SPECIAL_DAY_EVENTS_PROPERTY, old, this.holidays);
         if (! events.isEmpty()){
             try {

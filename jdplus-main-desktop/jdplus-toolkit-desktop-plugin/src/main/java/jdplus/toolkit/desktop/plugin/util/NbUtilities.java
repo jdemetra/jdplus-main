@@ -9,11 +9,7 @@ import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.api.util.Documented;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import org.openide.DialogDescriptor;
@@ -30,7 +26,7 @@ public class NbUtilities {
     public static Sheet.Set createMetadataPropertiesSet(final Map<String, String> md) {
         NodePropertySetBuilder b = new NodePropertySetBuilder().name("Metadata");
         List<String> keys = new ArrayList<>(md.keySet());
-        Collections.sort(keys);
+        keys.sort(Comparator.naturalOrder());
         for (final String key : keys) {
             if (key.charAt(0) == '@') {
                 String dname = key.substring(1);

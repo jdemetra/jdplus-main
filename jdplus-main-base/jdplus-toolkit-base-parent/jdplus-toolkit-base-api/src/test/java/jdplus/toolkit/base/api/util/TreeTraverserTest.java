@@ -18,12 +18,14 @@ package jdplus.toolkit.base.api.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-import java.util.function.Function;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 /**
  *
@@ -34,7 +36,7 @@ public class TreeTraverserTest {
     @Test
     @SuppressWarnings("null")
     public void testFactory() {
-        assertThatNullPointerException().isThrownBy(() -> TreeTraverser.of(null, o -> Collections.emptyList()));
+        assertThatNullPointerException().isThrownBy(() -> TreeTraverser.of(null, o -> List.of()));
         assertThatNullPointerException().isThrownBy(() -> TreeTraverser.of("", null));
     }
 

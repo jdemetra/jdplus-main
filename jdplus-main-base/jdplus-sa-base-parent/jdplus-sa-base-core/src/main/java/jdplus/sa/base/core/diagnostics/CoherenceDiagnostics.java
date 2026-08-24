@@ -261,9 +261,9 @@ public final class CoherenceDiagnostics implements Diagnostics {
     @Override
     public List<String> getWarnings() {
         if (shortSeries) {
-            return Collections.singletonList(SHORTSERIES);
+            return List.of(SHORTSERIES);
         } else {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

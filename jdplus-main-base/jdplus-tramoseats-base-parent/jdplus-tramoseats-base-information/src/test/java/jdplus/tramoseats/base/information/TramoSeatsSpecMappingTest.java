@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -163,7 +164,7 @@ public class TramoSeatsSpecMappingTest {
         NameManager<SaSpecification> mgr = SaItemsMapping.defaultNameManager();
         InformationSet info = SaItemMapping.write(item, mgr, true, DemetraVersion.JD3);
 
-        SaItem nitem = SaItemMapping.read(info, mgr, Collections.emptyMap());
+        SaItem nitem = SaItemMapping.read(info, mgr, Map.of());
         nitem.process(null, true);
     }
 

@@ -67,7 +67,7 @@ public class SummaryView extends AbstractSaProcessingTopComponent implements Mul
 
         visualRepresentation = reportTB_;
 
-        setData(Collections.emptyMap());
+        setData(Map.of());
 
         setLayout(new BorderLayout());
         add(toolBarRepresentation, BorderLayout.NORTH);
@@ -81,13 +81,13 @@ public class SummaryView extends AbstractSaProcessingTopComponent implements Mul
             SaItem[] items = current();
             setData(createRegSarimaReports(items));
         } else {
-            setData(Collections.emptyMap());
+            setData(Map.of());
         }
     }
 
 //    @Override
 //    protected void onSaProcessingSaved(){
-//        setData(Collections.emptyMap());
+//        setData(Map.of());
 //    }
 //    
     @Override

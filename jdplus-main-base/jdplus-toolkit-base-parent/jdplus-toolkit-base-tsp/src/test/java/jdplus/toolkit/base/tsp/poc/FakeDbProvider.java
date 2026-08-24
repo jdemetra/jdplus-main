@@ -32,7 +32,8 @@ import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import jdplus.toolkit.base.tsp.util.ResourcePool;
 
-import static java.util.Collections.emptyMap;
+import java.util.Map;
+
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -82,6 +83,6 @@ public final class FakeDbProvider implements DataSourceLoader<FakeDbBean> {
     }
 
     private static CubeSeriesWithData of(CubeId id, TsData data) {
-        return new CubeSeriesWithData(id, id.getDimensionValueStream().collect(joining("/")), emptyMap(), data);
+        return new CubeSeriesWithData(id, id.getDimensionValueStream().collect(joining("/")), Map.of(), data);
     }
 }

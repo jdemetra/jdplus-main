@@ -35,7 +35,7 @@ public class HasDataSourceListTest {
     @Test
     @SuppressWarnings("null")
     public void testFactory() {
-        assertThatThrownBy(() -> HasDataSourceList.of(null, Collections.emptyList())).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> HasDataSourceList.of(null, List.of())).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> HasDataSourceList.of("name", null)).isInstanceOf(NullPointerException.class);
 
         DataSource.Builder b = DataSource.builder("name", "");

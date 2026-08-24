@@ -93,7 +93,7 @@ public interface ProcessingLog {
     }
 
     default List<Information> all() {
-        return Collections.emptyList();
+        return List.of();
     }
 
     default void push(String routine) {
@@ -208,7 +208,7 @@ class NotImplementedLog implements ProcessingLog {
         return false;
     }
 
-    private static final List<Information> ALL = Collections.singletonList(
+    private static final List<Information> ALL = List.of(
             new Information("Processing", null, "not implemented", InformationType.Error, null));
 
     @Override

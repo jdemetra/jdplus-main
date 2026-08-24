@@ -8,10 +8,6 @@ import jdplus.toolkit.base.api.DemetraVersion;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.toolkit.base.api.util.Id;
 import jdplus.toolkit.base.api.util.TreeOfIds;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import lombok.NonNull;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -20,6 +16,8 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+
+import java.util.*;
 
 /**
  *
@@ -33,7 +31,7 @@ public class WorkspaceFactory implements LookupListener {
     public static final String SPECIFICATIONS = "specifications", DOCUMENTS = "documents", TOOLS = "tools", MULTIDOCUMENTS = "multi-documents";
 
     public void notifyEvent(Event ev) {
-        content.set(Collections.singleton(ev), null);
+        content.set(Set.of(ev), null);
     }
 
     public void notifyEvents(Event[] ev) {
@@ -224,7 +222,7 @@ public class WorkspaceFactory implements LookupListener {
         ws_ = wks;
         ModellingContext.setActiveContext(ws_.getContext());
         if (event > 0) {
-            content.set(Collections.singleton(new Event(ws_, Id.empty(), event)), null);
+            content.set(Set.of(new Event(ws_, Id.empty(), event)), null);
         }
     }
 

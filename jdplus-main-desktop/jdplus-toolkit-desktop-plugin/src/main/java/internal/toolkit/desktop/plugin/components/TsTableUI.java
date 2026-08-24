@@ -242,7 +242,7 @@ public final class TsTableUI implements InternalUI<JTsTable> {
 
         public TsTableModel() {
             this.data = TsCollection.EMPTY;
-            this.columns = Collections.emptyList();
+            this.columns = List.of();
         }
 
         public void setData(TsCollection data) {

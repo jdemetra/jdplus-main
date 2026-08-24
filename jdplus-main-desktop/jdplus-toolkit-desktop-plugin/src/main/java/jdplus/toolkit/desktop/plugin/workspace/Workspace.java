@@ -13,10 +13,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager.ItemType;
 import jdplus.toolkit.base.api.util.Id;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.swing.SwingUtilities;
 
@@ -63,7 +60,7 @@ public class Workspace implements Disposable {
     }
 
     public void sort() {
-        Collections.sort(items_);
+        items_.sort(Comparator.naturalOrder());
         dirty_ = true;
         WorkspaceFactory.Event ev = new WorkspaceFactory.Event(this, Id.empty(), WorkspaceFactory.Event.SORT);
         WorkspaceFactory.getInstance().notifyEvent(ev);

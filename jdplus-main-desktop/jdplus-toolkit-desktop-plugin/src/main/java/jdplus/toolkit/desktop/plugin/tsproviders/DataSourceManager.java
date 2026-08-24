@@ -45,7 +45,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -340,7 +339,7 @@ public final class DataSourceManager {
             return TsManager.get()
                     .getProvider(DataSourceProvider.class, providerName)
                     .map(DefaultSheetStrategy::provider)
-                    .orElseGet(Collections::emptyList);
+                    .orElseGet(List::of);
         }
 
         private static List<Sheet.Set> provider(DataSourceProvider provider) {

@@ -81,7 +81,7 @@ public class X13 {
 
         @Override
         public Map<String, Class> outputDictionary(boolean compact) {
-            return Collections.emptyMap();
+            return Map.of();
         }
         
     }

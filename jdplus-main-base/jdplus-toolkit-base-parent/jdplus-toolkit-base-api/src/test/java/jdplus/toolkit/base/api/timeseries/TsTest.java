@@ -101,7 +101,7 @@ public class TsTest {
 
     private final TsMoniker tsMoniker = TsMoniker.of(MockedTsProvider.NAME, "0:300");
 
-    private final List<TsProvider> providers = Collections.singletonList(
+    private final List<TsProvider> providers = List.of(
             MockedTsProvider
                     .builder()
                     .ts(Ts

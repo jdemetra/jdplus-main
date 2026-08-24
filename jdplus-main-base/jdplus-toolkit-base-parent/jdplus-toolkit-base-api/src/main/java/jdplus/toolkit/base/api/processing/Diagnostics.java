@@ -60,6 +60,6 @@ public interface Diagnostics {
      * @return The list of warnings.
      */
     default List<String> getWarnings(){
-        return Collections.emptyList();
+        return List.of();
     }
 }

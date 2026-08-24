@@ -69,7 +69,7 @@ public class MultiTsDocumentMapping {
         if (input != null) {
             List<Information<Ts>> sel = input.select(SERIES + '*', Ts.class);
             if (! sel.isEmpty()){
-            Collections.sort(sel, new Information.IndexedNameSorter(SERIES));
+            sel.sort(new Information.IndexedNameSorter(SERIES));
             doc.set(sel.stream().map(c->c.getValue()).toList());
             }
         } else {

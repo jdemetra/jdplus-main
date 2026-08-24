@@ -79,7 +79,7 @@ public class JBenchmarkingView extends JComponent {
         TsData sdiff = mul ? (TsData.divide(benchSa, sa).fn(z->z-1))
                 : TsData.subtract(benchSa, sa);
         Ts diff = Ts.of("Differences", sdiff);
-        List<Ts> ldiff = Collections.singletonList(diff);
+        List<Ts> ldiff = List.of(diff);
        dchart_.setTsCollection(TsCollection.of(ldiff));
         all.add(diff);
         grid_.setTsCollection(TsCollection.of(all));

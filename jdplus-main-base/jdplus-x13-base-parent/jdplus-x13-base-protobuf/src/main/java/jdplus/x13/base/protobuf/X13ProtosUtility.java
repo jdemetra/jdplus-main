@@ -94,7 +94,7 @@ public class X13ProtosUtility {
             }
         }
         if (same) {
-            return Collections.singletonList(convert(sf0));
+            return List.of(convert(sf0));
         } else {
             return Arrays.stream(sf).map(s -> convert(s)).toList();
         }

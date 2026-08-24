@@ -57,7 +57,7 @@ public abstract class AbstractWorkspaceItemManager<D> implements WorkspaceItemMa
 
     @Override
     public List<WorkspaceItem<D>> getDefaultItems() {
-        return Collections.emptyList();
+        return List.of();
     }
 
     @Override

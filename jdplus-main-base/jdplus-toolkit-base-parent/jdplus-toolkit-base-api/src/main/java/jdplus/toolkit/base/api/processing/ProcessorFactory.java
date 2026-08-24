@@ -67,6 +67,6 @@ public interface ProcessorFactory<S extends ProcSpecification, I, R> {
      * preferred.
      */
     default Map<String, Class> getOutputDictionary(boolean compact) {
-        return Collections.emptyMap();
+        return Map.of();
     }
 }

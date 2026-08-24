@@ -101,6 +101,6 @@ public class OutOfSampleDiagnostics implements Diagnostics {
 
     @Override
     public List<String> getWarnings() {
-        return Collections.emptyList();
+        return List.of();
     }
 }

@@ -136,7 +136,7 @@ public class TsCollectionTest {
 
     private final TsMoniker colMoniker = TsMoniker.of(MockedTsProvider.NAME, "0");
 
-    private final List<TsProvider> providers = Collections.singletonList(
+    private final List<TsProvider> providers = List.of(
             MockedTsProvider
                     .builder()
                     .tsCollection(TsCollection.builder().moniker(colMoniker).build())

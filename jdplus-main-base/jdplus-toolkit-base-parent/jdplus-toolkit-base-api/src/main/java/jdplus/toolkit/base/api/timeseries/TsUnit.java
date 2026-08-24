@@ -133,7 +133,7 @@ public class TsUnit implements TemporalAmount, HasAnnualFrequency {
 
     @Override
     public List<TemporalUnit> getUnits() {
-        return Collections.singletonList(chronoUnit);
+        return List.of(chronoUnit);
     }
 
     @Override

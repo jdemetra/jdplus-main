@@ -233,7 +233,7 @@ public final class OdbcProviderBuddy implements DataSourceProviderBuddy, Configu
         Optional<OdbcRegistry> odbcRegistry = OdbcRegistry.ofServiceLoader();
         return odbcRegistry.isPresent()
                 ? odbcRegistry.orElseThrow().getDataSources(OdbcDataSource.Type.SYSTEM, OdbcDataSource.Type.USER)
-                : Collections.emptyList();
+                : List.of();
     }
 
     private static List<OdbcDataSource> getDataSources(List<OdbcDataSource> allValues, String term) {
