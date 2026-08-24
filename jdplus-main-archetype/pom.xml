@@ -57,6 +57,15 @@
                     <useDefaultExcludes>false</useDefaultExcludes>
                 </configuration>
             </plugin>
+            <!-- Fix maven-archetype bug in nbbrd-enforcer-rules -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rulesToSkip>requireJavadocJar,reactorModuleConvergence,requireNoRepositories</rulesToSkip>
+                    <failIfNoRules>false</failIfNoRules>
+                </configuration>
+            </plugin>
         </plugins>
         <extensions>
             <extension>

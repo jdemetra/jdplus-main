@@ -106,6 +106,7 @@
         <protobuf-maven-plugin.version>5.1.8</protobuf-maven-plugin.version>
         <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
         <heylogs.version>0.19.1</heylogs.version>
+        <nbbrd-enforcer-rules>1.3.0</nbbrd-enforcer-rules>
     </properties>
 
     <dependencies>
@@ -209,6 +210,28 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>${maven-enforcer-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.kordamp.maven</groupId>
+                            <artifactId>pomchecker-enforcer-rules</artifactId>
+                            <version>${pomchecker-enforcer-rules.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>extra-enforcer-rules</artifactId>
+                            <version>${extra-enforcer-rules.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.github.nbbrd.heylogs</groupId>
+                            <artifactId>heylogs-enforcer-rules</artifactId>
+                            <version>${heylogs.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                            <artifactId>nbbrd-enforcer-rules</artifactId>
+                            <version>${nbbrd-enforcer-rules}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.gaul</groupId>
@@ -367,23 +390,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>extra-enforcer-rules</artifactId>
-                        <version>${extra-enforcer-rules.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.kordamp.maven</groupId>
-                        <artifactId>pomchecker-enforcer-rules</artifactId>
-                        <version>${pomchecker-enforcer-rules.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.github.nbbrd.heylogs</groupId>
-                        <artifactId>heylogs-enforcer-rules</artifactId>
-                        <version>${heylogs.version}</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
                         <id>enforce-root-on-validate</id>
@@ -572,6 +578,24 @@
                             <sourcepath>${project.build.directory}/no-source</sourcepath>
                             <quiet>true</quiet>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-javadoc</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <rules>
+                                        <requireJavadocJar/>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.simplify4u.plugins</groupId>
