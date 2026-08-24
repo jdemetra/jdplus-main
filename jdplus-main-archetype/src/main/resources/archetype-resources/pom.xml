@@ -406,6 +406,12 @@
                                 <!-- heylogs-enforcer-rules -->
                                 <checkChangelog/>
                                 <formatChangelog/>
+                                <!-- nbbrd-enforcer-rules -->
+                                <requireArtifactIdPattern>
+                                    <packagings>nbm</packagings>
+                                    <pattern>^.+-desktop-(plugin|branding)$</pattern>
+                                    <message>nbm artifacts must follow the "*-desktop-plugin" naming convention</message>
+                                </requireArtifactIdPattern>
                             </rules>
                         </configuration>
                     </execution>
