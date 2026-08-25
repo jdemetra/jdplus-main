@@ -17,47 +17,31 @@
 package jdplus.tramoseats.desktop.plugin.anomalydetection.ui;
 
 import ec.util.list.swing.JLists;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
-import jdplus.toolkit.desktop.plugin.DemetraIcons;
-import jdplus.tramoseats.desktop.plugin.anomalydetection.AnomalyItem;
-import jdplus.toolkit.desktop.plugin.components.JTsTable;
 import ec.util.table.swing.JTables;
 import ec.util.various.swing.JCommand;
-import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Transferable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
-
-import jdplus.toolkit.desktop.plugin.components.TsIdentifier;
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.tramoseats.base.api.tramo.TramoSpec;
+import jdplus.toolkit.base.api.timeseries.*;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.api.util.Table;
-import java.util.LinkedHashMap;
-import java.util.OptionalInt;
-import jdplus.toolkit.base.api.timeseries.TsInformationType;
-
 import jdplus.toolkit.base.core.regsarima.regular.CheckLast;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import jdplus.toolkit.desktop.plugin.components.JTsTable;
+import jdplus.toolkit.desktop.plugin.components.TsIdentifier;
+import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import jdplus.tramoseats.base.core.tramo.TramoKernel;
+import jdplus.tramoseats.desktop.plugin.anomalydetection.AnomalyItem;
 import nbbrd.design.SkipProcessing;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.util.*;
+import java.util.List;
 
 /**
  * List component containing input and output results of a Check Last batch
@@ -216,8 +200,8 @@ public final class JTsCheckLastList extends JComponent {
     }
 
     public Ts getSelectedItem() {
-        OptionalInt singleSelection = JLists.getSelectionIndexStream(table.getTsSelectionModel()).findFirst();
-        return singleSelection.isPresent() ? table.getTsCollection().get(singleSelection.getAsInt()) : null;
+        int singleSelection = JLists.getSelectionIndexStream(table.getTsSelectionModel()).findFirst().orElse(-1);
+        return singleSelection != -1 ? table.getTsCollection().get(singleSelection) : null;
     }
     
     public void fireTableStructureChanged() {

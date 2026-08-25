@@ -17,7 +17,6 @@
 package jdplus.x13.base.protobuf;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import jdplus.x13.base.api.regarima.RegressionTestSpec;
 import jdplus.x13.base.api.regarima.EasterSpec;
@@ -94,7 +93,7 @@ public class X13ProtosUtility {
             }
         }
         if (same) {
-            return Collections.singletonList(convert(sf0));
+            return List.of(convert(sf0));
         } else {
             return Arrays.stream(sf).map(s -> convert(s)).toList();
         }

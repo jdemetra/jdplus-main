@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.desktop.plugin.components;
 
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferSpiLoader;
 import jdplus.toolkit.desktop.plugin.util.FixmeCollectionSupplier;
 import jdplus.main.desktop.design.GlobalService;
 import jdplus.toolkit.desktop.plugin.util.CollectionSupplier;

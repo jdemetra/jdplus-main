@@ -12,7 +12,6 @@ import java.util.prefs.AbstractPreferences;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StarStepTest {
@@ -38,7 +37,7 @@ public class StarStepTest {
         assertThat(StarStep.loadSources(prefs))
                 .containsExactlyElementsOf(dataSources);
 
-        StarStep.storeSources(prefs, emptyList());
+        StarStep.storeSources(prefs, List.of());
         assertThat(StarStep.loadSources(prefs))
                 .isEmpty();
     }

@@ -29,7 +29,6 @@ import jdplus.toolkit.base.core.math.linearfilters.BackFilter;
 import jdplus.toolkit.base.core.math.linearfilters.RationalBackFilter;
 import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import lombok.NonNull;
-import jdplus.toolkit.base.api.dstats.Distribution;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 
 /**

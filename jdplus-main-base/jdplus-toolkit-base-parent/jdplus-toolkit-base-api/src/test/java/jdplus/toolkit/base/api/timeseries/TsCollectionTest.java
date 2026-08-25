@@ -4,7 +4,6 @@ import _util.MockedTsProvider;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -136,7 +135,7 @@ public class TsCollectionTest {
 
     private final TsMoniker colMoniker = TsMoniker.of(MockedTsProvider.NAME, "0");
 
-    private final List<TsProvider> providers = Collections.singletonList(
+    private final List<TsProvider> providers = List.of(
             MockedTsProvider
                     .builder()
                     .tsCollection(TsCollection.builder().moniker(colMoniker).build())

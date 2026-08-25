@@ -100,7 +100,7 @@
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>3.5.6</maven-failsafe-plugin.version>
-        <modernizer-maven-plugin.version>3.3.0</modernizer-maven-plugin.version>
+        <modernizer-maven-plugin.version>3.5.0</modernizer-maven-plugin.version>
         <nbm-maven-plugin.version>14.5</nbm-maven-plugin.version>
         <pomchecker-enforcer-rules.version>1.15.0</pomchecker-enforcer-rules.version>
         <protobuf-maven-plugin.version>5.1.8</protobuf-maven-plugin.version>
@@ -492,9 +492,10 @@
                             <!-- 2.5 upgradable source code -->
                             <javaVersion>${maven.compiler.release}</javaVersion>
                             <!-- 2.6 forbidden source code -->
-                            <exclusionPatterns>
-                                <!--<exclusionPattern>com/google/common/base/Optional.*</exclusionPattern>-->
-                            </exclusionPatterns>
+                            <ignoreClassNamePatterns>
+                                <!-- Bulletproof pattern matching trailing 'Protos' and its nested classes -->
+                                <ignoreClassNamePattern>.*/[^/]*Protos(\$.*)?</ignoreClassNamePattern>
+                            </ignoreClassNamePatterns>
                         </configuration>
                     </execution>
                 </executions>
@@ -542,16 +543,6 @@
     </build>
 
     <profiles>
-        <!-- Disable some plugins to accelerate the build -->
-        <profile>
-            <id>fast-build</id>
-            <properties>
-                <enforcer.skip>true</enforcer.skip>
-                <modernizer.skip>true</modernizer.skip>
-                <heylogs.skip>true</heylogs.skip>
-            </properties>
-        </profile>
-
         <!-- Base deploy -->
         <profile>
             <id>base-deploy</id>

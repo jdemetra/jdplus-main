@@ -15,7 +15,6 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -47,14 +46,14 @@ public class TsRegressionProcessingViewer<S extends ProcSpecification, D extends
         yList.setVisible(true);
         yList.setShowHeader(false);
         yList.setTsUpdateMode(TsUpdateMode.Single);
-        yList.setColumns(Collections.singletonList(Column.NAME));
+        yList.setColumns(List.of(Column.NAME));
         xList = new JTsTable(TsInformationType.Data);
         yList.setVisible(true);
         xList.setShowHeader(false);
         if (singleX) {
             xList.setTsUpdateMode(TsUpdateMode.Single);
         }
-        xList.setColumns(Collections.singletonList(Column.NAME));
+        xList.setColumns(List.of(Column.NAME));
         this.specLabel = new JLabel("Spec: ");
         specLabel.setVisible(true);
         xList.setPreferredSize(new Dimension(50, 60));
@@ -117,7 +116,7 @@ public class TsRegressionProcessingViewer<S extends ProcSpecification, D extends
     private void updateInput() {
         List<Ts> y = yList.getTsCollection().getItems();
         if (y.isEmpty()) {
-            getDocument().set(Collections.emptyList());
+            getDocument().set(List.of());
         }
         List<Ts> x = xList.getTsCollection().getItems();
         if (x.isEmpty()) {

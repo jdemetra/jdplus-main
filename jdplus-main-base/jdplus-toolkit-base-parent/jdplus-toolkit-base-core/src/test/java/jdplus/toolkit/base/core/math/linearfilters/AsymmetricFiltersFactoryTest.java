@@ -18,8 +18,6 @@ package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.math.linearfilters.HendersonSpec;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import tck.demetra.data.Data;
 
 

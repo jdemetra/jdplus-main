@@ -15,7 +15,6 @@
  */
 package jdplus.toolkit.base.r.modelling;
 
-import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.modelling.regular.tests.TradingDaysTest;

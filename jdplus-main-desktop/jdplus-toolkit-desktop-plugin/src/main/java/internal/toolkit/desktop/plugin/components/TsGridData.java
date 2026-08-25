@@ -24,7 +24,6 @@ import lombok.NonNull;
 import nbbrd.design.StaticFactoryMethod;
 import nbbrd.design.NonNegative;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,7 +64,7 @@ sealed interface TsGridData permits ByTsColumnGridData, ByAnnualFrequencyColumnG
         }
         Ts series = col.get(singleSeriesIndex);
         return series.getData().getAnnualFrequency() == TsUnit.NO_ANNUAL_FREQUENCY
-                ? new ByTsColumnGridData(Collections.singletonList(series))
+                ? new ByTsColumnGridData(List.of(series))
                 : new ByAnnualFrequencyColumnGridData(series, singleSeriesIndex);
     }
 }

@@ -6,7 +6,6 @@ package jdplus.toolkit.desktop.plugin.ui.processing;
 
 import jdplus.toolkit.base.api.processing.ProcDocument;
 import jdplus.toolkit.base.api.util.Id;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import lombok.NonNull;
 import nbbrd.design.MightBeGenerated;
 

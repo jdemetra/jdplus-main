@@ -5,7 +5,6 @@
  */
 package jdplus.toolkit.base.core.math.matrices;
 
-import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.design.Algorithm;
 import jdplus.toolkit.base.api.design.InterchangeableProcessor;

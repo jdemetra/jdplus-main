@@ -127,8 +127,8 @@ public class SaItems {
         return new SaItems(name, meta, Collections.unmodifiableList(ritems));
     }
 
-    private static final SaItems EMPTY = new SaItems("", Collections.emptyMap(),
-            Collections.emptyList());
+    private static final SaItems EMPTY = new SaItems("", Map.of(),
+            List.of());
 
     public boolean isEmpty() {
         return items.isEmpty();

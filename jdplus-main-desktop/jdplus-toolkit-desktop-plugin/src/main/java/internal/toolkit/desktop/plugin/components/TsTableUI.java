@@ -34,7 +34,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -242,7 +241,7 @@ public final class TsTableUI implements InternalUI<JTsTable> {
 
         public TsTableModel() {
             this.data = TsCollection.EMPTY;
-            this.columns = Collections.emptyList();
+            this.columns = List.of();
         }
 
         public void setData(TsCollection data) {

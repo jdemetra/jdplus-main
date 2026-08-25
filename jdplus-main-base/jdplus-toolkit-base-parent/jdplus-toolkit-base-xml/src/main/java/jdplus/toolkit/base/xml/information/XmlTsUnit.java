@@ -18,7 +18,7 @@
 package jdplus.toolkit.base.xml.information;
 
 import java.time.temporal.ChronoUnit;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
+
 import jdplus.toolkit.base.xml.legacy.IXmlConverter;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;

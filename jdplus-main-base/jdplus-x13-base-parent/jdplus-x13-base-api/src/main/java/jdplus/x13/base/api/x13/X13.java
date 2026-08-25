@@ -23,7 +23,7 @@ import jdplus.toolkit.base.api.processing.ProcResults;
 import nbbrd.design.Development;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -81,7 +81,7 @@ public class X13 {
 
         @Override
         public Map<String, Class> outputDictionary(boolean compact) {
-            return Collections.emptyMap();
+            return Map.of();
         }
         
     }

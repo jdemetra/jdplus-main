@@ -17,17 +17,17 @@
 package jdplus.toolkit.base.tspbridge;
 
 import _util.*;
-import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.base.api.timeseries.*;
-import jdplus.toolkit.base.tsp.FileBean;
-import jdplus.toolkit.base.tsp.FileLoader;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
-import jdplus.toolkit.base.api.util.Table;
 import ec.tss.TsBypass;
 import ec.tss.TsCollectionInformation;
 import ec.tss.tsproviders.utils.DataFormat;
 import ec.tstoolkit.timeseries.Day;
 import ec.tstoolkit.timeseries.simplets.TsFrequency;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.util.Table;
+import jdplus.toolkit.base.tsp.FileBean;
+import jdplus.toolkit.base.tsp.FileLoader;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -332,8 +332,8 @@ public class TsConverterTest {
     private final Ts monthlyTs = Ts.builder().name("x").data(monthlyTsData).meta("k", "v").moniker(TsMoniker.of("a", "b")).type(TsInformationType.UserDefined).build();
 
     private final String[] names = {"", "not_blank"};
-    private final Map<String, String>[] metaArray = new Map[]{Collections.emptyMap(), Collections.singletonMap("hello", "world")};
+    private final Map<String, String>[] metaArray = new Map[]{Map.of(), Map.of("hello", "world")};
     private final TsMoniker[] monikers = new TsMoniker[]{TsMoniker.of("p", "id")};
     private final TsData[] dataArray = new TsData[]{emptyTsData, monthlyTsData};
-    private final List<Ts>[] tsArray = new List[]{Collections.emptyList(), Arrays.asList(emptyTs, monthlyTs)};
+    private final List<Ts>[] tsArray = new List[]{List.of(), Arrays.asList(emptyTs, monthlyTs)};
 }

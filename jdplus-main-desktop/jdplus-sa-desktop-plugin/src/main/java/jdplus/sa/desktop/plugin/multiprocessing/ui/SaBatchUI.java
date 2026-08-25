@@ -1301,7 +1301,7 @@ public class SaBatchUI extends AbstractSaProcessingTopComponent implements Multi
         @Override
         protected List<SaNode> getValues() {
             MultiProcessingDocument element = getElement();
-            return element == null ? Collections.emptyList() : element.getCurrent();
+            return element == null ? List.of() : element.getCurrent();
         }
 
         @Override

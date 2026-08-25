@@ -15,8 +15,6 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
-import jdplus.tramoseats.base.api.tramoseats.TramoSeatsSpec;
-import jdplus.tramoseats.base.core.tramoseats.TramoSeatsDocument;
 import nbbrd.design.ClassNameConstant;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;

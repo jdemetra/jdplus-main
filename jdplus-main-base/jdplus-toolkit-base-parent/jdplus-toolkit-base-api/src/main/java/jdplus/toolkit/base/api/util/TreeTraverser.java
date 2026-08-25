@@ -18,10 +18,7 @@ package jdplus.toolkit.base.api.util;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -166,7 +163,7 @@ public final class TreeTraverser<T> {
         private final Function<? super T, ? extends Iterable<? extends T>> children;
 
         private DepthFirstIterator(T root, Function<? super T, ? extends Iterable<? extends T>> children) {
-            this.stack = newLinkedList(Collections.singleton(root).iterator());
+            this.stack = newLinkedList(Set.of(root).iterator());
             this.children = children;
         }
 

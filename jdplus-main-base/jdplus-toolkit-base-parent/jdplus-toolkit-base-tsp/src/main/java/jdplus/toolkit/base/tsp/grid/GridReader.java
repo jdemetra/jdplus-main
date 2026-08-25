@@ -141,7 +141,7 @@ public final class GridReader {
             try {
                 List<LocalDateTime> dates = stream.readRow()
                         ? readCells(stream, TypedInputStream::getDateTime)
-                        : Collections.emptyList();
+                        : List.of();
                 int firstObsIndex = getFirstObsIndex(dates);
                 dates = dates.subList(firstObsIndex, getLastObsIndex(dates) + 1);
                 return new SeriesByRowHead(firstObsIndex, dates.size(), dates);

@@ -25,7 +25,6 @@ import jdplus.toolkit.desktop.plugin.ui.Disposables;
 import jdplus.toolkit.desktop.plugin.ui.processing.TsViewToolkit;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
-import jdplus.sa.base.api.DecompositionMode;
 import jdplus.sa.base.api.SaDictionaries;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsCollection;

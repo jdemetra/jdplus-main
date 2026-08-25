@@ -25,7 +25,7 @@ Its main **documentation** is available at https://doc.jdemetra.org.
 
 ## Installing
 
-JDemetra+ v3 runs on any desktop operating system such as Microsoft **Windows**, **Solaris OS**, Apple **macOS**, **Ubuntu** and other various **Linux** distributions.
+JDemetra+ v3 runs on major desktop operating systems such as Microsoft **Windows**, Apple **macOS**, **Ubuntu** and other **Linux** distributions.
 
 Platform-specific packages are provided in addition to the platform-independent packages.
 These specific packages are self-sufficient and therefore don't require Java to run.
@@ -38,7 +38,7 @@ This binary provides its own Java runtime.
 
    | `PLATFORM`  | Intel            | Arm                |
    |:-----------:|------------------|--------------------|
-   |  **MacOS**  | `osx-x86_64`     | `osx-aarch_64`     |
+   |  **macOS**  | `osx-x86_64`     | `osx-aarch_64`     |
    |  **Linux**  | `linux-x86_64`   | `linux-aarch_64`   |
    | **Windows** | `windows-x86_64` | `windows-aarch_64` |
 
@@ -59,7 +59,7 @@ This binary requires an external Java runtime.
 This project is written in Java and uses [Apache Maven](https://maven.apache.org/) as a build tool.  
 It requires [Java 21 as minimum version](https://whichjdk.com/) and all its dependencies are hosted on [Maven Central](https://search.maven.org/).
 
-The code can be built using any IDE or by just type-in the following commands in a terminal:
+The code can be built using any IDE or by typing the following commands in a terminal:
 ```shell
 git clone https://github.com/jdemetra/jdplus-main.git
 cd jdplus-main
@@ -140,9 +140,65 @@ This naming convention is enforced by the following regex pattern:
 ^(jdplus)-(\w+)(?:-(base|cli|desktop|bom)(?:-(\w+))?)?$
 ```
 
+### Speeding up development
+
+Use the `yolo` profile to skip all static-analysis checks (enforcer, modernizer, forbiddenapis, jacoco, …) during local iteration:
+```shell
+mvn clean install -Pyolo               # full build, no checks
+mvn clean install -Pyolo -DskipTests   # full build, no checks, no tests
+```
+
+Because the project is structured as a multi-module Maven build, you can target a single module (or a topic) instead of rebuilding everything.
+Use `-pl` to select modules and `-am` to also build their required dependencies:
+```shell
+# rebuild only the x13 core module and its dependencies
+mvn clean install -pl jdplus-main-base/jdplus-x13-base-parent/jdplus-x13-base-core -am -Pyolo
+
+# run tests for a single module and its required dependencies
+mvn test -pl jdplus-main-base/jdplus-x13-base-parent/jdplus-x13-base-core -am -Pyolo
+
+# rebuild an entire topic (all x13 base modules)
+mvn clean install -pl jdplus-main-base/jdplus-x13-base-parent -am -Pyolo
+```
+
+### Using the libraries
+
+JDemetra+ libraries are published to Maven Central under `eu.europa.ec.joinup.sat`.
+For example:
+
+```xml
+<dependency>
+  <groupId>eu.europa.ec.joinup.sat</groupId>
+  <artifactId>jdplus-toolkit-base-api</artifactId>
+  <version>VERSION</version>
+</dependency>
+
+<dependency>
+  <groupId>eu.europa.ec.joinup.sat</groupId>
+  <artifactId>jdplus-sa-base-api</artifactId>
+  <version>VERSION</version>
+</dependency>
+```
+
+Other modules follow the same naming pattern, for example `jdplus-x13-base-api` and `jdplus-tramoseats-base-api`.
+
 ## Contributing
 
-Any contribution is welcome and should be done through pull requests and/or issues.
+Contributions are welcome through issues and pull requests.
+
+Please open pull requests against the `develop` branch.
+
+Before submitting a change:
+- use Java 21
+- follow the existing module naming, package structure and code style
+- keep changes small and focused
+- update `CHANGELOG.md` for user-visible changes
+
+Validate your changes locally with:
+
+```shell
+mvn clean install
+```
 
 ## Licensing
 

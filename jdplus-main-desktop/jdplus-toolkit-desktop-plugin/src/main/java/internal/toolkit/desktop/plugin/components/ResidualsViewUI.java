@@ -50,8 +50,8 @@ import org.jfree.ui.RectangleInsets;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collections;
 import java.util.DoubleSummaryStatistics;
+import java.util.List;
 import java.util.stream.DoubleStream;
 
 import static jdplus.toolkit.desktop.plugin.components.parts.HasObsFormat.OBS_FORMAT_PROPERTY;
@@ -136,7 +136,7 @@ public final class ResidualsViewUI implements InternalUI<JResidualsView> {
     private void onTsDataChange(JResidualsView view) {
         TsData data = view.getTsData();
         Ts ts = Ts.builder().moniker(TsMoniker.of()).name("Residuals").data(data).build();
-        chartPanel.getChart().getXYPlot().setDataset(TsXYDataset.ofTs(Collections.singletonList(ts)));
+        chartPanel.getChart().getXYPlot().setDataset(TsXYDataset.ofTs(List.of(ts)));
         if (!data.isEmpty()) {
             Range rng = calcRange(data.getValues().toArray());
             ((NumberAxis) chartPanel.getChart().getXYPlot().getRangeAxis()).setTickUnit(new NumberTickUnit(calcTick(rng)), true, false);

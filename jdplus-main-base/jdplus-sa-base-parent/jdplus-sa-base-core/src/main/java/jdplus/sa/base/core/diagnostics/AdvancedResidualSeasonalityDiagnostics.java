@@ -21,7 +21,6 @@ import jdplus.toolkit.base.api.processing.ProcQuality;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 
@@ -122,7 +121,7 @@ public class AdvancedResidualSeasonalityDiagnostics implements Diagnostics {
 
     @Override
     public List<String> getWarnings() {
-        return Collections.emptyList();
+        return List.of();
     }
     
     public StatisticalTest QsTestOnSa(){

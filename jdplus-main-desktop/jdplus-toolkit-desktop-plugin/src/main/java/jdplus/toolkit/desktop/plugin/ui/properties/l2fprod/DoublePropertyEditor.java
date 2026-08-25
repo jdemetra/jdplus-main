@@ -19,11 +19,7 @@ package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 import com.l2fprod.common.swing.LookAndFeelTweaks;
 import jdplus.toolkit.desktop.plugin.util.JTextComponents;
 
-import static jdplus.toolkit.desktop.plugin.util.JTextComponents.enableDecimalMappingOnNumpad;
-import static jdplus.toolkit.desktop.plugin.util.JTextComponents.enableValidationFeedback;
-
 import java.beans.PropertyEditor;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.function.BiConsumer;

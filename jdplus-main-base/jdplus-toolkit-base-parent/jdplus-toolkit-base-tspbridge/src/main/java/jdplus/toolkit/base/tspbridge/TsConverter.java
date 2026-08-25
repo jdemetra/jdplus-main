@@ -28,7 +28,6 @@ import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -261,7 +260,7 @@ public class TsConverter {
 
     //<editor-fold defaultstate="collapsed" desc="Map / MetaData">
     public @NonNull Map<String, String> toMeta(ec.tstoolkit.@Nullable MetaData o) {
-        return o != null ? Collections.unmodifiableMap(o) : Collections.emptyMap();
+        return o != null ? Collections.unmodifiableMap(o) : Map.of();
     }
 
     public ec.tstoolkit.@NonNull MetaData fromMeta(@NonNull Map<String, String> o) {

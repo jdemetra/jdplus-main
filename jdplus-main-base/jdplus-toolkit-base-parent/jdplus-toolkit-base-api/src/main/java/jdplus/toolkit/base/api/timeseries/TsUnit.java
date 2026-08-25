@@ -30,7 +30,6 @@ import java.time.Duration;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -133,7 +132,7 @@ public class TsUnit implements TemporalAmount, HasAnnualFrequency {
 
     @Override
     public List<TemporalUnit> getUnits() {
-        return Collections.singletonList(chronoUnit);
+        return List.of(chronoUnit);
     }
 
     @Override

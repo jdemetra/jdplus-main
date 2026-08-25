@@ -6,7 +6,6 @@
 package jdplus.toolkit.desktop.plugin;
 
 import jdplus.toolkit.base.api.design.ExtensionPoint;
-import jdplus.toolkit.desktop.plugin.util.NetBeansServiceBackend;
 import jdplus.toolkit.base.api.timeseries.TsCollection;
 import nbbrd.design.swing.OnEDT;
 import nbbrd.service.Quantifier;

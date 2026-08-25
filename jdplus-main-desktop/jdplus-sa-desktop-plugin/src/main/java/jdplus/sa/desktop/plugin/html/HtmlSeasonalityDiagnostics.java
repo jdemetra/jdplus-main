@@ -16,7 +16,6 @@
  */
 package jdplus.sa.desktop.plugin.html;
 
-import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
 import jdplus.toolkit.desktop.plugin.html.Bootstrap4;
 import jdplus.toolkit.desktop.plugin.html.HtmlClass;
@@ -29,7 +28,6 @@ import jdplus.toolkit.base.api.stats.StatisticalTest;
 import java.io.IOException;
 import java.util.function.IntToDoubleFunction;
 import jdplus.sa.base.core.diagnostics.GenericSeasonalityTests;
-import jdplus.sa.base.core.diagnostics.ResidualSeasonalityTests;
 import jdplus.sa.base.core.tests.SpectralPeaks;
 import jdplus.toolkit.base.api.stats.AutoCovariances;
 import jdplus.toolkit.base.core.modelling.DifferencingResult;

@@ -17,7 +17,6 @@
 
 package jdplus.toolkit.base.api.processing;
 
-import java.util.Collections;
 import nbbrd.design.Development;
 import java.util.List;
 
@@ -60,6 +59,6 @@ public interface Diagnostics {
      * @return The list of warnings.
      */
     default List<String> getWarnings(){
-        return Collections.emptyList();
+        return List.of();
     }
 }

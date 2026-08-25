@@ -28,7 +28,6 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -79,7 +78,7 @@ public class JBenchmarkingView extends JComponent {
         TsData sdiff = mul ? (TsData.divide(benchSa, sa).fn(z->z-1))
                 : TsData.subtract(benchSa, sa);
         Ts diff = Ts.of("Differences", sdiff);
-        List<Ts> ldiff = Collections.singletonList(diff);
+        List<Ts> ldiff = List.of(diff);
        dchart_.setTsCollection(TsCollection.of(ldiff));
         all.add(diff);
         grid_.setTsCollection(TsCollection.of(all));

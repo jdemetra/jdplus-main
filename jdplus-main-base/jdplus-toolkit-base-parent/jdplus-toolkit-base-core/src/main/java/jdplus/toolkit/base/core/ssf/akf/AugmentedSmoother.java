@@ -22,7 +22,6 @@ import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.math.matrices.QuadraticForm;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.ISsfDynamics;
 import jdplus.toolkit.base.core.ssf.ISsfInitialization;

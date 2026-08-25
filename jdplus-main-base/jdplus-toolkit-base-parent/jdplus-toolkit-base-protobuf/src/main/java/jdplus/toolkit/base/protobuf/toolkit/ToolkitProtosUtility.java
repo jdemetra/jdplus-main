@@ -30,7 +30,6 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import jdplus.toolkit.base.core.arima.IArimaModel;
 import jdplus.toolkit.base.core.stats.tests.NiidTests;
@@ -202,7 +201,7 @@ public class ToolkitProtosUtility {
 
     public List<ToolkitProtos.Parameter> convert(Parameter[] p) {
         if (p == null || p.length == 0) {
-            return Collections.emptyList();
+            return List.of();
         }
         ArrayList<ToolkitProtos.Parameter> list = new ArrayList<>();
         for (int i = 0; i < p.length; ++i) {
