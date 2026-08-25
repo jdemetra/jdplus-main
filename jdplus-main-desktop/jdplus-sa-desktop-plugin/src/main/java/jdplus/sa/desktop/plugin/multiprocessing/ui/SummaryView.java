@@ -19,7 +19,6 @@ import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -28,7 +28,6 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.JComponent;

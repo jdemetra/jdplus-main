@@ -4,7 +4,6 @@ import lombok.NonNull;
 import nbbrd.design.MightBePromoted;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;

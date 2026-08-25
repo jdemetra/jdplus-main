@@ -17,7 +17,6 @@
 package jdplus.x13.base.protobuf;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import jdplus.x13.base.api.regarima.RegressionTestSpec;
 import jdplus.x13.base.api.regarima.EasterSpec;

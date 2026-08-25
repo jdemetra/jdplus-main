@@ -24,7 +24,6 @@ import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.base.api.timeseries.MultiTsDocument;
 import jdplus.toolkit.base.api.timeseries.Ts;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

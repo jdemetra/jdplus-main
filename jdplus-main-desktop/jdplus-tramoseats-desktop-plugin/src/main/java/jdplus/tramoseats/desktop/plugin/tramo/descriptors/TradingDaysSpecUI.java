@@ -23,7 +23,6 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import jdplus.tramoseats.base.api.tramo.TradingDaysSpec.AutoMethod;
 
 /**
  *

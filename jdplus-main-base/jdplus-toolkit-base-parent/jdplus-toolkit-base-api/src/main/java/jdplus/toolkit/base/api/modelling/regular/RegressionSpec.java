@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.base.api.modelling.regular;
 
-import jdplus.toolkit.base.api.data.Parameter;
 import nbbrd.design.Development;
 import nbbrd.design.LombokWorkaround;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;

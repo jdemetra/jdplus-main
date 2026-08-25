@@ -18,7 +18,6 @@ package jdplus.toolkit.base.core.regarima.diagnostics;
 
 import jdplus.toolkit.base.api.processing.ProcQuality;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.api.processing.Diagnostics;

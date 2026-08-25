@@ -30,7 +30,6 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import jdplus.toolkit.base.core.arima.IArimaModel;
 import jdplus.toolkit.base.core.stats.tests.NiidTests;

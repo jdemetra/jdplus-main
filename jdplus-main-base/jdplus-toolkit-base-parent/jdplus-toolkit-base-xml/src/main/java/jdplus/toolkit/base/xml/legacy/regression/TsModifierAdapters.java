@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import jdplus.toolkit.base.api.timeseries.regression.ModifiedTsVariable;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  *

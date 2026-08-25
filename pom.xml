@@ -543,16 +543,6 @@
     </build>
 
     <profiles>
-        <!-- Disable some plugins to accelerate the build -->
-        <profile>
-            <id>fast-build</id>
-            <properties>
-                <enforcer.skip>true</enforcer.skip>
-                <modernizer.skip>true</modernizer.skip>
-                <heylogs.skip>true</heylogs.skip>
-            </properties>
-        </profile>
-
         <!-- Base deploy -->
         <profile>
             <id>base-deploy</id>

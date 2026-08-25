@@ -17,7 +17,7 @@
 package jdplus.tramoseats.base.core.seats.diagnostics;
 
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import java.util.Collections;
+
 import java.util.List;
 import jdplus.toolkit.base.core.ucarima.WienerKolmogorovDiagnostics;
 import jdplus.toolkit.base.api.processing.Diagnostics;

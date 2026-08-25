@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import jdplus.x13.base.api.x11.X11Spec;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import org.junit.jupiter.api.Disabled;
+
 import org.junit.jupiter.api.Test;
 
 /**

@@ -34,7 +34,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;

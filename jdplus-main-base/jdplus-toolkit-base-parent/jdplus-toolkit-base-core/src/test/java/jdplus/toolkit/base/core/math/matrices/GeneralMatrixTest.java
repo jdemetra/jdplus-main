@@ -16,7 +16,6 @@
 package jdplus.toolkit.base.core.math.matrices;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

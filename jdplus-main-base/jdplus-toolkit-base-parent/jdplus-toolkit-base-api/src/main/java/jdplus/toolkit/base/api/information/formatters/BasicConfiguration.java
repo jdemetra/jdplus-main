@@ -16,9 +16,6 @@
  */
 package jdplus.toolkit.base.api.information.formatters;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

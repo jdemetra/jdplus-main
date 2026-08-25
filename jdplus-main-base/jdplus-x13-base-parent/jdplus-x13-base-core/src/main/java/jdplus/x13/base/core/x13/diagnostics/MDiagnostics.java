@@ -18,7 +18,7 @@ package jdplus.x13.base.core.x13.diagnostics;
 
 import jdplus.x13.base.core.x13.Mstatistics;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import java.util.Collections;
+
 import java.util.List;
 import jdplus.x13.base.core.x13.X13Results;
 import jdplus.toolkit.base.api.processing.Diagnostics;

@@ -16,10 +16,6 @@
  */
 package jdplus.toolkit.base.core.timeseries.simplets;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 ///**
 // *
 // * @author Jean Palate

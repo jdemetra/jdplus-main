@@ -5,6 +5,7 @@ import jdplus.x13.base.api.x11.X11;
 import jdplus.x13.base.api.x13.X13;
 import jdplus.x13.base.core.x13.X13Factory;
 
+@SuppressWarnings("module")
 module jdplus.x13.base.core {
 
     requires static lombok;

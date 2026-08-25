@@ -23,7 +23,6 @@ import jdplus.toolkit.base.api.timeseries.TsData;
 import nbbrd.io.xml.bind.Jaxb;
 import org.assertj.core.util.Files;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 

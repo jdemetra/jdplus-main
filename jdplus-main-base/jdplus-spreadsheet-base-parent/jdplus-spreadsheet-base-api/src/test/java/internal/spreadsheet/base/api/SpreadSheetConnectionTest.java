@@ -23,7 +23,6 @@ import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.tsp.grid.GridReader;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;

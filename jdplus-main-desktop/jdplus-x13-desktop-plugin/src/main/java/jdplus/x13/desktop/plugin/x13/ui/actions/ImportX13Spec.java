@@ -40,7 +40,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 
 import javax.swing.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

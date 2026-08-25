@@ -37,10 +37,8 @@ import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;

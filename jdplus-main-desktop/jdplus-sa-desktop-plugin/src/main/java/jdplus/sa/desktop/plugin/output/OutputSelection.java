@@ -9,7 +9,6 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.sa.base.api.SaProcessingFactory;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

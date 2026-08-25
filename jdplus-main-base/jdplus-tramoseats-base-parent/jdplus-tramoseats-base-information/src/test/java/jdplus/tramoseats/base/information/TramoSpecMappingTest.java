@@ -28,13 +28,9 @@ import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

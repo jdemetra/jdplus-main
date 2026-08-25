@@ -16,8 +16,6 @@
  */
 package jdplus.toolkit.base.core.ssf.multivariate;
 
-import java.util.ArrayList;
-import java.util.List;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.ssf.IPredictionErrorDecomposition;

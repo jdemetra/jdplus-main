@@ -7,7 +7,6 @@ import internal.spreadsheet.base.api.SpreadsheetManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;

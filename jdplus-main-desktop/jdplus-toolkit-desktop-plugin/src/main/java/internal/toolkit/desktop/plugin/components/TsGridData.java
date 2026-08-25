@@ -24,7 +24,6 @@ import lombok.NonNull;
 import nbbrd.design.StaticFactoryMethod;
 import nbbrd.design.NonNegative;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

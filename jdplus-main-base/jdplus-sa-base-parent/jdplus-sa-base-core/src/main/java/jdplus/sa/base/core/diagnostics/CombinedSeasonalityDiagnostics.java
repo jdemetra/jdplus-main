@@ -17,7 +17,7 @@
 package jdplus.sa.base.core.diagnostics;
 
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import java.util.Collections;
+
 import java.util.List;
 import jdplus.sa.base.core.tests.CombinedSeasonality;
 import jdplus.toolkit.base.api.processing.Diagnostics;

@@ -22,7 +22,6 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import jdplus.toolkit.base.api.data.DoubleSeq;

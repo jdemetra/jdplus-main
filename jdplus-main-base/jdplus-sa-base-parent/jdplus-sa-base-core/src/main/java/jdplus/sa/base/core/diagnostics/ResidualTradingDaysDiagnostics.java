@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.processing.ProcQuality;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 

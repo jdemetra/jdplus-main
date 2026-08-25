@@ -4,7 +4,6 @@
  */
 package jdplus.toolkit.desktop.plugin.workspace;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

@@ -15,7 +15,6 @@ import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import jdplus.toolkit.base.api.util.Id;
 import jdplus.toolkit.base.api.util.LinearId;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
