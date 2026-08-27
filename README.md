@@ -161,6 +161,21 @@ mvn test -pl jdplus-main-base/jdplus-x13-base-parent/jdplus-x13-base-core -am -P
 mvn clean install -pl jdplus-main-base/jdplus-x13-base-parent -am -Pyolo
 ```
 
+### Formatting with Spotless
+
+Use Spotless to apply the project's Java formatting rules:
+```shell
+mvn spotless:apply
+```
+
+In this repository, Spotless is configured with `ratchetFrom=origin/develop`, so `spotless:apply`
+formats only files changed compared to `origin/develop`.
+
+If needed, fetch the branch reference first:
+```shell
+git fetch origin develop
+```
+
 ### Using the libraries
 
 JDemetra+ libraries are published to Maven Central under `eu.europa.ec.joinup.sat`.
@@ -203,4 +218,3 @@ mvn clean install
 ## Licensing
 
 The code of this project is licensed under the [European Union Public Licence (EUPL)](https://joinup.ec.europa.eu/page/eupl-text-11-12).
- 
