@@ -82,6 +82,7 @@
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <jdks-maven-plugin.version>1.25.0</jdks-maven-plugin.version>
         <tidy-maven-plugin.version>1.4.0</tidy-maven-plugin.version>
+        <spotless-maven-plugin.version>3.10.0</spotless-maven-plugin.version>
         <jreleaser-maven-plugin.version>1.25.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-archetype-plugin.version>3.4.1</maven-archetype-plugin.version>
@@ -282,6 +283,11 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>tidy-maven-plugin</artifactId>
                     <version>${tidy-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jreleaser</groupId>
@@ -530,6 +536,29 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tidy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <configuration>
+                    <java>
+                        <googleJavaFormat>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
+                        <importOrder/>
+                        <removeUnusedImports />
+                        <formatAnnotations />
+                    </java>
+                    <ratchetFrom>origin/develop</ratchetFrom>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>validate</phase>

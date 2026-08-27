@@ -69,6 +69,7 @@
         <heylogs.version>@heylogs.version@</heylogs.version>
         <nbbrd-enforcer-rules>@nbbrd-enforcer-rules@</nbbrd-enforcer-rules>
         <tidy-maven-plugin.version>@tidy-maven-plugin.version@</tidy-maven-plugin.version>
+        <spotless-maven-plugin.version>@spotless-maven-plugin.version@</spotless-maven-plugin.version>
         <jreleaser-maven-plugin.version>@jreleaser-maven-plugin.version@</jreleaser-maven-plugin.version>
         <maven-clean-plugin.version>@maven-clean-plugin.version@</maven-clean-plugin.version>
         <maven-compiler-plugin.version>@maven-compiler-plugin.version@</maven-compiler-plugin.version>
@@ -283,6 +284,11 @@
                     <version>${tidy-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>${spotless-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.jreleaser</groupId>
                     <artifactId>jreleaser-maven-plugin</artifactId>
                     <version>${jreleaser-maven-plugin.version}</version>
@@ -486,6 +492,29 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>tidy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <configuration>
+                    <java>
+                        <googleJavaFormat>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
+                        <importOrder/>
+                        <removeUnusedImports />
+                        <formatAnnotations />
+                    </java>
+                    <ratchetFrom>origin/develop</ratchetFrom>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>validate</phase>
