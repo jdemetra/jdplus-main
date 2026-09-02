@@ -7,9 +7,7 @@ import nbbrd.service.ServiceDefinition;
 @ServiceDefinition
 public interface MetaDefinition {
 
-    @lombok.NonNull
-    List<Class> getSupportedClasses();
+    @lombok.NonNull List<Class> getSupportedClasses();
 
-    @lombok.NonNull
-    Set<String> getAllMetaKeys();
+    @lombok.NonNull Set<String> getAllMetaKeys();
 }

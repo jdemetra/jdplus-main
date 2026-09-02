@@ -6,6 +6,15 @@ package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import jdplus.sa.base.api.EstimationPolicy;
 import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaItem;
@@ -16,20 +25,10 @@ import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
 import jdplus.toolkit.base.api.util.Documented;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import jdplus.toolkit.base.tsp.TsMeta;
 import lombok.NonNull;
 
 /**
- *
  * @author Jean Palate
  */
 public class MultiProcessingDocument implements Documented {
@@ -39,8 +38,7 @@ public class MultiProcessingDocument implements Documented {
     private final Map<String, String> metadata = new LinkedHashMap<>();
 
     private final List<SaNode> current = new ArrayList<>();
-    @NonNull
-    private final SaItems initial;
+    @NonNull private final SaItems initial;
 
     private MultiProcessingDocument(SaItems initial) {
         this.initial = initial;
@@ -48,7 +46,9 @@ public class MultiProcessingDocument implements Documented {
     }
 
     private List<SaNode> of(List<SaItem> items) {
-        return items.stream().map(item -> SaNode.of(curId++, item.copy())).collect(Collectors.<SaNode>toList());
+        return items.stream()
+                .map(item -> SaNode.of(curId++, item.copy()))
+                .collect(Collectors.<SaNode>toList());
     }
 
     public List<SaNode> getCurrent() {
@@ -84,7 +84,10 @@ public class MultiProcessingDocument implements Documented {
     }
 
     public boolean hasFrozenItems() {
-        Optional<SaNode> any = current.stream().filter(o -> o.getOutput().getDefinition().getTs().isFrozen()).findAny();
+        Optional<SaNode> any =
+                current.stream()
+                        .filter(o -> o.getOutput().getDefinition().getTs().isFrozen())
+                        .findAny();
         return any.isPresent();
     }
 
@@ -143,7 +146,12 @@ public class MultiProcessingDocument implements Documented {
                 if (item != null) {
                     Ts ts = item.getDefinition().getTs();
                     TsDomain domain = ts.getData().getDomain().select(span);
-                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), TsInformationType.All));
+                    SaNode n =
+                            SaNode.of(
+                                    id,
+                                    item.refresh(
+                                            new EstimationPolicy(policy, domain),
+                                            TsInformationType.All));
                     current.set(i, n);
                 }
             }
@@ -171,7 +179,13 @@ public class MultiProcessingDocument implements Documented {
                         }
                         domain = domain.drop(0, nback);
                     }
-                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), cur.domainSpec(), TsInformationType.All));
+                    SaNode n =
+                            SaNode.of(
+                                    id,
+                                    item.refresh(
+                                            new EstimationPolicy(policy, domain),
+                                            cur.domainSpec(),
+                                            TsInformationType.All));
                     current.set(i, n);
                 }
             }
@@ -253,6 +267,9 @@ public class MultiProcessingDocument implements Documented {
     }
 
     public SaItem[] all() {
-        return current.stream().peek(o -> o.prepare()).map(o -> o.getOutput()).toArray(n -> new SaItem[n]);
+        return current.stream()
+                .peek(o -> o.prepare())
+                .map(o -> o.getOutput())
+                .toArray(n -> new SaItem[n]);
     }
 }

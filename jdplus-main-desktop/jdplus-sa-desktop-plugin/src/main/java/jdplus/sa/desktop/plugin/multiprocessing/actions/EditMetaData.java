@@ -32,7 +32,7 @@ public class EditMetaData extends ActiveViewAction<SaBatchUI> {
     }
 
     @Override
-    final protected void refreshAction() {
+    protected final void refreshAction() {
         SaBatchUI ui = context();
         enabled = ui != null && ui.getSelectionCount() == 1;
     }

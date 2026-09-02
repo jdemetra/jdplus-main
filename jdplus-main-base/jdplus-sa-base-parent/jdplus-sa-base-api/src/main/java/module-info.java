@@ -4,12 +4,10 @@ import jdplus.sa.base.api.SaProcessingFactory;
 import jdplus.toolkit.base.api.information.InformationExtractor;
 
 module jdplus.sa.base.api {
-
     requires static lombok;
     requires static nbbrd.design;
     requires static nbbrd.service;
     requires static org.jspecify;
-
     requires transitive jdplus.toolkit.base.api;
 
     exports jdplus.sa.base.api.benchmarking;
