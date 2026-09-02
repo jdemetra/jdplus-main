@@ -21,6 +21,7 @@ module jdplus.sa.base.api {
     uses SaDiagnosticsFactory;
     uses SaOutputFactory;
     uses jdplus.sa.base.api.diagnostics.SeasonalityTests.Factory;
+    uses jdplus.sa.base.api.MetaDefinition;
 
     provides InformationExtractor with
             jdplus.sa.base.api.extractors.VarianceDecompositionExtractor,

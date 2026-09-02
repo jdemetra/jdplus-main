@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![UI] Add display of ts metadata in Properties panel when an SaItem is selected in a multi-document.
+- ![UI]![IO] Add configurator for editing an SaItems's metadata. Interface for adding metadata keys to the configurator's autocomplete feature.
+
 ### Fixed
 
 - ![STAT] Fix NPE for final filters [#1029](https://github.com/jdemetra/jdplus-main/issues/1029) 

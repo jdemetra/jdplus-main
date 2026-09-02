@@ -47,8 +47,9 @@ public enum DemetraIcons implements Icon, IconFactory {
     BLOG_16("blog_16x16.png"),
     WARNING("warning.png"),
     COMMENT("comment_16x16.png"),
-    BROOM("broom_16x16.png"),
-    BULLET_STAR("bullet_star.png");
+    BROOM("broom_16x16.png"),   
+    BULLET_STAR("bullet_star.png"),
+    RESET("reset_16x16.png");
     
     final String path;
 

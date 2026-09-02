@@ -107,7 +107,7 @@ public class MultiProcessingDocument implements Documented {
 
     public void refresh(EstimationPolicy policy) {
         current.clear();
-        current.addAll(of(initial.refresh(policy, TsInformationType.Data)));
+        current.addAll(of(initial.refresh(policy, TsInformationType.All)));
     }
 
     public void refresh(EstimationPolicy policy, Predicate<SaNode> test) {
@@ -122,7 +122,7 @@ public class MultiProcessingDocument implements Documented {
                     item = cur.getOutput();
                 }
                 if (item != null) {
-                    SaNode n = SaNode.of(id, item.refresh(policy, TsInformationType.Data));
+                    SaNode n = SaNode.of(id, item.refresh(policy, TsInformationType.All));
                     current.set(i, n);
                 }
             }
@@ -143,7 +143,7 @@ public class MultiProcessingDocument implements Documented {
                 if (item != null) {
                     Ts ts = item.getDefinition().getTs();
                     TsDomain domain = ts.getData().getDomain().select(span);
-                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), TsInformationType.Data));
+                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), TsInformationType.All));
                     current.set(i, n);
                 }
             }
@@ -171,7 +171,7 @@ public class MultiProcessingDocument implements Documented {
                         }
                         domain = domain.drop(0, nback);
                     }
-                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), cur.domainSpec(), TsInformationType.Data));
+                    SaNode n = SaNode.of(id, item.refresh(new EstimationPolicy(policy, domain), cur.domainSpec(), TsInformationType.All));
                     current.set(i, n);
                 }
             }
