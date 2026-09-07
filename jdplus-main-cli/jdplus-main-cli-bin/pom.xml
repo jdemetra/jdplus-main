@@ -186,16 +186,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <configuration combine.self="merge">
-                    <rules>
-                        <banDuplicateClasses>
-                            <scopes>
-                                <scope>compile</scope>
-                                <scope>runtime</scope>
-                            </scopes>
-                        </banDuplicateClasses>
-                    </rules>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>enforce-on-verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration combine.children="merge">
+                            <rules>
+                                <!-- extra-enforcer-rules -->
+                                <banDuplicateClasses>
+                                    <scopes>
+                                        <scope>compile</scope>
+                                        <scope>runtime</scope>
+                                    </scopes>
+                                </banDuplicateClasses>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Assemble the application and attach it to the project -->
