@@ -80,7 +80,7 @@
         <flatten-maven-plugin.version>1.8.0</flatten-maven-plugin.version>
         <forbiddenapis.version>3.10</forbiddenapis.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
-        <jdks-maven-plugin.version>1.25.0</jdks-maven-plugin.version>
+        <jdks-maven-plugin.version>1.26.0</jdks-maven-plugin.version>
         <tidy-maven-plugin.version>1.4.0</tidy-maven-plugin.version>
         <spotless-maven-plugin.version>3.10.2</spotless-maven-plugin.version>
         <jreleaser-maven-plugin.version>1.26.0</jreleaser-maven-plugin.version>
