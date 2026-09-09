@@ -37,13 +37,8 @@ class BasicSpecMapping {
     }
 
     InformationSet write(BasicSpec spec, boolean verbose) {
-        if (!verbose && spec.isDefault()) {
-            return null;
-        }
         InformationSet info = new InformationSet();
-        if (spec.getFrequency() != 0) {
-            info.add(FREQUENCY, spec.getFrequency());
-        }
+        info.add(FREQUENCY, spec.getFrequency());
         if (verbose || spec.getSpan().getType() != TimeSelector.SelectionType.All) {
             info.add(SPAN, spec.getSpan());
         }
