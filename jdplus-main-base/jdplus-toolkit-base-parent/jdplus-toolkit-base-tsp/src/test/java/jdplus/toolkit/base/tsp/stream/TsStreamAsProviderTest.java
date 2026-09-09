@@ -26,7 +26,6 @@ import lombok.NonNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -86,7 +85,7 @@ public class TsStreamAsProviderTest {
                             .map(ts -> new DataSetTs(
                                     toDataSet.apply(ts),
                                     ts.getName(),
-                                    type.encompass(MetaData) ? ts.getMeta() : Collections.emptyMap(),
+                                    type.encompass(MetaData) ? ts.getMeta() : Map.of(),
                                     type.encompass(Data) ? ts.getData() : DataSetTs.DATA_NOT_REQUESTED)
                             );
                 }

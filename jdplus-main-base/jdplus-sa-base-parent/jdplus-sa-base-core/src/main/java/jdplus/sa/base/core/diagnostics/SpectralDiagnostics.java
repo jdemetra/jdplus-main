@@ -20,7 +20,7 @@ import jdplus.toolkit.base.api.processing.Diagnostics;
 import jdplus.toolkit.base.api.processing.ProcQuality;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.api.timeseries.TsData;
-import java.util.Collections;
+
 import java.util.List;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.toolkit.base.core.modelling.regular.tests.SpectralAnalysis;
@@ -170,9 +170,9 @@ public class SpectralDiagnostics implements Diagnostics {
     @Override
     public List<String> getWarnings() {
         if (!sorig) {
-            return Collections.singletonList("No seasonal peak in the original differenced series");
+            return List.of("No seasonal peak in the original differenced series");
         } else {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 }

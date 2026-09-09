@@ -1,6 +1,7 @@
 import jdplus.toolkit.base.workspace.file.spi.FamilyHandler;
 import jdplus.x13.base.workspace.X13Handlers;
 
+@SuppressWarnings("module")
 module jdplus.x13.base.workspace {
 
     requires static lombok;

@@ -18,7 +18,6 @@ package jdplus.toolkit.base.api.information.formatters;
 
 import jdplus.toolkit.base.api.processing.ProcDiagnostic;
 
-import java.text.NumberFormat;
 import java.util.Locale;
 
 /**

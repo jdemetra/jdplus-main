@@ -25,15 +25,20 @@ import jdplus.toolkit.base.core.random.XorshiftRNG;
 @lombok.experimental.UtilityClass
 public class Distributions {
 
-    public double[] randomsT(double df, int n) {
-
+    public double[] randomsT(double df, int n, int seed) {
         T dist = new T(df);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsT(double df, int n) {
+        return randomsT(df, n, -1);
     }
 
     public double[] cdfT(double df, double[] x) {
@@ -56,15 +61,21 @@ public class Distributions {
         return r;
     }
 
-    public double[] randomsChi2(double df, int n) {
+    public double[] randomsChi2(double df, int n, int seed) {
 
         Chi2 dist = new Chi2(df);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsChi2(double df, int n) {
+        return randomsChi2(df, n, -1);
     }
 
     public double[] cdfChi2(double df, double[] x) {
@@ -87,15 +98,21 @@ public class Distributions {
         return r;
     }
 
-    public double[] randomsF(double dfnum, double dfdenom, int n) {
+    public double[] randomsF(double dfnum, double dfdenom, int n, int seed) {
 
         F dist = new F(dfnum, dfdenom);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsF(double dfnum, double dfdenom, int n) {
+        return randomsF(dfnum, dfdenom, n, -1);
     }
 
     public double[] cdfF(double dfnum, double dfdenom, double[] x) {
@@ -117,16 +134,22 @@ public class Distributions {
         }
         return r;
     }
-    
-    public double[] randomsNormal(double mean, double stdev, int n) {
+
+    public double[] randomsNormal(double mean, double stdev, int n, int seed) {
 
         Normal dist = new Normal(mean, stdev);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsNormal(double mean, double stdev, int n) {
+        return randomsNormal(mean, stdev, n, -1);
     }
 
     public double[] cdfNormal(double mean, double stdev, double[] x) {
@@ -148,16 +171,22 @@ public class Distributions {
         }
         return r;
     }
-    
-    public double[] randomsLogNormal(double mean, double stdev, int n) {
+
+    public double[] randomsLogNormal(double mean, double stdev, int n, int seed) {
 
         LogNormal dist = new LogNormal(mean, stdev);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsLogNormal(double mean, double stdev, int n) {
+        return randomsLogNormal(mean, stdev, n, -1);
     }
 
     public double[] cdfLogNormal(double mean, double stdev, double[] x) {
@@ -180,15 +209,21 @@ public class Distributions {
         return r;
     }
 
-    public double[] randomsGamma(double shape, double scale, int n) {
+    public double[] randomsGamma(double shape, double scale, int n, int seed) {
 
         Gamma dist = new Gamma(shape, scale);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsGamma(double shape, double scale, int n) {
+        return randomsGamma(shape, scale, n, -1);
     }
 
     public double[] cdfGamma(double shape, double scale, double[] x) {
@@ -211,15 +246,21 @@ public class Distributions {
         return r;
     }
 
-    public double[] randomsInverseGamma(double shape, double scale, int n) {
+    public double[] randomsInverseGamma(double shape, double scale, int n, int seed) {
 
         InverseGamma dist = new InverseGamma(shape, scale);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsInverseGamma(double shape, double scale, int n) {
+        return randomsInverseGamma(shape, scale, n, -1);
     }
 
     public double[] cdfInverseGamma(double shape, double scale, double[] x) {
@@ -242,15 +283,21 @@ public class Distributions {
         return r;
     }
 
-    public double[] randomsInverseGaussian(double shape, double scale, int n) {
+    public double[] randomsInverseGaussian(double shape, double scale, int n, int seed) {
 
         InverseGaussian dist = new InverseGaussian(shape, scale);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsInverseGaussian(double shape, double scale, int n) {
+        return randomsInverseGaussian(shape, scale, n, -1);
     }
 
     public double[] cdfInverseGaussian(double shape, double scale, double[] x) {
@@ -273,15 +320,21 @@ public class Distributions {
         return r;
     }
 
-    public double[] randomsExponential(double scale, int n) {
+    public double[] randomsExponential(double scale, int n, int seed) {
 
         Exponential dist = new Exponential(scale);
-        RandomNumberGenerator rnd = XorshiftRNG.fromSystemNanoTime();
+        RandomNumberGenerator rnd = (seed == -1)
+                                   ? XorshiftRNG.fromSystemNanoTime()
+                                   : new XorshiftRNG(seed);
         double[] r = new double[n];
         for (int i = 0; i < n; ++i) {
             r[i] = dist.random(rnd);
         }
         return r;
+    }
+
+    public double[] randomsExponential(double scale, int n) {
+        return randomsExponential(scale, n, -1);
     }
 
     public double[] cdfExponential(double scale, double[] x) {

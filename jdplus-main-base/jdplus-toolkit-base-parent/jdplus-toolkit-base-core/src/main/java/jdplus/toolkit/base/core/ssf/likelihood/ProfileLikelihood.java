@@ -16,7 +16,6 @@
  */
 package jdplus.toolkit.base.core.ssf.likelihood;
 
-import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.stats.likelihood.Likelihood;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;

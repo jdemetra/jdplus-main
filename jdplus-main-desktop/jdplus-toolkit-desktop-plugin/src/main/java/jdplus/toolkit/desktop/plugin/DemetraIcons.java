@@ -4,20 +4,17 @@
  */
 package jdplus.toolkit.desktop.plugin;
 
-import jdplus.toolkit.desktop.plugin.util.IconFactory;
+import ec.util.various.swing.FontAwesome;
 import java.awt.*;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-
-import ec.util.various.swing.FontAwesome;
+import jdplus.toolkit.desktop.plugin.util.IconFactory;
 import org.openide.util.ImageUtilities;
 
 /**
- *
  * @author Philippe Charles
  */
 public enum DemetraIcons implements Icon, IconFactory {
-
     COLOR_SWATCH_16("color-swatch_16x16.png"),
     DOCUMENT_PRINT_16("document-print_16x16.png"),
     EDIT_CLEAR_16("edit-clear_16x16.png"),
@@ -48,14 +45,15 @@ public enum DemetraIcons implements Icon, IconFactory {
     WARNING("warning.png"),
     COMMENT("comment_16x16.png"),
     BROOM("broom_16x16.png"),
-    BULLET_STAR("bullet_star.png");
-    
+    BULLET_STAR("bullet_star.png"),
+    RESET("reset_16x16.png");
+
     final String path;
 
     DemetraIcons(String path) {
         this.path = "jdplus/toolkit/desktop/plugin/icons/" + path;
     }
-    
+
     public ImageIcon getImageIcon() {
         return ImageUtilities.loadImageIcon(path, true);
     }

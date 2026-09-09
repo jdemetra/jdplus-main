@@ -92,7 +92,7 @@ public final class KeyStrokes {
                         .distinct()
                         .sorted(orderingUsingKeyTextLength())
                         .toList();
-                result.put(o, !tmp.isEmpty() ? tmp : Collections.singletonList(getFallback(o)));
+                result.put(o, !tmp.isEmpty() ? tmp : List.of(getFallback(o)));
             }
             return result;
         }

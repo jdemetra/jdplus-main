@@ -226,7 +226,7 @@ public final class PocProvider implements DataSourceProvider {
                     "Index", String.valueOf(seriesIndex),
                     "Sleep meta", String.valueOf(dt.getSleepDuration(MetaData)),
                     "Sleep data", String.valueOf(dt.getSleepDuration(Data)))
-                    : ignore -> Collections.emptyMap();
+                    : ignore -> Map.of();
         }
 
         private static IntFunction<String> labelFunc(DataType dt) {

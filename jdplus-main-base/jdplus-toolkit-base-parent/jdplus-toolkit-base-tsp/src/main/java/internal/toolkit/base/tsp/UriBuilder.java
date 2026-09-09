@@ -175,7 +175,7 @@ public final class UriBuilder {
     @Nullable
     private static Map<String, String> splitMap(@NonNull CharSequence input) {
         if (input.isEmpty()) {
-            return Collections.emptyMap();
+            return Map.of();
         }
         Map<String, String> result = new HashMap<>();
         return splitMapTo(input, result::put) ? result : null;

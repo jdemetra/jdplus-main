@@ -18,7 +18,6 @@ package jdplus.toolkit.base.core.math.linearfilters;
 
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 
 /**
  *

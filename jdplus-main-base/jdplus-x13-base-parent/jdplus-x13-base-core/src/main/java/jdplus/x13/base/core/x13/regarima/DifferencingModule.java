@@ -35,7 +35,6 @@ import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.sarima.estimation.HannanRissanen;
 import jdplus.toolkit.base.core.sarima.estimation.SarimaMapping;
-import static jdplus.x13.base.core.x13.regarima.AutoModellingModule.DEFAULT;
 import nbbrd.design.BuilderPattern;
 import nbbrd.design.Development;
 

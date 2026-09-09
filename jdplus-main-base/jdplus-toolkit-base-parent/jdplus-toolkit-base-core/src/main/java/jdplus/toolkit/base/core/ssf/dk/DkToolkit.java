@@ -50,9 +50,7 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.decomposition.Householder2;
 import jdplus.toolkit.base.core.math.matrices.decomposition.QRDecomposition;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.base.core.math.matrices.decomposition.HouseholderWithPivoting;
 import jdplus.toolkit.base.core.math.linearsystem.QRLeastSquaresSolver;
-import jdplus.toolkit.base.core.ssf.multivariate.ExtendedMultivariateSsfData;
 import jdplus.toolkit.base.core.ssf.univariate.ExtendedSsfData;
 import jdplus.toolkit.base.core.ssf.univariate.ISsfMeasurement;
 

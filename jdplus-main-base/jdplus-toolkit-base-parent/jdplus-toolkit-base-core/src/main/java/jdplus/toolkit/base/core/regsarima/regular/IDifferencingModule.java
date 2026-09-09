@@ -16,9 +16,6 @@
  */
 package jdplus.toolkit.base.core.regsarima.regular;
 
-import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
-
 /**
  * Estimates the stationary part of the arima model provided in the context.
  * On entry, the estimation should be available

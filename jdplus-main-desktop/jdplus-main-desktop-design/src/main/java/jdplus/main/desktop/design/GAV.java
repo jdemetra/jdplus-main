@@ -4,7 +4,6 @@ import lombok.NonNull;
 import nbbrd.design.MightBePromoted;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class GAV {
         String items = manifest.getMainAttributes().getValue("Maven-Class-Path");
         return items != null
                 ? splitAsStream(items, ' ').map(GAV::parseNbmMavenClassPath).collect(Collectors.toList())
-                : Collections.emptyList();
+                : List.of();
     }
 
     private static GAV parseNbmMavenClassPath(CharSequence input) throws IllegalArgumentException {

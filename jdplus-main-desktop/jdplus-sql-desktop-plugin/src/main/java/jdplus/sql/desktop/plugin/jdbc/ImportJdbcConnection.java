@@ -31,7 +31,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
 
 import javax.swing.*;
-import java.util.Collections;
 import java.util.List;
 
 @ActionID(category = "Edit", id = ImportJdbcConnection.ID)
@@ -71,7 +70,7 @@ public final class ImportJdbcConnection extends SingleNodeAction<Node> implement
     }
 
     private List<Importable> getImportables() {
-        return Collections.singletonList(new Importable() {
+        return List.of(new Importable() {
 
             @Override
             public String getDomain() {

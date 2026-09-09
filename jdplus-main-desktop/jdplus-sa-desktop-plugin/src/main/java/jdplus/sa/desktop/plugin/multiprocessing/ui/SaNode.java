@@ -16,7 +16,6 @@
  */
 package jdplus.sa.desktop.plugin.multiprocessing.ui;
 
-import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaDefinition;
 import jdplus.sa.base.api.SaEstimation;
 import jdplus.sa.base.api.SaItem;

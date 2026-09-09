@@ -36,7 +36,7 @@ public abstract class AbstractMultiTsDocument<S extends ProcSpecification, R ext
 
     private final UUID uuid;
 
-    private Map<String, String> metadata = Collections.emptyMap();
+    private Map<String, String> metadata = Map.of();
 
     @lombok.NonNull
     private S specification;
@@ -50,7 +50,7 @@ public abstract class AbstractMultiTsDocument<S extends ProcSpecification, R ext
     protected AbstractMultiTsDocument(S spec) {
         this.specification = spec;
         uuid = UUID.randomUUID();
-        input=Collections.emptyList();
+        input=List.of();
     }
 
     private void clear() {

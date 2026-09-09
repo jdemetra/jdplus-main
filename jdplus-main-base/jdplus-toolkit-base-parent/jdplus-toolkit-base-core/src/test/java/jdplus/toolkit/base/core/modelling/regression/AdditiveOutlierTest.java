@@ -24,7 +24,7 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -58,7 +58,7 @@ public class InformationExtractors {
             // last one
             InformationExtractor last = cur.getLast();
             if (last.getPriority() == -1) {
-                x.put(cl, Collections.singletonList(last));
+                x.put(cl, List.of(last));
             } else {
                 x.put(cl, Collections.unmodifiableList(x.get(cl)));
             }
@@ -72,7 +72,7 @@ public class InformationExtractors {
         }
         List<InformationExtractor> all = extractors.get(D);
         if (all == null) {
-            return Collections.emptyList();
+            return List.of();
         } else {
             return all;
         }

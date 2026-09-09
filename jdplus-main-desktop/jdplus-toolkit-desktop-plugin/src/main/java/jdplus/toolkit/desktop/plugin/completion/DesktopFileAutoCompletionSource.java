@@ -13,6 +13,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public final class DesktopFileAutoCompletionSource extends FileAutoCompletionSou
             return result;
         }
         if (enhancedResult.addAll(result)) {
-            Collections.sort(enhancedResult);
+            enhancedResult.sort(Comparator.naturalOrder());
         }
         return enhancedResult;
     }

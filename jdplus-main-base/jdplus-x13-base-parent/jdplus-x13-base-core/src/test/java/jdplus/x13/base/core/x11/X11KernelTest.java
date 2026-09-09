@@ -10,7 +10,6 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.x13.base.api.x11.CalendarSigmaOption;
 import jdplus.x13.base.api.x11.SeasonalFilterOption;
-import jdplus.x13.base.api.x11.X11Exception;
 import jdplus.x13.base.api.x11.X11Spec;
 import ec.satoolkit.x11.X11Specification;
 import ec.satoolkit.x11.X11Toolkit;
@@ -20,10 +19,8 @@ import java.util.Arrays;
 import jdplus.x13.base.api.x11.BiasCorrection;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**

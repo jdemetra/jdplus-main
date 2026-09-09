@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+
 import jdplus.spreadsheet.base.api.SpreadSheetBean;
 import jdplus.spreadsheet.base.api.SpreadSheetProvider;
 import jdplus.toolkit.base.api.timeseries.Ts;

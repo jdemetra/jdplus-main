@@ -55,7 +55,7 @@ public class CompositeGregorianCalendarPanel extends JPanel implements ExplorerM
     public CompositeGregorianCalendarPanel(String initialCalendarName) {
         this.initialCalendarName = initialCalendarName;
         this.calendarName = initialCalendarName != null ? initialCalendarName : "";
-        this.weightedItems = Collections.emptyList();
+        this.weightedItems = List.of();
 
         this.em = new ExplorerManager();
 
@@ -183,7 +183,7 @@ public class CompositeGregorianCalendarPanel extends JPanel implements ExplorerM
 
     public void setWeightedItems(List<WeightedItem<String>> weightedItems) {
         List<WeightedItem<String>> old = this.weightedItems;
-        this.weightedItems = weightedItems != null ? weightedItems : Collections.emptyList();
+        this.weightedItems = weightedItems != null ? weightedItems : List.of();
         firePropertyChange(WEIGHTED_ITEMS_PROPERTY, old, this.weightedItems);
     }
     //</editor-fold>

@@ -21,7 +21,6 @@ import jdplus.toolkit.base.tsp.HasDataSourceList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -35,7 +34,7 @@ public class HasDataSourceListTest {
     @Test
     @SuppressWarnings("null")
     public void testFactory() {
-        assertThatThrownBy(() -> HasDataSourceList.of(null, Collections.emptyList())).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> HasDataSourceList.of(null, List.of())).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> HasDataSourceList.of("name", null)).isInstanceOf(NullPointerException.class);
 
         DataSource.Builder b = DataSource.builder("name", "");

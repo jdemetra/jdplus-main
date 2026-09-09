@@ -4,7 +4,6 @@
  */
 package jdplus.toolkit.desktop.plugin.workspace;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -57,7 +56,7 @@ public abstract class AbstractWorkspaceItemManager<D> implements WorkspaceItemMa
 
     @Override
     public List<WorkspaceItem<D>> getDefaultItems() {
-        return Collections.emptyList();
+        return List.of();
     }
 
     @Override

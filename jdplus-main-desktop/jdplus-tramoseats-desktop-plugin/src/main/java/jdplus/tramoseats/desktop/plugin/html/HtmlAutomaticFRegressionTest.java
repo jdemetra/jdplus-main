@@ -18,7 +18,6 @@ package jdplus.tramoseats.desktop.plugin.html;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Formatter;
 import java.util.Locale;
 import jdplus.toolkit.desktop.plugin.html.HtmlStream;
 import jdplus.toolkit.desktop.plugin.html.core.HtmlLogFormatter;

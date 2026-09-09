@@ -25,7 +25,6 @@ import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
 import jdplus.toolkit.base.api.util.NameManager;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +42,7 @@ public class WorkspaceUtility {
                     .map(desc -> desc.getKey().getId())
                     .collect(Collectors.toList());
         } catch (IOException ex) {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 
@@ -53,7 +52,7 @@ public class WorkspaceUtility {
                     .filter(desc -> desc.getKey().getFamily().equals(family))
                     .collect(Collectors.toList());
         } catch (IOException ex) {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

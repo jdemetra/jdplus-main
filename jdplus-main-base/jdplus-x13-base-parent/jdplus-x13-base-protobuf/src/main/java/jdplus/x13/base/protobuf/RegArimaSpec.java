@@ -1649,7 +1649,7 @@ private static final long serialVersionUID = 0L;
       super(builder);
     }
     private OutlierSpec() {
-      outliers_ = java.util.Collections.emptyList();
+      outliers_ = java.util.List.of();
       method_ = 0;
     }
 
@@ -2655,7 +2655,7 @@ private static final long serialVersionUID = 0L;
         super.clear();
         bitField0_ = 0;
         if (outliersBuilder_ == null) {
-          outliers_ = java.util.Collections.emptyList();
+          outliers_ = java.util.List.of();
         } else {
           outliers_ = null;
           outliersBuilder_.clear();
@@ -2887,7 +2887,7 @@ private static final long serialVersionUID = 0L;
       private int bitField0_;
 
       private java.util.List<jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec.Type> outliers_ =
-        java.util.Collections.emptyList();
+        java.util.List.of();
       private void ensureOutliersIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
           outliers_ = new java.util.ArrayList<jdplus.x13.base.protobuf.RegArimaSpec.OutlierSpec.Type>(outliers_);
@@ -3040,7 +3040,7 @@ private static final long serialVersionUID = 0L;
        */
       public Builder clearOutliers() {
         if (outliersBuilder_ == null) {
-          outliers_ = java.util.Collections.emptyList();
+          outliers_ = java.util.List.of();
           bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
@@ -5754,7 +5754,7 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.LazyStringArrayList.emptyList();
       test_ = 0;
       auto_ = 0;
-      tdcoefficients_ = java.util.Collections.emptyList();
+      tdcoefficients_ = java.util.List.of();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -6374,7 +6374,7 @@ private static final long serialVersionUID = 0L;
         ptest2_ = 0D;
         autoAdjust_ = false;
         if (tdcoefficientsBuilder_ == null) {
-          tdcoefficients_ = java.util.Collections.emptyList();
+          tdcoefficients_ = java.util.List.of();
         } else {
           tdcoefficients_ = null;
           tdcoefficientsBuilder_.clear();
@@ -7190,7 +7190,7 @@ private static final long serialVersionUID = 0L;
       }
 
       private java.util.List<jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.Parameter> tdcoefficients_ =
-        java.util.Collections.emptyList();
+        java.util.List.of();
       private void ensureTdcoefficientsIsMutable() {
         if (!((bitField0_ & 0x00000400) != 0)) {
           tdcoefficients_ = new java.util.ArrayList<jdplus.toolkit.base.protobuf.toolkit.ToolkitProtos.Parameter>(tdcoefficients_);
@@ -7343,7 +7343,7 @@ private static final long serialVersionUID = 0L;
        */
       public Builder clearTdcoefficients() {
         if (tdcoefficientsBuilder_ == null) {
-          tdcoefficients_ = java.util.Collections.emptyList();
+          tdcoefficients_ = java.util.List.of();
           bitField0_ = (bitField0_ & ~0x00000400);
           onChanged();
         } else {
@@ -7774,10 +7774,10 @@ private static final long serialVersionUID = 0L;
       super(builder);
     }
     private RegressionSpec() {
-      outliers_ = java.util.Collections.emptyList();
-      users_ = java.util.Collections.emptyList();
-      interventions_ = java.util.Collections.emptyList();
-      ramps_ = java.util.Collections.emptyList();
+      outliers_ = java.util.List.of();
+      users_ = java.util.List.of();
+      interventions_ = java.util.List.of();
+      ramps_ = java.util.List.of();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -8368,28 +8368,28 @@ private static final long serialVersionUID = 0L;
           easterBuilder_ = null;
         }
         if (outliersBuilder_ == null) {
-          outliers_ = java.util.Collections.emptyList();
+          outliers_ = java.util.List.of();
         } else {
           outliers_ = null;
           outliersBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000010);
         if (usersBuilder_ == null) {
-          users_ = java.util.Collections.emptyList();
+          users_ = java.util.List.of();
         } else {
           users_ = null;
           usersBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000020);
         if (interventionsBuilder_ == null) {
-          interventions_ = java.util.Collections.emptyList();
+          interventions_ = java.util.List.of();
         } else {
           interventions_ = null;
           interventionsBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000040);
         if (rampsBuilder_ == null) {
-          ramps_ = java.util.Collections.emptyList();
+          ramps_ = java.util.List.of();
         } else {
           ramps_ = null;
           rampsBuilder_.clear();
@@ -9138,7 +9138,7 @@ private static final long serialVersionUID = 0L;
       }
 
       private java.util.List<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.Outlier> outliers_ =
-        java.util.Collections.emptyList();
+        java.util.List.of();
       private void ensureOutliersIsMutable() {
         if (!((bitField0_ & 0x00000010) != 0)) {
           outliers_ = new java.util.ArrayList<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.Outlier>(outliers_);
@@ -9291,7 +9291,7 @@ private static final long serialVersionUID = 0L;
        */
       public Builder clearOutliers() {
         if (outliersBuilder_ == null) {
-          outliers_ = java.util.Collections.emptyList();
+          outliers_ = java.util.List.of();
           bitField0_ = (bitField0_ & ~0x00000010);
           onChanged();
         } else {
@@ -9378,7 +9378,7 @@ private static final long serialVersionUID = 0L;
       }
 
       private java.util.List<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.TsVariable> users_ =
-        java.util.Collections.emptyList();
+        java.util.List.of();
       private void ensureUsersIsMutable() {
         if (!((bitField0_ & 0x00000020) != 0)) {
           users_ = new java.util.ArrayList<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.TsVariable>(users_);
@@ -9531,7 +9531,7 @@ private static final long serialVersionUID = 0L;
        */
       public Builder clearUsers() {
         if (usersBuilder_ == null) {
-          users_ = java.util.Collections.emptyList();
+          users_ = java.util.List.of();
           bitField0_ = (bitField0_ & ~0x00000020);
           onChanged();
         } else {
@@ -9618,7 +9618,7 @@ private static final long serialVersionUID = 0L;
       }
 
       private java.util.List<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.InterventionVariable> interventions_ =
-        java.util.Collections.emptyList();
+        java.util.List.of();
       private void ensureInterventionsIsMutable() {
         if (!((bitField0_ & 0x00000040) != 0)) {
           interventions_ = new java.util.ArrayList<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.InterventionVariable>(interventions_);
@@ -9771,7 +9771,7 @@ private static final long serialVersionUID = 0L;
        */
       public Builder clearInterventions() {
         if (interventionsBuilder_ == null) {
-          interventions_ = java.util.Collections.emptyList();
+          interventions_ = java.util.List.of();
           bitField0_ = (bitField0_ & ~0x00000040);
           onChanged();
         } else {
@@ -9858,7 +9858,7 @@ private static final long serialVersionUID = 0L;
       }
 
       private java.util.List<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.Ramp> ramps_ =
-        java.util.Collections.emptyList();
+        java.util.List.of();
       private void ensureRampsIsMutable() {
         if (!((bitField0_ & 0x00000080) != 0)) {
           ramps_ = new java.util.ArrayList<jdplus.toolkit.base.protobuf.modelling.ModellingProtos.Ramp>(ramps_);
@@ -10011,7 +10011,7 @@ private static final long serialVersionUID = 0L;
        */
       public Builder clearRamps() {
         if (rampsBuilder_ == null) {
-          ramps_ = java.util.Collections.emptyList();
+          ramps_ = java.util.List.of();
           bitField0_ = (bitField0_ & ~0x00000080);
           onChanged();
         } else {

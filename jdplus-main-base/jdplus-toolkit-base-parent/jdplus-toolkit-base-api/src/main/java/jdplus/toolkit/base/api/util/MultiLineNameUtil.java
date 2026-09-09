@@ -16,9 +16,10 @@
  */
 package jdplus.toolkit.base.api.util;
 
-import java.util.Collections;
-import java.util.function.Function;
 import lombok.NonNull;
+
+import java.util.List;
+import java.util.function.Function;
 
 /**
  *
@@ -49,7 +50,7 @@ public class MultiLineNameUtil {
     public static String toHtml(@NonNull String input) {
 //        return "<html>" + input.replace(SEPARATOR, "<br>");
         String[] items = input.split(SEPARATOR, -1);
-        Function<Integer, Iterable<Integer>> children = o -> o < items.length - 1 ? Collections.singletonList(o + 1) : Collections.emptyList();
+        Function<Integer, Iterable<Integer>> children = o -> o < items.length - 1 ? List.of(o + 1) : List.of();
         Function<Integer, String> toString = o -> (o == 0 ? "" : " ") + items[o] + "<br>";
         String result = TreeTraverser.of(0, children).prettyPrintToString(Integer.MAX_VALUE, toString);
         return "<html>" + result.replace(" ", "&nbsp;");

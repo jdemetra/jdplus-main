@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.UpdateInformation;
 
 

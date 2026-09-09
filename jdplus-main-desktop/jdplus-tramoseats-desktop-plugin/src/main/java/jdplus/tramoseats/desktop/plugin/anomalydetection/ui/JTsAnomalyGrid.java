@@ -16,47 +16,41 @@
  */
 package jdplus.tramoseats.desktop.plugin.anomalydetection.ui;
 
-import jdplus.tramoseats.desktop.plugin.anomalydetection.OutlierEstimation;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.desktop.plugin.components.parts.HasHoveredObs;
-import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
-import jdplus.toolkit.desktop.plugin.components.JTsGrid;
-import jdplus.toolkit.desktop.plugin.components.TsGridObs;
 import ec.util.chart.ObsIndex;
 import ec.util.list.swing.JLists;
-import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
-import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.OutlierColorChooser;
 import jdplus.main.desktop.design.SwingComponent;
 import jdplus.main.desktop.design.SwingProperty;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.timeseries.Ts;
+import jdplus.toolkit.base.api.timeseries.TsCollection;
 import jdplus.toolkit.base.api.timeseries.TsInformationType;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.desktop.plugin.components.JTsGrid;
+import jdplus.toolkit.desktop.plugin.components.TsGridObs;
+import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
+import jdplus.toolkit.desktop.plugin.components.parts.HasHoveredObs;
+import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.OutlierColorChooser;
 import jdplus.tramoseats.base.api.tramo.OutlierSpec;
 import jdplus.tramoseats.base.api.tramo.TramoException;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import jdplus.tramoseats.base.api.tramo.TransformSpec;
-import java.awt.BorderLayout;
-import java.awt.Component;
+import jdplus.tramoseats.base.core.tramo.TramoKernel;
+import jdplus.tramoseats.desktop.plugin.anomalydetection.OutlierEstimation;
+import lombok.NonNull;
+import nbbrd.design.SkipProcessing;
+import org.jspecify.annotations.Nullable;
+import org.netbeans.api.progress.ProgressHandle;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.OptionalInt;
-import lombok.NonNull;
-import org.jspecify.annotations.Nullable;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JToolTip;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingWorker;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
-import jdplus.tramoseats.base.core.tramo.TramoKernel;
-import nbbrd.design.SkipProcessing;
-import org.netbeans.api.progress.ProgressHandle;
 
 /**
  * A grid component used to display outliers found in time series. The outliers
@@ -187,8 +181,8 @@ public final class JTsAnomalyGrid extends JComponent {
     }
 
     public Ts getSelectedItem() {
-        OptionalInt singleSelection = JLists.getSelectionIndexStream(grid.getTsSelectionModel()).findFirst();
-        return singleSelection.isPresent() ? grid.getTsCollection().get(singleSelection.getAsInt()) : null;
+        int singleSelection = JLists.getSelectionIndexStream(grid.getTsSelectionModel()).findFirst().orElse(-1);
+        return singleSelection != -1 ? grid.getTsCollection().get(singleSelection) : null;
     }
 
     public boolean isShowAO() {

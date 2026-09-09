@@ -24,7 +24,6 @@ import jdplus.toolkit.base.tsp.DataSource;
 import tck.demetra.tsp.FileLoaderAssert;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;

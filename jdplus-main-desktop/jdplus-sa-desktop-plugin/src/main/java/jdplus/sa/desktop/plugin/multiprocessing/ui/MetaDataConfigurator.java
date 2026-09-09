@@ -1,0 +1,902 @@
+package jdplus.sa.desktop.plugin.multiprocessing.ui;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionListener;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.IntStream;
+import javax.swing.AbstractCellEditor;
+import javax.swing.ComboBoxEditor;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.BadLocationException;
+import jdplus.sa.base.api.MetaDefinition;
+import jdplus.toolkit.desktop.plugin.DemetraIcons;
+import org.openide.util.Lookup;
+
+public class MetaDataConfigurator extends javax.swing.JDialog {
+
+    private final SaNode base;
+    private final SaBatchUI owner;
+    private final List<String> possibleItems;
+
+    public MetaDataConfigurator(SaBatchUI owner, SaNode base) {
+        super(
+                SwingUtilities.getWindowAncestor(owner),
+                "Create new metadata",
+                ModalityType.TOOLKIT_MODAL);
+        initComponents();
+        this.owner = owner;
+        this.base = base;
+
+        saveButton.setText("Change");
+        if (owner == null || base == null) {
+            resetMetaDataButton.setEnabled(false);
+            saveButton.setEnabled(false);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Could not determine the corresponding item. Changing the metadata is not possible ",
+                    "Saving not possible",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            idField.setText(base.getName());
+            setToOriginalData();
+            setTitle("Change Metadata for \"" + base.getName() + "\"");
+        }
+        possibleItems =
+                Lookup.getDefault().lookupAll(MetaDefinition.class).stream()
+                        .filter(
+                                t ->
+                                        t.getSupportedClasses()
+                                                .contains(MultiProcessingDocument.class))
+                        .map(MetaDefinition::getAllMetaKeys)
+                        .flatMap(Set::stream)
+                        .distinct()
+                        .sorted()
+                        .toList();
+
+        TableColumn keyColumn = metaDataTable.getColumnModel().getColumn(0);
+        keyColumn.setCellEditor(new AutoCompleteCellEditor());
+
+        for (int viewColumn = 0; viewColumn < metaDataTable.getColumnCount(); viewColumn++) {
+            int modelColumn = metaDataTable.convertColumnIndexToModel(viewColumn);
+            TableCellRenderer currentRenderer =
+                    metaDataTable.getColumnModel().getColumn(viewColumn).getCellRenderer();
+            if (currentRenderer instanceof LockedRowRenderer lockedRowRenderer) {
+                currentRenderer = lockedRowRenderer.getDelegate();
+            }
+            if (currentRenderer == null) {
+                Class<?> columnClass = metaDataTable.getModel().getColumnClass(modelColumn);
+                currentRenderer = metaDataTable.getDefaultRenderer(columnClass);
+            }
+            metaDataTable
+                    .getColumnModel()
+                    .getColumn(viewColumn)
+                    .setCellRenderer(new LockedRowRenderer(currentRenderer));
+        }
+
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(owner);
+    }
+
+    private void setToOriginalData() {
+        clearMetaData(false);
+        DefaultTableModel defaultTableModel = (DefaultTableModel) metaDataTable.getModel();
+        Map<String, String> metaData = base.getOutput().getMeta();
+        Set<String> metaDataKeys = new TreeSet<>(base.getOutput().getMeta().keySet());
+        for (String metaDataKey : metaDataKeys) {
+            defaultTableModel.addRow(
+                    new Object[] {metaDataKey, metaData.getOrDefault(metaDataKey, "")});
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT
+     * modify this code. The content of this method is always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        javax.swing.JLabel idLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler2 =
+                new javax.swing.Box.Filler(
+                        new java.awt.Dimension(5, 0),
+                        new java.awt.Dimension(5, 0),
+                        new java.awt.Dimension(5, 32767));
+        idField = new javax.swing.JTextField();
+        javax.swing.Box.Filler filler4 =
+                new javax.swing.Box.Filler(
+                        new java.awt.Dimension(50, 0),
+                        new java.awt.Dimension(50, 0),
+                        new java.awt.Dimension(50, 32767));
+        javax.swing.Box.Filler filler1 =
+                new javax.swing.Box.Filler(
+                        new java.awt.Dimension(5, 0),
+                        new java.awt.Dimension(5, 0),
+                        new java.awt.Dimension(5, 32767));
+        javax.swing.Box.Filler filler3 =
+                new javax.swing.Box.Filler(
+                        new java.awt.Dimension(0, 0),
+                        new java.awt.Dimension(0, 0),
+                        new java.awt.Dimension(32767, 0));
+        jPanel2 = new javax.swing.JPanel();
+        saveButton = new javax.swing.JButton();
+        filler7 =
+                new javax.swing.Box.Filler(
+                        new java.awt.Dimension(0, 0),
+                        new java.awt.Dimension(0, 0),
+                        new java.awt.Dimension(0, 0));
+        javax.swing.JTabbedPane jTabbedPane1 = new javax.swing.JTabbedPane();
+        javax.swing.JPanel metaDataTab = new javax.swing.JPanel();
+        javax.swing.JPanel metaDataButtons = new javax.swing.JPanel();
+        addMetaDataButton = new javax.swing.JButton();
+        deleteMetaDataButton = new javax.swing.JButton();
+        resetMetaDataButton = new javax.swing.JButton();
+        clearMetaDataButton = new javax.swing.JButton();
+        javax.swing.JScrollPane jScrollPane2 = new javax.swing.JScrollPane();
+        metaDataTable = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
+
+        idLabel.setText("Series");
+        org.openide.awt.Mnemonics.setLocalizedText(
+                idLabel,
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class, "MetaDataConfigurator.idLabel.text")); // NOI18N
+        jPanel1.add(idLabel);
+        jPanel1.add(filler2);
+
+        idField.setEditable(false);
+        idField.setText(
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class, "MetaDataConfigurator.idField.text")); // NOI18N
+        jPanel1.add(idField);
+        jPanel1.add(filler4);
+        jPanel1.add(filler1);
+        jPanel1.add(filler3);
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.NORTH);
+
+        org.openide.awt.Mnemonics.setLocalizedText(
+                saveButton,
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.saveButton.text")); // NOI18N
+        saveButton.addActionListener(
+                new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        saveButtonActionPerformed(evt);
+                    }
+                });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+                jPanel2Layout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                javax.swing.GroupLayout.Alignment.TRAILING,
+                                jPanel2Layout
+                                        .createSequentialGroup()
+                                        .addGap(0, 298, Short.MAX_VALUE)
+                                        .addGroup(
+                                                jPanel2Layout
+                                                        .createParallelGroup(
+                                                                javax.swing.GroupLayout.Alignment
+                                                                        .LEADING)
+                                                        .addGroup(
+                                                                javax.swing.GroupLayout.Alignment
+                                                                        .TRAILING,
+                                                                jPanel2Layout
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(
+                                                                                filler7,
+                                                                                javax.swing
+                                                                                        .GroupLayout
+                                                                                        .PREFERRED_SIZE,
+                                                                                javax.swing
+                                                                                        .GroupLayout
+                                                                                        .DEFAULT_SIZE,
+                                                                                javax.swing
+                                                                                        .GroupLayout
+                                                                                        .PREFERRED_SIZE)
+                                                                        .addGap(35, 35, 35))
+                                                        .addGroup(
+                                                                javax.swing.GroupLayout.Alignment
+                                                                        .TRAILING,
+                                                                jPanel2Layout
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(saveButton)
+                                                                        .addContainerGap()))));
+        jPanel2Layout.setVerticalGroup(
+                jPanel2Layout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(
+                                jPanel2Layout
+                                        .createSequentialGroup()
+                                        .addContainerGap(
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)
+                                        .addComponent(
+                                                filler7,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(
+                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(saveButton)
+                                        .addContainerGap()));
+
+        getContentPane().add(jPanel2, java.awt.BorderLayout.SOUTH);
+
+        jTabbedPane1.setToolTipText(
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.jTabbedPane1.toolTipText")); // NOI18N
+
+        metaDataTab.setLayout(new java.awt.BorderLayout());
+
+        metaDataButtons.setLayout(
+                new javax.swing.BoxLayout(metaDataButtons, javax.swing.BoxLayout.LINE_AXIS));
+
+        addMetaDataButton.setIcon(DemetraIcons.LIST_ADD_16);
+        org.openide.awt.Mnemonics.setLocalizedText(
+                addMetaDataButton,
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.addMetaDataButton.text")); // NOI18N
+        addMetaDataButton.setToolTipText(
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.addMetaDataButton.toolTipText")); // NOI18N
+        addMetaDataButton.addActionListener(
+                new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        addMetaDataButtonActionPerformed(evt);
+                    }
+                });
+        metaDataButtons.add(addMetaDataButton);
+
+        deleteMetaDataButton.setIcon(DemetraIcons.LIST_REMOVE_16);
+        org.openide.awt.Mnemonics.setLocalizedText(
+                deleteMetaDataButton,
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.deleteMetaDataButton.text")); // NOI18N
+        deleteMetaDataButton.setToolTipText(
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.deleteMetaDataButton.toolTipText")); // NOI18N
+        deleteMetaDataButton.addActionListener(
+                new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        deleteMetaDataButtonActionPerformed(evt);
+                    }
+                });
+        metaDataButtons.add(deleteMetaDataButton);
+
+        resetMetaDataButton.setIcon(DemetraIcons.RESET);
+        org.openide.awt.Mnemonics.setLocalizedText(
+                resetMetaDataButton,
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.resetMetaDataButton.text")); // NOI18N
+        resetMetaDataButton.setToolTipText(
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.resetMetaDataButton.toolTipText")); // NOI18N
+        resetMetaDataButton.addActionListener(
+                new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        resetMetaDataButtonActionPerformed(evt);
+                    }
+                });
+        metaDataButtons.add(resetMetaDataButton);
+
+        clearMetaDataButton.setIcon(DemetraIcons.DELETE_16);
+        org.openide.awt.Mnemonics.setLocalizedText(
+                clearMetaDataButton,
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.clearMetaDataButton.text")); // NOI18N
+        clearMetaDataButton.setToolTipText(
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.clearMetaDataButton.toolTipText")); // NOI18N
+        clearMetaDataButton.addActionListener(
+                new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        clearMetaDataButtonActionPerformed(evt);
+                    }
+                });
+        metaDataButtons.add(clearMetaDataButton);
+
+        metaDataTab.add(metaDataButtons, java.awt.BorderLayout.SOUTH);
+
+        metaDataTable.setModel(
+                new javax.swing.table.DefaultTableModel(
+                        new Object[][] {}, new String[] {"Key", "Value"}) {
+
+                    Class[] types = new Class[] {java.lang.String.class, java.lang.String.class};
+
+                    public Class getColumnClass(int columnIndex) {
+                        return types[columnIndex];
+                    }
+
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        Object firstColumnValue = getValueAt(row, 0);
+                        if (firstColumnValue != null
+                                && firstColumnValue.toString().trim().startsWith("@")) {
+                            return false;
+                        }
+                        return true;
+                    }
+                });
+        metaDataTable.setRowSorter(new TableRowSorter<TableModel>(metaDataTable.getModel()));
+        metaDataTable.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        metaDataTable.setShowHorizontalLines(true);
+        metaDataTable.setShowVerticalLines(true);
+        metaDataTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(metaDataTable);
+        if (metaDataTable.getColumnModel().getColumnCount() > 0) {
+            metaDataTable
+                    .getColumnModel()
+                    .getColumn(0)
+                    .setHeaderValue(
+                            org.openide.util.NbBundle.getMessage(
+                                    MetaDataConfigurator.class,
+                                    "MetaDataConfigurator.metaDataTable.columnModel.title0")); // NOI18N
+            metaDataTable
+                    .getColumnModel()
+                    .getColumn(1)
+                    .setHeaderValue(
+                            org.openide.util.NbBundle.getMessage(
+                                    MetaDataConfigurator.class,
+                                    "MetaDataConfigurator.metaDataTable.columnModel.title1")); // NOI18N
+        }
+
+        metaDataTab.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        jTabbedPane1.addTab(
+                org.openide.util.NbBundle.getMessage(
+                        MetaDataConfigurator.class,
+                        "MetaDataConfigurator.metaDataTab.TabConstraints.tabTitle"),
+                metaDataTab); // NOI18N
+
+        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        jTabbedPane1
+                .getAccessibleContext()
+                .setAccessibleName(
+                        org.openide.util.NbBundle.getMessage(
+                                MetaDataConfigurator.class,
+                                "MetaDataConfigurator.jTabbedPane1.AccessibleContext.accessibleName")); // NOI18N
+
+        pack();
+    } // </editor-fold>//GEN-END:initComponents
+
+    private void clearMetaDataButtonActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_clearMetaDataButtonActionPerformed
+        clearMetaData(true);
+    } // GEN-LAST:event_clearMetaDataButtonActionPerformed
+
+    private void clearMetaData(boolean onlyEditable) {
+        DefaultTableModel model = (DefaultTableModel) metaDataTable.getModel();
+        // metaDataTable.selectAll();
+        int[] allRows =
+                IntStream.range(0, metaDataTable.getRowCount())
+                        .toArray(); // metaDataTable.getSelectedRows();
+        metaDataTable.clearSelection();
+        Arrays.stream(allRows)
+                .map(metaDataTable::convertRowIndexToModel)
+                .boxed()
+                .filter(row -> !onlyEditable || model.isCellEditable(row, 0))
+                .sorted(Collections.reverseOrder())
+                .forEachOrdered(model::removeRow);
+    }
+
+    private void deleteMetaDataButtonActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_deleteMetaDataButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) metaDataTable.getModel();
+        int[] selectedRows = metaDataTable.getSelectedRows();
+        metaDataTable.clearSelection();
+        Arrays.stream(selectedRows)
+                .map(metaDataTable::convertRowIndexToModel)
+                .boxed()
+                .filter(row -> model.isCellEditable(row, 0))
+                .sorted(Collections.reverseOrder())
+                .forEachOrdered(model::removeRow);
+    } // GEN-LAST:event_deleteMetaDataButtonActionPerformed
+
+    private void addMetaDataButtonActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_addMetaDataButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) metaDataTable.getModel();
+        model.addRow(new Object[] {"", ""});
+        int modelRow = model.getRowCount() - 1;
+        SwingUtilities.invokeLater(
+                () -> {
+                    int viewRow = metaDataTable.convertRowIndexToView(modelRow);
+                    if (viewRow < 0) {
+                        return;
+                    }
+                    var rect = metaDataTable.getCellRect(viewRow, 0, true);
+                    metaDataTable.scrollRectToVisible(rect);
+                });
+    } // GEN-LAST:event_addMetaDataButtonActionPerformed
+
+    private void resetMetaDataButtonActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_resetMetaDataButtonActionPerformed
+        Object[] options = {"Reset Selected", "Reset All", "Cancel"};
+        switch (JOptionPane.showOptionDialog(
+                this,
+                "Reset the metadata in the selected rows or reset all the metadata."
+                        + System.lineSeparator()
+                        + "New metadata might be removed."
+                        + System.lineSeparator()
+                        + "This action cannot be undone.",
+                "Reset Metadata",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0])) {
+            case 0 -> {
+                int[] selectedRows = metaDataTable.getSelectedRows();
+                if (selectedRows.length != 0) {
+                    DefaultTableModel model = (DefaultTableModel) metaDataTable.getModel();
+                    Map<String, String> metaData = base.getOutput().getMeta();
+                    Arrays.stream(selectedRows)
+                            .map(metaDataTable::convertRowIndexToModel)
+                            .boxed()
+                            .filter(row -> model.isCellEditable(row, 0))
+                            .sorted(Collections.reverseOrder())
+                            .forEachOrdered(
+                                    row -> {
+                                        String key = model.getValueAt(row, 0).toString();
+                                        if (metaData.containsKey(key)) {
+                                            model.setValueAt(
+                                                    metaData.getOrDefault(key, ""), row, 1);
+                                        } else {
+                                            model.removeRow(row);
+                                        }
+                                    });
+                }
+                break;
+            }
+            case 1 -> {
+                setToOriginalData();
+                break;
+            }
+        }
+    } // GEN-LAST:event_resetMetaDataButtonActionPerformed
+
+    private void saveButtonActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_saveButtonActionPerformed
+        if (metaDataTable.isEditing()) {
+            metaDataTable.getCellEditor().stopCellEditing();
+        }
+        TableModel metaDataModel = metaDataTable.getModel();
+        Map<String, String> metaData = new HashMap<>();
+        for (int i = 0; i < metaDataModel.getRowCount(); i++) {
+            String key = (String) metaDataModel.getValueAt(i, 0);
+            if (key.isBlank()) {
+                continue;
+            }
+            String value = ((String) metaDataModel.getValueAt(i, 1)).trim();
+            if (metaData.containsKey(key) && !value.equals(metaData.get(key))) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "The key \""
+                                + key
+                                + "\" is defined multiple times with different values:"
+                                + System.lineSeparator()
+                                + value
+                                + System.lineSeparator()
+                                + metaData.get(key),
+                        "Creating metadata failed",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            metaData.put(key, value);
+        }
+
+        base.setOutput(base.getOutput().withInformations(metaData));
+        owner.getController().getDocument().setDirty();
+        owner.redrawAll();
+        this.dispose();
+    } // GEN-LAST:event_saveButtonActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addMetaDataButton;
+    private javax.swing.JButton clearMetaDataButton;
+    private javax.swing.JButton deleteMetaDataButton;
+    private javax.swing.Box.Filler filler7;
+    private javax.swing.JTextField idField;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JTable metaDataTable;
+    private javax.swing.JButton resetMetaDataButton;
+    private javax.swing.JButton saveButton;
+
+    // End of variables declaration//GEN-END:variables
+
+    private class AutoCompleteCellEditor extends AbstractCellEditor implements TableCellEditor {
+
+        private final DefaultTableModel tableModel;
+
+        private DefaultComboBoxModel<String> model;
+        private JComboBox<String> comboBox;
+        private GhostComboBoxEditor comboEditor;
+        private List<String> allowedValues;
+        private boolean updating;
+        private static final int MAX_VISIBLE_ROWS = 10;
+
+        public AutoCompleteCellEditor() {
+            this.tableModel = (DefaultTableModel) metaDataTable.getModel();
+            this.model = new DefaultComboBoxModel<>();
+            this.comboBox = new JComboBox<>(model);
+            this.comboBox.setEditable(true);
+            this.comboEditor = new GhostComboBoxEditor();
+            comboBox.setEditor(comboEditor);
+
+            this.comboEditor
+                    .getTextField()
+                    .getDocument()
+                    .addDocumentListener(
+                            new DocumentListener() {
+                                @Override
+                                public void insertUpdate(DocumentEvent e) {
+                                    textChanged();
+                                }
+
+                                @Override
+                                public void removeUpdate(DocumentEvent e) {
+                                    textChanged();
+                                }
+
+                                @Override
+                                public void changedUpdate(DocumentEvent e) {
+                                    textChanged();
+                                }
+
+                                private void textChanged() {
+                                    if (updating) {
+                                        return;
+                                    }
+
+                                    SwingUtilities.invokeLater(
+                                            () -> {
+                                                if (!updating) {
+                                                    filterComboBox(
+                                                            comboEditor.getTextField().getText());
+                                                }
+                                            });
+                                }
+                            });
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return comboEditor.getTextField().getText().trim();
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(
+                JTable table, Object value, boolean isSelected, int row, int column) {
+            allowedValues = getProposedValues(table.convertRowIndexToModel(row));
+            String initialText = value == null ? "" : value.toString();
+            filterComboBox(initialText);
+
+            SwingUtilities.invokeLater(
+                    () -> {
+                        JTextField textField = comboEditor.getTextField();
+                        textField.requestFocusInWindow();
+                        textField.setCaretPosition(textField.getText().length());
+                        if (comboBox.getItemCount() > 0) {
+                            comboBox.setPopupVisible(true);
+                            comboBox.showPopup();
+                        }
+                    });
+            return comboBox;
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            String text = comboEditor.getTextField().getText().trim();
+            comboEditor.setItem(findCanonicalAllowedValue(text));
+            return super.stopCellEditing();
+        }
+
+        private String findCanonicalAllowedValue(String text) {
+            for (String value : allowedValues) {
+                if (value.equalsIgnoreCase(text)) {
+                    return value;
+                }
+            }
+            return text;
+        }
+
+        private List<String> getProposedValues(int currentModelRow) {
+            Set<String> usedValues = new HashSet<>();
+            for (int row = 0; row < tableModel.getRowCount(); row++) {
+                if (row == currentModelRow) {
+                    continue;
+                }
+
+                Object value = tableModel.getValueAt(row, 0);
+                if (value != null && !value.toString().trim().isEmpty()) {
+                    usedValues.add(value.toString().trim().toLowerCase(Locale.ROOT));
+                }
+            }
+
+            List<String> result = new ArrayList<>();
+            for (String value : possibleItems) {
+                if (!usedValues.contains(value.toLowerCase(Locale.ROOT))) {
+                    result.add(value);
+                }
+            }
+
+            return result;
+        }
+
+        private void filterComboBox(String typedText) {
+            String lowerTypedText = typedText.toLowerCase(Locale.ROOT);
+            List<String> filteredValues = new ArrayList<>();
+            for (String value : allowedValues) {
+                if (lowerTypedText.isEmpty()
+                        || value.toLowerCase(Locale.ROOT).startsWith(lowerTypedText)) {
+                    filteredValues.add(value);
+                }
+            }
+
+            String suggestion = "";
+            if (!typedText.isEmpty() && !filteredValues.isEmpty()) {
+                String first = filteredValues.get(0);
+                if (first.length() > typedText.length()) {
+                    suggestion = first;
+                }
+            }
+            updating = true;
+
+            try {
+                comboEditor.setIgnoreSetItem(true);
+                model.removeAllElements();
+
+                for (String value : filteredValues) {
+                    model.addElement(value);
+                }
+
+                int visibleRows = Math.min(MAX_VISIBLE_ROWS, Math.max(1, model.getSize()));
+                comboBox.setMaximumRowCount(visibleRows);
+
+                comboBox.setSelectedIndex(-1);
+                comboEditor.setIgnoreSetItem(false);
+                comboEditor.getTextField().setText(typedText);
+                comboEditor.getTextField().setCompletion(suggestion);
+                comboEditor
+                        .getTextField()
+                        .setCaretPosition(comboEditor.getTextField().getText().length());
+                comboBox.setEditable(true);
+                comboBox.validate();
+            } finally {
+                updating = false;
+            }
+
+            SwingUtilities.invokeLater(
+                    () -> {
+                        if (!comboBox.isShowing()) {
+                            return;
+                        }
+                        if (filteredValues.isEmpty()) {
+                            comboBox.setPopupVisible(false);
+                        } else {
+                            comboBox.setPopupVisible(true);
+                        }
+                    });
+        }
+
+        private static class GhostComboBoxEditor implements ComboBoxEditor {
+
+            private final GhostTextField textField = new GhostTextField();
+            private boolean ignoreSetItem;
+
+            public GhostTextField getTextField() {
+                return textField;
+            }
+
+            public void setIgnoreSetItem(boolean ignoreSetItem) {
+                this.ignoreSetItem = ignoreSetItem;
+            }
+
+            @Override
+            public Component getEditorComponent() {
+                return textField;
+            }
+
+            @Override
+            public void setItem(Object item) {
+                if (ignoreSetItem) {
+                    return;
+                }
+                textField.setCompletion(null);
+                textField.setText(item == null ? "" : normalizeString(item.toString()));
+            }
+
+            private String normalizeString(String text) {
+                while (text.startsWith("@")) {
+                    text = text.substring(1);
+                }
+                return text;
+            }
+
+            @Override
+            public Object getItem() {
+                return textField.getText();
+            }
+
+            @Override
+            public void selectAll() {
+                textField.selectAll();
+            }
+
+            @Override
+            public void addActionListener(ActionListener listener) {
+                textField.addActionListener(listener);
+            }
+
+            @Override
+            public void removeActionListener(ActionListener listener) {
+                textField.removeActionListener(listener);
+            }
+        }
+
+        private static class GhostTextField extends JTextField {
+
+            private String completion;
+
+            public void setCompletion(String completion) {
+                this.completion = completion;
+                repaint();
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (completion == null || completion.isEmpty()) {
+                    return;
+                }
+                String text = getText();
+                if (text == null || text.isEmpty()) {
+                    return;
+                }
+                if (!completion
+                        .toLowerCase(Locale.ROOT)
+                        .startsWith(text.toLowerCase(Locale.ROOT))) {
+                    return;
+                }
+
+                if (completion.length() <= text.length()) {
+                    return;
+                }
+
+                if (getSelectionStart() != getSelectionEnd()) {
+                    return;
+                }
+
+                String suffix = completion.substring(text.length());
+                Graphics2D g2 = (Graphics2D) g.create();
+                try {
+                    Color color = UIManager.getColor("TextField.inactiveForeground");
+                    if (color == null) {
+                        color = Color.GRAY;
+                    }
+
+                    g2.setColor(color);
+                    g2.setFont(getFont());
+
+                    int x, y;
+                    try {
+                        Rectangle2D rectangle = modelToView2D(getDocument().getLength());
+                        x = rectangle.getBounds().x;
+                        y = rectangle.getBounds().y + getFontMetrics(getFont()).getAscent();
+                    } catch (BadLocationException ex) {
+                        x = getInsets().left + getFontMetrics(getFont()).stringWidth(text);
+                        y = getInsets().top + getFontMetrics(getFont()).getAscent();
+                    }
+                    g2.drawString(suffix, x, y);
+                } finally {
+                    g2.dispose();
+                }
+            }
+        }
+    }
+
+    private class LockedRowRenderer implements TableCellRenderer {
+
+        private final TableCellRenderer delegate;
+        private final Color lockedBackground = new Color(235, 235, 235);
+        private final Color lockedForeground = Color.GRAY;
+
+        public LockedRowRenderer(TableCellRenderer delegate) {
+            this.delegate = delegate;
+        }
+
+        public TableCellRenderer getDelegate() {
+            return delegate;
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(
+                JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column) {
+            resetDelegateColorsIfNecessary(delegate);
+            Component component =
+                    delegate.getTableCellRendererComponent(
+                            table, value, isSelected, hasFocus, row, column);
+            if (!isLockedRow(table, row)) {
+                return component;
+            }
+
+            if (isSelected) {
+                component.setBackground(table.getSelectionBackground());
+                component.setForeground(Color.LIGHT_GRAY);
+            } else {
+                component.setBackground(lockedBackground);
+                component.setForeground(lockedForeground);
+            }
+            if (component instanceof JComponent jComponent) {
+                jComponent.setOpaque(true);
+            }
+            return component;
+        }
+
+        private void resetDelegateColorsIfNecessary(TableCellRenderer renderer) {
+            if (renderer instanceof DefaultTableCellRenderer defaultRenderer) {
+                defaultRenderer.setBackground(null);
+                defaultRenderer.setForeground(null);
+            }
+        }
+
+        private boolean isLockedRow(JTable table, int viewRow) {
+            int modelRow = table.convertRowIndexToModel(viewRow);
+            return !table.getModel().isCellEditable(modelRow, 0);
+        }
+    }
+}

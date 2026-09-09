@@ -30,7 +30,6 @@ import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +73,7 @@ public class VariableMapping {
         List<Information<String[]>> attr = info.select(ATTRIBUTES, String[].class);
         Map<String, String> map;
         if (attr.isEmpty()) {
-            map = Collections.emptyMap();
+            map = Map.of();
         } else {
             map = new HashMap<>();
             attr.forEach(a -> {

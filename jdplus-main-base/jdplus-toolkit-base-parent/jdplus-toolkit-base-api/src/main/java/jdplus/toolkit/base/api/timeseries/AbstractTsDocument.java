@@ -34,7 +34,7 @@ public abstract class AbstractTsDocument<S extends ProcSpecification, R extends 
 
     private final UUID uuid;
 
-    private Map<String, String> metadata = Collections.emptyMap();
+    private Map<String, String> metadata = Map.of();
 
     @lombok.NonNull
     private S specification;

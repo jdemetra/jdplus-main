@@ -20,7 +20,6 @@ import tck.demetra.data.Data;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.core.ssf.StateComponent;
-import jdplus.toolkit.base.core.ssf.StateStorage;
 import jdplus.toolkit.base.core.ssf.akf.AkfToolkit;
 import jdplus.toolkit.base.core.ssf.akf.AugmentedFilter;
 import jdplus.toolkit.base.core.ssf.akf.AugmentedSmoother;
