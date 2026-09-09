@@ -15,13 +15,14 @@
  */
 package jdplus.toolkit.base.core.stats.samples;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Random;
 import java.util.function.DoubleSupplier;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
