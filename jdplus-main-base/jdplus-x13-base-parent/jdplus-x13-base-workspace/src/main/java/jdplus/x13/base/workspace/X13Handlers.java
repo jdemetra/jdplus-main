@@ -79,7 +79,7 @@ public class X13Handlers {
 
     }
 
-    public static final class SaDocX13Legzcy implements FamilyHandler {
+    public static final class SaDocX13Legacy implements FamilyHandler {
 
         @lombok.experimental.Delegate
         private final FamilyHandler delegate = informationSet(SA_DOC_X13,

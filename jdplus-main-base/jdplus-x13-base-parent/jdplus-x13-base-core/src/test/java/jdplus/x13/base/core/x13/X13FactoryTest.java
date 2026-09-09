@@ -16,9 +16,6 @@
  */
 package jdplus.x13.base.core.x13;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.processing.DefaultProcessingLog;
 import jdplus.toolkit.base.api.processing.ProcQuality;
@@ -31,10 +28,6 @@ import jdplus.x13.base.api.x13.X13;
 import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.x13.base.api.x13.X13Spec;
 import java.util.Map;
-import jdplus.toolkit.base.api.information.Explorable;
-import jdplus.toolkit.base.api.stats.StatisticalTest;
-import jdplus.toolkit.base.api.timeseries.regression.RegressionItem;
-import jdplus.x13.base.api.regarima.OutlierSpec;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;

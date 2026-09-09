@@ -121,7 +121,7 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
         }
         Builder builder = toBuilder()
                 .basic(basic.toBuilder().frequency(freq).buildWithoutValidation());
-        if (frequency == 0) {
+        if (frequency <= 0) {
             // Nothing to check
             return builder.buildWithoutValidation();
         }
