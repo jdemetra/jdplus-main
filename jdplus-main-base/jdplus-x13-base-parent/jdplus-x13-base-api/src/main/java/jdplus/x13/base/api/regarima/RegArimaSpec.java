@@ -1,23 +1,23 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.x13.base.api.regarima;
 
-import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.processing.AlgorithmDescriptor;
 import jdplus.toolkit.base.api.processing.ProcSpecification;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
@@ -33,8 +33,7 @@ import nbbrd.design.LombokWorkaround;
  */
 @Development(status = Development.Status.Beta)
 @lombok.Value
-
-@lombok.Builder(toBuilder = true,  buildMethodName = "buildWithoutValidation")
+@lombok.Builder(toBuilder = true, buildMethodName = "buildWithoutValidation")
 public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecification {
 
     public static final String METHOD = "regarima";
@@ -46,7 +45,8 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
     public static final AlgorithmDescriptor DESCRIPTOR_V3 = new AlgorithmDescriptor(FAMILY, METHOD, VERSION_V3);
 
     public static final RegArimaSpec DEFAULT_ENABLED = RegArimaSpec.builder().build();
-    public static final RegArimaSpec DEFAULT_DISABLED = RegArimaSpec.builder().basic(BasicSpec.DEFAULT_ENABLED).build();
+    public static final RegArimaSpec DEFAULT_DISABLED =
+            RegArimaSpec.builder().basic(BasicSpec.DEFAULT_ENABLED).build();
 
     private BasicSpec basic;
     private TransformSpec transform;
@@ -55,9 +55,9 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
     private AutoModelSpec autoModel;
     private SarimaSpec arima;
     private EstimateSpec estimate;
-    
+
     @Override
-    public AlgorithmDescriptor getAlgorithmDescriptor(){
+    public AlgorithmDescriptor getAlgorithmDescriptor() {
         return DESCRIPTOR_V3;
     }
 
@@ -108,20 +108,19 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
             return this;
         }
     }
-    
-    public int getFrequency(){
+
+    public int getFrequency() {
         return basic.getFrequency();
     }
-    
-    public RegArimaSpec setFrequency(int freq){
-        int frequency=basic.getFrequency();
+
+    public RegArimaSpec setFrequency(int freq) {
+        int frequency = basic.getFrequency();
         if (freq == frequency) {
             // Nothing to do
             return this;
         }
-        Builder builder = toBuilder()
-                .basic(basic.toBuilder().frequency(freq).buildWithoutValidation());
-        if (frequency == 0) {
+        Builder builder = toBuilder().basic(basic.toBuilder().frequency(freq).buildWithoutValidation());
+        if (frequency <= 0) {
             // Nothing to check
             return builder.buildWithoutValidation();
         }
@@ -136,11 +135,11 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
         return builder.buildWithoutValidation();
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Default specifications">
+    // <editor-fold defaultstate="collapsed" desc="Default specifications">
     public static final RegArimaSpec RGDISABLED, RG0, RG1, RG2, RG3, RG4, RG5;
 
     public static final RegArimaSpec[] allSpecifications() {
-        return new RegArimaSpec[]{RG0, RG1, RG2, RG3, RG4, RG5};
+        return new RegArimaSpec[] {RG0, RG1, RG2, RG3, RG4, RG5};
     }
 
     static {
@@ -148,46 +147,34 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
                 .basic(BasicSpec.builder().preprocessing(false).build())
                 .build();
 
-        TransformSpec tr = TransformSpec.builder()
-                .function(TransformationType.Auto)
-                .build();
+        TransformSpec tr =
+                TransformSpec.builder().function(TransformationType.Auto).build();
 
-        EasterSpec easter = EasterSpec.builder()
-                .easterSpec(true)
-                .build();
+        EasterSpec easter = EasterSpec.builder().easterSpec(true).build();
 
-        TradingDaysSpec wd = TradingDaysSpec.td(TradingDaysType.TD2, LengthOfPeriodType.LeapYear, RegressionTestSpec.Remove, true);
+        TradingDaysSpec wd =
+                TradingDaysSpec.td(TradingDaysType.TD2, LengthOfPeriodType.LeapYear, RegressionTestSpec.Remove, true);
 
-        TradingDaysSpec td = TradingDaysSpec.td(TradingDaysType.TD7, LengthOfPeriodType.LeapYear, RegressionTestSpec.Remove, true);
+        TradingDaysSpec td =
+                TradingDaysSpec.td(TradingDaysType.TD7, LengthOfPeriodType.LeapYear, RegressionTestSpec.Remove, true);
 
-        RegressionSpec rwd = RegressionSpec.builder()
-                .easter(easter)
-                .tradingDays(wd)
-                .build();
+        RegressionSpec rwd =
+                RegressionSpec.builder().easter(easter).tradingDays(wd).build();
 
-        RegressionSpec rtd = RegressionSpec.builder()
-                .easter(easter)
-                .tradingDays(td)
-                .build();
+        RegressionSpec rtd =
+                RegressionSpec.builder().easter(easter).tradingDays(td).build();
 
         OutlierSpec o = OutlierSpec.builder()
                 .type(new SingleOutlierSpec("AO", 0))
                 .type(new SingleOutlierSpec("LS", 0))
-                .type(new SingleOutlierSpec("TC",0))
+                .type(new SingleOutlierSpec("TC", 0))
                 .build();
 
         RG0 = RegArimaSpec.DEFAULT_ENABLED;
 
-        RG1 = RegArimaSpec.builder()
-                .transform(tr)
-                .outliers(o)
-                .build();
+        RG1 = RegArimaSpec.builder().transform(tr).outliers(o).build();
 
-        RG2 = RegArimaSpec.builder()
-                .transform(tr)
-                .outliers(o)
-                .regression(rwd)
-                .build();
+        RG2 = RegArimaSpec.builder().transform(tr).outliers(o).regression(rwd).build();
         RG3 = RegArimaSpec.builder()
                 .transform(tr)
                 .outliers(o)
@@ -238,8 +225,8 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
                 throw new RegArimaException();
         }
     }
-    //</editor-fold>
-    
+    // </editor-fold>
+
     @Override
     public String display() {
         if (this == RG0) {
@@ -282,6 +269,4 @@ public final class RegArimaSpec implements Validatable<RegArimaSpec>, ProcSpecif
     }
 
     private static final String SMETHOD = "RG";
-
-     
 }

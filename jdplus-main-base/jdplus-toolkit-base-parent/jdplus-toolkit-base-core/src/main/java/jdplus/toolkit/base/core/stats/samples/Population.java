@@ -33,10 +33,9 @@ public class Population {
     private final double mean, variance;
     private final boolean normal;
 
-    public static class PopulationBuilder{
-    private int size=UNKNOWN_SIZE;
-    private double mean, variance=Double.NaN;
-    private boolean normal=true;
-        
+    public static class PopulationBuilder {
+        private int size = UNKNOWN_SIZE;
+        private double mean, variance = Double.NaN;
+        private boolean normal = true;
     }
 }

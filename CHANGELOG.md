@@ -15,6 +15,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - ![STAT] Fix NPE for final filters [#1029](https://github.com/jdemetra/jdplus-main/issues/1029) 
+- ![STAT] Fix QS test instead of Friedman test in some cases [#1058](https://github.com/jdemetra/jdplus-main/issues/1058) 
+- ![OTHER] Fix reload of old workspaces (without frequency) [#1039](https://github.com/jdemetra/jd3-main/issues/1039)
+
 
 ## [3.8.0] - 2026-07-02
 

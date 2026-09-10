@@ -17,7 +17,6 @@ package jdplus.x13.desktop.plugin.x13.ui;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.x13.desktop.plugin.x13.documents.X13DocumentManager;
 import jdplus.toolkit.desktop.plugin.ui.processing.TsProcessingViewer;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
@@ -26,6 +25,7 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.core.x13.X13Document;
+import jdplus.x13.desktop.plugin.x13.documents.X13DocumentManager;
 import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -38,20 +38,16 @@ import org.openide.windows.TopComponent;
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//demetra.desktop.x13.ui//X13//EN",
-        autostore = false)
-@TopComponent.Description(preferredID = "X13TopComponent",
-        //iconBase="SET/PATH/TO/ICON/HERE", 
+@ConvertAsProperties(dtd = "-//demetra.desktop.x13.ui//X13//EN", autostore = false)
+@TopComponent.Description(
+        preferredID = "X13TopComponent",
+        // iconBase="SET/PATH/TO/ICON/HERE",
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Seasonal Adjustment", id = X13TopComponent.ID)
 @ActionReference(path = "Menu/Statistical methods/Seasonal Adjustment/Single Analysis", position = 1010)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_X13Action")
-@NbBundle.Messages({
-    "CTL_X13Action=X13",
-    "CTL_X13TopComponent=X13 Window",
-    "HINT_X13TopComponent=This is a X13 window"
-})
+@NbBundle.Messages({"CTL_X13Action=X13", "CTL_X13TopComponent=X13 Window", "HINT_X13TopComponent=This is a X13 window"})
 public final class X13TopComponent extends WorkspaceTsTopComponent<X13Document> {
 
     @ClassNameConstant
@@ -89,6 +85,34 @@ public final class X13TopComponent extends WorkspaceTsTopComponent<X13Document> 
         return TsProcessingViewer.create(getElement(), DocumentUIServices.forDocument(X13Document.class));
     }
 
+    @Override
+    public void componentActivated() {
+        super.componentActivated();
+        updateUserInterfaceContext();
+    }
+
+    @Override
+    public void componentDeactivated() {
+        super.componentDeactivated();
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+    }
+
+    private void updateUserInterfaceContext() {
+        if (getDocument() == null) {
+            return;
+        }
+        X13Document element = getElement();
+        if (element == null) {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+        } else {
+            X13Spec s = element.getSpecification();
+            if (s == null) {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+            } else {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(s.getRegArima().getFrequency());
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,7 +123,7 @@ public final class X13TopComponent extends WorkspaceTsTopComponent<X13Document> 
     private void initComponents() {
 
         setLayout(new java.awt.BorderLayout());
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
@@ -117,8 +141,8 @@ public final class X13TopComponent extends WorkspaceTsTopComponent<X13Document> 
     protected String getContextPath() {
         return X13DocumentManager.CONTEXTPATH;
     }
-    
-        @Override
+
+    @Override
     public boolean update(X13Document element, Ts s) {
         if (s != null) {
             TsDomain domain = s.getData().getDomain();
@@ -131,5 +155,4 @@ public final class X13TopComponent extends WorkspaceTsTopComponent<X13Document> 
         }
         return true;
     }
-
 }
