@@ -29,11 +29,12 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Collections;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static jdplus.toolkit.base.tsp.util.PropertyHandler.*;
+import static jdplus.toolkit.base.tsp.util.PropertyHandler.onString;
+import static jdplus.toolkit.base.tsp.util.PropertyHandler.onStringList;
 
 /**
  * @author Philippe Charles
@@ -57,7 +58,7 @@ public interface JdbcParam extends DataSource.Converter<JdbcBean> {
                         .cube(
                                 TableAsCubeHandler
                                         .builder()
-                                        .dimensions(onStringList("dimColumns", Collections.emptyList(), ','))
+                                        .dimensions(onStringList("dimColumns", List.of(), ','))
                                         .timeDimension(onString("periodColumn", ""))
                                         .measure(onString("valueColumn", ""))
                                         .format(LegacyHandler.onObsFormat("locale", "datePattern", "numberPattern", ObsFormat.getSystemDefault()))

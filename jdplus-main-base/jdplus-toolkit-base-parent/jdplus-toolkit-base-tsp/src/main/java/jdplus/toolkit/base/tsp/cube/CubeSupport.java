@@ -76,7 +76,7 @@ public final class CubeSupport implements HasDataHierarchy, HasTsStream, HasData
                     throw ex.orElseThrow();
                 }
                 DataSet fake = DataSet.of(dataSource, DataSet.Kind.SERIES);
-                return Collections.singletonList(fake);
+                return List.of(fake);
             }
 
             try (Stream<CubeId> children = connection.getChildren(root)) {

@@ -1,25 +1,25 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.x13.base.information;
 
-import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.x13.base.api.regarima.BasicSpec;
-import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import java.util.Map;
+import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.x13.base.api.regarima.BasicSpec;
 
 /**
  *
@@ -28,7 +28,10 @@ import java.util.Map;
 @lombok.experimental.UtilityClass
 class BasicSpecMapping {
 
-    final String SPAN = "span", PREPROCESS = "preprocess", PRELIMINARYCHECK = "preliminarycheck", FREQUENCY = "frequency";
+    final String SPAN = "span",
+            PREPROCESS = "preprocess",
+            PRELIMINARYCHECK = "preliminarycheck",
+            FREQUENCY = "frequency";
 
     void fillDictionary(String prefix, Map<String, Class> dic) {
         dic.put(InformationSet.item(prefix, SPAN), TimeSelector.class);
@@ -37,13 +40,8 @@ class BasicSpecMapping {
     }
 
     InformationSet write(BasicSpec spec, boolean verbose) {
-        if (!verbose && spec.isDefault()) {
-            return null;
-        }
         InformationSet info = new InformationSet();
-        if (spec.getFrequency() != 0) {
-            info.add(FREQUENCY, spec.getFrequency());
-        }
+        info.add(FREQUENCY, spec.getFrequency());
         if (verbose || spec.getSpan().getType() != TimeSelector.SelectionType.All) {
             info.add(SPAN, spec.getSpan());
         }
@@ -66,8 +64,7 @@ class BasicSpecMapping {
         Integer freq = info.get(FREQUENCY, Integer.class);
         if (freq != null) {
             builder.frequency(freq);
-        }else
-            builder.frequency(-1);
+        } else builder.frequency(-1);
         TimeSelector span = info.get(SPAN, TimeSelector.class);
         if (span != null) {
             builder.span(span);
@@ -82,5 +79,4 @@ class BasicSpecMapping {
         }
         return builder.build();
     }
-
 }

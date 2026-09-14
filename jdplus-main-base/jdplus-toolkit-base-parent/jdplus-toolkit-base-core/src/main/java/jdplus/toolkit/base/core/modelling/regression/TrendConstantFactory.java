@@ -5,7 +5,6 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
@@ -14,7 +13,6 @@ import jdplus.toolkit.base.api.timeseries.TsPeriod;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesInterval;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
-import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.polynomials.UnitRoots;
 
 /**

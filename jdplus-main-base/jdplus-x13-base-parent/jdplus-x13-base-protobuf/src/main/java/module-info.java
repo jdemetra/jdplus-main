@@ -1,3 +1,4 @@
+@SuppressWarnings("module")
 module jdplus.x13.base.protobuf {
 
     requires static lombok;
@@ -9,6 +10,7 @@ module jdplus.x13.base.protobuf {
     requires jdplus.x13.base.core;
     requires jdplus.sa.base.protobuf;
     requires jdplus.toolkit.base.protobuf;
+    requires com.google.protobuf;
 
     exports jdplus.x13.base.protobuf;
 }

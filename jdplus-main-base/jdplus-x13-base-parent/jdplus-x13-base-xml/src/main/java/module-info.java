@@ -1,3 +1,4 @@
+@SuppressWarnings("module")
 module jdplus.x13.base.xml {
 
     requires static lombok;

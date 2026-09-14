@@ -75,7 +75,7 @@ public final class TramoSeatsUI implements PropertyChangeSource.WithWeakListener
     }
 
     public List<String> allDiagnostics() {
-        return OutputSelection.matrixItems(Collections.singletonList(TramoSeatsFactory.getInstance()));
+        return OutputSelection.matrixItems(List.of(TramoSeatsFactory.getInstance()));
     }
 
     public void setSelectedComponents(List<String> cmps) {
@@ -88,7 +88,7 @@ public final class TramoSeatsUI implements PropertyChangeSource.WithWeakListener
     }
 
     public List<String> allComponents() {
-        return OutputSelection.seriesItems(Collections.singletonList(TramoSeatsFactory.getInstance()));
+        return OutputSelection.seriesItems(List.of(TramoSeatsFactory.getInstance()));
     }
 
     @Override
@@ -109,12 +109,12 @@ public final class TramoSeatsUI implements PropertyChangeSource.WithWeakListener
             .name("demetra-tramoseats")
             .version("3.0.0")
             .with(
-                    PropertyHandler.onStringList(COMPONENTS, Collections.emptyList(), ','),
+                    PropertyHandler.onStringList(COMPONENTS, List.of(), ','),
                     TramoSeatsUI::getSelectedComponents,
                     TramoSeatsUI::setSelectedComponents
             )
             .with(
-                    PropertyHandler.onStringList(DIAGS, Collections.emptyList(), ','),
+                    PropertyHandler.onStringList(DIAGS, List.of(), ','),
                     TramoSeatsUI::getSelectedDiagnostics,
                     TramoSeatsUI::setSelectedDiagnostics
             )

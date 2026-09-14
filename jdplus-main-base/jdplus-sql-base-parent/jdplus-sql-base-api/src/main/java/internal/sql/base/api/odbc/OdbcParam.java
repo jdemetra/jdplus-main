@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Collections;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -58,7 +58,7 @@ public interface OdbcParam extends DataSource.Converter<OdbcBean> {
                         .cube(
                                 TableAsCubeHandler
                                         .builder()
-                                        .dimensions(onStringList("dimColumns", Collections.emptyList(), ','))
+                                        .dimensions(onStringList("dimColumns", List.of(), ','))
                                         .timeDimension(onString("periodColumn", ""))
                                         .measure(onString("valueColumn", ""))
                                         .format(LegacyHandler.onObsFormat("locale", "datePattern", "numberPattern", ObsFormat.getSystemDefault()))

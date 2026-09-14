@@ -91,14 +91,14 @@ public class Variable<V extends ITsVariable> {
      */
     public static Variable variable(@NonNull final String name, @NonNull final ITsVariable variable, Map<String, String> attributes) {
         if (attributes == null) {
-            return new Variable(name, variable, null, Collections.emptyMap());
+            return new Variable(name, variable, null, Map.of());
         } else {
             return new Variable(name, variable, null, Collections.unmodifiableMap(attributes));
         }
     }
     
     public static Variable variable(@NonNull final String name, @NonNull final ITsVariable variable) {
-        return new Variable(name, variable, null, Collections.emptyMap());
+        return new Variable(name, variable, null, Map.of());
     }
     
     public int freeCoefficientsCount() {
@@ -175,7 +175,7 @@ public class Variable<V extends ITsVariable> {
         Map<String, String> natts;
         natts = new HashMap<>(attributes);
         natts.remove(key);
-        return natts.isEmpty() ? new Variable(name, core, coefficients, Collections.emptyMap())
+        return natts.isEmpty() ? new Variable(name, core, coefficients, Map.of())
                 : new Variable(name, core, coefficients, Collections.unmodifiableMap(natts));
     }
     

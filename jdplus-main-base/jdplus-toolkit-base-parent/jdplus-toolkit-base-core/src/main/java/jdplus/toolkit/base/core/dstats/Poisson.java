@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.dstats.BoundaryType;
 import jdplus.toolkit.base.api.dstats.DStatException;
 import jdplus.toolkit.base.api.dstats.DiscreteDistribution;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
-import jdplus.toolkit.base.api.stats.ProbabilityType;
 import jdplus.toolkit.base.core.stats.Combinatorics;
 
 /**

@@ -19,7 +19,6 @@ import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -67,7 +66,7 @@ public class SummaryView extends AbstractSaProcessingTopComponent implements Mul
 
         visualRepresentation = reportTB_;
 
-        setData(Collections.emptyMap());
+        setData(Map.of());
 
         setLayout(new BorderLayout());
         add(toolBarRepresentation, BorderLayout.NORTH);
@@ -81,13 +80,13 @@ public class SummaryView extends AbstractSaProcessingTopComponent implements Mul
             SaItem[] items = current();
             setData(createRegSarimaReports(items));
         } else {
-            setData(Collections.emptyMap());
+            setData(Map.of());
         }
     }
 
 //    @Override
 //    protected void onSaProcessingSaved(){
-//        setData(Collections.emptyMap());
+//        setData(Map.of());
 //    }
 //    
     @Override

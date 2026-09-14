@@ -29,7 +29,6 @@ import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaSpecification;
 import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import jdplus.sa.base.core.diagnostics.CombinedSeasonalityOptions;
@@ -153,7 +152,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
 
     @SwingProperty
     public static final String SELECTED_DIAG_FIELDS_PROPERTY = "selectedDiagFields";
-    private static final List<String> DEFAULT_SELECTED_DIAG_FIELDS = Collections.emptyList();
+    private static final List<String> DEFAULT_SELECTED_DIAG_FIELDS = List.of();
     private List<String> selectedDiagFields = DEFAULT_SELECTED_DIAG_FIELDS;
 
     public List<String> getSelectedDiagFields() {
@@ -168,7 +167,7 @@ public final class DemetraSaUI implements PropertyChangeSource.WithWeakListeners
 
     @SwingProperty
     public static final String SELECTED_SERIES_FIELDS_PROPERTY = "selectedSeriesFields";
-    private static final List<String> DEFAULT_SELECTED_SERIES_FIELDS = Collections.emptyList();
+    private static final List<String> DEFAULT_SELECTED_SERIES_FIELDS = List.of();
     private List<String> selectedSeriesFields = DEFAULT_SELECTED_SERIES_FIELDS;
 
     public List<String> getSelectedSeriesFields() {

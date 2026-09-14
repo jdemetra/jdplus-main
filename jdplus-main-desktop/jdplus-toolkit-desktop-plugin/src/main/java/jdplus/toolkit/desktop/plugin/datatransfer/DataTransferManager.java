@@ -125,7 +125,7 @@ public final class DataTransferManager implements PropertyChangeSource.WithWeakL
     @NonNull
     public Transferable fromTs(@NonNull Ts ts) {
         requireNonNull(ts);
-        return fromTsCollection(TsCollection.of(Collections.singletonList(ts)));
+        return fromTsCollection(TsCollection.of(List.of(ts)));
     }
 
     /**

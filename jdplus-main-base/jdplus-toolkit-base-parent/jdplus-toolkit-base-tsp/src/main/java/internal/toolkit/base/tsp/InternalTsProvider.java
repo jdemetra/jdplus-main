@@ -331,13 +331,13 @@ public class InternalTsProvider {
         @Override
         public @NonNull List<DataSet> children(@NonNull DataSource dataSource) throws IllegalArgumentException, IOException {
             checkProvider(dataSource);
-            return Collections.emptyList();
+            return List.of();
         }
 
         @Override
         public @NonNull List<DataSet> children(@NonNull DataSet parent) throws IllegalArgumentException, IOException {
             checkProvider(parent);
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

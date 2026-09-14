@@ -15,9 +15,6 @@
  */
 package jdplus.toolkit.base.core.ssf.basic;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  *
  * @author Jean Palate

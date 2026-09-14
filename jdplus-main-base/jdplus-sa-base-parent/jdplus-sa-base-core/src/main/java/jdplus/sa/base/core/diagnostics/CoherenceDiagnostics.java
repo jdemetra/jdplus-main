@@ -23,7 +23,7 @@ import jdplus.sa.base.api.DecompositionMode;
 import jdplus.sa.base.api.SaDictionaries;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsUnit;
-import java.util.Collections;
+
 import java.util.List;
 import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
 import jdplus.toolkit.base.api.information.Explorable;
@@ -261,9 +261,9 @@ public final class CoherenceDiagnostics implements Diagnostics {
     @Override
     public List<String> getWarnings() {
         if (shortSeries) {
-            return Collections.singletonList(SHORTSERIES);
+            return List.of(SHORTSERIES);
         } else {
-            return Collections.emptyList();
+            return List.of();
         }
     }
 

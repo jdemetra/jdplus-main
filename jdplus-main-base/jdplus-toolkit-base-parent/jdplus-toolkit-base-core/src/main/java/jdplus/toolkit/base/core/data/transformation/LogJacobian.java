@@ -6,7 +6,6 @@
 package jdplus.toolkit.base.core.data.transformation;
 
 import nbbrd.design.Development;
-import java.util.Arrays;
 
 /**
  * Contains the log of the Jacobian of a transformation of a time series.

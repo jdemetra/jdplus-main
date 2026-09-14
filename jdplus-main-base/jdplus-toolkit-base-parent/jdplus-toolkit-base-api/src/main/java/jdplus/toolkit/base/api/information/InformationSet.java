@@ -534,14 +534,14 @@ public final class InformationSet implements Cloneable {
         ArrayList<Information<S>> list = new ArrayList<>();
         WildCards w = new WildCards(wc);
         fillSelection(null, this, list, w, sclass);
-        java.util.Collections.sort(list, new InformationComparer<S>());
+        list.sort(new InformationComparer<S>());
         return list;
     }
 
     public <S> List<Information<S>> deepSelect(Class<S> sclass) {
         ArrayList<Information<S>> list = new ArrayList<>();
         fillSelection(null, this, list, sclass);
-        java.util.Collections.sort(list, new InformationComparer<S>());
+        list.sort(new InformationComparer<S>());
         return list;
     }
 
@@ -570,8 +570,8 @@ public final class InformationSet implements Cloneable {
 
             }
         }
-        java.util.Collections.sort(pnames);
-        java.util.Collections.sort(snames);
+        pnames.sort(Comparator.naturalOrder());
+        snames.sort(Comparator.naturalOrder());
         for (IndexedName pname : pnames) {
             items.add((prefix == null || prefix.isEmpty()) ? pname.name
                     : item(prefix, pname.name));
@@ -603,8 +603,8 @@ public final class InformationSet implements Cloneable {
                 pnames.add(new IndexedName(kv.getValue().index, kv.getKey()));
             }
         }
-        java.util.Collections.sort(snames);
-        java.util.Collections.sort(pnames);
+        snames.sort(Comparator.naturalOrder());
+        pnames.sort(Comparator.naturalOrder());
         for (IndexedName pname : pnames) {
             Object obj = information_.get(pname.name).obj;
             if (obj != null) {
@@ -645,8 +645,8 @@ public final class InformationSet implements Cloneable {
             }
 
         }
-        java.util.Collections.sort(pnames);
-        java.util.Collections.sort(snames);
+        pnames.sort(Comparator.naturalOrder());
+        snames.sort(Comparator.naturalOrder());
         for (IndexedName pname : pnames) {
             items.add((prefix == null || prefix.isEmpty()) ? pname.name
                     : item(prefix, pname.name));
@@ -754,7 +754,7 @@ public final class InformationSet implements Cloneable {
             list.add(new Information<>(kv.getKey(), kv.getValue().obj, kv.getValue().index));
 
         }
-        java.util.Collections.sort(list, new InformationComparer());
+        list.sort(new InformationComparer());
         return list;
     }
 
@@ -845,7 +845,7 @@ public final class InformationSet implements Cloneable {
             }
 
         }
-        java.util.Collections.sort(list, new InformationComparer<S>());
+        list.sort(new InformationComparer<S>());
         return list;
     }
 
@@ -861,7 +861,7 @@ public final class InformationSet implements Cloneable {
         String[] split = split(wc);
         InformationSet cur = root(split);
         if (cur == null) {
-            return Collections.emptyList();
+            return List.of();
         }
         WildCards w = new WildCards(split[split.length - 1]);
         List<Information<Object>> list = new ArrayList<>();
@@ -873,7 +873,7 @@ public final class InformationSet implements Cloneable {
             }
 
         }
-        java.util.Collections.sort(list, new InformationComparer<>());
+        list.sort(new InformationComparer<>());
         return list;
     }
 
@@ -893,7 +893,7 @@ public final class InformationSet implements Cloneable {
         String[] split = split(wc);
         InformationSet cur = root(split);
         if (cur == null) {
-            return Collections.emptyList();
+            return List.of();
         }
         WildCards w = new WildCards(split[split.length - 1]);
         ArrayList<Information<S>> list = new ArrayList<>();
@@ -906,7 +906,7 @@ public final class InformationSet implements Cloneable {
                 }
             }
         }
-        java.util.Collections.sort(list, new InformationComparer<S>());
+        list.sort(new InformationComparer<S>());
         return list;
     }
 

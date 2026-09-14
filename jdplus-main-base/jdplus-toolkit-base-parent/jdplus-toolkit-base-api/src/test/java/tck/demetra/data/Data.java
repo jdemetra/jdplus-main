@@ -708,7 +708,7 @@ public class Data {
     }
 
     public static File copyToTempFile(URL url) throws IOException {
-        File file = File.createTempFile("temp", "file");
+        File file = Files.createTempFile("temp", "file").toFile();
         file.delete();
         try (InputStream stream = url.openStream()) {
             Files.copy(stream, file.toPath());

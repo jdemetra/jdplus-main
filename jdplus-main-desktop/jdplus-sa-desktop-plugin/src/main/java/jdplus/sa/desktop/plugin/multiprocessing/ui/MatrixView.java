@@ -121,12 +121,12 @@ public final class MatrixView extends AbstractSaProcessingTopComponent implement
     public List<String> customItems() {
         AlgorithmDescriptor desc = activeMethod();
         if (desc == null) {
-            return Collections.emptyList();
+            return List.of();
         }
         SaProcessingFactory factory = SaManager.factoryFor(desc);
         ActionsHelper helper = ActionsHelpers.getInstance().getHelperFor(factory);
         if (helper == null) {
-            return Collections.emptyList();
+            return List.of();
         } else {
             return helper.selectedMatrixItems();
         }

@@ -20,7 +20,6 @@ import jdplus.toolkit.desktop.plugin.util.NbComponents;
 import jdplus.toolkit.base.api.util.MultiLineNameUtil;
 import jdplus.toolkit.base.api.util.Paths;
 import java.awt.Dimension;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;

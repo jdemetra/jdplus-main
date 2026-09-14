@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
-import java.util.Collections;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 
 /**
@@ -272,7 +271,7 @@ public class ResidualsDiagnostics implements Diagnostics {
 
     @Override
     public List<String> getWarnings() {
-        return Collections.emptyList();
+        return List.of();
     }
 
     public double getNIIDBound(ProcQuality quality) {

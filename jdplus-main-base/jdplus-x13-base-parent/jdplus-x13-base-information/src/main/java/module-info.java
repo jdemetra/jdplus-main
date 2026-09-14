@@ -1,6 +1,7 @@
 import jdplus.sa.base.information.SaSpecificationMapping;
 import jdplus.x13.base.information.X13SpecMapping;
 
+@SuppressWarnings("module")
 module jdplus.x13.base.information {
 
     requires static lombok;

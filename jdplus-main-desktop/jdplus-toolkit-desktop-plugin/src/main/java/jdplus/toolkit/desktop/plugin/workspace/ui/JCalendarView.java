@@ -4,48 +4,33 @@
  */
 package jdplus.toolkit.desktop.plugin.workspace.ui;
 
+import ec.util.list.swing.JLists;
+import jdplus.main.desktop.design.SwingComponent;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.timeseries.calendars.*;
+import jdplus.toolkit.base.api.timeseries.regression.*;
+import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.modelling.regression.HolidaysCorrectionFactory;
+import jdplus.toolkit.base.core.modelling.regression.Regression;
 import jdplus.toolkit.desktop.plugin.components.JTsGrid;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMode;
 import jdplus.toolkit.desktop.plugin.components.tools.PeriodogramView;
-import jdplus.main.desktop.design.SwingComponent;
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.util.NbComponents;
-import jdplus.toolkit.base.api.timeseries.Ts;
-import jdplus.toolkit.base.api.timeseries.TsCollection;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
-import jdplus.toolkit.base.api.timeseries.calendars.CalendarDefinition;
-import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
-import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
-import jdplus.toolkit.base.api.timeseries.calendars.RegularFrequency;
-import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
-import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
-import jdplus.toolkit.base.api.timeseries.regression.HolidaysCorrectedTradingDays;
-import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
-import jdplus.toolkit.base.api.timeseries.regression.LengthOfPeriod;
-import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
-import ec.util.list.swing.JLists;
-import java.awt.BorderLayout;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
-import javax.swing.JComponent;
-import javax.swing.JSplitPane;
-import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import jdplus.toolkit.base.core.modelling.regression.HolidaysCorrectionFactory;
-import jdplus.toolkit.base.core.modelling.regression.Regression;
 import org.openide.explorer.propertysheet.PropertySheet;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
+
+import javax.swing.*;
+import java.awt.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -96,8 +81,8 @@ public final class JCalendarView extends JComponent {
     }
 
     protected void onTsGridSelectionChange() {
-        OptionalInt selection = JLists.getSelectionIndexStream(tsGrid.getTsSelectionModel()).findFirst();
-        pView.setTs(selection.isPresent() ? tsGrid.getTsCollection().get(selection.getAsInt()) : null);
+        int selection = JLists.getSelectionIndexStream(tsGrid.getTsSelectionModel()).findFirst().orElse(-1);
+        pView.setTs(selection != -1 ? tsGrid.getTsCollection().get(selection) : null);
     }
 
     protected void onCalendarProviderChange() {

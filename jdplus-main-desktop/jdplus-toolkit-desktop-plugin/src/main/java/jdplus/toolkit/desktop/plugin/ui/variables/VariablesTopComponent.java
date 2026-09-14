@@ -5,7 +5,7 @@
 package jdplus.toolkit.desktop.plugin.ui.variables;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTopComponent;

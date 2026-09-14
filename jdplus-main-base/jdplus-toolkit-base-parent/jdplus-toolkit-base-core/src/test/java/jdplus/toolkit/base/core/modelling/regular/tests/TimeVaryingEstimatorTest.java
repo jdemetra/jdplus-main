@@ -7,7 +7,6 @@ package jdplus.toolkit.base.core.modelling.regular.tests;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import tck.demetra.data.Data;
 
 /**

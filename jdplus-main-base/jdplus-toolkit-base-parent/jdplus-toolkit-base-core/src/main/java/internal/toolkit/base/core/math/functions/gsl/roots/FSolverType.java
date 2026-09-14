@@ -16,8 +16,6 @@
  */
 package internal.toolkit.base.core.math.functions.gsl.roots;
 
-import java.util.function.DoubleUnaryOperator;
-
 /**
  *
  * @author Mats Maggi

@@ -86,7 +86,7 @@ public class ActionsHelpers implements LookupListener {
     }
 
     public List<String> merge(Collection<SaProcessingFactory> factories, Function<ActionsHelper, List<String>> selector) {
-        List<String> common = Collections.emptyList();
+        List<String> common = List.of();
         Set<ActionsHelper> all = new LinkedHashSet<>();
         for (SaProcessingFactory fac : factories) {
             ActionsHelper helper = getHelperFor(fac);

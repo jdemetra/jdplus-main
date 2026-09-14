@@ -17,12 +17,9 @@
 package jdplus.toolkit.base.core.ssf.arima;
 
 import jdplus.toolkit.base.core.arima.IArimaModel;
-import jdplus.toolkit.base.core.data.DataBlock;
 import nbbrd.design.Development;
-import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import jdplus.toolkit.base.core.arima.estimation.ArimaForecasts;
 import jdplus.toolkit.base.api.data.DoubleSeq;
-import internal.toolkit.base.core.arima.MaLjungBoxFilter;
 
 /**
  * The class has been moved to the package

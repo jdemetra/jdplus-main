@@ -7,6 +7,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [3.9.0] - 2026-09-14
+
+### Added
+
+- ![UI] Add display of ts metadata in Properties panel when an SaItem is selected in a multi-document.
+- ![UI]![IO] Add configurator for editing an SaItems's metadata. Interface for adding metadata keys to the configurator's autocomplete feature.
+
+### Fixed
+
+- ![STAT] Fix NPE for final filters [#1029](https://github.com/jdemetra/jdplus-main/issues/1029)
+- ![STAT] Fix QS test instead of Friedman test in some cases [#1058](https://github.com/jdemetra/jdplus-main/issues/1058)
+- ![OTHER] Fix reload of old workspaces (without frequency) [#1039](https://github.com/jdemetra/jd3-main/issues/1039)
+
 ## [3.8.0] - 2026-07-02
 
 ### Added
@@ -342,7 +355,8 @@ This is the **initial release** of JDemetra+ v3.0.0.
 
 - Initial release
 
-[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.8.0...HEAD
+[Unreleased]: https://github.com/jdemetra/jd3-main/compare/v3.9.0...HEAD
+[3.9.0]: https://github.com/jdemetra/jd3-main/compare/v3.8.0...v3.9.0
 [3.8.0]: https://github.com/jdemetra/jd3-main/compare/v3.7.1...v3.8.0
 [3.7.1]: https://github.com/jdemetra/jd3-main/compare/v3.7.0...v3.7.1
 [3.7.0]: https://github.com/jdemetra/jd3-main/compare/v3.6.0...v3.7.0

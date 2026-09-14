@@ -16,18 +16,18 @@
  */
 package jdplus.toolkit.base.tsp.util;
 
+import jdplus.toolkit.base.api.util.TreeTraverser;
 import jdplus.toolkit.base.tsp.DataSet;
 import jdplus.toolkit.base.tsp.DataSource;
 import jdplus.toolkit.base.tsp.DataSourceProvider;
-import jdplus.toolkit.base.api.util.TreeTraverser;
-import nbbrd.io.function.IOFunction;
-import nbbrd.design.NonNegative;
 import lombok.NonNull;
+import nbbrd.design.NonNegative;
+import nbbrd.io.function.IOFunction;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
-import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -43,7 +43,7 @@ public class TsProviders {
         IOFunction<Object, Iterable<?>> children = o ->
                 o instanceof DataSource ds
                         ? provider.children(ds)
-                        : ((DataSet) o).getKind() == DataSet.Kind.COLLECTION ? provider.children((DataSet) o) : Collections.emptyList();
+                        : ((DataSet) o).getKind() == DataSet.Kind.COLLECTION ? provider.children((DataSet) o) : List.of();
 
         return TreeTraverser.of(dataSource, children.asUnchecked());
     }

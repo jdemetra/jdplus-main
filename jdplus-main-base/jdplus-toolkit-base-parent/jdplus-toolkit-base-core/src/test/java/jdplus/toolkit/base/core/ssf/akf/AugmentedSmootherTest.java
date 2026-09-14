@@ -5,19 +5,6 @@
  */
 package jdplus.toolkit.base.core.ssf.akf;
 
-import jdplus.toolkit.base.api.arima.SarimaOrders;
-import tck.demetra.data.Data;
-import jdplus.toolkit.base.core.ssf.arima.SsfArima;
-import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.math.matrices.LowerTriangularMatrix;
-import jdplus.toolkit.base.core.math.matrices.FastMatrix;
-import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
-import jdplus.toolkit.base.core.sarima.SarimaModel;
-import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
-import jdplus.toolkit.base.core.ssf.basic.RegSsf;
-import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
-import jdplus.toolkit.base.core.ssf.univariate.Ssf;
-import jdplus.toolkit.base.core.ssf.univariate.SsfData;
 import org.junit.jupiter.api.Test;
 
 /**

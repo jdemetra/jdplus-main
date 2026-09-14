@@ -16,9 +16,9 @@
  */
 package jdplus.toolkit.desktop.plugin.properties;
 
-import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
-import jdplus.toolkit.base.api.util.TreeTraverser;
 import ec.util.table.swing.JTables;
+import jdplus.toolkit.base.api.util.TreeTraverser;
+import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
 import lombok.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.openide.DialogDescriptor;
@@ -33,7 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.IntrospectionException;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -98,6 +98,6 @@ public final class PropertySheetDialogBuilder {
     private static Iterable<Component> children(Component c) {
         return c instanceof Container c1 && c1.getComponentCount() > 0
                 ? Arrays.asList(c1.getComponents())
-                : Collections.emptyList();
+                : List.of();
     }
 }

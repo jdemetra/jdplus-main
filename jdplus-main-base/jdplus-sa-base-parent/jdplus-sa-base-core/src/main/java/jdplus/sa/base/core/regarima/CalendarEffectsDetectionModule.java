@@ -16,7 +16,6 @@
  */
 package jdplus.sa.base.core.regarima;
 
-import java.util.Arrays;
 import static jdplus.sa.base.core.regarima.AutomaticTradingRegressionModule.NOTD;
 import static jdplus.sa.base.core.regarima.AutomaticTradingRegressionModule.TD_SEL;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
@@ -29,7 +28,6 @@ import jdplus.toolkit.base.core.regarima.RegArimaEstimation;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.core.regsarima.regular.IModelComparator;
-import jdplus.toolkit.base.core.regsarima.regular.IRegressionModule;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;

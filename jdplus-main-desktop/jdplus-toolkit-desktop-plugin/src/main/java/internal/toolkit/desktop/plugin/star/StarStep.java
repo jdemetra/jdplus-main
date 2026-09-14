@@ -13,6 +13,7 @@ import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;
 import org.openide.util.NbPreferences;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -21,7 +22,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Stream;
 
-import static java.util.Collections.emptyList;
 import static jdplus.toolkit.base.api.util.Collections2.streamOf;
 
 /**
@@ -63,7 +63,7 @@ public class StarStep extends InstallerStep {
                     .toList();
         } catch (BackingStoreException ex) {
             log.log(Level.WARNING, "Can't load stared data sources", ex);
-            return emptyList();
+            return List.of();
         }
     }
 

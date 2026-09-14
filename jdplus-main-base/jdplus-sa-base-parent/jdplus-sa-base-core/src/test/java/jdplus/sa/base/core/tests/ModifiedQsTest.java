@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import jdplus.toolkit.base.api.dstats.RandomNumberGenerator;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.core.dstats.Normal;
-import jdplus.toolkit.base.core.random.MersenneTwister;
 import jdplus.toolkit.base.core.random.XorshiftRNG;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import org.junit.jupiter.api.Test;

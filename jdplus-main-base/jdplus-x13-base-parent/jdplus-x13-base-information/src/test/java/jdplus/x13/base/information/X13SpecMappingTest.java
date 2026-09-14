@@ -16,30 +16,29 @@
  */
 package jdplus.x13.base.information;
 
-import jdplus.toolkit.base.api.DemetraVersion;
 import jdplus.sa.base.api.*;
-import tck.demetra.data.Data;
-import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.sa.base.information.SaItemMapping;
 import jdplus.sa.base.information.SaItemsMapping;
+import jdplus.toolkit.base.api.DemetraVersion;
+import jdplus.toolkit.base.api.information.InformationSet;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsMoniker;
-import jdplus.toolkit.base.xml.information.XmlInformationSet;
 import jdplus.toolkit.base.api.util.NameManager;
+import jdplus.toolkit.base.xml.information.XmlInformationSet;
 import jdplus.x13.base.api.x13.X13Spec;
 import jdplus.x13.base.core.x13.X13Results;
 import nbbrd.io.xml.bind.Jaxb;
 import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
+import tck.demetra.data.Data;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collections;
 
 /**
  *
@@ -101,7 +100,7 @@ public class X13SpecMappingTest {
         NameManager<SaSpecification> mgr = SaItemsMapping.defaultNameManager();
         InformationSet info = SaItemMapping.write(item, mgr, true, DemetraVersion.JD3);
 
-        SaItem nitem = SaItemMapping.read(info, mgr, Collections.emptyMap());
+        SaItem nitem = SaItemMapping.read(info, mgr, Map.of());
         nitem.process(null, true);
     }
 

@@ -6,7 +6,6 @@ package jdplus.x13.desktop.plugin.regarima.ui;
 
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.x13.desktop.plugin.regarima.documents.RegArimaDocumentManager;
 import jdplus.toolkit.desktop.plugin.ui.processing.TsProcessingViewer;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.toolkit.desktop.plugin.workspace.DocumentUIServices;
@@ -15,22 +14,23 @@ import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.ui.WorkspaceTsTopComponent;
 import jdplus.x13.base.api.regarima.RegArimaSpec;
 import jdplus.x13.base.core.x13.regarima.RegArimaDocument;
+import jdplus.x13.desktop.plugin.regarima.documents.RegArimaDocumentManager;
 import nbbrd.design.ClassNameConstant;
-import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//demetra.desktop.regarima.ui//RegArima//EN",
-        autostore = false)
-@TopComponent.Description(preferredID = "RegArimaTopComponent",
-        //iconBase="SET/PATH/TO/ICON/HERE", 
+@ConvertAsProperties(dtd = "-//demetra.desktop.regarima.ui//RegArima//EN", autostore = false)
+@TopComponent.Description(
+        preferredID = "RegArimaTopComponent",
+        // iconBase="SET/PATH/TO/ICON/HERE",
         persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "editor", openAtStartup = false)
 @ActionID(category = "Modelling", id = RegArimaTopComponent.ID)
@@ -87,7 +87,7 @@ public final class RegArimaTopComponent extends WorkspaceTsTopComponent<RegArima
     private void initComponents() {
 
         setLayout(new java.awt.BorderLayout());
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
@@ -105,8 +105,8 @@ public final class RegArimaTopComponent extends WorkspaceTsTopComponent<RegArima
     protected String getContextPath() {
         return RegArimaDocumentManager.CONTEXTPATH;
     }
-    
-        @Override
+
+    @Override
     public boolean update(RegArimaDocument element, Ts s) {
         if (s != null) {
             TsDomain domain = s.getData().getDomain();
@@ -120,4 +120,32 @@ public final class RegArimaTopComponent extends WorkspaceTsTopComponent<RegArima
         return true;
     }
 
+    @Override
+    public void componentActivated() {
+        super.componentActivated();
+        updateUserInterfaceContext();
+    }
+
+    @Override
+    public void componentDeactivated() {
+        super.componentDeactivated();
+        UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+    }
+
+    private void updateUserInterfaceContext() {
+        if (getDocument() == null) {
+            return;
+        }
+        RegArimaDocument element = getElement();
+        if (element == null) {
+            UserInterfaceContext.INSTANCE.setDomain(null);
+        } else {
+            RegArimaSpec s = element.getSpecification();
+            if (s == null) {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(0);
+            } else {
+                UserInterfaceContext.INSTANCE.setAnnualFrequency(s.getFrequency());
+            }
+        }
+    }
 }

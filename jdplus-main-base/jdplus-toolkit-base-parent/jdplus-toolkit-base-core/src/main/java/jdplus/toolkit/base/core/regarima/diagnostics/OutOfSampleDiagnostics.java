@@ -18,7 +18,7 @@ package jdplus.toolkit.base.core.regarima.diagnostics;
 
 import jdplus.toolkit.base.core.regarima.tests.OneStepAheadForecastingTest;
 import jdplus.toolkit.base.api.processing.ProcQuality;
-import java.util.Collections;
+
 import java.util.List;
 import jdplus.toolkit.base.api.processing.Diagnostics;
 
@@ -101,6 +101,6 @@ public class OutOfSampleDiagnostics implements Diagnostics {
 
     @Override
     public List<String> getWarnings() {
-        return Collections.emptyList();
+        return List.of();
     }
 }

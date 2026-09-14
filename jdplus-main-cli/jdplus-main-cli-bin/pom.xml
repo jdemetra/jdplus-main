@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>eu.europa.ec.joinup.sat</groupId>
         <artifactId>jdplus-main-cli</artifactId>
-        <version>3.8.0</version>
+        <version>3.9.0</version>
     </parent>
 
     <artifactId>jdplus-main-cli-bin</artifactId>
@@ -190,8 +188,14 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
-                        <configuration combine.self="append">
-                            <rules combine.self="append">
+                        <id>enforce-on-verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration combine.children="merge">
+                            <rules>
+                                <!-- extra-enforcer-rules -->
                                 <banDuplicateClasses>
                                     <scopes>
                                         <scope>compile</scope>
@@ -223,7 +227,8 @@
                     <repositoryName>lib</repositoryName>
                     <endorsedDir>lib/ext</endorsedDir>
                     <copyConfigurationDirectory>true</copyConfigurationDirectory>
-                    <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties --enable-native-access=ALL-UNNAMED
+                    <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties
+                        --enable-native-access=ALL-UNNAMED
                     </extraJvmArguments>
                     <programs>
                         <program>

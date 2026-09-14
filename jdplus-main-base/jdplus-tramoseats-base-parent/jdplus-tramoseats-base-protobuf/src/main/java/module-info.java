@@ -10,6 +10,7 @@ module jdplus.tramoseats.base.protobuf {
     requires jdplus.toolkit.base.protobuf;
     requires jdplus.sa.base.protobuf;
     requires jdplus.toolkit.base.core;
+    requires com.google.protobuf;
 
     exports jdplus.tramoseats.base.protobuf;
 }

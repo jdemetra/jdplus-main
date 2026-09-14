@@ -24,7 +24,6 @@ import lombok.NonNull;
 import nbbrd.design.NonNegative;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,7 +40,7 @@ public final class TsFeatureHelper {
         Confidential
     }
 
-    public static final TsFeatureHelper EMPTY = of(Collections.emptyList());
+    public static final TsFeatureHelper EMPTY = of(List.of());
 
     @NonNull
     public static TsFeatureHelper of(@NonNull List<Ts> list) {

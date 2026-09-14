@@ -45,7 +45,6 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,7 +61,7 @@ public final class TsChartUI implements InternalUI<JTsChart> {
     private final IntList savedSelection = new IntList();
     private final DualDispatcherListener dualDispatcherListener = new DualDispatcherListener();
 
-    private TsFeatureHelper tsFeatures = TsFeatureHelper.of(Collections.emptyList());
+    private TsFeatureHelper tsFeatures = TsFeatureHelper.of(List.of());
     private InternalTsSelectionAdapter selectionListener;
     private HasObsFormatResolver obsFormatResolver;
     private HasColorSchemeResolver colorSchemeResolver;

@@ -206,9 +206,9 @@ public final class JStabilityView extends JComponent implements HasColorScheme {
         xAxis.setRange(-0.5, ((double) g.getMaxElements()) - 0.5);
         plot.setDomainAxis(xAxis);
 
-        plot.setDataset(MEAN_INDEX, new BasicXYDataset(Collections.singletonList(g.S1_)));
-        plot.setDataset(POINTS_INDEX, new BasicXYDataset(Collections.singletonList(g.S2_)));
-        plot.setDataset(SMOOTH_INDEX, new BasicXYDataset(Collections.singletonList(g.S3_)));
+        plot.setDataset(MEAN_INDEX, new BasicXYDataset(List.of(g.S1_)));
+        plot.setDataset(POINTS_INDEX, new BasicXYDataset(List.of(g.S2_)));
+        plot.setDataset(SMOOTH_INDEX, new BasicXYDataset(List.of(g.S3_)));
 
         rescaleAxis((NumberAxis) plot.getRangeAxis());
 

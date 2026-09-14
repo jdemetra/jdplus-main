@@ -7,6 +7,7 @@ module jdplus.sa.base.protobuf {
 
     requires jdplus.sa.base.core;
     requires jdplus.toolkit.base.protobuf;
+    requires com.google.protobuf;
 
     exports jdplus.sa.base.protobuf;
 }

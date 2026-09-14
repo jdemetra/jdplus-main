@@ -26,7 +26,6 @@ import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import nbbrd.design.Development;
 import nbbrd.service.ServiceProvider;
 import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.x13.base.api.x11.MsrTable;
 import jdplus.x13.base.api.x11.SeasonalFilterOption;
 import jdplus.x13.base.api.x11.X11Dictionaries;

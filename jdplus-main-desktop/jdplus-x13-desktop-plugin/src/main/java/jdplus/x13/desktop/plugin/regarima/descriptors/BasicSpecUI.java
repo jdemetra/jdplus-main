@@ -4,17 +4,16 @@
  */
 package jdplus.x13.desktop.plugin.regarima.descriptors;
 
-import jdplus.toolkit.base.api.timeseries.TimeSelector;
-import jdplus.toolkit.desktop.plugin.descriptors.DateSelectorUI;
-import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
-import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
-import org.openide.util.NbBundle.Messages;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.timeseries.TimeSelector;
+import jdplus.toolkit.desktop.plugin.descriptors.DateSelectorUI;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.x13.base.api.regarima.X13Frequency;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -32,14 +31,17 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
 
     public void setFrequency(X13Frequency freq) {
         int ifreq = freq.toInt();
-        if (ifreq < 0)
-            throw new IllegalArgumentException("Can't be used. For legacy purposes only");
+        if (ifreq < 0) throw new IllegalArgumentException("Can't be used. For legacy purposes only");
         update(ifreq);
         UserInterfaceContext.INSTANCE.setAnnualFrequency(ifreq);
     }
 
     public DateSelectorUI getSpan() {
-        return new DateSelectorUI(core().getBasic().getSpan(), UserInterfaceContext.INSTANCE.getDomain(), isRo(), selector -> updateSpan(selector));
+        return new DateSelectorUI(
+                core().getBasic().getSpan(),
+                UserInterfaceContext.INSTANCE.getDomain(),
+                isRo(),
+                selector -> updateSpan(selector));
     }
 
     public void updateSpan(TimeSelector span) {
@@ -52,8 +54,7 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
 
     public void setPreprocessing(boolean pc) {
         if (pc != isPreprocessing()) {
-            update(core().getBasic().toBuilder()
-                    .preprocessing(pc).build());
+            update(core().getBasic().toBuilder().preprocessing(pc).build());
         }
     }
 
@@ -62,9 +63,7 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
     }
 
     public void setPreliminaryCheck(boolean value) {
-        update(core().getBasic().toBuilder()
-                .preliminaryCheck(value)
-                .build());
+        update(core().getBasic().toBuilder().preliminaryCheck(value).build());
     }
 
     @Override
@@ -82,11 +81,11 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
         if (desc != null) {
             descs.add(desc);
         }
-//      excluded for the moment. That could change in the future        
-//        desc = preprocessingDesc();
-//        if (desc != null) {
-//            descs.add(desc);
-//        }
+        //      excluded for the moment. That could change in the future
+        //        desc = preprocessingDesc();
+        //        if (desc != null) {
+        //            descs.add(desc);
+        //        }
         return descs;
     }
 
@@ -96,12 +95,9 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
         return Bundle.basicSpecUI_getDislayName();
     }
     ///////////////////////////////////////////////////////////////////////////
-    private static final int SPAN_ID = 1, AUTOMDL_ID = 2, PRELIMINARYCHECK_ID = 3, FREQ_ID=0;
+    private static final int SPAN_ID = 1, AUTOMDL_ID = 2, PRELIMINARYCHECK_ID = 3, FREQ_ID = 0;
 
-   @Messages({
-        "basicSpecUI.freqDesc.name=Frequency",
-        "basicSpecUI.freqDesc.desc=Number of periods in one year"
-    })
+    @Messages({"basicSpecUI.freqDesc.name=Frequency", "basicSpecUI.freqDesc.desc=Number of periods in one year"})
     private EnhancedPropertyDescriptor freqDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("frequency", this.getClass());
@@ -109,17 +105,14 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
             edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
             desc.setShortDescription(Bundle.basicSpecUI_freqDesc_desc());
             desc.setDisplayName(Bundle.basicSpecUI_freqDesc_name());
-            edesc.setReadOnly(isRo() || (UserInterfaceContext.INSTANCE.getDomain() != null && core().getFrequency() == 0));
+            edesc.setReadOnly(isRo() || UserInterfaceContext.INSTANCE.getDomain() != null);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
         }
     }
 
-    @Messages({
-        "basicSpecUI.spanDesc.name=Series span",
-        "basicSpecUI.spanDesc.desc=Time span used for the processing"
-    })
+    @Messages({"basicSpecUI.spanDesc.name=Series span", "basicSpecUI.spanDesc.desc=Time span used for the processing"})
     private EnhancedPropertyDescriptor spanDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("span", this.getClass(), "getSpan", null);
@@ -134,10 +127,7 @@ public class BasicSpecUI extends BaseRegArimaSpecUI {
         }
     }
 
-    @Messages({
-        "basicSpecUI.automdlDesc.name=Preprocessing",
-        "basicSpecUI.automdlDesc.desc=Preprocessing"
-    })
+    @Messages({"basicSpecUI.automdlDesc.name=Preprocessing", "basicSpecUI.automdlDesc.desc=Preprocessing"})
     private EnhancedPropertyDescriptor preprocessingDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("preprocessing", this.getClass());

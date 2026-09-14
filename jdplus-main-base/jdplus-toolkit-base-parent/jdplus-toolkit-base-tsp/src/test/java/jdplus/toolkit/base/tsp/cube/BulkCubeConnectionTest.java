@@ -30,9 +30,9 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import static java.util.Collections.emptyMap;
 import static jdplus.toolkit.base.api.timeseries.TsPeriod.monthly;
 import static org.assertj.core.api.Assertions.*;
 
@@ -49,10 +49,10 @@ public class BulkCubeConnectionTest {
     private static final CubeId OTHER_BE_ID = OTHER_ID.child("be");
     private static final CubeId OTHER_EU_ID = OTHER_ID.child("eu");
 
-    private static final CubeSeriesWithData INDUSTRY_BE = new CubeSeriesWithData(INDUSTRY_BE_ID, null, emptyMap(), TsData.of(monthly(2012, 1), DoubleSeq.of(1.2, 2.3)));
-    private static final CubeSeriesWithData INDUSTRY_EU = new CubeSeriesWithData(INDUSTRY_EU_ID, null, emptyMap(), TsData.of(monthly(2012, 1), DoubleSeq.of(3.4, 4.5)));
-    private static final CubeSeriesWithData OTHER_BE = new CubeSeriesWithData(OTHER_BE_ID, null, emptyMap(), TsData.of(monthly(2012, 1), DoubleSeq.of(5.6, 6.7)));
-    private static final CubeSeriesWithData OTHER_EU = new CubeSeriesWithData(OTHER_EU_ID, null, emptyMap(), TsData.of(monthly(2012, 1), DoubleSeq.of(7.8, 8.9)));
+    private static final CubeSeriesWithData INDUSTRY_BE = new CubeSeriesWithData(INDUSTRY_BE_ID, null, Map.of(), TsData.of(monthly(2012, 1), DoubleSeq.of(1.2, 2.3)));
+    private static final CubeSeriesWithData INDUSTRY_EU = new CubeSeriesWithData(INDUSTRY_EU_ID, null, Map.of(), TsData.of(monthly(2012, 1), DoubleSeq.of(3.4, 4.5)));
+    private static final CubeSeriesWithData OTHER_BE = new CubeSeriesWithData(OTHER_BE_ID, null, Map.of(), TsData.of(monthly(2012, 1), DoubleSeq.of(5.6, 6.7)));
+    private static final CubeSeriesWithData OTHER_EU = new CubeSeriesWithData(OTHER_EU_ID, null, Map.of(), TsData.of(monthly(2012, 1), DoubleSeq.of(7.8, 8.9)));
 
     private static final CubeRepository DIM2 = CubeRepository
             .builder()

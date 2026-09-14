@@ -26,7 +26,6 @@ import nbbrd.design.Development;
 import jdplus.toolkit.base.core.math.linearfilters.SymmetricFilter;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.MatrixException;
-import jdplus.toolkit.base.core.math.polynomials.Polynomial;
 import nbbrd.service.ServiceProvider;
 import jdplus.toolkit.base.core.arima.estimation.ArmaFilter;
 import jdplus.toolkit.base.api.data.DoubleSeq;

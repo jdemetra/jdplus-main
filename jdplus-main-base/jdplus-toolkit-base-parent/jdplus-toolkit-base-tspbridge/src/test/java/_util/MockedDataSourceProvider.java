@@ -6,14 +6,14 @@ import jdplus.toolkit.base.tsp.stream.HasTsStream;
 import jdplus.toolkit.base.tsp.stream.TsStreamAsProvider;
 import nbbrd.io.function.IORunnable;
 
-import java.util.Collections;
+import java.util.List;
 
 public final class MockedDataSourceProvider implements DataSourceProvider {
 
     private static final String NAME = "mocked";
 
     @lombok.experimental.Delegate
-    private final HasDataSourceList dataSourceMutableList = HasDataSourceList.of(NAME, Collections.emptyList());
+    private final HasDataSourceList dataSourceMutableList = HasDataSourceList.of(NAME, List.of());
 
     @lombok.experimental.Delegate
     private final HasDataHierarchy dataHierarchy = HasDataHierarchy.noOp(NAME);

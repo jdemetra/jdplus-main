@@ -137,7 +137,7 @@ public class ProviderDemo {
                 IOFunction<Object, Iterable<? extends Object>> children = o -> {
                     return o instanceof DataSource ds
                             ? provider.children(ds)
-                            : ((DataSet) o).getKind() == DataSet.Kind.COLLECTION ? provider.children((DataSet) o) : Collections.emptyList();
+                            : ((DataSet) o).getKind() == DataSet.Kind.COLLECTION ? provider.children((DataSet) o) : List.of();
                 };
 
                 Optional<DataSet> result = TreeTraverser

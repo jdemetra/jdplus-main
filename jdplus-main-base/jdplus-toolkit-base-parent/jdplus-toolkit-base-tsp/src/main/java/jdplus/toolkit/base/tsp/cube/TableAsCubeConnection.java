@@ -233,7 +233,7 @@ public final class TableAsCubeConnection<DATE> implements CubeConnection {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Implementation details">
-    private static final Map<String, String> NO_META = Collections.emptyMap();
+    private static final Map<String, String> NO_META = Map.of();
 
     private static abstract class AbstractTableIterator<T> extends AbstractIOIterator<T> {
 

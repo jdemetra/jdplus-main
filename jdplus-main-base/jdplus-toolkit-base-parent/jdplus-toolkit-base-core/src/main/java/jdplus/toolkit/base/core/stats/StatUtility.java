@@ -5,7 +5,6 @@
  */
 package jdplus.toolkit.base.core.stats;
 
-import java.util.function.DoublePredicate;
 import jdplus.toolkit.base.api.stats.StatException;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;

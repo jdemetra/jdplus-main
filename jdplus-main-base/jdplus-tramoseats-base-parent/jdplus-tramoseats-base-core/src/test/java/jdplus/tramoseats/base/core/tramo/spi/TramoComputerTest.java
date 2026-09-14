@@ -12,7 +12,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 /**

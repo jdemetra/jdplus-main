@@ -24,21 +24,20 @@ import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.arima.SarmaOrders;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Collections;
+
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.regarima.RegArimaUtility;
 import jdplus.toolkit.base.core.regarima.IRegArimaComputer;
 import jdplus.toolkit.base.core.regsarima.regular.IArmaModule;
 import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.ARMA;
-import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.DEFAULT;
 import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.FAILED;
 import static jdplus.toolkit.base.core.regsarima.regular.IArmaModule.MODEL;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.regsarima.regular.ProcessingResult;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModelling;
-import static jdplus.x13.base.core.x13.regarima.AutoModellingModule.MODEL;
 
 /**
  *
@@ -285,7 +284,7 @@ public class ArmaModule implements IArmaModule {
                     all.add(cur);
                 }
             }
-            Collections.sort(all);
+            all.sort(Comparator.naturalOrder());
             return all.toArray(new RegArmaBic[all.size()]);
         }
     }

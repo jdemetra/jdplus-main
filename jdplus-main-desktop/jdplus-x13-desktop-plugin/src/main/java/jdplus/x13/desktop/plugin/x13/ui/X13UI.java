@@ -90,7 +90,7 @@ public final class X13UI implements PropertyChangeSource.WithWeakListeners, Pers
     }
 
     public List<String> allDiagnostics() {
-        return OutputSelection.matrixItems(Collections.singletonList(X13Factory.getInstance()));
+        return OutputSelection.matrixItems(List.of(X13Factory.getInstance()));
     }
 
     public void setSelectedComponents(List<String> cmps) {
@@ -103,7 +103,7 @@ public final class X13UI implements PropertyChangeSource.WithWeakListeners, Pers
     }
 
     public List<String> allComponents() {
-        return OutputSelection.seriesItems(Collections.singletonList(X13Factory.getInstance()));
+        return OutputSelection.seriesItems(List.of(X13Factory.getInstance()));
     }
 
     @Override
@@ -124,12 +124,12 @@ public final class X13UI implements PropertyChangeSource.WithWeakListeners, Pers
             .name("demetra-x13")
             .version("3.0.0")
             .with(
-                    PropertyHandler.onStringList(COMPONENTS, Collections.emptyList(), ','),
+                    PropertyHandler.onStringList(COMPONENTS, List.of(), ','),
                     X13UI::getSelectedComponents,
                     X13UI::setSelectedComponents
             )
             .with(
-                    PropertyHandler.onStringList(DIAGS, Collections.emptyList(), ','),
+                    PropertyHandler.onStringList(DIAGS, List.of(), ','),
                     X13UI::getSelectedDiagnostics,
                     X13UI::setSelectedDiagnostics
             )

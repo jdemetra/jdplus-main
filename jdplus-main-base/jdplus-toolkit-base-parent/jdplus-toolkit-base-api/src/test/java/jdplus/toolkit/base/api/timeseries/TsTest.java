@@ -21,7 +21,6 @@ import jdplus.toolkit.base.api.data.Doubles;
 import jdplus.toolkit.base.api.timeseries.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static jdplus.toolkit.base.api.timeseries.TsInformationType.BaseInformation;
@@ -101,7 +100,7 @@ public class TsTest {
 
     private final TsMoniker tsMoniker = TsMoniker.of(MockedTsProvider.NAME, "0:300");
 
-    private final List<TsProvider> providers = Collections.singletonList(
+    private final List<TsProvider> providers = List.of(
             MockedTsProvider
                     .builder()
                     .ts(Ts

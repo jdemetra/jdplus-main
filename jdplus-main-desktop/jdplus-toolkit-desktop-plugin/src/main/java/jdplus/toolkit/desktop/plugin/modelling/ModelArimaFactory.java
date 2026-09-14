@@ -4,15 +4,15 @@
  */
 package jdplus.toolkit.desktop.plugin.modelling;
 
-import jdplus.toolkit.desktop.plugin.ui.processing.ProcDocumentItemFactory;
-import jdplus.toolkit.desktop.plugin.ui.processing.stats.ArimaUI;
 import jdplus.toolkit.base.api.timeseries.TsDocument;
 import jdplus.toolkit.base.api.util.Id;
-import java.util.Collections;
-import java.util.Map;
-import java.util.function.Function;
 import jdplus.toolkit.base.core.arima.IArimaModel;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.desktop.plugin.ui.processing.ProcDocumentItemFactory;
+import jdplus.toolkit.desktop.plugin.ui.processing.stats.ArimaUI;
+
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  *
@@ -28,7 +28,7 @@ public abstract class ModelArimaFactory<D extends TsDocument<?, ?>>
                 return null;
             }
             IArimaModel model = source.arima();
-            return Collections.singletonMap("Arima model", model);
+            return Map.of("Arima model", model);
         }), new ArimaUI());
     }
 }

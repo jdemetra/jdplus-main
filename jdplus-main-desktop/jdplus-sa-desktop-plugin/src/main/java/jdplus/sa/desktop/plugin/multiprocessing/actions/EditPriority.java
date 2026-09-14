@@ -20,7 +20,6 @@ import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
 import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
 import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import java.awt.Dimension;
-import java.util.Arrays;
 import javax.swing.JFormattedTextField;
 import javax.swing.JScrollPane;
 

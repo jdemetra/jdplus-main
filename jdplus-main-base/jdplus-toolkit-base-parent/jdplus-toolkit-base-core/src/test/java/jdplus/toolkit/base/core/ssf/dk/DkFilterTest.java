@@ -16,8 +16,6 @@
  */
 package jdplus.toolkit.base.core.ssf.dk;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  *
  * @author palatej

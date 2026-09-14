@@ -5,7 +5,6 @@ import lombok.NonNull;
 import nbbrd.design.StaticFactoryMethod;
 
 import java.time.LocalDateTime;
-import java.time.Period;
 
 @lombok.Value(staticConstructor = "of")
 class LocalDateTimeInterval implements TimeInterval<LocalDateTime, TsUnit> {

@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import jdplus.sa.base.api.ComponentType;
-import jdplus.sa.base.api.SeriesDecomposition;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsConfiguration;
 import jdplus.sa.base.core.diagnostics.AdvancedResidualSeasonalityDiagnosticsFactory;

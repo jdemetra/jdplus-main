@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,13 +46,13 @@ class CsvInformationFormatterTest {
     @Test
     public void testFormatEmpty() throws IOException {
         try (var writer = new StringWriter()) {
-            format(writer, Collections.emptyList(), Collections.emptyList(), false);
+            format(writer, List.of(), List.of(), false);
             assertThat(writer.toString())
                     .isEqualToIgnoringNewLines("");
         }
 
         try (var writer = new StringWriter()) {
-            format(writer, Collections.emptyList(), List.of("complex", "string"), false);
+            format(writer, List.of(), List.of("complex", "string"), false);
             assertThat(writer.toString())
                     .isEqualToIgnoringNewLines("");
         }
@@ -137,13 +136,13 @@ class CsvInformationFormatterTest {
     @Test
     public void testFormatResultsEmpty() throws IOException {
         try (var writer = new StringWriter()) {
-            formatResults(writer, Collections.emptyList(), Collections.emptyList(), false, false);
+            formatResults(writer, List.of(), List.of(), false, false);
             assertThat(writer.toString())
                     .isEqualToIgnoringNewLines("\"\"");
         }
 
         try (var writer = new StringWriter()) {
-            formatResults(writer, Collections.emptyList(), List.of("complex", "string"), false, false);
+            formatResults(writer, List.of(), List.of("complex", "string"), false, false);
             assertThat(writer.toString())
                     .isEqualToIgnoringNewLines("\"\"");
         }

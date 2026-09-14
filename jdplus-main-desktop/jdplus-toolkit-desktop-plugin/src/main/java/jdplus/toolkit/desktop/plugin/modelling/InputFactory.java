@@ -4,12 +4,13 @@
  */
 package jdplus.toolkit.desktop.plugin.modelling;
 
-import jdplus.toolkit.desktop.plugin.ui.processing.ProcDocumentItemFactory;
-import jdplus.toolkit.desktop.plugin.ui.processing.TsViewToolkit;
 import jdplus.toolkit.base.api.timeseries.Ts;
 import jdplus.toolkit.base.api.timeseries.TsDocument;
 import jdplus.toolkit.base.api.util.Id;
-import java.util.Collections;
+import jdplus.toolkit.desktop.plugin.ui.processing.ProcDocumentItemFactory;
+import jdplus.toolkit.desktop.plugin.ui.processing.TsViewToolkit;
+
+import java.util.Set;
 
 /**
  *
@@ -21,6 +22,6 @@ public abstract class InputFactory<D extends TsDocument<?, ?>> extends ProcDocum
     protected InputFactory(Class<D> documentType, Id id) {
         super(documentType, id,
                 source -> source.getInput(),
-                s -> TsViewToolkit.getGrid(s == null ? null : Collections.singleton(s)));
+                s -> TsViewToolkit.getGrid(s == null ? null : Set.of(s)));
     }
 }

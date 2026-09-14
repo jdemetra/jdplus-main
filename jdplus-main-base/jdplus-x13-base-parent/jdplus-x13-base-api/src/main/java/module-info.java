@@ -2,6 +2,7 @@ import jdplus.x13.base.api.regarima.RegArima;
 import jdplus.x13.base.api.x11.X11;
 import jdplus.x13.base.api.x13.X13;
 
+@SuppressWarnings("module")
 module jdplus.x13.base.api {
 
     requires static lombok;

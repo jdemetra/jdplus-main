@@ -4,6 +4,11 @@
  */
 package jdplus.toolkit.desktop.plugin.nodes;
 
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.api.util.MultiLineNameUtil;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
 import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection;
@@ -11,10 +16,6 @@ import jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.TsUpdateMo
 import jdplus.toolkit.desktop.plugin.properties.NodePropertySetBuilder;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
 import jdplus.toolkit.desktop.plugin.util.FrozenTsHelper;
-import jdplus.toolkit.base.api.timeseries.*;
-import jdplus.toolkit.base.tsp.DataSourceProvider;
-import jdplus.toolkit.base.api.util.MultiLineNameUtil;
-import jdplus.toolkit.base.tsp.DataSet;
 import lombok.NonNull;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
@@ -29,7 +30,7 @@ import java.awt.*;
 import java.beans.PropertyVetoException;
 import java.time.LocalDateTime;
 import java.util.*;
-import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import java.util.List;
 
 /**
  * @author Philippe Charles
@@ -136,7 +137,7 @@ public class ControlNode {
 
             @Override
             protected void removeNotify() {
-                setKeys(Collections.emptyList());
+                setKeys(List.of());
             }
 
             @Override

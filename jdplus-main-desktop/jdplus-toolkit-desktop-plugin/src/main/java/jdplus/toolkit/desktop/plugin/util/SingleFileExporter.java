@@ -28,7 +28,6 @@ import org.openide.filesystems.FileChooserBuilder;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -150,7 +149,7 @@ public final class SingleFileExporter {
 
     @NonNull
     public static FileChooserBuilder newFileChooser(@NonNull Class<?> preferencesKey) {
-        return newFileChooser(preferencesKey, Collections.emptyList());
+        return newFileChooser(preferencesKey, List.of());
     }
 
     @NonNull

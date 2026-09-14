@@ -20,7 +20,6 @@ import jdplus.toolkit.base.api.timeseries.TsDataTable.ValueStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.IntFunction;
@@ -87,9 +86,9 @@ public class TsDataTableTest {
     public void testFactory() {
         assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(null));
 
-        assertThat(TsDataTable.of(Collections.emptyList()))
+        assertThat(TsDataTable.of(List.of()))
                 .extracting(TsDataTable::getDomain, TsDataTable::getData)
-                .containsExactly(TsDomain.DEFAULT_EMPTY, Collections.emptyList());
+                .containsExactly(TsDomain.DEFAULT_EMPTY, List.of());
 
         assertThat(TsDataTable.of(asList(empty, empty)))
                 .extracting(TsDataTable::getDomain, TsDataTable::getData)
@@ -111,10 +110,10 @@ public class TsDataTableTest {
     @Test
     @SuppressWarnings({"null", "DataFlowIssue"})
     public void testCursorValue() {
-        assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(Collections.emptyList()).cursor((TsDataTable.DistributionType) null));
-        assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(Collections.emptyList()).cursor((IntFunction<TsDataTable.DistributionType>) null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(List.of()).cursor((TsDataTable.DistributionType) null));
+        assertThatNullPointerException().isThrownBy(() -> TsDataTable.of(List.of()).cursor((IntFunction<TsDataTable.DistributionType>) null));
 
-        assertThat(Cell.toArray(TsDataTable.of(Collections.emptyList()).cursor(FIRST))).isEmpty();
+        assertThat(Cell.toArray(TsDataTable.of(List.of()).cursor(FIRST))).isEmpty();
         assertThat(Cell.toArray(TsDataTable.of(List.of(empty)).cursor(FIRST))).isEmpty();
 
         TsDataTable table = TsDataTable.of(asList(p1m_jan2010, p3m_oct2009, empty));

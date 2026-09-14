@@ -17,7 +17,6 @@
 package jdplus.toolkit.base.tsp;
 
 import internal.toolkit.base.tsp.DefaultTsMeta;
-import jdplus.toolkit.base.tsp.fixme.Strings;
 import jdplus.toolkit.base.tsp.util.ObsFormat;
 import nbbrd.io.text.Formatter;
 import nbbrd.io.text.Parser;

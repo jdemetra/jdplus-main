@@ -17,8 +17,6 @@
 
 package jdplus.sa.base.csv;
 
-import java.io.StringWriter;
-
 /**
  *
  * @author Kristof Bayens
