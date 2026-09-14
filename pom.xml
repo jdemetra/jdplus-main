@@ -4,7 +4,7 @@
 
     <groupId>eu.europa.ec.joinup.sat</groupId>
     <artifactId>jdplus-main</artifactId>
-    <version>3.8.1-SNAPSHOT</version>
+    <version>3.9.0</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -44,7 +44,7 @@
     <properties>
         <!-- Java config -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.outputTimestamp>2026-07-02T07:30:47Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-09-14T10:43:30Z</project.build.outputTimestamp>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.release>21</maven.compiler.release>
