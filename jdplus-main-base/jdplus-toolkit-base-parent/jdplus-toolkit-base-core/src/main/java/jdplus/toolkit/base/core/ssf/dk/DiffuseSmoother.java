@@ -1,24 +1,24 @@
 /*
  * Copyright 2016 National Bank copyOf Belgium
- *  
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions copyOf the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy copyOf the Licence at:
- *  
+ *
  * http://ec.europa.eu/idabc/eupl
- *  
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.core.ssf.dk;
 
 import jdplus.toolkit.base.core.data.DataBlock;
-import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.base.core.math.matrices.GeneralMatrix;
 import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.univariate.ISmoothingResults;
@@ -127,11 +127,11 @@ public class DiffuseSmoother extends BaseDiffuseSmoother {
             Ci.mul(1 / fi);
             C.addAY(-f, Ci);
             C.mul(1 / fi);
-        } else {
+        } else if (f != 0) {
             C.mul(1 / f);
             Ci.set(0);
         }
-        missing = !Double.isFinite(e);
+        missing = !Double.isFinite(e) || f == 0; // missing or redundant
         DataBlock fa = frslts.a(pos);
         hasinfo = fa != null;
         if (!hasinfo) {
@@ -157,7 +157,7 @@ public class DiffuseSmoother extends BaseDiffuseSmoother {
             a.addProduct(Ri, frslts.Pi(pos).columnsIterator());
         }
     }
-    
+
     @Override
     protected void updateP(int pos) {
         FastMatrix P = state.P();
@@ -171,14 +171,11 @@ public class DiffuseSmoother extends BaseDiffuseSmoother {
         P.sub(PN1Pi);
         P.subTranspose(PN1Pi);
         SymmetricMatrix.reenforceSymmetry(P);
-
     }
 
     private void ordinarySmoothing(ISsf ssf, final int end) {
-        OrdinarySmoother smoother = OrdinarySmoother
-                .builder(ssf)
-                .calcVariance(calcvar)
-                .build();
+        OrdinarySmoother smoother =
+                OrdinarySmoother.builder(ssf).calcVariance(calcvar).build();
         int beg = frslts.getEndDiffusePosition();
         smoother.process(beg, end, frslts, srslts);
         // updates R, N
@@ -191,5 +188,4 @@ public class DiffuseSmoother extends BaseDiffuseSmoother {
     public DefaultDiffuseFilteringResults getFilteringResults() {
         return frslts;
     }
-
 }

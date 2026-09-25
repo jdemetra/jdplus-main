@@ -1,17 +1,17 @@
 /*
  * Copyright 2022 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.core.ssf.akf;
@@ -47,7 +47,7 @@ public class AugmentedSmoother {
 
     // state information
     private State state;
-    // contains the "states" of the diffuse effects 
+    // contains the "states" of the diffuse effects
     private FastMatrix A;
     // 1-step ahead errors and their variances
     private double err, errVariance;
@@ -74,7 +74,8 @@ public class AugmentedSmoother {
         return process(ssf, data, true, sresults);
     }
 
-    public boolean process(ISsf ssf, final int endpos, DefaultAugmentedFilteringResults results, ISmoothingResults sresults) {
+    public boolean process(
+            ISsf ssf, final int endpos, DefaultAugmentedFilteringResults results, ISmoothingResults sresults) {
         frslts = results;
         srslts = sresults;
         initFilter(ssf);
@@ -184,7 +185,7 @@ public class AugmentedSmoother {
     private void updateP(boolean collapsing) {
         // B=(A(t)+P*r(t-1)), C= r(t-1)+N(t-1)*A(t)
         // S^-1 = (lS*lS')^-1 = lS'^-1 /lS^-1
-        // P(t|y)=P(t)-P(t)N(t-1)P(t)+B*psi*B' - W - W' 
+        // P(t|y)=P(t)-P(t)N(t-1)P(t)+B*psi*B' - W - W'
         // W =P * C * lS'^-1*lS^-1 * B't
         FastMatrix P = state.P();
         FastMatrix P0 = collapsing ? P.deepClone() : null;
@@ -197,9 +198,9 @@ public class AugmentedSmoother {
             calcRpNA();
             // C
             FastMatrix PC = GeneralMatrix.AB(P0, RpNA);
-            // PC*L'^-1 = Y <=> PC = X L' 
+            // PC*L'^-1 = Y <=> PC = X L'
             LowerTriangularMatrix.solveXLt(lS, PC);
-            // L^-1 B' = X <=> B' = LX 
+            // L^-1 B' = X <=> B' = LX
             FastMatrix Bt = B.transpose();
             LowerTriangularMatrix.solveLX(lS, Bt);
             FastMatrix W = GeneralMatrix.AB(PC, Bt);
@@ -230,7 +231,7 @@ public class AugmentedSmoother {
      *
      */
     private void iterateN(int pos, boolean collapsing) {
-        if (!missing) {
+        if (!missing && errVariance != 0) {
             // N(t-1) = Z'(t)*Z(t)/f(t) + L'(t)*N(t)*L(t)
             XL(pos, N.rowsIterator());
             XL(pos, N.columnsIterator());
@@ -277,10 +278,8 @@ public class AugmentedSmoother {
     }
 
     private void ordinarySmoothing(ISsf ssf, final int startpos, final int endpos) {
-        OrdinarySmoother smoother = OrdinarySmoother
-                .builder(ssf)
-                .calcVariance(calcvar)
-                .build();
+        OrdinarySmoother smoother =
+                OrdinarySmoother.builder(ssf).calcVariance(calcvar).build();
         smoother.process(startpos, endpos, frslts, srslts);
         // updates r, N
         r.copy(smoother.getFinalR());
