@@ -1,17 +1,17 @@
 /*
  * Copyright 2022 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.core.ssf.akf;
@@ -24,7 +24,6 @@ import jdplus.toolkit.base.core.math.matrices.SymmetricMatrix;
 import jdplus.toolkit.base.core.ssf.ISsfDynamics;
 import jdplus.toolkit.base.core.ssf.ISsfInitialization;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
-import jdplus.toolkit.base.core.ssf.SsfException;
 import jdplus.toolkit.base.core.ssf.State;
 import jdplus.toolkit.base.core.ssf.StateInfo;
 import jdplus.toolkit.base.core.ssf.univariate.ISsf;
@@ -44,10 +43,10 @@ public class AugmentedFilter {
     private ISsfError error;
     private ISsfDynamics dynamics;
     private ISsfData data;
-//    private boolean missing;
+    //    private boolean missing;
     private final boolean collapsing;
     private int collapsingPos = -1;
-    //private double scale;
+    // private double scale;
 
     /**
      *
@@ -65,7 +64,7 @@ public class AugmentedFilter {
             pe.setMissing();
             return false;
         } else {
-            // computes (ZP)' in C'. Missing values are set to 0 
+            // computes (ZP)' in C'. Missing values are set to 0
             // Z~m x r, P~r x r, C~r x f
             DataBlock C = pe.M();
             loading.ZM(t, state.P(), C);
@@ -91,11 +90,11 @@ public class AugmentedFilter {
     private void update() {
         double v = pe.getVariance(), e = pe.get();
         if (v == 0) {
-            if (Math.abs(e) < State.ZERO) {
-                return;
-            } else {
-                throw new SsfException(SsfException.INCONSISTENT);
-            }
+            //            if (Math.abs(e) < State.ZERO) {
+            return;
+            //            } else {
+            //                throw new SsfException(SsfException.INCONSISTENT);
+            //            }
         }
         // P = P - M * v^-1 * M' --> Symmetric
         // a = a + M * v^-1 * e
@@ -169,15 +168,15 @@ public class AugmentedFilter {
             }
             state.next(t++, dynamics);
         }
-        collapsingPos=t;
+        collapsingPos = t;
         return true;
     }
 
     // P -= c*r
     private void update(FastMatrix P, double v, DataBlock C) {
-        SymmetricMatrix.addXaXt(P, -1/v, C);
-//        P.addXaXt(-1 / v, C);
-//        SymmetricMatrix.reenforceSymmetry(P);
+        SymmetricMatrix.addXaXt(P, -1 / v, C);
+        //        P.addXaXt(-1 / v, C);
+        //        SymmetricMatrix.reenforceSymmetry(P);
     }
 
     private boolean collapse(int t, IAugmentedFilteringResults decomp) {
@@ -190,5 +189,4 @@ public class AugmentedFilter {
         // update the state vector
         return decomp.collapse(t, state);
     }
-
 }
