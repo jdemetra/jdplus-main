@@ -1,17 +1,17 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.x13.base.r;
@@ -21,17 +21,18 @@ import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.toolkit.base.r.util.Dictionaries;
 import jdplus.x13.base.api.x13.X13Dictionaries;
 import jdplus.x13.base.api.x13.X13Spec;
-import jdplus.x13.base.protobuf.Spec;
-import jdplus.x13.base.protobuf.SpecProto;
-import jdplus.x13.base.protobuf.X13ResultsProto;
 import jdplus.x13.base.core.x13.X13Factory;
 import jdplus.x13.base.core.x13.X13Kernel;
-import jdplus.x13.base.core.x13.X13Results;
 import jdplus.x13.base.core.x13.X13Output;
+import jdplus.x13.base.core.x13.X13Results;
+import jdplus.x13.base.protobuf.Spec;
+import jdplus.x13.base.protobuf.SpecProto;
 import jdplus.x13.base.protobuf.X13ProtosUtility;
+import jdplus.x13.base.protobuf.X13ResultsProto;
 
 /**
  *
@@ -56,7 +57,8 @@ public class X13 {
     }
 
     public X13Spec refreshSpec(X13Spec currentSpec, X13Spec domainSpec, TsDomain domain, String policy) {
-        return X13Factory.getInstance().refreshSpec(currentSpec, domainSpec, EstimationPolicyType.valueOf(policy), domain);
+        return X13Factory.getInstance()
+                .refreshSpec(currentSpec, domainSpec, EstimationPolicyType.valueOf(policy), domain);
     }
 
     /**
@@ -80,11 +82,13 @@ public class X13 {
     public X13Output fullProcess(TsData series, X13Spec spec, ModellingContext context) {
         X13Kernel tramoseats = X13Kernel.of(spec, context);
         X13Results estimation = tramoseats.process(series.cleanExtremities(), null);
+        RegSarimaModel preprocessing = estimation == null ? null : estimation.getPreprocessing();
 
         return X13Output.builder()
                 .estimationSpec(spec)
                 .result(estimation)
-                .resultSpec(estimation == null ? null : X13Factory.getInstance().generateSpec(spec, estimation))
+                .resultSpec(
+                        preprocessing == null ? null : X13Factory.getInstance().generateSpec(spec, estimation))
                 .build();
     }
 
