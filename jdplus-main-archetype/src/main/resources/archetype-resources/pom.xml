@@ -86,7 +86,7 @@
         <modernizer-maven-plugin.version>@modernizer-maven-plugin.version@</modernizer-maven-plugin.version>
         <nbm-maven-plugin.version>@nbm-maven-plugin.version@</nbm-maven-plugin.version>
         <pomchecker-enforcer-rules.version>@pomchecker-enforcer-rules.version@</pomchecker-enforcer-rules.version>
-        <sign-maven-plugin.version>@sign-maven-plugin.version@</sign-maven-plugin.version>
+        <maven-gpg-plugin.version>@maven-gpg-plugin.version@</maven-gpg-plugin.version>
     </properties>
 
     <dependencies>
@@ -269,9 +269,9 @@
                     <version>${maven-javadoc-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.simplify4u.plugins</groupId>
-                    <artifactId>sign-maven-plugin</artifactId>
-                    <version>${sign-maven-plugin.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
@@ -578,8 +578,11 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.simplify4u.plugins</groupId>
-                        <artifactId>sign-maven-plugin</artifactId>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <configuration>
+                            <signer>bc</signer>
+                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
