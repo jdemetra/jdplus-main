@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - ![OTHER] jwsacruncher launcher fails when its path contains blank characters [#1075](https://github.com/jdemetra/jd3-main/issues/1075)
+- ![OTHER] Generate output in the csv matrix for statistical tests [#1077](https://github.com/jdemetra/jd3-main/issues/1077)
 
 ## [3.9.0] - 2026-09-14
 
