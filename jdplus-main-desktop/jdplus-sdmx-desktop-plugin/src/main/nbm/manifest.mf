@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: jdplus/sdmx/desktop/plugin/Bundle.properties
+OpenIDE-Module-Display-Category: JD+ SDMX
+OpenIDE-Module-Java-Dependencies: Java > 21

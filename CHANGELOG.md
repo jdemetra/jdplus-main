@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- ![IO] Migrate SDMX plugin to main [#1079](https://github.com/jdemetra/jd3-main/issues/1079)
+
 ### Fixed
 
 - ![OTHER] jwsacruncher launcher fails when its path contains blank characters [#1075](https://github.com/jdemetra/jd3-main/issues/1075)

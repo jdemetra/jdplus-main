@@ -22,6 +22,7 @@
         <module>jdplus-sa-desktop-plugin</module>
         <module>jdplus-tramoseats-desktop-plugin</module>
         <module>jdplus-x13-desktop-plugin</module>
+        <module>jdplus-sdmx-desktop-plugin</module>
         <module>jdplus-main-desktop-branding</module>
         <module>jdplus-main-desktop-bin</module>
     </modules>

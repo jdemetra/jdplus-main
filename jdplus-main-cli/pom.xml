@@ -24,6 +24,7 @@
         <module>jdplus-text-cli-plugin</module>
         <module>jdplus-tramoseats-cli-plugin</module>
         <module>jdplus-x13-cli-plugin</module>
+        <module>jdplus-sdmx-cli-plugin</module>
         <module>jdplus-main-cli-bin</module>
     </modules>
 

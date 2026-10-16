@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>eu.europa.ec.joinup.sat</groupId>
+        <artifactId>jdplus-main-desktop</artifactId>
+        <version>3.9.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jdplus-sdmx-desktop-plugin</artifactId>
+    <packaging>nbm</packaging>
+
+    <name>jdplus-sdmx-desktop-plugin</name>
+    <description>jdplus-sdmx-desktop - jdplus-sdmx-desktop-plugin</description>
+    <url>https://github.com/${x.github.user}/${x.github.repo}</url>
+
+    <dependencies>
+        <!-- 1. NetBeans Platform -->
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-awt</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-nodes</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-windows</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-explorer</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-dialogs</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-progress</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-ui</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-progress-nb</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems-nb</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-swing-outline</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+
+        <!-- 2. JD3 Desktop -->
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-main-desktop-design</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-toolkit-desktop-plugin</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.netbeans.api</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.nbbrd.java-io-util</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 3. JD3 Base -->
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-sdmx-base-api</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.nbbrd.sdmx-dl</groupId>
+                    <artifactId>sdmx-dl-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 4. Other libraries -->
+        <dependency>
+            <groupId>com.github.nbbrd.sdmx-dl</groupId>
+            <artifactId>sdmx-dl-standalone</artifactId>
+            <version>${sdmx-dl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nbbrd.sdmx-dl</groupId>
+            <artifactId>sdmx-dl-swing</artifactId>
+            <version>${sdmx-dl.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nbbrd.java-desktop-util</groupId>
+            <artifactId>java-desktop-util-favicon</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.netbeans.utilities</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                    </publicPackages>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
