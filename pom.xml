@@ -71,6 +71,7 @@
         <java-sql-util.version>1.0.7</java-sql-util.version>
         <spreadsheet4j.version>2.6.0</spreadsheet4j.version>
         <netbeans.version>RELEASE310</netbeans.version>
+        <sdmx-dl.version>3.2.0</sdmx-dl.version>
 
         <!-- plugins -->
         <appassembler-maven-plugin.version>2.1.0</appassembler-maven-plugin.version>
