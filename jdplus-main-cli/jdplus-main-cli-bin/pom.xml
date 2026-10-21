@@ -228,7 +228,7 @@
                     <endorsedDir>lib/ext</endorsedDir>
                     <copyConfigurationDirectory>true</copyConfigurationDirectory>
                     <extraJvmArguments>-Djava.util.logging.config.file=@BASEDIR@/etc/logging.properties
-                        --enable-native-access=ALL-UNNAMED
+                        --enable-native-access=ALL-UNNAMED -Djdk.xml.maxGeneralEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=50000000
                     </extraJvmArguments>
                     <programs>
                         <program>
