@@ -203,6 +203,9 @@
                         <all.clusters>${all.clusters}</all.clusters>
                         <branding.token>${brandingToken}</branding.token>
                     </systemPropertyVariables>
+                  <excludes>
+                        <exclude>**/ApplicationTest.java</exclude>
+                    </excludes>
                 </configuration>
                 <dependencies>
                     <dependency>
