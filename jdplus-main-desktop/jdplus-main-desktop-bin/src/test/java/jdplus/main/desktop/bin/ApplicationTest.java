@@ -1,39 +1,25 @@
 package jdplus.main.desktop.bin;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
+import java.awt.GraphicsEnvironment;
+import junit.framework.TestResult;
+import junit.textui.TestRunner;
+import org.junit.jupiter.api.Test;
+
 /**
- *
- * @author Christiane.Hofer@bundesbank.de
+ * Runs the NbModuleSuite-based UI scenarios.
+ * <p>
+ * NbModuleSuite creates its tests at runtime, which the JUnit Vintage engine cannot report,
+ * so the suite is executed explicitly here.
  */
-import java.util.logging.Level;
-import junit.framework.Test;
-import org.netbeans.jellytools.NbDialogOperator;
-import org.netbeans.jellytools.actions.ActionNoBlock;
-import org.netbeans.junit.NbModuleSuite;
-import org.netbeans.junit.NbTestCase;
+class ApplicationTest {
 
-public class ApplicationTest extends NbTestCase {
-
-    public static Test suite() {
-
-        return NbModuleSuite.createConfiguration(ApplicationTest.class)
-                .gui(true)
-                .failOnMessage(Level.SEVERE)
-                .failOnException(Level.SEVERE)
-                .enableClasspathModules(false)
-                .clusters(".*")
-                .enableModules("org.netbeans.modules.jellytools.platform")
-                .suite();
-    }
-
-    public ApplicationTest(String n) {
-        // n="nbdemetra";
-        super(n);
-    }
-
-    public void testApplication() {
-        // pass if there are merely no warnings/exceptions
-        // Example of using Jelly Tools (additional test dependencies required) with gui(true):
-        new ActionNoBlock("Help|About", null).performMenu();
-        new NbDialogOperator("About").closeByButton();
+    @Test
+    void testApplication() {
+        assumeFalse(GraphicsEnvironment.isHeadless(), "UI tests require a display");
+        TestResult result = TestRunner.run(ApplicationScenario.suite());
+        assertThat(result.wasSuccessful()).isTrue();
     }
 }
