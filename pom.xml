@@ -108,7 +108,7 @@
         <protobuf-maven-plugin.version>5.1.11</protobuf-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <heylogs.version>0.19.1</heylogs.version>
-        <nbbrd-enforcer-rules>1.3.0</nbbrd-enforcer-rules>
+        <nbbrd-enforcer-rules>1.3.1</nbbrd-enforcer-rules>
     </properties>
 
     <dependencies>
