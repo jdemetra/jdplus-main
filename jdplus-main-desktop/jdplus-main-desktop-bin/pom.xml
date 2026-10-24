@@ -21,6 +21,44 @@
         <netbeans.run.params>${netbeans.run.params.ide}</netbeans.run.params>
         <project.x.binaries>${project.build.directory}/binaries</project.x.binaries>
         <project.x.zipname>jdemetra-${project.version}-bin</project.x.zipname>
+        <all.clusters>${project.build.directory}/${brandingToken}</all.clusters>
+        <!-- Mirror the JVM options of nbdemetra.conf -->
+        <ui-tests.argLine>
+            -Xss2m -XX:+IgnoreUnrecognizedVMOptions
+            -DTopSecurityManager.disable=true
+            -Dplugin.manager.check.updates=false
+            -Duser.language=en -Duser.country=US
+            -Djdk.xml.maxGeneralEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=50000000
+            --enable-native-access=ALL-UNNAMED
+            --add-opens=java.base/java.net=ALL-UNNAMED
+            --add-opens=java.base/java.lang.ref=ALL-UNNAMED
+            --add-opens=java.base/java.lang=ALL-UNNAMED
+            --add-opens=java.base/java.security=ALL-UNNAMED
+            --add-opens=java.base/java.util=ALL-UNNAMED
+            --add-opens=java.base/java.nio=ALL-UNNAMED
+            --add-exports=java.base/sun.reflect.annotation=ALL-UNNAMED
+            --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED
+            --add-opens=java.desktop/javax.swing.plaf.basic=ALL-UNNAMED
+            --add-opens=java.desktop/javax.swing.text=ALL-UNNAMED
+            --add-opens=java.desktop/javax.swing=ALL-UNNAMED
+            --add-opens=java.desktop/java.awt=ALL-UNNAMED
+            --add-opens=java.desktop/java.awt.event=ALL-UNNAMED
+            --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
+            --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED
+            --add-opens=java.desktop/com.sun.java.swing.plaf.gtk=ALL-UNNAMED
+            --add-opens=java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED
+            --add-opens=java.desktop/com.apple.laf=ALL-UNNAMED
+            --add-opens=java.desktop/sun.awt.shell=ALL-UNNAMED
+            --add-opens=java.desktop/sun.awt.im=ALL-UNNAMED
+            --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+            --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED
+            --add-exports=java.desktop/com.sun.beans.editors=ALL-UNNAMED
+            --add-exports=java.desktop/sun.swing=ALL-UNNAMED
+            --add-exports=java.desktop/sun.awt.im=ALL-UNNAMED
+            --add-exports=java.desktop/com.sun.java.swing.plaf.motif=ALL-UNNAMED
+            --add-exports=java.desktop/com.apple.eio=ALL-UNNAMED
+            --add-exports=java.management/sun.management=ALL-UNNAMED
+        </ui-tests.argLine>
     </properties>
 
     <dependencies>
@@ -110,6 +148,20 @@
             <artifactId>jdplus-sdmx-desktop-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- UI tests -->
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-nbjunit</artifactId>
+            <version>${netbeans.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-jellytools-platform</artifactId>
+            <version>${netbeans.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -176,6 +228,43 @@
                     <etcConfFile>target/etc/nbdemetra.conf</etcConfFile>
                 </configuration>
             </plugin>
+            <!-- Runs NbModuleSuite tests in integration-test phase (nbm-application lifecycle) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>${ui-tests.argLine}</argLine>
+                    <systemPropertyVariables>
+                        <all.clusters>${all.clusters}</all.clusters>
+                        <branding.token>${brandingToken}</branding.token>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- UI tests are skipped automatically when headless; disable them explicitly with -DskipUITests -->
+        <profile>
+            <id>skip-ui-tests</id>
+            <activation>
+                <property>
+                    <name>skipUITests</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/ApplicationTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
