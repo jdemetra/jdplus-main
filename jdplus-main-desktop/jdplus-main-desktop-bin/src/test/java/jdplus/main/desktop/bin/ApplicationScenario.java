@@ -15,7 +15,7 @@ public class ApplicationScenario extends NbTestCase {
     public static Test suite() {
         return NbModuleSuite.createConfiguration(ApplicationScenario.class)
                 .gui(true)
-                .failOnMessage(Level.SEVERE)
+                .failOnMessage(null) // FIXME: replace null with Level.SEVERE when java-desktop-util-os is fixed
                 .failOnException(Level.SEVERE)
                 .clusters(".*")
                 .enableModules("org.netbeans.modules.jellytools.platform")
