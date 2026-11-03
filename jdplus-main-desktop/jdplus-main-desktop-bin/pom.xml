@@ -234,6 +234,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>${ui-tests.argLine}</argLine>
+                    <!-- Application modules are loaded from the cluster; keep only test tooling on the classpath -->
+                    <classpathDependencyScopeExclude>compile</classpathDependencyScopeExclude>
                     <systemPropertyVariables>
                         <all.clusters>${all.clusters}</all.clusters>
                         <branding.token>${brandingToken}</branding.token>
