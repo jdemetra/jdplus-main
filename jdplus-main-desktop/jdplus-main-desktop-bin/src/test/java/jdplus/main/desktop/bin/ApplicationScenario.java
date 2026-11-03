@@ -28,7 +28,8 @@ public class ApplicationScenario extends NbTestCase {
 
     public void testApplication() {
         // pass if there are merely no warnings/exceptions
-        new ActionNoBlock("Help|About", null).performMenu();
+        // Invoked through the API since the menu item is moved to the native application menu on macOS
+        new ActionNoBlock(null, null, "org.netbeans.core.actions.AboutAction").performAPI();
         new NbDialogOperator("About").closeByButton();
     }
 }
