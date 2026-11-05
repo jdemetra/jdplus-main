@@ -4,11 +4,6 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramoseats.ui;
 
-import jdplus.toolkit.desktop.plugin.actions.Configurable;
-import jdplus.toolkit.desktop.plugin.actions.Resetable;
-import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
-import jdplus.toolkit.desktop.plugin.nodes.NamedServiceNode;
-import jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import ec.util.list.swing.JListSelection;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -18,7 +13,11 @@ import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
+import jdplus.toolkit.desktop.plugin.actions.Configurable;
+import jdplus.toolkit.desktop.plugin.actions.Resetable;
+import jdplus.toolkit.desktop.plugin.nodes.AbstractNodeBuilder;
+import jdplus.toolkit.desktop.plugin.nodes.NamedServiceNode;
+import jdplus.tramoseats.desktop.plugin.tramoseats.diagnostics.TramoSeatsDiagnosticsFactoryBuddy;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.explorer.ExplorerManager;
@@ -39,8 +38,10 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         getDiagnosticsExplorerManager().addPropertyChangeListener((PropertyChangeEvent evt) -> {
             if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
                 Node[] nodes = (Node[]) evt.getNewValue();
-                editDiagnostic.setEnabled(nodes.length == 1 && nodes[0].getLookup().lookup(Configurable.class) != null);
-                resetDiagnostic.setEnabled(nodes.length == 1 && nodes[0].getLookup().lookup(Resetable.class) != null);
+                editDiagnostic.setEnabled(
+                        nodes.length == 1 && nodes[0].getLookup().lookup(Configurable.class) != null);
+                resetDiagnostic.setEnabled(
+                        nodes.length == 1 && nodes[0].getLookup().lookup(Resetable.class) != null);
             }
         });
 
@@ -48,12 +49,11 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         fieldSelectionComponent.setTargetHeader(new JLabel("Selected items :"));
         fieldSelectionComponent.setBorder(new EmptyBorder(10, 10, 10, 10));
         fieldSelectionComponent.setPreferredSize(new Dimension(400, 300));
-
+        fieldSelectionComponent.setSearchVisible(true);
     }
 
     private ExplorerManager getDiagnosticsExplorerManager() {
         return ((ExplorerManager.Provider) diagnosticsPanel).getExplorerManager();
-
     }
 
     /**
@@ -79,16 +79,23 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         resetDiagnostic = new javax.swing.JButton();
         diagnosticsView = new org.openide.explorer.view.OutlineView("Diagnostics");
 
-        componentsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.componentsPanel.border.title"))); // NOI18N
+        componentsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(
+                TramoSeatsPanel.class, "TramoSeatsPanel.componentsPanel.border.title"))); // NOI18N
         componentsPanel.setLayout(new javax.swing.BoxLayout(componentsPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         seriesSubPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 5, 1));
         seriesSubPanel1.setLayout(new java.awt.BorderLayout());
 
-        org.openide.awt.Mnemonics.setLocalizedText(selectedSeriesLabel, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.selectedSeriesLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                selectedSeriesLabel,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.selectedSeriesLabel.text")); // NOI18N
         seriesSubPanel1.add(selectedSeriesLabel, java.awt.BorderLayout.CENTER);
 
-        org.openide.awt.Mnemonics.setLocalizedText(selectedSeriesButton, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.selectedSeriesButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                selectedSeriesButton,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.selectedSeriesButton.text")); // NOI18N
         selectedSeriesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectedSeriesButtonActionPerformed(evt);
@@ -96,7 +103,10 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         });
         seriesSubPanel1.add(selectedSeriesButton, java.awt.BorderLayout.EAST);
 
-        org.openide.awt.Mnemonics.setLocalizedText(estimationLabel6, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.estimationLabel6.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                estimationLabel6,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.estimationLabel6.text")); // NOI18N
         estimationLabel6.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 10));
         seriesSubPanel1.add(estimationLabel6, java.awt.BorderLayout.WEST);
 
@@ -104,10 +114,16 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
 
         seriesSubPanel.setLayout(new java.awt.BorderLayout());
 
-        org.openide.awt.Mnemonics.setLocalizedText(selectedDiagLabel, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.selectedDiagLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                selectedDiagLabel,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.selectedDiagLabel.text")); // NOI18N
         seriesSubPanel.add(selectedDiagLabel, java.awt.BorderLayout.CENTER);
 
-        org.openide.awt.Mnemonics.setLocalizedText(selectedDiagButton, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.selectedDiagButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                selectedDiagButton,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.selectedDiagButton.text")); // NOI18N
         selectedDiagButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectedDiagButtonActionPerformed(evt);
@@ -115,19 +131,27 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         });
         seriesSubPanel.add(selectedDiagButton, java.awt.BorderLayout.EAST);
 
-        org.openide.awt.Mnemonics.setLocalizedText(estimationLabel1, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.estimationLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                estimationLabel1,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.estimationLabel1.text")); // NOI18N
         estimationLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 10));
         seriesSubPanel.add(estimationLabel1, java.awt.BorderLayout.WEST);
 
         componentsPanel.add(seriesSubPanel);
 
-        diagnosticsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.diagnosticsPanel.border.title"))); // NOI18N
+        diagnosticsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(
+                TramoSeatsPanel.class, "TramoSeatsPanel.diagnosticsPanel.border.title"))); // NOI18N
 
         jToolBar1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jToolBar1.setRollover(true);
 
-        editDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/preferences-system_16x16.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(editDiagnostic, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.editDiagnostic.text")); // NOI18N
+        editDiagnostic.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/preferences-system_16x16.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                editDiagnostic,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.editDiagnostic.text")); // NOI18N
         editDiagnostic.setFocusable(false);
         editDiagnostic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editDiagnostic.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -138,8 +162,12 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         });
         jToolBar1.add(editDiagnostic);
 
-        resetDiagnostic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/reset_16x16.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(resetDiagnostic, org.openide.util.NbBundle.getMessage(TramoSeatsPanel.class, "TramoSeatsPanel.resetDiagnostic.text")); // NOI18N
+        resetDiagnostic.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/jdplus/toolkit/desktop/plugin/icons/reset_16x16.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(
+                resetDiagnostic,
+                org.openide.util.NbBundle.getMessage(
+                        TramoSeatsPanel.class, "TramoSeatsPanel.resetDiagnostic.text")); // NOI18N
         resetDiagnostic.setFocusable(false);
         resetDiagnostic.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         resetDiagnostic.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -156,49 +184,73 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
 
         javax.swing.GroupLayout diagnosticsPanelLayout = new javax.swing.GroupLayout(diagnosticsPanel);
         diagnosticsPanel.setLayout(diagnosticsPanelLayout);
-        diagnosticsPanelLayout.setHorizontalGroup(
-            diagnosticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(diagnosticsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(diagnosticsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        diagnosticsPanelLayout.setVerticalGroup(
-            diagnosticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(diagnosticsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(diagnosticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(diagnosticsPanelLayout.createSequentialGroup()
-                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 109, Short.MAX_VALUE))
-                    .addGroup(diagnosticsPanelLayout.createSequentialGroup()
+        diagnosticsPanelLayout.setHorizontalGroup(diagnosticsPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(diagnosticsPanelLayout
+                        .createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(diagnosticsView, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(
+                                jToolBar1,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()));
+        diagnosticsPanelLayout.setVerticalGroup(diagnosticsPanelLayout
+                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(diagnosticsPanelLayout
+                        .createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(diagnosticsPanelLayout
+                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(diagnosticsPanelLayout
+                                        .createSequentialGroup()
+                                        .addComponent(
+                                                jToolBar1,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                58,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(70, 109, Short.MAX_VALUE))
+                                .addGroup(diagnosticsPanelLayout
+                                        .createSequentialGroup()
+                                        .addComponent(
+                                                diagnosticsView,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                0,
+                                                Short.MAX_VALUE)
+                                        .addContainerGap()))));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(componentsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(diagnosticsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(componentsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(diagnosticsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-    }// </editor-fold>//GEN-END:initComponents
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(componentsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(
+                                diagnosticsPanel,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE)
+                        .addContainerGap()));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(
+                                componentsPanel,
+                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                82,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(
+                                diagnosticsPanel,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                Short.MAX_VALUE)
+                        .addContainerGap()));
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void selectedSeriesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedSeriesButtonActionPerformed
+    private void selectedSeriesButtonActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_selectedSeriesButtonActionPerformed
         fieldSelectionComponent.getSourceModel().clear();
         fieldSelectionComponent.getTargetModel().clear();
         List<String> tmpAvailable = new ArrayList<>(TramoSeatsUI.get().allComponents());
@@ -207,7 +259,9 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         fieldSelectionComponent.getSourceModel().addAll(tmpAvailable);
         fieldSelectionComponent.getTargetModel().addAll(selectedSeries);
 
-        NotifyDescriptor d = new NotifyDescriptor(fieldSelectionComponent, "Select fields",
+        NotifyDescriptor d = new NotifyDescriptor(
+                fieldSelectionComponent,
+                "Select fields",
                 NotifyDescriptor.OK_CANCEL_OPTION,
                 NotifyDescriptor.PLAIN_MESSAGE,
                 null,
@@ -218,9 +272,10 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
             selectedSeriesLabel.setText(String.format(Locale.ROOT, "%s selected", selectedSeries.size()));
             controller.changed();
         }
-    }//GEN-LAST:event_selectedSeriesButtonActionPerformed
+    } // GEN-LAST:event_selectedSeriesButtonActionPerformed
 
-    private void selectedDiagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedDiagButtonActionPerformed
+    private void selectedDiagButtonActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_selectedDiagButtonActionPerformed
         fieldSelectionComponent.getSourceModel().clear();
         fieldSelectionComponent.getTargetModel().clear();
         List<String> tmpAvailable = new ArrayList<>(TramoSeatsUI.get().allDiagnostics());
@@ -228,7 +283,9 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
 
         fieldSelectionComponent.getSourceModel().addAll(tmpAvailable);
         fieldSelectionComponent.getTargetModel().addAll(selectedDiags);
-        NotifyDescriptor d = new NotifyDescriptor(fieldSelectionComponent, "Select fields",
+        NotifyDescriptor d = new NotifyDescriptor(
+                fieldSelectionComponent,
+                "Select fields",
                 NotifyDescriptor.OK_CANCEL_OPTION,
                 NotifyDescriptor.PLAIN_MESSAGE,
                 null,
@@ -239,15 +296,21 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
             selectedDiagLabel.setText(String.format(Locale.ROOT, "%s selected", selectedDiags.size()));
             controller.changed();
         }
-    }//GEN-LAST:event_selectedDiagButtonActionPerformed
+    } // GEN-LAST:event_selectedDiagButtonActionPerformed
 
-    private void editDiagnosticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDiagnosticActionPerformed
-        if (getDiagnosticsExplorerManager().getSelectedNodes() != null && getDiagnosticsExplorerManager().getSelectedNodes().length != 0) {
-            getDiagnosticsExplorerManager().getSelectedNodes()[0].getPreferredAction().actionPerformed(evt);
+    private void editDiagnosticActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_editDiagnosticActionPerformed
+        if (getDiagnosticsExplorerManager().getSelectedNodes() != null
+                && getDiagnosticsExplorerManager().getSelectedNodes().length != 0) {
+            getDiagnosticsExplorerManager()
+                    .getSelectedNodes()[0]
+                    .getPreferredAction()
+                    .actionPerformed(evt);
         }
-    }//GEN-LAST:event_editDiagnosticActionPerformed
+    } // GEN-LAST:event_editDiagnosticActionPerformed
 
-    private void resetDiagnosticActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetDiagnosticActionPerformed
+    private void resetDiagnosticActionPerformed(
+            java.awt.event.ActionEvent evt) { // GEN-FIRST:event_resetDiagnosticActionPerformed
         Node[] sel = getDiagnosticsExplorerManager().getSelectedNodes();
         if (sel == null || sel.length == 0) {
             return;
@@ -257,11 +320,12 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         if (r == null) {
             return;
         }
-        NotifyDescriptor d = new NotifyDescriptor.Confirmation("Would you like to reset to default values ?", "Reset", NotifyDescriptor.YES_NO_OPTION);
+        NotifyDescriptor d = new NotifyDescriptor.Confirmation(
+                "Would you like to reset to default values ?", "Reset", NotifyDescriptor.YES_NO_OPTION);
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.YES_OPTION) {
             r.reset();
         }
-    }//GEN-LAST:event_resetDiagnosticActionPerformed
+    } // GEN-LAST:event_resetDiagnosticActionPerformed
 
     void load() {
         selectedSeries.clear();
@@ -270,9 +334,10 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
         selectedDiags.clear();
         selectedDiags.addAll(TramoSeatsUI.get().getSelectedDiagnostics());
         selectedDiagLabel.setText(String.format(Locale.ROOT, "%s selected", selectedDiags.size()));
-       AbstractNodeBuilder root = new AbstractNodeBuilder()
+        AbstractNodeBuilder root = new AbstractNodeBuilder()
                 .name("Diagnostics")
-                .add(Lookup.getDefault().lookupAll(TramoSeatsDiagnosticsFactoryBuddy.class).stream().map(NamedServiceNode::new));
+                .add(Lookup.getDefault().lookupAll(TramoSeatsDiagnosticsFactoryBuddy.class).stream()
+                        .map(NamedServiceNode::new));
         getDiagnosticsExplorerManager().setRootContext(root.build());
     }
 
@@ -283,7 +348,8 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
     }
 
     boolean valid() {
-        return Lookup.getDefault().lookupAll(TramoSeatsDiagnosticsFactoryBuddy.class).stream().allMatch(TramoSeatsDiagnosticsFactoryBuddy::valid);
+        return Lookup.getDefault().lookupAll(TramoSeatsDiagnosticsFactoryBuddy.class).stream()
+                .allMatch(TramoSeatsDiagnosticsFactoryBuddy::valid);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -312,5 +378,4 @@ final class TramoSeatsPanel extends javax.swing.JPanel {
             return em;
         }
     }
-
 }
