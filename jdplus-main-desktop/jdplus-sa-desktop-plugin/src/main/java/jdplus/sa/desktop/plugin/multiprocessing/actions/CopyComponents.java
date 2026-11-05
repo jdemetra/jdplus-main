@@ -1,27 +1,21 @@
 /*
  * Copyright 2017 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.desktop.plugin.multiprocessing.actions;
 
-import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
-import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
-import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
-import jdplus.sa.desktop.plugin.util.ActionsHelpers;
-import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
-import jdplus.sa.base.api.SaProcessingFactory;
 import ec.util.list.swing.JListSelection;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -29,7 +23,12 @@ import java.util.Collection;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
-
+import jdplus.sa.base.api.SaProcessingFactory;
+import jdplus.sa.desktop.plugin.multiprocessing.ui.MultiProcessingManager;
+import jdplus.sa.desktop.plugin.multiprocessing.ui.SaBatchUI;
+import jdplus.sa.desktop.plugin.multiprocessing.ui.SaNode;
+import jdplus.sa.desktop.plugin.util.ActionsHelpers;
+import jdplus.toolkit.desktop.plugin.ui.ActiveViewAction;
 import nbbrd.design.ClassNameConstant;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -46,9 +45,7 @@ import org.openide.util.NbBundle.Messages;
  */
 @ActionID(category = "SaProcessing", id = CopyComponents.ID)
 @ActionRegistration(displayName = "#CTL_CopyComponents", lazy = false)
-@ActionReferences({
-    @ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1430)
-})
+@ActionReferences({@ActionReference(path = MultiProcessingManager.CONTEXTPATH + Edit.PATH, position = 1430)})
 @Messages("CTL_CopyComponents=Copy Components...")
 public final class CopyComponents extends ActiveViewAction<SaBatchUI> {
 
@@ -59,7 +56,6 @@ public final class CopyComponents extends ActiveViewAction<SaBatchUI> {
         super(SaBatchUI.class);
         refreshAction();
         putValue(NAME, Bundle.CTL_CopyComponents());
-
     }
 
     @Override
@@ -76,19 +72,22 @@ public final class CopyComponents extends ActiveViewAction<SaBatchUI> {
         List<String> all = new ArrayList<>(ActionsHelpers.getInstance().merge(facs, helper -> helper.allSeries()));
         List<String> selected = ActionsHelpers.getInstance().merge(facs, helper -> helper.selectedSeries());
 
-        JListSelection fieldSelectionComponent = new JListSelection<>();
+        JListSelection<String> fieldSelectionComponent = new JListSelection<>();
         fieldSelectionComponent.setSourceHeader(new JLabel("Available items :"));
         fieldSelectionComponent.setTargetHeader(new JLabel("Selected items :"));
         fieldSelectionComponent.setBorder(new EmptyBorder(10, 10, 10, 10));
         fieldSelectionComponent.setMinimumSize(new Dimension(400, 300));
-         fieldSelectionComponent.getSourceModel().clear();
+        fieldSelectionComponent.getSourceModel().clear();
         fieldSelectionComponent.getTargetModel().clear();
         all.removeAll(selected);
         all.forEach(fieldSelectionComponent.getSourceModel()::addElement);
         selected.forEach(fieldSelectionComponent.getTargetModel()::addElement);
         fieldSelectionComponent.setPreferredSize(new Dimension(400, 300));
+        fieldSelectionComponent.setSearchVisible(true);
 
-        NotifyDescriptor d = new NotifyDescriptor(fieldSelectionComponent, "Select fields",
+        NotifyDescriptor d = new NotifyDescriptor(
+                fieldSelectionComponent,
+                "Select fields",
                 NotifyDescriptor.OK_CANCEL_OPTION,
                 NotifyDescriptor.PLAIN_MESSAGE,
                 null,
