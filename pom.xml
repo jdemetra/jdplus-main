@@ -299,6 +299,13 @@
                     <groupId>org.jreleaser</groupId>
                     <artifactId>jdks-maven-plugin</artifactId>
                     <version>${jdks-maven-plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.codehaus.plexus</groupId>
+                            <artifactId>plexus-xml</artifactId>
+                            <version>4.2.0</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
