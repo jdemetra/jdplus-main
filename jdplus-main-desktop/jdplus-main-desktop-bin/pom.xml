@@ -192,7 +192,25 @@
                 </executions>
             </plugin>
 
-            <!-- Add project version to cachedir path -->
+            <!-- Assemble before branding the launchers; standalone-zip remains in package -->
+            <plugin>
+                <groupId>org.apache.netbeans.utilities</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <configuration>
+                    <etcConfFile>target/etc/nbdemetra.conf</etcConfFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-cluster-app</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>cluster-app</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Filter configuration and keep unsigned launcher inputs separate from outputs -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -217,16 +235,61 @@
                             <escapeString>\</escapeString>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-unbranded-launchers</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/unbranded-launchers</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/${brandingToken}/bin</directory>
+                                    <includes>
+                                        <include>${brandingToken}.exe</include>
+                                        <include>${brandingToken}64.exe</include>
+                                    </includes>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
-            <!-- Generates standalone application -->
             <plugin>
-                <groupId>org.apache.netbeans.utilities</groupId>
-                <artifactId>nbm-maven-plugin</artifactId>
+                <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                <artifactId>exe-icon-maven-plugin</artifactId>
+                <version>${compatibility-maven-plugin.version}</version>
                 <configuration>
-                    <etcConfFile>target/etc/nbdemetra.conf</etcConfFile>
+                    <iconFile>${project.basedir}/src/main/resources/nbdemetra3.ico</iconFile>
+                    <iconGroupId>100</iconGroupId>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>brand-windows-launcher</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace-icon</goal>
+                        </goals>
+                        <configuration>
+                            <inputFile>${project.build.directory}/unbranded-launchers/${brandingToken}.exe</inputFile>
+                            <outputFile>${project.build.directory}/${brandingToken}/bin/${brandingToken}.exe</outputFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>brand-windows-launcher64</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>replace-icon</goal>
+                        </goals>
+                        <configuration>
+                            <inputFile>${project.build.directory}/unbranded-launchers/${brandingToken}64.exe</inputFile>
+                            <outputFile>${project.build.directory}/${brandingToken}/bin/${brandingToken}64.exe</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- Runs NbModuleSuite tests in integration-test phase (nbm-application lifecycle) -->
             <plugin>
