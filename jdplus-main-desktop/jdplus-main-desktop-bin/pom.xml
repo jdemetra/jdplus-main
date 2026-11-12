@@ -261,7 +261,6 @@
             <plugin>
                 <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
                 <artifactId>exe-icon-maven-plugin</artifactId>
-                <version>${compatibility-maven-plugin.version}</version>
                 <configuration>
                     <iconFile>${project.basedir}/src/main/resources/nbdemetra3.ico</iconFile>
                     <iconGroupId>100</iconGroupId>

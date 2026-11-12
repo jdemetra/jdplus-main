@@ -193,101 +193,39 @@
 
                     <!-- Create binaries bundled with JRE -->
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
+                        <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                        <artifactId>bundle-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>pack-cli-binaries</id>
                                 <phase>prepare-package</phase>
                                 <goals>
-                                    <goal>run</goal>
+                                    <goal>bundle-jdk</goal>
                                 </goals>
                                 <configuration>
-                                    <target>
-                                        <macrodef name="bundle-cli">
-                                            <attribute name="platform"/>
-                                            <attribute name="extension"/>
-                                            <attribute name="dir"/>
-                                            <sequential>
-                                                <echo message="Bundling @{platform}" level="info"/>
-                                                <pathconvert property="jdk.@{platform}">
-                                                    <first>
-                                                        <fileset dir="${project.build.directory}/jdks/jdk-@{platform}"/>
-                                                    </first>
-                                                </pathconvert>
-                                                <ant antfile="${project.basedir}/src/antrun/bundle-appassembler.xml">
-                                                    <property name="x.bundleInput"
-                                                              value="${project.build.directory}/jwsacruncher-${project.version}.zip"/>
-                                                    <property name="x.bundleOutput"
-                                                              value="${project.build.directory}/jwsacruncher-standalone-${project.version}-@{platform}.zip"/>
-                                                    <property name="x.programId" value="jwsacruncher"/>
-                                                    <property name="x.baseDirectory"
-                                                              value="jwsacruncher-${project.version}"/>
-                                                    <property name="x.jdkArchive" value="${jdk.@{platform}}"/>
-                                                    <property name="x.jdkDirectory" value="@{dir}"/>
-                                                    <target name="bundle.@{extension}"/>
-                                                </ant>
-                                            </sequential>
-                                        </macrodef>
-
-                                        <parallel threadsPerProcessor="1">
-                                            <bundle-cli platform="windows-x86_64" extension="zip" dir="${windows.dir}"/>
-                                            <bundle-cli platform="windows-aarch_64" extension="zip" dir="${windows.dir}"/>
-                                            <bundle-cli platform="linux-x86_64" extension="tar.gz" dir="${linux.dir}"/>
-                                            <bundle-cli platform="linux-aarch_64" extension="tar.gz" dir="${linux.dir}"/>
-                                            <bundle-cli platform="osx-x86_64" extension="tar.gz"
-                                                        dir="${osx.dir}/Contents/Home"/>
-                                            <bundle-cli platform="osx-aarch_64" extension="tar.gz"
-                                                        dir="${osx.dir}/Contents/Home"/>
-                                        </parallel>
-                                    </target>
+                                    <inputFile>${project.build.directory}/jwsacruncher-${project.version}.zip</inputFile>
+                                    <applicationRoot>jwsacruncher-${project.version}</applicationRoot>
+                                    <launcherId>appassembler</launcherId>
+                                    <appName>jwsacruncher</appName>
+                                    <archivePathTemplate>${project.build.directory}/jdks/jdk-{id}</archivePathTemplate>
+                                    <outputFileTemplate>${project.build.directory}/jwsacruncher-standalone-${project.version}-{id}.zip</outputFileTemplate>
+                                    <runtimeIds>windows-x86_64,windows-aarch_64,linux-x86_64,linux-aarch_64,osx-x86_64,osx-aarch_64</runtimeIds>
                                 </configuration>
                             </execution>
                             <execution>
                                 <id>pack-desktop-binaries</id>
                                 <phase>prepare-package</phase>
                                 <goals>
-                                    <goal>run</goal>
+                                    <goal>bundle-jdk</goal>
                                 </goals>
                                 <configuration>
-                                    <target>
-                                        <macrodef name="bundle-desktop">
-                                            <attribute name="platform"/>
-                                            <attribute name="extension"/>
-                                            <attribute name="dir"/>
-                                            <sequential>
-                                                <echo message="Bundling @{platform}" level="info"/>
-                                                <pathconvert property="jdk.@{platform}">
-                                                    <first>
-                                                        <fileset dir="${project.build.directory}/jdks/jdk-@{platform}"/>
-                                                    </first>
-                                                </pathconvert>
-                                                <ant antfile="${project.basedir}/src/antrun/bundle-netbeans.xml">
-                                                    <property name="x.bundleInput"
-                                                              value="${project.build.directory}/jdemetra-${project.version}.zip"/>
-                                                    <property name="x.bundleOutput"
-                                                              value="${project.build.directory}/jdemetra-standalone-${project.version}-@{platform}.zip"/>
-                                                    <property name="x.branding" value="nbdemetra"/>
-                                                    <property name="x.jdkArchive" value="${jdk.@{platform}}"/>
-                                                    <property name="x.jdkDirectory" value="@{dir}"/>
-                                                    <target name="bundle.@{extension}"/>
-                                                </ant>
-                                            </sequential>
-                                        </macrodef>
-
-                                        <parallel threadsPerProcessor="1">
-                                            <bundle-desktop platform="windows-x86_64" extension="zip" dir="${windows.dir}"/>
-                                            <bundle-desktop platform="windows-aarch_64" extension="zip" dir="${windows.dir}"/>
-                                            <bundle-desktop platform="linux-x86_64" extension="tar.gz"
-                                                            dir="${linux.dir}"/>
-                                            <bundle-desktop platform="linux-aarch_64" extension="tar.gz"
-                                                            dir="${linux.dir}"/>
-                                            <bundle-desktop platform="osx-x86_64" extension="tar.gz"
-                                                            dir="${osx.dir}/Contents/Home"/>
-                                            <bundle-desktop platform="osx-aarch_64" extension="tar.gz"
-                                                            dir="${osx.dir}/Contents/Home"/>
-                                        </parallel>
-                                    </target>
+                                    <inputFile>${project.build.directory}/jdemetra-${project.version}.zip</inputFile>
+                                    <applicationRoot>nbdemetra</applicationRoot>
+                                    <launcherId>netbeans</launcherId>
+                                    <appName>nbdemetra</appName>
+                                    <archivePathTemplate>${project.build.directory}/jdks/jdk-{id}</archivePathTemplate>
+                                    <outputFileTemplate>${project.build.directory}/jdemetra-standalone-${project.version}-{id}.zip</outputFileTemplate>
+                                    <runtimeIds>windows-x86_64,windows-aarch_64,linux-x86_64,linux-aarch_64,osx-x86_64,osx-aarch_64</runtimeIds>
                                 </configuration>
                             </execution>
                         </executions>
@@ -431,7 +369,6 @@
                     <plugin>
                         <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
                         <artifactId>compatibility-maven-plugin</artifactId>
-                        <version>${compatibility-maven-plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
@@ -447,7 +384,7 @@
                                         <target>https://github.com/jdemetra/jdplus-experimental</target>
                                         <target>https://github.com/jdemetra/jdplus-revisions</target>
                                         <target>https://github.com/jdemetra/jdplus-nowcasting</target>
-                                        <target>https://github.com/nbbrd/jdplus-sdmx</target>
+                                        <target>https://github.com/jdemetra/jdplus-eurostat</target>
                                     </targets>
                                     <targetLimits>1,1,1,1,1,1</targetLimits>
                                     <logErrors>true</logErrors>

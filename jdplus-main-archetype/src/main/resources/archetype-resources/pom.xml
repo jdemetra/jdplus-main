@@ -61,13 +61,12 @@
 
         <!-- plugins -->
         <central-publishing-maven-plugin.version>@central-publishing-maven-plugin.version@</central-publishing-maven-plugin.version>
-        <compatibility-maven-plugin.version>@compatibility-maven-plugin.version@</compatibility-maven-plugin.version>
+        <nbbrd-maven-tools.version>@nbbrd-maven-tools.version@</nbbrd-maven-tools.version>
         <extra-enforcer-rules.version>@extra-enforcer-rules.version@</extra-enforcer-rules.version>
         <flatten-maven-plugin.version>@flatten-maven-plugin.version@</flatten-maven-plugin.version>
         <forbiddenapis.version>@forbiddenapis.version@</forbiddenapis.version>
         <gitflow-maven-plugin.version>@gitflow-maven-plugin.version@</gitflow-maven-plugin.version>
         <heylogs.version>@heylogs.version@</heylogs.version>
-        <nbbrd-enforcer-rules>@nbbrd-enforcer-rules@</nbbrd-enforcer-rules>
         <tidy-maven-plugin.version>@tidy-maven-plugin.version@</tidy-maven-plugin.version>
         <spotless-maven-plugin.version>@spotless-maven-plugin.version@</spotless-maven-plugin.version>
         <jreleaser-maven-plugin.version>@jreleaser-maven-plugin.version@</jreleaser-maven-plugin.version>
@@ -234,7 +233,7 @@
                         <dependency>
                             <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
                             <artifactId>nbbrd-enforcer-rules</artifactId>
-                            <version>${nbbrd-enforcer-rules}</version>
+                            <version>${nbbrd-maven-tools.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -292,6 +291,11 @@
                     <groupId>org.jreleaser</groupId>
                     <artifactId>jreleaser-maven-plugin</artifactId>
                     <version>${jreleaser-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                    <artifactId>compatibility-maven-plugin</artifactId>
+                    <version>${nbbrd-maven-tools.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

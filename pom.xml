@@ -76,7 +76,7 @@
         <!-- plugins -->
         <appassembler-maven-plugin.version>2.1.0</appassembler-maven-plugin.version>
         <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
-        <compatibility-maven-plugin.version>1.4.2</compatibility-maven-plugin.version>
+        <nbbrd-maven-tools.version>1.5.0</nbbrd-maven-tools.version>
         <extra-enforcer-rules.version>1.12.1</extra-enforcer-rules.version>
         <flatten-maven-plugin.version>1.8.0</flatten-maven-plugin.version>
         <forbiddenapis.version>3.11</forbiddenapis.version>
@@ -108,7 +108,6 @@
         <protobuf-maven-plugin.version>5.1.12</protobuf-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <heylogs.version>0.19.1</heylogs.version>
-        <nbbrd-enforcer-rules>1.3.1</nbbrd-enforcer-rules>
     </properties>
 
     <dependencies>
@@ -231,7 +230,7 @@
                         <dependency>
                             <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
                             <artifactId>nbbrd-enforcer-rules</artifactId>
-                            <version>${nbbrd-enforcer-rules}</version>
+                            <version>${nbbrd-maven-tools.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -321,6 +320,21 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-archetype-plugin</artifactId>
                     <version>${maven-archetype-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                    <artifactId>compatibility-maven-plugin</artifactId>
+                    <version>${nbbrd-maven-tools.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                    <artifactId>exe-icon-maven-plugin</artifactId>
+                    <version>${nbbrd-maven-tools.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                    <artifactId>bundle-maven-plugin</artifactId>
+                    <version>${nbbrd-maven-tools.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
