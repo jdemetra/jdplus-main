@@ -82,7 +82,7 @@
         <forbiddenapis.version>3.11</forbiddenapis.version>
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <jdks-maven-plugin.version>1.27.0</jdks-maven-plugin.version>
-        <tidy-maven-plugin.version>1.4.1</tidy-maven-plugin.version>
+        <tidy-maven-plugin.version>1.5.0</tidy-maven-plugin.version>
         <spotless-maven-plugin.version>3.11.0</spotless-maven-plugin.version>
         <jreleaser-maven-plugin.version>1.27.0</jreleaser-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
