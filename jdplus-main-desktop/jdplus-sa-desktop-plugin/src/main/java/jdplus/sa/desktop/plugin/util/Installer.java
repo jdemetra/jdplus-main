@@ -16,10 +16,11 @@
  */
 package jdplus.sa.desktop.plugin.util;
 
+import java.util.prefs.Preferences;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariablesEditor;
-import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
-import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptorsEditor;
+import jdplus.sa.desktop.plugin.l2fprod.SaUserVariableDescriptor;
+import jdplus.sa.desktop.plugin.l2fprod.SaUserVariableDescriptorsEditor;
 import jdplus.sa.desktop.plugin.output.OutputFactoryBuddies;
 import jdplus.sa.desktop.plugin.ui.DemetraSaUI;
 import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.ArrayRenderer;
@@ -28,13 +29,10 @@ import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.CustomPropertyRendere
 import jdplus.toolkit.desktop.plugin.util.InstallerStep;
 import org.openide.modules.ModuleInstall;
 
-import java.util.prefs.Preferences;
-
 public final class Installer extends ModuleInstall {
 
-    public static final InstallerStep STEP = InstallerStep.all(
-            new DemetraSaOptionsStep(), new SaOutputStep(), new PropertiesStep()
-    );
+    public static final InstallerStep STEP =
+            InstallerStep.all(new DemetraSaOptionsStep(), new SaOutputStep(), new PropertiesStep());
 
     @Override
     public void restored() {
@@ -69,35 +67,45 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-            OutputFactoryBuddies.getInstance().getFactories()
+            OutputFactoryBuddies.getInstance()
+                    .getFactories()
                     .forEach(buddy -> load(outputs.node(buddy.getDisplayName()), buddy));
         }
 
         @Override
         public void close() {
-            OutputFactoryBuddies.getInstance().getFactories()
+            OutputFactoryBuddies.getInstance()
+                    .getFactories()
                     .forEach(buddy -> store(outputs.node(buddy.getDisplayName()), buddy));
         }
     }
-
 
     private static final class PropertiesStep extends InstallerStep {
 
         @Override
         public void restore() {
-            CustomPropertyEditorRegistry.INSTANCE.register(SaInterventionVariableDescriptor[].class, new SaInterventionVariablesEditor());
-            CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(SaInterventionVariableDescriptor[].class, new ArrayRenderer());
-            CustomPropertyEditorRegistry.INSTANCE.register(SaTsVariableDescriptor[].class, new SaTsVariableDescriptorsEditor());
-            CustomPropertyRendererFactory.INSTANCE.getRegistry().registerRenderer(SaTsVariableDescriptor[].class, new ArrayRenderer());
-            CustomPropertyEditorRegistry.INSTANCE.register(SaInterventionVariableDescriptor[].class, new SaInterventionVariablesEditor());
+            CustomPropertyEditorRegistry.INSTANCE.register(
+                    SaInterventionVariableDescriptor[].class, new SaInterventionVariablesEditor());
+            CustomPropertyRendererFactory.INSTANCE
+                    .getRegistry()
+                    .registerRenderer(SaInterventionVariableDescriptor[].class, new ArrayRenderer());
+            CustomPropertyEditorRegistry.INSTANCE.register(
+                    SaUserVariableDescriptor[].class, new SaUserVariableDescriptorsEditor());
+            CustomPropertyRendererFactory.INSTANCE
+                    .getRegistry()
+                    .registerRenderer(SaUserVariableDescriptor[].class, new ArrayRenderer());
+            CustomPropertyEditorRegistry.INSTANCE.register(
+                    SaInterventionVariableDescriptor[].class, new SaInterventionVariablesEditor());
         }
 
         @Override
         public void close() {
             CustomPropertyEditorRegistry.INSTANCE.unregister(SaInterventionVariableDescriptor[].class);
-            CustomPropertyRendererFactory.INSTANCE.getRegistry().unregisterRenderer(SaInterventionVariableDescriptor[].class);
-            CustomPropertyEditorRegistry.INSTANCE.unregister(SaTsVariableDescriptor[].class);
-            CustomPropertyRendererFactory.INSTANCE.getRegistry().unregisterRenderer(SaTsVariableDescriptor[].class);
+            CustomPropertyRendererFactory.INSTANCE
+                    .getRegistry()
+                    .unregisterRenderer(SaInterventionVariableDescriptor[].class);
+            CustomPropertyEditorRegistry.INSTANCE.unregister(SaUserVariableDescriptor[].class);
+            CustomPropertyRendererFactory.INSTANCE.getRegistry().unregisterRenderer(SaUserVariableDescriptor[].class);
         }
     }
 }

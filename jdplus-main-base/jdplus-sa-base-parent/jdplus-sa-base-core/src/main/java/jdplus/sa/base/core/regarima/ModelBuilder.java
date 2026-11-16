@@ -1,32 +1,39 @@
 /*
  * Copyright 2023 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * https://joinup.ec.europa.eu/software/page/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.base.core.regarima;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.modelling.regular.CalendarSpec;
 import jdplus.toolkit.base.api.modelling.regular.EasterSpec;
+import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
 import jdplus.toolkit.base.api.modelling.regular.ModellingSpec;
 import jdplus.toolkit.base.api.modelling.regular.RegressionSpec;
 import jdplus.toolkit.base.api.modelling.regular.TradingDaysSpec;
 import jdplus.toolkit.base.api.modelling.regular.TransformSpec;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
-import jdplus.sa.base.api.ComponentType;
-import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
@@ -53,16 +60,10 @@ import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.StockTradingDays;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
 import jdplus.toolkit.base.api.timeseries.regression.UserTradingDays;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
 import jdplus.toolkit.base.core.data.interpolation.AverageInterpolator;
 import jdplus.toolkit.base.core.modelling.regression.AdditiveOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.HolidaysCorrectionFactory;
@@ -78,7 +79,7 @@ import lombok.NonNull;
  *
  * @author palatej
  */
-public class ModelBuilder implements IModelBuilder{
+public class ModelBuilder implements IModelBuilder {
 
     public static final Map<String, String> calendarAMI;
 
@@ -106,7 +107,7 @@ public class ModelBuilder implements IModelBuilder{
         model.setArimaSpec(spec.getArima().withPeriod(freq));
     }
 
-    private void initializeVariables(ModelDescription model, RegressionSpec regSpec) {
+    private void initializeVariables(ModelDescription model, RegressionSpec regSpec, ProcessingLog log) {
 
         if (!regSpec.isUsed()) {
             return;
@@ -114,7 +115,7 @@ public class ModelBuilder implements IModelBuilder{
         initializeMean(model, regSpec.getMean());
         initializeCalendar(model, regSpec.getCalendar());
         initializeOutliers(model, regSpec.getOutliers());
-        initializeUsers(model, regSpec.getUserDefinedVariables());
+        initializeUsers(model, regSpec.getUserDefinedVariables(), log);
         initializeInterventions(model, regSpec.getInterventionVariables());
         initializeRamps(model, regSpec.getRamps());
     }
@@ -127,8 +128,8 @@ public class ModelBuilder implements IModelBuilder{
 
         initializeMissing(cur);
         initializeTransformation(cur, spec.getTransform());
-        initializeVariables(cur, spec.getRegression());
-        initializeArima(cur);// Mean is initialized here in case of auto-modelling (mean = true)
+        initializeVariables(cur, spec.getRegression(), log);
+        initializeArima(cur); // Mean is initialized here in case of auto-modelling (mean = true)
 
         return cur;
     }
@@ -144,12 +145,17 @@ public class ModelBuilder implements IModelBuilder{
         model.setPreadjustment(fnSpec.getAdjust());
     }
 
-   private void initializeMean(ModelDescription model, MeanSpec mu) {
-        if (! mu.isUsed()) {
+    private void initializeMean(ModelDescription model, MeanSpec mu) {
+        if (!mu.isUsed()) {
             model.setMean(false);
         } else if (Parameter.isFixed(mu.getCoefficient())) {
             int d = spec.getArima().getD(), bd = spec.getArima().getBd();
-            add(model, new TrendConstant(d, bd, model.getEstimationDomain().start()), "const", ComponentType.Undefined, new Parameter[]{mu.getCoefficient()});
+            add(
+                    model,
+                    new TrendConstant(d, bd, model.getEstimationDomain().start()),
+                    "const",
+                    ComponentType.Undefined,
+                    new Parameter[] {mu.getCoefficient()});
             model.setMean(false);
         } else {
             model.setMean(true);
@@ -185,7 +191,8 @@ public class ModelBuilder implements IModelBuilder{
 
     private void initializeOutliers(ModelDescription model, List<Variable<IOutlier>> outliers) {
         int freq = model.getAnnualFrequency();
-        TransitoryChangeFactory tc = new TransitoryChangeFactory(spec.getOutliers().getDeltaTC());
+        TransitoryChangeFactory tc =
+                new TransitoryChangeFactory(spec.getOutliers().getDeltaTC());
         PeriodicOutlierFactory so = new PeriodicOutlierFactory(freq, true);
         for (Variable<IOutlier> outlier : outliers) {
             IOutlier cur = outlier.getCore();
@@ -222,15 +229,19 @@ public class ModelBuilder implements IModelBuilder{
         }
     }
 
-    private void initializeUsers(ModelDescription model, List< Variable<TsContextVariable>> uvars) {
-        for (Variable<TsContextVariable> user : uvars) {
-            String name = user.getName();
-            ITsVariable var = user.getCore().instantiateFrom(context, name);
-            model.addVariable(user.withCore(var));
+    private void initializeUsers(ModelDescription model, List<UserVariableSpec> uvars, ProcessingLog log) {
+        for (UserVariableSpec user : uvars) {
+            Variable<UserVariable> s = user.instantiateFrom(context);
+            if (s != null) {
+                model.addVariable(s);
+            } else {
+                log.warning(user.getName() + ": not found (removed from the model)");
+            }
         }
     }
 
-    private void initializeInterventions(ModelDescription model, List<Variable<InterventionVariable>> interventionVariables) {
+    private void initializeInterventions(
+            ModelDescription model, List<Variable<InterventionVariable>> interventionVariables) {
         for (Variable<InterventionVariable> iv : interventionVariables) {
             model.addVariable(iv);
         }
@@ -273,7 +284,12 @@ public class ModelBuilder implements IModelBuilder{
      * @param cmp
      * @param c
      */
-    private void add(@NonNull ModelDescription model, ITsVariable v, @NonNull String name, @NonNull ComponentType cmp, Parameter[] c) {
+    private void add(
+            @NonNull ModelDescription model,
+            ITsVariable v,
+            @NonNull String name,
+            @NonNull ComponentType cmp,
+            Parameter[] c) {
         if (v == null) {
             return;
         }
@@ -295,14 +311,19 @@ public class ModelBuilder implements IModelBuilder{
      * @param cmp
      * @param c
      */
-    private void add(@NonNull ModelDescription model, ITsVariable v, @NonNull String name, @NonNull ComponentType cmp, Parameter c) {
+    private void add(
+            @NonNull ModelDescription model,
+            ITsVariable v,
+            @NonNull String name,
+            @NonNull ComponentType cmp,
+            Parameter c) {
         if (v == null) {
             return;
         }
         Variable var = Variable.builder()
                 .name(name)
                 .core(v)
-                .coefficients(c == null ? null : new Parameter[]{c})
+                .coefficients(c == null ? null : new Parameter[] {c})
                 .attribute(SaVariable.REGEFFECT, cmp.name())
                 .build();
         model.addVariable(var);
@@ -333,8 +354,12 @@ public class ModelBuilder implements IModelBuilder{
             return null;
         } else if (tdspec.getHolidays() != null) {
             GenericTradingDays gtd = GenericTradingDays.contrasts(dc);
-            HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
-            return HolidaysCorrectedTradingDays.builder().corrector(corrector).clustering(gtd.getClustering()).build();
+            HolidaysCorrectedTradingDays.HolidaysCorrector corrector =
+                    HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
+            return HolidaysCorrectedTradingDays.builder()
+                    .corrector(corrector)
+                    .clustering(gtd.getClustering())
+                    .build();
         } else if (tdspec.getUserVariables() != null) {
             return null;
         } else {
@@ -365,7 +390,8 @@ public class ModelBuilder implements IModelBuilder{
             tdType = TradingDaysType.TD7;
         }
         DayClustering dc = DayClustering.of(tdType);
-        HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(td.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
+        HolidaysCorrectedTradingDays.HolidaysCorrector corrector =
+                HolidaysCorrectionFactory.corrector(td.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
         return HolidaysCorrectedTradingDays.builder()
                 .clustering(dc)
                 .corrector(corrector)
@@ -389,14 +415,16 @@ public class ModelBuilder implements IModelBuilder{
     public static IEasterVariable easter(EasterSpec.Type type, int w) {
         return switch (type) {
             case JULIANEASTER -> new JulianEasterVariable(w, true);
-            case EASTER -> EasterVariable.builder()
-                    .duration(w)
-                    .meanCorrection(EasterVariable.Correction.Simple)
-                    .endPosition(-1)
-                    .build();
+            case EASTER ->
+                EasterVariable.builder()
+                        .duration(w)
+                        .meanCorrection(EasterVariable.Correction.Simple)
+                        .endPosition(-1)
+                        .build();
             default -> null;
         };
     }
+
     public static IEasterVariable easter(ModellingSpec spec) {
         EasterSpec espec = spec.getRegression().getCalendar().getEaster();
         if (!espec.isUsed()) {
@@ -412,5 +440,4 @@ public class ModelBuilder implements IModelBuilder{
                     .build();
         }
     }
-
 }

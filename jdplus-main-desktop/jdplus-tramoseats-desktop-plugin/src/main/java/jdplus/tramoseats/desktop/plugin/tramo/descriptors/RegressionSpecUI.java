@@ -4,6 +4,12 @@
  */
 package jdplus.tramoseats.desktop.plugin.tramo.descriptors;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.SaVariable;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
@@ -18,13 +24,6 @@ import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import jdplus.tramoseats.base.api.tramo.RegressionSpec;
 import org.openide.util.NbBundle.Messages;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  *
  * @author Jean Palate
@@ -33,16 +32,11 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
 
     private static IOutlier toOutlier(OutlierDescriptor od, int period, double tc) {
         return switch (od.getType()) {
-            case AO ->
-                new AdditiveOutlier(od.getPosition().atStartOfDay());
-            case LS ->
-                new LevelShift(od.getPosition().atStartOfDay(), true);
-            case TC ->
-                new TransitoryChange(od.getPosition().atStartOfDay(), tc);
-            case SO ->
-                new PeriodicOutlier(od.getPosition().atStartOfDay(), period, true);
-            default ->
-                null;
+            case AO -> new AdditiveOutlier(od.getPosition().atStartOfDay());
+            case LS -> new LevelShift(od.getPosition().atStartOfDay(), true);
+            case TC -> new TransitoryChange(od.getPosition().atStartOfDay(), tc);
+            case SO -> new PeriodicOutlier(od.getPosition().atStartOfDay(), period, true);
+            default -> null;
         };
     }
 
@@ -83,10 +77,10 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
             descs.add(desc);
         }
 
-//        desc = fixedCoefficientsDesc();
-//        if (desc != null) {
-//            descs.add(desc);
-//        }
+        //        desc = fixedCoefficientsDesc();
+        //        if (desc != null) {
+        //            descs.add(desc);
+        //        }
         return descs;
     }
 
@@ -97,11 +91,14 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
     }
 
     public OutlierDescriptor[] getPreSpecifiedOutliers() {
-        return inner().getOutliers()
-                .stream()
+        return inner().getOutliers().stream()
                 .map(var -> {
                     IOutlier o = var.getCore();
-                    return new OutlierDescriptor(o.getPosition().toLocalDate(), OutlierDescriptor.OutlierType.valueOf(o.getCode()), var.getCoefficient(0), var.getName());
+                    return new OutlierDescriptor(
+                            o.getPosition().toLocalDate(),
+                            OutlierDescriptor.OutlierType.valueOf(o.getCode()),
+                            var.getCoefficient(0),
+                            var.getName());
                 })
                 .sorted((o1, o2) -> o1.getPosition().compareTo(o2.getPosition()))
                 .toArray(n -> new OutlierDescriptor[n]);
@@ -112,20 +109,21 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         double tc = core().getOutliers().getDeltaTC();
         TsDomain domain = UserInterfaceContext.INSTANCE.getDomain();
         int period = domain == null ? 0 : domain.getAnnualFrequency();
-        List<Variable<IOutlier>> list = Arrays.stream(value).map(v -> {
-            IOutlier o = toOutlier(v, period, tc);
-            return Variable.<IOutlier>builder()
-                    .name(v.getName())
-                    .core(o)
-                    .coefficients(parameter(v.getCoefficient()))
-                    .build();
-        }).collect(Collectors.toList());
+        List<Variable<IOutlier>> list = Arrays.stream(value)
+                .map(v -> {
+                    IOutlier o = toOutlier(v, period, tc);
+                    return Variable.<IOutlier>builder()
+                            .name(v.getName())
+                            .core(o)
+                            .coefficients(parameter(v.getCoefficient()))
+                            .build();
+                })
+                .collect(Collectors.toList());
         update(inner().toBuilder().clearOutliers().outliers(list).build());
     }
 
     public SaInterventionVariableDescriptor[] getInterventionVariables() {
-        return inner().getInterventionVariables()
-                .stream()
+        return inner().getInterventionVariables().stream()
                 .map(var -> new SaInterventionVariableDescriptor(var))
                 .toArray(SaInterventionVariableDescriptor[]::new);
     }
@@ -134,69 +132,66 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         if (!isTransformationDefined()) {
             p = Parameter.undefined();
         }
-        return new Parameter[]{p};
+        return new Parameter[] {p};
     }
 
     public void setInterventionVariables(SaInterventionVariableDescriptor[] value) {
-        List<Variable<InterventionVariable>> list = Arrays.stream(value).map(v -> Variable.<InterventionVariable>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
-                .build())
+        List<Variable<InterventionVariable>> list = Arrays.stream(value)
+                .map(v -> Variable.<InterventionVariable>builder()
+                        .name(v.getName())
+                        .core(v.getCore())
+                        .coefficients(parameter(v.getCoefficient()))
+                        .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
+                        .build())
                 .collect(Collectors.toList());
-        update(inner().toBuilder().clearInterventionVariables().interventionVariables(list).build());
+        update(inner().toBuilder()
+                .clearInterventionVariables()
+                .interventionVariables(list)
+                .build());
     }
 
     public RampDescriptor[] getRamps() {
-        return inner().getRamps()
-                .stream()
-                .map(var -> new RampDescriptor(var))
-                .toArray(RampDescriptor[]::new);
+        return inner().getRamps().stream().map(var -> new RampDescriptor(var)).toArray(RampDescriptor[]::new);
     }
 
     public void setRamps(RampDescriptor[] value) {
-        List<Variable<Ramp>> list = Arrays.stream(value).map(v -> Variable.<Ramp>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, ComponentType.Trend.name())
-                .build())
+        List<Variable<Ramp>> list = Arrays.stream(value)
+                .map(v -> Variable.<Ramp>builder()
+                        .name(v.getName())
+                        .core(v.getCore())
+                        .coefficients(parameter(v.getCoefficient()))
+                        .attribute(SaVariable.REGEFFECT, ComponentType.Trend.name())
+                        .build())
                 .collect(Collectors.toList());
         update(inner().toBuilder().clearRamps().ramps(list).build());
     }
 
     public SaTsVariableDescriptor[] getUserDefinedVariables() {
-        return inner().getUserDefinedVariables()
-                .stream()
+        return inner().getUserDefinedVariables().stream()
                 .map(var -> new SaTsVariableDescriptor(var))
                 .toArray(SaTsVariableDescriptor[]::new);
     }
 
     public void setUserDefinedVariables(SaTsVariableDescriptor[] value) {
-        List<Variable<TsContextVariable>> list = Arrays.stream(value).map(v -> Variable.<TsContextVariable>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
-                .build())
-                .collect(Collectors.toList());
-        update(inner().toBuilder().clearUserDefinedVariables().userDefinedVariables(list).build());
+        List<UserVariableDescriptor> list =
+                Arrays.stream(value).map(v -> v.getCore()).collect(Collectors.toList());
+        update(inner().toBuilder()
+                .clearUserDefinedVariables()
+                .userDefinedVariables(list)
+                .build());
     }
 
     public MeanSpecUI getMean() {
         return new MeanSpecUI(root);
     }
-    
-    public boolean isRegressionRo(){
+
+    public boolean isRegressionRo() {
         return root.isRo() || root.getCore().getFrequency() == -1;
     }
 
     private static final int MEAN_ID = 1, CALENDAR_ID = 2, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6;
 
-    @Messages({
-        "regressionSpecUI.meanDesc.desc=[imean] Mean correction"
-    })
+    @Messages({"regressionSpecUI.meanDesc.desc=[imean] Mean correction"})
     private EnhancedPropertyDescriptor meanDesc() {
         if (core().isUsingAutoModel()) {
             return null;
@@ -255,10 +250,7 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         }
     }
 
-    @Messages({
-        "regressionSpecUI.rampsDesc.name=Ramps",
-        "regressionSpecUI.rampsDesc.desc=Ramps"
-    })
+    @Messages({"regressionSpecUI.rampsDesc.name=Ramps", "regressionSpecUI.rampsDesc.desc=Ramps"})
     private EnhancedPropertyDescriptor rampsDesc() {
         if (core().getFrequency() == 0) {
             return null;
@@ -297,10 +289,7 @@ public class RegressionSpecUI extends BaseTramoSpecUI {
         }
     }
 
-    @Messages({
-        "regressionSpecUI.calendarDesc.name=Calendar",
-        "regressionSpecUI.calendarDesc.desc=Calendar effects"
-    })
+    @Messages({"regressionSpecUI.calendarDesc.name=Calendar", "regressionSpecUI.calendarDesc.desc=Calendar effects"})
     private EnhancedPropertyDescriptor calendarDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("calendar", this.getClass(), "getCalendar", null);

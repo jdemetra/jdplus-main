@@ -4,76 +4,38 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 
-import jdplus.toolkit.base.api.data.Parameter;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
-import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
-import jdplus.toolkit.desktop.plugin.descriptors.IObjectDescriptor;
-import org.openide.util.NbBundle;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IObjectDescriptor;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jean Palate
- * @param <T>
  */
-public abstract class VariableDescriptor<T extends ITsVariable> implements IObjectDescriptor<T> {
-
-    private String name;
-    private Parameter coefficient;
+public abstract class VariableDescriptor implements IObjectDescriptor {
 
     @Override
     public String toString() {
         return getName();
     }
 
-    protected VariableDescriptor() {
-        name = null;
-        coefficient = Parameter.undefined();
-    }
-    
-    public abstract String name();
+    protected VariableDescriptor() {}
 
-    protected VariableDescriptor(Variable<T> var) {
-        this.coefficient = var.getCoefficient(0);
-        this.name=null;
-    }
+    public abstract String getName();
 
-    protected VariableDescriptor(VariableDescriptor<T> desc) {
-        this.name = desc.name;
-        this.coefficient = desc.coefficient;
-    }
+    public abstract void setName(String name);
 
-   public String getName() {
-        return name == null ? name() : name;
-    }
+    public abstract Parameter getCoefficient();
 
-    public void setName(String name) {
-        if (!name.isBlank() && !name.equals(name())) {
-            this.name = name;
-        }else
-            this.name=null;
-    }
-
-    public Parameter getCoefficient() {
-        return coefficient;
-    }
-
-    public Parameter getParameter() {
-        return coefficient;
-    }
-
-    public void setParameter(Parameter p) {
-        coefficient = p;
-    }
-
+    public abstract void setCoefficient(Parameter p);
 
     private static final int NAME_ID = 1, PARAMETER_ID = 2;
 
@@ -92,7 +54,7 @@ public abstract class VariableDescriptor<T extends ITsVariable> implements IObje
     @NbBundle.Messages("variableDescriptor.paramDesc.display=Coefficient")
     protected EnhancedPropertyDescriptor parameterDesc() {
         try {
-            PropertyDescriptor desc = new PropertyDescriptor("parameter", this.getClass());
+            PropertyDescriptor desc = new PropertyDescriptor("coefficient", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, PARAMETER_ID);
             desc.setDisplayName(Bundle.variableDescriptor_paramDesc_display());
             return edesc;
@@ -106,16 +68,14 @@ public abstract class VariableDescriptor<T extends ITsVariable> implements IObje
         StringBuilder builder = new StringBuilder();
         if (period <= 0) {
             builder.append(start.toLocalDate().format(DateTimeFormatter.ISO_DATE))
-                    .append(" - ").append(end.toLocalDate().format(DateTimeFormatter.ISO_DATE));
+                    .append(" - ")
+                    .append(end.toLocalDate().format(DateTimeFormatter.ISO_DATE));
         } else {
             TsUnit unit = TsUnit.ofAnnualFrequency(period);
             TsPeriod pstart = TsPeriod.of(unit, start);
             TsPeriod pend = TsPeriod.of(unit, end);
-            builder.append(pstart.getStartAsShortString())
-                    .append(" - ").append(pend.getStartAsShortString());
-
+            builder.append(pstart.getStartAsShortString()).append(" - ").append(pend.getStartAsShortString());
         }
         return builder.toString();
     }
-
 }

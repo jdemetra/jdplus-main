@@ -1,33 +1,34 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.base.information.highfreq;
 
+import java.util.List;
 import jdplus.toolkit.base.api.information.Information;
 import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.toolkit.base.information.VariableMapping;
+import jdplus.toolkit.base.api.modelling.highfreq.EasterSpec;
+import jdplus.toolkit.base.api.modelling.highfreq.HolidaysSpec;
 import jdplus.toolkit.base.api.modelling.highfreq.RegressionSpec;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import java.util.List;
-import jdplus.toolkit.base.api.modelling.highfreq.EasterSpec;
-import jdplus.toolkit.base.api.modelling.highfreq.HolidaysSpec;
+import jdplus.toolkit.base.information.UserVariableMapping;
+import jdplus.toolkit.base.information.VariableMapping;
 
 /**
  *
@@ -36,10 +37,14 @@ import jdplus.toolkit.base.api.modelling.highfreq.HolidaysSpec;
 @lombok.experimental.UtilityClass
 public class RegressionSpecMapping {
 
-    final String CAL = "calendar", EASTER = "easter",
-            OUTLIER = "outlier", OUTLIERS = "outlier*",
-            USER = "user", USERS = "user*",
-            INTERVENTION = "intervention", INTERVENTIONS = "intervention*";
+    final String CAL = "calendar",
+            EASTER = "easter",
+            OUTLIER = "outlier",
+            OUTLIERS = "outlier*",
+            USER = "user",
+            USERS = "user*",
+            INTERVENTION = "intervention",
+            INTERVENTIONS = "intervention*";
 
     public RegressionSpec read(InformationSet info) {
         if (info == null) {
@@ -51,8 +56,8 @@ public class RegressionSpecMapping {
         if (hol != null) {
             builder.holidays(hol);
         }
-        EasterSpec e=EasterSpecMapping.read(info.getSubSet(EASTER));
-        if (e != null){
+        EasterSpec e = EasterSpecMapping.read(info.getSubSet(EASTER));
+        if (e != null) {
             builder.easter(e);
         }
         List<Information<InformationSet>> sel = info.select(OUTLIERS, InformationSet.class);
@@ -72,7 +77,7 @@ public class RegressionSpecMapping {
         sel = info.select(USERS, InformationSet.class);
         if (!sel.isEmpty()) {
             for (Information<InformationSet> sub : sel) {
-                Variable<TsContextVariable> v = VariableMapping.readT(sub.getValue());
+                UserVariableSpec v = UserVariableMapping.read(sub.getValue());
                 builder.userDefinedVariable(v);
             }
         }
@@ -101,11 +106,11 @@ public class RegressionSpecMapping {
                 info.set(OUTLIER + (idx++), w);
             }
         }
-        List<Variable<TsContextVariable>> vusers = spec.getUserDefinedVariables();
+        List<UserVariableSpec> vusers = spec.getUserDefinedVariables();
         if (!vusers.isEmpty()) {
             int idx = 1;
-            for (Variable<TsContextVariable> v : vusers) {
-                InformationSet w = VariableMapping.writeT(v, verbose);
+            for (UserVariableSpec v : vusers) {
+                InformationSet w = UserVariableMapping.write(v, verbose);
                 info.set(USER + (idx++), w);
             }
         }
@@ -119,5 +124,4 @@ public class RegressionSpecMapping {
         }
         return info;
     }
-
 }

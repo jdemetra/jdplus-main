@@ -1,39 +1,40 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.protobuf.modelling;
 
+import static jdplus.toolkit.base.protobuf.modelling.ModellingProtos.TradingDays.TD2C;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.Iterables;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.data.Range;
-import jdplus.toolkit.base.core.modelling.StationaryTransformation;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
 import jdplus.toolkit.base.api.timeseries.regression.Ramp;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtosUtility;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import jdplus.toolkit.base.core.arima.IArimaModel;
-import static jdplus.toolkit.base.protobuf.modelling.ModellingProtos.TradingDays.TD2C;
+import jdplus.toolkit.base.core.modelling.StationaryTransformation;
+import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtosUtility;
 
 /**
  *
@@ -104,23 +105,24 @@ public class ModellingProtosUtility {
         };
     }
 
-    public ModellingProtos.TsVariable convertTsContextVariable(Variable<TsContextVariable> v) {
+    public ModellingProtos.TsVariable convertUserVariable(UserVariableSpec v) {
         return ModellingProtos.TsVariable.newBuilder()
                 .setName(v.getName())
-                .setId(v.getCore().getId())
-                .setLag(v.getCore().getLag())
-                .setCoefficient(ToolkitProtosUtility.convert(v.getCoefficient(0)))
+                .setId(v.getId())
+                .setLag(v.getLag())
+                .setCoefficient(ToolkitProtosUtility.convert(v.getCoefficient()))
                 .putAllMetadata(v.getAttributes())
                 .build();
     }
 
-    public Variable<TsContextVariable> convert(ModellingProtos.TsVariable v) {
+    public UserVariableSpec convert(ModellingProtos.TsVariable v) {
         Parameter c = ToolkitProtosUtility.convert(v.getCoefficient());
-        return Variable.<TsContextVariable>builder()
+        return UserVariableSpec.builder()
                 .name(v.getName())
-                .core(new TsContextVariable(v.getId(), v.getLag()))
+                .id(v.getId())
+                .lag(v.getLag())
                 .attributes(v.getMetadataMap())
-                 .coefficients(c == null ? null : new Parameter[]{c})
+                .coefficient(c)
                 .build();
     }
 
@@ -142,7 +144,7 @@ public class ModellingProtosUtility {
                 .name(v.getName())
                 .core(new Ramp(start.atStartOfDay(), end.atStartOfDay()))
                 .attributes(v.getMetadataMap())
-                .coefficients(c == null ? null : new Parameter[]{c})
+                .coefficients(c == null ? null : new Parameter[] {c})
                 .build();
     }
 
@@ -156,8 +158,8 @@ public class ModellingProtosUtility {
                 .putAllMetadata(var.getAttributes());
 
         List<Range<LocalDateTime>> seqs = v.getSequences();
-        for (Range<LocalDateTime> seq :seqs) {
-             builder.addSequences(ModellingProtos.InterventionVariable.Sequence.newBuilder()
+        for (Range<LocalDateTime> seq : seqs) {
+            builder.addSequences(ModellingProtos.InterventionVariable.Sequence.newBuilder()
                     .setStart(ToolkitProtosUtility.convert(seq.start().toLocalDate()))
                     .setEnd(ToolkitProtosUtility.convert(seq.end().toLocalDate()))
                     .build());
@@ -166,9 +168,8 @@ public class ModellingProtosUtility {
     }
 
     public Variable<InterventionVariable> convert(ModellingProtos.InterventionVariable v) {
-        InterventionVariable.Builder builder = InterventionVariable.builder()
-                .delta(v.getDelta())
-                .deltaSeasonal(v.getSeasonalDelta());
+        InterventionVariable.Builder builder =
+                InterventionVariable.builder().delta(v.getDelta()).deltaSeasonal(v.getSeasonalDelta());
         int n = v.getSequencesCount();
         for (int i = 0; i < n; ++i) {
             ModellingProtos.InterventionVariable.Sequence seq = v.getSequences(i);
@@ -180,7 +181,7 @@ public class ModellingProtosUtility {
         return Variable.<InterventionVariable>builder()
                 .name(v.getName())
                 .core(builder.build())
-                .coefficients(c == null ? null : new Parameter[]{c})
+                .coefficients(c == null ? null : new Parameter[] {c})
                 .attributes(v.getMetadataMap())
                 .build();
     }
@@ -193,11 +194,9 @@ public class ModellingProtosUtility {
             builder.addDifferences(ModellingProtos.StationaryTransformation.Differencing.newBuilder()
                     .setLag(d.getLag())
                     .setOrder(d.getOrder())
-                    .build()
-            );
+                    .build());
         }
-        return builder
-                .build();
+        return builder.build();
     }
 
     public StationaryTransformation convert(ModellingProtos.StationaryTransformation st) {
@@ -212,19 +211,17 @@ public class ModellingProtosUtility {
             ModellingProtos.StationaryTransformation.Differencing d = st.getDifferences(i);
             builder.difference(new StationaryTransformation.Differencing(d.getLag(), d.getOrder()));
         }
-        return builder
-                .build();
+        return builder.build();
     }
-    
-    public ModellingProtos.ArimaModel convert(IArimaModel arima, String name){
+
+    public ModellingProtos.ArimaModel convert(IArimaModel arima, String name) {
         return ModellingProtos.ArimaModel.newBuilder()
                 .setName(name)
                 .addAllAr(Iterables.of(arima.getStationaryAr().asPolynomial().coefficients()))
-                .addAllDelta(Iterables.of(arima.getNonStationaryAr().asPolynomial().coefficients()))
+                .addAllDelta(
+                        Iterables.of(arima.getNonStationaryAr().asPolynomial().coefficients()))
                 .addAllMa(Iterables.of(arima.getMa().asPolynomial().coefficients()))
                 .setInnovationVariance(arima.getInnovationVariance())
                 .build();
-                
     }
-
 }

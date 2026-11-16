@@ -5,7 +5,6 @@
 package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
-
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -16,20 +15,21 @@ import javax.swing.SwingUtilities;
  *
  * @author Demortier Jeremy
  */
-public class TsVariableDescriptorsEditor extends AbstractPropertyEditor {
+public class UserVariableDescriptorsEditor extends AbstractPropertyEditor {
 
-    private static final TsVariableDescriptor[] EMPTY= new TsVariableDescriptor[0];
+    private static final UserVariableDescriptor[] EMPTY = new UserVariableDescriptor[0];
 
-    private TsVariableDescriptor[] descriptors;
+    private UserVariableDescriptor[] descriptors;
 
-    public TsVariableDescriptorsEditor() {
+    public UserVariableDescriptorsEditor() {
         editor = new JButton(new AbstractAction("...") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final ArrayEditorDialog<TsVariableDescriptor> dialog = new ArrayEditorDialog<>(SwingUtilities.getWindowAncestor(editor),
-                        null != descriptors ? descriptors : EMPTY, 
-                        TsVariableDescriptor::new, 
-                        TsVariableDescriptor::duplicate);
+                final ArrayEditorDialog<UserVariableDescriptor> dialog = new ArrayEditorDialog<>(
+                        SwingUtilities.getWindowAncestor(editor),
+                        null != descriptors ? descriptors : EMPTY,
+                        UserVariableDescriptor::new,
+                        UserVariableDescriptor::duplicate);
                 dialog.setTitle("Variables");
                 dialog.setVisible(true);
                 if (dialog.isDirty()) {
@@ -39,11 +39,10 @@ public class TsVariableDescriptorsEditor extends AbstractPropertyEditor {
         });
     }
 
-
-    private void setDescriptors(List<TsVariableDescriptor> elements) {
-        TsVariableDescriptor[] old = descriptors;
+    private void setDescriptors(List<UserVariableDescriptor> elements) {
+        UserVariableDescriptor[] old = descriptors;
         // check that the descriptors are well-formed
-       descriptors = elements.toArray(TsVariableDescriptor[]::new);
+        descriptors = elements.toArray(UserVariableDescriptor[]::new);
         firePropertyChange(old, descriptors);
     }
 
@@ -54,11 +53,10 @@ public class TsVariableDescriptorsEditor extends AbstractPropertyEditor {
 
     @Override
     public void setValue(Object value) {
-        if (null != value && value instanceof TsVariableDescriptor[] vars) {
-            TsVariableDescriptor[] old = descriptors;
+        if (null != value && value instanceof UserVariableDescriptor[] vars) {
+            UserVariableDescriptor[] old = descriptors;
             descriptors = vars;
             firePropertyChange(old, descriptors);
-        }else
-            descriptors=EMPTY;
+        } else descriptors = EMPTY;
     }
 }

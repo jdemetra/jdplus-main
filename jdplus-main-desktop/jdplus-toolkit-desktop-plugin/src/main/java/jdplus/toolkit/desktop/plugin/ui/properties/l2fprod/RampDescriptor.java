@@ -4,10 +4,6 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 
-import jdplus.toolkit.base.api.timeseries.regression.Ramp;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.Clock;
@@ -15,22 +11,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.timeseries.regression.Ramp;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
 
 /**
  *
  * @author Jean Palate
  */
-public class RampDescriptor extends VariableDescriptor<Ramp> {
+public class RampDescriptor extends VariableDescriptor {
 
-    @Override
-    public String name() {
-        return "rp: " + VariableDescriptor.toShortString(core.getStart(), core.getEnd(), UserInterfaceContext.INSTANCE.getDomain());
-    }
-
+    private String name;
+    private Parameter p;
     private Ramp core;
 
     public RampDescriptor() {
         core = new Ramp(LocalDateTime.now(Clock.systemDefaultZone()), LocalDateTime.now(Clock.systemDefaultZone()));
+        p = Parameter.undefined();
+        name = core.description(null);
     }
 
     public RampDescriptor duplicate() {
@@ -38,14 +37,15 @@ public class RampDescriptor extends VariableDescriptor<Ramp> {
     }
 
     public RampDescriptor(Variable<Ramp> ramp) {
-        super(ramp);
-        core = ramp.getCore();
-        setName(ramp.getName());
+        this.core = ramp.getCore();
+        this.name = ramp.getName();
+        this.p = ramp.getCoefficient(0);
     }
 
     public RampDescriptor(RampDescriptor desc) {
-        super(desc);
         this.core = desc.core;
+        this.name = desc.name;
+        this.p = desc.p;
     }
 
     @Override
@@ -91,15 +91,15 @@ public class RampDescriptor extends VariableDescriptor<Ramp> {
         }
         return descs;
     }
-    private static final int START_ID = 10,
-            END_ID = 11;
+
+    private static final int START_ID = 10, END_ID = 11;
 
     private EnhancedPropertyDescriptor startDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("start", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, START_ID);
             desc.setDisplayName("Start");
-            //edesc.setReadOnly(true);
+            // edesc.setReadOnly(true);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -111,7 +111,7 @@ public class RampDescriptor extends VariableDescriptor<Ramp> {
             PropertyDescriptor desc = new PropertyDescriptor("end", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, END_ID);
             desc.setDisplayName("End");
-            //edesc.setReadOnly(true);
+            // edesc.setReadOnly(true);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
@@ -123,4 +123,23 @@ public class RampDescriptor extends VariableDescriptor<Ramp> {
         return "Ramp";
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Parameter getCoefficient() {
+        return p;
+    }
+
+    @Override
+    public void setCoefficient(Parameter p) {
+        this.p = p;
+    }
 }

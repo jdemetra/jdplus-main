@@ -1,43 +1,43 @@
 /*
  * Copyright 2023 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * https://joinup.ec.europa.eu/software/page/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.desktop.plugin.descriptors.highfreq;
 
-import jdplus.toolkit.base.api.data.Parameter;
-import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
-import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
-import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
-import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
-import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.HighFreqOutlierDescriptor;
-import jdplus.toolkit.base.api.modelling.TransformationType;
-import jdplus.toolkit.base.api.modelling.highfreq.RegressionSpec;
-import jdplus.sa.base.api.SaVariable;
-import jdplus.toolkit.base.api.timeseries.regression.AdditiveOutlier;
-import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
-import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
-import jdplus.toolkit.base.api.timeseries.regression.LevelShift;
-import jdplus.toolkit.base.api.timeseries.regression.SwitchOutlier;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import jdplus.sa.base.api.SaVariable;
+import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
+import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.toolkit.base.api.modelling.highfreq.RegressionSpec;
+import jdplus.toolkit.base.api.timeseries.regression.AdditiveOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.LevelShift;
+import jdplus.toolkit.base.api.timeseries.regression.SwitchOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.HighFreqOutlierDescriptor;
 import org.openide.util.NbBundle;
 
 /**
@@ -88,19 +88,22 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         return Bundle.highfreq_regressionSpecUI_getDisplayName();
     }
 
-        public Parameter[] parameter(Parameter p) {
+    public Parameter[] parameter(Parameter p) {
         if (root().transform().getFunction() == TransformationType.Auto) {
             p = Parameter.undefined();
         }
-        return new Parameter[]{p};
+        return new Parameter[] {p};
     }
-        
+
     public HighFreqOutlierDescriptor[] getPreSpecifiedOutliers() {
-        return spec().getOutliers()
-                .stream()
+        return spec().getOutliers().stream()
                 .map(var -> {
                     IOutlier o = var.getCore();
-                    return new HighFreqOutlierDescriptor(o.getPosition().toLocalDate(), HighFreqOutlierDescriptor.OutlierType.valueOf(o.getCode()), var.getCoefficient(0), var.getName());
+                    return new HighFreqOutlierDescriptor(
+                            o.getPosition().toLocalDate(),
+                            HighFreqOutlierDescriptor.OutlierType.valueOf(o.getCode()),
+                            var.getCoefficient(0),
+                            var.getName());
                 })
                 .sorted((o1, o2) -> o1.getPosition().compareTo(o2.getPosition()))
                 .toArray(n -> new HighFreqOutlierDescriptor[n]);
@@ -108,53 +111,53 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
 
     public void setPreSpecifiedOutliers(HighFreqOutlierDescriptor[] value) {
 
-        List<Variable<IOutlier>> list = Arrays.stream(value).map(v -> {
-            IOutlier o = toOutlier(v);
-            return Variable.<IOutlier>builder()
-                    .name(v.getName())
-                    .core(o)
-                    .coefficients(parameter(v.getCoefficient()))
-                    .build();
-        }).collect(Collectors.toList());
+        List<Variable<IOutlier>> list = Arrays.stream(value)
+                .map(v -> {
+                    IOutlier o = toOutlier(v);
+                    return Variable.<IOutlier>builder()
+                            .name(v.getName())
+                            .core(o)
+                            .coefficients(parameter(v.getCoefficient()))
+                            .build();
+                })
+                .collect(Collectors.toList());
         root().update(spec().toBuilder().clearOutliers().outliers(list).build());
     }
 
     public SaInterventionVariableDescriptor[] getInterventionVariables() {
-        return spec().getInterventionVariables()
-                .stream()
+        return spec().getInterventionVariables().stream()
                 .map(var -> new SaInterventionVariableDescriptor(var))
                 .toArray(SaInterventionVariableDescriptor[]::new);
     }
 
     public void setInterventionVariables(SaInterventionVariableDescriptor[] value) {
-        List<Variable<InterventionVariable>> list = Arrays.stream(value).map(v -> Variable.<InterventionVariable>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
-                .build())
+        List<Variable<InterventionVariable>> list = Arrays.stream(value)
+                .map(v -> Variable.<InterventionVariable>builder()
+                        .name(v.getName())
+                        .core(v.getCore())
+                        .coefficients(parameter(v.getCoefficient()))
+                        .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
+                        .build())
                 .collect(Collectors.toList());
-        root().update(spec().toBuilder().clearInterventionVariables().interventionVariables(list).build());
+        root().update(spec().toBuilder()
+                .clearInterventionVariables()
+                .interventionVariables(list)
+                .build());
     }
 
-     public SaTsVariableDescriptor[] getUserDefinedVariables() {
-        return spec().getUserDefinedVariables()
-                .stream()
+    public SaTsVariableDescriptor[] getUserDefinedVariables() {
+        return spec().getUserDefinedVariables().stream()
                 .map(var -> new SaTsVariableDescriptor(var))
                 .toArray(SaTsVariableDescriptor[]::new);
     }
 
     public void setUserDefinedVariables(SaTsVariableDescriptor[] value) {
-        List<Variable<TsContextVariable>> list = Arrays.stream(value).map(v -> Variable.<TsContextVariable>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
-                .build())
-                .collect(Collectors.toList());
-        root().update(spec().toBuilder().clearUserDefinedVariables().userDefinedVariables(list).build());
+        List<UserVariableSpec> list = Arrays.stream(value).map(v -> v.getCore()).collect(Collectors.toList());
+        root().update(spec().toBuilder()
+                .clearUserDefinedVariables()
+                .userDefinedVariables(list)
+                .build());
     }
-
 
     private static final int CALENDAR_ID = 1, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6;
 
@@ -194,10 +197,7 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         }
     }
 
-    @NbBundle.Messages({
-        "regressionSpecUI.calendarDesc.name=Holidays",
-        "regressionSpecUI.calendarDesc.desc=Holidays"
-    })
+    @NbBundle.Messages({"regressionSpecUI.calendarDesc.name=Holidays", "regressionSpecUI.calendarDesc.desc=Holidays"})
     private EnhancedPropertyDescriptor calendarDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("calendar", this.getClass(), "getCalendar", null);
@@ -210,7 +210,6 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
             return null;
         }
     }
-
 
     @NbBundle.Messages({
         "highfreq.regressionSpecUI.prespecDesc.name=Pre-specified outliers",

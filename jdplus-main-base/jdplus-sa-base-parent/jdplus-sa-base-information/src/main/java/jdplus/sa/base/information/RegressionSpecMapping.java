@@ -1,35 +1,36 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.base.information;
 
+import java.util.List;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.information.Information;
 import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.toolkit.base.information.VariableMapping;
 import jdplus.toolkit.base.api.modelling.regular.CalendarSpec;
+import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
 import jdplus.toolkit.base.api.modelling.regular.RegressionSpec;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
 import jdplus.toolkit.base.api.timeseries.regression.Ramp;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import java.util.List;
-import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
+import jdplus.toolkit.base.information.UserVariableMapping;
+import jdplus.toolkit.base.information.VariableMapping;
 
 /**
  *
@@ -39,13 +40,20 @@ import jdplus.toolkit.base.api.modelling.regular.MeanSpec;
 class RegressionSpecMapping {
 
     final String AICDIFF = "aicdiff",
-            MU = "mu", CHECKMU = "checkmu",
-            TD = "tradingdays", EASTER = "easter",
-            OUTLIER = "outlier", OUTLIERS = "outlier*",
-            RAMP = "ramp", RAMPS = "ramp*",
-            USER = "user", USERS = "user*",
-            INTERVENTION = "intervention", INTERVENTIONS = "intervention*",
-            COEFF = "coefficients", FCOEFF = "fixedcoefficients";
+            MU = "mu",
+            CHECKMU = "checkmu",
+            TD = "tradingdays",
+            EASTER = "easter",
+            OUTLIER = "outlier",
+            OUTLIERS = "outlier*",
+            RAMP = "ramp",
+            RAMPS = "ramp*",
+            USER = "user",
+            USERS = "user*",
+            INTERVENTION = "intervention",
+            INTERVENTIONS = "intervention*",
+            COEFF = "coefficients",
+            FCOEFF = "fixedcoefficients";
 
     RegressionSpec read(InformationSet info) {
         if (info == null) {
@@ -65,9 +73,7 @@ class RegressionSpecMapping {
                 .tradingDays(TradingDaysSpecMapping.read(info.getSubSet(TD)))
                 .easter(EasterSpecMapping.read(info.getSubSet(EASTER)))
                 .build();
-        RegressionSpec.Builder builder = RegressionSpec.builder()
-                .mean(mean)
-                .calendar(cal);
+        RegressionSpec.Builder builder = RegressionSpec.builder().mean(mean).calendar(cal);
         Double aic = info.get(AICDIFF, Double.class);
         if (aic != null) {
             builder.aicDiff(aic);
@@ -97,7 +103,7 @@ class RegressionSpecMapping {
         sel = info.select(USERS, InformationSet.class);
         if (!sel.isEmpty()) {
             for (Information<InformationSet> sub : sel) {
-                Variable<TsContextVariable> v = VariableMapping.readT(sub.getValue());
+                UserVariableSpec v = UserVariableMapping.read(sub.getValue());
                 builder.userDefinedVariable(v);
             }
         }
@@ -144,11 +150,11 @@ class RegressionSpecMapping {
                 info.set(RAMP + (idx++), w);
             }
         }
-        List<Variable<TsContextVariable>> vusers = spec.getUserDefinedVariables();
+        List<UserVariableSpec> vusers = spec.getUserDefinedVariables();
         if (!vusers.isEmpty()) {
             int idx = 1;
-            for (Variable<TsContextVariable> v : vusers) {
-                InformationSet w = VariableMapping.writeT(v, verbose);
+            for (UserVariableSpec v : vusers) {
+                InformationSet w = UserVariableMapping.write(v, verbose);
                 info.set(USER + (idx++), w);
             }
         }
@@ -162,5 +168,4 @@ class RegressionSpecMapping {
         }
         return info;
     }
-
 }

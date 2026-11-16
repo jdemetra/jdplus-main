@@ -1,23 +1,30 @@
 /*
  * Copyright 2017 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:ModelDescr
- * 
+ *
  * https://joinup.ec.europa.eu/software/page/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.tramoseats.base.core.tramo;
 
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import ec.tstoolkit.modelling.arima.IPreprocessor;
+import ec.tstoolkit.timeseries.Month;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import jdplus.toolkit.base.api.data.AggregationType;
-import tck.demetra.data.Data;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.processing.DefaultProcessingLog;
 import jdplus.toolkit.base.api.timeseries.StaticTsDataSupplier;
@@ -30,24 +37,16 @@ import jdplus.toolkit.base.api.timeseries.calendars.FixedDay;
 import jdplus.toolkit.base.api.timeseries.calendars.Holiday;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingContext;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
 import jdplus.toolkit.base.api.timeseries.regression.TsDataSuppliers;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
+import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
 import jdplus.tramoseats.base.api.tramo.CalendarSpec;
 import jdplus.tramoseats.base.api.tramo.RegressionSpec;
 import jdplus.tramoseats.base.api.tramo.TradingDaysSpec;
 import jdplus.tramoseats.base.api.tramo.TradingDaysSpec.AutoMethod;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
-import ec.tstoolkit.modelling.arima.IPreprocessor;
-import ec.tstoolkit.timeseries.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
-
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+import tck.demetra.data.Data;
 
 /**
  *
@@ -121,8 +120,7 @@ public class TramoKernelTest {
         obelgium.add(ec.tstoolkit.timeseries.calendars.EasterRelatedDay.PentecostMonday);
     }
 
-    public TramoKernelTest() {
-    }
+    public TramoKernelTest() {}
 
     @Test
     public void testProdMissing() {
@@ -137,7 +135,8 @@ public class TramoKernelTest {
     @Test
     public void testProdLegacyMissing() {
         IPreprocessor processor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TR5.build();
-        ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1967, 0, datamissing, true);
+        ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1967, 0, datamissing, true);
         ec.tstoolkit.modelling.arima.PreprocessingModel rslt = processor.process(s, null);
         System.out.println("Legacy with missing");
         System.out.println(rslt.estimation.getStatistics().logLikelihood);
@@ -158,7 +157,8 @@ public class TramoKernelTest {
     @Test
     public void testProdLegacy() {
         IPreprocessor processor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.build();
-        ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1992, 0, Data.RETAIL_BOOKSTORES, true);
+        ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1992, 0, Data.RETAIL_BOOKSTORES, true);
         ec.tstoolkit.modelling.arima.PreprocessingModel rslt = processor.process(s, null);
         System.out.println("Legacy");
         System.out.println(rslt.estimation.getStatistics().adjustedLogLikelihood);
@@ -173,18 +173,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TRfull");
         System.out.println(n);
@@ -200,39 +205,44 @@ public class TramoKernelTest {
 
         RegressionSpec regSpec = spec.getRegression();
         CalendarSpec calSpec = regSpec.getCalendar();
-        TradingDaysSpec tdSpec = TradingDaysSpec.automaticHolidays("belgium", LengthOfPeriodType.LeapYear, AutoMethod.FTEST, TradingDaysSpec.DEF_PFTD, false);
+        TradingDaysSpec tdSpec = TradingDaysSpec.automaticHolidays(
+                "belgium", LengthOfPeriodType.LeapYear, AutoMethod.FTEST, TradingDaysSpec.DEF_PFTD, false);
         spec = spec.toBuilder()
                 .regression(regSpec.toBuilder()
-                        .calendar(calSpec.toBuilder()
-                                .tradingDays(tdSpec)
-                                .build())
+                        .calendar(calSpec.toBuilder().tradingDays(tdSpec).build())
                         .build())
                 .build();
 
         TramoKernel processor = TramoKernel.of(spec, context);
 
         ec.tstoolkit.algorithm.ProcessingContext ocontext = new ec.tstoolkit.algorithm.ProcessingContext();
-        ocontext.getGregorianCalendars().set("belgium", new ec.tstoolkit.timeseries.calendars.NationalCalendarProvider(obelgium));
-        ec.tstoolkit.modelling.arima.tramo.TramoSpecification ospec = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.clone();
+        ocontext.getGregorianCalendars()
+                .set("belgium", new ec.tstoolkit.timeseries.calendars.NationalCalendarProvider(obelgium));
+        ec.tstoolkit.modelling.arima.tramo.TramoSpecification ospec =
+                ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.clone();
         ospec.getRegression().getCalendar().getTradingDays().setHolidays("belgium");
         IPreprocessor oprocessor = ospec.build(ocontext);
         int n = 0;
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
-            }
-            else{
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            } else {
+                //            System.out.print(i);
+                //            System.out.print('\t');
+                //            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
+                //            System.out.print('\t');
+                //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
             }
         }
         System.out.println(" XM:TRfull");
@@ -249,44 +259,50 @@ public class TramoKernelTest {
 
         RegressionSpec regSpec = spec.getRegression();
         CalendarSpec calSpec = regSpec.getCalendar();
-        TradingDaysSpec tdSpec = TradingDaysSpec.automaticHolidays("france", LengthOfPeriodType.LeapYear, AutoMethod.FTEST, TradingDaysSpec.DEF_PFTD, false);
+        TradingDaysSpec tdSpec = TradingDaysSpec.automaticHolidays(
+                "france", LengthOfPeriodType.LeapYear, AutoMethod.FTEST, TradingDaysSpec.DEF_PFTD, false);
         spec = spec.toBuilder()
                 .regression(regSpec.toBuilder()
-                        .calendar(calSpec.toBuilder()
-                                .tradingDays(tdSpec)
-                                .build())
+                        .calendar(calSpec.toBuilder().tradingDays(tdSpec).build())
                         .build())
                 .build();
 
         TramoKernel processor = TramoKernel.of(spec, context);
 
         ec.tstoolkit.algorithm.ProcessingContext ocontext = new ec.tstoolkit.algorithm.ProcessingContext();
-        ocontext.getGregorianCalendars().set("france", new ec.tstoolkit.timeseries.calendars.NationalCalendarProvider(ofrance));
-        ec.tstoolkit.modelling.arima.tramo.TramoSpecification ospec = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.clone();
+        ocontext.getGregorianCalendars()
+                .set("france", new ec.tstoolkit.timeseries.calendars.NationalCalendarProvider(ofrance));
+        ec.tstoolkit.modelling.arima.tramo.TramoSpecification ospec =
+                ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.clone();
         ospec.getRegression().getCalendar().getTradingDays().setHolidays("france");
         IPreprocessor oprocessor = ospec.build(ocontext);
         int n = 0;
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TRfullc");
         System.out.println(n);
 
-// The old implementation was bugged. 
-//        assertTrue(n > .6 * all.length);
+        // The old implementation was bugged.
+        //        assertTrue(n > .6 * all.length);
     }
 
     @Test
@@ -298,18 +314,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TR0");
         System.out.println(n);
@@ -325,18 +346,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TR1");
         System.out.println(n);
@@ -352,18 +378,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TR2");
         System.out.println(n);
@@ -379,18 +410,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TR3");
         System.out.println(n);
@@ -406,18 +442,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TR4");
         System.out.println(n);
@@ -433,18 +474,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TR5");
         System.out.println(n);
@@ -460,18 +506,23 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             RegSarimaModel rslt = processor.process(all[i], null);
             TsPeriod start = all[i].getStart();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()), start.year(), start.annualPosition(), all[i].getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(all[i].getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    all[i].getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(s, null);
             double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                     - orslt.estimation.getStatistics().adjustedLogLikelihood;
             if (Math.abs(del) < 1e-3) {
                 ++n;
             }
-//            System.out.print(i);
-//            System.out.print('\t');
-//            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
-//            System.out.print('\t');
-//            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
+            //            System.out.print(i);
+            //            System.out.print('\t');
+            //            System.out.print(rslt.getStatistics().getAdjustedLogLikelihood());
+            //            System.out.print('\t');
+            //            System.out.println(orslt.estimation.getStatistics().adjustedLogLikelihood);
         }
         System.out.println("TR5-retail");
         System.out.println(n);
@@ -485,25 +536,29 @@ public class TramoKernelTest {
         IPreprocessor oprocessor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.build();
         RegSarimaModel rslt = processor.process(Data.SP_IPI_CN, null);
         TsPeriod start = s.getStart();
-        ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
+        ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(
+                ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()),
+                start.year(),
+                start.annualPosition(),
+                s.getValues().toArray(),
+                false);
         ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
         double del = rslt.getEstimation().getStatistics().getAdjustedLogLikelihood()
                 - orslt.estimation.getStatistics().adjustedLogLikelihood;
         System.out.println(del);
     }
 
-//    @Test
+    //    @Test
     public void testProdWald() {
         TramoSpec nspec = TramoSpec.TRfull;
 
         RegressionSpec regSpec = nspec.getRegression();
         CalendarSpec calSpec = regSpec.getCalendar();
-        TradingDaysSpec tdSpec = TradingDaysSpec.automatic(LengthOfPeriodType.LeapYear, AutoMethod.WALD, TradingDaysSpec.DEF_PFTD, false);
+        TradingDaysSpec tdSpec = TradingDaysSpec.automatic(
+                LengthOfPeriodType.LeapYear, AutoMethod.WALD, TradingDaysSpec.DEF_PFTD, false);
         nspec = nspec.toBuilder()
                 .regression(regSpec.toBuilder()
-                        .calendar(calSpec.toBuilder()
-                                .tradingDays(tdSpec)
-                                .build())
+                        .calendar(calSpec.toBuilder().tradingDays(tdSpec).build())
                         .build())
                 .build();
 
@@ -515,12 +570,17 @@ public class TramoKernelTest {
         System.out.println(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
     }
 
-//    @Test
+    //    @Test
     public void testProdWaldLegacy() {
-        ec.tstoolkit.modelling.arima.tramo.TramoSpecification nspec = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.clone();
-        nspec.getRegression().getCalendar().getTradingDays().setAutomaticMethod(ec.tstoolkit.modelling.arima.tramo.TradingDaysSpec.AutoMethod.WaldTest);
+        ec.tstoolkit.modelling.arima.tramo.TramoSpecification nspec =
+                ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TRfull.clone();
+        nspec.getRegression()
+                .getCalendar()
+                .getTradingDays()
+                .setAutomaticMethod(ec.tstoolkit.modelling.arima.tramo.TradingDaysSpec.AutoMethod.WaldTest);
         IPreprocessor processor = nspec.build();
-        ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1967, 0, data, true);
+        ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1967, 0, data, true);
         ec.tstoolkit.modelling.arima.PreprocessingModel rslt = processor.process(s, null);
         System.out.println("Legacy wald");
         System.out.println(rslt.estimation.getStatistics().adjustedLogLikelihood);
@@ -536,7 +596,12 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
-            ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    s.getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
             assertNotSame(rslt, null);
@@ -553,7 +618,12 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
-            ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    s.getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
             assertNotSame(rslt, null);
@@ -570,7 +640,12 @@ public class TramoKernelTest {
         for (int i = 0; i < all.length; ++i) {
             TsData s = all[i].aggregate(TsUnit.P1Y, AggregationType.Average, true);
             TsPeriod start = s.getStart();
-            ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()), start.year(), start.annualPosition(), s.getValues().toArray(), false);
+            ec.tstoolkit.timeseries.simplets.TsData os = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.valueOf(s.getAnnualFrequency()),
+                    start.year(),
+                    start.annualPosition(),
+                    s.getValues().toArray(),
+                    false);
             ec.tstoolkit.modelling.arima.PreprocessingModel orslt = oprocessor.process(os, null);
             RegSarimaModel rslt = processor.process(s, null);
             assertNotSame(rslt, null);
@@ -599,53 +674,37 @@ public class TramoKernelTest {
 
         TsPeriod start = TsPeriod.monthly(1967, 1);
         TsData s = TsData.ofInternal(start, data);
-        
-        TsContextVariable tv = new TsContextVariable("vars.test");
-        Variable<TsContextVariable> var = Variable.<TsContextVariable>builder()
-                .core(tv)
-                .name("test")
-                .coefficients(null)
-                .build();
+
+        UserVariableSpec tv =
+                UserVariableSpec.builder().id("vars.test").name("test").build();
         TramoSpec nspec = TramoSpec.TRfull;
         RegressionSpec regSpec = nspec.getRegression();
-        regSpec=regSpec.toBuilder()
-                .userDefinedVariable(var)
-                .build();
+        regSpec = regSpec.toBuilder().userDefinedVariable(tv).build();
 
-        nspec = nspec.toBuilder()
-                .regression(regSpec)
-                .build();
+        nspec = nspec.toBuilder().regression(regSpec).build();
 
         TramoKernel processor = TramoKernel.of(nspec, context);
         RegSarimaModel rslt = processor.process(s, null);
         System.out.println(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-       
-        var = Variable.<TsContextVariable>builder()
-                .core(tv)
-                .name("test")
-                .coefficients(new Parameter[]{Parameter.fixed(-0.005)})
-                .build();
+
+        tv = tv.withCoefficient(Parameter.fixed(-0.005));
         nspec = TramoSpec.TRfull;
         regSpec = nspec.getRegression();
-        regSpec=regSpec.toBuilder()
-                .userDefinedVariable(var)
-                .build();
+        regSpec = regSpec.toBuilder().userDefinedVariable(tv).build();
 
-        nspec = nspec.toBuilder()
-                .regression(regSpec)
-                .build();
+        nspec = nspec.toBuilder().regression(regSpec).build();
 
         processor = TramoKernel.of(nspec, context);
         rslt = processor.process(s, null);
         System.out.println(rslt.getEstimation().getStatistics().getAdjustedLogLikelihood());
-
     }
 
     public static void stressTestProd() {
         long t0 = System.currentTimeMillis();
         for (int i = 0; i < 1000; ++i) {
             IPreprocessor processor = ec.tstoolkit.modelling.arima.tramo.TramoSpecification.TR2.build();
-            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1982, 3, Data.ABS_RETAIL, true);
+            ec.tstoolkit.timeseries.simplets.TsData s = new ec.tstoolkit.timeseries.simplets.TsData(
+                    ec.tstoolkit.timeseries.simplets.TsFrequency.Monthly, 1982, 3, Data.ABS_RETAIL, true);
             ec.tstoolkit.modelling.arima.PreprocessingModel rslt = processor.process(s, null);
         }
         long t1 = System.currentTimeMillis();
@@ -654,7 +713,7 @@ public class TramoKernelTest {
         t0 = System.currentTimeMillis();
         for (int i = 0; i < 1000; ++i) {
             TramoKernel processor = TramoKernel.of(TramoSpec.TR2, null);
-            TsPeriod start = TsPeriod.monthly(1982,4);
+            TsPeriod start = TsPeriod.monthly(1982, 4);
             TsData s = TsData.ofInternal(start, Data.ABS_RETAIL);
             RegSarimaModel rslt = processor.process(s, null);
         }
@@ -664,8 +723,8 @@ public class TramoKernelTest {
     }
 
     public static void main(String[] arg) {
-//        testInseeFull();
-//        testInseeFullc();
+        //        testInseeFull();
+        //        testInseeFullc();
         stressTestProd();
     }
 }

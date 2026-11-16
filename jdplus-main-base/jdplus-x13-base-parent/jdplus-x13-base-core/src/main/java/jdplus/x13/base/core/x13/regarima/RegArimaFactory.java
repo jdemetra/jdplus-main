@@ -5,22 +5,20 @@
  */
 package jdplus.x13.base.core.x13.regarima;
 
-import jdplus.toolkit.base.api.data.Parameter;
-import jdplus.toolkit.base.api.modelling.TransformationType;
-import jdplus.toolkit.base.api.arima.SarimaSpec;
-import jdplus.toolkit.base.api.data.Range;
-import jdplus.x13.base.api.regarima.AutoModelSpec;
-import jdplus.x13.base.api.regarima.EasterSpec;
-import jdplus.x13.base.api.regarima.MeanSpec;
-import jdplus.x13.base.api.regarima.OutlierSpec;
-import jdplus.x13.base.api.regarima.RegArimaSpec;
-import jdplus.x13.base.api.regarima.RegressionSpec;
-import jdplus.x13.base.api.regarima.RegressionTestSpec;
-import jdplus.x13.base.api.regarima.TradingDaysSpec;
-import jdplus.x13.base.api.regarima.TransformSpec;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.EstimationPolicyType;
 import jdplus.sa.base.api.SaVariable;
+import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.data.Range;
+import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
@@ -31,35 +29,41 @@ import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
-import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
+import jdplus.x13.base.api.regarima.AutoModelSpec;
 import jdplus.x13.base.api.regarima.BasicSpec;
+import jdplus.x13.base.api.regarima.EasterSpec;
+import jdplus.x13.base.api.regarima.MeanSpec;
+import jdplus.x13.base.api.regarima.OutlierSpec;
+import jdplus.x13.base.api.regarima.RegArimaSpec;
+import jdplus.x13.base.api.regarima.RegressionSpec;
+import jdplus.x13.base.api.regarima.RegressionTestSpec;
+import jdplus.x13.base.api.regarima.TradingDaysSpec;
+import jdplus.x13.base.api.regarima.TransformSpec;
 
 /**
  *
  * @author PALATEJ
  */
-//@ServiceProvider(SaProcessingFactory.class)
+// @ServiceProvider(SaProcessingFactory.class)
 public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec, TramoSeatsResults>*/ {
 
     private static final RegArimaFactory INSTANCE = new RegArimaFactory();
-    
-    public static RegArimaFactory getInstance(){return INSTANCE;}
+
+    public static RegArimaFactory getInstance() {
+        return INSTANCE;
+    }
 
     public RegArimaSpec generateSpec(RegArimaSpec spec, GeneralLinearModel.Description<SarimaSpec> desc) {
-        BasicSpec basic = spec.getBasic().toBuilder().frequency(desc.getDomain().getAnnualFrequency()).build();
+        BasicSpec basic = spec.getBasic().toBuilder()
+                .frequency(desc.getDomain().getAnnualFrequency())
+                .build();
         RegArimaSpec.Builder builder = spec.toBuilder().basic(basic);
         update(spec.getTransform(), desc, builder);
         update(spec.getArima(), desc, builder);
@@ -70,28 +74,29 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         return builder.build();
     }
 
-    public RegArimaSpec refreshSpec(RegArimaSpec currentSpec, RegArimaSpec domainSpec, EstimationPolicyType policy, TsDomain frozenDomain) {
+    public RegArimaSpec refreshSpec(
+            RegArimaSpec currentSpec, RegArimaSpec domainSpec, EstimationPolicyType policy, TsDomain frozenDomain) {
         if (policy == EstimationPolicyType.Complete) {
             return domainSpec;
         }
-        if (policy == EstimationPolicyType.None || ! currentSpec.getBasic().isPreprocessing()) {
+        if (policy == EstimationPolicyType.None || !currentSpec.getBasic().isPreprocessing()) {
             return currentSpec;
         }
         RegArimaSpec.Builder builder = currentSpec.toBuilder();
         switch (policy) {
             case Outliers_StochasticComponent -> {
                 resetArima(currentSpec, domainSpec, builder);
-                RegressionSpec rspec=removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
+                RegressionSpec rspec = removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
                 freeVariables(rspec, domainSpec, builder);
             }
             case Outliers -> {
                 clearArima(currentSpec, domainSpec, builder);
-                RegressionSpec rspec=removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
+                RegressionSpec rspec = removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
                 freeVariables(rspec, domainSpec, builder);
             }
             case LastOutliers -> {
                 clearArima(currentSpec, domainSpec, builder);
-                RegressionSpec rspec=removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
+                RegressionSpec rspec = removeOutliers(currentSpec, domainSpec, builder, frozenDomain);
                 freeVariables(rspec, domainSpec, builder);
             }
             case FreeParameters -> {
@@ -111,13 +116,14 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
                 fixVariables(currentSpec.getRegression(), domainSpec, builder, frozenDomain);
             }
             default -> {
-                    return currentSpec;
+                return currentSpec;
             }
         }
         return builder.build();
     }
 
-    private void update(TransformSpec transform, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
+    private void update(
+            TransformSpec transform, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
         if (transform.getFunction() == TransformationType.Auto) {
             TransformSpec ntransform = transform.toBuilder()
                     .function(rslts.isLogTransformation() ? TransformationType.Log : TransformationType.None)
@@ -127,29 +133,28 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         }
     }
 
-    private void update(SarimaSpec arima, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
+    private void update(
+            SarimaSpec arima, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
         SarimaSpec nspec = rslts.getStochasticComponent();
         builder.arima(nspec);
     }
 
-    private void update(AutoModelSpec ami, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
+    private void update(
+            AutoModelSpec ami, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
         // Disable ami
-        AutoModelSpec nami = ami.toBuilder()
-                .enabled(false)
-                .build();
+        AutoModelSpec nami = ami.toBuilder().enabled(false).build();
         builder.autoModel(nami);
     }
 
-    private void update(OutlierSpec outliers, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
-        if (outliers.isUsed()) {    // Disable outliers
-            builder.outliers(
-                    outliers.toBuilder()
-                            .clearTypes()
-                            .build());
+    private void update(
+            OutlierSpec outliers, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
+        if (outliers.isUsed()) { // Disable outliers
+            builder.outliers(outliers.toBuilder().clearTypes().build());
         }
     }
 
-    private void update(RegressionSpec regression, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
+    private void update(
+            RegressionSpec regression, GeneralLinearModel.Description<SarimaSpec> rslts, RegArimaSpec.Builder builder) {
         // The huge part
         RegressionSpec.Builder rbuilder = regression.toBuilder();
         // all the coefficients (fixed or free) of the variables have already been filled
@@ -158,13 +163,16 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         update(regression.getTradingDays(), variables, rbuilder);
         update(regression.getEaster(), variables, rbuilder);
         updateOutliers(variables, rbuilder);
+        updateInterventionVariables(variables, rbuilder);
+        updateRamps(variables, rbuilder);
         updateUserVariables(variables, rbuilder);
         builder.regression(rbuilder.build());
     }
 
     private void updateMean(Variable[] vars, RegressionSpec.Builder builder) {
         Optional<Variable> fc = Arrays.stream(vars)
-                .filter(v -> v.getName().equals(TrendConstant.NAME)).findFirst();
+                .filter(v -> v.getName().equals(TrendConstant.NAME))
+                .findFirst();
         if (fc.isPresent()) {
             builder.mean(MeanSpec.mean(fc.orElseThrow().getCoefficient(0)));
         } else {
@@ -175,9 +183,11 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
     private void update(TradingDaysSpec tdspec, Variable[] vars, RegressionSpec.Builder builder) {
         // leap year
         Optional<Variable> flp = Arrays.stream(vars)
-                .filter(v -> ModellingUtility.isLengthOfPeriod(v)).findFirst();
+                .filter(v -> ModellingUtility.isLengthOfPeriod(v))
+                .findFirst();
         Optional<Variable> ftd = Arrays.stream(vars)
-                .filter(v -> ModellingUtility.isTradingDays(v)).findFirst();
+                .filter(v -> ModellingUtility.isTradingDays(v))
+                .findFirst();
 
         TradingDaysSpec ntdspec = TradingDaysSpec.none();
 
@@ -193,8 +203,8 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         if (ftd.isPresent()) {
             Variable v = ftd.orElseThrow();
             if (tdspec.isAutomatic()) {
-                ITradingDaysVariable  tdv=(ITradingDaysVariable) v.getCore();
-                td=tdv.getTradingDaysType();
+                ITradingDaysVariable tdv = (ITradingDaysVariable) v.getCore();
+                td = tdv.getTradingDaysType();
             } else {
                 td = tdspec.getTradingDaysType();
             }
@@ -206,11 +216,10 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
                 int ntd = tdspec.getStockTradingDays();
                 ntdspec = TradingDaysSpec.stockTradingDays(ntd, ctd);
             } else if (tdspec.isHolidays()) {
-                ntdspec = TradingDaysSpec.holidays(tdspec.getHolidays(),
-                        td, lp, ctd, clp);
+                ntdspec = TradingDaysSpec.holidays(tdspec.getHolidays(), td, lp, ctd, clp);
             } else if (tdspec.isUserDefined()) {
                 ntdspec = TradingDaysSpec.userDefined(tdspec.getUserVariables(), ctd);
-            } else { //normal case
+            } else { // normal case
                 ntdspec = TradingDaysSpec.td(td, lp, ctd, clp);
             }
         }
@@ -219,24 +228,24 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
 
     private void update(EasterSpec espec, Variable[] vars, RegressionSpec.Builder builder) {
         // Search for an optional easter variable
-        Optional<Variable> fe = Arrays.stream(vars)
-                .filter(v -> ModellingUtility.isEaster(v)).findFirst();
+        Optional<Variable> fe =
+                Arrays.stream(vars).filter(v -> ModellingUtility.isEaster(v)).findFirst();
         if (fe.isPresent()) {
             Variable ev = fe.orElseThrow();
             if (ev.getCore() instanceof EasterVariable evar) {
-            espec = espec.toBuilder()
-                    .type(EasterSpec.Type.Easter)
-                    .test(RegressionTestSpec.None)
-                    .duration(evar.getDuration())
-                    .coefficient(ev.getCoefficient(0))
-                    .build();
+                espec = espec.toBuilder()
+                        .type(EasterSpec.Type.Easter)
+                        .test(RegressionTestSpec.None)
+                        .duration(evar.getDuration())
+                        .coefficient(ev.getCoefficient(0))
+                        .build();
             } else if (ev.getCore() instanceof JulianEasterVariable evar) {
                 espec = espec.toBuilder()
-                     .type(EasterSpec.Type.Easter)
-                    .test(RegressionTestSpec.None)
-                    .duration(evar.getDuration())
-                    .coefficient(ev.getCoefficient(0))
-                    .build();
+                        .type(EasterSpec.Type.Easter)
+                        .test(RegressionTestSpec.None)
+                        .duration(evar.getDuration())
+                        .coefficient(ev.getCoefficient(0))
+                        .build();
             } else {
                 espec = EasterSpec.none();
             }
@@ -253,23 +262,24 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
                 .forEach(v -> builder.outlier(v.removeAttribute(ModellingUtility.AMI)));
     }
 
-    private void updateUserVariables(Variable[] vars, RegressionSpec.Builder builder) {
-        
+    private void updateInterventionVariables(Variable[] vars, RegressionSpec.Builder builder) {
+        builder.clearRamps();
+        Arrays.stream(vars).filter(v -> v.getCore() instanceof Ramp).forEach(v -> builder.ramp(v));
+    }
+
+    private void updateRamps(Variable[] vars, RegressionSpec.Builder builder) {
         builder.clearInterventionVariables();
         Arrays.stream(vars)
-                .filter(v -> v.getCore() instanceof InterventionVariable )
+                .filter(v -> v.getCore() instanceof InterventionVariable)
                 .forEach(v -> builder.interventionVariable(v));
-        builder.clearRamps();
-        Arrays.stream(vars)
-                .filter(v -> v.getCore() instanceof Ramp )
-                .forEach(v -> builder.ramp(v));
+    }
+
+    private void updateUserVariables(Variable[] vars, RegressionSpec.Builder builder) {
         builder.clearUserDefinedVariables();
         Arrays.stream(vars)
-                .filter(v->ModellingUtility.isUser(v))
-                .filter(v -> !( v.getCore() instanceof InterventionVariable))
-                .filter(v -> !(v.getCore() instanceof Ramp))
-                .map(v-> v.withCore(TsContextVariable.of(v.getCore())))
-                .forEach(v -> builder.userDefinedVariable(v));
+                .filter(v -> ModellingUtility.isUser(v))
+                .map(v -> UserVariableSpec.of(v))
+                .forEach(d -> builder.userDefinedVariable(d));
     }
 
     private void resetArima(RegArimaSpec currentSpec, RegArimaSpec domainSpec, RegArimaSpec.Builder builder) {
@@ -277,18 +287,21 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         builder.autoModel(domainSpec.getAutoModel());
     }
 
-    private RegressionSpec removeOutliers(RegArimaSpec currentSpec, RegArimaSpec domainSpec, RegArimaSpec.Builder builder, TsDomain frozen) {
+    private RegressionSpec removeOutliers(
+            RegArimaSpec currentSpec, RegArimaSpec domainSpec, RegArimaSpec.Builder builder, TsDomain frozen) {
         OutlierSpec ospec = domainSpec.getOutliers();
-        if (frozen != null){
-            ospec=ospec.toBuilder().span(TimeSelector.from(frozen.getEndPeriod().start())).build();
+        if (frozen != null) {
+            ospec = ospec.toBuilder()
+                    .span(TimeSelector.from(frozen.getEndPeriod().start()))
+                    .build();
         }
         builder.outliers(ospec);
-       // remove existing automatic outliers...
+        // remove existing automatic outliers...
         List<Variable<IOutlier>> outliers = currentSpec.getRegression().getOutliers();
         List<Variable<IOutlier>> defoutliers = domainSpec.getRegression().getOutliers();
 
-        RegressionSpec.Builder rbuilder = currentSpec.getRegression().toBuilder()
-                .clearOutliers();
+        RegressionSpec.Builder rbuilder =
+                currentSpec.getRegression().toBuilder().clearOutliers();
         // use frozen outliers and outliers specified in the domain spec (avoid doubles)
         defoutliers.forEach(outlier -> {
             rbuilder.outlier(outlier);
@@ -296,7 +309,8 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
 
         outliers.stream()
                 .filter(outlier -> !belongsTo(outlier, defoutliers))
-                .filter(outlier -> (frozen != null && frozen.contains(outlier.getCore().getPosition())))
+                .filter(outlier ->
+                        (frozen != null && frozen.contains(outlier.getCore().getPosition())))
                 .forEachOrdered(outlier -> {
                     rbuilder.outlier(outlier);
                 });
@@ -306,24 +320,25 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
     private static boolean belongsTo(Variable<IOutlier> outlier, List<Variable<IOutlier>> defoutliers) {
         return defoutliers.stream()
                 .filter(o -> o.getCore().getCode().equals(outlier.getCore().getCode()))
-                .anyMatch(o -> o.getCore().getPosition().equals(outlier.getCore().getPosition()));
+                .anyMatch(
+                        o -> o.getCore().getPosition().equals(outlier.getCore().getPosition()));
     }
 
     private void clearArima(RegArimaSpec currentSpec, RegArimaSpec domainSpec, RegArimaSpec.Builder builder) {
-        builder.arima(currentSpec.getArima().resetParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
+        builder.arima(
+                currentSpec.getArima().resetParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
     }
 
     private void freeArima(RegArimaSpec currentSpec, RegArimaSpec domainSpec, RegArimaSpec.Builder builder) {
-        builder.arima(currentSpec.getArima().freeParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
+        builder.arima(
+                currentSpec.getArima().freeParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
     }
 
     private void fixAR(RegArimaSpec currentSpec, RegArimaSpec domainSpec, RegArimaSpec.Builder builder) {
         SarimaSpec arima = currentSpec.getArima();
         Parameter[] phi = Parameter.fixParameters(arima.getPhi());
         Parameter[] bphi = Parameter.fixParameters(arima.getBphi());
-        SarimaSpec.Builder abuilder = arima.toBuilder()
-                .phi(phi)
-                .bphi(bphi);
+        SarimaSpec.Builder abuilder = arima.toBuilder().phi(phi).bphi(bphi);
         if (domainSpec.isUsingAutoModel()) {
             abuilder.theta(Parameter.freeParameters(arima.getTheta()))
                     .btheta(Parameter.freeParameters(arima.getTheta()));
@@ -344,7 +359,7 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         RegressionSpec.Builder rbuilder = reg.toBuilder();
         MeanSpec mean = reg.getMean();
         if (mean.hasFixedCoefficient()) {
-            if (! dreg.getMean().hasFixedCoefficient()){
+            if (!dreg.getMean().hasFixedCoefficient()) {
                 mean = MeanSpec.mean(Parameter.initial(mean.getCoefficient().getValue()));
             }
         }
@@ -367,10 +382,10 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
             nr.add(v.withCoefficients(freeCoefficients(v, dreg.getRamps())));
         });
 
-        List<Variable<TsContextVariable>> u = reg.getUserDefinedVariables();
-        List<Variable<TsContextVariable>> nu = new ArrayList<>();
+        List<UserVariableSpec> u = reg.getUserDefinedVariables();
+        List<UserVariableSpec> nu = new ArrayList<>();
         u.forEach(v -> {
-            nu.add(v.withCoefficients(freeCoefficients(v, dreg.getUserDefinedVariables())));
+            nu.add(v.withCoefficient(freeCoefficient(v, dreg.getUserDefinedVariables())));
         });
 
         EasterSpec easter = reg.getEaster();
@@ -379,9 +394,7 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
             Parameter dc = dreg.getEaster().getCoefficient();
             if (dc == null || !dc.isFixed()) {
                 c = Parameter.initial(c.getValue());
-                easter = easter.toBuilder()
-                        .coefficient(c)
-                        .build();
+                easter = easter.toBuilder().coefficient(c).build();
             }
         }
         TradingDaysSpec td = reg.getTradingDays();
@@ -398,12 +411,15 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
             td = td.withCoefficients(tdc, c);
         }
 
-        builder.regression(rbuilder
-                .mean(mean)
-                .clearInterventionVariables().interventionVariables(niv)
-                .clearOutliers().outliers(no)
-                .clearRamps().ramps(nr)
-                .clearUserDefinedVariables().userDefinedVariables(nu)
+        builder.regression(rbuilder.mean(mean)
+                .clearInterventionVariables()
+                .interventionVariables(niv)
+                .clearOutliers()
+                .outliers(no)
+                .clearRamps()
+                .ramps(nr)
+                .clearUserDefinedVariables()
+                .userDefinedVariables(nu)
                 .easter(easter)
                 .tradingDays(td)
                 .build());
@@ -411,10 +427,8 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
 
     private static <S extends ITsVariable> Parameter[] freeCoefficients(Variable<S> var, List<Variable<S>> ref) {
         Parameter[] c = var.getCoefficients();
-        if (c == null) {
-            return null;
-        }
-        Optional<Variable<S>> rvar = ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
+        Optional<Variable<S>> rvar =
+                ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
         if (rvar.isPresent()) {
             return Parameter.freeParameters(c, rvar.orElseThrow().getCoefficients());
         } else {
@@ -422,16 +436,29 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         }
     }
 
+    private static Parameter freeCoefficient(UserVariableSpec var, List<UserVariableSpec> ref) {
+        Parameter c = var.getCoefficient();
+        Optional<UserVariableSpec> rvar =
+                ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
+        UserVariableSpec found = rvar.orElse(null);
+        if (found != null) {
+            return c.free(found.getCoefficient());
+        } else {
+            return c.free();
+        }
+    }
+
     private static Map<String, String> ao_attributes() {
         HashMap<String, String> attributes = new HashMap<>();
-        attributes.put(ModellingUtility.AMI, "x13");
+        attributes.put(ModellingUtility.AMI, "tramo");
         attributes.put(SaVariable.REGEFFECT, ComponentType.Irregular.name());
         return attributes;
     }
 
     private static final Map<String, String> IV_AO = ao_attributes();
 
-    private void fixVariables(RegressionSpec reg, RegArimaSpec domainSpec, RegArimaSpec.Builder builder, TsDomain frozenDomain) {
+    private void fixVariables(
+            RegressionSpec reg, RegArimaSpec domainSpec, RegArimaSpec.Builder builder, TsDomain frozenDomain) {
         RegressionSpec.Builder rbuilder = reg.toBuilder();
         MeanSpec mean = reg.getMean();
         if (mean.isDefined()) {
@@ -450,18 +477,18 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
         });
         if (frozenDomain != null) {
             // Current AO: Add IV (ao for the frozen period)
-                for (int i=0; i<frozenDomain.getLength(); ++i){
-                    TsPeriod period = frozenDomain.get(i);
-                    LocalDateTime day = period.start();
-                    InterventionVariable ao = InterventionVariable.builder()
-                            .sequence(Range.of(day, day))
-                            .build();
-                    niv.add(Variable.<InterventionVariable>builder()
-                            .name(EstimationPolicyType.IV_AO+ period.getStartAsShortString())
-                            .core(ao)
-                            .attributes(IV_AO)
-                            .build());
-                }
+            for (int i = 0; i < frozenDomain.getLength(); ++i) {
+                TsPeriod period = frozenDomain.get(i);
+                LocalDateTime day = period.start();
+                InterventionVariable ao = InterventionVariable.builder()
+                        .sequence(Range.of(day, day))
+                        .build();
+                niv.add(Variable.<InterventionVariable>builder()
+                        .name(EstimationPolicyType.IV_AO + period.getStartAsShortString())
+                        .core(ao)
+                        .attributes(IV_AO)
+                        .build());
+            }
         }
 
         List<Variable<IOutlier>> o = reg.getOutliers();
@@ -476,10 +503,10 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
             nr.add(v.withCoefficients(Parameter.fixParameters(v.getCoefficients())));
         });
 
-        List<Variable<TsContextVariable>> u = reg.getUserDefinedVariables();
-        List<Variable<TsContextVariable>> nu = new ArrayList<>();
+        List<UserVariableSpec> u = reg.getUserDefinedVariables();
+        List<UserVariableSpec> nu = new ArrayList<>();
         u.forEach(v -> {
-            nu.add(v.withCoefficients(Parameter.fixParameters(v.getCoefficients())));
+            nu.add(v.withCoefficient(v.getCoefficient()));
         });
 
         EasterSpec easter = reg.getEaster();
@@ -496,16 +523,17 @@ public class RegArimaFactory /*implements SaProcessingFactory<RegArimaSeatsSpec,
             td = td.withCoefficients(Parameter.fixParameters(tdc), c == null ? null : Parameter.fixed(c.getValue()));
         }
 
-        builder.regression(rbuilder
-                .mean(mean)
-                .clearInterventionVariables().interventionVariables(niv)
-                .clearOutliers().outliers(no)
-                .clearRamps().ramps(nr)
-                .clearUserDefinedVariables().userDefinedVariables(nu)
+        builder.regression(rbuilder.mean(mean)
+                .clearOutliers()
+                .outliers(no)
+                .clearInterventionVariables()
+                .interventionVariables(niv)
+                .clearRamps()
+                .ramps(nr)
+                .clearUserDefinedVariables()
+                .userDefinedVariables(nu)
                 .easter(easter)
                 .tradingDays(td)
                 .build());
-
     }
-
 }

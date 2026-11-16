@@ -1,44 +1,44 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.tramoseats.base.information;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.data.ParameterType;
 import jdplus.toolkit.base.api.information.Information;
 import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.toolkit.base.information.InterventionVariableMapping;
-import jdplus.toolkit.base.information.OutlierDefinition;
-import jdplus.toolkit.base.information.OutlierMapping;
-import jdplus.toolkit.base.information.RampMapping;
-import jdplus.toolkit.base.information.TsContextVariableMapping;
-import jdplus.toolkit.base.information.VariableMapping;
-import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
 import jdplus.toolkit.base.api.timeseries.regression.Ramp;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.information.InterventionVariableMapping;
+import jdplus.toolkit.base.information.OutlierDefinition;
+import jdplus.toolkit.base.information.OutlierMapping;
+import jdplus.toolkit.base.information.RampMapping;
+import jdplus.toolkit.base.information.UserVariableMapping;
+import jdplus.toolkit.base.information.VariableMapping;
 import jdplus.tramoseats.base.api.tramo.CalendarSpec;
 import jdplus.tramoseats.base.api.tramo.MeanSpec;
 import jdplus.tramoseats.base.api.tramo.RegressionSpec;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -48,19 +48,28 @@ import java.util.Map;
 class RegressionSpecMapping {
 
     final String CALENDAR = "calendar",
-            OUTLIERS_LEGACY = "outliers", OUTLIER = "outlier", OUTLIERS = "outlier*",
-            USER = "user", USERS = "user*", RAMPS_LEGACY = "ramps", RAMP = "ramp", RAMPS = "ramp*",
-            INTERVENTION = "intervention", INTERVENTIONS = "intervention*",
-            COEFF = "coefficients", FCOEFF = "fixedcoefficients",
-            MU = "mu", CHECKMU = "checkmu";
+            OUTLIERS_LEGACY = "outliers",
+            OUTLIER = "outlier",
+            OUTLIERS = "outlier*",
+            USER = "user",
+            USERS = "user*",
+            RAMPS_LEGACY = "ramps",
+            RAMP = "ramp",
+            RAMPS = "ramp*",
+            INTERVENTION = "intervention",
+            INTERVENTIONS = "intervention*",
+            COEFF = "coefficients",
+            FCOEFF = "fixedcoefficients",
+            MU = "mu",
+            CHECKMU = "checkmu";
 
-//    void fillDictionary(String prefix, Map<String, Class> dic) {
-//        dic.put(InformationSet.item(prefix, OUTLIERS_LEGACY), String[].class);
-//        dic.put(InformationSet.item(prefix, RAMPS_LEGACY), String[].class);
-//        CalendarSpecMapping.fillDictionary(InformationSet.item(prefix, CALENDAR), dic);
-//        InterventionVariableMapping.fillDictionary(InformationSet.item(prefix, INTERVENTIONS), dic);
-////        TsContextVariableMapping.fillDictionary(InformationSet.item(prefix, USERS), dic);
-//    }
+    //    void fillDictionary(String prefix, Map<String, Class> dic) {
+    //        dic.put(InformationSet.item(prefix, OUTLIERS_LEGACY), String[].class);
+    //        dic.put(InformationSet.item(prefix, RAMPS_LEGACY), String[].class);
+    //        CalendarSpecMapping.fillDictionary(InformationSet.item(prefix, CALENDAR), dic);
+    //        InterventionVariableMapping.fillDictionary(InformationSet.item(prefix, INTERVENTIONS), dic);
+    ////        TsContextVariableMapping.fillDictionary(InformationSet.item(prefix, USERS), dic);
+    //    }
     Parameter coefficientOf(InformationSet regInfo, String name) {
         InformationSet scoefs = regInfo.getSubSet(RegressionSpecMapping.COEFF);
         if (scoefs != null) {
@@ -109,8 +118,7 @@ class RegressionSpecMapping {
         if (p == null || !p.isDefined()) {
             return;
         }
-        InformationSet scoefs = regInfo.subSet(p.isFixed() ? FCOEFF
-                : COEFF);
+        InformationSet scoefs = regInfo.subSet(p.isFixed() ? FCOEFF : COEFF);
         scoefs.set(name, p.getValue());
     }
 
@@ -119,8 +127,7 @@ class RegressionSpecMapping {
             return;
         }
         // TODO Split in case of partially fixed parameters
-        InformationSet scoefs = regInfo.subSet(Parameter.hasFixedParameters(p) ? FCOEFF
-                : COEFF);
+        InformationSet scoefs = regInfo.subSet(Parameter.hasFixedParameters(p) ? FCOEFF : COEFF);
         scoefs.set(name, Parameter.values(p));
     }
 
@@ -135,15 +142,16 @@ class RegressionSpecMapping {
                 OutlierDefinition o = OutlierDefinition.fromString(outliers[i]);
                 if (o != null) {
                     Parameter c = RegressionSpecMapping.coefficientOf(regInfo, o.name(context));
-                    if (c == null)
-                        c=RegressionSpecMapping.coefficientOf(regInfo, o.name(null));
+                    if (c == null) c = RegressionSpecMapping.coefficientOf(regInfo, o.name(null));
                     IOutlier io = OutlierMapping.from(o);
                     String name = OutlierMapping.name(io, context);
-                    Variable<IOutlier> v=Variable.<IOutlier>builder()
+                    Variable<IOutlier> v = Variable.<IOutlier>builder()
                             .name(name)
                             .core(io)
-                            .attribute(SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(io).name())
-                            .coefficients(c == null ? null : new Parameter[]{c})
+                            .attribute(
+                                    SaVariable.REGEFFECT,
+                                    SaVariable.defaultComponentTypeOf(io).name())
+                            .coefficients(c == null ? null : new Parameter[] {c})
                             .build();
                     builder.outlier(v);
                 }
@@ -164,20 +172,22 @@ class RegressionSpecMapping {
             for (Information<InformationSet> sub : sel) {
                 InformationSet sinfo = sub.getValue();
                 InterventionVariable iv = InterventionVariableMapping.read(sub.getValue());
-                String name=sinfo.get(InterventionVariableMapping.NAME_LEGACY, String.class);
-                Variable<InterventionVariable> v=Variable.<InterventionVariable>builder()
+                String name = sinfo.get(InterventionVariableMapping.NAME_LEGACY, String.class);
+                Variable<InterventionVariable> v = Variable.<InterventionVariable>builder()
                         .core(iv)
                         .name(name)
                         .coefficients(coefficientsOf(regInfo, name))
-                        .attribute(SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(iv).name())
+                        .attribute(
+                                SaVariable.REGEFFECT,
+                                SaVariable.defaultComponentTypeOf(iv).name())
                         .build();
-                 builder.interventionVariable(v);
+                builder.interventionVariable(v);
             }
         }
         sel = regInfo.select(USERS, InformationSet.class);
         if (!sel.isEmpty()) {
             for (Information<InformationSet> sub : sel) {
-                List<Variable<TsContextVariable>> v = TsContextVariableMapping.readLegacy(sub.getValue());
+                List<UserVariableSpec> v = UserVariableMapping.readLegacy(sub.getValue());
                 if (!v.isEmpty()) {
                     Parameter[] c = coefficientsOf(regInfo, v.getFirst().getName());
                     int j = 0;
@@ -206,9 +216,8 @@ class RegressionSpecMapping {
                     .build();
         }
 
-        RegressionSpec.Builder builder = RegressionSpec.builder()
-                .mean(mean)
-                .calendar(CalendarSpecMapping.read(info.getSubSet(CALENDAR)));
+        RegressionSpec.Builder builder =
+                RegressionSpec.builder().mean(mean).calendar(CalendarSpecMapping.read(info.getSubSet(CALENDAR)));
         List<Information<InformationSet>> sel = info.select(OUTLIERS, InformationSet.class);
         if (!sel.isEmpty()) {
             for (Information<InformationSet> sub : sel) {
@@ -233,7 +242,7 @@ class RegressionSpecMapping {
         sel = info.select(USERS, InformationSet.class);
         if (!sel.isEmpty()) {
             for (Information<InformationSet> sub : sel) {
-                Variable<TsContextVariable> v = VariableMapping.readT(sub.getValue());
+                UserVariableSpec v = UserVariableMapping.read(sub.getValue());
                 builder.userDefinedVariable(v);
             }
         }
@@ -272,11 +281,11 @@ class RegressionSpecMapping {
                 info.set(RAMP + (idx++), w);
             }
         }
-        List<Variable<TsContextVariable>> vusers = spec.getUserDefinedVariables();
+        List<UserVariableSpec> vusers = spec.getUserDefinedVariables();
         if (!vusers.isEmpty()) {
             int idx = 1;
-            for (Variable<TsContextVariable> v : vusers) {
-                InformationSet w = VariableMapping.writeT(v, verbose);
+            for (UserVariableSpec v : vusers) {
+                InformationSet w = UserVariableMapping.write(v, verbose);
                 info.set(USER + (idx++), w);
             }
         }
@@ -319,14 +328,14 @@ class RegressionSpecMapping {
             }
             info.set(RAMPS_LEGACY, ramps);
         }
-        List<Variable<TsContextVariable>> vusers = spec.getUserDefinedVariables();
+        List<UserVariableSpec> vusers = spec.getUserDefinedVariables();
         if (!vusers.isEmpty()) {
             int idx = 1;
-            for (Variable<TsContextVariable> v : vusers) {
-                InformationSet cur = TsContextVariableMapping.writeLegacy(v, verbose);
+            for (UserVariableSpec v : vusers) {
+                InformationSet cur = UserVariableMapping.writeLegacy(v, verbose);
                 if (cur != null) {
                     info.set(USER + Integer.toString(idx++), cur);
-                    Parameter p = v.getCoefficient(0);
+                    Parameter p = v.getCoefficient();
                     set(info, v.getName(), p);
                 }
             }
@@ -348,8 +357,8 @@ class RegressionSpecMapping {
 
     private Map<String, String> attributes(IOutlier o) {
         HashMap<String, String> attributes = new HashMap<>();
-        attributes.put(SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(o).name());
+        attributes.put(
+                SaVariable.REGEFFECT, SaVariable.defaultComponentTypeOf(o).name());
         return attributes;
     }
-
 }
