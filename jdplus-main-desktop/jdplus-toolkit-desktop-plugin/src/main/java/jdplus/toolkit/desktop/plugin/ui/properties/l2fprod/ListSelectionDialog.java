@@ -33,6 +33,7 @@ public class ListSelectionDialog<T> extends JDialog {
 
         list = new JListSelection<>();
         list.setPreferredSize(new Dimension(150, 200));
+        list.setSearchVisible(true);
         pane.add(list, BorderLayout.NORTH);
 
         final JPanel buttonPane = new JPanel();

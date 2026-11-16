@@ -1,34 +1,33 @@
 /*
  * Copyright 2016 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.1 or - as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * http://ec.europa.eu/idabc/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.desktop.plugin.properties;
 
 import ec.util.list.swing.JListSelection;
 import ec.util.list.swing.JLists;
-import org.openide.explorer.propertysheet.ExPropertyEditor;
-import org.openide.explorer.propertysheet.InplaceEditor;
-import org.openide.explorer.propertysheet.PropertyEnv;
-
-import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.*;
+import org.openide.explorer.propertysheet.ExPropertyEditor;
+import org.openide.explorer.propertysheet.InplaceEditor;
+import org.openide.explorer.propertysheet.PropertyEnv;
 
 /**
  *
@@ -45,9 +44,12 @@ public class ListSelectionEditor<T> extends PropertyEditorSupport implements ExP
         this.allValues = allValues;
         this.customEditor = new JListSelection<>();
         this.currentEnv = null;
-        customEditor.getTargetModel().addListDataListener(JLists.dataListenerOf(o -> setValue(customEditor.getSelectedValues())));
+        customEditor
+                .getTargetModel()
+                .addListDataListener(JLists.dataListenerOf(o -> setValue(customEditor.getSelectedValues())));
         customEditor.setPreferredSize(new Dimension(400, 300));
         customEditor.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        customEditor.setSearchVisible(true);
     }
 
     @Override

@@ -10,12 +10,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - ![IO] Migrate SDMX plugin to main [#1079](https://github.com/jdemetra/jd3-main/issues/1079)
+- ![UI] Add search bar for output items selection [#1097](https://github.com/jdemetra/jd3-main/issues/1097)
 
 ### Fixed
 
 - ![OTHER] jwsacruncher launcher fails when its path contains blank characters [#1075](https://github.com/jdemetra/jd3-main/issues/1075)
 - ![OTHER] Generate output in the csv matrix for statistical tests [#1077](https://github.com/jdemetra/jd3-main/issues/1077)
 - ![IO] Fix XML entity size limits [#1085](https://github.com/jdemetra/jd3-main/issues/1085)
+- ![UI] Fix logo in shortcuts [#261](https://github.com/jdemetra/jdplus-main/issues/261)
 
 ## [3.9.0] - 2026-09-14
 
