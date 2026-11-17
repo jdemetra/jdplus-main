@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - ![IO] Migrate SDMX plugin to main [#1079](https://github.com/jdemetra/jd3-main/issues/1079)
 - ![UI] Add search bar for output items selection [#1097](https://github.com/jdemetra/jd3-main/issues/1097)
+- ![UI] Add SDMX to quick search [#1116](https://github.com/jdemetra/jd3-main/issues/1116)
 
 ### Fixed
 

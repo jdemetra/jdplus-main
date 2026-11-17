@@ -362,15 +362,7 @@ public final class JSdmxWebSourcePanel extends JComponent {
         public void execute(JSdmxWebSourcePanel c) throws Exception {
             int idx = c.table.convertRowIndexToModel(c.table.getSelectedRow());
             WebSource source = ((WebSourceModel) c.table.getModel()).getValues().get(idx);
-            TsManager.get().getProvider(SdmxWebProvider.class).ifPresent(provider -> {
-                SdmxWebBean bean = provider.newBean();
-                bean.setSource(source.getId());
-                if (DataSourceManager.get()
-                        .getBeanEditor(provider.getSource(), "Open data source")
-                        .editBean(bean, Exceptions::printStackTrace)) {
-                    provider.open(provider.encodeBean(bean));
-                }
-            });
+            TsManager.get().getProvider(SdmxWebProvider.class).ifPresent(provider -> openSource(provider, source));
         }
 
         @Override
@@ -381,6 +373,16 @@ public final class JSdmxWebSourcePanel extends JComponent {
         @Override
         public JCommand.ActionAdapter toAction(JSdmxWebSourcePanel c) {
             return super.toAction(c).withWeakListSelectionListener(c.table.getSelectionModel());
+        }
+    }
+
+    static void openSource(SdmxWebProvider provider, WebSource source) {
+        SdmxWebBean bean = provider.newBean();
+        bean.setSource(source.getId());
+        if (DataSourceManager.get()
+                .getBeanEditor(provider.getSource(), "Open data source")
+                .editBean(bean, Exceptions::printStackTrace)) {
+            provider.open(provider.encodeBean(bean));
         }
     }
 
