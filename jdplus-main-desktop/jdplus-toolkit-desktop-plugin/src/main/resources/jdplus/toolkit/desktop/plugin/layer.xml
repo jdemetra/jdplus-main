@@ -5,6 +5,14 @@ Examples: https://github.com/apache/netbeans/blob/master/platform/core.ui/src/or
 -->
 <filesystem>
 
+    <folder name="QuickSearch">
+        <folder name="Workspace">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="jdplus.toolkit.desktop.plugin.Bundle"/>
+            <attr name="command" stringvalue="ws"/>
+            <attr name="position" intvalue="100"/>
+        </folder>
+    </folder>
+
     <folder name="Menu">
         <folder name="File">
             <file name="Separator2.instance_hidden"/>
