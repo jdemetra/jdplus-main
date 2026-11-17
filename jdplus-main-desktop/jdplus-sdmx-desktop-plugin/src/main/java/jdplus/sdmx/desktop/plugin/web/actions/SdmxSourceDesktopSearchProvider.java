@@ -17,30 +17,61 @@
 package jdplus.sdmx.desktop.plugin.web.actions;
 
 import ec.util.completion.ExtAutoCompletionSource;
+import internal.sdmx.desktop.plugin.SdmxIcons;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.util.function.Predicate;
+import javax.swing.CellRendererPane;
+import javax.swing.Icon;
 import jdplus.sdmx.base.api.web.SdmxWebProvider;
 import jdplus.toolkit.desktop.plugin.TsManager;
+import jdplus.toolkit.desktop.plugin.search.DesktopSearchProvider;
+import jdplus.toolkit.desktop.plugin.search.DesktopSearchResult;
+import jdplus.toolkit.desktop.plugin.search.DesktopSearchResults;
+import jdplus.toolkit.desktop.plugin.search.QuickSearchSupport;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.lookup.ServiceProviders;
 import sdmxdl.Languages;
 import sdmxdl.web.WebSource;
+import sdmxdl.web.spi.Networking;
 
-@ServiceProvider(service = SearchProvider.class, path = "QuickSearch/SDMX")
+@ServiceProviders({
+    @ServiceProvider(service = DesktopSearchProvider.class, position = 300),
+    @ServiceProvider(service = SearchProvider.class, path = "QuickSearch/SDMX")
+})
 @Messages({
     "ERR_SdmxProviderUnavailable=SDMX provider is no longer available",
     "# {0} - sourceId",
-    "ERR_SdmxSourceUnavailable=SDMX source is no longer available: {0}"
+    "ERR_SdmxSourceUnavailable=SDMX source is no longer available: {0}",
+    "SdmxSearchCategory=SDMX Sources"
 })
-public final class SdmxSourceQuickSearchProvider implements SearchProvider {
+public final class SdmxSourceDesktopSearchProvider implements DesktopSearchProvider, SearchProvider {
+
+    private static final String CATEGORY_ID = "sdmx";
+
+    @Override
+    public String getCategoryId() {
+        return CATEGORY_ID;
+    }
+
+    @Override
+    public String getCategoryName() {
+        return Bundle.SdmxSearchCategory();
+    }
 
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
-        String text = request.getText();
-        if (text == null || text.isBlank() || response.isObsolete()) {
+        QuickSearchSupport.evaluate(this, request, response);
+    }
+
+    @Override
+    public void search(String text, DesktopSearchResults results) {
+        if (text == null || text.isBlank() || results.isObsolete()) {
             return;
         }
 
@@ -48,16 +79,20 @@ public final class SdmxSourceQuickSearchProvider implements SearchProvider {
         TsManager.get().getProvider(SdmxWebProvider.class).ifPresent(provider -> {
             Languages languages = provider.getLanguages();
             for (WebSource source : provider.getSdmxManager().getSources().values()) {
-                if (response.isObsolete()) {
+                if (results.isObsolete()) {
                     return;
                 }
                 if (!matches(source, languages, filter)) {
                     continue;
                 }
                 String name = languages.select(source.getNames());
-                String displayName =
-                        (name == null || name.isBlank() ? source.getId() : name) + " (" + source.getId() + ")";
-                if (!response.addResult(() -> openSource(source.getId()), displayName)) {
+                boolean hasName = name != null && !name.isBlank();
+                Networking networking = provider.getSdmxManager().getNetworking();
+                if (!results.addResult(new DesktopSearchResult(
+                        hasName ? name : source.getId(),
+                        hasName ? source.getId() : null,
+                        new FaviconIcon(networking, source),
+                        () -> openSource(source.getId())))) {
                     return;
                 }
             }
@@ -87,5 +122,28 @@ public final class SdmxSourceQuickSearchProvider implements SearchProvider {
             return;
         }
         JSdmxWebSourcePanel.openSource(provider.orElseThrow(), source);
+    }
+
+    /** Resolves the favicon lazily on the EDT, when painted. */
+    private record FaviconIcon(Networking networking, WebSource source) implements Icon {
+
+        private static final int SIZE = 16;
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            Component target =
+                    c.getParent() instanceof CellRendererPane pane && pane.getParent() != null ? pane.getParent() : c;
+            SdmxIcons.getFavicon(networking, source, target::repaint, SIZE).paintIcon(c, g, x, y);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return SIZE;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return SIZE;
+        }
     }
 }

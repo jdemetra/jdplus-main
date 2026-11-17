@@ -20,6 +20,11 @@ import ec.util.completion.ExtAutoCompletionSource;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.function.Predicate;
+import javax.swing.Icon;
+import jdplus.toolkit.desktop.plugin.search.DesktopSearchProvider;
+import jdplus.toolkit.desktop.plugin.search.DesktopSearchResult;
+import jdplus.toolkit.desktop.plugin.search.DesktopSearchResults;
+import jdplus.toolkit.desktop.plugin.search.QuickSearchSupport;
 import jdplus.toolkit.desktop.plugin.workspace.Workspace;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceFactory;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
@@ -30,18 +35,39 @@ import org.netbeans.spi.quicksearch.SearchResponse;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.lookup.ServiceProviders;
 
-@ServiceProvider(service = SearchProvider.class, path = "QuickSearch/Workspace")
+@ServiceProviders({
+    @ServiceProvider(service = DesktopSearchProvider.class, position = 200),
+    @ServiceProvider(service = SearchProvider.class, path = "QuickSearch/Workspace")
+})
 @Messages({
     "ERR_WorkspaceChanged=Active workspace changed; search again",
-    "ERR_WorkspaceItemUnavailable=Workspace item is no longer available"
+    "ERR_WorkspaceItemUnavailable=Workspace item is no longer available",
+    "WorkspaceSearchCategory=Workspace"
 })
-public final class WorkspaceQuickSearchProvider implements SearchProvider {
+public final class WorkspaceDesktopSearchProvider implements DesktopSearchProvider, SearchProvider {
+
+    private static final String CATEGORY_ID = "workspace";
+
+    @Override
+    public String getCategoryId() {
+        return CATEGORY_ID;
+    }
+
+    @Override
+    public String getCategoryName() {
+        return Bundle.WorkspaceSearchCategory();
+    }
 
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
-        String text = request.getText();
-        if (text == null || text.isBlank() || response.isObsolete()) {
+        QuickSearchSupport.evaluate(this, request, response);
+    }
+
+    @Override
+    public void search(String text, DesktopSearchResults results) {
+        if (text == null || text.isBlank() || results.isObsolete()) {
             return;
         }
 
@@ -49,7 +75,7 @@ public final class WorkspaceQuickSearchProvider implements SearchProvider {
         Workspace workspace = WorkspaceFactory.getInstance().getActiveWorkspace();
         List<WorkspaceItem<?>> items = List.copyOf(workspace.getItems());
         for (WorkspaceItem<?> item : items) {
-            if (response.isObsolete()) {
+            if (results.isObsolete()) {
                 return;
             }
 
@@ -58,12 +84,20 @@ public final class WorkspaceQuickSearchProvider implements SearchProvider {
                 continue;
             }
 
-            String displayName =
-                    item.getDisplayName() + " (" + manager.getItemClass().getSimpleName() + ")";
-            if (!response.addResult(() -> openItem(workspace, item), displayName)) {
+            if (!results.addResult(new DesktopSearchResult(
+                    item.getDisplayName(),
+                    manager.getItemClass().getSimpleName(),
+                    getIcon(manager, item),
+                    () -> openItem(workspace, item)))) {
                 return;
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Icon getIcon(WorkspaceItemManager<?> manager, WorkspaceItem<?> item) {
+        Icon result = ((WorkspaceItemManager<Object>) manager).getItemIcon((WorkspaceItem<Object>) item);
+        return result != null ? result : manager.getManagerIcon();
     }
 
     static Predicate<String> searchFilter(String text) {

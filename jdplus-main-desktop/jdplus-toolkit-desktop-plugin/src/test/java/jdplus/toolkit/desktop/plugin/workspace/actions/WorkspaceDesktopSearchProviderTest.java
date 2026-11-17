@@ -16,19 +16,21 @@
  */
 package jdplus.toolkit.desktop.plugin.workspace.actions;
 
-import static jdplus.toolkit.desktop.plugin.workspace.actions.WorkspaceQuickSearchProvider.matches;
-import static jdplus.toolkit.desktop.plugin.workspace.actions.WorkspaceQuickSearchProvider.searchFilter;
+import static jdplus.toolkit.desktop.plugin.workspace.actions.WorkspaceDesktopSearchProvider.matches;
+import static jdplus.toolkit.desktop.plugin.workspace.actions.WorkspaceDesktopSearchProvider.searchFilter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import jdplus.toolkit.base.api.util.Id;
 import jdplus.toolkit.base.api.util.LinearId;
+import jdplus.toolkit.desktop.plugin.search.DesktopSearchProvider;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItem;
 import jdplus.toolkit.desktop.plugin.workspace.WorkspaceItemManager;
 import org.junit.jupiter.api.Test;
 import org.netbeans.spi.quicksearch.SearchProvider;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
-class WorkspaceQuickSearchProviderTest {
+class WorkspaceDesktopSearchProviderTest {
 
     @Test
     void matchesItemNameTypeAndCommentsIgnoringCaseAndOuterSpaces() {
@@ -45,7 +47,13 @@ class WorkspaceQuickSearchProviderTest {
     void registersQuickSearchProvider() {
         SearchProvider provider = Lookups.forPath("QuickSearch/Workspace").lookup(SearchProvider.class);
 
-        assertThat(provider).isInstanceOf(WorkspaceQuickSearchProvider.class);
+        assertThat(provider).isInstanceOf(WorkspaceDesktopSearchProvider.class);
+    }
+
+    @Test
+    void registersDesktopSearchProvider() {
+        assertThat(Lookup.getDefault().lookupAll(DesktopSearchProvider.class))
+                .anyMatch(provider -> "workspace".equals(provider.getCategoryId()));
     }
 
     private static WorkspaceItemManager<?> manager() {
