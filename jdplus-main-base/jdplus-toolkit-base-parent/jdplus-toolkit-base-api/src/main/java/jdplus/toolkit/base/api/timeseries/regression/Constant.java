@@ -24,7 +24,7 @@ import nbbrd.design.Development;
  * @author Jean Palate <jean.palate@nbb.be>
  */
 @Development(status = Development.Status.Release)
-public class Constant implements ITsVariable {
+public class Constant implements IConstant {
 
     public static final Constant C = new Constant();
 

@@ -139,7 +139,7 @@ public class RegressionDictionaries {
                     .build())
             .item(AtomicDictionary.Item.builder()
                     .name(NTD)
-                    .description("number of trading days (outside lp)")
+                    .description("number of trading days (besides lp and user-defined td)")
                     .outputClass(Integer.class)
                     .build())
             .item(AtomicDictionary.Item.builder()
@@ -149,7 +149,7 @@ public class RegressionDictionaries {
                     .build())
             .item(AtomicDictionary.Item.builder()
                     .name(NMH)
-                    .description("number of moving holidays regressors")
+                    .description("number of moving holidays regressors (besides user-defined ones)")
                     .outputClass(Integer.class)
                     .build())
             .item(AtomicDictionary.Item.builder()
@@ -271,31 +271,9 @@ public class RegressionDictionaries {
             // Untransformed
             YLIN_F = "ylin_f",
             YLIN_B = "ylin_b",
-            CAL = "cal", // all calendar effects (including pre-adjustments). cal=tde+*mhe. Untransformed
-            CAL_F = "cal_f",
-            CAL_B = "cal_b",
-            YCAL = "ycal", // series corrected for calendar effects: y_cal = yc-/cal. Untransformed
-            YCAL_F = "ycal_f",
-            YCAL_B = "ycal_b",
             DET = "det", // all deterministic effects (including pre-adjustment). Untransformed
             DET_F = "det_f",
             DET_B = "det_b",
-            TDE = "tde", // trading days effects (including leap year/length of period, includeing pre-adjustments).
-            // Untransformed
-            TDE_F = "tde_f",
-            TDE_B = "tde_b",
-            EE = "ee", // Easter effects. Untransformed
-            EE_F = "ee_f",
-            EE_B = "ee_b",
-            RMDE = "rmde", // Ramadan effects. Untransformed
-            RMDE_F = "rmde_f",
-            RMDE_B = "rmde_b",
-            OMHE = "omhe", // Other mothing holidays effects. Untransformed
-            OMHE_F = "omhe_f",
-            OMHE_B = "omhe_b",
-            MHE = "mhe", // All moving holidays effects. mhe=ee+*rmde+*omhe. Untransformed
-            MHE_F = "mhe_f",
-            MHE_B = "mhe_b",
             OUT = "out", // All outliers effects. Untransformed
             OUT_F = "out_f",
             OUT_B = "out_b",
@@ -393,109 +371,6 @@ public class RegressionDictionaries {
                     .name(DET_B)
                     .description(
                             "backcasts of all deterministic effects (including pre-adjustment, but without trend polynomial effect). Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(CAL)
-                    .description("all calendar effects (including pre-adjustments). cal=tde+*mhe. Untransformed")
-                    .outputClass(TsData.class)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(CAL_F)
-                    .description("forecasts of all calendar effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(CAL_B)
-                    .description("backcasts of all calendar effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(YCAL)
-                    .description("series corrected for calendar effects: y_cal = yc-/cal. Untransformed")
-                    .outputClass(TsData.class)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(YCAL_F)
-                    .description("forecasts of the series corrected for calendar effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(YCAL_B)
-                    .description("backcasts of the series corrected for calendar effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(TDE)
-                    .description(
-                            "trading days effects (including leap year/length of period, including pre-adjustments). Untransformed")
-                    .outputClass(TsData.class)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(TDE_F)
-                    .description("forecasts of the trading days effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(TDE_B)
-                    .description("backcasts of the trading days effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(EE)
-                    .description("Easter effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(EE_F)
-                    .description("forecasts of the Easter effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(EE_B)
-                    .description("backcasts of the Easter effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(OMHE)
-                    .description("other mothing holidays effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(OMHE_F)
-                    .description("forecasts of the other moving holidays effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(OMHE_B)
-                    .description("backcasts of the other moving holidays effects. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(MHE)
-                    .description("all moving holidays effects. mhe=ee+*rmde+*omhe. Untransformed")
-                    .outputClass(TsData.class)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(MHE_F)
-                    .description("forecats of all moving holidays effects. mhe=ee+*rmde+*omhe. Untransformed")
-                    .outputClass(TsData.class)
-                    .type(Dictionary.EntryType.Parametric)
-                    .build())
-            .item(AtomicDictionary.Item.builder()
-                    .name(MHE_B)
-                    .description("backcasts of all moving holidays effects. mhe=ee+*rmde+*omhe. Untransformed")
                     .outputClass(TsData.class)
                     .type(Dictionary.EntryType.Parametric)
                     .build())

@@ -49,6 +49,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
+import jdplus.toolkit.base.api.timeseries.regression.IUserVariable;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
 import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
 import jdplus.toolkit.base.api.timeseries.regression.LengthOfPeriod;
@@ -61,7 +62,6 @@ import jdplus.toolkit.base.api.timeseries.regression.StockTradingDays;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
 import jdplus.toolkit.base.api.timeseries.regression.UserTradingDays;
-import jdplus.toolkit.base.api.timeseries.regression.UserVariable;
 import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.core.data.interpolation.AverageInterpolator;
@@ -231,7 +231,7 @@ public class ModelBuilder implements IModelBuilder {
 
     private void initializeUsers(ModelDescription model, List<UserVariableSpec> uvars, ProcessingLog log) {
         for (UserVariableSpec user : uvars) {
-            Variable<UserVariable> s = user.instantiateFrom(context);
+            Variable<IUserVariable> s = SaVariable.instantiateFrom(user, context);
             if (s != null) {
                 model.addVariable(s);
             } else {

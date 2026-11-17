@@ -1,34 +1,36 @@
 /*
  * Copyright 2022 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.base.core;
 
-import jdplus.toolkit.base.api.data.AggregationType;
-import jdplus.toolkit.base.api.timeseries.TsException;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
-import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.api.data.DoubleSeqCursor;
-import jdplus.toolkit.base.api.information.Explorable;
-import jdplus.toolkit.base.api.modelling.SeriesInfo;
+import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.multiply;
+
+import jdplus.sa.base.api.SaDictionaries;
 import jdplus.sa.base.api.benchmarking.SaBenchmarkingSpec;
 import jdplus.sa.base.api.benchmarking.SaBenchmarkingSpec.BiasCorrection;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.data.AggregationType;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.modelling.SeriesInfo;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsException;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.normalizer.AbsMeanNormalizer;
 import jdplus.toolkit.base.core.ssf.benchmarking.SsfCholette;
@@ -36,7 +38,7 @@ import jdplus.toolkit.base.core.ssf.dk.DkToolkit;
 import jdplus.toolkit.base.core.ssf.univariate.DefaultSmoothingResults;
 import jdplus.toolkit.base.core.ssf.univariate.ISsf;
 import jdplus.toolkit.base.core.ssf.univariate.SsfData;
-import static jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit.multiply;
+import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
 import lombok.NonNull;
 
 /**
@@ -66,10 +68,10 @@ public class CholetteProcessor {
             return new SaBenchmarkingResults(y, y, y);
         }
         TsData orig = preprocessing == null ? y : preprocessing.getData(RegressionDictionaries.YC, TsData.class);
-        TsData cal = preprocessing == null ? null : preprocessing.getData(RegressionDictionaries.YCAL, TsData.class);
+        TsData cal = preprocessing == null ? null : preprocessing.getData(SaDictionaries.YCAL, TsData.class);
         if (preprocessing != null && spec.isForecast()) {
             TsData origf = preprocessing.getData(RegressionDictionaries.Y_F, TsData.class);
-            TsData calf = preprocessing.getData(RegressionDictionaries.YCAL + SeriesInfo.F_SUFFIX, TsData.class);
+            TsData calf = preprocessing.getData(SaDictionaries.YCAL + SeriesInfo.F_SUFFIX, TsData.class);
             orig = TsData.concatenate(orig, origf);
             cal = TsData.concatenate(cal, calf);
         }
@@ -187,5 +189,4 @@ public class CholetteProcessor {
         }
         return TsData.add(highFreqSeries, TsData.ofInternal(start, b));
     }
-
 }

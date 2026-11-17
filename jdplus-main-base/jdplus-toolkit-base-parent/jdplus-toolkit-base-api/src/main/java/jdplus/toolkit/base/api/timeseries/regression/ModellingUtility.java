@@ -1,17 +1,17 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries.regression;
@@ -52,8 +52,7 @@ public class ModellingUtility {
         if (var.getCore() instanceof IMovingHolidayVariable) {
             return true;
         }
-        if ((var.getCore() instanceof ModifiedTsVariable)) {
-            ModifiedTsVariable mvar = (ModifiedTsVariable) var.getCore();
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
             return mvar.getVariable() instanceof IMovingHolidayVariable;
         }
         return false;
@@ -63,8 +62,7 @@ public class ModellingUtility {
         if (var.getCore() instanceof IEasterVariable) {
             return true;
         }
-        if ((var.getCore() instanceof ModifiedTsVariable)) {
-            ModifiedTsVariable mvar = (ModifiedTsVariable) var.getCore();
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
             return mvar.getVariable() instanceof IEasterVariable;
         }
         return false;
@@ -74,8 +72,7 @@ public class ModellingUtility {
         if (var.getCore() instanceof ITradingDaysVariable) {
             return true;
         }
-        if ((var.getCore() instanceof ModifiedTsVariable)) {
-            ModifiedTsVariable mvar = (ModifiedTsVariable) var.getCore();
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
             return mvar.getVariable() instanceof ITradingDaysVariable;
         }
         return false;
@@ -85,8 +82,7 @@ public class ModellingUtility {
         if (var.getCore() instanceof ILengthOfPeriodVariable) {
             return true;
         }
-        if ((var.getCore() instanceof ModifiedTsVariable)) {
-            ModifiedTsVariable mvar = (ModifiedTsVariable) var.getCore();
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
             return mvar.getVariable() instanceof ILengthOfPeriodVariable;
         }
         return false;
@@ -97,18 +93,46 @@ public class ModellingUtility {
     }
 
     public boolean isCalendar(Variable var) {
-        return isTradingDays(var) || isLengthOfPeriod(var) || isMovingHoliday(var);
+        if (var.getCore() instanceof ICalendarVariable) {
+            return true;
+        }
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
+            return mvar.getVariable() instanceof ICalendarVariable;
+        }
+        return false;
     }
 
     public boolean isUser(Variable var) {
         if (var.getCore() instanceof IUserVariable) {
             return true;
         }
-        if ((var.getCore() instanceof ModifiedTsVariable)) {
-            ModifiedTsVariable mvar = (ModifiedTsVariable) var.getCore();
-            return mvar.getVariable() instanceof IUserVariable;
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
+            return mvar.getVariable() instanceof UserVariable;
         }
         return false;
     }
 
+    public boolean isSystem(Variable var) {
+        return !isUser(var);
+    }
+
+    public boolean isRamp(Variable var) {
+        if (var.getCore() instanceof Ramp) {
+            return true;
+        }
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
+            return mvar.getVariable() instanceof Ramp;
+        }
+        return false;
+    }
+
+    public boolean isIntervention(Variable var) {
+        if (var.getCore() instanceof InterventionVariable) {
+            return true;
+        }
+        if ((var.getCore() instanceof ModifiedTsVariable mvar)) {
+            return mvar.getVariable() instanceof InterventionVariable;
+        }
+        return false;
+    }
 }

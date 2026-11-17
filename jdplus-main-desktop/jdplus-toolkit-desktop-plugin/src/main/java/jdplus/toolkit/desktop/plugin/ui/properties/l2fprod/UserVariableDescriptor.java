@@ -42,11 +42,11 @@ public class UserVariableDescriptor extends VariableDescriptor {
         return new UserVariableDescriptor(this);
     }
 
-    public UserVariable getVariableName() {
+    public UserVariable getUserName() {
         return new UserVariable(core.getId());
     }
 
-    public void setVariableName(UserVariable name) {
+    public void setUserName(UserVariable name) {
         core = core.withId(name.getName());
     }
 

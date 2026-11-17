@@ -16,37 +16,6 @@
  */
 package jdplus.toolkit.desktop.plugin.html.modelling;
 
-import jdplus.toolkit.base.api.arima.SarimaOrders;
-import jdplus.toolkit.base.api.data.DoubleSeq;
-import jdplus.toolkit.base.api.data.DoubleSeqCursor;
-import jdplus.toolkit.base.api.data.Parameter;
-import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
-import jdplus.toolkit.desktop.plugin.html.HtmlStream;
-import jdplus.toolkit.desktop.plugin.html.HtmlTable;
-import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
-import jdplus.toolkit.desktop.plugin.html.HtmlTag;
-import jdplus.toolkit.desktop.plugin.html.Bootstrap4;
-import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
-import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.base.api.arima.SarimaSpec;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
-import jdplus.toolkit.base.api.timeseries.TsPeriod;
-import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
-import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
-import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
-import jdplus.toolkit.base.api.timeseries.regression.HolidaysCorrectedTradingDays;
-import jdplus.toolkit.base.api.timeseries.regression.IEasterVariable;
-import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
-import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
-import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
-import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
-import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
-import jdplus.toolkit.base.api.timeseries.regression.MissingValueEstimation;
-import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
-import jdplus.toolkit.base.api.timeseries.regression.Ramp;
-import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
-import jdplus.toolkit.base.api.timeseries.regression.UserVariable;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,13 +24,44 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import jdplus.toolkit.base.api.arima.SarimaOrders;
+import jdplus.toolkit.base.api.arima.SarimaSpec;
+import jdplus.toolkit.base.api.data.DoubleSeq;
+import jdplus.toolkit.base.api.data.DoubleSeqCursor;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
+import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
+import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
+import jdplus.toolkit.base.api.timeseries.regression.GenericTradingDaysVariable;
+import jdplus.toolkit.base.api.timeseries.regression.HolidaysCorrectedTradingDays;
+import jdplus.toolkit.base.api.timeseries.regression.IEasterVariable;
+import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
+import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
+import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
+import jdplus.toolkit.base.api.timeseries.regression.IUserVariable;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.MissingValueEstimation;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
+import jdplus.toolkit.base.api.timeseries.regression.Ramp;
+import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.dstats.T;
 import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.toolkit.base.core.modelling.regression.RegressionDesc;
 import jdplus.toolkit.base.core.regsarima.regular.RegSarimaModel;
+import jdplus.toolkit.base.core.stats.likelihood.LikelihoodStatistics;
+import jdplus.toolkit.desktop.plugin.html.AbstractHtmlElement;
+import jdplus.toolkit.desktop.plugin.html.Bootstrap4;
+import jdplus.toolkit.desktop.plugin.html.HtmlStream;
+import jdplus.toolkit.desktop.plugin.html.HtmlTable;
+import jdplus.toolkit.desktop.plugin.html.HtmlTableCell;
+import jdplus.toolkit.desktop.plugin.html.HtmlTag;
 
 /**
  *
@@ -80,9 +80,15 @@ public class HtmlRegSarima extends AbstractHtmlElement {
     private <T extends ITsVariable> int countVariables(Class<T> tclass, boolean fixed) {
         Variable[] variables = model.getDescription().getVariables();
         if (fixed) {
-            return Arrays.stream(variables).filter(var -> tclass.isInstance(var.getCore())).mapToInt(var -> var.fixedCoefficientsCount()).sum();
+            return Arrays.stream(variables)
+                    .filter(var -> tclass.isInstance(var.getCore()))
+                    .mapToInt(var -> var.fixedCoefficientsCount())
+                    .sum();
         } else {
-            return Arrays.stream(variables).filter(var -> tclass.isInstance(var.getCore())).mapToInt(var -> var.freeCoefficientsCount()).sum();
+            return Arrays.stream(variables)
+                    .filter(var -> tclass.isInstance(var.getCore()))
+                    .mapToInt(var -> var.freeCoefficientsCount())
+                    .sum();
         }
     }
 
@@ -99,18 +105,23 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         TsDomain edom = model.getEstimation().getDomain();
         stream.write(HtmlTag.HEADER1, "Summary").newLine();
         stream.write("Estimation span: [").write(edom.getStartPeriod().getStartAsShortString());
-        stream.write(" - ").write(edom.getLastPeriod().getStartAsShortString()).write(']').newLine();
+        stream.write(" - ")
+                .write(edom.getLastPeriod().getStartAsShortString())
+                .write(']')
+                .newLine();
         GeneralLinearModel.Description<SarimaSpec> description = model.getDescription();
         Variable[] variables = description.getVariables();
         GeneralLinearModel.Estimation estimation = model.getEstimation();
         MissingValueEstimation[] missing = estimation.getMissing();
         int nm = missing.length;
         if (nm > 0) {
-            stream.write(Integer.toString(edom.getLength())).
-                    write(" observations (including missing)").newLine();
+            stream.write(Integer.toString(edom.getLength()))
+                    .write(" observations (including missing)")
+                    .newLine();
         } else {
-            stream.write(Integer.toString(edom.getLength())).
-                    write(" observations").newLine();
+            stream.write(Integer.toString(edom.getLength()))
+                    .write(" observations")
+                    .newLine();
         }
         if (description.isLogTransformation()) {
             stream.write("Series has been log-transformed").newLine();
@@ -126,28 +137,47 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             stream.write("No trading days effects").newLine();
         } else {
             if (ntd != 0) {
-                stream.write("Trading days effects (").write(Integer.toString(ntd)).write(ntd > 1 ? " variables)" : " variable)").newLine();
+                stream.write("Trading days effects (")
+                        .write(Integer.toString(ntd))
+                        .write(ntd > 1 ? " variables)" : " variable)")
+                        .newLine();
             }
             if (nftd != 0) {
-                stream.write("Fixed Trading days effects (").write(Integer.toString(nftd)).write(nftd > 1 ? " variables)" : " variable)").newLine();
+                stream.write("Fixed Trading days effects (")
+                        .write(Integer.toString(nftd))
+                        .write(nftd > 1 ? " variables)" : " variable)")
+                        .newLine();
             }
         }
-        Optional<Variable> ee = Arrays.stream(variables).filter(var -> var.isFree() && var.getCore() instanceof IEasterVariable).findFirst();
-        Optional<Variable> fee = Arrays.stream(variables).filter(var -> !var.isFree() && var.getCore() instanceof IEasterVariable).findFirst();
+        Optional<Variable> ee = Arrays.stream(variables)
+                .filter(var -> var.isFree() && var.getCore() instanceof IEasterVariable)
+                .findFirst();
+        Optional<Variable> fee = Arrays.stream(variables)
+                .filter(var -> !var.isFree() && var.getCore() instanceof IEasterVariable)
+                .findFirst();
         if (ee.isEmpty() && fee.isEmpty()) {
             stream.write("No easter effect").newLine();
         } else {
             if (ee.isPresent()) {
-                stream.write(ee.orElseThrow().getCore().description(edom) + " detected").newLine();
+                stream.write(ee.orElseThrow().getCore().description(edom) + " detected")
+                        .newLine();
             }
             if (fee.isPresent()) {
-                stream.write("Fixed " + fee.orElseThrow().getCore().description(edom) + " effect").newLine();
+                stream.write("Fixed " + fee.orElseThrow().getCore().description(edom) + " effect")
+                        .newLine();
             }
         }
 
-        int no = (int) Arrays.stream(variables).filter(var -> var.getCore() instanceof IOutlier && var.hasAttribute(ModellingUtility.AMI)).count();
-        int nfo = (int) Arrays.stream(variables).filter(var -> var.getCore() instanceof IOutlier && !var.isFree()).count();
-        int npo = -nfo + (int) Arrays.stream(variables).filter(var -> var.getCore() instanceof IOutlier && !var.hasAttribute(ModellingUtility.AMI)).count();
+        int no = (int) Arrays.stream(variables)
+                .filter(var -> var.getCore() instanceof IOutlier && var.hasAttribute(ModellingUtility.AMI))
+                .count();
+        int nfo = (int) Arrays.stream(variables)
+                .filter(var -> var.getCore() instanceof IOutlier && !var.isFree())
+                .count();
+        int npo = -nfo
+                + (int) Arrays.stream(variables)
+                        .filter(var -> var.getCore() instanceof IOutlier && !var.hasAttribute(ModellingUtility.AMI))
+                        .count();
 
         if (npo > 1) {
             stream.write(Integer.toString(npo)).write(" pre-specified outliers").newLine();
@@ -211,7 +241,8 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         int P = sspec.getP();
         Parameter[] p = arima.getPhi();
         int nobs = ll.getEffectiveObservationsCount(), nparams = ll.getEstimatedParametersCount();
-        DoubleSeqCursor vars = model.getEstimation().getParameters().getCovariance().diagonal().cursor();
+        DoubleSeqCursor vars =
+                model.getEstimation().getParameters().getCovariance().diagonal().cursor();
         double ndf = nobs - nparams;
         T t = new T(ndf);
         List<String> headers = new ArrayList<>();
@@ -331,23 +362,71 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         TsDomain edom = model.getEstimation().getDomain();
         writeMean(stream);
 
-        writeFullRegressionItems(stream, edom, true, var -> !var.isPreadjustment() && var.getCore() instanceof ITradingDaysVariable);
-        writeFullRegressionItems(stream, edom, true, var -> !var.isPreadjustment() && var.getCore() instanceof ILengthOfPeriodVariable);
-        writeFixedRegressionItems(stream, "Fixed trading days", edom, true, var -> !var.isFree() && var.getCore() instanceof ITradingDaysVariable);
-        writeFixedRegressionItems(stream, "Fixed leap year", edom, true, var -> !var.isFree() && var.getCore() instanceof ILengthOfPeriodVariable);
-        writeRegressionItems(stream, "Easter", edom, true, var -> !var.isPreadjustment() && var.getCore() instanceof IEasterVariable);
-        writeFixedRegressionItems(stream, "Fixed Easter", edom, true, var -> var.isPreadjustment() && var.getCore() instanceof IEasterVariable);
+        writeFullRegressionItems(
+                stream, edom, true, var -> !var.isPreadjustment() && var.getCore() instanceof ITradingDaysVariable);
+        writeFullRegressionItems(
+                stream, edom, true, var -> !var.isPreadjustment() && var.getCore() instanceof ILengthOfPeriodVariable);
+        writeFixedRegressionItems(
+                stream,
+                "Fixed trading days",
+                edom,
+                true,
+                var -> !var.isFree() && var.getCore() instanceof ITradingDaysVariable);
+        writeFixedRegressionItems(
+                stream,
+                "Fixed leap year",
+                edom,
+                true,
+                var -> !var.isFree() && var.getCore() instanceof ILengthOfPeriodVariable);
+        writeRegressionItems(
+                stream,
+                "Easter",
+                edom,
+                true,
+                var -> !var.isPreadjustment() && var.getCore() instanceof IEasterVariable);
+        writeFixedRegressionItems(
+                stream,
+                "Fixed Easter",
+                edom,
+                true,
+                var -> var.isPreadjustment() && var.getCore() instanceof IEasterVariable);
         if (outliers) {
             writeOutliers(stream, true, edom);
             writeOutliers(stream, false, edom);
-            writeFixedRegressionItems(stream, "Fixed outliers", edom, false, var -> var.isPreadjustment() && var.getCore() instanceof IOutlier);
+            writeFixedRegressionItems(
+                    stream,
+                    "Fixed outliers",
+                    edom,
+                    false,
+                    var -> var.isPreadjustment() && var.getCore() instanceof IOutlier);
         }
         writeRegressionItems(stream, "Ramps", edom, true, var -> var.isFree() && var.getCore() instanceof Ramp);
-        writeRegressionItems(stream, "Intervention variables", edom, false, var -> var.isFree() && var.getCore() instanceof InterventionVariable);
-        writeRegressionItems(stream, "User variables", edom, true, var -> !var.isPreadjustment() && var.test(v -> v instanceof UserVariable));
-        writeFixedRegressionItems(stream, "Fixed ramps", edom, true, var -> !var.isFree() && var.getCore() instanceof Ramp);
-        writeFixedRegressionItems(stream, "Fixed intervention variables", edom, false, var -> !var.isFree() && var.getCore() instanceof InterventionVariable);
-        writeFixedRegressionItems(stream, "Fixed user variables", edom, true, var -> !var.isFree() && var.test(v -> v instanceof UserVariable));
+        writeRegressionItems(
+                stream,
+                "Intervention variables",
+                edom,
+                false,
+                var -> var.isFree() && var.getCore() instanceof InterventionVariable);
+        writeRegressionItems(
+                stream,
+                "User variables",
+                edom,
+                true,
+                var -> !var.isPreadjustment() && var.test(v -> v instanceof IUserVariable));
+        writeFixedRegressionItems(
+                stream, "Fixed ramps", edom, true, var -> !var.isFree() && var.getCore() instanceof Ramp);
+        writeFixedRegressionItems(
+                stream,
+                "Fixed intervention variables",
+                edom,
+                false,
+                var -> !var.isFree() && var.getCore() instanceof InterventionVariable);
+        writeFixedRegressionItems(
+                stream,
+                "Fixed user variables",
+                edom,
+                true,
+                var -> !var.isFree() && var.test(v -> v instanceof IUserVariable));
         writeMissing(stream);
     }
 
@@ -357,14 +436,18 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             return;
         }
         Variable[] variables = model.getDescription().getVariables();
-        Optional<Variable> mean = Arrays.stream(variables).filter(var -> var.getCore() instanceof TrendConstant).findFirst();
+        Optional<Variable> mean = Arrays.stream(variables)
+                .filter(var -> var.getCore() instanceof TrendConstant)
+                .findFirst();
         if (mean.isEmpty()) {
             return;
         }
         Variable v = mean.orElseThrow();
         if (v.isFree()) {
             List<RegressionDesc> regressionItems = model.getDetails().getRegressionItems();
-            Optional<RegressionDesc> d = regressionItems.stream().filter(desc -> desc.getCore() instanceof TrendConstant).findFirst();
+            Optional<RegressionDesc> d = regressionItems.stream()
+                    .filter(desc -> desc.getCore() instanceof TrendConstant)
+                    .findFirst();
             if (d.isEmpty()) {
                 return;
             }
@@ -405,17 +488,24 @@ public class HtmlRegSarima extends AbstractHtmlElement {
 
         String header = prespecified ? "Prespecified outliers" : "Outliers";
         Set<ITsVariable> outliers = Arrays.stream(model.getDescription().getVariables())
-                .filter(var -> var.getCore() instanceof IOutlier && var.isFree() && prespecified != var.hasAttribute(ModellingUtility.AMI))
-                .map(var -> var.getCore()).collect(Collectors.toSet());
+                .filter(var -> var.getCore() instanceof IOutlier
+                        && var.isFree()
+                        && prespecified != var.hasAttribute(ModellingUtility.AMI))
+                .map(var -> var.getCore())
+                .collect(Collectors.toSet());
         if (!outliers.isEmpty()) {
             stream.write(HtmlTag.HEADER3, header);
             writeRegressionItems(stream, outliers, context, false);
         }
     }
 
-    private <V extends ITsVariable> void writeFixedRegressionItems(HtmlStream stream, String header, TsDomain context, boolean description, Predicate<Variable> predicate) throws IOException {
+    private <V extends ITsVariable> void writeFixedRegressionItems(
+            HtmlStream stream, String header, TsDomain context, boolean description, Predicate<Variable> predicate)
+            throws IOException {
 
-        List<Variable> regs = Arrays.stream(model.getDescription().getVariables()).filter(predicate).collect(Collectors.toList());
+        List<Variable> regs = Arrays.stream(model.getDescription().getVariables())
+                .filter(predicate)
+                .collect(Collectors.toList());
         if (regs.isEmpty()) {
             return;
         }
@@ -433,7 +523,8 @@ public class HtmlRegSarima extends AbstractHtmlElement {
                 Parameter[] c = reg.getCoefficients();
                 if (c[i].isFixed()) {
                     stream.open(HtmlTag.TABLEROW);
-                    stream.write(new HtmlTableCell(display(reg, i, context, description || c.length > 1)).withWidth(100));
+                    stream.write(
+                            new HtmlTableCell(display(reg, i, context, description || c.length > 1)).withWidth(100));
                     stream.write(new HtmlTableCell(df4.format(c[i].getValue())).withWidth(100));
                     stream.close(HtmlTag.TABLEROW);
                 }
@@ -443,8 +534,11 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         stream.newLine();
     }
 
-    private <V extends ITsVariable> void writeRegressionItems(HtmlStream stream, String header, TsDomain context, boolean description, Predicate<Variable> predicate) throws IOException {
-        Set<ITsVariable> selection = Arrays.stream(model.getDescription().getVariables()).filter(var -> predicate.test(var))
+    private <V extends ITsVariable> void writeRegressionItems(
+            HtmlStream stream, String header, TsDomain context, boolean description, Predicate<Variable> predicate)
+            throws IOException {
+        Set<ITsVariable> selection = Arrays.stream(model.getDescription().getVariables())
+                .filter(var -> predicate.test(var))
                 .map(var -> var.getCore())
                 .collect(Collectors.toSet());
         if (!selection.isEmpty() && header != null) {
@@ -453,8 +547,11 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         }
     }
 
-    private <V extends ITsVariable> void writeFullRegressionItems(HtmlStream stream, TsDomain context, boolean description, Predicate<Variable> predicate) throws IOException {
-        Set<ITsVariable> selection = Arrays.stream(model.getDescription().getVariables()).filter(var -> predicate.test(var))
+    private <V extends ITsVariable> void writeFullRegressionItems(
+            HtmlStream stream, TsDomain context, boolean description, Predicate<Variable> predicate)
+            throws IOException {
+        Set<ITsVariable> selection = Arrays.stream(model.getDescription().getVariables())
+                .filter(var -> predicate.test(var))
                 .map(var -> var.getCore())
                 .collect(Collectors.toSet());
         if (!selection.isEmpty()) {
@@ -464,7 +561,8 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         }
     }
 
-    private <V extends ITsVariable> void writeRegressionItems(HtmlStream stream, List<RegressionDesc> regs, TsDomain context, boolean description) throws IOException {
+    private <V extends ITsVariable> void writeRegressionItems(
+            HtmlStream stream, List<RegressionDesc> regs, TsDomain context, boolean description) throws IOException {
 
         stream.open(new HtmlTable().withWidth(400));
         stream.open(HtmlTag.TABLEROW);
@@ -485,7 +583,8 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         stream.newLine();
     }
 
-    private <V extends ITsVariable> void writeRegressionItems(HtmlStream stream, Set<ITsVariable> vars, TsDomain context, boolean description) throws IOException {
+    private <V extends ITsVariable> void writeRegressionItems(
+            HtmlStream stream, Set<ITsVariable> vars, TsDomain context, boolean description) throws IOException {
         List<RegressionDesc> regs = new ArrayList<>();
         for (RegressionDesc reg : model.getDetails().getRegressionItems()) {
             if (vars.contains(reg.getCore())) {
@@ -513,7 +612,8 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         }
     }
 
-    private <V extends ITsVariable> void writeRegressionItems(HtmlStream stream, ITsVariable var, TsDomain context, boolean description) throws IOException {
+    private <V extends ITsVariable> void writeRegressionItems(
+            HtmlStream stream, ITsVariable var, TsDomain context, boolean description) throws IOException {
 
         List<RegressionDesc> regs = model.getDetails().getRegressionItems().stream()
                 .filter(desc -> desc.getCore() == var)
@@ -544,14 +644,14 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         if (size > 1 && regs.size() == var.dim() && var instanceof ITradingDaysVariable tdvar) {
             RegressionDesc derivedTradingDay = model.getDetails().getDerivedTradingDay();
             if (derivedTradingDay != null) {
-                String sun="sun";
+                String sun = "sun";
                 TradingDaysType type = tdvar.getTradingDaysType();
-                if (type != null){
+                if (type != null) {
                     String[] names = type.names();
-                    sun=names[names.length-1];
+                    sun = names[names.length - 1];
                 }
                 stream.open(HtmlTag.TABLEROW);
-                stream.write(new HtmlTableCell(sun +" (derived)").withWidth(100));
+                stream.write(new HtmlTableCell(sun + " (derived)").withWidth(100));
                 stream.write(new HtmlTableCell(df4.format(derivedTradingDay.getCoef())).withWidth(100));
                 stream.write(new HtmlTableCell(formatT(derivedTradingDay.getTStat())).withWidth(100));
                 stream.write(new HtmlTableCell(df4.format(derivedTradingDay.getPvalue())).withWidth(100));
@@ -560,10 +660,13 @@ public class HtmlRegSarima extends AbstractHtmlElement {
             stream.close(HtmlTag.TABLE);
             stream.newLine();
             StatisticalTest ftest = model.getDetails().getFTestonTradingDays();
-            if (ftest != null){
-                 StringBuilder builder = new StringBuilder();
-                builder.append("Joint F-Test = ").append(df2.format(ftest.getValue()))
-                        .append(" (").append(df4.format(ftest.getPvalue())).append(')');
+            if (ftest != null) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("Joint F-Test = ")
+                        .append(df2.format(ftest.getValue()))
+                        .append(" (")
+                        .append(df4.format(ftest.getPvalue()))
+                        .append(')');
                 if (ftest.getPvalue() > .05) {
                     stream.write(HtmlTag.IMPORTANT_TEXT, builder.toString(), Bootstrap4.TEXT_DANGER);
                 } else {
@@ -622,7 +725,6 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         }
         stream.close(HtmlTag.TABLE);
         stream.newLines(2);
-
     }
 
     private void writeScore(HtmlStream stream) throws IOException {
@@ -634,5 +736,4 @@ public class HtmlRegSarima extends AbstractHtmlElement {
         stream.write(HtmlTag.HEADER3, "Scores at the solution");
         stream.write(DoubleSeq.format(score, df6));
     }
-
 }

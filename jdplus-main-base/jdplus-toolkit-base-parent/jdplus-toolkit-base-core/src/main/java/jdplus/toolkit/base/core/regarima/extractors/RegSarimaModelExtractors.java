@@ -19,7 +19,6 @@ import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.api.modelling.SeriesInfo;
 import jdplus.toolkit.base.api.stats.StatisticalTest;
 import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.IEasterVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
@@ -248,128 +247,19 @@ public class RegSarimaModelExtractors {
                     TsData.class,
                     (source, i) -> source.backcasts(i).getForecasts());
 
-            set(RegressionDictionaries.YLIN, TsData.class, source -> {
-                TsData lin = source.linearizedSeries();
-                return source.backTransform(lin, false);
-            });
-            setArray(RegressionDictionaries.YLIN_B, NBCAST, TsData.class, (source, i) -> {
-                TsData lin = source.linearizedBackcasts(i);
-                return source.backTransform(lin, false);
-            });
-            setArray(RegressionDictionaries.YLIN_F, NFCAST, TsData.class, (source, i) -> {
-                TsData lin = source.linearizedForecasts(i);
-                return source.backTransform(lin, false);
-            });
-            set(RegressionDictionaries.L, TsData.class, source -> source.linearizedSeries());
-            setArray(RegressionDictionaries.L_B, NFCAST, TsData.class, (source, i) -> source.linearizedBackcasts(i));
-            setArray(RegressionDictionaries.L_F, NBCAST, TsData.class, (source, i) -> source.linearizedForecasts(i));
-            //            setArray(RegressionDictionaries.L_EF, NFCAST, TsData.class, (source, i) ->
-            // source.forecasts(i).getRawForecastsStdev());
-            //            setArray(RegressionDictionaries.L_EB, NBCAST, TsData.class, (source, i) ->
-            // source.backcasts(i).getRawForecastsStdev());
-            set(RegressionDictionaries.YCAL, TsData.class, source -> {
-                TsData y = source.getDescription().getSeries();
-                TsData cal = source.getCalendarEffect(y.getDomain());
-                return source.inv_op(y, cal);
-            });
-            setArray(RegressionDictionaries.YCAL_F, NFCAST, TsData.class, (source, i) -> {
-                TsDomain fdom = source.forecastDomain(i);
-                TsData yf = source.forecasts(i).getForecasts();
-                TsData calf = source.getCalendarEffect(fdom);
-                return source.inv_op(yf, calf);
-            });
-            setArray(RegressionDictionaries.YCAL_B, NBCAST, TsData.class, (source, i) -> {
-                TsDomain fdom = source.backcastDomain(i);
-                TsData yf = source.backcasts(i).getForecasts();
-                TsData calf = source.getCalendarEffect(fdom);
-                return source.inv_op(yf, calf);
-            });
-            set(RegressionDictionaries.YCAL, TsData.class, source -> {
-                TsData y = source.getDescription().getSeries();
-                TsData cal = source.getCalendarEffect(y.getDomain());
-                return source.inv_op(y, cal);
-            });
-
             // All deterministic effects
             set(RegressionDictionaries.DET, TsData.class, (RegSarimaModel source) -> {
-                TsData det = source.deterministicEffect(null, v -> !(v.getCore() instanceof TrendConstant));
+                TsData det = source.deterministicEffect(null, v -> true);
                 return source.backTransform(det, true);
             });
             setArray(RegressionDictionaries.DET_F, NFCAST, TsData.class, (source, i) -> {
-                TsData det = source.deterministicEffect(
-                        source.forecastDomain(i), v -> !(v.getCore() instanceof TrendConstant));
+                TsData det = source.deterministicEffect(source.forecastDomain(i), v -> true);
                 return source.backTransform(det, true);
             });
             setArray(RegressionDictionaries.DET_B, NBCAST, TsData.class, (source, i) -> {
-                TsData det = source.deterministicEffect(
-                        source.backcastDomain(i), v -> !(v.getCore() instanceof TrendConstant));
+                TsData det = source.deterministicEffect(source.backcastDomain(i), v -> true);
                 return source.backTransform(det, true);
             });
-
-            // All calendar effects
-            set(RegressionDictionaries.CAL, TsData.class, source -> source.getCalendarEffect(null));
-            setArray(
-                    RegressionDictionaries.CAL_F,
-                    NFCAST,
-                    TsData.class,
-                    (source, i) -> source.getCalendarEffect(source.forecastDomain(i)));
-            setArray(
-                    RegressionDictionaries.CAL_B,
-                    NBCAST,
-                    TsData.class,
-                    (source, i) -> source.getCalendarEffect(source.backcastDomain(i)));
-
-            // Trading days effects
-            set(RegressionDictionaries.TDE, TsData.class, source -> source.getTradingDaysEffect(null));
-            setArray(
-                    RegressionDictionaries.TDE_F,
-                    NFCAST,
-                    TsData.class,
-                    (source, i) -> source.getTradingDaysEffect(source.forecastDomain(i)));
-            setArray(
-                    RegressionDictionaries.TDE_B,
-                    NBCAST,
-                    TsData.class,
-                    (source, i) -> source.getTradingDaysEffect(source.backcastDomain(i)));
-
-            // All moving holidays effects
-            set(RegressionDictionaries.MHE, TsData.class, source -> source.getMovingHolidayEffect(null));
-            setArray(
-                    RegressionDictionaries.MHE_F,
-                    NFCAST,
-                    TsData.class,
-                    (source, i) -> source.getMovingHolidayEffect(source.forecastDomain(i)));
-            setArray(
-                    RegressionDictionaries.MHE_B,
-                    NBCAST,
-                    TsData.class,
-                    (source, i) -> source.getMovingHolidayEffect(source.backcastDomain(i)));
-
-            // Easter effect
-            set(RegressionDictionaries.EE, TsData.class, source -> source.getEasterEffect(null));
-            setArray(
-                    RegressionDictionaries.EE_F,
-                    NFCAST,
-                    TsData.class,
-                    (source, i) -> source.getEasterEffect(source.forecastDomain(i)));
-            setArray(
-                    RegressionDictionaries.EE_B,
-                    NBCAST,
-                    TsData.class,
-                    (source, i) -> source.getEasterEffect(source.backcastDomain(i)));
-
-            // Other moving holidays effects
-            set(RegressionDictionaries.OMHE, TsData.class, source -> source.getOtherMovingHolidayEffect(null));
-            setArray(
-                    RegressionDictionaries.OMHE_F,
-                    NFCAST,
-                    TsData.class,
-                    (source, i) -> source.getOtherMovingHolidayEffect(source.forecastDomain(i)));
-            setArray(
-                    RegressionDictionaries.OMHE_B,
-                    NBCAST,
-                    TsData.class,
-                    (source, i) -> source.getOtherMovingHolidayEffect(source.backcastDomain(i)));
 
             // All Outliers effect
             set(RegressionDictionaries.OUT, TsData.class, source -> source.getOutliersEffect(null));
@@ -446,20 +336,15 @@ public class RegSarimaModelExtractors {
             set(RegressionDictionaries.FULL_RES, TsData.class, source -> source.fullResiduals());
 
             set(RegressionDictionaries.REG, TsData.class, (RegSarimaModel source) -> {
-                TsData reg = source.deterministicEffect(
-                        null, v -> !ModellingUtility.isCalendar(v) && !ModellingUtility.isOutlier(v));
+                TsData reg = source.deterministicEffect(null, v -> ModellingUtility.isUser(v));
                 return source.backTransform(reg, false);
             });
             setArray(RegressionDictionaries.REG_F, NFCAST, TsData.class, (source, i) -> {
-                TsData reg = source.deterministicEffect(
-                        source.forecastDomain(i),
-                        v -> !ModellingUtility.isCalendar(v) && !ModellingUtility.isOutlier(v));
+                TsData reg = source.deterministicEffect(source.forecastDomain(i), v -> ModellingUtility.isUser(v));
                 return source.backTransform(reg, false);
             });
             setArray(RegressionDictionaries.REG_B, NBCAST, TsData.class, (source, i) -> {
-                TsData reg = source.deterministicEffect(
-                        source.backcastDomain(i),
-                        v -> !ModellingUtility.isCalendar(v) && !ModellingUtility.isOutlier(v));
+                TsData reg = source.deterministicEffect(source.backcastDomain(i), v -> ModellingUtility.isUser(v));
                 return source.backTransform(reg, false);
             });
 
@@ -500,26 +385,6 @@ public class RegSarimaModelExtractors {
                 diag.set(1);
                 return cov;
             });
-
-            //            set(residualsItem(ResidualsDictionaries.SER), Double.class, (RegSarimaModel source) -> {
-            //                LikelihoodStatistics stats = source.getEstimation().getStatistics();
-            //                double ssqErr = stats.getSsqErr();
-            //                int ndf = stats.getEffectiveObservationsCount() - stats.getEstimatedParametersCount() -
-            // source.freeArimaParametersCount();
-            //                return Math.sqrt(ssqErr / ndf);
-            //            });
-            //            set(residualsItem(ResidualsDictionaries.SER_ML), Double.class, (RegSarimaModel source) -> {
-            //                LikelihoodStatistics stats = source.getEstimation().getStatistics();
-            //                double ssqErr = stats.getSsqErr();
-            //                int ndf = stats.getEffectiveObservationsCount();
-            //                return Math.sqrt(ssqErr / ndf);
-            //            });
-            //            set(residualsItem(ResidualsDictionaries.RES), double[].class, (RegSarimaModel source) -> {
-            //                RegSarimaModel.Details details = source.getDetails();
-            //                return details.getIndependentResiduals().toArray();
-            //            });
-            //            set(residualsItem(ResidualsDictionaries.TSRES), TsData.class, (RegSarimaModel source) ->
-            // source.fullResiduals());
         }
 
         @Override

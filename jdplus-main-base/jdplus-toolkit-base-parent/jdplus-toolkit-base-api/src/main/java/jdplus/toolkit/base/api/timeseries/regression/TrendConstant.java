@@ -15,7 +15,7 @@ import nbbrd.design.Development;
  */
 @lombok.Value
 @Development(status = Development.Status.Release)
-public class TrendConstant implements ITsVariable {
+public class TrendConstant implements IConstant {
 
     public static final String NAME = "const";
 

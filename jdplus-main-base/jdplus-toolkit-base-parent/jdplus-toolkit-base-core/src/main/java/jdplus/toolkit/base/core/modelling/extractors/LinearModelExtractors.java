@@ -7,7 +7,6 @@ package jdplus.toolkit.base.core.modelling.extractors;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Predicate;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.toolkit.base.api.dictionaries.RegArimaDictionaries;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
@@ -55,6 +54,7 @@ public class LinearModelExtractors {
                 ITD = 10,
                 ILP = 11,
                 IEASTER = 12,
+                ICALENDAR = 13,
                 AO = 20,
                 LS = 21,
                 TC = 22,
@@ -137,47 +137,47 @@ public class LinearModelExtractors {
             set(
                     regressionItem(RegressionDictionaries.NLP),
                     Integer.class,
-                    source -> count(source, var -> var instanceof ILengthOfPeriodVariable));
+                    source -> source.count(var -> var instanceof ILengthOfPeriodVariable));
             set(
                     regressionItem(RegressionDictionaries.NTD),
                     Integer.class,
-                    source -> count(source, var -> var instanceof ITradingDaysVariable));
+                    source -> source.count(var -> var instanceof ITradingDaysVariable));
             set(
                     regressionItem(RegressionDictionaries.NMH),
                     Integer.class,
-                    source -> count(source, var -> var instanceof IMovingHolidayVariable));
+                    source -> source.count(var -> var instanceof IMovingHolidayVariable));
             set(
                     regressionItem(RegressionDictionaries.NOUT),
                     Integer.class,
-                    source -> count(source, var -> var instanceof IOutlier));
+                    source -> source.count(var -> var instanceof IOutlier));
             set(
                     regressionItem(RegressionDictionaries.NAO),
                     Integer.class,
-                    source -> count(source, var -> var instanceof AdditiveOutlier));
+                    source -> source.count(var -> var instanceof AdditiveOutlier));
             set(
                     regressionItem(RegressionDictionaries.NLS),
                     Integer.class,
-                    source -> count(source, var -> var instanceof LevelShift));
+                    source -> source.count(var -> var instanceof LevelShift));
             set(
                     regressionItem(RegressionDictionaries.NTC),
                     Integer.class,
-                    source -> count(source, var -> var instanceof TransitoryChange));
+                    source -> source.count(var -> var instanceof TransitoryChange));
             set(
                     regressionItem(RegressionDictionaries.NSO),
                     Integer.class,
-                    source -> count(source, var -> var instanceof PeriodicOutlier));
+                    source -> source.count(var -> var instanceof PeriodicOutlier));
             set(
                     regressionItem(RegressionDictionaries.NRAMPS),
                     Integer.class,
-                    source -> count(source, var -> var instanceof Ramp));
+                    source -> source.count(var -> var instanceof Ramp));
             set(
                     regressionItem(RegressionDictionaries.NIV),
                     Integer.class,
-                    source -> count(source, var -> var instanceof InterventionVariable));
+                    source -> source.count(var -> var instanceof InterventionVariable));
             set(
                     regressionItem(RegressionDictionaries.NUSERS),
                     Integer.class,
-                    source -> count(source, var -> var instanceof IUserVariable));
+                    source -> source.count(var -> var instanceof IUserVariable));
             set(regressionItem(RegressionDictionaries.LEASTER), Integer.class, source -> {
                 Variable[] variables = source.getDescription().getVariables();
                 Optional<Variable> found = Arrays.stream(variables)
@@ -279,7 +279,7 @@ public class LinearModelExtractors {
             return Matrix.of(cm, m.getRowsCount(), m.getColumnsCount());
         }
 
-        private int type(ITsVariable var) {
+        public static int type(ITsVariable var) {
             if (var instanceof TrendConstant) {
                 return IMEAN;
             }
@@ -318,29 +318,6 @@ public class LinearModelExtractors {
         @Override
         public int getPriority() {
             return 1;
-        }
-
-        private int countVar(GeneralLinearModel source, Predicate<Variable> pred) {
-            Variable[] variables = source.getDescription().getVariables();
-            int n = 0;
-            for (int i = 0; i < variables.length; ++i) {
-                if (pred.test(variables[i])) {
-                    n += variables[i].dim();
-                }
-            }
-            return n;
-        }
-
-        private int count(GeneralLinearModel source, Predicate<ITsVariable> pred) {
-            Variable[] variables = source.getDescription().getVariables();
-            int n = 0;
-            for (int i = 0; i < variables.length; ++i) {
-                ITsVariable core = variables[i].getCore();
-                if (pred.test(core)) {
-                    n += core.dim();
-                }
-            }
-            return n;
         }
     }
 }

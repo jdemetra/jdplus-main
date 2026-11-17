@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.SaVariable;
 import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
-import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
+import jdplus.sa.desktop.plugin.l2fprod.SaUserVariableDescriptor;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.*;
@@ -163,15 +163,14 @@ public class RegressionSpecUI extends BaseRegArimaSpecUI {
         update(inner().toBuilder().clearRamps().ramps(list).build());
     }
 
-    public SaTsVariableDescriptor[] getUserDefinedVariables() {
+    public SaUserVariableDescriptor[] getUserDefinedVariables() {
         return inner().getUserDefinedVariables().stream()
-                .map(var -> new SaTsVariableDescriptor(var))
-                .toArray(SaTsVariableDescriptor[]::new);
+                .map(var -> new SaUserVariableDescriptor(var))
+                .toArray(SaUserVariableDescriptor[]::new);
     }
 
-    public void setUserDefinedVariables(SaTsVariableDescriptor[] value) {
-        List<UserVariableDescriptor> list =
-                Arrays.stream(value).map(v -> v.getCore()).collect(Collectors.toList());
+    public void setUserDefinedVariables(SaUserVariableDescriptor[] value) {
+        List<UserVariableSpec> list = Arrays.stream(value).map(v -> v.getCore()).collect(Collectors.toList());
         update(inner().toBuilder()
                 .clearUserDefinedVariables()
                 .userDefinedVariables(list)

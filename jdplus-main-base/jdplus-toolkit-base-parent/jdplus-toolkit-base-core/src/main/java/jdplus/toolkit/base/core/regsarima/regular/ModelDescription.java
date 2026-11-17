@@ -1,26 +1,34 @@
 /*
  * Copyright 2020 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * https://joinup.ec.europa.eu/software/page/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.core.regsarima.regular;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 import jdplus.toolkit.base.api.arima.SarimaOrders;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.HasAnnualFrequency;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
@@ -32,14 +40,6 @@ import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import jdplus.toolkit.base.api.util.IntList;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.arima.estimation.IArimaMapping;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
@@ -60,8 +60,8 @@ import jdplus.toolkit.base.core.stats.likelihood.ConcentratedLikelihoodWithMissi
 import jdplus.toolkit.base.core.stats.likelihood.LogLikelihoodFunction;
 import jdplus.toolkit.base.core.timeseries.simplets.Transformations;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataTransformation;
-import nbbrd.design.Development;
 import lombok.NonNull;
+import nbbrd.design.Development;
 
 /**
  *
@@ -81,6 +81,7 @@ public final class ModelDescription implements HasAnnualFrequency {
      * domain correspond to the domain of the series
      */
     private double[] interpolatedData, transformedData;
+
     private double llCorrection;
     /**
      * Position in the original series of the missing values (if interpolated)
@@ -101,7 +102,7 @@ public final class ModelDescription implements HasAnnualFrequency {
      */
     private SarimaSpec arima = SarimaSpec.whiteNoise();
 
-    private boolean sortedVariables; //optimization
+    private boolean sortedVariables; // optimization
 
     public static ModelDescription dummyModel() {
         return new ModelDescription();
@@ -163,24 +164,17 @@ public final class ModelDescription implements HasAnnualFrequency {
     // 2 users
     // 3 calendars
     // 4 moving holidays
-    // 5 outliers, 5.1 pre-specified, 5.2 detected 
+    // 5 outliers, 5.1 pre-specified, 5.2 detected
     private void sortVariables() {
         if (sortedVariables) {
             return;
         }
         List<Variable> vars = new ArrayList<>();
-        variables.stream()
-                .filter(v -> v.getCore() instanceof TrendConstant)
-                .forEach(v -> vars.add(v));
-        variables.stream()
-                .filter(v -> ModellingUtility.isUser(v))
-                .forEachOrdered(v -> vars.add(v));
-        variables.stream()
-                .filter(v -> ModellingUtility.isDaysRelated(v))
-                .forEachOrdered(v -> vars.add(v));
-        variables.stream()
-                .filter(v -> ModellingUtility.isMovingHoliday(v))
-                .forEachOrdered(v -> vars.add(v));
+        variables.stream().filter(v -> v.getCore() instanceof TrendConstant).forEach(v -> vars.add(v));
+        variables.stream().filter(v -> ModellingUtility.isRamp(v)).forEachOrdered(v -> vars.add(v));
+        variables.stream().filter(v -> ModellingUtility.isIntervention(v)).forEachOrdered(v -> vars.add(v));
+        variables.stream().filter(v -> ModellingUtility.isUser(v)).forEachOrdered(v -> vars.add(v));
+        variables.stream().filter(v -> ModellingUtility.isCalendar(v)).forEachOrdered(v -> vars.add(v));
         variables.stream()
                 .filter(v -> ModellingUtility.isOutlier(v))
                 .filter(v -> !ModellingUtility.isAutomaticallyIdentified(v))
@@ -391,23 +385,20 @@ public final class ModelDescription implements HasAnnualFrequency {
     }
 
     public Variable variable(String name) {
-        Optional<Variable> search = variables.stream()
-                .filter(var -> var.getName().equals(name))
-                .findFirst();
+        Optional<Variable> search =
+                variables.stream().filter(var -> var.getName().equals(name)).findFirst();
         return search.orElse(null);
     }
 
     public Variable variable(ITsVariable v) {
-        Optional<Variable> search = variables.stream()
-                .filter(var -> var.getCore() == v)
-                .findFirst();
+        Optional<Variable> search =
+                variables.stream().filter(var -> var.getCore() == v).findFirst();
         return search.orElse(null);
     }
 
     public boolean remove(String name) {
-        Optional<Variable> search = variables.stream()
-                .filter(var -> var.getName().equals(name))
-                .findFirst();
+        Optional<Variable> search =
+                variables.stream().filter(var -> var.getName().equals(name)).findFirst();
         if (search.isPresent()) {
             variables.remove(search.orElseThrow());
             return true;
@@ -417,9 +408,8 @@ public final class ModelDescription implements HasAnnualFrequency {
     }
 
     public boolean remove(ITsVariable v) {
-        Optional<Variable> search = variables.stream()
-                .filter(var -> var.getCore() == v)
-                .findFirst();
+        Optional<Variable> search =
+                variables.stream().filter(var -> var.getCore() == v).findFirst();
         if (search.isPresent()) {
             variables.remove(search.orElseThrow());
             return true;
@@ -440,8 +430,7 @@ public final class ModelDescription implements HasAnnualFrequency {
     }
 
     public boolean contains(String name) {
-        return variables.stream()
-                .anyMatch(var -> var.getName().equals(name));
+        return variables.stream().anyMatch(var -> var.getName().equals(name));
     }
 
     public void setLogTransformation(boolean log) {
@@ -550,8 +539,7 @@ public final class ModelDescription implements HasAnnualFrequency {
 
     public void setAirline(boolean seas) {
         int period = getAnnualFrequency();
-        SarimaOrders s = seas ? SarimaOrders.airline(period)
-                : SarimaOrders.m011(period);
+        SarimaOrders s = seas ? SarimaOrders.airline(period) : SarimaOrders.m011(period);
         setSpecification(s);
     }
 
@@ -581,9 +569,7 @@ public final class ModelDescription implements HasAnnualFrequency {
      * @return The number of regressors (>= # variables)
      */
     public int countRegressors(Predicate<Variable> pred) {
-        return variables()
-                .filter(pred)
-                .mapToInt(var -> var.getCore().dim()).sum();
+        return variables().filter(pred).mapToInt(var -> var.getCore().dim()).sum();
     }
 
     public void setPreadjustment(LengthOfPeriodType lengthOfPeriodType) {
@@ -816,6 +802,6 @@ public final class ModelDescription implements HasAnnualFrequency {
 
     private static final String EXCLUDED = "excluded variable: ",
             COLLINEAR = "collinear model. Some coefficients are set to 0",
-            NOTFOUND = ": data not found", ZERO= ": is zero";
-
+            NOTFOUND = ": data not found",
+            ZERO = ": is zero";
 }

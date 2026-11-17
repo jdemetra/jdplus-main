@@ -24,7 +24,7 @@ import nbbrd.design.Development;
  * @author Jean Palate
  */
 @Development(status = Development.Status.Release)
-public class UserMovingHoliday extends TsVariable implements IMovingHolidayVariable, IUserVariable {
+public class UserMovingHoliday extends TsVariable implements IMovingHolidayVariable {
 
     public static UserMovingHoliday of(String id, String desc, ModellingContext context) {
         TsData data = data(id, context);

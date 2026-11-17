@@ -26,7 +26,7 @@ import nbbrd.design.Development;
  */
 @lombok.Value
 @Development(status = Development.Status.Release)
-public class LinearTrend implements ITsVariable {
+public class LinearTrend implements IConstant {
 
     private LocalDateTime start;
 

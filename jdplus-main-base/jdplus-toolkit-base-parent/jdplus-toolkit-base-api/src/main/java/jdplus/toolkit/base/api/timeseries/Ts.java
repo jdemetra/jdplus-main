@@ -17,16 +17,15 @@
 package jdplus.toolkit.base.api.timeseries;
 
 import internal.toolkit.base.api.timeseries.util.TsDataCollector;
-import lombok.NonNull;
-import nbbrd.design.LombokWorkaround;
-import nbbrd.design.StaticFactoryMethod;
-import org.jspecify.annotations.Nullable;
-
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Objects;
+import lombok.NonNull;
+import nbbrd.design.LombokWorkaround;
+import nbbrd.design.StaticFactoryMethod;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author Jean Palate
@@ -35,26 +34,23 @@ import java.util.Objects;
 @lombok.Builder(toBuilder = true)
 public class Ts {
 
-    public static final String SOURCE_OLD = "tsmoniker.source", ID_OLD = "tsmoniker.id",
-            DYNAMIC = "dynamic";
+    public static final Ts EMPTY = builder().build();
+
+    public static final String SOURCE_OLD = "tsmoniker.source", ID_OLD = "tsmoniker.id", DYNAMIC = "dynamic";
     // Additional metadata.
     public static final String BEG = "@beg", END = "@end", CONFIDENTIAL = "@confidential";
 
-    @lombok.NonNull
-    private TsMoniker moniker;
+    @lombok.NonNull private TsMoniker moniker;
 
-    @lombok.NonNull
-    private TsInformationType type;
+    @lombok.NonNull private TsInformationType type;
 
     @lombok.With
-    @lombok.NonNull
-    private String name;
+    @lombok.NonNull private String name;
 
     @lombok.Singular("meta")
     private Map<String, String> meta;
 
-    @lombok.NonNull
-    private TsData data;
+    @lombok.NonNull private TsData data;
 
     @LombokWorkaround
     public static Builder builder() {
@@ -87,8 +83,8 @@ public class Ts {
         }
         return factory.makeTs(moniker, info);
     }
-    
-    private static final String FROZEN=" (frozen)";
+
+    private static final String FROZEN = " (frozen)";
 
     public @NonNull Ts freeze() {
         if (!moniker.isProvided()) {
@@ -97,26 +93,24 @@ public class Ts {
         Builder builder = this.toBuilder();
         putFreezeMeta(builder, moniker);
 
-        return builder
-                .moniker(TsMoniker.of())
+        return builder.moniker(TsMoniker.of())
                 .name(name + FROZEN)
                 .type(TsInformationType.UserDefined)
                 .build();
     }
 
     public @NonNull Ts unfreeze(@NonNull TsFactory factory, TsInformationType type) {
-        if (moniker.isProvided())
-            return this;
+        if (moniker.isProvided()) return this;
         TsMoniker pmoniker = getFreezeMeta(meta);
-        if (pmoniker == null)
-            return this;
+        if (pmoniker == null) return this;
         return factory.makeTs(pmoniker, type);
     }
 
     private static void putFreezeMeta(@NonNull Builder builder, @NonNull TsMoniker origin) {
         builder.meta(TsFactory.SOURCE, origin.getSource());
         builder.meta(TsFactory.ID, origin.getId());
-        builder.meta(TsFactory.DATE, LocalDateTime.now(Clock.systemDefaultZone()).format(DateTimeFormatter.ISO_DATE));
+        builder.meta(
+                TsFactory.DATE, LocalDateTime.now(Clock.systemDefaultZone()).format(DateTimeFormatter.ISO_DATE));
     }
 
     private static boolean containsFreezeMeta(@NonNull Map<String, String> md) {
@@ -131,8 +125,7 @@ public class Ts {
         }
     }
 
-    @Nullable
-    private static TsMoniker getFreezeMeta(@NonNull Map<String, String> md) {
+    @Nullable private static TsMoniker getFreezeMeta(@NonNull Map<String, String> md) {
 
         String source = md.get(TsFactory.SOURCE);
         // Legacy
@@ -162,10 +155,8 @@ public class Ts {
     }
 
     public boolean isFrozen() {
-        if (moniker.isProvided())
-            return false;
+        if (moniker.isProvided()) return false;
         TsMoniker pmoniker = getFreezeMeta(meta);
         return pmoniker != null;
     }
-
 }
