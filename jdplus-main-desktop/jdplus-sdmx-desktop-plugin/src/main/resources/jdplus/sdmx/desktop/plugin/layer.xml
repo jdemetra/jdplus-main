@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="QuickSearch">
+        <folder name="SDMX">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="jdplus.sdmx.desktop.plugin.Bundle"/>
+            <attr name="command" stringvalue="sdmx"/>
+            <attr name="position" intvalue="200"/>
+        </folder>
+    </folder>
+</filesystem>
