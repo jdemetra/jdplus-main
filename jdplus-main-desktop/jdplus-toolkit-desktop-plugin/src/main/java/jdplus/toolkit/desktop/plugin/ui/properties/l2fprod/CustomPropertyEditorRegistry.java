@@ -1,17 +1,16 @@
 package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 
 import com.l2fprod.common.propertysheet.PropertyEditorRegistry;
-import jdplus.toolkit.base.api.data.Parameter;
 import java.beans.PropertyEditor;
 import java.io.File;
 import java.time.LocalDate;
+import jdplus.toolkit.base.api.data.Parameter;
 
 /**
  *
  * @author Demortier Jeremy
  */
 public enum CustomPropertyEditorRegistry {
-
     INSTANCE;
     private final PropertyEditorRegistry m_registry;
 
@@ -22,13 +21,13 @@ public enum CustomPropertyEditorRegistry {
         m_registry.registerEditor(double.class, DoublePropertyEditor.class);
         m_registry.registerEditor(Double.class, DoublePropertyEditor.class);
 
-        //registerCompositeEditor(SeasonalFilterOption[].class);
+        // registerCompositeEditor(SeasonalFilterOption[].class);
         register(File.class, new DirectoryEditor());
         register(LocalDate.class, new JDayPropertyEditor());
         register(Parameter.class, new ParameterEditor());
         register(Parameter[].class, new ParametersPropertyEditor());
         register(RampDescriptor[].class, new RampsEditor());
-        register(TsVariableDescriptor[].class, new TsVariableDescriptorsEditor());
+        register(UserVariableDescriptor[].class, new UserVariableDescriptorsEditor());
         register(InterventionVariableDescriptor[].class, new InterventionVariablesEditor());
         register(Sequence[].class, new SequencesEditor());
         register(OutlierDescriptor[].class, new OutlierDescriptorsEditor());
@@ -59,7 +58,9 @@ public enum CustomPropertyEditorRegistry {
     }
 
     public void registerCompositeEditor(Class type) {
-        if (m_registry.getEditor(type) == null && type.isArray() && type.getComponentType().isEnum()) {
+        if (m_registry.getEditor(type) == null
+                && type.isArray()
+                && type.getComponentType().isEnum()) {
             MultiEnumPropertyEditor editor = new MultiEnumPropertyEditor(type.getComponentType());
             m_registry.registerEditor(type, editor);
         }

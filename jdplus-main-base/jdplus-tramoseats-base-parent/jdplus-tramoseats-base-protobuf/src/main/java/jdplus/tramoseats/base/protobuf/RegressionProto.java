@@ -5,10 +5,9 @@
  */
 package jdplus.tramoseats.base.protobuf;
 
+import java.time.LocalDate;
+import java.util.List;
 import jdplus.toolkit.base.api.data.Parameter;
-import jdplus.toolkit.base.protobuf.modelling.ModellingProtos;
-import jdplus.toolkit.base.protobuf.modelling.ModellingProtosUtility;
-import jdplus.tramoseats.base.api.tramo.RegressionSpec;
 import jdplus.toolkit.base.api.timeseries.regression.AdditiveOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
@@ -16,13 +15,14 @@ import jdplus.toolkit.base.api.timeseries.regression.LevelShift;
 import jdplus.toolkit.base.api.timeseries.regression.PeriodicOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.protobuf.modelling.ModellingProtos;
+import jdplus.toolkit.base.protobuf.modelling.ModellingProtosUtility;
 import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtosUtility;
 import jdplus.tramoseats.base.api.tramo.CalendarSpec;
 import jdplus.tramoseats.base.api.tramo.MeanSpec;
-import java.time.LocalDate;
-import java.util.List;
+import jdplus.tramoseats.base.api.tramo.RegressionSpec;
 
 /**
  *
@@ -53,9 +53,7 @@ public class RegressionProto {
             }
         }
 
-        RegressionSpec.Builder builder = RegressionSpec.builder()
-                .mean(mean)
-                .calendar(cbuilder.build());
+        RegressionSpec.Builder builder = RegressionSpec.builder().mean(mean).calendar(cbuilder.build());
         int n = spec.getOutliersCount();
         for (int i = 0; i < n; ++i) {
             ModellingProtos.Outlier outlier = spec.getOutliers(i);
@@ -86,8 +84,7 @@ public class RegressionProto {
                 .setTd(TradingDaysProto.convert(spec.getCalendar().getTradingDays()));
         MeanSpec mean = spec.getMean();
         if (mean.isUsed()) {
-            builder.setMean(ToolkitProtosUtility.convert(mean.getCoefficient()))
-                    .setCheckMean(mean.isTest());
+            builder.setMean(ToolkitProtosUtility.convert(mean.getCoefficient())).setCheckMean(mean.isTest());
         } else {
             // unused -> Parameter = unused
             builder.clearMean().setCheckMean(false);
@@ -97,9 +94,9 @@ public class RegressionProto {
         outliers.forEach(outlier -> {
             builder.addOutliers(convert(outlier));
         });
-        List<Variable<TsContextVariable>> users = spec.getUserDefinedVariables();
+        List<UserVariableSpec> users = spec.getUserDefinedVariables();
         users.forEach(user -> {
-            builder.addUsers(ModellingProtosUtility.convertTsContextVariable(user));
+            builder.addUsers(ModellingProtosUtility.convertUserVariable(user));
         });
         List<Variable<InterventionVariable>> ivs = spec.getInterventionVariables();
         ivs.forEach(iv -> {
@@ -141,7 +138,7 @@ public class RegressionProto {
         return Variable.<IOutlier>builder()
                 .core(o)
                 .name(outlier.getName())
-                .coefficients(c == null ? null : new Parameter[]{c})
+                .coefficients(c == null ? null : new Parameter[] {c})
                 .attributes(outlier.getMetadataMap())
                 .build();
     }

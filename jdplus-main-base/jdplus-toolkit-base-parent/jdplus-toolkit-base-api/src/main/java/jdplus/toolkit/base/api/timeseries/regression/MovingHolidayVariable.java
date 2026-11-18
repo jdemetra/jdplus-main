@@ -13,20 +13,19 @@ import jdplus.toolkit.base.api.timeseries.calendars.HolidayPattern;
  * @author palatej
  */
 @lombok.Value
-public class MovingHolidayVariable implements IMovingHolidayVariable, ISystemVariable{
+public class MovingHolidayVariable implements IMovingHolidayVariable {
 
-    @lombok.NonNull
-    String event;
+    @lombok.NonNull String event;
+
     HolidayPattern pattern;
 
     @Override
     public int dim() {
         return 1;
     }
-    
+
     @Override
-    public <D extends TimeSeriesDomain<?>> String description(D context){
+    public <D extends TimeSeriesDomain<?>> String description(D context) {
         return "event";
     }
-    
 }

@@ -4,18 +4,19 @@
  */
 package jdplus.sa.desktop.plugin.descriptors.regular;
 
-import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
-import jdplus.sa.desktop.plugin.l2fprod.SaTsVariableDescriptor;
-import jdplus.toolkit.base.api.data.Parameter;
-import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
-import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
-import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.OutlierDescriptor;
-import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.RampDescriptor;
-import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
-import jdplus.toolkit.base.api.modelling.TransformationType;
-import jdplus.toolkit.base.api.modelling.regular.RegressionSpec;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import jdplus.sa.base.api.ComponentType;
 import jdplus.sa.base.api.SaVariable;
+import jdplus.sa.desktop.plugin.l2fprod.SaInterventionVariableDescriptor;
+import jdplus.sa.desktop.plugin.l2fprod.SaUserVariableDescriptor;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.modelling.TransformationType;
+import jdplus.toolkit.base.api.modelling.regular.RegressionSpec;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.regression.AdditiveOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
@@ -24,14 +25,13 @@ import jdplus.toolkit.base.api.timeseries.regression.LevelShift;
 import jdplus.toolkit.base.api.timeseries.regression.PeriodicOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
+import jdplus.toolkit.desktop.plugin.descriptors.IPropertyDescriptors;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.OutlierDescriptor;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.RampDescriptor;
+import jdplus.toolkit.desktop.plugin.ui.properties.l2fprod.UserInterfaceContext;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -42,16 +42,11 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
 
     private static IOutlier toOutlier(OutlierDescriptor od, int period, double tc) {
         return switch (od.getType()) {
-            case AO ->
-                new AdditiveOutlier(od.getPosition().atStartOfDay());
-            case LS ->
-                new LevelShift(od.getPosition().atStartOfDay(), true);
-            case TC ->
-                new TransitoryChange(od.getPosition().atStartOfDay(), tc);
-            case SO ->
-                new PeriodicOutlier(od.getPosition().atStartOfDay(), period, true);
-            default ->
-                null;
+            case AO -> new AdditiveOutlier(od.getPosition().atStartOfDay());
+            case LS -> new LevelShift(od.getPosition().atStartOfDay(), true);
+            case TC -> new TransitoryChange(od.getPosition().atStartOfDay(), tc);
+            case SO -> new PeriodicOutlier(od.getPosition().atStartOfDay(), period, true);
+            default -> null;
         };
     }
 
@@ -92,10 +87,10 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
             descs.add(desc);
         }
 
-//        desc = fixedCoefficientsDesc();
-//        if (desc != null) {
-//            descs.add(desc);
-//        }
+        //        desc = fixedCoefficientsDesc();
+        //        if (desc != null) {
+        //            descs.add(desc);
+        //        }
         return descs;
     }
 
@@ -106,11 +101,14 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
     }
 
     public OutlierDescriptor[] getPreSpecifiedOutliers() {
-        return spec().getOutliers()
-                .stream()
+        return spec().getOutliers().stream()
                 .map(var -> {
                     IOutlier o = var.getCore();
-                    return new OutlierDescriptor(o.getPosition().toLocalDate(), OutlierDescriptor.OutlierType.valueOf(o.getCode()), var.getCoefficient(0), var.getName());
+                    return new OutlierDescriptor(
+                            o.getPosition().toLocalDate(),
+                            OutlierDescriptor.OutlierType.valueOf(o.getCode()),
+                            var.getCoefficient(0),
+                            var.getName());
                 })
                 .sorted((o1, o2) -> o1.getPosition().compareTo(o2.getPosition()))
                 .toArray(n -> new OutlierDescriptor[n]);
@@ -121,20 +119,21 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         double tc = root().outlier().getDeltaTC();
         TsDomain domain = UserInterfaceContext.INSTANCE.getDomain();
         int period = domain == null ? 0 : domain.getAnnualFrequency();
-        List<Variable<IOutlier>> list = Arrays.stream(value).map(v -> {
-            IOutlier o = toOutlier(v, period, tc);
-            return Variable.<IOutlier>builder()
-                    .name(v.getName())
-                    .core(o)
-                    .coefficients(parameter(v.getCoefficient()))
-                    .build();
-        }).collect(Collectors.toList());
+        List<Variable<IOutlier>> list = Arrays.stream(value)
+                .map(v -> {
+                    IOutlier o = toOutlier(v, period, tc);
+                    return Variable.<IOutlier>builder()
+                            .name(v.getName())
+                            .core(o)
+                            .coefficients(parameter(v.getCoefficient()))
+                            .build();
+                })
+                .collect(Collectors.toList());
         root().update(spec().toBuilder().clearOutliers().outliers(list).build());
     }
 
     public SaInterventionVariableDescriptor[] getInterventionVariables() {
-        return spec().getInterventionVariables()
-                .stream()
+        return spec().getInterventionVariables().stream()
                 .map(var -> new SaInterventionVariableDescriptor(var))
                 .toArray(SaInterventionVariableDescriptor[]::new);
     }
@@ -143,54 +142,52 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         if (root().transform().getFunction() == TransformationType.Auto) {
             p = Parameter.undefined();
         }
-        return new Parameter[]{p};
+        return new Parameter[] {p};
     }
 
     public void setInterventionVariables(SaInterventionVariableDescriptor[] value) {
-        List<Variable<InterventionVariable>> list = Arrays.stream(value).map(v -> Variable.<InterventionVariable>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
-                .build())
+        List<Variable<InterventionVariable>> list = Arrays.stream(value)
+                .map(v -> Variable.<InterventionVariable>builder()
+                        .name(v.getName())
+                        .core(v.getCore())
+                        .coefficients(parameter(v.getCoefficient()))
+                        .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
+                        .build())
                 .collect(Collectors.toList());
-        root().update(spec().toBuilder().clearInterventionVariables().interventionVariables(list).build());
+        root().update(spec().toBuilder()
+                .clearInterventionVariables()
+                .interventionVariables(list)
+                .build());
     }
 
     public RampDescriptor[] getRamps() {
-        return spec().getRamps()
-                .stream()
-                .map(var -> new RampDescriptor(var))
-                .toArray(RampDescriptor[]::new);
+        return spec().getRamps().stream().map(var -> new RampDescriptor(var)).toArray(RampDescriptor[]::new);
     }
 
     public void setRamps(RampDescriptor[] value) {
-        List<Variable<Ramp>> list = Arrays.stream(value).map(v -> Variable.<Ramp>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, ComponentType.Trend.name())
-                .build())
+        List<Variable<Ramp>> list = Arrays.stream(value)
+                .map(v -> Variable.<Ramp>builder()
+                        .name(v.getName())
+                        .core(v.getCore())
+                        .coefficients(parameter(v.getCoefficient()))
+                        .attribute(SaVariable.REGEFFECT, ComponentType.Trend.name())
+                        .build())
                 .collect(Collectors.toList());
         root().update(spec().toBuilder().clearRamps().ramps(list).build());
     }
 
-    public SaTsVariableDescriptor[] getUserDefinedVariables() {
-        return spec().getUserDefinedVariables()
-                .stream()
-                .map(var -> new SaTsVariableDescriptor(var))
-                .toArray(SaTsVariableDescriptor[]::new);
+    public SaUserVariableDescriptor[] getUserDefinedVariables() {
+        return spec().getUserDefinedVariables().stream()
+                .map(var -> new SaUserVariableDescriptor(var))
+                .toArray(SaUserVariableDescriptor[]::new);
     }
 
-    public void setUserDefinedVariables(SaTsVariableDescriptor[] value) {
-        List<Variable<TsContextVariable>> list = Arrays.stream(value).map(v -> Variable.<TsContextVariable>builder()
-                .name(v.getName())
-                .core(v.getCore())
-                .coefficients(parameter(v.getCoefficient()))
-                .attribute(SaVariable.REGEFFECT, v.getRegressionEffect().name())
-                .build())
-                .collect(Collectors.toList());
-        root().update(spec().toBuilder().clearUserDefinedVariables().userDefinedVariables(list).build());
+    public void setUserDefinedVariables(SaUserVariableDescriptor[] value) {
+        List<UserVariableSpec> list = Arrays.stream(value).map(v -> v.getCore()).collect(Collectors.toList());
+        root().update(spec().toBuilder()
+                .clearUserDefinedVariables()
+                .userDefinedVariables(list)
+                .build());
     }
 
     public abstract IPropertyDescriptors getMean();
@@ -203,11 +200,16 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         root().update(spec().toBuilder().aicDiff(ad).build());
     }
 
-    private static final int MEAN_ID = 1, CALENDAR_ID = 2, PRESPEC_ID = 3, INTERV_ID = 4, RAMPS_ID = 5, USERDEF_ID = 6, AICCDIFF_ID = 7, MU_ID = 8;
+    private static final int MEAN_ID = 1,
+            CALENDAR_ID = 2,
+            PRESPEC_ID = 3,
+            INTERV_ID = 4,
+            RAMPS_ID = 5,
+            USERDEF_ID = 6,
+            AICCDIFF_ID = 7,
+            MU_ID = 8;
 
-    @Messages({
-        "regular.regressionSpecUI.meanDesc.desc=[imean] Mean correction"
-    })
+    @Messages({"regular.regressionSpecUI.meanDesc.desc=[imean] Mean correction"})
     private EnhancedPropertyDescriptor meanDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Mean", this.getClass(), "getMean", null);
@@ -257,10 +259,7 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
         }
     }
 
-    @Messages({
-        "regular.regressionSpecUI.rampsDesc.name=Ramps",
-        "regular.regressionSpecUI.rampsDesc.desc=Ramps"
-    })
+    @Messages({"regular.regressionSpecUI.rampsDesc.name=Ramps", "regular.regressionSpecUI.rampsDesc.desc=Ramps"})
     private EnhancedPropertyDescriptor rampsDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("Ramps", this.getClass());
@@ -309,25 +308,25 @@ public abstract class AbstractRegressionSpecUI implements IPropertyDescriptors {
             return null;
         }
     }
-//    @Messages({
-//        "regular.regressionSpecUI.fixedCoefficientsDesc.name=Fixed regression coefficients",
-//        "regular.regressionSpecUI.fixedCoefficientsDesc.desc="
-//    })
-//    private EnhancedPropertyDescriptor fixedCoefficientsDesc() {
-//        try {
-//            PropertyDescriptor desc = new PropertyDescriptor("FixedCoefficients", this.getClass());
-//            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, FCOEFF_ID);
-//            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
-//            desc.setDisplayName(Bundle.regular_regressionSpecUI_fixedCoefficientsDesc_name());
-//            desc.setShortDescription(Bundle.regular_regressionSpecUI_fixedCoefficientsDesc_desc());
-//            // Disabled when the transformation is on "auto"
-//            edesc.setReadOnly(root().isRo() || core().getTransform().getFunction() == TransformationType.Auto);
-//            return edesc;
-//        } catch (IntrospectionException ex) {
-//            return null;
-//        }
-//    }
-//
+    //    @Messages({
+    //        "regular.regressionSpecUI.fixedCoefficientsDesc.name=Fixed regression coefficients",
+    //        "regular.regressionSpecUI.fixedCoefficientsDesc.desc="
+    //    })
+    //    private EnhancedPropertyDescriptor fixedCoefficientsDesc() {
+    //        try {
+    //            PropertyDescriptor desc = new PropertyDescriptor("FixedCoefficients", this.getClass());
+    //            EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, FCOEFF_ID);
+    //            edesc.setRefreshMode(EnhancedPropertyDescriptor.Refresh.All);
+    //            desc.setDisplayName(Bundle.regular_regressionSpecUI_fixedCoefficientsDesc_name());
+    //            desc.setShortDescription(Bundle.regular_regressionSpecUI_fixedCoefficientsDesc_desc());
+    //            // Disabled when the transformation is on "auto"
+    //            edesc.setReadOnly(root().isRo() || core().getTransform().getFunction() == TransformationType.Auto);
+    //            return edesc;
+    //        } catch (IntrospectionException ex) {
+    //            return null;
+    //        }
+    //    }
+    //
 
     @Messages({
         "regular.regressionSpecUI.calendarDesc.name=Calendar",

@@ -1,35 +1,34 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.sa.base.core.diagnostics;
 
-import jdplus.toolkit.base.api.data.AggregationType;
-import nbbrd.design.Development;
-import jdplus.toolkit.base.api.processing.ProcQuality;
+import java.util.List;
 import jdplus.sa.base.api.DecompositionMode;
 import jdplus.sa.base.api.SaDictionaries;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsUnit;
-
-import java.util.List;
-import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
-import jdplus.toolkit.base.api.information.Explorable;
-import jdplus.toolkit.base.api.processing.Diagnostics;
+import jdplus.toolkit.base.api.data.AggregationType;
 import jdplus.toolkit.base.api.dictionaries.Dictionary;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.processing.Diagnostics;
+import jdplus.toolkit.base.api.processing.ProcQuality;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsUnit;
+import jdplus.toolkit.base.core.stats.DescriptiveStatistics;
+import nbbrd.design.Development;
 
 /**
  *
@@ -56,7 +55,7 @@ public final class CoherenceDiagnostics implements Diagnostics {
     private boolean multiplicative;
     private boolean shortSeries;
     private double scale;
-    private final static String SHORTSERIES = "Short series";
+    private static final String SHORTSERIES = "Short series";
 
     public static CoherenceDiagnostics of(CoherenceDiagnosticsConfiguration config, Input data) {
         try {
@@ -115,10 +114,10 @@ public final class CoherenceDiagnostics implements Diagnostics {
             TsData ls = rslts.getData(decompositionItem(SaDictionaries.S_LIN), TsData.class);
             TsData li = rslts.getData(decompositionItem(SaDictionaries.I_LIN), TsData.class);
             TsData lsa = rslts.getData(decompositionItem(SaDictionaries.SA_LIN), TsData.class);
-            TsData tde = rslts.getData(RegressionDictionaries.TDE, TsData.class);
-            TsData ee = rslts.getData(RegressionDictionaries.EE, TsData.class);
-            TsData omhe = rslts.getData(RegressionDictionaries.OMHE, TsData.class);
-            TsData cal = rslts.getData(RegressionDictionaries.CAL, TsData.class);
+            TsData tde = rslts.getData(SaDictionaries.TDE, TsData.class);
+            TsData ee = rslts.getData(SaDictionaries.EE, TsData.class);
+            TsData omhe = rslts.getData(SaDictionaries.OMHE, TsData.class);
+            TsData cal = rslts.getData(SaDictionaries.CAL, TsData.class);
             TsData outs = rslts.getData(SaDictionaries.OUT_S, TsData.class);
             TsData regs = rslts.getData(SaDictionaries.REG_S, TsData.class);
             TsData outt = rslts.getData(SaDictionaries.OUT_T, TsData.class);
@@ -131,7 +130,7 @@ public final class CoherenceDiagnostics implements Diagnostics {
             // finals
             TsData df0 = sub(yc, op(t, s, i, regsa));
             TsData df1 = sub(sa, op(t, i, regsa));
-            //TsData df2 = sub(inv_op(y, regy), op(sa, s)); REDUNDANT
+            // TsData df2 = sub(inv_op(y, regy), op(sa, s)); REDUNDANT
             TsData df3 = sub(s, op(cs, cal, regs, outs));
             TsData df4 = sub(t, op(ct, regt, outt));
             TsData df5 = sub(i, op(ci, regi, outi));
@@ -139,27 +138,27 @@ public final class CoherenceDiagnostics implements Diagnostics {
             // components
             TsData dc0 = sub(cy, op(ct, cs, ci));
             TsData dc1 = sub(csa, op(ct, ci));
-            //TsData dc2 = sub(cy, op(csa, cs)); REDUNDANT
+            // TsData dc2 = sub(cy, op(csa, cs)); REDUNDANT
 
             maxDefinitionDifference = Double.NaN;
             check(df0);
             check(df1);
-            //check(df2);
+            // check(df2);
             check(df3);
             check(df4);
             check(df5);
             check(dcal);
             check(dc0);
             check(dc1);
-            //check(dc2);
+            // check(dc2);
             // lin
             if (lsa != null) {
                 TsData dl0 = sub(ly, add(lt, ls, li));
                 TsData dl1 = sub(lsa, add(lt, li));
-                //TsData dl2 = sub(ly, add(lsa, ls)); REDUNDANT
+                // TsData dl2 = sub(ly, add(lsa, ls)); REDUNDANT
                 check(dl0);
                 check(dl1);
-                //check(dl2);
+                // check(dl2);
             }
         }
         // annual totals
@@ -269,7 +268,7 @@ public final class CoherenceDiagnostics implements Diagnostics {
 
     public double getLowerBound(ProcQuality quality) {
         return switch (quality) {
-//            case Error -> config.getErrorThreshold();
+            //            case Error -> config.getErrorThreshold();
             case Severe -> config.getSevereThreshold();
             case Bad -> config.getBadThreshold();
             case Uncertain -> config.getUncertainThreshold();

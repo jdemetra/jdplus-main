@@ -5,8 +5,8 @@
  */
 package jdplus.toolkit.base.api.timeseries.regression;
 
-import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import java.time.LocalDateTime;
+import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import nbbrd.design.Development;
 
 /**
@@ -14,11 +14,11 @@ import nbbrd.design.Development;
  * @author PALATEJ
  */
 @lombok.Value
-@Development(status=Development.Status.Release)
-public class TrendConstant implements ISystemVariable {
-    
-    public static final String NAME="const";
-    
+@Development(status = Development.Status.Release)
+public class TrendConstant implements IConstant {
+
+    public static final String NAME = "const";
+
     private int d, bd;
     private LocalDateTime reference;
 
@@ -27,22 +27,21 @@ public class TrendConstant implements ISystemVariable {
         return 1;
     }
 
-     @Override
-    public <D extends TimeSeriesDomain<?>> String description(D context){
+    @Override
+    public <D extends TimeSeriesDomain<?>> String description(D context) {
         return "Constant";
     }
-   
+
     @Deprecated
-    public TrendConstant(int d, int bd){
-        this.d=d;
-        this.bd=bd;
-        this.reference=null;
+    public TrendConstant(int d, int bd) {
+        this.d = d;
+        this.bd = bd;
+        this.reference = null;
     }
-    
-    public TrendConstant(int d, int bd, LocalDateTime reference){
-        this.d=d;
-        this.bd=bd;
-        this.reference=reference;
+
+    public TrendConstant(int d, int bd, LocalDateTime reference) {
+        this.d = d;
+        this.bd = bd;
+        this.reference = reference;
     }
-    
 }

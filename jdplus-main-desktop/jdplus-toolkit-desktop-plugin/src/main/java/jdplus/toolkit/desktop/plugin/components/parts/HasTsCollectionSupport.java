@@ -16,35 +16,13 @@
  */
 package jdplus.toolkit.desktop.plugin.components.parts;
 
+import static jdplus.toolkit.base.api.timeseries.TsCollection.toTsCollection;
+import static jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.*;
+
 import ec.util.list.swing.JLists;
 import ec.util.various.swing.FontAwesome;
 import ec.util.various.swing.JCommand;
-import jdplus.toolkit.base.api.data.Range;
-import jdplus.toolkit.base.api.timeseries.*;
-import jdplus.toolkit.base.tsp.DataSet;
-import jdplus.toolkit.base.tsp.DataSourceProvider;
-import jdplus.toolkit.base.tsp.util.ObsFormat;
-import jdplus.toolkit.desktop.plugin.*;
-import jdplus.toolkit.desktop.plugin.actions.Actions;
-import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
-import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
-import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
 import internal.toolkit.desktop.plugin.tools.JTsChartTopComponent;
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
-import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
-import jdplus.toolkit.desktop.plugin.datatransfer.LocalObjectDataTransfer;
-import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
-import jdplus.toolkit.desktop.plugin.util.Collections2;
-import jdplus.toolkit.desktop.plugin.util.KeyStrokes;
-import lombok.NonNull;
-import org.jspecify.annotations.Nullable;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
-import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
@@ -61,9 +39,30 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static jdplus.toolkit.base.api.timeseries.TsCollection.toTsCollection;
-import static jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.*;
+import javax.swing.*;
+import jdplus.toolkit.base.api.data.Range;
+import jdplus.toolkit.base.api.timeseries.*;
+import jdplus.toolkit.base.tsp.DataSet;
+import jdplus.toolkit.base.tsp.DataSourceProvider;
+import jdplus.toolkit.base.tsp.util.ObsFormat;
+import jdplus.toolkit.desktop.plugin.*;
+import jdplus.toolkit.desktop.plugin.actions.Actions;
+import jdplus.toolkit.desktop.plugin.beans.PropertyChangeBroadcaster;
+import jdplus.toolkit.desktop.plugin.components.ComponentCommand;
+import jdplus.toolkit.desktop.plugin.components.TsSelectionBridge;
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransferManager;
+import jdplus.toolkit.desktop.plugin.datatransfer.DataTransfers;
+import jdplus.toolkit.desktop.plugin.datatransfer.LocalObjectDataTransfer;
+import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceManager;
+import jdplus.toolkit.desktop.plugin.util.Collections2;
+import jdplus.toolkit.desktop.plugin.util.KeyStrokes;
+import lombok.NonNull;
+import org.jspecify.annotations.Nullable;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 
 /**
  * @author Philippe Charles
@@ -71,25 +70,25 @@ import static jdplus.toolkit.desktop.plugin.components.parts.HasTsCollection.*;
 @lombok.experimental.UtilityClass
 public class HasTsCollectionSupport {
 
-    @NonNull
-    public static HasTsCollection of(@NonNull PropertyChangeBroadcaster broadcaster, TsInformationType info) {
+    @NonNull public static HasTsCollection of(@NonNull PropertyChangeBroadcaster broadcaster, TsInformationType info) {
         TsInformationType type = info.encompass(TsInformationType.Data) ? info : TsInformationType.Data;
         return new HasTsCollectionImpl(broadcaster, info, type).watch(TsManager.get());
     }
 
-    @NonNull
-    public static HasTsCollection of(@NonNull PropertyChangeBroadcaster broadcaster, TsInformationType broadcastInfo, TsInformationType loadInfo) {
+    @NonNull public static HasTsCollection of(
+            @NonNull PropertyChangeBroadcaster broadcaster,
+            TsInformationType broadcastInfo,
+            TsInformationType loadInfo) {
         TsInformationType type = broadcastInfo.encompass(loadInfo) ? broadcastInfo : loadInfo;
         return new HasTsCollectionImpl(broadcaster, broadcastInfo, type).watch(TsManager.get());
     }
 
-    @NonNull
-    public static TransferHandler newTransferHandler(@NonNull HasTsCollection component) {
+    @NonNull public static TransferHandler newTransferHandler(@NonNull HasTsCollection component) {
         return new HasTsCollectionTransferHandler(component, DataTransferManager.get());
     }
 
-    @NonNull
-    public static DropTargetListener newDropTargetListener(@NonNull HasTsCollection component, @NonNull DropTarget dropTarget) {
+    @NonNull public static DropTargetListener newDropTargetListener(
+            @NonNull HasTsCollection component, @NonNull DropTarget dropTarget) {
         return new HasTsCollectionDropTargetListener(component, DataTransferManager.get()).watch(dropTarget);
     }
 
@@ -104,9 +103,10 @@ public class HasTsCollectionSupport {
         am.put(SELECT_ALL_ACTION, SelectAllCommand.INSTANCE.toAction(component));
         am.put(RENAME_ACTION, RenameCommand.INSTANCE.toAction(component));
         am.put(SPLIT_ACTION, SplitCommand.INSTANCE.toAction(component));
-//        if (this instanceof HasColorScheme) {
-//            am.put(HasColorScheme.DEFAULT_COLOR_SCHEME_ACTION, HasColorScheme.commandOf(null).toAction((HasColorScheme) this));
-//        }
+        //        if (this instanceof HasColorScheme) {
+        //            am.put(HasColorScheme.DEFAULT_COLOR_SCHEME_ACTION,
+        // HasColorScheme.commandOf(null).toAction((HasColorScheme) this));
+        //        }
     }
 
     public static void registerInputs(@NonNull InputMap im) {
@@ -164,7 +164,9 @@ public class HasTsCollectionSupport {
         result.setText("Open with");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_BAR_CHART_O));
         Actions.hideWhenDisabled(result);
-        TsActionManager.get().getOpenActions().stream().map(o -> newOpenWithMenu(component, o)).forEach(result::add);
+        TsActionManager.get().getOpenActions().stream()
+                .map(o -> newOpenWithMenu(component, o))
+                .forEach(result::add);
         return result;
     }
 
@@ -185,7 +187,9 @@ public class HasTsCollectionSupport {
         JMenu result = new JMenu(new MainSaveCommand().toAction(component));
         result.setText("Save");
         Actions.hideWhenDisabled(result);
-        TsActionManager.get().getSaveActions().stream().map(o -> newSaveMenu(component, o)).forEach(result::add);
+        TsActionManager.get().getSaveActions().stream()
+                .map(o -> newSaveMenu(component, o))
+                .forEach(result::add);
         return result;
     }
 
@@ -216,7 +220,7 @@ public class HasTsCollectionSupport {
         result.setText("Paste");
         result.setIcon(DemetraIcons.getPopupMenuIcon(FontAwesome.FA_CLIPBOARD));
         result.setAccelerator(KeyStrokes.PASTE.getFirst());
-//        ExtAction.hideWhenDisabled(item);
+        //        ExtAction.hideWhenDisabled(item);
         return result;
     }
 
@@ -261,7 +265,7 @@ public class HasTsCollectionSupport {
         return result;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Commands">
+    // <editor-fold defaultstate="collapsed" desc="Commands">
     private static final class CopyAllCommand extends ComponentCommand<HasTsCollection> {
 
         public static final CopyAllCommand INSTANCE = new CopyAllCommand();
@@ -282,8 +286,7 @@ public class HasTsCollectionSupport {
         }
     }
 
-    private static abstract sealed class SingleSelectionCommand
-            extends ComponentCommand<HasTsCollection>
+    private abstract static sealed class SingleSelectionCommand extends ComponentCommand<HasTsCollection>
             permits MainOpenWithCommand, OpenCommand, OpenWithCommand, RenameCommand, SplitCommand {
 
         public SingleSelectionCommand() {
@@ -295,16 +298,15 @@ public class HasTsCollectionSupport {
             return c.getTsCollection().size() == 1 || JLists.isSingleSelectionIndex(c.getTsSelectionModel());
         }
 
-        protected final @NonNull
-        Ts getSingle(@NonNull HasTsCollection c) {
+        protected final @NonNull Ts getSingle(@NonNull HasTsCollection c) {
+            if (c.getTsCollection().isEmpty()) return Ts.EMPTY;
             return c.getTsCollection().size() == 1
                     ? c.getTsCollection().get(0)
                     : c.getTsCollection().get(c.getTsSelectionModel().getMinSelectionIndex());
         }
     }
 
-    private static abstract sealed class AnySelectionCommand
-            extends ComponentCommand<HasTsCollection>
+    private abstract static sealed class AnySelectionCommand extends ComponentCommand<HasTsCollection>
             permits CopyCommand, MainSaveCommand, SaveCommand {
 
         public AnySelectionCommand() {
@@ -313,11 +315,11 @@ public class HasTsCollectionSupport {
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
-            return !c.getTsSelectionModel().isSelectionEmpty() || !c.getTsCollection().isEmpty();
+            return !c.getTsSelectionModel().isSelectionEmpty()
+                    || !c.getTsCollection().isEmpty();
         }
 
-        protected final @NonNull
-        Stream<Ts> getAny(@NonNull HasTsCollection c) {
+        protected final @NonNull Stream<Ts> getAny(@NonNull HasTsCollection c) {
             return !c.getTsSelectionModel().isSelectionEmpty()
                     ? c.getTsSelectionStream()
                     : c.getTsCollection().stream();
@@ -334,18 +336,23 @@ public class HasTsCollectionSupport {
             NotifyDescriptor.InputLine descriptor = new NotifyDescriptor.InputLine("New name:", "Rename time series");
             descriptor.setInputText(ts.getName());
             if (ts.getMoniker().isProvided()) {
-                descriptor.setAdditionalOptions(new Object[]{new JButton(new AbstractAction("Restore") {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        Optional<DataSourceProvider> provider = TsManager.get().getProvider(DataSourceProvider.class, ts.getMoniker());
-                        if (provider.isPresent()) {
-                            DataSet dataSet = provider.orElseThrow().toDataSet(ts.getMoniker()).orElse(null);
-                            if (dataSet != null) {
-                                rename(c, ts, provider.orElseThrow().getDisplayName(dataSet));
+                descriptor.setAdditionalOptions(new Object[] {
+                    new JButton(new AbstractAction("Restore") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            Optional<DataSourceProvider> provider =
+                                    TsManager.get().getProvider(DataSourceProvider.class, ts.getMoniker());
+                            if (provider.isPresent()) {
+                                DataSet dataSet = provider.orElseThrow()
+                                        .toDataSet(ts.getMoniker())
+                                        .orElse(null);
+                                if (dataSet != null) {
+                                    rename(c, ts, provider.orElseThrow().getDisplayName(dataSet));
+                                }
                             }
                         }
-                    }
-                })});
+                    })
+                });
             }
             if (DialogDisplayer.getDefault().notify(descriptor) == NotifyDescriptor.OK_OPTION) {
                 rename(c, ts, descriptor.getInputText());
@@ -372,7 +379,12 @@ public class HasTsCollectionSupport {
         public void execute(@NonNull HasTsCollection c) {
             if (c instanceof HasTsAction action) {
                 String actionName = action.getTsAction();
-                TsActionManager.get().openWith(getSingle(c), actionName != null ? actionName : DemetraBehaviour.get().getTsActionName());
+                TsActionManager.get()
+                        .openWith(
+                                getSingle(c),
+                                actionName != null
+                                        ? actionName
+                                        : DemetraBehaviour.get().getTsActionName());
             }
         }
     }
@@ -388,8 +400,7 @@ public class HasTsCollectionSupport {
     @lombok.AllArgsConstructor
     private static final class OpenWithCommand extends SingleSelectionCommand {
 
-        private final @Nullable
-        String tsAction;
+        private final @Nullable String tsAction;
 
         @Override
         public void execute(@NonNull HasTsCollection c) {
@@ -408,8 +419,7 @@ public class HasTsCollectionSupport {
     @lombok.AllArgsConstructor
     private static final class SaveCommand extends AnySelectionCommand {
 
-        private final @Nullable
-        String tsSave;
+        private final @Nullable String tsSave;
 
         @Override
         public void execute(@NonNull HasTsCollection c) {
@@ -441,18 +451,19 @@ public class HasTsCollectionSupport {
 
         @Override
         public void execute(@NonNull HasTsCollection c) {
-            HasTsCollectionTransferHandler.importData(c, DataTransferManager.get(), DataTransfers::systemClipboardAsTransferable);
+            HasTsCollectionTransferHandler.importData(
+                    c, DataTransferManager.get(), DataTransfers::systemClipboardAsTransferable);
         }
 
         @Override
-        public @NonNull
-        ActionAdapter toAction(@NonNull HasTsCollection c) {
+        public @NonNull ActionAdapter toAction(@NonNull HasTsCollection c) {
             final ActionAdapter result = super.toAction(c);
             if (c instanceof Component component) {
                 result.withWeakPropertyChangeListener(component, HasTsCollection.TS_UPDATE_MODE_PROPERTY);
             }
             PropertyChangeListener realListener = evt -> result.refreshActionState();
-            DataTransferManager.get().addWeakPropertyChangeListener(DataTransferManager.VALID_CLIPBOARD_PROPERTY, realListener);
+            DataTransferManager.get()
+                    .addWeakPropertyChangeListener(DataTransferManager.VALID_CLIPBOARD_PROPERTY, realListener);
             result.putValue("TssTransferSupport", realListener);
             return result;
         }
@@ -475,8 +486,7 @@ public class HasTsCollectionSupport {
         @Override
         public void execute(HasTsCollection c) {
             Set<Ts> selection = c.getTsSelectionStream().collect(Collectors.toSet());
-            TsCollection result = c.getTsCollection()
-                    .stream()
+            TsCollection result = c.getTsCollection().stream()
                     .filter(ts -> !selection.contains(ts))
                     .collect(toTsCollection());
             c.setTsCollection(result);
@@ -493,7 +503,8 @@ public class HasTsCollectionSupport {
 
         @Override
         public boolean isEnabled(HasTsCollection component) {
-            return !component.getTsUpdateMode().isReadOnly() && !component.getTsCollection().isEmpty();
+            return !component.getTsUpdateMode().isReadOnly()
+                    && !component.getTsCollection().isEmpty();
         }
 
         @Override
@@ -512,7 +523,8 @@ public class HasTsCollectionSupport {
 
         @Override
         public boolean isEnabled(HasTsCollection c) {
-            return JLists.getSelectionIndexSize(c.getTsSelectionModel()) != c.getTsCollection().size();
+            return JLists.getSelectionIndexSize(c.getTsSelectionModel())
+                    != c.getTsCollection().size();
         }
 
         @Override
@@ -537,17 +549,15 @@ public class HasTsCollectionSupport {
 
         @Override
         public void execute(HasTsCollection c) {
-            JLists.getSelectionIndexStream(c.getTsSelectionModel())
-                    .findFirst()
-                    .ifPresent(i -> {
-                        TsCollection tmp = c.getTsCollection();
-                        List<Ts> list = tmp.toList();
-                        Ts s = list.get(i);
-                        if (!s.getMoniker().isUserDefined()) {
-                            list.add(s.freeze());
-                            c.setTsCollection(tmp.toBuilder().clearItems().items(list).build());
-                        }
-                    });
+            JLists.getSelectionIndexStream(c.getTsSelectionModel()).findFirst().ifPresent(i -> {
+                TsCollection tmp = c.getTsCollection();
+                List<Ts> list = tmp.toList();
+                Ts s = list.get(i);
+                if (!s.getMoniker().isUserDefined()) {
+                    list.add(s.freeze());
+                    c.setTsCollection(tmp.toBuilder().clearItems().items(list).build());
+                }
+            });
         }
     }
 
@@ -562,7 +572,11 @@ public class HasTsCollectionSupport {
 
         private static boolean isValid(TsData data) {
             return !data.isEmpty()
-                    && Duration.between(data.getDomain().start(), data.getDomain().end()).toDays() > 365
+                    && Duration.between(
+                                            data.getDomain().start(),
+                                            data.getDomain().end())
+                                    .toDays()
+                            > 365
                     && data.getTsUnit().ratioOf(TsUnit.P1Y) >= 1;
         }
 
@@ -571,7 +585,11 @@ public class HasTsCollectionSupport {
             Ts ts = getSingle(c);
             JTsChartTopComponent result = new JTsChartTopComponent();
             result.getChart().setTitle(ts.getName());
-            result.getChart().setObsFormat(ObsFormat.builder().locale(null).dateTimePattern("MMM").build());
+            result.getChart()
+                    .setObsFormat(ObsFormat.builder()
+                            .locale(null)
+                            .dateTimePattern("MMM")
+                            .build());
             result.getChart().setTsUpdateMode(HasTsCollection.TsUpdateMode.None);
             result.getChart().setTsCollection(split(ts));
             result.setIcon(DataSourceManager.get().getImage(ts.getMoniker(), BeanInfo.ICON_COLOR_16x16, false));
@@ -586,7 +604,11 @@ public class HasTsCollectionSupport {
         private static Ts dataOf(Range<LocalDateTime> year, TsData data) {
             TsData select = data.select(TimeSelector.between(year));
             TsData result = withYear(2000, select);
-            return Ts.builder().moniker(TsMoniker.of()).data(result).name(year.start().getYear() + "").build();
+            return Ts.builder()
+                    .moniker(TsMoniker.of())
+                    .data(result)
+                    .name(year.start().getYear() + "")
+                    .build();
         }
 
         private static TsData withYear(int year, TsData data) {
@@ -598,13 +620,12 @@ public class HasTsCollectionSupport {
         }
 
         private static TsCollection split(Ts ts) {
-            return yearsOf(ts.getData().getDomain())
-                    .stream()
+            return yearsOf(ts.getData().getDomain()).stream()
                     .map(year -> dataOf(year, ts.getData()))
                     .collect(toTsCollection());
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
     /**
      * @author Philippe Charles
@@ -612,15 +633,14 @@ public class HasTsCollectionSupport {
     @lombok.RequiredArgsConstructor
     private static final class HasTsCollectionTransferHandler extends TransferHandler {
 
-        @lombok.NonNull
-        private final HasTsCollection delegate;
+        @lombok.NonNull private final HasTsCollection delegate;
 
-        @lombok.NonNull
-        private final DataTransferManager dataTransfer;
+        @lombok.NonNull private final DataTransferManager dataTransfer;
 
         @Override
         public int getSourceActions(JComponent c) {
-            //            TsDragRenderer r = selection.length < 10 ? TsDragRenderer.asChart() : TsDragRenderer.asCount();
+            //            TsDragRenderer r = selection.length < 10 ? TsDragRenderer.asChart() :
+            // TsDragRenderer.asCount();
             //            Image image = r.getTsDragRendererImage(Arrays.asList(selection));
             //            setDragImage(image);
             return COPY;
@@ -648,18 +668,26 @@ public class HasTsCollectionSupport {
             return importData(delegate, dataTransfer, support::getTransferable);
         }
 
-        public static boolean canImport(@NonNull HasTsCollection view, @NonNull DataTransferManager tssSupport, @NonNull Supplier<Transferable> toData) {
+        public static boolean canImport(
+                @NonNull HasTsCollection view,
+                @NonNull DataTransferManager tssSupport,
+                @NonNull Supplier<Transferable> toData) {
             if (!view.getTsUpdateMode().isReadOnly()) {
                 Transferable t = toData.get();
-                return tssSupport.canImport(t) && TransferChange.of(t, view.getTsCollection()).mayChangeContent();
+                return tssSupport.canImport(t)
+                        && TransferChange.of(t, view.getTsCollection()).mayChangeContent();
             }
             return false;
         }
 
-        public static boolean importData(@NonNull HasTsCollection view, @NonNull DataTransferManager tssSupport, @NonNull Supplier<Transferable> toData) {
+        public static boolean importData(
+                @NonNull HasTsCollection view,
+                @NonNull DataTransferManager tssSupport,
+                @NonNull Supplier<Transferable> toData) {
             if (!view.getTsUpdateMode().isReadOnly()) {
                 // merge the collections
-                List<TsCollection> all = tssSupport.toTsCollectionStream(toData.get()).toList();
+                List<TsCollection> all =
+                        tssSupport.toTsCollectionStream(toData.get()).toList();
                 switch (all.size()) {
                     case 0:
                         return false;
@@ -675,27 +703,29 @@ public class HasTsCollectionSupport {
                         }
                         return true;
                 }
-//                return tssSupport.toTsCollectionStream(toData.get())
-//                        .peek(col -> importData(view, col))
-//                        .count() > 0;
+                //                return tssSupport.toTsCollectionStream(toData.get())
+                //                        .peek(col -> importData(view, col))
+                //                        .count() > 0;
             }
             return false;
         }
 
         private static void importData(HasTsCollection view, TsCollection data) {
-//            if (view.isFreezeOnImport() && TsManager.isDynamic(data)) {
-//                TsCollection latest = TsManager.get().makeTsCollection(data.getMoniker(), TsInformationType.All);
-//                view.setTsCollection(update(view.getTsUpdateMode(), view.getTsCollection(), frozenCopyOf(latest)));
-//            } else {
+            //            if (view.isFreezeOnImport() && TsManager.isDynamic(data)) {
+            //                TsCollection latest = TsManager.get().makeTsCollection(data.getMoniker(),
+            // TsInformationType.All);
+            //                view.setTsCollection(update(view.getTsUpdateMode(), view.getTsCollection(),
+            // frozenCopyOf(latest)));
+            //            } else {
             if (TransferChange.isNotYetLoaded(data)) {
                 // TODO: put load in a separate thread
                 data = data.load(TsInformationType.Definition, TsManager.get());
             }
             if (!data.isEmpty()) {
                 view.setTsCollection(update(view.getTsUpdateMode(), view.getTsCollection(), data));
-//                    TsManager.get().loadAsync(data, TsInformationType.All, view::replaceTsCollection);
+                //                    TsManager.get().loadAsync(data, TsInformationType.All, view::replaceTsCollection);
             }
-//            }
+            //            }
         }
 
         private static TsCollection update(HasTsCollection.TsUpdateMode mode, TsCollection first, TsCollection second) {
@@ -707,15 +737,21 @@ public class HasTsCollectionSupport {
                 case Replace:
                     return second;
                 case Append:
-                    Set<TsMoniker> firstMonikers = first.stream().map(Ts::getMoniker).collect(Collectors.toSet());
+                    Set<TsMoniker> firstMonikers =
+                            first.stream().map(Ts::getMoniker).collect(Collectors.toSet());
                     Predicate<TsMoniker> filter = moniker -> !moniker.isProvided() || !firstMonikers.contains(moniker);
-                    return Stream.concat(first.stream(), second.stream().filter(Collections2.compose(filter, Ts::getMoniker))).collect(toTsCollection());
+                    return Stream.concat(
+                                    first.stream(),
+                                    second.stream().filter(Collections2.compose(filter, Ts::getMoniker)))
+                            .collect(toTsCollection());
             }
             return first;
         }
 
         private enum TransferChange {
-            YES, NO, MAYBE;
+            YES,
+            NO,
+            MAYBE;
 
             public boolean mayChangeContent() {
                 return this != NO;
@@ -726,7 +762,8 @@ public class HasTsCollectionSupport {
                 return handler != null ? of(handler, source, target) : MAYBE;
             }
 
-            private static TransferChange of(LocalObjectDataTransfer handler, Transferable source, TsCollection target) {
+            private static TransferChange of(
+                    LocalObjectDataTransfer handler, Transferable source, TsCollection target) {
                 return DataTransfers.getMultiTransferables(source)
                         .map(handler::peekTsCollection)
                         .map(col -> of(col, target))
@@ -760,11 +797,9 @@ public class HasTsCollectionSupport {
     @lombok.RequiredArgsConstructor
     private static final class HasTsCollectionDropTargetListener implements DropTargetListener {
 
-        @lombok.NonNull
-        private final HasTsCollection target;
+        @lombok.NonNull private final HasTsCollection target;
 
-        @lombok.NonNull
-        private final DataTransferManager transferSupport;
+        @lombok.NonNull private final DataTransferManager transferSupport;
 
         @Override
         public void dragEnter(DropTargetDragEvent dtde) {
@@ -781,12 +816,10 @@ public class HasTsCollectionSupport {
         }
 
         @Override
-        public void dragOver(DropTargetDragEvent dtde) {
-        }
+        public void dragOver(DropTargetDragEvent dtde) {}
 
         @Override
-        public void dropActionChanged(DropTargetDragEvent dtde) {
-        }
+        public void dropActionChanged(DropTargetDragEvent dtde) {}
 
         @Override
         public void dragExit(DropTargetEvent dte) {
@@ -814,10 +847,9 @@ public class HasTsCollectionSupport {
     @lombok.RequiredArgsConstructor
     private static final class HasTsCollectionImpl implements HasTsCollection, TsListener {
 
-        @lombok.NonNull
-        private final PropertyChangeBroadcaster broadcaster;
-        @lombok.NonNull
-        private final TsInformationType broadcastInfo, loadInfo;
+        @lombok.NonNull private final PropertyChangeBroadcaster broadcaster;
+
+        @lombok.NonNull private final TsInformationType broadcastInfo, loadInfo;
 
         private static final TsCollection DEFAULT_TS_COLLECTION = TsCollection.EMPTY;
         private TsCollection tsCollection = DEFAULT_TS_COLLECTION;
@@ -832,7 +864,9 @@ public class HasTsCollectionSupport {
             TsCollection old = this.tsCollection;
             this.tsCollection = tsCollection != null ? tsCollection : DEFAULT_TS_COLLECTION;
             boolean toload = tsCollection != null && !checkInfo(tsCollection, loadInfo);
-            boolean tobroadcast = tsCollection == null || broadcastInfo == TsInformationType.None || checkInfo(tsCollection, broadcastInfo);
+            boolean tobroadcast = tsCollection == null
+                    || broadcastInfo == TsInformationType.None
+                    || checkInfo(tsCollection, broadcastInfo);
             if (toload) {
                 TsManager.get().loadAsync(tsCollection, loadInfo, this::setTsCollection);
             }
@@ -914,7 +948,8 @@ public class HasTsCollectionSupport {
         public void tsUpdated(TsEvent event) {
             TsCollection currentData = getTsCollection();
             if (isEventRelatedToCollection(event, currentData)) {
-                TsCollection newData = event.getSource().makeTsCollection(currentData.getMoniker(), currentData.getType());
+                TsCollection newData =
+                        event.getSource().makeTsCollection(currentData.getMoniker(), currentData.getType());
                 setTsCollection(newData);
             } else {
                 boolean requireChange = false;
@@ -922,7 +957,9 @@ public class HasTsCollectionSupport {
                 for (Ts ts : currentData) {
                     if (event.getRelated().test(ts.getMoniker())) {
                         requireChange = true;
-                        newData.item(event.getSource().makeTs(ts.getMoniker(), TsInformationType.All).withName(ts.getName()));
+                        newData.item(event.getSource()
+                                .makeTs(ts.getMoniker(), TsInformationType.All)
+                                .withName(ts.getName()));
                     } else {
                         newData.item(ts);
                     }

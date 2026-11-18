@@ -1,29 +1,29 @@
 /*
-* Copyright 2013 National Bank of Belgium
-*
-* Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
-* by the European Commission - subsequent versions of the EUPL (the "Licence");
-* You may not use this work except in compliance with the Licence.
-* You may obtain a copy of the Licence at:
-*
-* http://ec.europa.eu/idabc/eupl
-*
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and 
-* limitations under the Licence.
+ * Copyright 2013 National Bank of Belgium
+ *
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
+ * by the European Commission - subsequent versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
  */
 package jdplus.sa.base.csv;
 
-import jdplus.toolkit.base.api.information.Explorable;
-import jdplus.sa.base.api.SaDictionaries;
-import jdplus.sa.base.api.SaDocument;
-import jdplus.toolkit.base.api.timeseries.TsData;
-import jdplus.toolkit.base.api.timeseries.TsDomain;
 import java.util.HashMap;
 import java.util.Map;
+import jdplus.sa.base.api.SaDictionaries;
+import jdplus.sa.base.api.SaDocument;
 import jdplus.toolkit.base.api.dictionaries.RegressionDictionaries;
+import jdplus.toolkit.base.api.information.Explorable;
+import jdplus.toolkit.base.api.timeseries.TsData;
+import jdplus.toolkit.base.api.timeseries.TsDomain;
 
 /**
  *
@@ -77,16 +77,16 @@ public class CsvSummary {
             } else if (item.equalsIgnoreCase("il")) {
                 series_.put("ic", results.getData(SaDictionaries.I_LIN, TsData.class));
             } else if (item.equalsIgnoreCase("ycal")) {
-                series_.put("ycal", results.getData(RegressionDictionaries.YCAL, TsData.class));
+                series_.put("ycal", results.getData(SaDictionaries.YCAL, TsData.class));
             }
-//            else {
-//                TsDomain fullDomain = domain_.union(fdomain_);
-//                IRegArimaSaResults regmodel = (IRegArimaSaResults) results;
-//                if (regmodel != null) {
-//                    if (item.equalsIgnoreCase("td"))
-//                        series_.put("td", regmodel.getPreprocessingPart().regressionEffect(fullDomain));
-//                }
-//            }
+            //            else {
+            //                TsDomain fullDomain = domain_.union(fdomain_);
+            //                IRegArimaSaResults regmodel = (IRegArimaSaResults) results;
+            //                if (regmodel != null) {
+            //                    if (item.equalsIgnoreCase("td"))
+            //                        series_.put("td", regmodel.getPreprocessingPart().regressionEffect(fullDomain));
+            //                }
+            //            }
         }
     }
 

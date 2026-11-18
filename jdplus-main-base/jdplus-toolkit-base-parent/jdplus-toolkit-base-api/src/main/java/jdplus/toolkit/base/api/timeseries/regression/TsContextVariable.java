@@ -1,23 +1,23 @@
 /*
  * Copyright 2013 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries.regression;
 
-import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import java.util.List;
+import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import nbbrd.design.Development;
 
 /**
@@ -28,21 +28,20 @@ import nbbrd.design.Development;
  */
 @Development(status = Development.Status.Release)
 @lombok.Value
+@Deprecated
 public class TsContextVariable implements ITsVariable {
-    
-    @lombok.NonNull
-    String id;
-    
+
+    @lombok.NonNull String id;
+
     int lag;
-    
+
     public TsContextVariable(String id) {
         this.id = id;
         lag = 0;
     }
-    
+
     /**
-     * For instance, if lag = -1 we have the following variables:
-     * v(t+1)
+     * For instance, if lag = -1 we have the following variables: v(t+1)
      *
      * @param id
      * @param lag (negative values = leads)
@@ -51,7 +50,7 @@ public class TsContextVariable implements ITsVariable {
         this.id = id;
         this.lag = lag;
     }
-    
+
     public TsContextVariable withId(String nid) {
         if (id.equals(nid)) {
             return this;
@@ -59,7 +58,7 @@ public class TsContextVariable implements ITsVariable {
             return new TsContextVariable(nid, lag);
         }
     }
-    
+
     public TsContextVariable withLag(int nlag) {
         if (nlag == lag) {
             return this;
@@ -71,17 +70,17 @@ public class TsContextVariable implements ITsVariable {
     public boolean isLag() {
         return lag != 0;
     }
-    
+
     @Override
     public int dim() {
         return 1;
     }
-    
+
     @Override
     public <D extends TimeSeriesDomain<?>> String description(D context) {
         return id;
     }
-    
+
     @Override
     public <D extends TimeSeriesDomain<?>> String description(int idx, D context) {
         if (isLag()) {
@@ -97,9 +96,9 @@ public class TsContextVariable implements ITsVariable {
             return id;
         }
     }
-    
+
     public ITsVariable instantiateFrom(ModellingContext context, String desc) {
-        UserVariable var = UserVariable.of(id, desc, context);
+        UserVariable var = UserVariable.of(id, desc, context, 0);
         if (var != null && isLag()) {
             return ModifiedTsVariable.builder()
                     .variable(var)
@@ -109,7 +108,7 @@ public class TsContextVariable implements ITsVariable {
             return var;
         }
     }
-    
+
     public static TsContextVariable of(ITsVariable var) {
         if (var instanceof TsContextVariable tvar) {
             return tvar;
@@ -117,13 +116,15 @@ public class TsContextVariable implements ITsVariable {
             return new TsContextVariable(user.getId(), 0);
         } else if (var instanceof ModifiedTsVariable mvar) {
             List<ModifiedTsVariable.Modifier> modifiers = mvar.getModifiers();
-            if (modifiers.size() == 1 && modifiers.getFirst() instanceof TsLag lag && mvar.getVariable() instanceof UserVariable user) {
+            if (modifiers.size() == 1
+                    && modifiers.getFirst() instanceof TsLag lag
+                    && mvar.getVariable() instanceof UserVariable user) {
                 return new TsContextVariable(user.getId(), lag.getLag());
             }
         }
         throw new IllegalArgumentException();
     }
-    
+
     @Override
     public String toString() {
         if (lag == 0) {
@@ -136,6 +137,5 @@ public class TsContextVariable implements ITsVariable {
         }
         builder.append(-lag);
         return builder.append(']').toString();
-        
     }
 }

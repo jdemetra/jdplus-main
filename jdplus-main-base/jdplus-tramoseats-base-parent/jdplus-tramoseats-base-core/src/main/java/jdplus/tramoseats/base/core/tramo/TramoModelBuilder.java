@@ -16,11 +16,17 @@
  */
 package jdplus.tramoseats.base.core.tramo;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.modelling.TransformationType;
 import jdplus.toolkit.base.api.processing.ProcessingLog;
-import jdplus.sa.base.api.ComponentType;
-import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.calendars.DayClustering;
@@ -36,6 +42,7 @@ import jdplus.toolkit.base.api.timeseries.regression.ILengthOfPeriodVariable;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
 import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
+import jdplus.toolkit.base.api.timeseries.regression.IUserVariable;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
 import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
 import jdplus.toolkit.base.api.timeseries.regression.LengthOfPeriod;
@@ -47,22 +54,9 @@ import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.StockTradingDays;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
 import jdplus.toolkit.base.api.timeseries.regression.UserTradingDays;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import jdplus.tramoseats.base.api.tramo.CalendarSpec;
-import jdplus.tramoseats.base.api.tramo.EasterSpec;
-import jdplus.tramoseats.base.api.tramo.MeanSpec;
-import jdplus.tramoseats.base.api.tramo.RegressionSpec;
-import jdplus.tramoseats.base.api.tramo.TradingDaysSpec;
-import jdplus.tramoseats.base.api.tramo.TramoSpec;
-import jdplus.tramoseats.base.api.tramo.TransformSpec;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import jdplus.toolkit.base.core.data.interpolation.AverageInterpolator;
 import jdplus.toolkit.base.core.modelling.regression.AdditiveOutlierFactory;
 import jdplus.toolkit.base.core.modelling.regression.HolidaysCorrectionFactory;
@@ -74,8 +68,15 @@ import jdplus.toolkit.base.core.regsarima.regular.IModelBuilder;
 import jdplus.toolkit.base.core.regsarima.regular.ModelDescription;
 import jdplus.toolkit.base.core.sarima.SarimaModel;
 import jdplus.toolkit.base.core.timeseries.simplets.TsDataToolkit;
-import nbbrd.design.Development;
+import jdplus.tramoseats.base.api.tramo.CalendarSpec;
+import jdplus.tramoseats.base.api.tramo.EasterSpec;
+import jdplus.tramoseats.base.api.tramo.MeanSpec;
+import jdplus.tramoseats.base.api.tramo.RegressionSpec;
+import jdplus.tramoseats.base.api.tramo.TradingDaysSpec;
+import jdplus.tramoseats.base.api.tramo.TramoSpec;
+import jdplus.tramoseats.base.api.tramo.TransformSpec;
 import lombok.NonNull;
+import nbbrd.design.Development;
 
 /**
  *
@@ -124,9 +125,9 @@ class TramoModelBuilder implements IModelBuilder {
         initializeMean(model, regSpec.getMean());
         initializeCalendar(model, regSpec.getCalendar());
         initializeOutliers(model, regSpec.getOutliers());
-        initializeUsers(model, regSpec.getUserDefinedVariables(), log);
         initializeInterventions(model, regSpec.getInterventionVariables());
         initializeRamps(model, regSpec.getRamps());
+        initializeUsers(model, regSpec.getUserDefinedVariables(), log);
     }
 
     @Override
@@ -138,7 +139,7 @@ class TramoModelBuilder implements IModelBuilder {
         initializeMissing(cur);
         initializeTransformation(cur, spec.getTransform());
         initializeVariables(cur, spec.getRegression(), log);
-        initializeArima(cur);// Mean is initialized here in case of auto-modelling (mean = true)
+        initializeArima(cur); // Mean is initialized here in case of auto-modelling (mean = true)
         RegArimaModel<SarimaModel> regarima = cur.regarima(log);
         cur.check(regarima, log);
         return cur;
@@ -156,11 +157,16 @@ class TramoModelBuilder implements IModelBuilder {
     }
 
     private void initializeMean(ModelDescription model, MeanSpec mu) {
-        if (! mu.isUsed()) {
+        if (!mu.isUsed()) {
             model.setMean(false);
         } else if (Parameter.isFixed(mu.getCoefficient())) {
             int d = spec.getArima().getD(), bd = spec.getArima().getBd();
-            add(model, new TrendConstant(d, bd, model.getEstimationDomain().start()), "const", ComponentType.Undefined, new Parameter[]{mu.getCoefficient()});
+            add(
+                    model,
+                    new TrendConstant(d, bd, model.getEstimationDomain().start()),
+                    "const",
+                    ComponentType.Undefined,
+                    new Parameter[] {mu.getCoefficient()});
             model.setMean(false);
         } else {
             model.setMean(true);
@@ -196,7 +202,8 @@ class TramoModelBuilder implements IModelBuilder {
 
     private void initializeOutliers(ModelDescription model, List<Variable<IOutlier>> outliers) {
         int freq = model.getAnnualFrequency();
-        TransitoryChangeFactory tc = new TransitoryChangeFactory(spec.getOutliers().getDeltaTC());
+        TransitoryChangeFactory tc =
+                new TransitoryChangeFactory(spec.getOutliers().getDeltaTC());
         PeriodicOutlierFactory so = new PeriodicOutlierFactory(freq, true);
         for (Variable<IOutlier> outlier : outliers) {
             IOutlier cur = outlier.getCore();
@@ -205,24 +212,23 @@ class TramoModelBuilder implements IModelBuilder {
             IOutlier v;
             ComponentType cmp = ComponentType.Undefined;
             switch (code) {
-                case AdditiveOutlier.CODE:
+                case AdditiveOutlier.CODE -> {
                     v = AdditiveOutlierFactory.FACTORY.make(pos);
                     cmp = ComponentType.Irregular;
-                    break;
-                case LevelShift.CODE:
+                }
+                case LevelShift.CODE -> {
                     v = LevelShiftFactory.FACTORY_ZEROENDED.make(pos);
                     cmp = ComponentType.Trend;
-                    break;
-                case PeriodicOutlier.CODE:
+                }
+                case PeriodicOutlier.CODE -> {
                     v = so.make(pos);
                     cmp = ComponentType.Seasonal;
-                    break;
-                case TransitoryChange.CODE:
+                }
+                case TransitoryChange.CODE -> {
                     v = tc.make(pos);
                     cmp = ComponentType.Irregular;
-                    break;
-                default:
-                    v = null;
+                }
+                default -> v = null;
             }
             if (v != null) {
                 Variable nvar = outlier.withCore(v);
@@ -234,18 +240,19 @@ class TramoModelBuilder implements IModelBuilder {
         }
     }
 
-    private void initializeUsers(ModelDescription model, List< Variable<TsContextVariable>> uvars, ProcessingLog log) {
-        for (Variable<TsContextVariable> user : uvars) {
-            ITsVariable s = user.getCore().instantiateFrom(context, user.getName());
+    private void initializeUsers(ModelDescription model, List<UserVariableSpec> uvars, ProcessingLog log) {
+        for (UserVariableSpec user : uvars) {
+            Variable<IUserVariable> s = SaVariable.instantiateFrom(user, context);
             if (s != null) {
-                model.addVariable(user.withCore(s));
+                model.addVariable(s);
             } else {
                 log.warning(user.getName() + ": not found (removed from the model)");
             }
         }
     }
 
-    private void initializeInterventions(ModelDescription model, List<Variable<InterventionVariable>> interventionVariables) {
+    private void initializeInterventions(
+            ModelDescription model, List<Variable<InterventionVariable>> interventionVariables) {
         for (Variable<InterventionVariable> iv : interventionVariables) {
             model.addVariable(iv);
         }
@@ -288,7 +295,12 @@ class TramoModelBuilder implements IModelBuilder {
      * @param cmp
      * @param c
      */
-    private void add(@NonNull ModelDescription model, ITsVariable v, @NonNull String name, @NonNull ComponentType cmp, Parameter[] c) {
+    private void add(
+            @NonNull ModelDescription model,
+            ITsVariable v,
+            @NonNull String name,
+            @NonNull ComponentType cmp,
+            Parameter[] c) {
         if (v == null) {
             return;
         }
@@ -310,14 +322,19 @@ class TramoModelBuilder implements IModelBuilder {
      * @param cmp
      * @param c
      */
-    private void add(@NonNull ModelDescription model, ITsVariable v, @NonNull String name, @NonNull ComponentType cmp, Parameter c) {
+    private void add(
+            @NonNull ModelDescription model,
+            ITsVariable v,
+            @NonNull String name,
+            @NonNull ComponentType cmp,
+            Parameter c) {
         if (v == null) {
             return;
         }
         Variable var = Variable.builder()
                 .name(name)
                 .core(v)
-                .coefficients(c == null ? null : new Parameter[]{c})
+                .coefficients(c == null ? null : new Parameter[] {c})
                 .attribute(SaVariable.REGEFFECT, cmp.name())
                 .build();
         model.addVariable(var);
@@ -347,7 +364,8 @@ class TramoModelBuilder implements IModelBuilder {
         if (tdspec.isStockTradingDays()) {
             return null;
         } else if (tdspec.getHolidays() != null) {
-             HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
+            HolidaysCorrectedTradingDays.HolidaysCorrector corrector =
+                    HolidaysCorrectionFactory.corrector(tdspec.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
             return HolidaysCorrectedTradingDays.builder()
                     .clustering(dc)
                     .corrector(corrector)
@@ -383,12 +401,13 @@ class TramoModelBuilder implements IModelBuilder {
             tdType = TradingDaysType.TD7;
         }
         DayClustering dc = DayClustering.of(tdType);
-        HolidaysCorrectedTradingDays.HolidaysCorrector corrector = HolidaysCorrectionFactory.corrector(td.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
-             return HolidaysCorrectedTradingDays.builder()
-                    .clustering(dc)
-                    .corrector(corrector)
-                    .contrast(true)
-                    .build();
+        HolidaysCorrectedTradingDays.HolidaysCorrector corrector =
+                HolidaysCorrectionFactory.corrector(td.getHolidays(), context.getCalendars(), DayOfWeek.SUNDAY);
+        return HolidaysCorrectedTradingDays.builder()
+                .clustering(dc)
+                .corrector(corrector)
+                .contrast(true)
+                .build();
     }
 
     private static ITradingDaysVariable userTradingDays(TradingDaysSpec td, ModellingContext context) {

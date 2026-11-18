@@ -1,37 +1,38 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.information;
 
-import jdplus.toolkit.base.api.information.InformationSet;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import jdplus.toolkit.base.api.information.InformationSet;
+import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
 
 /**
  *
  * @author PALATEJ
  */
 @lombok.experimental.UtilityClass
+@Deprecated
 public class TsContextVariableMapping {
 
-    public static final String NAME_LEGACY = "name", ID = "id",
+    public static final String NAME_LEGACY = "name",
+            ID = "id",
             EFFECT_LEGACY = "effect",
             LAG = "lag",
             FIRSTLAG = "firstlag",
@@ -88,7 +89,6 @@ public class TsContextVariableMapping {
         for (int i = fl; i < ll; ++i) {
             TsContextVariable var = new TsContextVariable(id, i);
             list.add(Variable.<TsContextVariable>variable(id, var, Map.of("regeffect", effect)));
-
         }
         return list;
     }
@@ -98,6 +98,6 @@ public class TsContextVariableMapping {
         String id = info.get(ID, String.class);
         Integer L = info.get(LAG, Integer.class);
         int l = L == null ? 0 : L;
-         return new TsContextVariable(id, l);
+        return new TsContextVariable(id, l);
     }
 }

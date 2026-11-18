@@ -5,52 +5,52 @@
  */
 package jdplus.tramoseats.base.core.tramo;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import jdplus.sa.base.api.ComponentType;
+import jdplus.sa.base.api.EstimationPolicyType;
+import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.arima.SarimaSpec;
 import jdplus.toolkit.base.api.data.Parameter;
 import jdplus.toolkit.base.api.data.Range;
 import jdplus.toolkit.base.api.modelling.TransformationType;
-import jdplus.sa.base.api.ComponentType;
-import jdplus.sa.base.api.EstimationPolicyType;
-import jdplus.sa.base.api.SaVariable;
 import jdplus.toolkit.base.api.timeseries.TimeSelector;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
 import jdplus.toolkit.base.api.timeseries.calendars.TradingDaysType;
+import jdplus.toolkit.base.api.timeseries.regression.EasterVariable;
+import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
+import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
+import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
+import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
+import jdplus.toolkit.base.api.timeseries.regression.Ramp;
+import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
 import jdplus.tramoseats.base.api.tramo.AutoModelSpec;
 import jdplus.tramoseats.base.api.tramo.CalendarSpec;
 import jdplus.tramoseats.base.api.tramo.EasterSpec;
+import jdplus.tramoseats.base.api.tramo.MeanSpec;
 import jdplus.tramoseats.base.api.tramo.OutlierSpec;
 import jdplus.tramoseats.base.api.tramo.RegressionSpec;
 import jdplus.tramoseats.base.api.tramo.TradingDaysSpec;
 import jdplus.tramoseats.base.api.tramo.TramoSpec;
 import jdplus.tramoseats.base.api.tramo.TransformSpec;
-import java.util.Arrays;
-import java.util.Optional;
-import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
-import jdplus.toolkit.base.api.timeseries.regression.EasterVariable;
-import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
-import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
-import jdplus.toolkit.base.api.timeseries.regression.ITradingDaysVariable;
-import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
-import jdplus.toolkit.base.api.timeseries.regression.Ramp;
-import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
-import java.util.ArrayList;
-import java.util.List;
-import jdplus.toolkit.base.core.modelling.GeneralLinearModel;
-import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
-import jdplus.tramoseats.base.api.tramo.MeanSpec;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import jdplus.toolkit.base.api.timeseries.regression.JulianEasterVariable;
 
 /**
  *
  * @author PALATEJ
  */
-//@ServiceProvider(SaProcessingFactory.class)
+// @ServiceProvider(SaProcessingFactory.class)
 public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, TramoSeatsResults>*/ {
 
     private static final TramoFactory INSTANCE = new TramoFactory();
@@ -70,7 +70,8 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
         return builder.build();
     }
 
-    public TramoSpec refreshSpec(TramoSpec currentSpec, TramoSpec domainSpec, EstimationPolicyType policy, TsDomain frozenDomain) {
+    public TramoSpec refreshSpec(
+            TramoSpec currentSpec, TramoSpec domainSpec, EstimationPolicyType policy, TsDomain frozenDomain) {
         if (policy == EstimationPolicyType.None) {
             return currentSpec;
         }
@@ -117,7 +118,8 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
         return builder.build();
     }
 
-    private void update(TransformSpec transform, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
+    private void update(
+            TransformSpec transform, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
         if (transform.getFunction() == TransformationType.Auto) {
             TransformSpec ntransform = transform.toBuilder()
                     .function(rslts.isLogTransformation() ? TransformationType.Log : TransformationType.None)
@@ -132,41 +134,40 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
         builder.arima(nspec);
     }
 
-    private void update(AutoModelSpec ami, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
+    private void update(
+            AutoModelSpec ami, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
         // Disable ami
-        AutoModelSpec nami = ami.toBuilder()
-                .enabled(false)
-                .build();
+        AutoModelSpec nami = ami.toBuilder().enabled(false).build();
         builder.autoModel(nami);
     }
 
-    private void update(OutlierSpec outliers, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
-        if (outliers.isUsed()) {    // Disable outliers
+    private void update(
+            OutlierSpec outliers, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
+        if (outliers.isUsed()) { // Disable outliers
             builder.outliers(
-                    outliers.toBuilder()
-                            .ao(false)
-                            .ls(false)
-                            .tc(false)
-                            .so(false)
-                            .build());
+                    outliers.toBuilder().ao(false).ls(false).tc(false).so(false).build());
         }
     }
 
-    private void update(RegressionSpec regression, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
-        // The huge part. 
+    private void update(
+            RegressionSpec regression, GeneralLinearModel.Description<SarimaSpec> rslts, TramoSpec.Builder builder) {
+        // The huge part.
         RegressionSpec.Builder rbuilder = regression.toBuilder();
         // all the coefficients (fixed or free) of the variables have already been filled
         Variable[] variables = rslts.getVariables();
         updateMean(variables, rbuilder);
         update(regression.getCalendar(), variables, rbuilder);
         updateOutliers(variables, rbuilder);
+        updateInterventionVariables(variables, rbuilder);
+        updateRamps(variables, rbuilder);
         updateUserVariables(variables, rbuilder);
         builder.regression(rbuilder.build());
     }
 
     private void updateMean(Variable[] vars, RegressionSpec.Builder builder) {
         Optional<Variable> fc = Arrays.stream(vars)
-                .filter(v -> v.getName().equals(TrendConstant.NAME)).findFirst();
+                .filter(v -> v.getName().equals(TrendConstant.NAME))
+                .findFirst();
         if (fc.isPresent()) {
             builder.mean(MeanSpec.mean(fc.orElseThrow().getCoefficient(0)));
         } else {
@@ -181,23 +182,24 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
                 .forEach(v -> builder.outlier(v.removeAttribute(ModellingUtility.AMI)));
     }
 
-    private void updateUserVariables(Variable[] vars, RegressionSpec.Builder builder) {
+    private void updateInterventionVariables(Variable[] vars, RegressionSpec.Builder builder) {
+        builder.clearRamps();
+        Arrays.stream(vars).filter(v -> v.getCore() instanceof Ramp).forEach(v -> builder.ramp(v));
+    }
 
+    private void updateRamps(Variable[] vars, RegressionSpec.Builder builder) {
         builder.clearInterventionVariables();
         Arrays.stream(vars)
                 .filter(v -> v.getCore() instanceof InterventionVariable)
                 .forEach(v -> builder.interventionVariable(v));
-        builder.clearRamps();
-        Arrays.stream(vars)
-                .filter(v -> v.getCore() instanceof Ramp)
-                .forEach(v -> builder.ramp(v));
+    }
+
+    private void updateUserVariables(Variable[] vars, RegressionSpec.Builder builder) {
         builder.clearUserDefinedVariables();
         Arrays.stream(vars)
                 .filter(v -> ModellingUtility.isUser(v))
-                .filter(v -> !(v.getCore() instanceof InterventionVariable))
-                .filter(v -> !(v.getCore() instanceof Ramp))
-                .map(v -> v.withCore(TsContextVariable.of(v.getCore())))
-                .forEach(v -> builder.userDefinedVariable(v));
+                .map(v -> UserVariableSpec.of(v))
+                .forEach(d -> builder.userDefinedVariable(d));
     }
 
     private void update(CalendarSpec cspec, Variable[] variables, RegressionSpec.Builder builder) {
@@ -210,9 +212,11 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
     private void update(TradingDaysSpec tdspec, Variable[] vars, CalendarSpec.Builder builder) {
         // leap year
         Optional<Variable> flp = Arrays.stream(vars)
-                .filter(v -> ModellingUtility.isLengthOfPeriod(v)).findFirst();
+                .filter(v -> ModellingUtility.isLengthOfPeriod(v))
+                .findFirst();
         Optional<Variable> ftd = Arrays.stream(vars)
-                .filter(v -> ModellingUtility.isTradingDays(v)).findFirst();
+                .filter(v -> ModellingUtility.isTradingDays(v))
+                .findFirst();
 
         TradingDaysSpec ntdspec = TradingDaysSpec.none();
 
@@ -241,11 +245,10 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
                 int ntd = tdspec.getStockTradingDays();
                 ntdspec = TradingDaysSpec.stockTradingDays(ntd, ctd);
             } else if (tdspec.isHolidays()) {
-                ntdspec = TradingDaysSpec.holidays(tdspec.getHolidays(),
-                        td, lp, ctd, clp);
+                ntdspec = TradingDaysSpec.holidays(tdspec.getHolidays(), td, lp, ctd, clp);
             } else if (tdspec.isUserDefined()) {
                 ntdspec = TradingDaysSpec.userDefined(tdspec.getUserVariables(), ctd);
-            } else { //normal case
+            } else { // normal case
                 ntdspec = TradingDaysSpec.td(td, lp, ctd, clp);
             }
         }
@@ -254,8 +257,8 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
 
     private void update(EasterSpec espec, Variable[] vars, CalendarSpec.Builder builder) {
         // Search for an optional easter variable
-        Optional<Variable> fe = Arrays.stream(vars)
-                .filter(v -> ModellingUtility.isEaster(v)).findFirst();
+        Optional<Variable> fe =
+                Arrays.stream(vars).filter(v -> ModellingUtility.isEaster(v)).findFirst();
         if (fe.isPresent()) {
             Variable ev = fe.orElseThrow();
             if (ev.getCore() instanceof EasterVariable evar) {
@@ -285,10 +288,13 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
         builder.autoModel(domainSpec.getAutoModel());
     }
 
-    private RegressionSpec removeOutliers(TramoSpec currentSpec, TramoSpec domainSpec, TramoSpec.Builder builder, TsDomain frozen) {
+    private RegressionSpec removeOutliers(
+            TramoSpec currentSpec, TramoSpec domainSpec, TramoSpec.Builder builder, TsDomain frozen) {
         OutlierSpec ospec = domainSpec.getOutliers();
         if (frozen != null) {
-            ospec = ospec.toBuilder().span(TimeSelector.from(frozen.getEndPeriod().start())).build();
+            ospec = ospec.toBuilder()
+                    .span(TimeSelector.from(frozen.getEndPeriod().start()))
+                    .build();
         }
         builder.outliers(ospec);
 
@@ -296,8 +302,8 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
         List<Variable<IOutlier>> outliers = currentSpec.getRegression().getOutliers();
         List<Variable<IOutlier>> defoutliers = domainSpec.getRegression().getOutliers();
 
-        RegressionSpec.Builder rbuilder = currentSpec.getRegression().toBuilder()
-                .clearOutliers();
+        RegressionSpec.Builder rbuilder =
+                currentSpec.getRegression().toBuilder().clearOutliers();
         // use frozen outliers and outliers specified in the domain spec (avoid doubles)
         defoutliers.forEach(outlier -> {
             rbuilder.outlier(outlier);
@@ -305,7 +311,8 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
 
         outliers.stream()
                 .filter(outlier -> !belongsTo(outlier, defoutliers))
-                .filter(outlier -> (frozen != null && frozen.contains(outlier.getCore().getPosition())))
+                .filter(outlier ->
+                        (frozen != null && frozen.contains(outlier.getCore().getPosition())))
                 .forEachOrdered(outlier -> {
                     rbuilder.outlier(outlier);
                 });
@@ -315,24 +322,25 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
     private static boolean belongsTo(Variable<IOutlier> outlier, List<Variable<IOutlier>> defoutliers) {
         return defoutliers.stream()
                 .filter(o -> o.getCore().getCode().equals(outlier.getCore().getCode()))
-                .anyMatch(o -> o.getCore().getPosition().equals(outlier.getCore().getPosition()));
+                .anyMatch(
+                        o -> o.getCore().getPosition().equals(outlier.getCore().getPosition()));
     }
 
     private void freeArima(TramoSpec currentSpec, TramoSpec domainSpec, TramoSpec.Builder builder) {
-        builder.arima(currentSpec.getArima().freeParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
+        builder.arima(
+                currentSpec.getArima().freeParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
     }
 
     private void clearArima(TramoSpec currentSpec, TramoSpec domainSpec, TramoSpec.Builder builder) {
-        builder.arima(currentSpec.getArima().resetParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
+        builder.arima(
+                currentSpec.getArima().resetParameters(domainSpec.isUsingAutoModel() ? null : domainSpec.getArima()));
     }
 
     private void fixAR(TramoSpec currentSpec, TramoSpec domainSpec, TramoSpec.Builder builder) {
         SarimaSpec arima = currentSpec.getArima();
         Parameter[] phi = Parameter.fixParameters(arima.getPhi());
         Parameter[] bphi = Parameter.fixParameters(arima.getBphi());
-        SarimaSpec.Builder abuilder = arima.toBuilder()
-                .phi(phi)
-                .bphi(bphi);
+        SarimaSpec.Builder abuilder = arima.toBuilder().phi(phi).bphi(bphi);
         if (domainSpec.isUsingAutoModel()) {
             abuilder.theta(Parameter.freeParameters(arima.getTheta()))
                     .btheta(Parameter.freeParameters(arima.getTheta()));
@@ -376,10 +384,10 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
             nr.add(v.withCoefficients(freeCoefficients(v, dreg.getRamps())));
         });
 
-        List<Variable<TsContextVariable>> u = reg.getUserDefinedVariables();
-        List<Variable<TsContextVariable>> nu = new ArrayList<>();
+        List<UserVariableSpec> u = reg.getUserDefinedVariables();
+        List<UserVariableSpec> nu = new ArrayList<>();
         u.forEach(v -> {
-            nu.add(v.withCoefficients(freeCoefficients(v, dreg.getUserDefinedVariables())));
+            nu.add(v.withCoefficient(freeCoefficient(v, dreg.getUserDefinedVariables())));
         });
 
         EasterSpec easter = reg.getCalendar().getEaster();
@@ -388,9 +396,7 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
             Parameter dc = dreg.getCalendar().getEaster().getCoefficient();
             if (dc == null || !dc.isFixed()) {
                 c = Parameter.initial(c.getValue());
-                easter = easter.toBuilder()
-                        .coefficient(c)
-                        .build();
+                easter = easter.toBuilder().coefficient(c).build();
             }
         }
         TradingDaysSpec td = reg.getCalendar().getTradingDays();
@@ -403,33 +409,44 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
                     c = Parameter.initial(c.getValue());
                 }
             }
-            tdc = Parameter.freeParameters(tdc, dreg.getCalendar().getTradingDays().getTdCoefficients());
+            tdc = Parameter.freeParameters(
+                    tdc, dreg.getCalendar().getTradingDays().getTdCoefficients());
             td = td.withCoefficients(tdc, c);
         }
 
-        builder.regression(rbuilder
-                .mean(mean)
-                .clearInterventionVariables().interventionVariables(niv)
-                .clearOutliers().outliers(no)
-                .clearRamps().ramps(nr)
-                .clearUserDefinedVariables().userDefinedVariables(nu)
-                .calendar(CalendarSpec.builder()
-                        .easter(easter)
-                        .tradingDays(td)
-                        .build())
+        builder.regression(rbuilder.mean(mean)
+                .clearInterventionVariables()
+                .interventionVariables(niv)
+                .clearOutliers()
+                .outliers(no)
+                .clearRamps()
+                .ramps(nr)
+                .clearUserDefinedVariables()
+                .userDefinedVariables(nu)
+                .calendar(CalendarSpec.builder().easter(easter).tradingDays(td).build())
                 .build());
     }
 
     private static <S extends ITsVariable> Parameter[] freeCoefficients(Variable<S> var, List<Variable<S>> ref) {
         Parameter[] c = var.getCoefficients();
-        if (c == null) {
-            return null;
-        }
-        Optional<Variable<S>> rvar = ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
+        Optional<Variable<S>> rvar =
+                ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
         if (rvar.isPresent()) {
             return Parameter.freeParameters(c, rvar.orElseThrow().getCoefficients());
         } else {
             return Parameter.freeParameters(c);
+        }
+    }
+
+    private static Parameter freeCoefficient(UserVariableSpec var, List<UserVariableSpec> ref) {
+        Parameter c = var.getCoefficient();
+        Optional<UserVariableSpec> rvar =
+                ref.stream().filter(v -> v.getName().equals(var.getName())).findFirst();
+        UserVariableSpec found = rvar.orElse(null);
+        if (found != null) {
+            return c.free(found.getCoefficient());
+        } else {
+            return c.free();
         }
     }
 
@@ -442,7 +459,8 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
 
     private static final Map<String, String> IV_AO = ao_attributes();
 
-    private void fixVariables(RegressionSpec reg, TramoSpec domainSpec, TramoSpec.Builder builder, TsDomain frozenDomain) {
+    private void fixVariables(
+            RegressionSpec reg, TramoSpec domainSpec, TramoSpec.Builder builder, TsDomain frozenDomain) {
         RegressionSpec.Builder rbuilder = reg.toBuilder();
         MeanSpec mean = reg.getMean();
         if (mean.isDefined()) {
@@ -487,10 +505,10 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
             nr.add(v.withCoefficients(Parameter.fixParameters(v.getCoefficients())));
         });
 
-        List<Variable<TsContextVariable>> u = reg.getUserDefinedVariables();
-        List<Variable<TsContextVariable>> nu = new ArrayList<>();
+        List<UserVariableSpec> u = reg.getUserDefinedVariables();
+        List<UserVariableSpec> nu = new ArrayList<>();
         u.forEach(v -> {
-            nu.add(v.withCoefficients(Parameter.fixParameters(v.getCoefficients())));
+            nu.add(v.withCoefficient(v.getCoefficient()));
         });
 
         EasterSpec easter = reg.getCalendar().getEaster();
@@ -507,18 +525,16 @@ public class TramoFactory /*implements SaProcessingFactory<TramoSeatsSpec, Tramo
             td = td.withCoefficients(Parameter.fixParameters(tdc), c == null ? null : Parameter.fixed(c.getValue()));
         }
 
-        builder.regression(rbuilder
-                .mean(mean)
-                .clearInterventionVariables().interventionVariables(niv)
-                .clearOutliers().outliers(no)
-                .clearRamps().ramps(nr)
-                .clearUserDefinedVariables().userDefinedVariables(nu)
-                .calendar(CalendarSpec.builder()
-                        .easter(easter)
-                        .tradingDays(td)
-                        .build())
+        builder.regression(rbuilder.mean(mean)
+                .clearInterventionVariables()
+                .interventionVariables(niv)
+                .clearOutliers()
+                .outliers(no)
+                .clearRamps()
+                .ramps(nr)
+                .clearUserDefinedVariables()
+                .userDefinedVariables(nu)
+                .calendar(CalendarSpec.builder().easter(easter).tradingDays(td).build())
                 .build());
-
     }
-
 }

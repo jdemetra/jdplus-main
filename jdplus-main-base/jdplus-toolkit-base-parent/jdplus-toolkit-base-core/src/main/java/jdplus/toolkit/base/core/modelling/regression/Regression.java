@@ -5,6 +5,9 @@
  */
 package jdplus.toolkit.base.core.modelling.regression;
 
+import java.util.HashMap;
+import java.util.Map;
+import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.TimeSeriesDomain;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsException;
@@ -34,13 +37,9 @@ import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
 import jdplus.toolkit.base.api.timeseries.regression.TrigonometricVariables;
 import jdplus.toolkit.base.api.timeseries.regression.TsVariable;
 import jdplus.toolkit.base.api.timeseries.regression.TsVariables;
-import jdplus.toolkit.base.api.timeseries.regression.UserMovingHoliday;
 import jdplus.toolkit.base.api.timeseries.regression.UserTradingDays;
 import jdplus.toolkit.base.api.timeseries.regression.UserVariable;
 import jdplus.toolkit.base.api.timeseries.regression.UserVariables;
-import java.util.HashMap;
-import java.util.Map;
-import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
 import jdplus.toolkit.base.core.math.matrices.MatrixWindow;
@@ -53,10 +52,10 @@ import lombok.NonNull;
 @lombok.experimental.UtilityClass
 public class Regression {
 
-    private final Map< Class<? extends ITsVariable>, RegressionVariableFactory> FACTORIES
-            = new HashMap<>();
+    private final Map<Class<? extends ITsVariable>, RegressionVariableFactory> FACTORIES = new HashMap<>();
 
-    public <V extends ITsVariable, W extends V> boolean register(Class<W> wclass, RegressionVariableFactory<V> factory) {
+    public <V extends ITsVariable, W extends V> boolean register(
+            Class<W> wclass, RegressionVariableFactory<V> factory) {
         synchronized (FACTORIES) {
             if (FACTORIES.containsKey(wclass)) {
                 return false;
@@ -108,27 +107,26 @@ public class Regression {
 
             FACTORIES.put(TsVariable.class, TsVariableFactory.FACTORY);
             FACTORIES.put(UserVariable.class, TsVariableFactory.FACTORY);
-            FACTORIES.put(UserMovingHoliday.class, TsVariableFactory.FACTORY);
             FACTORIES.put(TsVariables.class, TsVariablesFactory.FACTORY);
             FACTORIES.put(UserVariables.class, TsVariablesFactory.FACTORY);
             FACTORIES.put(UserTradingDays.class, TsVariablesFactory.FACTORY);
-            
+
             FACTORIES.put(ModifiedTsVariable.class, ModifiedTsVariableFactory.FACTORY);
         }
     }
-    
-    static RegressionVariableFactory factoryFor(ITsVariable var){
-       synchronized (FACTORIES) {
-             return FACTORIES.get(var.getClass());
+
+    static RegressionVariableFactory factoryFor(ITsVariable var) {
+        synchronized (FACTORIES) {
+            return FACTORIES.get(var.getClass());
         }
-        
     }
-   
+
     public <D extends TimeSeriesDomain> FastMatrix matrix(@NonNull D domain, @NonNull ITsVariable... vars) {
         return matrix(domain, null, vars);
     }
 
-    public <D extends TimeSeriesDomain> FastMatrix matrix(@NonNull D domain, ProcessingLog log, @NonNull ITsVariable... vars) {
+    public <D extends TimeSeriesDomain> FastMatrix matrix(
+            @NonNull D domain, ProcessingLog log, @NonNull ITsVariable... vars) {
         if (domain.isEmpty() || vars.length == 0) {
             return FastMatrix.EMPTY;
         }
@@ -167,5 +165,4 @@ public class Regression {
         FastMatrix m = matrix(domain, vars);
         return DataBlock.of(m.getStorage());
     }
-
 }

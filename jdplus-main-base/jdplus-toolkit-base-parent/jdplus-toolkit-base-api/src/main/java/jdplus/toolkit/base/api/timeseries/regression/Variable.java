@@ -1,28 +1,28 @@
 /*
  * Copyright 2020 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * https://joinup.ec.europa.eu/software/page/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.timeseries.regression;
 
-import jdplus.toolkit.base.api.data.Parameter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-import nbbrd.design.Development;
+import jdplus.toolkit.base.api.data.Parameter;
 import lombok.NonNull;
+import nbbrd.design.Development;
 
 /**
  *
@@ -31,54 +31,47 @@ import lombok.NonNull;
  */
 @Development(status = Development.Status.Release)
 @lombok.Value
-//@lombok.EqualsAndHashCode(exclude = {"attributes"})
+// @lombok.EqualsAndHashCode(exclude = {"attributes"})
 /* Some attributes could change the behaviour of some algorithms. So, they can't be excluded */
 @lombok.Builder(toBuilder = true)
 public class Variable<V extends ITsVariable> {
-    
-    @lombok.NonNull
-    private String name;
-    
-    @lombok.NonNull
-    private V core;
-    
+
+    @lombok.NonNull private String name;
+
+    @lombok.NonNull private V core;
+
     private Parameter[] coefficients;
-    
-    @lombok.NonNull
-    @lombok.Singular
+
+    @lombok.NonNull @lombok.Singular
     private Map<String, String> attributes;
-    
+
     public int dim() {
         return core.dim();
     }
-    
+
     public boolean hasAttribute(String id) {
         return attributes.containsKey(id);
     }
-    
+
     public String attribute(String id) {
         return attributes.get(id);
     }
-    
+
     public boolean isAttribute(String key, String value) {
         String val = attributes.get(key);
         return val != null && val.equals(value);
     }
-    
-    public boolean test(Predicate<ITsVariable> pred){
-        if (core instanceof ModifiedTsVariable mcore)
-            return pred.test(mcore.getVariable());
-        else 
-            return pred.test(core);
+
+    public boolean test(Predicate<ITsVariable> pred) {
+        if (core instanceof ModifiedTsVariable mcore) return pred.test(mcore.getVariable());
+        else return pred.test(core);
     }
-    
-    @NonNull
-    public Parameter getCoefficient(int i) {
+
+    @NonNull public Parameter getCoefficient(int i) {
         return coefficients == null ? Parameter.undefined() : coefficients[i];
     }
-    
-    @NonNull
-    public Parameter[] getCoefficients() {
+
+    @NonNull public Parameter[] getCoefficients() {
         return coefficients == null ? Parameter.make(core.dim()) : coefficients.clone();
     }
 
@@ -89,18 +82,19 @@ public class Variable<V extends ITsVariable> {
      * @param attributes
      * @return
      */
-    public static Variable variable(@NonNull final String name, @NonNull final ITsVariable variable, Map<String, String> attributes) {
+    public static Variable variable(
+            @NonNull final String name, @NonNull final ITsVariable variable, Map<String, String> attributes) {
         if (attributes == null) {
             return new Variable(name, variable, null, Map.of());
         } else {
             return new Variable(name, variable, null, Collections.unmodifiableMap(attributes));
         }
     }
-    
+
     public static Variable variable(@NonNull final String name, @NonNull final ITsVariable variable) {
         return new Variable(name, variable, null, Map.of());
     }
-    
+
     public int freeCoefficientsCount() {
         if (coefficients == null) {
             return core.dim();
@@ -109,13 +103,13 @@ public class Variable<V extends ITsVariable> {
         }
     }
 
-   public int fixedCoefficientsCount() {
+    public int fixedCoefficientsCount() {
         if (coefficients == null) {
             return 0;
         } else {
             return Parameter.fixedParametersCount(coefficients);
         }
-   }
+    }
     // main types
     /**
      *
@@ -132,7 +126,7 @@ public class Variable<V extends ITsVariable> {
     public boolean isFree() {
         return Parameter.isFree(coefficients);
     }
-    
+
     public Variable rename(String name) {
         if (name.equals(this.name)) {
             return this;
@@ -140,7 +134,7 @@ public class Variable<V extends ITsVariable> {
             return new Variable(name, core, coefficients, attributes);
         }
     }
-    
+
     public Variable withCoefficient(Parameter coefficient) {
         if (core.dim() != 1) {
             throw new IllegalArgumentException();
@@ -148,9 +142,9 @@ public class Variable<V extends ITsVariable> {
         if (coefficient == null && this.coefficients == null) {
             return this;
         }
-        return new Variable(name, core, coefficient == null ? null : new Parameter[]{coefficient}, attributes);
+        return new Variable(name, core, coefficient == null ? null : new Parameter[] {coefficient}, attributes);
     }
-    
+
     public Variable withCoefficients(Parameter[] coefficients) {
         if (coefficients != null && core.dim() != coefficients.length) {
             throw new IllegalArgumentException();
@@ -160,33 +154,25 @@ public class Variable<V extends ITsVariable> {
         }
         return new Variable(name, core, coefficients, attributes);
     }
-    
+
     public Variable withCore(ITsVariable ncore) {
         if (coefficients != null && ncore.dim() != coefficients.length) {
             throw new IllegalArgumentException();
         }
         return new Variable(name, ncore, coefficients, attributes);
     }
-    
-    public Variable withoutAttribute(String key) {
-        if (!attributes.containsKey(key)) {
-            return this;
-        }
-        Map<String, String> natts;
-        natts = new HashMap<>(attributes);
-        natts.remove(key);
-        return natts.isEmpty() ? new Variable(name, core, coefficients, Map.of())
-                : new Variable(name, core, coefficients, Collections.unmodifiableMap(natts));
-    }
-    
+
     public Variable setAttribute(String key, String value) {
         Map<String, String> natts;
         natts = new HashMap<>(attributes);
         natts.put(key, value);
         return new Variable(name, core, coefficients, Collections.unmodifiableMap(natts));
     }
-    
+
     public Variable removeAttribute(String key) {
+        if (!attributes.containsKey(key)) {
+            return this;
+        }
         Map<String, String> natts;
         natts = new HashMap<>(attributes);
         natts.remove(key);
@@ -208,7 +194,7 @@ public class Variable<V extends ITsVariable> {
         natts.put(newkey, newvalue);
         return new Variable(name, core, coefficients, Collections.unmodifiableMap(natts));
     }
-    
+
     public Variable setAttributes(Map<String, String> additionalAttributes) {
         if (additionalAttributes.isEmpty()) {
             return this;
@@ -220,13 +206,13 @@ public class Variable<V extends ITsVariable> {
         natts.putAll(additionalAttributes);
         return new Variable(name, core, coefficients, Collections.unmodifiableMap(natts));
     }
-    
+
     public static final String EXCLUDED = "excluded";
-    
+
     public boolean isExcluded() {
         return attributes.containsKey(EXCLUDED);
     }
-    
+
     public Variable exclude(boolean excluded) {
         if (isExcluded() == excluded) {
             return this;
@@ -237,5 +223,4 @@ public class Variable<V extends ITsVariable> {
             return setAttribute(EXCLUDED, Boolean.toString(excluded)).withCoefficients(Parameter.zero(core.dim()));
         }
     }
-    
 }

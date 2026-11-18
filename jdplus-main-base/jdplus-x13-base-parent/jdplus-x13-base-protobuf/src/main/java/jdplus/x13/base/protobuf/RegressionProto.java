@@ -1,26 +1,24 @@
 /*
  * Copyright 2021 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.x13.base.protobuf;
 
+import java.time.LocalDate;
+import java.util.List;
 import jdplus.toolkit.base.api.data.Parameter;
-import jdplus.toolkit.base.protobuf.modelling.ModellingProtos;
-import jdplus.toolkit.base.protobuf.modelling.ModellingProtosUtility;
-import jdplus.x13.base.api.regarima.MeanSpec;
-import jdplus.x13.base.api.regarima.RegressionSpec;
 import jdplus.toolkit.base.api.timeseries.regression.AdditiveOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.IOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
@@ -28,11 +26,13 @@ import jdplus.toolkit.base.api.timeseries.regression.LevelShift;
 import jdplus.toolkit.base.api.timeseries.regression.PeriodicOutlier;
 import jdplus.toolkit.base.api.timeseries.regression.Ramp;
 import jdplus.toolkit.base.api.timeseries.regression.TransitoryChange;
-import jdplus.toolkit.base.api.timeseries.regression.TsContextVariable;
+import jdplus.toolkit.base.api.timeseries.regression.UserVariableSpec;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.base.protobuf.modelling.ModellingProtos;
+import jdplus.toolkit.base.protobuf.modelling.ModellingProtosUtility;
 import jdplus.toolkit.base.protobuf.toolkit.ToolkitProtosUtility;
-import java.time.LocalDate;
-import java.util.List;
+import jdplus.x13.base.api.regarima.MeanSpec;
+import jdplus.x13.base.api.regarima.RegressionSpec;
 
 /**
  *
@@ -90,8 +90,7 @@ public class RegressionProto {
                 .setTd(TradingDaysProto.convert(spec.getTradingDays()));
         MeanSpec mean = spec.getMean();
         if (mean.isUsed()) {
-            builder.setMean(ToolkitProtosUtility.convert(mean.getCoefficient()))
-                    .setCheckMean(mean.isTest());
+            builder.setMean(ToolkitProtosUtility.convert(mean.getCoefficient())).setCheckMean(mean.isTest());
         } else {
             builder.clearMean().setCheckMean(false);
         }
@@ -100,10 +99,10 @@ public class RegressionProto {
         for (Variable<IOutlier> outlier : outliers) {
             builder.addOutliers(convert(outlier));
         }
-        List<Variable<TsContextVariable>> users = spec.getUserDefinedVariables();
-        for (Variable<TsContextVariable> user : users) {
-            builder.addUsers(ModellingProtosUtility.convertTsContextVariable(user));
-        }
+        List<UserVariableSpec> users = spec.getUserDefinedVariables();
+        users.forEach(user -> {
+            builder.addUsers(ModellingProtosUtility.convertUserVariable(user));
+        });
         List<Variable<InterventionVariable>> ivs = spec.getInterventionVariables();
         for (Variable<InterventionVariable> iv : ivs) {
             builder.addInterventions(ModellingProtosUtility.convertInterventionVariable(iv));
@@ -144,7 +143,7 @@ public class RegressionProto {
         return Variable.<IOutlier>builder()
                 .core(o)
                 .name(outlier.getName())
-                .coefficients(c == null ? null : new Parameter[]{c})
+                .coefficients(c == null ? null : new Parameter[] {c})
                 .attributes(outlier.getMetadataMap())
                 .build();
     }

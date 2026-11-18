@@ -5,18 +5,18 @@
  */
 package jdplus.toolkit.base.core.ssf.composite;
 
+import java.util.ArrayList;
+import java.util.List;
 import jdplus.toolkit.base.core.ssf.ISsfDynamics;
 import jdplus.toolkit.base.core.ssf.ISsfInitialization;
 import jdplus.toolkit.base.core.ssf.ISsfLoading;
 import jdplus.toolkit.base.core.ssf.StateComponent;
-import jdplus.toolkit.base.core.ssf.univariate.ISsfError;
-import jdplus.toolkit.base.core.ssf.univariate.Measurement;
-import jdplus.toolkit.base.core.ssf.univariate.Ssf;
-import java.util.ArrayList;
-import java.util.List;
 import jdplus.toolkit.base.core.ssf.basic.Loading;
 import jdplus.toolkit.base.core.ssf.basic.MeasurementError;
+import jdplus.toolkit.base.core.ssf.univariate.ISsfError;
 import jdplus.toolkit.base.core.ssf.univariate.ISsfMeasurement;
+import jdplus.toolkit.base.core.ssf.univariate.Measurement;
+import jdplus.toolkit.base.core.ssf.univariate.Ssf;
 import nbbrd.design.BuilderPattern;
 
 /**
@@ -41,15 +41,14 @@ public class CompositeSsf extends Ssf {
             dim[j] = i[j].getStateDim();
         }
 
-        return new StateComponent(new CompositeInitialization(dim, i),
-                new CompositeDynamics(dim, d));
-
+        return new StateComponent(new CompositeInitialization(dim, i), new CompositeDynamics(dim, d));
     }
 
     private final int[] pos;
     private final int[] dim;
 
-    CompositeSsf(int[] cmpPos, int[] cmpDim, ISsfInitialization init, ISsfDynamics dynamics, ISsfMeasurement measurement) {
+    CompositeSsf(
+            int[] cmpPos, int[] cmpDim, ISsfInitialization init, ISsfDynamics dynamics, ISsfMeasurement measurement) {
         super(init, dynamics, measurement);
         this.pos = cmpPos;
         this.dim = cmpDim;
@@ -112,7 +111,10 @@ public class CompositeSsf extends Ssf {
             // optimization
             ISsfLoading cl = Loading.optimize(new CompositeLoading(dim, l), cpos);
 
-            return new CompositeSsf(pos, dim, new CompositeInitialization(dim, i),
+            return new CompositeSsf(
+                    pos,
+                    dim,
+                    new CompositeInitialization(dim, i),
                     new CompositeDynamics(dim, d),
                     new Measurement(cl, measurementError));
         }
@@ -130,4 +132,7 @@ public class CompositeSsf extends Ssf {
         return new Builder();
     }
 
+    public int getComponentsCount() {
+        return dim.length;
+    }
 }

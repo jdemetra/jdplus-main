@@ -4,46 +4,47 @@
  */
 package jdplus.toolkit.desktop.plugin.ui.properties.l2fprod;
 
-import jdplus.toolkit.base.api.data.Range;
-import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
-import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
-import jdplus.toolkit.base.api.timeseries.regression.Variable;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import jdplus.toolkit.base.api.data.Parameter;
+import jdplus.toolkit.base.api.data.Range;
+import jdplus.toolkit.base.api.timeseries.regression.InterventionVariable;
+import jdplus.toolkit.base.api.timeseries.regression.Variable;
+import jdplus.toolkit.desktop.plugin.descriptors.EnhancedPropertyDescriptor;
 
 /**
  *
  * @author Jean Palate
  */
-public final class InterventionVariableDescriptor extends VariableDescriptor<InterventionVariable> {
+public class InterventionVariableDescriptor extends VariableDescriptor {
 
+    private String name;
+    private Parameter p;
     private InterventionVariable core;
 
     public InterventionVariableDescriptor() {
         core = InterventionVariable.empty();
+        p = Parameter.undefined();
+        name = core.description(null);
     }
 
     public InterventionVariableDescriptor(Variable<InterventionVariable> var) {
-        super(var);
         core = var.getCore();
-        setName(var.getName());
+        this.name = var.getName();
+        this.p = var.getCoefficient(0);
     }
 
     public InterventionVariableDescriptor(InterventionVariableDescriptor desc) {
-        super(desc);
         core = desc.core;
+        this.name = desc.name;
+        this.p = desc.getCoefficient();
     }
 
     public InterventionVariableDescriptor duplicate() {
         return new InterventionVariableDescriptor(this);
-    }
-    
-    @Override
-    public String name(){
-        return core.description(UserInterfaceContext.INSTANCE.getDomain());
     }
 
     @Override
@@ -78,22 +79,21 @@ public final class InterventionVariableDescriptor extends VariableDescriptor<Int
         return descs;
     }
 
-    private static final int SEQ_ID = 1,
-            DELTA_ID = 2, DELTAS_ID = 3;
+    private static final int SEQ_ID = 1, DELTA_ID = 2, DELTAS_ID = 3;
 
-    private EnhancedPropertyDescriptor seqDesc() {
+    protected EnhancedPropertyDescriptor seqDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("sequences", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, SEQ_ID);
             desc.setDisplayName("Sequences");
-            //edesc.setReadOnly(true);
+            // edesc.setReadOnly(true);
             return edesc;
         } catch (IntrospectionException ex) {
             return null;
         }
     }
 
-    private EnhancedPropertyDescriptor deltaDesc() {
+    protected EnhancedPropertyDescriptor deltaDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("delta", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, DELTA_ID);
@@ -104,7 +104,7 @@ public final class InterventionVariableDescriptor extends VariableDescriptor<Int
         }
     }
 
-    private EnhancedPropertyDescriptor deltaSDesc() {
+    protected EnhancedPropertyDescriptor deltaSDesc() {
         try {
             PropertyDescriptor desc = new PropertyDescriptor("deltaS", this.getClass());
             EnhancedPropertyDescriptor edesc = new EnhancedPropertyDescriptor(desc, DELTAS_ID);
@@ -126,11 +126,11 @@ public final class InterventionVariableDescriptor extends VariableDescriptor<Int
     }
 
     public void setSequences(Sequence[] val) {
-        InterventionVariable.Builder builder = core.toBuilder()
-                .clearSequences();
+        InterventionVariable.Builder builder = core.toBuilder().clearSequences();
         if (val != null) {
             for (int i = 0; i < val.length; ++i) {
-                builder.sequence(Range.of(val[i].getStart().atStartOfDay(), val[i].getEnd().atStartOfDay()));
+                builder.sequence(Range.of(
+                        val[i].getStart().atStartOfDay(), val[i].getEnd().atStartOfDay()));
             }
         }
         core = builder.build();
@@ -141,8 +141,7 @@ public final class InterventionVariableDescriptor extends VariableDescriptor<Int
     }
 
     public void setDelta(double val) {
-        core = core.toBuilder()
-                .delta(val).build();
+        core = core.toBuilder().delta(val).build();
     }
 
     public double getDeltaS() {
@@ -150,8 +149,7 @@ public final class InterventionVariableDescriptor extends VariableDescriptor<Int
     }
 
     public void setDeltaS(double val) {
-        core = core.toBuilder()
-                .deltaSeasonal(val).build();
+        core = core.toBuilder().deltaSeasonal(val).build();
     }
 
     @Override
@@ -159,4 +157,23 @@ public final class InterventionVariableDescriptor extends VariableDescriptor<Int
         return "Intervention variable";
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Parameter getCoefficient() {
+        return p;
+    }
+
+    @Override
+    public void setCoefficient(Parameter p) {
+        this.p = p;
+    }
 }

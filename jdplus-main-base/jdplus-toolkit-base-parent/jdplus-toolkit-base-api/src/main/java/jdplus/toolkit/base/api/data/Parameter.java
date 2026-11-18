@@ -1,24 +1,23 @@
 /*
  * Copyright 2021 National Bank of Belgium
- * 
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ *
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
- * 
+ *
  * https://joinup.ec.europa.eu/software/page/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software 
+ *
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.api.data;
 
 import java.util.Formatter;
 import java.util.Locale;
-
 import nbbrd.design.Development;
 
 /**
@@ -214,6 +213,35 @@ public class Parameter {
         return nspec;
     }
 
+    /**
+     * Fixes the parameter, except if it is undefined
+     * @return
+     */
+    public Parameter fix() {
+        if (type == ParameterType.Undefined || type == ParameterType.Fixed) return this;
+        return fixed(value);
+    }
+
+    /**
+     * Relaxes a fixed or estimated parameter, which become an initial one
+     * @return
+     */
+    public Parameter free() {
+        if (type == ParameterType.Undefined || type == ParameterType.Initial) return this;
+        return initial(value);
+    }
+
+    /**
+     * Relaxes a fixed or estimated parameter, except if it is fixed in the reference parameter;
+     * in that case, we return the reference parameter
+     * @param refParameter
+     * @return
+     */
+    public Parameter free(Parameter refParameter) {
+        if (refParameter != null && refParameter.isFixed()) return refParameter;
+        else return free();
+    }
+
     public static Parameter of(double val, ParameterType t) {
         if (t == ParameterType.Undefined) {
             return UNDEFINED;
@@ -294,7 +322,7 @@ public class Parameter {
         }
         for (int i = 0; i < spec.length; ++i) {
             if (!spec[i].isFree()) {
-//            if (!spec[i].isFree() && !spec[i].isDerived()) {
+                //            if (!spec[i].isFree() && !spec[i].isDerived()) {
                 return false;
             }
         }
@@ -442,21 +470,25 @@ public class Parameter {
             return new Parameter(value, type);
         }
     }
-    
+
     @Override
-    public String toString(){
-        if (type == ParameterType.Undefined)
-            return "...";
-        else{
-            StringBuilder builder=new StringBuilder();
+    public String toString() {
+        if (type == ParameterType.Undefined) return "...";
+        else {
+            StringBuilder builder = new StringBuilder();
             builder.append(new Formatter(Locale.ROOT).format("%6g", value));
-            switch (type){
-                case Fixed: builder.append('f'); break;
-                case Estimated: builder.append('e'); break;
+            switch (type) {
+                case Fixed:
+                    builder.append('f');
+                    break;
+                case Estimated:
+                    builder.append('e');
+                    break;
             }
             return builder.toString();
         }
     }
 
-    private static final Parameter UNDEFINED = new Parameter(0, ParameterType.Undefined), ZERO = new Parameter(0, ParameterType.Fixed);
+    private static final Parameter UNDEFINED = new Parameter(0, ParameterType.Undefined),
+            ZERO = new Parameter(0, ParameterType.Fixed);
 }

@@ -1,21 +1,24 @@
 /*
  * Copyright 2020 National Bank of Belgium
  *
- * Licensed under the EUPL, Version 1.2 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.2 or – as soon they will be approved
  * by the European Commission - subsequent versions of the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at:
  *
  * https://joinup.ec.europa.eu/software/page/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.core.modelling;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
 import jdplus.toolkit.base.api.data.DoubleSeq;
 import jdplus.toolkit.base.api.data.DoubleSeqCursor;
 import jdplus.toolkit.base.api.data.Parameter;
@@ -26,15 +29,13 @@ import jdplus.toolkit.base.api.processing.ProcessingLog;
 import jdplus.toolkit.base.api.timeseries.TsData;
 import jdplus.toolkit.base.api.timeseries.TsDomain;
 import jdplus.toolkit.base.api.timeseries.TsPeriod;
+import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import jdplus.toolkit.base.api.timeseries.calendars.LengthOfPeriodType;
+import jdplus.toolkit.base.api.timeseries.regression.ITsVariable;
 import jdplus.toolkit.base.api.timeseries.regression.MissingValueEstimation;
 import jdplus.toolkit.base.api.timeseries.regression.ModellingUtility;
 import jdplus.toolkit.base.api.timeseries.regression.TrendConstant;
 import jdplus.toolkit.base.api.timeseries.regression.Variable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Predicate;
-import jdplus.toolkit.base.api.timeseries.TsResiduals;
 import jdplus.toolkit.base.core.data.DataBlock;
 import jdplus.toolkit.base.core.data.DataBlockIterator;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
@@ -95,7 +96,6 @@ public interface GeneralLinearModel<M> extends Explorable {
          * @return
          */
         M getStochasticComponent();
-
     }
 
     interface Estimation {
@@ -177,15 +177,14 @@ public interface GeneralLinearModel<M> extends Explorable {
         LikelihoodStatistics getStatistics();
 
         List<ProcessingLog.Information> getLogs();
-
     }
 
     /**
-     * Gets the effect of all the variables (pre-specified or estimated)
+     * Gets the effect of all the variables (pre-specified or estimated) fulfilling the test.
      * The result corresponds to the transformed series (log + lp-adjust)
      *
-     * @param domain
-     * @param test
+     * @param domain The domain on which the effects are computed; if null, the domain of the series
+     * @param test The selection test applied on the variables.
      * @return
      */
     default TsData deterministicEffect(TsDomain domain, Predicate<Variable> test) {
@@ -221,10 +220,21 @@ public interface GeneralLinearModel<M> extends Explorable {
         return TsData.ofInternal(domain.getStartPeriod(), all.getStorage());
     }
 
+    /**
+     * Gets the effect of all the variables (pre-specified or estimated).
+     * The result corresponds to the transformed series (log + lp-adjust): X(fixed) b(fixed) + X(free) b
+     *
+     * @param domain The domain on which the effects are computed; if null, the domain of the series
+     * @return
+     */
     default TsData deterministicEffect(TsDomain domain) {
         return deterministicEffect(domain, v -> true);
     }
 
+    /**
+     * Is the mean correction put in the model.
+     * @return
+     */
     default boolean isMeanCorrection() {
         Description description = getDescription();
         Variable[] variables = description.getVariables();
@@ -236,6 +246,11 @@ public interface GeneralLinearModel<M> extends Explorable {
         return false;
     }
 
+    /**
+     * Is the mean correction actually used in the estimation (pre-specified or rejected
+     * mean correction are not considered)
+     * @return
+     */
     default boolean isMeanEstimation() {
         Description description = getDescription();
         Variable[] variables = description.getVariables();
@@ -247,6 +262,10 @@ public interface GeneralLinearModel<M> extends Explorable {
         return false;
     }
 
+    /**
+     * Gets the (transformed) interpolated series minus all the deterministics effects
+     * @return log(Yc) - X(fixed, not constant) b(fixed) - X(free, not constant) b
+     */
     default TsData linearizedSeries() {
         Description description = getDescription();
         TsData interp = interpolatedSeries(true);
@@ -254,7 +273,7 @@ public interface GeneralLinearModel<M> extends Explorable {
         if (variables.length == 0) {
             return interp;
         }
-        TsData det = deterministicEffect(interp.getDomain(), v->true);
+        TsData det = deterministicEffect(interp.getDomain(), v -> true);
         return TsData.subtract(interp, det);
     }
 
@@ -263,17 +282,18 @@ public interface GeneralLinearModel<M> extends Explorable {
      * one
      *
      * @param s The transformed series (in logs for instance)
-     * @param includeLp Specifies if a correction for leap year must be applied
+     * @param includeLp Specifies if a back-correction for leap year must be applied
      * @return
      */
     default TsData backTransform(TsData s, boolean includeLp) {
-        if (s.isEmpty())
-            return s;
+        if (s.isEmpty()) return s;
         Description description = getDescription();
         if (description.isLogTransformation()) {
             s = s.exp();
             if (includeLp && description.getLengthOfPeriodTransformation() != LengthOfPeriodType.None) {
-                s = Transformations.lengthOfPeriod(description.getLengthOfPeriodTransformation()).converse().transform(s, null);
+                s = Transformations.lengthOfPeriod(description.getLengthOfPeriodTransformation())
+                        .converse()
+                        .transform(s, null);
             }
         }
         return s;
@@ -292,13 +312,18 @@ public interface GeneralLinearModel<M> extends Explorable {
         Description description = getDescription();
         if (description.isLogTransformation()) {
             if (includeLp && description.getLengthOfPeriodTransformation() != LengthOfPeriodType.None) {
-                s = Transformations.lengthOfPeriod(description.getLengthOfPeriodTransformation()).transform(s, null);
+                s = Transformations.lengthOfPeriod(description.getLengthOfPeriodTransformation())
+                        .transform(s, null);
             }
             s = s.log();
         }
         return s;
     }
 
+    /**
+     * Transforms the series of the model (not interpolated)
+     * @return
+     */
     default TsData transformedSeries() {
         Description description = getDescription();
         LengthOfPeriodType lp = description.getLengthOfPeriodTransformation();
@@ -360,8 +385,8 @@ public interface GeneralLinearModel<M> extends Explorable {
             for (int i = 0; i < nmissing; ++i) {
                 int pos = dpos + missing[i].getPosition();
                 TsDomain mdom = TsDomain.of(domain.get(pos), 1);
-                TsData preadjust = preadjustmentEffect(mdom, v->true);
-                    missingvals[i] = missing[i].getValue() + preadjust.getValue(0);
+                TsData preadjust = preadjustmentEffect(mdom, v -> true);
+                missingvals[i] = missing[i].getValue() + preadjust.getValue(0);
                 if (!description.isLogTransformation()) {
                     missingvals[i] = missing[i].getValue() + preadjust.getValue(0);
                 } else {
@@ -373,18 +398,17 @@ public interface GeneralLinearModel<M> extends Explorable {
         return missingvals;
     }
 
-    default int regressionVariablesDim(){
+    default int regressionVariablesDim() {
         Variable[] variables = getDescription().getVariables();
-        return Arrays.stream(variables).mapToInt(v->v.freeCoefficientsCount()).sum();
+        return Arrays.stream(variables).mapToInt(v -> v.freeCoefficientsCount()).sum();
     }
-    
+
     default FastMatrix regressionMatrix(TsDomain domain) {
-        int nvars=regressionVariablesDim();
-        if (nvars == 0)
-            return null;
+        int nvars = regressionVariablesDim();
+        if (nvars == 0) return null;
         FastMatrix M = FastMatrix.make(domain.getLength(), nvars);
         Variable[] variables = getDescription().getVariables();
-        int cur=0;
+        int cur = 0;
         for (Variable v : variables) {
             if (!v.isPreadjustment()) {
                 FastMatrix x = Regression.matrix(domain, v.getCore());
@@ -405,11 +429,12 @@ public interface GeneralLinearModel<M> extends Explorable {
 
     /**
      * Gets the effect of all the estimated regression variables (= with unknown
-     * coefficients)
-     * The result corresponds to the transformed series (log + lp-adjust)
+     * coefficients) fulfilling the given test
+     * The result corresponds to the transformed series (log + lp-adjust); back-transformation should be applied on the result if necessary.
+     * That corresponds to deterministicEffect wheb there is no fixed regression coefficient.
      *
-     * @param domain
-     * @param test
+     * @param domain The domain on which the effects are computed; if null, the domain of the series
+     * @param test The selection test
      * @return
      */
     default TsData regressionEffect(TsDomain domain, Predicate<Variable> test) {
@@ -451,8 +476,8 @@ public interface GeneralLinearModel<M> extends Explorable {
      * coefficients)
      * The result corresponds to the transformed series (log + lp-adjust)
      *
-     * @param domain
-     * @param test
+     * @param domain The estimation domain. Domain of the series if null.
+     * @param test The selection test applied on "fixed" variables
      * @return
      */
     default TsData preadjustmentEffect(TsDomain domain, Predicate<Variable> test) {
@@ -477,14 +502,13 @@ public interface GeneralLinearModel<M> extends Explorable {
                         }
                     }
                 }
-
             }
         }
         return TsData.ofInternal(domain.getStartPeriod(), all.getStorage());
     }
 
     /**
-     * tde
+     * tde (untransformed). The selected variables derive from itradingdaysvariable or lengthofperiodvariable (user-defined td are not considered)
      *
      * @param domain If the domain is null, the series domain is used
      * @return
@@ -495,7 +519,7 @@ public interface GeneralLinearModel<M> extends Explorable {
     }
 
     /**
-     * ee
+     * ee (untranformed). The selected variables derive from ieastervariable
      *
      * @param domain If the domain is null, the series domain is used
      * @return
@@ -506,7 +530,7 @@ public interface GeneralLinearModel<M> extends Explorable {
     }
 
     /**
-     * mhe
+     * mhe (untransformed). The selected variables derive from imovingholidaysvariable (user-defined mhe are not considered)
      *
      * @param domain If the domain is null, the series domain is used
      * @return
@@ -517,13 +541,14 @@ public interface GeneralLinearModel<M> extends Explorable {
     }
 
     /**
-     * mhe
+     * omhe (untransformed).  The selected variables derive from imovingholidaysvariable,excluding ieastervariable (user-defined mhe are not considered)
      *
      * @param domain If the domain is null, the series domain is used
      * @return
      */
     default TsData getOtherMovingHolidayEffect(TsDomain domain) {
-        TsData s = deterministicEffect(domain, v -> ModellingUtility.isMovingHoliday(v) && ! ModellingUtility.isEaster(v));
+        TsData s =
+                deterministicEffect(domain, v -> ModellingUtility.isMovingHoliday(v) && !ModellingUtility.isEaster(v));
         return backTransform(s, false);
     }
     /**
@@ -534,12 +559,12 @@ public interface GeneralLinearModel<M> extends Explorable {
      */
     default TsData getRamadanEffect(TsDomain domain) {
         throw new UnsupportedOperationException("Not supported yet.");
-//        TsData s = deterministicEffect(domain, v->v instanceof RamadanVariable);
-//        return backTransform(s, false);
+        //        TsData s = deterministicEffect(domain, v->v instanceof RamadanVariable);
+        //        return backTransform(s, false);
     }
 
     /**
-     * out
+     * out. The selected variables derive from ioutlier.
      *
      * @param domain If the domain is null, the series domain is used
      * @return
@@ -550,6 +575,7 @@ public interface GeneralLinearModel<M> extends Explorable {
     }
 
     /**
+     * out (automatic). The selected variables derive from ioutlier and have been identified by an algorithm (not specified by the user).
      *
      * @param domain If the domain is null, the series domain is used
      * @param ami if true, only the outliers detected by the automatic procedure
@@ -562,7 +588,7 @@ public interface GeneralLinearModel<M> extends Explorable {
     }
 
     /**
-     * cal
+     * cal. The selected variables derive from icalendareffect (user-defined mhe are not considered).
      *
      * @param domain If the domain is null, the series domain is used
      * @return
@@ -587,7 +613,6 @@ public interface GeneralLinearModel<M> extends Explorable {
 
         return TsDomain.of(domain.getEndPeriod(), nfcast);
     }
-
 
     /**
      * The backcast domain is relative to the series domain, not to
@@ -621,6 +646,18 @@ public interface GeneralLinearModel<M> extends Explorable {
         }
     }
 
+    default int count(Predicate<ITsVariable> pred) {
+        Variable[] variables = getDescription().getVariables();
+        int n = 0;
+        for (int i = 0; i < variables.length; ++i) {
+            ITsVariable core = variables[i].getCore();
+            if (pred.test(core)) {
+                n += core.dim();
+            }
+        }
+        return n;
+    }
+
     /**
      * Subtract/divide two series
      *
@@ -635,6 +672,4 @@ public interface GeneralLinearModel<M> extends Explorable {
             return TsData.subtract(l, r);
         }
     }
-
-    
 }
