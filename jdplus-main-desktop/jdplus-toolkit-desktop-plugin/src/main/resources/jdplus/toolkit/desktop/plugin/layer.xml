@@ -11,6 +11,16 @@ Examples: https://github.com/apache/netbeans/blob/master/platform/core.ui/src/or
             <attr name="command" stringvalue="ws"/>
             <attr name="position" intvalue="100"/>
         </folder>
+        <folder name="Windows">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="jdplus.toolkit.desktop.plugin.Bundle"/>
+            <attr name="command" stringvalue="win"/>
+            <attr name="position" intvalue="110"/>
+        </folder>
+        <folder name="DataSources">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="jdplus.toolkit.desktop.plugin.Bundle"/>
+            <attr name="command" stringvalue="ds"/>
+            <attr name="position" intvalue="120"/>
+        </folder>
     </folder>
 
     <folder name="Menu">
