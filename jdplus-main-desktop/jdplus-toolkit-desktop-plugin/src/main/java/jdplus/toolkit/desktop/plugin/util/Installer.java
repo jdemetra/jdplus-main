@@ -17,6 +17,25 @@
 package jdplus.toolkit.desktop.plugin.util;
 
 import ec.util.chart.swing.Charts;
+import internal.toolkit.desktop.plugin.search.SearchEverywhereStep;
+import internal.toolkit.desktop.plugin.star.StarStep;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import jdplus.toolkit.base.api.timeseries.TsProvider;
 import jdplus.toolkit.base.tsp.FileLoader;
 import jdplus.toolkit.desktop.plugin.DemetraBehaviour;
@@ -25,7 +44,6 @@ import jdplus.toolkit.desktop.plugin.Persistable;
 import jdplus.toolkit.desktop.plugin.TsManager;
 import jdplus.toolkit.desktop.plugin.concurrent.ThreadPriority;
 import jdplus.toolkit.desktop.plugin.concurrent.UIExecutors;
-import internal.toolkit.desktop.plugin.star.StarStep;
 import jdplus.toolkit.desktop.plugin.tsproviders.DataSourceProviderBuddy;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruProvidersStep;
 import jdplus.toolkit.desktop.plugin.ui.mru.MruWorkspacesStep;
@@ -43,28 +61,11 @@ import org.openide.modules.ModuleInstall;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @lombok.extern.java.Log
 public final class Installer extends ModuleInstall {
 
-    public static final InstallerStep STEP = InstallerStep.all(new AppVersionStep(),
+    public static final InstallerStep STEP = InstallerStep.all(
+            new AppVersionStep(),
             new ProvidersV3Step(),
             new ProviderBuddyStep(),
             new TsVariableStep(),
@@ -73,8 +74,8 @@ public final class Installer extends ModuleInstall {
             new JFreeChartStep(),
             new StarStep(),
             new DemetraOptionsStep(),
-            new FileChooserStep()
-    );
+            new FileChooserStep(),
+            new SearchEverywhereStep());
 
     @Override
     public void restored() {
@@ -111,7 +112,9 @@ public final class Installer extends ModuleInstall {
         public void restore() {
             try {
                 Properties properties = FileParser.onParsingStream(AppVersionStep::parseProperties)
-                        .parseResource(Installer.class, "/META-INF/maven/eu.europa.ec.joinup.sat/jdplus-toolkit-desktop-plugin/pom.properties");
+                        .parseResource(
+                                Installer.class,
+                                "/META-INF/maven/eu.europa.ec.joinup.sat/jdplus-toolkit-desktop-plugin/pom.properties");
                 System.setProperty("netbeans.buildnumber", properties.getProperty("version"));
             } catch (IOException ex) {
                 log.log(Level.WARNING, "Cannot load version", ex);
@@ -122,8 +125,10 @@ public final class Installer extends ModuleInstall {
     private static final class ProvidersV3Step extends InstallerStep.LookupStep<TsProvider> {
 
         final Preferences prefs = prefs();
-        final Parser<File[]> pathsParser = Jaxb.Parser.of(PathsBean.class).asParser().andThen(o -> o.paths != null ? o.paths : new File[0]);
-        final Formatter<File[]> pathsFormatter = Jaxb.Formatter.of(PathsBean.class).asFormatter().compose(PathsBean::create);
+        final Parser<File[]> pathsParser =
+                Jaxb.Parser.of(PathsBean.class).asParser().andThen(o -> o.paths != null ? o.paths : new File[0]);
+        final Formatter<File[]> pathsFormatter =
+                Jaxb.Formatter.of(PathsBean.class).asFormatter().compose(PathsBean::create);
 
         ProvidersV3Step() {
             super(TsProvider.class);
@@ -134,11 +139,10 @@ public final class Installer extends ModuleInstall {
             for (TsProvider o : providers) {
                 TsManager.get().register(o);
                 if (o instanceof FileLoader<?> fileLoader) {
-                    tryGet(pathsNode, o.getSource(), pathsParser)
-                            .ifPresent(fileLoader::setPaths);
+                    tryGet(pathsNode, o.getSource(), pathsParser).ifPresent(fileLoader::setPaths);
                 }
             }
-//            TsManager.get().register(new PocProvider());
+            //            TsManager.get().register(new PocProvider());
         }
 
         private void unregister(Iterable<? extends TsProvider> providers) {
@@ -175,7 +179,10 @@ public final class Installer extends ModuleInstall {
         @Override
         protected void onRestore(Lookup.Result<TsProvider> lookup) {
             register(lookup.allInstances());
-            log.log(Level.FINE, "Loaded providers: [{}]", toString(TsManager.get().getProviders()));
+            log.log(
+                    Level.FINE,
+                    "Loaded providers: [{}]",
+                    toString(TsManager.get().getProviders()));
         }
 
         @Override
@@ -207,8 +214,8 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-//            TsVariable.register();
-//            DynamicTsVariable.register();
+            //            TsVariable.register();
+            //            DynamicTsVariable.register();
         }
     }
 
@@ -224,7 +231,8 @@ public final class Installer extends ModuleInstall {
         protected void onRestore(Lookup.Result<DataSourceProviderBuddy> lookup) {
             for (DataSourceProviderBuddy buddy : lookup.allInstances()) {
                 if (buddy instanceof Persistable persistable) {
-                    tryGet(prefs, buddy.getProviderName(), XmlConfig.xmlParser()).ifPresent(persistable::setConfig);
+                    tryGet(prefs, buddy.getProviderName(), XmlConfig.xmlParser())
+                            .ifPresent(persistable::setConfig);
                 }
             }
         }
@@ -277,15 +285,17 @@ public final class Installer extends ModuleInstall {
 
         @Override
         public void restore() {
-            UIExecutors.newSingleThreadExecutor(ThreadPriority.MIN)
-                    .execute(FileChooserStep::warmupFileSystemView);
+            UIExecutors.newSingleThreadExecutor(ThreadPriority.MIN).execute(FileChooserStep::warmupFileSystemView);
         }
 
         private static void warmupFileSystemView() {
             try {
                 Stopwatch stopwatch = Stopwatch.createStarted();
                 List<SystemFile> files = SystemFile.load();
-                log.log(Level.INFO, "FileSystemView warmed up on " + files.size() + " files in " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
+                log.log(
+                        Level.INFO,
+                        "FileSystemView warmed up on " + files.size() + " files in "
+                                + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
             } catch (RuntimeException ex) {
                 log.log(Level.WARNING, "Failed to warmup FileSystemView", ex);
             }
@@ -298,14 +308,16 @@ public final class Installer extends ModuleInstall {
                 Dimension shortcutsIconSize = getShortcutsIconSize();
                 return Stream.concat(
                                 Stream.of(fsv.getChooserComboBoxFiles()).map(f -> SystemFile.of(f, fsv, null)),
-                                Stream.of(fsv.getChooserShortcutPanelFiles()).map(f -> SystemFile.of(f, fsv, shortcutsIconSize)))
+                                Stream.of(fsv.getChooserShortcutPanelFiles())
+                                        .map(f -> SystemFile.of(f, fsv, shortcutsIconSize)))
                         .toList();
             }
 
             private static SystemFile of(File file, FileSystemView fsv, Dimension size) {
                 return size == null
                         ? new SystemFile(file, fsv.getSystemDisplayName(file), fsv.getSystemIcon(file))
-                        : new SystemFile(file, fsv.getSystemDisplayName(file), fsv.getSystemIcon(file, size.width, size.height));
+                        : new SystemFile(
+                                file, fsv.getSystemDisplayName(file), fsv.getSystemIcon(file, size.width, size.height));
             }
 
             private static Dimension getShortcutsIconSize() {

@@ -4,6 +4,9 @@
  */
 package internal.toolkit.desktop.plugin.tsproviders;
 
+import java.beans.PropertyVetoException;
+import javax.swing.text.DefaultEditorKit;
+import jdplus.toolkit.base.tsp.DataSource;
 import nbbrd.design.ClassNameConstant;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -13,30 +16,29 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
-
-import javax.swing.text.DefaultEditorKit;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
  */
-@ConvertAsProperties(dtd = "-//ec.nbdemetra.ui//Providers//EN",
-        autostore = false)
-@TopComponent.Description(preferredID = "ProvidersTopComponent",
+@ConvertAsProperties(dtd = "-//ec.nbdemetra.ui//Providers//EN", autostore = false)
+@TopComponent.Description(
+        preferredID = "ProvidersTopComponent",
         iconBase = "jdplus/toolkit/desktop/plugin/icons/table.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = ProvidersTopComponent.ID)
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
-@TopComponent.OpenActionRegistration(displayName = "#CTL_ProvidersAction",
-        preferredID = "ProvidersTopComponent")
+@TopComponent.OpenActionRegistration(displayName = "#CTL_ProvidersAction", preferredID = "ProvidersTopComponent")
 @NbBundle.Messages({
-        "CTL_ProvidersAction=Providers",
-        "CTL_ProvidersTopComponent=Providers",
-        "HINT_ProvidersTopComponent=This is a Providers window"
+    "CTL_ProvidersAction=Providers",
+    "CTL_ProvidersTopComponent=Providers",
+    "HINT_ProvidersTopComponent=This is a Providers window"
 })
 public final class ProvidersTopComponent extends TopComponent implements ExplorerManager.Provider {
 
@@ -71,7 +73,7 @@ public final class ProvidersTopComponent extends TopComponent implements Explore
 
         setLayout(new java.awt.BorderLayout());
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
@@ -107,5 +109,42 @@ public final class ProvidersTopComponent extends TopComponent implements Explore
     @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("ec.nbdemetra.ui.datasources");
+    }
+
+    /**
+     * Opens the providers window and selects the node of a data source. Must be called on the EDT.
+     *
+     * @return true if the data source node has been found and selected
+     */
+    static boolean selectDataSource(DataSource dataSource) {
+        if (!(WindowManager.getDefault().findTopComponent("ProvidersTopComponent")
+                instanceof ProvidersTopComponent window)) {
+            return false;
+        }
+        window.open();
+        window.requestActive();
+        Node node = findDataSourceNode(window.mgr.getRootContext(), dataSource);
+        if (node == null) {
+            return false;
+        }
+        try {
+            window.mgr.setSelectedNodes(new Node[] {node});
+            return true;
+        } catch (PropertyVetoException ex) {
+            return false;
+        }
+    }
+
+    private static Node findDataSourceNode(Node parent, DataSource dataSource) {
+        for (Node child : parent.getChildren().getNodes(true)) {
+            if (child instanceof DataSourceNode
+                    && dataSource.equals(child.getLookup().lookup(DataSource.class))) {
+                return child;
+            }
+            if (child instanceof ProviderNode && dataSource.getProviderName().equals(child.getName())) {
+                return findDataSourceNode(child, dataSource);
+            }
+        }
+        return null;
     }
 }

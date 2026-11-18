@@ -68,6 +68,26 @@
 
         <dependency>
             <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-sdmx-cli-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
+            <artifactId>jdplus-sdmx-cli-plugin</artifactId>
+            <version>${project.version}</version>
+            <classifier>uber</classifier>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europa.ec.joinup.sat</groupId>
             <artifactId>jdplus-sql-cli-plugin</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
