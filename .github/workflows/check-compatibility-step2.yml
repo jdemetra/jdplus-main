@@ -26,7 +26,7 @@ jobs:
       - if: ${{ hashFiles('continue') != '' }}
         name: ⚙️ Load PR number
         id: pr_number
-        run: echo "number=$(cat pr_number.txt)" >> $GITHUB_OUTPUT
+        run: echo "number=$(cat pr_number.txt)" >> "$GITHUB_OUTPUT"
 
       - if: ${{ hashFiles('continue') != '' }}
         name: 🔔 Notify PR with compatibility report

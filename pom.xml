@@ -76,7 +76,7 @@
         <!-- plugins -->
         <appassembler-maven-plugin.version>2.1.0</appassembler-maven-plugin.version>
         <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
-        <nbbrd-maven-tools.version>1.5.0</nbbrd-maven-tools.version>
+        <nbbrd-maven-tools.version>1.6.0</nbbrd-maven-tools.version>
         <extra-enforcer-rules.version>1.12.1</extra-enforcer-rules.version>
         <flatten-maven-plugin.version>1.9.0</flatten-maven-plugin.version>
         <forbiddenapis.version>3.11</forbiddenapis.version>
@@ -336,6 +336,11 @@
                     <artifactId>bundle-maven-plugin</artifactId>
                     <version>${nbbrd-maven-tools.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                    <artifactId>actionlint-maven-plugin</artifactId>
+                    <version>${nbbrd-maven-tools.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -415,6 +420,18 @@
             </plugin>
 
             <!-- 2 Enforce rules -->
+            <plugin>
+                <groupId>com.github.nbbrd.nbbrd-maven-tools</groupId>
+                <artifactId>actionlint-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>lint</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -710,6 +727,7 @@
                 <heylogs.skip>true</heylogs.skip>
                 <tidy.skip>true</tidy.skip>
                 <spotless.skip>true</spotless.skip>
+                <actionlint.skip>true</actionlint.skip>
             </properties>
         </profile>
     </profiles>
