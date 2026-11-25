@@ -36,9 +36,9 @@
     </modules>
 
     <scm>
-        <connection>scm:git:git://github.com/${x.github.user}/${x.github.repo}.git</connection>
-        <developerConnection>scm:git:ssh://github.com:${x.github.user}/${x.github.repo}.git</developerConnection>
-        <url>https://github.com/${x.github.user}/${x.github.repo}/tree/master</url>
+        <url>https://github.com/jdemetra/jdplus-main</url>
+        <connection>scm:git:https://github.com/jdemetra/jdplus-main.git</connection>
+        <developerConnection>scm:git:https://github.com/jdemetra/jdplus-main.git</developerConnection>
     </scm>
 
     <properties>
