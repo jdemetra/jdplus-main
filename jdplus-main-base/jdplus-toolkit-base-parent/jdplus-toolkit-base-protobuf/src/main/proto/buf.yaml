@@ -1,0 +1,21 @@
+version: v2
+lint:
+  use:
+    - STANDARD
+  except:
+    - DIRECTORY_SAME_PACKAGE
+    - ENUM_VALUE_PREFIX
+    - PACKAGE_DIRECTORY_MATCH
+    - PACKAGE_VERSION_SUFFIX
+  ignore_only:
+    ENUM_VALUE_UPPER_SNAKE_CASE:
+      - toolkit.proto
+    ENUM_ZERO_VALUE_SUFFIX:
+      - modelling.proto
+      - toolkit.proto
+    FIELD_LOWER_SNAKE_CASE:
+      - toolkit.proto
+    IMPORT_NO_PUBLIC:
+      - modelling.proto
+      - outliers.proto
+      - regarima.proto
