@@ -121,12 +121,7 @@ public class AugmentedSmoother {
         // auxiliary matrices
         B = FastMatrix.make(dim, nd);
         RpNA = FastMatrix.make(dim, nd);
-
-        if (calcvar) {
-            N = FastMatrix.square(dim);
-        } else {
-            N = null;
-        }
+        N = FastMatrix.square(dim);
     }
 
     private void loadInfo(int pos) {
@@ -140,9 +135,7 @@ public class AugmentedSmoother {
 
         state.a().copy(frslts.a(pos));
         A.copy(frslts.A(pos));
-        if (calcvar) {
-            state.P().copy(frslts.P(pos));
-        }
+        state.P().copy(frslts.P(pos));
     }
 
     private void iterate(int pos, boolean collapsing) {

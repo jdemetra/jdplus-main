@@ -46,12 +46,22 @@ public class CompositeSsf extends Ssf {
 
     private final int[] pos;
     private final int[] dim;
+    private final List<StateComponent> components;
+    private final List<ISsfLoading> loadings;
 
     CompositeSsf(
-            int[] cmpPos, int[] cmpDim, ISsfInitialization init, ISsfDynamics dynamics, ISsfMeasurement measurement) {
+            int[] cmpPos,
+            int[] cmpDim,
+            List<StateComponent> components,
+            List<ISsfLoading> loadings,
+            ISsfInitialization init,
+            ISsfDynamics dynamics,
+            ISsfMeasurement measurement) {
         super(init, dynamics, measurement);
         this.pos = cmpPos;
         this.dim = cmpDim;
+        this.loadings = loadings;
+        this.components = components;
     }
 
     public int[] componentsPosition() {
@@ -114,6 +124,8 @@ public class CompositeSsf extends Ssf {
             return new CompositeSsf(
                     pos,
                     dim,
+                    components,
+                    loadings,
                     new CompositeInitialization(dim, i),
                     new CompositeDynamics(dim, d),
                     new Measurement(cl, measurementError));
@@ -134,5 +146,13 @@ public class CompositeSsf extends Ssf {
 
     public int getComponentsCount() {
         return dim.length;
+    }
+
+    public StateComponent component(int idx) {
+        return components.get(idx);
+    }
+
+    public ISsfLoading loading(int idx) {
+        return loadings.get(idx);
     }
 }

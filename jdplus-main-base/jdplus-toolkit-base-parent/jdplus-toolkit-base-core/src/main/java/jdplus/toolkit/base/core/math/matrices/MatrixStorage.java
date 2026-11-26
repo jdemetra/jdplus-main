@@ -1,17 +1,17 @@
 /*
  * Copyright 2013 National Bank copyOf Belgium
  *
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved
  * by the European Commission - subsequent versions copyOf the EUPL (the "Licence");
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy copyOf the Licence at:
  *
  * http://ec.europa.eu/idabc/eupl
  *
- * Unless required by applicable law or agreed to in writing, software 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the Licence is distributed on an "AS IS" basis,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Licence for the specific language governing permissions and 
+ * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  */
 package jdplus.toolkit.base.core.math.matrices;
@@ -30,7 +30,6 @@ public class MatrixStorage {
     private double[] m_data;
 
     private int m_n, m_nused;
-
     private final int m_size, m_nr;
 
     private int m_nc;
@@ -94,10 +93,10 @@ public class MatrixStorage {
     public FastMatrix matrix(final int pos) {
         return new FastMatrix(m_data, m_nr, m_size * pos, m_nr, m_nc);
     }
-    
-    public DataBlock item(final int row, final int col){
-        int start=row+m_nr*col;
-        int end=start+m_nused*m_size;
+
+    public DataBlock item(final int row, final int col) {
+        int start = row + m_nr * col;
+        int end = start + m_nused * m_size;
         return DataBlock.of(m_data, start, end, m_size);
     }
 
@@ -130,14 +129,18 @@ public class MatrixStorage {
 
     /**
      * Multiplies the current data blocks by a given factor
-     * @param factor 
+     * @param factor
      */
     public void rescale(double factor) {
-        if (factor == 1)
-            return;
-        int n=m_size*m_nused;
-        for (int i=0; i<n; ++i){
-            m_data[i]*=factor;
+        if (factor == 1) return;
+        int n = m_size * m_nused;
+        for (int i = 0; i < n; ++i) {
+            m_data[i] *= factor;
         }
+    }
+
+    public void use(int n) {
+        resize(n);
+        m_nused = n;
     }
 }
