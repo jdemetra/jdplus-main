@@ -30,7 +30,7 @@ public class FinalEstimatorsView extends JComponent {
         wk2.setFrequency(freq);
         wk2.setType(WienerKolmogorovUcarimaEstimators.EstimatorType.Final);
         wk2.setInformation(WienerKolmogorovUcarimaEstimators.GAIN);
-        tabbedpanel_.addTab("Square gain", new PiView(wk2));
+        tabbedpanel_.addTab("Squared gain", new PiView(wk2));
 
         WienerKolmogorovUcarimaEstimators wk3 = new WienerKolmogorovUcarimaEstimators(wke, descs);
         wk3.setFrequency(freq);

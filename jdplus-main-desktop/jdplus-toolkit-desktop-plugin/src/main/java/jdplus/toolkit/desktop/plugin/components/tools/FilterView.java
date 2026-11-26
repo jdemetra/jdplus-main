@@ -4,20 +4,20 @@
  */
 package jdplus.toolkit.desktop.plugin.components.tools;
 
-import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
 import ec.util.chart.swing.ChartCommand;
 import ec.util.chart.swing.SwingColorSchemeSupport;
-import jdplus.toolkit.desktop.plugin.jfreechart.MatrixChartCommand;
-import jdplus.toolkit.base.api.math.matrices.Matrix;
-import jdplus.toolkit.desktop.plugin.ui.DiscreteDisplayDomain;
-import jdplus.toolkit.desktop.plugin.ui.DiscreteInformationProvider;
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.JMenu;
+import jdplus.toolkit.base.api.math.matrices.Matrix;
 import jdplus.toolkit.base.core.math.matrices.FastMatrix;
+import jdplus.toolkit.desktop.plugin.jfreechart.MatrixChartCommand;
+import jdplus.toolkit.desktop.plugin.jfreechart.TsCharts;
+import jdplus.toolkit.desktop.plugin.ui.DiscreteDisplayDomain;
+import jdplus.toolkit.desktop.plugin.ui.DiscreteInformationProvider;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -43,14 +43,24 @@ public class FilterView extends AChartView {
     public static final double DEFAULT_MAX_Y = 1;
     public static final NumberTickUnit DEFAULT_TICKUNIT_X = new NumberTickUnit(5);
     public static final NumberTickUnit DEFAULT_TICKUNIT_Y = new NumberTickUnit(0.1);
-    public static final DecimalFormat DEFAULT_FORMAT = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
+    public static final DecimalFormat DEFAULT_FORMAT =
+            new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.getDefault(Locale.Category.FORMAT)));
     protected static final int DOT_INDEX = 0;
     protected static final int BAR_INDEX = 1;
     // OTHER
     protected final DiscreteInformationProvider provider;
 
     public FilterView(DiscreteInformationProvider provider) {
-        super(100, PlotOrientation.VERTICAL, DEFAULT_MIN_X, DEFAULT_MAX_X, DEFAULT_MIN_Y, DEFAULT_MAX_Y, DEFAULT_TICKUNIT_X, DEFAULT_TICKUNIT_Y, DEFAULT_FORMAT);
+        super(
+                100,
+                PlotOrientation.VERTICAL,
+                DEFAULT_MIN_X,
+                DEFAULT_MAX_X,
+                DEFAULT_MIN_Y,
+                DEFAULT_MAX_Y,
+                DEFAULT_TICKUNIT_X,
+                DEFAULT_TICKUNIT_Y,
+                DEFAULT_FORMAT);
         setZoomable(false);
         this.provider = provider;
         this.chartPanel.setChart(createFilterView(seriesCollection));
@@ -58,7 +68,26 @@ public class FilterView extends AChartView {
         chartPanel.setPopupMenu(buildMenu(chartPanel).getPopupMenu());
     }
 
-    //<editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
+    public FilterView(
+            DiscreteInformationProvider provider, int npoints, double minx, double maxx, double miny, double maxy) {
+        super(
+                npoints,
+                PlotOrientation.VERTICAL,
+                minx,
+                maxx,
+                miny,
+                maxy,
+                DEFAULT_TICKUNIT_X,
+                DEFAULT_TICKUNIT_Y,
+                DEFAULT_FORMAT);
+        setZoomable(false);
+        this.provider = provider;
+        this.chartPanel.setChart(createFilterView(seriesCollection));
+        onDomainChange();
+        chartPanel.setPopupMenu(buildMenu(chartPanel).getPopupMenu());
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="EVENT HANDLERS">
     @Override
     protected void onColorSchemeChange() {
         SwingColorSchemeSupport themeSupport = colorSchemeResolver.resolve();
@@ -99,7 +128,11 @@ public class FilterView extends AChartView {
         }
 
         int fx = getFactorX();
-        chartPanel.getChart().getXYPlot().getRenderer(DOT_INDEX).setBaseShape(new Ellipse2D.Double(-2 * fx, -2 * fx, 4 * fx, 4 * fx));
+        chartPanel
+                .getChart()
+                .getXYPlot()
+                .getRenderer(DOT_INDEX)
+                .setBaseShape(new Ellipse2D.Double(-2 * fx, -2 * fx, 4 * fx, 4 * fx));
         chartPanel.getChart().getLegend().setVisible(seriesCollection.getSeriesCount() > 1);
 
         configureAxis();
@@ -113,14 +146,14 @@ public class FilterView extends AChartView {
         int focusIndex = getFocusIndex();
         XYPlot plot = chartPanel.getChart().getXYPlot();
         XYLineAndShapeRenderer dotRenderer = (XYLineAndShapeRenderer) plot.getRenderer(DOT_INDEX);
-        //XYBarRenderer barRenderer = (XYBarRenderer) plot.getRenderer(BAR_INDEX);
+        // XYBarRenderer barRenderer = (XYBarRenderer) plot.getRenderer(BAR_INDEX);
         for (int i = 0; i < seriesCollection.getSeriesCount(); i++) {
             boolean hasFocus = i == focusIndex;
             dotRenderer.setSeriesShapesFilled(i, hasFocus);
-            //barRenderer.setSeriesStroke(i, hasFocus ? Utils.THICK_STROKE : Utils.STROKE);
+            // barRenderer.setSeriesStroke(i, hasFocus ? Utils.THICK_STROKE : Utils.STROKE);
         }
     }
-    //</editor-fold>
+    // </editor-fold>
 
     private static JFreeChart createFilterView(XYDataset dataset) {
         XYPlot plot = new XYPlot();
